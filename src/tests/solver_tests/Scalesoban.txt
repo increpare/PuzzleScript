@@ -1,0 +1,175 @@
+title Scalesoban
+author increpare - remix of David Skinner's Microban
+homepage www.increpare.com
+
+(
+
+taking the levels from an existing sokoban set and changing the rules
+
+)
+
+color_palette 6
+
+text_color yellow
+
+========
+OBJECTS
+========
+
+Background
+black black black
+11111
+01111
+11201
+11111
+10111
+
+
+Target
+blue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+darkred darkred
+00010
+11111
+01000
+11111
+00010
+
+Player
+green green green green
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+tag
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+obstacle = wall or crate
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+tag
+======
+RULES
+======
+
+(
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+random [ > player | > crate ] [ stationary crate ] -> [ > crate | > crate ] [ player ]
+)
+
+
+[ > player | wall ] -> cancel 
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ] 
+
+[ > crate | wall] -> cancel
+[ > crate | crate ] -> cancel
+
+[ > player | > crate ] [stationary crate] -> [> player | > crate ] [< crate ]
+
+[ > player | > crate | | < crate ] -> [ > player | > crate | | crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+no tag
+
+=======
+LEVELS
+=======
+
+
+
+message level 1 of 3
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+
+
+message level 2 of 3
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+
+message level 3 of 3
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+
+(
+impossibly hard:
+
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+)
+
+message congratulations!

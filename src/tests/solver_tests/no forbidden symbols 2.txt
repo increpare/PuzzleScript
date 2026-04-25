@@ -1,0 +1,114 @@
+title NO FORBIDDEN SYMBOLS 2
+author increpare
+homepage www.increpare.com
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green 
+11111
+01111
+11101
+11111
+10111
+
+outside_wall
+red
+
+Target
+transparent
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange transparent
+00000
+01110
+01110
+01110
+00000
+
+safe
+red
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+, = outside_wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+Obstacle = Wall or Player or Crate or Target
+
+pusher = crate or player
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, outside_wall
+safe
+
+======
+RULES
+======
+
+[ >  pusher | Crate ] -> [  >  pusher | > Crate  ]
+late [player] [ crate no Target ] -> [ player safe] [ crate no target]
+late [ player no safe ] [ crate ] -> [ player no safe ] [ ]
+late [ player no safe ] [ wall ] -> [ player no safe ] [ ]
+late [ player no safe ] [ target ] -> [ player no safe ] [ ]
+late [ player no safe ] -> [player] win
+late [ safe ] -> []
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+message NO FORBIDDEN SYMBOLS 2 is a totally free-form block-pushing experience.  Please behave!
+
+.......
+.#*###.
+.o.o*..
+.#o###.
+.**#.#.
+.#o#.#.
+p......
+
+message no! you're a bad player!

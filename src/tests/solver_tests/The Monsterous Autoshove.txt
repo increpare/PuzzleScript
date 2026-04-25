@@ -1,0 +1,651 @@
+title The Monsterous Autoshove
+author increpare
+homepage www.increpare.com
+
+
+require_player_movement
+
+( debug )
+( verbose_logging )
+
+again_interval 0.05
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+no_neighbours
+red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+one_neighbour
+red
+.....
+.....
+..0..
+.....
+.....
+
+multiple_neighbour
+red
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+tokens = one_neighbour or no_neighbours or multiple_neighbour
+
+obstacle = crate or Wall
+
+pusher = crate or Player
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+tokens
+
+======
+RULES
+======
+
+
+[  ] -> again
+
+
+
+[ Player one_neighbour | Crate | no obstacle ] -> [  Player | > Crate | ] 
+
+
+late [ tokens ] -> []
+
+late down [ no obstacle one_neighbour | Crate | no obstacle ] -> [ multiple_neighbour | crate | ]
+late down [ no obstacle no tokens | Crate | no obstacle ] -> [ one_neighbour | crate | ]
+
+late left [ no obstacle one_neighbour | Crate | no obstacle ] -> [ multiple_neighbour | crate | ]
+late left [ no obstacle no tokens | Crate | no obstacle ] -> [ one_neighbour | crate | ]
+
+late right [ no obstacle one_neighbour | Crate | no obstacle ] -> [ multiple_neighbour | crate | ]
+late right [ no obstacle no tokens | Crate | no obstacle ] -> [ one_neighbour | crate | ]
+
+late up [ no obstacle one_neighbour | Crate | no obstacle ] -> [ multiple_neighbour | crate | ]
+late up [ no obstacle no tokens | Crate | no obstacle ] -> [ one_neighbour | crate | ]
+
+late [ multiple_neighbour ]->[]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+
+message 1/6 I shove a crates whenever I can
+
+
+(560 mag ich)
+########
+#.#....#
+#..p...#
+#.....##
+##.#.#.#
+#.*..o.#
+#......#
+########
+
+message 2/6 I only shove if there's one clear choice
+
+(notrivial basic level)
+#######
+#.....#
+#..@O.#
+#.*O@.#
+#..*..#
+#p....#
+#######
+
+message 3/6 My behavioural rules as real as any physical thing.
+
+
+(fine?)
+#######
+##...##
+#..*..#
+#..@..#
+#..@..#
+#..o..#
+#..o..#
+#..@..#
+#..@..#
+#p.*..#
+##...##
+#######
+
+
+
+message 4/6 Fickle boxes will not accept a shove from an uncertain man!
+
+(2464 - elegant but I need to think about this wehn I have a clearer head - I used a solver to find the solution :'[ )
+#######
+#.....#
+#po.*o#
+#.....#
+#..*..#
+#..#..#
+#######
+
+
+message 5/6 A layer of jealous paralysis chokes the world.
+
+(I like this, I just hope players don't misinterpret the groupings)
+#########
+#o.....o#
+#.......#
+#..***..#
+#.......#
+#o.....o#
+#.......#
+#..***..#
+#.p.....#
+#o.....o#
+#########
+
+
+message 6/6 I do not exhibt any behavioural peculiarities.  Everything is external in the world.  Don't you feel this to be true?
+
+(this should be possible but I'm so tired ^^)
+(update: satisfying to work out a rough solution, somewhat haphazard to execute it lol)
+###########
+#.........#
+#.@@......#
+#.*..p..@.#
+#......o@.#
+#.........#
+###########
+
+message The world is a queer and monstrous place, but I have mastered it!
+
+(
+
+(1452 could be an opkay level 1? nah)
+#######
+#....p#
+#.*.*o#
+#.#o..#
+#.....#
+#.....#
+#######
+
+#############
+#...........#
+#po.*......o#
+#...........#
+#..*........#
+#..#######..#
+####.....####
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#######
+
+
+########
+#......#
+#......#
+#......#
+#......#
+#......#
+#......#
+########
+
+(43092 - looked up the solution - absolutely monstrous - will I get it after another day's rest?)
+###########
+#.....*.o.#
+#o.o.#...p#
+#...*.*...#
+#.........#
+###########
+
+(32613 - I coudln't solve it, but the solution isn't interesting.)
+###########
+#....#.p..#
+#o#..*.#..#
+#.*oo...*.#
+#.........#
+###########
+
+(80052)
+########
+#..o...#
+#.....*#
+#.*.#..#
+#...**p#
+#.#o..o#
+#.o..###
+########
+
+(20172 triivial)
+###########
+#o.....*..#
+#.......#.#
+#.*.....*.#
+#.....opo.#
+###########
+
+###############
+#.......#...*o#
+#...........*.#
+#...@........##
+#...#....*.op.#
+#.#..........o#
+###############
+
+
+(2210 - nicht interesant)
+###########
+###......##
+#.#.......#
+#.....#...#
+#......#..#
+##*.#....p#
+#....#...##
+##....#...#
+##.......##
+##....#o.##
+###########
+
+(19224 really hard, not sure how to think about this one? ----)
+#######
+#.....#
+#o.*#o#
+#..*..#
+#p.@..#
+#.....#
+#######
+
+
+
+(728 mag ich nicht so sehr)
+########
+#...#..#
+#.p.#..#
+#......#
+#.o*...#
+#.....##
+#...#..#
+########
+
+(34561)
+########
+#..*o..#
+#.*.#..#
+#p.*o..#
+#.....##
+#.#..###
+#..*oo.#
+########
+
+
+(trivial, but only the computer could find the trivial solution lol)
+#############
+#.....#...*o#
+#.........*.#
+#.@........##
+#.#....*.op.#
+#..........o#
+#############
+
+
+(12679 really hard lol - not *so* hard on day 3, but still pretty hard)
+#######
+##p...#
+#...o.#
+#o*..o#
+#.**..#
+###...#
+#######
+
+(10206 nope too hard)
+#######
+#.po..#
+#..*..#
+#.*#o.#
+#..*.##
+#o....#
+#######
+
+(9936 jfc - couldn't solve and got bored)
+#######
+#..p..#
+#o..*.#
+#..*..#
+#o#...#
+#.*.o.#
+#######
+
+(super easy. too easy?)
+#######
+#.....#
+#..p..#
+#.*.o.#
+#.....#
+#.o.*.#
+#######
+
+(1503 trivial)
+#######
+#o..o.#
+#...p.#
+##....#
+#.*.*.#
+#.....#
+#######
+
+
+(3200 - fine if you get what to do, but maybe too easy to unintentionally soolve)
+#######
+#...p.#
+#..*..#
+#..o.o#
+#.*...#
+#.....#
+#######
+
+###############
+##........#...#
+##..*..*..##o.#
+##..ooo.p.#o#.#
+##.*o.@...#.o.#
+###....#..#...#
+#####.#########
+..#.....#......
+..#.....#......
+..#..*..#......
+..#.....#......
+..#######......
+
+###########
+##........#
+##..*..*..#
+##..ooo.p.#
+##.*o.@...#
+###....#..#
+#####.#####
+..#.....#..
+..#.....#..
+..#..*..#..
+..#.....#..
+..#######..
+
+(not so interesting rly)
+##########
+#........#
+#..*.*...#
+#..ooo.p.#
+#.*o.o*..#
+##....#..#
+####.#####
+.#.....#..
+.#.....#..
+.#..*..#..
+.#.....#..
+.#######..
+
+
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+###########
+
+#########
+#.......#
+#...o...#
+#...@...#
+#..*o*..#
+#...@...#
+#..*o*..#
+#.p.o...#
+#.......#
+#########
+
+(notrivial basic level)
+#######
+#.....#
+#..@O.#
+#.*O@.#
+#..*..#
+#p....#
+#######
+
+#######
+#.po..#
+#..*..#
+#.*#o.#
+#..*.##
+#o....#
+#######
+
+########
+#......#
+#......#
+#...o*.#
+#...*..#
+#.p..*o#
+#...o..#
+########
+
+(solved by chance, sadface)
+#######
+#.....#
+#..o*.#
+#..*.p#
+#...*o#
+#..o..#
+#######
+
+o##########
+#.........#
+#..*.*.*..#
+#.*.*.*.*.#
+#..*.*.*..#
+#.*.*.*.*.#
+#..*.*.*..#
+#.*.*.*.*.#
+#..p......#
+###########
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+
+(can i do something with this one?)
+.#######
+.#.....#
+.#.O*O.#
+##.*.*.#
+#..O*O.#
+#p.....#
+########
+
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#..@O.#
+##.*O@.#
+#...*..#
+#.p....#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#########
+#...o...#
+#...@...#
+#..*o*..#
+#...@...#
+#..*o*..#
+#.p.o...#
+#########
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+
+
+
+(
+
+choose 5 [ ] -> [ wall ]
+choose 1 [ no wall ] -> [ player ]
+choose 4 [ no wall no player no crate ] -> [ crate ]
+choose 4 [ no wall no player no target ] -> [ target ]
+
+
+))

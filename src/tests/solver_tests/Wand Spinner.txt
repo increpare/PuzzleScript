@@ -1,0 +1,1025 @@
+title Wand Spinner
+author increpare
+homepage www.increpare.com
+
+background_color #5b6ee1
+
+(thanks to bluemelon555 for the assistance, and ggn2, and bvoq )
+
+
+
+========
+OBJECTS
+========
+
+Background
+#5b6ee1
+
+crate
+#abb5f1 #5f4a18
+01110
+1...1
+1...1
+1...1
+01110
+
+Target_h
+transparent #c71fa9 transparent transparent
+00000
+11111
+22223
+11111
+00000
+
+Target_v
+transparent #c71fa9 transparent transparent
+01210
+01210
+01210
+01210
+01210
+
+Wall
+#3f3f74
+
+Player
+#5b6ee1 #5fcde4 #000000
+01110
+12121
+11111
+11211
+01110
+
+stick_w 1
+#abb5f1 #323c39
+.....
+.....
+00111
+.....
+.....
+
+stick_nw 2
+#abb5f1 #323c39
+.....
+.0...
+..0..
+...1.
+....1
+
+stick_n 3
+#abb5f1 #323c39
+..0..
+..0..
+..1..
+..1..
+..1..
+
+stick_ne 4
+#ffffff #abb5f1 #323c39
+.....
+...1.
+..1..
+.2...
+2....
+
+
+stick_e 5
+#323c39 #abb5f1
+.....
+.....
+00011
+.....
+.....
+
+
+stick_se 6
+#323c39 #abb5f1
+0....
+.0...
+..1..
+...1.
+.....
+
+stick_s 7
+#323c39 #abb5f1
+..0..
+..0..
+..0..
+..1..
+..1..
+
+stick_sw 8
+#323c39 #abb5f1
+....0
+...0.
+..1..
+.1...
+.....
+
+moved
+transparent
+
+con_ne
+transparent
+
+con_nw
+transparent
+
+con_se
+transparent
+
+con_sw
+transparent
+
+tl
+transparent
+
+
+
+=======
+LEGEND
+=======
+stick = stick_w or stick_nw or stick_n or stick_ne or stick_e or stick_se or stick_s or stick_sw
+stick_h = stick_e or stick_w
+
+stick_v = stick_n or stick_s
+
+. = Background
+# = Wall
+P = Player
+
+
+9 = target_h
+0 = Target_v
+
+target = target_h or Target_v
+o = crate
+player_or_crate = player or crate
+stick_or_crate = stick or crate
+player_or_crate_or_stick = player or crate or stick
+
+@ = wall and tl
+
+obstacle = player or stick or crate or wall
+
+a = target_v and stick_n
+s = target_v and stick_s
+d = target_h and stick_w
+f = target_h and stick_e
+
+z = target_v and stick_w
+x = target_v and stick_e
+c = target_h and stick_n
+b = target_h and stick_s
+
+=======
+SOUNDS
+=======
+
+stick move 12743307
+endlevel 58303907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, stick,crate
+moved
+con_ne, con_nw, con_se, con_sw
+tl
+
+
+======
+RULES
+======
+
+
+
+[ > player_or_crate | stick_or_crate ] -> [ > player_or_crate | > stick_or_crate ]
+
+down [ left stick_n no moved | stick_s no moved ] -> [ left stick_nw moved | stick_se moved ]
++ down [ right stick_n no moved | stick_s no moved ] -> [ right stick_ne moved | stick_sw moved ]
++ down [ stick_n no moved | left stick_s no moved ] -> [  stick_ne moved | left stick_sw moved ]
++ down [ stick_n no moved | right stick_s no moved ] -> [  stick_nw moved | right stick_se moved ]
+
++ right [ down stick_w no moved | stick_e no moved ] -> [ down stick_sw moved | stick_ne moved ]
++ right [ up stick_w no moved | stick_e no moved ] -> [ up stick_nw moved | stick_se moved ]
++ right [ stick_w no moved | down stick_e no moved ] -> [  stick_nw moved | down stick_se moved ]
++ right [ stick_w no moved | up stick_e no moved ] -> [  stick_sw moved | up stick_ne moved ]
+
+
++ right [ right stick_nw no moved | ] -> [ right stick_n moved | right con_ne ]
++ right [ up stick_nw no moved | ] -> [ right stick_n moved | right con_ne ]
++ down [ right con_ne | stick_se ] -> [ | stick_s ]
+
++ down [ down stick_nw no moved | ] -> [ down stick_w moved | down con_se ]
++ down [ left stick_nw no moved | ] -> [ down stick_w moved | down con_se ]
++ right [ down con_se | stick_se ] -> [ | stick_e ]
+
++ left [ left stick_se no moved | ] -> [ left stick_s moved | left con_se ]
++ left [ down stick_se no moved | ] -> [ left stick_s moved | left con_se ]
++ up [ left con_se | stick_nw ] -> [ | stick_n ]
+
++ up [ up stick_se no moved | ] -> [ up stick_e moved | up con_ne ]
++ up [ right stick_se no moved | ] -> [ up stick_e moved | up con_ne ]
++ left [ up con_ne | stick_nw ] -> [ | stick_w ]
+
+
++ left [ left stick_ne no moved | ] -> [ left stick_n moved | left con_nw ]
++ left [ up stick_ne no moved | ] -> [ left stick_n moved | left con_nw ]
++ down [ left con_nw | stick_sw ] -> [ | stick_s ]
+
++ down [ down stick_ne no moved | ] -> [ down stick_e moved | down con_se ]
++ down [ right stick_ne no moved | ] -> [ down stick_e moved | down con_se ]
++ left [ down con_se | stick_sw ] -> [ | stick_w ]
+
++ right [ right stick_sw no moved | ] -> [ right stick_s moved | right con_sw ]
++ right [ down stick_sw no moved | ] -> [ right stick_s moved | right con_sw ]
++ up [ right con_sw | stick_ne ] -> [ | stick_n ]
+
++ up [ up stick_sw no moved | ] -> [ up stick_w moved | up con_nw ]
++ up [ left stick_sw no moved | ] -> [ up stick_w moved | up con_nw ]
++ right [ up con_nw | stick_ne ] -> [ | stick_e ]
+
+
++ [ stationary tl ] [ > crate | stationary stick_or_crate ] -> [ action tl ] [ > crate | > stick_or_crate ]
++ [ action tl ] -> [ stationary tl ]
+
++ [ stationary tl ] [ > stick | stationary stick_or_crate ] -> [ action tl ] [ > stick | > stick_or_crate ]
++ [ action tl ] -> [ stationary tl ]
+
+[ > player_or_crate_or_stick | wall ] -> cancel
+
+late [moved]->[]
+
+
+==============
+WINCONDITIONS
+==============
+all Target_h on stick_h  
+all Target_v on stick_V
+
+=======
+LEVELS
+=======
+
+
+message 1 / 18
+(ok level 1?)
+@###..
+#..#..
+#..###
+#.399#
+#.7.p#
+#..###
+####..
+
+
+message 2 / 18
+(kinda easy but not bad?)
+@####.
+#0..##
+#03..#
+##7..#
+.##p.#
+..##.#
+...###
+
+
+message 3 / 18
+(easy but fun manipulation? could be level 1 but maybe too constrained?)
+@#####.
+#.3..##
+#.7..0#
+#993p0#
+#..7..#
+#######
+
+( (level 2?) )
+( @##### )
+( #99..# )
+( #.#..# )
+( #....# )
+( #.15.# )
+( #p...# )
+( ###### )
+
+
+message 4 / 18
+(ok late-early)
+@######
+#.3.p.#
+#.7..0#
+#1f9.0#
+#.....#
+#######
+
+message 5 / 18
+(could be ok easy level)
+.######
+.#99#.#
+@#.15.#
+#.3.#.#
+#pb9..#
+#######
+
+message 6 / 18
+(easy enough to think through?)
+@####.
+#..3##
+#.9b.#
+#df..#
+#p...#
+######
+
+message 7 / 18
+(simple-enough)
+@#####
+#..a.#
+#15s.#
+#..#0#
+#p..0#
+######
+
+
+
+message 8 / 18
+(late-easy kinda fine?)
+@######
+#.#.3.#
+#..0b9#
+#p.z5.#
+#...#.#
+#######
+
+( (not too hard but kinda fun?) )
+( @.#####.... )
+( ###99.##### )
+( #.99...33.# )
+( #.#...#77.# )
+( #.....#..p# )
+( ########### )
+
+message 9 / 18
+(reduced above. still solvable)
+.@####....
+##99.#####
+#99...33.#
+#....#77.#
+######..p#
+.....#####
+
+message 10 / 18
+@#####.#####
+#...3###.0.#
+#...7....0.#
+#####.p.df.#
+....########
+
+message 11 / 18
+(easy. feeling lukewarm about it)
+@######
+#.a...#
+#.s.#.#
+#015..#
+#0p#.##
+#######
+
+
+message 12 / 18
+(ok free early level?)
+@#######
+#.3....#
+#.7..99#
+#.3.p.0#
+#.7..#0#
+########
+
+message 13 / 18
+(not hard. kinda fun/silly)
+@########
+#p......#
+#.#.#a#.#
+#.15.s99#
+#.#.#.#.#
+#.......#
+#########
+
+message 14 / 18
+(ok-ish intermediate level)
+@######
+#.#03.#
+#.307.#
+#.7pc9#
+#99.7.#
+#######
+
+
+message 15 / 18
+(slightly tricky + fun trick to notice)
+@#####
+#..3.#
+#.#7.#
+#00.a#
+#0a.s#
+#.7p.#
+######
+
+message 16 / 18
+(intermediate?)
+@####.
+#.9c##
+#.9b0#
+#1530#
+#p.7.#
+######
+
+message 17 / 18
+(kinda chilll / ok!)
+@######
+#.....#
+#.zfc.#
+#.a.sp#
+#.bdx.#
+#.....#
+#######
+
+message 18 / 18
+(hardish but ok?)
+.@####
+##.3.#
+#.07.#
+#.0df#
+#p...#
+######
+
+message Congratulations!  You've graduated from the college of magicians' assistants with flying colours!  
+
+( (I like this level) )
+( @###### )
+( #.a.### )
+( #.sp### )
+( #.3.0.# )
+( #.7.0.# )
+( ####### )
+
+
+(( NOT BAD BUT )(Easyish. ok? not soo interesting) )
+( @###### )
+( #.99.## )
+( #..3.p# )
+( #.3b9.# )
+( #.7.### )
+( ####### )
+
+( (Easy but funish? ok level 2?) )
+( @###### )
+( #.3..p# )
+( #.799.# )
+( #.3...# )
+( #.799.# )
+( #.3...# )
+( #.799.# )
+( ####### )
+
+( (interesting goal, but too bloody hard. not solved but solution gawked at) )
+( @###### )
+( #0p3..# )
+( #0.730# )
+( ##1fb0# )
+( ###...# )
+( ####### )
+
+( (trivial) )
+( @###### )
+( ##.p3.# )
+( #df.7.# )
+( #9930.# )
+( #..70## )
+( ####### )
+
+( (meh tolerable but meh) )
+( @###### )
+( #p0..0# )
+( #.0330# )
+( #.377.# )
+( #9b.#.# )
+( ####### )
+
+( (trivial) )
+( @###### )
+( #.99.p# )
+( #.3.c9# )
+( #.7.7.# )
+( #.df.## )
+( ####### )
+
+( (meh) )
+( @######## )
+( ######### )
+( ###p99.## )
+( ###15..## )
+( ###..#### )
+( ####.#### )
+( ####.#### )
+( ####..### )
+( ##....### )
+( ##....### )
+( ######### )
+( ######### )
+
+( (same old) )
+( @###### )
+( #...30# )
+( #.0.70# )
+( #.z5..# )
+( #..#.p# )
+( ####### )
+
+( (same old) )
+( @######## )
+( #..3....# )
+( ##37....# )
+( #.7.p99## )
+( #...99.## )
+( ######### )
+
+( (same old) )
+( (not hard. ok?) )
+( @######## )
+( #.3.....# )
+( #.799.#p# )
+( #.3..99.# )
+( #.7.....# )
+( ######### )
+
+
+( (meh) )
+( (not hard) )
+( @###### )
+( #p.a..# )
+( #..s15# )
+( #.df..# )
+( #.99..# )
+( ####### )
+
+( (meh) )
+( (intermediate ok?) )
+( @##### )
+( #0...# )
+( #0#30# )
+( #..70# )
+( #151x# )
+( #p..0# )
+( ###### )
+
+
+( (meh trial and error solution) )
+( @##### )
+( #..3.# )
+( #0#7p# )
+( #0.3.# )
+( #0a7.# )
+( #0s..# )
+( ###### )
+
+( (trivial) )
+( @######## )
+( #...p...# )
+( #.3399..# )
+( #.773.00# )
+( #...7.00# )
+( ######### )
+
+( (trivial) )
+( @######## )
+( #.3.3...# )
+( #.79b.p.# )
+( #..99...# )
+( #..1599.# )
+( ######### )
+
+( (trivial) )
+( @######## )
+( #.3.....# )
+( #.b9.99.# )
+( #...3p15# )
+( #.997...# )
+( ######### )
+
+( (trivial) )
+( @######## )
+( #..p..3.# )
+( #....cb.# )
+( #....7c9# )
+( #.99..7.# )
+( ######### )
+
+
+
+
+( (fine? too easy maybe I have enough levels like this) )
+( @##### )
+( #....# )
+( #.#99# )
+( #1515# )
+( #p...# )
+( #.99.# )
+( ###### )
+
+( (kinda kludgy? YIP)  )
+( @##### )
+( #...p# )
+( #.#0.# )
+( #150.# )
+( #.015# )
+( #.0..# )
+( ###### )
+
+( (eeh rests around a single mechanism. maybe if it were duplciated multiple times with a level, but not just once) )
+( @.#### )
+( ###..# )
+( #.15p# )
+( #1f90# )
+( #...0# )
+( ###### )
+
+
+
+( (meh driving game) INCOMPLETE BUT ALSO DON'T CARE)
+( @.####... )
+( ###..#### )
+( #.....3.# )
+( #.#..#7.# )
+( #....#.p# )
+( ######### )
+
+
+
+
+
+( @##### )
+( #....# )
+( #.#..# )
+( #....# )
+( #....# )
+( #....# )
+( ###### )
+
+( (trivial) )
+( @.###### )
+( ..#p99.# )
+( ..#.15.# )
+( ..##.### )
+( ...#.#.. )
+( ..##.#.. )
+( ###..#.. )
+( #....##. )
+( #.#...#. )
+( #...#.#. )
+( ###...#. )
+( ..#####. )
+
+
+
+((test level))
+( @.#####.... )
+( ###...##### )
+( #......33.# )
+( #.#...#77.# )
+( #.....#..p# )
+( ########### )
+
+
+( (meh, don't like that you can randomly need to backtrack if you do things in the wrong order. don't find it fun) )
+( @.#####.... )
+( ###...##### )
+( #......33.# )
+( #.#00.#77.# )
+( #..00.#..p# )
+( ########### )
+
+( (trivial but bad) )
+( @.####... )
+( ###..#### )
+( #..cc99.# )
+( #.#77#..# )
+( #p...#..# )
+( ######### )
+
+
+( @.#####... )
+( ###...#### )
+( #........# )
+( #.#...#..# )
+( #.....#..# )
+( ########## )
+
+
+( @.####... )
+( ###..#### )
+( #.......# )
+( #.#..#..# )
+( #....#..# )
+( ######### )
+
+( @####### )
+( #......# )
+( #......# )
+( #......# )
+( #####..# )
+( ....#### )
+
+
+
+( @####### )
+( .#.....# )
+( .#.....# )
+( ##.....# )
+( #......# )
+( #......# )
+( ######## )
+
+( (meh ok but not so tricky? too much walking about) )
+( @#####..##### )
+( #....####...# )
+( #.33......#.# )
+( #.77#9999...# )
+( #p..######### )
+( #####........ )
+
+( @#####.##### )
+( #....###...# )
+( #........#.# )
+( #...#......# )
+( #...######## )
+( #####....... )
+
+( (meh) )
+( @#### )
+( #990# )
+( #0.0# )
+( #099# )
+( #15.# )
+( #15.# )
+( #33.# )
+( #77.# )
+( #.p.# )
+( ##### )
+
+( @####### )
+( #990099# )
+( #..00..# )
+( #.3153.# )
+( #.7157.# )
+( #...p..# )
+( #......# )
+( ######## )
+
+( @##### )
+( #....# )
+( #....# )
+( #....# )
+( #....# )
+( ###### )
+
+( @###### )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( ####### )
+
+( @########### )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( ############ )
+
+( @########### )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #.....15...# )
+( #......p...# )
+( #..........# )
+( #..........# )
+( #.........9# )
+( ############ )
+
+( (dunno!) )
+( @###### )
+( ##..### )
+( ##..### )
+( ##..### )
+( ##..### )
+( ##15### )
+( ##15### )
+( ##15### )
+( #.p...# )
+( #.....# )
+( #.99..# )
+( #.99..# )
+( #.99..# )
+( ####### )
+
+( @####....... )
+( #99..##....# )
+( #..99..##..# )
+( #........### )
+( ###........# )
+( ..##@...15.# )
+( ...#.@#..15# )
+( ...#..#@@.p# )
+( ...#.......# )
+( ...######### )
+
+( @##### )
+( #....# )
+( #....# )
+( #....# )
+( #....# )
+( ###### )
+
+( (nice idea but hard also has a crate) )
+( @##### )
+( #99..# )
+( #o.df# )
+( #.p3.# )
+( #..7.# )
+( ###### )
+
+( @.###### )
+( ..#....# )
+( ..#....# )
+( ..##.### )
+( ...#.#.. )
+( ...#.#.. )
+( ####.#.. )
+( #....##. )
+( #.#...#. )
+( #...#.#. )
+( ###...#. )
+( ..#####. )
+
+
+
+( @####. )
+( #...## )
+( #....# )
+( ##...# )
+( .##..# )
+( ..##.# )
+( ...### )
+
+
+( @.....##### )
+( ......#...# )
+( ......#.#.# )
+( #######.#.# )
+( #.........# )
+( #.#.#.#.### )
+( #.......#.. )
+( #########.. )
+
+( @######## )
+( #.......# )
+( #.#.#.#.# )
+( #.......# )
+( #.#.#.#.# )
+( #.......# )
+( ######### )
+
+
+
+( @###.. )
+( #..#.. )
+( #..### )
+( #....# )
+( #....# )
+( #..### )
+( ####.. )
+
+
+( @######## )
+( #.......# )
+( #.......# )
+( #.......# )
+( #.......# )
+( ######### )
+
+( (trivial) )
+( @######## )
+( #......p# )
+( #.9c....# )
+( #997.3a.# )
+( #....7s.# )
+( ######### )
+
+( (trivial) )
+( @######## )
+( #..p..3.# )
+( #....cb.# )
+( #....7c9# )
+( #.99..7.# )
+( ######### )
+
+( (fine/tricky but too like other levels) )
+( @##### )
+( ##30.# )
+( #.70.# )
+( #df..# )
+( #.p..# )
+( ###### )
+
+( @###### )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( ####### )
+
+( @############ )
+( #...........# )
+( #...........# )
+( #...........# )
+( #...........# )
+( ############# )
+
+( @######## )
+( #.......# )
+( #.......# )
+( #.......# )
+( #.......# )
+( #.......# )
+( #.......# )
+( #.......# )
+( ######### )
+
+( @########### )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( #..........# )
+( ############ )
+
+( @.#####.... )
+( ###...##### )
+( #.........# )
+( #.#...#...# )
+( #.....#...# )
+( ########### )
+
+( @................ )
+( ................. )
+( ........9........ )
+( .....999......... )
+( ................. )
+( ......p.......... )
+( .3333.....2..4... )
+( .7777...15.68.... )
+( ................. )
+( ................. )
+( ................. )
+( ................. )
+
+(TRANSFORMATION
+==========
+TRANSFORM
+==========
+
+
+choose 5 [  ] -> [ wall ]
+choose 1 [ no wall ] -> [ player ]
+
+choose 2 option 0.5 right [ no obstacle | no obstacle ] -> [ stick_w | stick_e ]
++ option 0.5 up [ no obstacle | no obstacle ] -> [ stick_s | stick_n ]
+
+
+choose 2 option 0.5 right [ no wall no player no target | no wall no player no target ] -> [ target_h | target_h ]
++ option 0.5 up [ no wall no player no target | no wall no player no target ] -> [ target_v | target_v ]
+
+
+
+)

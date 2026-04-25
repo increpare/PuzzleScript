@@ -1,0 +1,231 @@
+title Acorn Scorchery Paradise
+author increpare
+homepage www.increpare.com
+
+
+background_color #3f3f74
+
+========
+OBJECTS
+========
+
+Background
+#3f3f74 #59598f
+00000
+00000
+00100
+00000
+00000
+
+
+
+Target
+orange transparent transparent
+00000
+01110
+01210
+01110
+00000
+
+Wall
+#323c39
+00000
+00000
+00000
+00000
+00000
+
+
+Player
+#847e87 #a33c88
+00000
+01110
+00000
+..0..
+.0.0.
+
+
+Crate
+#3f3f74 lightgreen green
+.111.
+21112
+21112
+22222
+.222.
+
+
+Crate_HOT
+#3f3f74 #ff0018 #ac3232
+.111.
+21112
+21112
+22222
+.222.
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+crate_or_player = Crate or Player or Crate_HOT
+any_Crate = Crate or Crate_HOT
+push_obstacle = wall or crate or Crate_HOT
+obstacle = wall or crate or Crate_HOT or Player
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 34709107
+endlevel 27179907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, Crate_HOT
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate_hot  ]
+
+[ > crate_or_player | stationary push_obstacle ] -> cancel
+
+[ stationary crate_hot ] [ ^ crate_hot ] -> [ crate ] [ ^ Crate_HOT ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on any_Crate
+
+=======
+LEVELS
+=======
+
+message 1/5
+(nice!)
+######
+#.#..#
+#.*@.#
+#.p..#
+##.o.#
+.#####
+
+message 2/5
+(fine)
+#####
+#o..#
+#o..#
+#**@#
+#.p.#
+#####
+
+message 3/5
+(lol)
+######
+#p...#
+#.*..#
+#o.@.#
+##.@.#
+.#####
+
+message 4/5
+(fine)
+#####
+#opo#
+#.*.#
+#.*.#
+#o*.#
+#####
+
+
+(youAtExample suggested 'vive of five' when I was looking for stupid homophones)
+message 5/5 
+(fiiineish)
+######
+#.o.o#
+#....#
+#.**.#
+#.p#.#
+######
+
+
+
+message Congratulations! You are the best Acorn Scorcherer in Acorn Scorchery Paradise!
+
+( (meh not sure) )
+( ..#### )
+( ###.o# )
+( #o*..# )
+( #.*..# )
+( #p.@.# )
+( ###### )
+
+( ##### )
+( #...# )
+( #...# )
+( #...# )
+( #...# )
+( ##### )
+
+
+( ###### )
+( #....# )
+( #....# )
+( #....# )
+( #....# )
+( ###### )
+
+( ####### )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( ####### )
+
+( ###### )
+( #....# )
+( #....# )
+( #....# )
+( #....# )
+( ###### )
+
+( ######### )
+( #.......# )
+( #.......# )
+( #.......# )
+( #.......# )
+( ######### )
+
+( ######## )
+( #......# )
+( #......# )
+( #......# )
+( #......# )
+( #......# )
+( #......# )
+( ######## )
+
+
+
+(Transformation
+
+choose 5 [ ] -> [ wall ]
+choose 1 [ no wall ] -> [ player ]
+choose 3 [ no obstacle ] -> [ crate ]
+choose 3 [ no player no wall no target ] -> [ target ]
+
+)

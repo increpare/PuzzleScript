@@ -1,0 +1,362 @@
+title Two-Step Pete
+author increpare
+homepage www.increpare.com
+
+color_palette 7
+(
+thanks to c00t00 for tips + feedback
+thanks to bvoq + marcosdon for the lovely solvers
+
+https://marcosdon.github.io/PuzzleScriptWithSolver/editor.html
+https://dekeyser.ch/puzzlescriptmis/
+)
+
+noaction
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN 
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN 
+
+Player
+Blue Blue Blue Blue yellow
+.000.
+.141.
+22222
+.333.
+.3.3.
+
+Crate
+#ee5555
+00000
+0...0
+0...0
+0...0
+00000
+
+laststart
+transparent
+
+lastup
+transparent
+
+lastdown
+transparent
+
+lastleft
+transparent
+
+lastright
+transparent
+
+spawncrate 
+transparent
+
+=======
+LEGEND
+=======
+
+lastany = lastup or lastdown or lastleft or lastright or laststart
+
+. = Background
+# = Wall
+P = Player and laststart
+* = Background
+@ = Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+lastany
+spawncrate
+
+======
+RULES
+======
+
+[ action player ] -> cancel
+
+[ > player | wall ] -> cancel
+[ > player | crate | wall ] -> cancel
+[ > player | crate | crate ] -> cancel
+
+
+up 		[ up player 	lastup 		no laststart ] -> [ up player 		spawncrate ]
+down 	[ down player 	lastdown 	no laststart ] -> [ down player 	spawncrate ]
+left 	[ left player 	lastleft 	no laststart ] -> [ left player 	spawncrate ]
+right 	[ right player 	lastright 	no laststart ] -> [ right player 	spawncrate ]
+
+[ lastany ] -> [ ]
+
+up 		[ up player 	| ] -> [ up player 		| lastup 	]
+down 	[ down player 	| ] -> [ down player 	| lastdown 	]
+left 	[ left player 	| ] -> [ left player 	| lastleft 	]
+right 	[ right player 	| ] -> [ right player 	| lastright ]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late [ spawncrate player ] -> cancel
+late [ spawncrate ] -> [ crate ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+All Crate on Target
+
+=======
+LEVELS
+=======
+
+message level 1 of 8
+(klinda fun)
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+
+(kinda fun?)
+
+message level 2 of 8
+######
+#@.@.#
+#.@.@#
+#@.@.#
+#.@.@#
+#@p@.#
+#.@.@#
+######
+
+(ok?)
+
+message level 3 of 8
+#####
+#.@@#
+#@.@#
+#p@.#
+#####
+
+
+
+message level 4 of 8
+(fun! ship it)
+###########
+#####@#####
+####...####
+#####@#####
+##.#.p.#.##
+#@.@...@.@#
+##.#...#.##
+#####@#####
+####...####
+#####@#####
+###########
+
+
+message level 5 of 8
+( tricky + nice )
+#######
+#.@..@#
+#...@.#
+##.#p##
+#.....#
+#...@.#
+#######
+
+message level 6 of 8
+(is this the same as above? IDK )
+#######
+#.@#..#
+#...@.#
+##@#.##
+#.p...#
+#.@#..#
+#######
+
+
+
+message level 7 of 8
+(like this)
+#####
+#@p@#
+#@@@#
+#@..#
+#.@@#
+#####
+
+
+message level 8 of 8
+
+(hard not great but ok?)
+######
+#@.@@#
+#@@@@#
+#@@@.#
+#p.@@#
+######
+
+message congrats. sorry ab out that final level.
+(
+
+######
+#....#
+#....#
+##..##
+#p...#
+#....#
+######
+
+#######
+#..#..#
+#.....#
+##.#.##
+#.....#
+#..#p.#
+#######
+
+###########
+#####@#####
+####...####
+#####@#####
+##.#.p.#.##
+#@.@...@.@#
+##.#...#.##
+#####@#####
+####...####
+#####@#####
+###########
+
+(kinda nice)
+###########
+#####.#####
+##.#.p.#.##
+#@.@......#
+##.#...#.##
+#####.#####
+###########
+
+
+######
+#....#
+#....#
+#....#
+#.p..#
+######
+
+
+#####
+#p..#
+#...#
+#...#
+#...#
+#####
+
+#########
+####.####
+###...###
+##.....##
+#...p...#
+##.....##
+###...###
+####.####
+#########
+
+###########
+#####.#####
+####...####
+#####.#####
+##.#...#.##
+#.........#
+##.#...#.##
+#####p#####
+####...####
+#####.#####
+###########
+
+###########
+#####.#####
+##.#...#.##
+#.........#
+##.#..p#.##
+#####.#####
+###########
+
+(kinda hard kinda random but ok?)
+#####
+#@@.#
+#p@@#
+#@.@#
+#@.@#
+#####
+
+
+#######
+#.@...#
+#.@..@#
+##.#@##
+#...p.#
+#.....#
+#######
+
+
+(same trick as above? iiish)
+#######
+#..#..#
+#..@@@#
+##p#.##
+#######
+
+#######
+#..#..#
+#.....#
+##.#.##
+#.....#
+#..#p.#
+#######
+
+
+#########
+#...#...#
+#.......#
+#...#...#
+##.###.##
+#...#...#
+#.......#
+#...#..p#
+#########
+
+message congratulations!
+)

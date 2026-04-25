@@ -1,0 +1,812 @@
+title CŌDEX·LŪBRICUS
+author INCREPĀRE
+homepage www.increpare.com
+
+again_interval 0.1
+
+run_rules_on_level_start
+
+
+background_color #523a2a
+text_color #c19c4d
+
+( verbose_logging )
+
+(thanks to everyon on twitch for feedback + company as I was making this)
+========
+OBJECTS
+========
+
+Background
+#ac763c #9b672f
+00000
+01010
+00000
+01010
+00000
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+targetfg1
+#ac763c #9b672f
+..111
+10101
+10101
+10101
+..111
+
+
+targetfg2
+#9b672f #523a2a 
+00111
+10101
+10101
+10101
+00111
+
+Wall
+#8a6b3e #7d623a
+00000
+00000
+00100
+00000
+00000
+
+Player
+#8a6b3e #7d623a
+00000
+00000
+00100
+00000
+00000
+
+wall_highlight_top
+#c19c4d
+00000
+.....
+.....
+.....
+.....
+
+wall_highlight_bottom
+#523a2a
+.....
+.....
+.....
+.....
+00000
+
+wall_highlight_left
+#523a2a
+0....
+0....
+0....
+0....
+0....
+
+wall_highlight_right
+#c19c4d
+....0
+....0
+....0
+....0
+....0
+
+
+wall_highlight_topleft
+#8a6b3e
+0....
+.....
+.....
+.....
+.....
+
+
+wall_highlight_bottomright
+#8a6b3e
+.....
+.....
+.....
+.....
+....0
+
+
+(
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+)
+Crate1 1
+#9e564a 
+00000
+00000
+00000
+00000
+00000
+
+crate1_highlight_top
+#b76f63
+00000
+.....
+.....
+.....
+.....
+
+crate1_highlight_bottom
+#743429
+.....
+.....
+.....
+.....
+00000
+
+crate1_highlight_left
+#743429
+0....
+0....
+0....
+0....
+0....
+
+crate1_highlight_right
+#b76f63
+....0
+....0
+....0
+....0
+....0
+
+
+crate1_highlight_topleft
+#9e564a
+0....
+.....
+.....
+.....
+.....
+
+
+crate1_highlight_bottomright
+#9e564a
+.....
+.....
+.....
+.....
+....0
+
+
+Crate2 2
+#4ca474 
+00000
+00000
+00000
+00000
+00000
+
+
+
+crate2_highlight_top
+#6dd39c
+00000
+.....
+.....
+.....
+.....
+
+crate2_highlight_bottom
+#2b6143
+.....
+.....
+.....
+.....
+00000
+
+crate2_highlight_left
+#2b6143
+0....
+0....
+0....
+0....
+0....
+
+crate2_highlight_right
+#6dd39c
+....0
+....0
+....0
+....0
+....0
+
+
+crate2_highlight_topleft
+#4ca474
+0....
+.....
+.....
+.....
+.....
+
+
+crate2_highlight_bottomright
+#4ca474
+.....
+.....
+.....
+.....
+....0
+
+
+slideright
+transparent
+
+slidedown
+transparent
+
+slideleft
+transparent
+
+slideup
+transparent
+
+nospawn ,
+transparent
+
+
+=======
+LEGEND
+=======
+
+
+crate = crate1 or crate2 
+slidetag = slideleft or slideup or slideright or slidedown
+
+crate1_highlight = crate1_highlight_top or crate1_highlight_bottom or crate1_highlight_left or crate1_highlight_right or crate1_highlight_topleft or crate1_highlight_bottomright
+
+crate2_highlight = crate2_highlight_top or crate2_highlight_bottom or crate2_highlight_left or crate2_highlight_right or crate2_highlight_topleft or crate2_highlight_bottomright
+
+crate_highlight = crate1_highlight or crate2_highlight
+
+highlight_left = wall_highlight_left or crate1_highlight_left or crate2_highlight_left
+highlight_bottom = wall_highlight_bottom or crate1_highlight_bottom or crate2_highlight_bottom
+
+. = Background
+# = Wall
+P = Player and wall
+* = Crate1
+@ = Crate1 and Target
+O = Target and nospawn
+obs = wall or crate
+
+; = targetfg1 and nospawn
+: = targetfg2 and Target and nospawn
+
+=======
+SOUNDS
+=======
+
+sfx0  94813307 (push)
+sfx1 66342702 (delete)
+endlevel 61653300
+startgame 5762303
+startlevel 10793103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+targetfg1, targetfg2
+Player
+Wall, Crate
+wall_highlight_top,crate1_highlight_top,crate2_highlight_top
+wall_highlight_bottom,crate1_highlight_bottom,crate2_highlight_bottom
+wall_highlight_left,crate1_highlight_left,crate2_highlight_left
+wall_highlight_right,crate1_highlight_right,crate2_highlight_right
+wall_highlight_topleft,crate1_highlight_topleft,crate2_highlight_topleft
+wall_highlight_bottomright,crate1_highlight_bottomright,crate2_highlight_bottomright
+slidetag
+nospawn
+
+======
+RULES
+======
+
+
+
+
+[> player slidetag]->[> player]
+
+[ up player ] -> [ up player slideup ] again 
+[ down player ] -> [ down player slidedown ] again 
+[ left player ] -> [ left player slideleft ] again 
+[ right player ] -> [ right player slideright ] again 
+
+
+[ slideup ] [ crate ] -> [ slideup ] [ up crate ] again
+[ slidedown ] [ crate ] -> [ slidedown ] [ down crate ] again
+[ slideleft ] [ crate ] -> [ slideleft ] [ left crate ] again
+[ slideright ] [ crate ] -> [ slideright ] [ right crate ] again
+
+[ > crate | stationary obs ] -> [ crate | stationary obs ]
++ [ moving crate1 | stationary crate1 ] -> [ stationary crate1 | stationary crate1 ]
++ [ moving crate2 | stationary crate2 ] -> [ stationary crate2 | stationary crate2 ]
+
+ [ target > crate ] -> [ target ] sfx1
+
+[moving player]->[player]
+
+(cosmetics start)
+late [crate_highlight]->[]
+
+
+late right [ no target | target ] -> [ targetfg1 | targetfg2 target]
+
+late up [ wall | no wall ] -> [ wall wall_highlight_top |]
+late down [ wall | no wall ] -> [ wall wall_highlight_bottom| ]
+late left [ wall | no wall ] -> [ wall wall_highlight_left |]
+late right [ wall | no wall ] -> [ wall wall_highlight_right |]
+late [wall_highlight_top wall_highlight_left ] -> [wall_highlight_top wall_highlight_left  wall_highlight_topleft]
+late [wall_highlight_bottom wall_highlight_right ] -> [wall_highlight_bottom wall_highlight_right  wall_highlight_bottomright]
+
+late up [ crate1 | no crate1 ] -> [ crate1 crate1_highlight_top |]
+late down [ crate1 | no crate1 ] -> [ crate1 crate1_highlight_bottom| ]
+late left [ crate1 | no crate1 ] -> [ crate1 crate1_highlight_left |]
+late right [ crate1 | no crate1 ] -> [ crate1 crate1_highlight_right |]
+late [crate1_highlight_top crate1_highlight_left ] -> [crate1_highlight_top crate1_highlight_left  crate1_highlight_topleft]
+late [crate1_highlight_bottom crate1_highlight_right ] -> [crate1_highlight_bottom crate1_highlight_right  crate1_highlight_bottomright]
+
+late up [ crate2 | no crate2 ] -> [ crate2 crate2_highlight_top |]
+late down [ crate2 | no crate2 ] -> [ crate2 crate2_highlight_bottom| ]
+late left [ crate2 | no crate2 ] -> [ crate2 crate2_highlight_left |]
+late right [ crate2 | no crate2 ] -> [ crate2 crate2_highlight_right |]
+late [crate2_highlight_top crate2_highlight_left ] -> [crate2_highlight_top crate2_highlight_left  crate2_highlight_topleft]
+late [crate2_highlight_bottom crate2_highlight_right ] -> [crate2_highlight_bottom crate2_highlight_right  crate2_highlight_bottomright]
+
+(cosmetics end)
+
+==============
+WINCONDITIONS
+==============
+
+no crate
+
+=======
+LEVELS
+=======
+ 
+ 
+(EASY)
+
+message DŪC·OMNIA·FIGŪRĀS·FORĀS
+message I·EX·XX·AETĀTIBUS
+
+(ok)
+(easy and not bad)
+#######p##
+#..#..####
+#1....,,,o
+#1..#.,,,o
+#2#...,,,o
+#.....####
+##########
+
+message  II·EX·XX·AETĀTIBUS
+
+(ok)
+(Easyish)
+#######p##
+#.....####
+#.....####
+#1....####
+#1#22.,,,o
+#122..,,,o
+#.2...,,,o
+#.....####
+#.....####
+#.....####
+##########
+
+message  III·EX·XX·AETĀTIBUS
+
+(ok)
+(kinda nice. not sooo strategic but i liked whne i got it)
+############p##
+#..........####
+#..........####
+#..........####
+#....#.....,,,o
+#..........,,,o
+#..........,,,o
+#..........####
+#...#......####
+#...1122222####
+###############
+
+message  IV·EX·XX·AETĀTIBUS
+
+(chill)
+(decent)
+#######p##
+#.....####
+##....,,,o
+#.2.#.,,,o
+#.2...,,,o
+#..#11####
+##########
+
+message  V·EX·XX·AETĀTIBUS
+
+(ok)
+(not so hard, and was fun to figure out)
+############p##
+#..........####
+#....#.....####
+#....122222####
+#......#...,,,o
+#..........,,,o
+#..........,,,o
+#.........#####
+#..........####
+#..........####
+###############
+
+message  VI·EX·XX·AETĀTIBUS
+
+
+(easy enough, not bad)
+(also interesting shape!)
+############p##
+#..........####
+#.2..#.....,,,o
+#.22...#...,,,o
+#...11.....,,,o
+#...#1.....####
+###############
+
+message  VII·EX·XX·AETĀTIBUS
+
+
+(late easy but fun)
+#######p##
+#...#.####
+#.....####
+#...2.####
+#...2.,,,o
+#...2.,,,o
+#..#..,,,o
+#.1...####
+#.11..####
+#.....####
+##########
+
+message  VIII·EX·XX·AETĀTIBUS
+
+(decent + late-easy)
+(looks interesting/tractable, but I'm wrecked~)
+############p##
+#.....222..####
+#..1...#...,,,o
+#..1.....#.,,,o
+#...#......,,,o
+#..........####
+###############
+
+message  IX·EX·XX·AETĀTIBUS
+
+(MEDIUM)
+
+
+(ok)
+(good fun level to analyse + solve)
+############p##
+#..........####
+##.........####
+#..........####
+#..........,,,o
+#...2......,,,o
+#..#2......,,,o
+#...2......####
+#..111111..####
+#.........#####
+###############
+
+message  X·EX·XX·AETĀTIBUS
+
+(meh? take or leave?)
+(before i left 4)
+(not too hard. satisfying middle state?)
+############p##
+#....1111..####
+#.#...1..#.####
+#22........####
+#22.#......,,,o
+#.2........,,,o
+#..........,,,o
+#..........####
+#..........####
+#..........####
+###############
+
+message  XI·EX·XX·AETĀTIBUS
+
+
+(fine)
+(ok but the second time was much harder)
+(not too hard and ok? / kinda fun!) 
+#######p##
+#.22#.####
+#.22..####
+#.11..####
+#.1...,,,o
+#..#..,,,o
+#.....,,,o
+#.....####
+#.....####
+#.....####
+##########
+
+message  XII·EX·XX·AETĀTIBUS
+
+(HARD)
+
+
+
+(dunno, felt a bit hard but without personality)
+(hardish but unsatisfying to solve when i got it)
+(pleasant)
+#######p##
+#.....####
+#...1.####
+#..21.####
+#..222,,,o
+#.#..2,,,o
+#.....,,,o
+#.....####
+#.....####
+#.....####
+##########
+
+message  XIII·EX·XX·AETĀTIBUS
+
+
+(TOO HARD)
+
+(biut hard but ok)
+(no idea how to solve, but haven't tried too hard)
+############p##
+#..........####
+#.#........####
+#..........####
+#.......#..,,,o
+#........11,,,o
+#..........,,,o
+#..........####
+#2.........####
+#2....#....####
+###############
+
+message  XIV·EX·XX·AETĀTIBUS
+
+
+
+(meh, could leave out - didn't solve it too intentionally and didn't care to remember why)
+(before i left #1)
+(too hard! don't wanna think - haven't solved)
+############p##
+#..........####
+#..........####
+#..........####
+##.........,,,o
+#..........,,,o
+#......1...,,,o
+#22...111..####
+#22.#..1...####
+#22.......#####
+###############
+
+message  XV·EX·XX·AETĀTIBUS
+
+
+
+(meh ok? once i solved it I could set a memorable personal goal state ,but there's no reason to have expected that to be deducable)
+(before i left 3)
+(no patience for this)
+############p##
+##......2..####
+#...#.2222.####
+#.....2....####
+#..........,,,o
+#..........,,,o
+#..#....111,,,o
+#........11####
+#..........####
+#..........####
+###############
+
+message  XVI·EX·XX·AETĀTIBUS
+
+
+(solved, but very lukewarm about it; not much memorable, just using heuristics to power through) 
+(After i came back 1)
+(dunno)
+############p##
+#..........####
+#1#........####
+#11111.....####
+#11........,,,o
+#..........,,,o
+#...#......,,,o
+#......2...####
+#..#...2...####
+#......2...####
+###############
+
+message  XVII·EX·XX·AETĀTIBUS
+
+(Very like another level, but maybe worse/more comlpicated)
+############p##
+#..........####
+#......#...####
+#..........####
+#..........,,,o
+#..........,,,o
+##.........,,,o
+#....11112.####
+#........2#####
+#........2.####
+###############
+
+
+message  XVIII·EX·XX·AETĀTIBUS
+
+
+(decent, lots of fun manipulations if a bit aimless)
+(might be ok but brain feels sleepy)
+#######p##
+#..2..####
+##.2.#####
+#..2..####
+#.....,,,o
+#...#.,,,o
+#11#..,,,o
+#.....####
+##....####
+#.....####
+##########
+
+message  XIX·EX·XX·AETĀTIBUS
+
+(solved.fine)
+(can't be bothered)
+(looks good, too tired to solve rn)
+#######p##
+#...#.####
+#.....####
+#.....####
+#22#..,,,o
+#21...,,,o
+#21...,,,o
+#.....####
+#.....####
+#.....####
+##########
+
+message  XX·EX·XX·AETĀTIBUS
+
+
+(ok last level but a bit meh)
+(After i came back 2)
+(too complicated?)
+############p##
+#....#.....####
+#..........####
+#..........####
+#..111.#...,,,o
+#..2111....,,,o
+#.2221.....,,,o
+#22........####
+#..........####
+#..#.......####
+###############
+
+message OPTIMĒ·LŪSISTĪ!
+
+
+( (Easy, maybe too easy?) )
+( #######p## )
+( #.....#### )
+( #...11,,,o )
+( #.###1,,,o )
+( ##2#..,,,o )
+( #3....#### )
+( ########## )
+
+
+
+( (curious / p. nice even thoguh it has three pieces) )
+( #######p## )
+( ###3#.#### )
+( #.#3..,,,o )
+( #..1#.,,,o )
+( #..12.,,,o )
+( #..22.#### )
+( ########## )
+
+( (hard) )
+( #######p## )
+( #.....#### )
+( #..11##### )
+( #3.1..#### )
+( #3....,,,o )
+( #.....,,,o )
+( #2....,,,o )
+( #.#...#### )
+( #....##### )
+( #.....#### )
+( ########## )
+
+
+( #######p## )
+( #.....#### )
+( #..11##### )
+( #3.1..#### )
+( #3....,,,o )
+( #.....,,,o )
+( #2....,,,o )
+( #.#...#### )
+( #....##### )
+( #.....#### )
+( ########## )
+
+( #######p## )
+( #.....#### )
+( #.....,,,o )
+( #.....,,,o )
+( #.....,,,o )
+( #.....#### )
+( ########## )
+
+
+( #######p## )
+( #.....#### )
+( #.....#### )
+( #.....#### )
+( #.....,,,o )
+( #.....,,,o )
+( #.....,,,o )
+( #.....#### )
+( #.....#### )
+( #.....#### )
+( ########## )
+
+
+( ############p## )
+( #..........#### )
+( #..........,,,o )
+( #..........,,,o )
+( #..........,,,o )
+( #..........#### )
+( ############### )
+
+( ############p## )
+( #..........#### )
+( #..........#### )
+( #..........#### )
+( #..........,,,o )
+( #..........,,,o )
+( #..........,,,o )
+( #..........#### )
+( #..........#### )
+( #..........#### )
+( ############### )

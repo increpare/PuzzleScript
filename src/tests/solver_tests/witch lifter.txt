@@ -1,0 +1,840 @@
+title WITCH LIFTER
+author increpare
+homepage www.increpare.com
+
+noaction
+
+
+run_rules_on_level_start
+
+background_color darkbrown
+text_color #cd8eb9
+
+( debug )
+( verbose_logging )
+
+( used https://marcosdon.github.io/PuzzleScriptWithSolver/src/editor.html to help with level-design : ) 
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+Wall
+darkbrown 
+
+
+ground
+darkbrown green
+11111
+01010
+00000
+00000
+00000
+
+Player_short
+brown blue
+.000.
+11111
+11111
+01110
+11.11
+
+Player_S1
+brown blue
+0...0
+1...1
+1...1
+10001
+1.1.1
+
+
+Player_S2
+brown blue
+11111
+.111.
+.111.
+.1.1.
+1...1
+
+W1
+#b77c6e
+
+W2
+#d0a75b
+
+w3
+#cd8eb9
+
+w4
+#a19970
+
+move_up
+yellow
+.....
+..0..
+.000.
+.....
+.....
+
+player_source 
+white
+.....
+.....
+..0..
+.....
+.....
+
+direct_push
+#ff00ff
+.....
+.0...
+.....
+.....
+.....
+
+has_won
+#00ffff
+.....
+.....
+...0.
+.....
+.....
+
+
+player_on_ladder
+#f08030
+.....
+.....
+.....
+.0...
+.....
+
+
+movable_src
+#ffffff
+....0
+.....
+.....
+.....
+.....
+
+ladder 
+yellow gray
+.1.1.
+00000
+.1.1.
+00000
+.1.1.
+
+eye1
+black white
+.....
+.10..
+.11..
+.....
+.....
+
+eye2
+black white
+.....
+10...
+11.10
+...11
+.....
+
+nose
+black
+.....
+.....
+.....
+.0.0.
+.....
+
+deadeye
+black
+0.0..
+.0...
+0.0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player_short
+1 = W1
+2 = W2
+3 = W3
+4 = W4
+q = W1 and ladder
+w = W2 and ladder
+e = W3 and ladder
+r = W4 and ladder
+
+a = W1 and eye1
+s = W2 and eye1
+d = w3 and eye1
+f = w4 and eye1
+
+z = W1 and nose
+x = W2 and nose
+c = w3 and nose
+v = w4 and nose
+
+t = w4 and ladder and nose
+y = w4 and ladder and eye1
+g = w3 and ladder and nose
+h = w3 and ladder and eye1
+b = w2 and ladder and nose
+n = w2 and ladder and eye1
+
+solidtile = wall or ground
+witch = W1 or W2 or W3 or W4
+player = Player_short or Player_S1 or Player_S2
+pusher = player or witch
+obstacle = wall or witch or ground
+movable = player or witch
+collidable = player or wall or witch or ground
+player_head = player_short or player_s1
+L = ladder	
+decoration = eye1 or eye2 or nose or deadeye
+eye = eye1 or eye2
+, = ground
+
+=======
+SOUNDS
+=======
+
+witch move 44641307
+Player_S1 create 40549507
+Player_short create 40549507
+player move vertical 63010507
+player move horizontal 7670907
+endlevel 61642103
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ladder
+Player, Wall, witch, ground
+move_up
+player_source
+direct_push
+has_won
+player_on_ladder
+movable_src
+decoration
+
+======
+RULES
+======
+
+
+[ movable ] -> [ movable movable_src ]
+
+[  player ] -> again
+
+up [ up player_s2 ladder | no ladder ] -> cancel
+
+[ stationary player ] [ witch ] -> [ stationary player ] [ down witch ]
+
+(if player shrinking, apply gravity)
+
+[ down player_s2 ] [ witch ] -> [ down player_s2 ] [ down witch ]
+
+ [ horizontal player ] -> [ horizontal player player_source direct_push ]
+
+[ up Player_short no ladder ] -> [ up Player_short move_up ]
+up [ up Player_short ladder | no ladder ] -> [ up Player_short move_up ladder | ]
+
+up [ obstacle | down Player_S2 | down Player_S1  ] -> [ obstacle| Player_short |   ]
+
+
+[ stationary player no ladder ] -> [ down player ]
+
+(propagate direct_push)
+[ > pusher direct_push | pusher ] -> [ > pusher direct_push | > pusher direct_push ]
++ [ orthogonal w1 direct_push| stationary w1 ] -> [ orthogonal w1 direct_push| orthogonal w1 direct_push]
++ [ orthogonal w2 direct_push| stationary w2 ] -> [ orthogonal w2 direct_push| orthogonal w2 direct_push]
++ [ orthogonal w3 direct_push| stationary w3 ] -> [ orthogonal w3 direct_push| orthogonal w3 direct_push]
++ [ orthogonal w4 direct_push| stationary w4 ] -> [ orthogonal w4 direct_push| orthogonal W4 direct_push]
+
+
+[ stationary player ladder ] -> [stationary player ladder player_on_ladder ]
+(propagate movements - first through different objects)
+[ > pusher | pusher no player_on_ladder] -> [ > pusher | > pusher ]
+(then within objects)
++ [ orthogonal w1 | stationary w1 ] -> [ orthogonal w1 | orthogonal w1 ]
++ [ orthogonal w2 | stationary w2 ] -> [ orthogonal w2 | orthogonal w2 ]
++ [ orthogonal w3 | stationary w3 ] -> [ orthogonal w3 | orthogonal w3 ]
++ [ orthogonal w4 | stationary w4 ] -> [ orthogonal w4 | orthogonal w4 ]
+(you can propagate motions upwards between objects)
++ up [ orthogonal pusher | stationary pusher ] -> [ orthogonal pusher | orthogonal pusher ]
+
+
+[player_on_ladder]->[]
+
+(vertical pushing is hard constraint)
+up [ > movable | solidtile ] -> cancel
+
+(now back-propagate non-movements - only need to do this horizontally, or for gravity, or upwards if its a soft push)
+horizontal [ > movable | stationary obstacle] -> [ movable | stationary obstacle ]
++ down [ > movable | stationary collidable] -> [ movable | stationary collidable ]
++ down [ horizontal movable no direct_push | stationary collidable] -> [ movable | stationary collidable ]
+	(back-propagate within objects)
++ [ orthogonal w1 | stationary w1 ] -> [ stationary w1 | stationary w1 ]
++ [ orthogonal w2 | stationary w2 ] -> [ stationary w2 | stationary w2 ]
++ [ orthogonal w3 | stationary w3 ] -> [ stationary w3 | stationary w3 ]
++ [ orthogonal w4 | stationary w4 ] -> [ stationary w4 | stationary w4 ]
++ [ orthogonal player | stationary player ] -> [ stationary player | stationary player ]
+(should stationaryness propagate upwards? i think so? - IF the motion is horizontal and not a direct push)
++ up [ stationary pusher | horizontal witch no direct_push ] -> [ stationary pusher | stationary witch ]
++ down [ down pusher | stationary collidable ] -> [ stationary pusher | stationary collidable ]
+
+
+[ > w1 | stationary obstacle ] -> [ w1 | stationary obstacle ]
+
+up [ > pusher | solidtile ] -> cancel
+
+down [ moving player | moving witch ] -> cancel
+
+[ moving witch decoration ] -> [ moving witch moving decoration ]
+
+late up [  move_up Player_short ] -> cancel
+late up [  move_up | Player_short ] -> [ Player_S2 | Player_S1]
+
+late [ player_source player ] -> cancel
+
+late [ player_source ] -> []
+
+late [ direct_push ] -> [ ]
+late [ player_head ] -> [ player_head has_won ]
+late down [has_won] [ witch | solidtile ]  -> [ ] [ witch|solidtile]
+late [ has_won ] [ movable_src no movable ] -> [ ] [ movable_src ]
+late [ movable_src ] -> []
+late [has_won ] [ eye] -> [ has_won] [ deadeye]
+late [has_won] -> [] win
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+message WITCHES GET THEIR POWER FROM THE EARTH.  LIFT THEM ALL OFF THE GROUND AT ONCE TO DEFEAT THEM.
+
+(MUST-HAVE)
+#############
+#...........#
+#.....l.....#
+#.....l.....#
+#.....l.....#
+#..za.l.ss..#
+#..a.pl..x..#
+#,,,,,,,,,,,#
+
+message level 2 of 8
+
+(MUST-HAVE)
+#############
+#...........#
+#.....l.....#
+#.....l.....#
+#.....l.....#
+#..aa.l.xs..#
+#..z.pl.s...#
+#,,,,,,,,,,,#
+
+message level 3 of 8
+
+(bit trivial? eh ok)
+#################
+#....l.dd.l.....#
+#....l.ss.l.....#
+#....l.zapl.....#
+#,,,,l,,,,l,,,,,#
+#####l....l######
+#################
+
+
+message level 4 of 8
+
+(decent! MUST-HAVE)
+############
+#########..#
+#ldcdza....#
+#l,,,,..ff,#
+#l.....ll,##
+#lp..sxll###
+#l,,,,,ll###
+#llllllll###
+#,,,,,,,,###
+
+message level 5 of 8
+
+(messsy but not so hard)
+###########
+#.........#
+#.........#
+#..az.....#
+#..,..dc..#
+#,,#...,,,#
+#.........#
+#.xs......#
+#.lsl.tfl.#
+#,l,l,l,l,#
+##lpl.l.l##
+##,,,,,,,##
+
+message level 6 of 8
+
+(messy, maybe has unnecessary bits?)
+(simple / maybe okay early on?)
+(HMMM i solved this without understanding it but then I did it again and I did)
+###########
+#######..##
+######...##
+#aa......##
+#lzlxndh.##
+#l,l,l,l,##
+#lpl.l.l###
+#,,,,,,,###
+
+message level 7 of 8
+
+
+(hard but ok?)
+####################
+#..................#
+#..................#
+#...l...l......l...#
+#...l...l......l...#
+#...l...l......l...#
+#...la1alxs...fy...#
+#.p.l.z.l.s..v4l...#
+#,,,,,,,,,,,,.,,,,,#
+#############,######
+
+
+message level 8 of 8
+
+(messy but ok? - last level maybe?)
+###################
+#.................#
+#.................#
+#.................#
+#.................#
+#.................#
+#....vfza.xsdd....#
+#....f.lalsl.c....#
+#,,,,,,l,l,l,,,,,,#
+#######l.lpl#######
+#######,,,,,#######
+
+
+message WOW you lifted all the witches!
+
+(
+
+
+(early material - can be solved with intention)
+
+###########
+#.........#
+#.........#
+#.a.a.sxs.#
+#l1z1l2.2l#
+#l,,,l,,,l#
+#l...lp..l#
+#,,,,,,,,,#
+
+
+
+message level 8 of 10
+
+(this level is a bit non-obvious somehow, or arbitrarayr - not a big fan)
+
+#################
+#..#.l.#..l#...##
+#....laxssl.....#
+#....lz1a2l.p...#
+#,,,,l,,,,l,,,,,#
+#####l....l######
+#####,,,,,,######
+
+message level 9 of 10
+
+(messy but at least high-level? maybe okay last leve? fiddly though?)
+###############
+#.............#
+#..hgtylnnll..#
+#..lhlylblll..#
+#,,l,l,l,l,l,,#
+###l.l.lpl.l###
+###,,,,,,,,,###
+
+#....................#
+#....................#
+#....................#
+#..l...l.......l.....#
+#..l...l.......l.....#
+#..l111l2...444l.....#
+#..l.1pl2....4.l.....#
+###########.##########
+######################
+
+#.....................#
+#.....................#
+#.....................#
+#..l...l.......l...l..#
+#..l...l.......l...l..#
+#..l111l2......l.33l..#
+#..l.1pl2......l33.l..#
+###########.###########
+#######################
+
+#.....................#
+#.....................#
+#.....................#
+#..l...l.......l...l..#
+#..l...l.......l...l..#
+#..l111l2.....4l333l..#
+#..l.1pl2.....4l.3.l..#
+###########.###########
+#######################
+
+#.......................#
+#.......................#
+#.......................#
+#..l...l.........l...l..#
+#..l...l.........l...l..#
+#..l111l22.....44l333l..#
+#..l.1pl2.......4l.3.l..#
+############.############
+#########################
+
+
+#.......................#
+#.......................#
+#.......................#
+#..l...l.........l...l..#
+#..l...l.........l...l..#
+#..l111l22.....44l333l..#
+#..l.1pl2.......4l.3.l..#
+############.############
+#########################
+
+#................#
+#................#
+#................#
+#..l...l.........#
+#..l...l.........#
+#..l111l22....44.#
+#..l.1pl2......4.#
+############.#####
+##################
+
+#................#
+#................#
+#................#
+#..l...l.........#
+#..l...l.........#
+#..l111l22....44.#
+#..l.1pl2.....4..#
+############.#####
+##################
+
+#...................#
+#...................#
+#...................#
+#..l...l........l...#
+#..l...l........l...#
+#..l111l22....44l...#
+#..l.1pl2......4l...#
+############.########
+#####################
+
+#...................#
+#...................#
+#...................#
+#..l...l........l...#
+#..l...l........l...#
+#..l111l22...444l...#
+#..l.1pl.2....4.l...#
+############.########
+#####################
+
+########################
+#......................#
+#......................#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l111l22...44.l.33l..#
+#..l.1pl.2...4..l33.l..#
+############.###########
+########################
+
+#......................#
+#......................#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l111l22...44.l.33l..#
+#..l.1pl.2...4..l33.l..#
+###l###l####.###l###l###
+#..l...l........l...l..#
+########################
+
+#......................#
+#......................#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l111l22...44.l.33l..#
+#..l.1pl.2...4..l33.l..#
+#######l####.###########
+#######l.....###########
+########################
+
+########################
+#......................#
+#......................#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l........l...l..#
+#..l...l2211144.l.33l..#
+#..l...l.2.1.4.pl33.l..#
+############.###########
+########################
+
+#####################
+#...................#
+#...................#
+#...................#
+#..l...l........l...#
+#..l...l........l...#
+#..l111l22...444l...#
+#..l.1pl.2..44..l...#
+############.########
+#####################
+
+#####################
+#...................#
+#...................#
+#...................#
+#..l...l..........l.#
+#..l...l..........l.#
+#..l111l22...444..l.#
+#..l.1pl.2..44....l.#
+############.########
+#####################
+
+###################
+#.................#
+#.................#
+#.................#
+#..l...l........l.#
+#..l...l........l.#
+#..l111l22...44.l.#
+#..l.1pl.2..44..l.#
+############.######
+###################
+
+###################
+#.................#
+#.................#
+#.................#
+#..l...l.....l....#
+#..l...l.....l....#
+#..l111l22...r4...#
+#..l.1pl.2..4r....#
+############.######
+###################
+
+###################
+#.................#
+#.................#
+#.................#
+#..l...l......l...#
+#..l...l......l...#
+#..l...l221114r...#
+#..l.p.l.2.144l...#
+############.######
+###################
+
+###################
+#.................#
+#.................#
+#.................#
+#..l...l......l...#
+#..l...l......l...#
+#..l.22q11..44l...#
+#..lp.2l1..44.l...#
+############.######
+###################
+
+###################
+#.................#
+#.................#
+#..l...l......l...#
+#..l...l......l...#
+#..l...l......l...#
+#..l.22q11..44l...#
+#..lp.2l1..44.l...#
+############.######
+###################
+
+####################
+#..................#
+#..................#
+#...l...l......l...#
+#...l...l......l...#
+#...l...l......l...#
+#...la1alxs...fy...#
+#.p.l.z.l.s..v4l...#
+#,,,,,,,,,,,,.,,,,,#
+#############,######
+
+###########
+#.........#
+#.........#
+#.1.1.2xs.#
+#.a.a.s.2.#
+#l1z1l2.2l#
+#l...l...l#
+#l,,,l,,,l#
+#l...lp..l#
+#,,,,,,,,,#
+
+(as 
+##############
+###########..#
+##########...#
+#l33344.....##
+#l#####..11###
+#l......ll####
+#lp....2wl####
+#l######ll####
+#lllllllll####
+##############
+
+###############
+###########..##
+##########...##
+###22........##
+###l2l.l1q3e.##
+###l#l#l#l#l###
+###lpl.l.l.l###
+###############
+
+###############
+#.............#
+#.............#
+#.............#
+#......ll.....#
+#......ll.....#
+#...11.ll22...#
+#.#.1..llp2.#.#
+###############
+
+###############
+#.............#
+#.............#
+#.............#
+#.............#
+#...11...22...#
+#.#.1..p..2.#.#
+###############
+
+###############
+#.............#
+#.............#
+#.............#
+#.11..........#
+#.1.22........#
+#.#.p2......#.#
+###############
+
+###############
+#.............#
+#.............#
+#.............#
+#...111.222...#
+#...11...22...#
+#.#.1..p..2.#.#
+###############
+
+
+#########
+#..#....#
+#......##
+#.111...#
+#.111.2.#
+#.1p..22#
+#########
+
+
+#########
+#.......#
+#.......#
+#.111...#
+#.111.2.#
+#.1p..22#
+#########
+
+
+
+#########
+#..#....#
+#......##
+#111....#
+#11.....#
+#1p..22.#
+#########
+
+#########
+#..#....#
+#....22##
+#..111..#
+#..11...#
+#..1.p..#
+#########
+
+
+#########
+#..#...##
+#....22##
+#..111..#
+#..11...#
+#..1.p..#
+#########
+
+#########
+#.......#
+#.......#
+#.P11...#
+#..12.3.#
+#..1233.#
+#.......#
+#...#####
+#########
+))

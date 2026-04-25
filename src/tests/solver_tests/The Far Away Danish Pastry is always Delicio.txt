@@ -1,0 +1,189 @@
+title The Far Away Danish Pastry is always Deliciouser.
+author increpare [variant of Lexaloffle's Neko Puzzle]
+homepage www.increpare.com
+background_color darkbrown
+text_color yellow
+(
+An inadequate but illustrative demake of one of my favourite puzzle games ever, by the extremely amicable Lexaloffle, and with his permission.
+
+www.lexaloffle.com/neko.htm
+
+The game proper has a lot of magic and love in it.
+)
+
+========
+OBJECTS
+========
+
+Background .
+darkbrown
+
+Fruit F
+yellow orange red
+...0.
+0010.
+.121.
+.0100
+.0...
+
+Player P
+yellow red
+.111.
+10001
+11111
+01110
+0...0
+
+=======
+LEGEND
+=======
+
+=========
+SOUNDS
+=========
+endlevel 97301508
+startgame 97301508
+endgame 97301508
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Fruit
+
+======
+RULES
+======
+
+[ > Player | ... | Fruit ] -> [ | ... | > Player fruit ]
+
+[ player fruit ] -> [ player ]
+
+(if you're not sure what this line does, try removing it, and see what happens)
+[ > Player ] -> [ Player]
+
+==============
+WINCONDITIONS
+==============
+No fruit
+
+=======
+LEVELS
+=======
+
+
+message level 1 of 8
+
+
+........
+....F.P.
+F.F.....
+........
+F...F...
+..F.F...
+........
+
+message level 2 of 8
+
+........
+...fff..
+..f.p...
+..ff.f..
+........
+..f.f...
+....f...
+
+
+message level 3 of 8
+
+........
+.f..ffff
+........
+.f....p.
+........
+........
+.....fff
+.......f
+
+message level 4 of 8
+
+........
+f...f...
+f..ff...
+........
+...pf...
+...ff.ff
+
+message level 5 of 8
+
+........
+........
+........
+f...f.f.
+f.f.p.ff
+f...f...
+.......f
+........
+
+
+message level 6 of 8
+(ok)
+.f......
+.f.ff...
+.f.fff.f
+fpff....
+.f.ffff.
+.f.f....
+.f......
+(
+message level 7 of 9 
+
+f.f....f
+f...f...
+.f....f.
+.f..p...
+........
+ff..ff.f
+..fff..f
+..f...ff
+)
+message level 7 of 8
+(like this one )
+.ffpff.....f.
+ff.f....f....
+ff...........
+..f.........f
+.f...f......f
+.............
+f...f....f.f.
+
+message level 8 of 8
+(Acceptably hard final level)
+fff...f..f...f
+....f..f.f....
+.......p....f.
+......f..ff...
+f.....f......f
+..............
+.....fff....f.
+
+
+
+
+(
+message level 6 of 10
+(hard!)
+..ffff..
+..fp....
+........
+ff......
+.f...fff
+...ff..f
+.f....f.
+.f.f.f..
+)
+
+
+message congratulations!

@@ -1,0 +1,320 @@
+title The Red Ring of Immortality
+author increpare
+homepage www.increpare.com
+text_color red
+color_palette 8
+(
+
+1: change colour of bad zone (nasty green/red)
+)
+
+========
+OBJECTS
+========
+
+Background
+darkblue
+
+Target
+red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+black
+
+Player
+purple
+.....
+.000.
+.000.
+.000.
+.....
+
+fire
+purple
+
+move_piece
+yellow
+..0..
+..0..
+00000
+..0..
+..0..
+
+player_move_up
+yellow
+.000.
+.....
+.....
+.....
+.....
+
+
+player_move_down
+yellow
+.....
+.....
+.....
+.....
+.000.
+
+
+player_move_left
+yellow
+.....
+0....
+0....
+0....
+.....
+
+
+player_move_right
+yellow
+.....
+....0
+....0
+....0
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player and player_move_up and player_move_down and player_move_left and player_move_right
+* = move_piece
+@ = Target
+O = Target
+" = fire
+
+player_move = player_move_up or player_move_down or player_move_left or player_move_right
+
+obstacle = wall or fire
+
+=======
+SOUNDS
+=======
+
+startlevel 66124302
+endlevel 65935703
+sfx0 54808707
+sfx1 71774907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+move_piece
+Player, Wall, fire
+player_move_up
+player_move_down
+player_move_left
+player_move_right
+
+======
+RULES
+======
+
+
+up [ up player player_move_up | move_piece ] -> cancel
+down [ down player player_move_down | move_piece ] -> cancel
+left [ left player player_move_left | move_piece ] -> cancel
+right [ right player player_move_right | move_piece ] -> cancel
+
+
+
+[ up player no player_move_up ] -> cancel
+[ down player no player_move_down ] -> cancel
+[ left player no player_move_left ] -> cancel
+[ right player no player_move_right ] -> cancel
+
+[ > player | obstacle ] -> cancel
+[ > player player_move ] -> [ > player > player_move ]
+
+late up [ player_move_up | fire ] -> [ | fire ] sfx1
+late down [ player_move_down | fire ] -> [ | fire ] sfx1
+late left [ player_move_left | fire ] -> [ | fire ] sfx1
+late right [ player_move_right | fire ] -> [ | fire ] sfx1
+
+
+late up [ player no player_move_up | move_piece ] -> [ player player_move_up | ] sfx0
+late down [ player no player_move_down | move_piece ] -> [ player player_move_down | ] sfx0 
+late left [ player no player_move_left | move_piece ] -> [ player player_move_left | ] sfx0 
+late right [ player no player_move_right | move_piece ] -> [ player player_move_right | ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+some player on target
+
+=======
+LEVELS
+=======
+
+message Get to the red ring of immortality! Level 1/10
+
+(ok level 1?)
+#".p.
+.....
+...*.
+"#*."
+@*.##
+
+
+message Immortality is just there around the corner! Level 2/10
+(fine!)
+.*.*..."
+....*...
+....*p..
+....*.."
+"..*.".o
+..".."..
+..."..".
+.*......
+.....*..
+
+
+message There's no choice but to be immortal. Level 3/10
+.*p*
+#".*
+#@..
+#.."
+
+
+message The stars want to suck you away from immortality.  Level 4/10
+(not actually too hard :] )
+...*.#..
+""......
+...##...
+*..""#.#
+..*.*..*
+*..*"...
+..*..*..
+..."o.#.
+..p##..#
+
+
+message Just as there is always another red ring to strive for, immortality is similarly endless. Level 5/10
+(too confined for first level)
+(ok!)
+@.*#
+"*..
+..p.
+**."
+
+
+message Immortality, thou art red und ringéd Level 6/10
+(ok) 
+"*..p*
+."..."
+o"*..*
+..*"..
+......
+
+
+message 7/10 Immortality is as long as the day is long!
+(kinda ok?)
+##.*....
+.o..#..*
+.".#....
+....*#..
+......."
+....."..
+*..."...
+p..#*...
+.#......
+
+message The road to immortality is not just long, it never ends! Level  Level 8/10
+(also fine)
+.#...p......#.
+.....*.*#.#...
+"....##*#.."*"
+".."#..#.*.o."
+
+
+message Immortality is the end of all things. Level 9/10
+(ok!)
+#.....*.
+..*..".#
+...#*...
+....p...
+*...."o.
+...#....
+".....#"
+........
+...*.#"#
+
+
+message Is this, the very final ring? Level 10/10
+.@"#..
+#...*#
+"*.#.#
+.#.p#*
+..*...
+..."*"
+
+message The ring that can be ringed is not the immortal ring. level 11/10
+......
+......
+#..#..
+p#.o#.
+..##..
+......
+
+
+message The end that can be reached is not the immortal end. level 12/10
+...
+.p.
+...
+.o.
+...
+
+message The non-immortal end. May you reach immortality some day.
+
+
+(
+
+
+(bit trivial)
+.*...*""
+#..p....
+".##.*..
+........
+..*#....
+.#o".#..
+
+
+
+
+
+
+(a bit trivial)
+*......#
+#.*".o.#
+".......
+..*.#"..
+".p..##.
+"..*...*
+........
+...*..#.
+.#*."*..
+
+(
+
+
+(==========
+TRANSFORM
+==========
+choose 5 [ ] -> [ move_piece ]
+choose 5 [ ] -> [ fire no move_piece ]
+choose 8 [] -> [ wall no move_piece ]
+choose 1 [ ] -> [ p no move_piece ]
+choose 1 [ no player no move_piece ] -> [ target ])

@@ -1,0 +1,337 @@
+title Crates move when you move
+author increpare
+homepage www.increpare.com
+
+(
+
+tools used during creation:
+
+https://dekeyser.ch/puzzlescriptmis/
+https://marcosdon.github.io/PuzzleScriptWithSolver/editor.html
+
+)
+
+noaction
+background_color darkblue
+========
+OBJECTS
+========
+
+Background
+darkblue
+
+
+Target
+darkgreen
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+darkbrown
+
+Player
+Orange Orange Orange Orange
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+lightgreen
+00000
+0...0
+0...0
+0...0
+00000
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+obstacle = player or crate or wall
+
+=======
+SOUNDS
+=======
+
+crate move 25044707
+sfx0 25044707
+
+endlevel  84712900
+startlevel 16124700
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+======
+RULES
+======
+
+
+[ >  Player ] [ Crate ] -> [  >  Player ] [ > Crate  ]
+
+
+
+[ > crate | no obstacle ] -> [ | > crate ] sfx0
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message level 1 of 10
+
+######
+#....#
+#...##
+#..*.#
+#..o.#
+#.p..#
+#....#
+######
+
+( ###### )
+( #*#..# )
+( #.p..# )
+( #..o.# )
+( #....# )
+( ###### )
+
+message Level 2 of 10
+######
+#.*.p#
+#.#.##
+#.o..#
+#.#..#
+######
+
+message Level 3 of 10
+..###..
+.##o##.
+##...##
+#*.p.o#
+##...##
+.##*##.
+..###..
+
+
+
+message Level 4 of 10
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message Level 5 of 10
+(kinda hard)
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+message Level 6 of 10
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message Level 7 of 10
+######
+##*.##
+##@###
+##..##
+##..##
+##p.##
+##.###
+##o.##
+##..##
+######
+
+
+message Level 8 of 10
+#######
+#o...*#
+#o.p.*#
+#o...*#
+#######
+
+message Level 9 of 10
+#####.
+#P..##
+#O**.#
+##...#
+.##..#
+..##O#
+...###
+
+message Level 10 of 10
+(POSSIBLE to solve! Good final level?)
+######
+#....#
+#o.#p#
+#.#..#
+#.*.@#
+######
+
+message Congratulations!  The crates learned from your your example and were all very succesful in their subsequent careers.
+
+(
+######
+#o#@.#
+#....#
+#.##*#
+#..p@#
+######
+
+(I solved this, but not intentionally)
+#######
+#.*...#
+#**...#
+#..p..#
+#...oo#
+#...o.#
+#######
+
+(fpfft no idea. haven't solved yet)
+######
+#..*.#
+#*#.##
+#..o.#
+##...#
+#..#.#
+#op#.#
+######
+
+(unsolved. too hard?)
+######
+#....#
+#....#
+#....#
+#....#
+######
+
+
+######
+#....#
+#....#
+#....#
+#....#
+######
+
+
+######
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+######
+
+
+####
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+####
+
+
+######
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+######
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#######
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#######
+
+#########
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#########
+
+#########
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#########
+
+)
+(
+TRANSFORMATION
+
+
+choose 3 [ ] -> [ wall ]
+choose 1 [ no obstacle ] -> [ player ]
+choose 2 [ no obstacle ] -> [ crate ]
+choose 2 [ no wall no player no target ] -> [ target ]
+
+)

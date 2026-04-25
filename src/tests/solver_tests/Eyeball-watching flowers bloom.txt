@@ -1,0 +1,413 @@
+title Eyeball-watching flowers bloom
+author increpare
+homepage www.increpare.com
+
+
+(thanks to bluemelon555 for title suggestions)
+
+background_color #094118
+text_color  #f7e26b
+run_rules_on_level_start
+
+verbose_logging
+
+(debug)
+
+========
+OBJECTS
+========
+
+Background
+#0f5321 #44891a
+00000
+01000
+01010
+00010
+00000
+
+
+
+
+Wall_inactivated
+transparent #44891a #a3ce27
+01110
+12121
+11211
+12121
+01110
+
+
+
+wall_activated =
+transparent #e06f8b #a3ce27 #f7e26b
+01120
+21111
+11311
+11112
+02110
+
+wall_burnt
+transparent #430006 #000000
+01210
+22222
+21221
+12222
+02210
+
+
+player_up
+white yellow red black
+10201
+02320
+00200
+00000
+.000.
+
+
+player_down
+white yellow red black
+.000.
+00000
+00200
+02320
+10201
+
+
+player_left
+white yellow red black
+1000.
+02000
+23200
+02000
+1000.
+
+
+player_right
+white yellow red black
+.0001
+00020
+00232
+00020
+.0001
+
+
+Crate
+transparent #9d9d9d #bfbfbf #737373
+00120
+01112
+31112
+33111
+03330
+
+
+strahlen
+yellow
+
+strahlen_top
+yellow
+00000
+00000
+.....
+.....
+.....
+
+strahlen_bottom
+yellow
+.....
+.....
+.....
+00000
+00000
+
+strahlen_left
+yellow
+00...
+00...
+00...
+00...
+00...
+
+strahlen_right
+yellow
+...00
+...00
+...00
+...00
+...00
+
+
+burnout
+#0f5321 #430006 #000000
+01210
+22222
+21221
+12222
+02210
+
+
+=======
+LEGEND
+=======
+
+player = player_up or player_down or player_left or player_right
+wall = Wall_inactivated or wall_activated
+. = Background
+# = Wall_inactivated
+strahlen_all = strahlen or strahlen_top or strahlen_bottom or strahlen_left or strahlen_right
+
+P = Player_up
+q = player_down
+r = player_left
+s = player_right
+
+* = crate
+o = background
+@ = background
+
+obstacle = crate or wall or player
+strahlen_or_player = strahlen or player
+=======
+SOUNDS
+=======
+
+Crate MOVE 21697107
+endlevel 23649709
+startlevel 40644309
+startgame 98216309
+
+sfx0 94788500 (Blume)
+(58036508)
+sfx1 78837102 (burn)
+
+sfx2 94214904 (deadend)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+strahlen_all
+Player, Wall, Crate, burnout, wall_burnt
+
+======
+RULES
+======
+
+up [ > player_up | wall_activated ] -> cancel 
+down [ > Player_down | wall_activated ] -> cancel 
+left [ > Player_left | wall_activated ] -> cancel 
+right [ > Player_right | wall_activated ] -> cancel 
+
+[wall_burnt] -> cancel sfx2
+
+up [ > Player | Crate | no obstacle ] -> [  |  Player_up | Crate  ]
+down [ > Player | Crate | no obstacle ] -> [  |  Player_down | Crate  ]
+left [ > Player | Crate | no obstacle ] -> [  |  Player_left | Crate  ]
+right [ > Player | Crate | no obstacle ] -> [  |  Player_right | Crate  ]
+
+up [ > Player |  no obstacle ] -> [ | Player_up ]
+down [ > Player |  no obstacle ] -> [ | Player_down ]
+left [ > Player |  no obstacle ] -> [ | player_left ]
+right [ > Player |  no obstacle ] -> [ | player_right ]
+
+[ up player ] -> [ player_up ]
+[ down player ] -> [ player_down ]
+[ left player ] -> [ player_left ]
+[ right player ] -> [ player_right ]
+
+[strahlen_all]->[]
+up [ player_up | no obstacle ] -> [ player_up | strahlen ]
+down [ player_down | no obstacle ] -> [ player_down | strahlen ]
+left [ player_left | no obstacle ] -> [ player_left | strahlen ]
+right [ player_right | no obstacle ] -> [ player_right | strahlen ]
+
+[ strahlen_or_player | strahlen | no strahlen no obstacle  ]-> [ strahlen_or_player | strahlen | strahlen ]
+
+[ strahlen_or_player | strahlen | wall_activated ] -> [ strahlen_or_player | strahlen | wall_burnt ] sfx1
+[ strahlen_or_player | strahlen | Wall_inactivated ] -> [ strahlen_or_player | strahlen | wall_activated ] sfx0
+
+
+up [ strahlen_or_player | strahlen | no strahlen ]-> [ strahlen_or_player | strahlen | strahlen_bottom ]
+down [ strahlen_or_player | strahlen | no strahlen ]-> [ strahlen_or_player | strahlen | strahlen_top ]
+left [ strahlen_or_player | strahlen | no strahlen ]-> [ strahlen_or_player | strahlen | strahlen_right ]
+right [ strahlen_or_player | strahlen | no strahlen ]-> [ strahlen_or_player | strahlen | strahlen_left ]
+
+
+up [ player_up | no strahlen ]-> [ player_up| strahlen_bottom ]
+down [ player_down | no strahlen ]-> [ player_down | strahlen_top]
+left [ player_left | no strahlen ]-> [ player_left | strahlen_right ]
+right [ player_right |  no strahlen ]-> [ player_right | strahlen_left ]
+
+up [ player_up | Wall_activated ] -> [ player_up | wall_burnt ] sfx1
+up [ player_up | Wall_inactivated ] -> [ player_up | wall_activated ] sfx0
+down [ player_down | Wall_activated ] -> [ player_down | wall_burnt ] sfx1
+down [ player_down | Wall_inactivated ] -> [ player_down | wall_activated ] sfx0
+left [ player_left | Wall_activated ] -> [ player_left | wall_burnt ] sfx1
+left [ player_left | Wall_inactivated ] -> [ player_left | wall_activated ] sfx0
+right [ player_right | Wall_activated ] -> [ player_right | wall_burnt ] sfx1
+right [ player_right | Wall_inactivated ] -> [ player_right | wall_activated ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+no Wall_inactivated
+
+=======
+LEVELS
+=======
+
+message level 1 of 3
+
+.###.
+#...#
+#.q.#
+.###.
+
+message level 2 of 3
+
+
+(ok!)
+.####.
+#....#
+#.*..#
+#.p*.#
+#....#
+.####.
+
+message level 3 of 3
+
+(decent)
+.#####.
+#.....#
+#..*..#
+#.*p*.#
+#..*..#
+#.....#
+.#####.
+
+message Congratulations.  The gardens look amazing.
+
+
+(
+(meh)
+.###.
+#...#
+#...#
+#.q.#
+.###.
+)
+(
+(meh)
+.####.
+#....#
+#.p..#
+#..*.#
+#....#
+.####.
+
+.#####.
+#.....#
+#.....#
+#..#..#
+#...*.#
+#...p.#
+.#####.
+
+(maybe ok? kinda cheated to find the solution but i could've figured it out!)
+.#####.
+#.....#
+#.....#
+#.....#
+#.....#
+#....q#
+.####=.
+
+(i could not solve this and I think that it's bad)
+.###.
+#...#
+#...#
+#...#
+#...#
+#.*.#
+#.p.#
+.###.
+
+
+.####.
+#....#
+#....#
+#....#
+#....#
+.####.
+
+.#####.
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+.#####.
+
+.#####.
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+.#####.
+
+.#####.
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+.#####.
+
+.######.
+#......#
+#......#
+#......#
+#......#
+#......#
+#......#
+#......#
+.######.
+)
+
+(Transform
+
+[player]->[]
+[crate]->[]
+
+
+choose 2 [ ] -> [ wall_inactivated ]
+
+choose 1 [ no obstacle ] -> [  player_up ]
++ [ no obstacle ] -> [ player_down ]
++ [ no obstacle ] -> [ player_left ] 
++ [ no obstacle ] -> [ player_right ]
+
+choose 1 [ no obstacle ] -> [ crate ]
+
+[strahlen]->[]
+up [ player_up | no obstacle ] -> [ player_up | strahlen ]
+down [ player_down | no obstacle ] -> [ player_down | strahlen ]
+left [ player_left | no obstacle ] -> [ player_left | strahlen ]
+right [ player_right | no obstacle ] -> [ player_right | strahlen ]
+
+[ strahlen_or_player | strahlen | no strahlen no obstacle  ]-> [ strahlen_or_player | strahlen | strahlen ]
+[ strahlen_or_player | strahlen | Wall_inactivated ] -> [ strahlen_or_player | strahlen | wall_activated ]
+
+up [ player_up | Wall_activated ] -> cancel
+up [ player_up | Wall_inactivated ] -> [ player_up | wall_activated ]
+down [ player_down | Wall_inactivated ] -> [ player_down | wall_activated ]
+left [ player_left | Wall_inactivated ] -> [ player_left | wall_activated ]
+right [ player_right | Wall_inactivated ] -> [ player_right | wall_activated ]
+
+
+)

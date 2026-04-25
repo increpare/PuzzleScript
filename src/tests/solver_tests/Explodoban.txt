@@ -1,0 +1,409 @@
+title Explodoban
+author increpare
+homepage www.increpare.com
+
+background_color #063421
+
+text_color #c978e7
+
+========
+OBJECTS
+========
+
+Background
+#145339
+
+
+Target
+#063421
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#323c39 #807e7c #a9a8a7 #595652 #232d2a
+01112
+03331
+03331
+03331
+44444
+
+
+
+Player
+#1f1f1f #000000 #d6cd1c #414141 #8a1b1b
+.000.
+12320
+11000
+.111.
+44.44
+
+
+Crate
+#984fb3 #ae60cb #c978e7 #76428a #5f2d72
+01112
+3...1
+3...1
+3...1
+44440
+
+explode_up
+#fbf236 #ac3232
+.....
+..0..
+.000.
+01110
+00110
+
+explode_down
+#fbf236 #ac3232 
+01100
+01110
+.000.
+..0..
+.....
+
+explode_left
+#fbf236 #ac3232
+...00
+..011
+.0011
+..010
+...00
+
+explode_right
+#fbf236  #ac3232
+00...
+010..
+1100.
+110..
+00...
+
+deadzone ,
+red
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+=======
+LEGEND
+=======
+
+explode = explode_up or explode_down or explode_left or explode_right
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 33465106
+endlevel 83744503
+startgame 92244503
+player action 18708701
+player move 254507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+deadzone
+Target
+Player, Wall, Crate
+explode
+======
+RULES
+======
+
+[ explode]->[no explode]
+[ action Player | Crate ] -> [ action  Player | > Crate ]
+
+up [ action Player | no wall ] -> [ action  Player |  explode_up ]
+down [ action Player | no wall ] -> [ action  Player |  explode_down  ]
+left [ action Player | no wall ] -> [ action  Player |  explode_left ]
+right [ action Player | no wall ] -> [ action  Player |  explode_right ]
+
+late [ explode Crate ] -> [crate]
+late [explode] -> again
+
+late [crate deadzone]->cancel
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+
+=======
+LEVELS
+=======
+
+message Level 1 of 7  [you can press x to explode]
+(kinda cute)
+########
+#.o.@..#
+#.o*.*.#
+#....p.#
+#####..#
+########
+
+message Level 2 of 7  
+(kinda bad but i kinda like it)
+########
+#o@.o..#
+#.*..*.#
+#p.#...#
+########
+
+message Level 3 of 7 
+(pretty nice to figure out, and not hard)
+########
+#...oo.#
+#o**..p#
+#..*...#
+#####..#
+########
+
+message Level 4 of 7 
+#########
+#.......#
+#...@...#
+#.o.....#
+#.*..@..#
+#.p@....#
+#.......#
+#########
+
+message Level 5 of 7 
+(tricky but fine)
+########
+#...@.p#
+#.o*o..#
+#.*....#
+#####..#
+########
+
+
+
+message Level 6 of 7
+(middle-hard!)
+#########
+###..####
+#.....*p#
+#.#o*.o.#
+#....#..#
+#########
+
+message Level 7 of 7 
+(kinda tricky but also good!)
+########
+##..p..#
+##.*@*.#
+#o....##
+##....##
+###.#o##
+########
+
+message Congratulations!
+
+
+(
+
+(neither good nor trivial:)
+########
+#,.@..,#
+#,...@,#
+#,@...,#
+#,p*o.,#
+#,@...,#
+#,...@,#
+#,.@..,#
+########
+
+(meh)
+##########
+###......#
+#.....@..#
+#...@..*.#
+#.o....o.#
+#.*..@...#
+#.p@.....#
+#......###
+##########
+
+
+
+########
+#......#
+#...@..#
+#.o....#
+#.*..@.#
+#.p@...#
+#......#
+########
+
+
+####.####
+####@####
+##.....##
+##.....##
+##.....##
+.@.*o.*o.
+##.....##.
+##.....##
+##.p...##
+####@####
+####.####
+
+####.####
+####@####
+##.....##
+##.....##
+.@.*o*.o.
+##.....##
+##.p...##
+####@####
+####.####
+
+####.####
+####o####
+##.....##
+##..*..##
+.o.*@*.o.
+##..*..##
+##p....##
+####o####
+####.####
+)
+(
+message level 1 of 10
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+
+(
+==========
+TRANSFORM
+==========
+[player]->[]
+[target]->[]
+[crate]->[]
+
+choose 1 [ no wall] ->[ player]
+choose 2 [ no wall no player]->[target]
+choose 2 [no wall no player] ->[crate]
+
+
+))

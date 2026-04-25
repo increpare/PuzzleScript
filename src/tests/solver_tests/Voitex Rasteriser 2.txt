@@ -1,0 +1,314 @@
+title Voitex Rasteriser 2 [2nd Demake of Vertex Dispenser Puzzle Mode]
+author increpare
+homepage www.increpare.com
+
+(inspired by https://store.steampowered.com/app/102400/Vertex_Dispenser/ )
+
+run_rules_on_level_start
+
+background_color darkblue
+text_color red
+
+
+========
+OBJECTS
+========
+
+Background
+black
+
+
+Player
+gray
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+fixed
+darkgreen
+
+
+1
+purple
+.....
+.....
+..0..
+.....
+.....
+
+
+
+2
+red
+.....
+..0..
+.....
+.....
+.....
+
+
+3
+pink
+.....
+...0.
+.....
+.....
+.....
+
+
+4
+yellow
+.....
+.....
+...0.
+.....
+.....
+
+
+5
+lightgreen
+.....
+.....
+.....
+...0.
+.....
+
+
+6
+green
+.....
+.....
+.....
+..0..
+.....
+
+
+7
+blue
+.....
+.....
+.....
+.0...
+.....
+
+
+8
+lightblue
+.....
+.....
+.0...
+.....
+.....
+
+
+9
+white
+.....
+.0...
+.....
+.....
+.....
+
+temp
+red
+
+
+
+
+p1
+purple black darkgray
+.....
+.222.
+.202.
+.222.
+.....
+
+
+
+p2
+red black darkgray
+.....
+.202.
+.212.
+.222.
+.....
+
+
+p3
+pink black darkgray
+.....
+.210.
+.212.
+.222.
+.....
+
+
+p4
+yellow black darkgray
+.....
+.211.
+.210.
+.222.
+.....
+
+
+p5
+lightgreen black darkgray
+.....
+.211.
+.211.
+.220.
+.....
+
+
+p6
+green black darkgray
+.....
+.211.
+.211.
+.201.
+.....
+
+
+p7
+blue black darkgray
+.....
+.211.
+.211.
+.011.
+.....
+
+p8
+lightblue black darkgray
+.....
+.211.
+.011.
+.111.
+.....
+
+
+p9
+white black darkgray
+.....
+.011.
+.111.
+.111.
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player 
+
+
+
+num = 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9
+placed = p1 or p2 or p3 or p4 or p5 or p6 or p7 or p8 or p9
+
+
+=======
+SOUNDS
+=======
+ 
+
+sfx1 55932906
+sfx2 4305306
+sfx3 6823106
+sfx4 83937501
+sfx5 65854702
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+1
+2
+3
+4
+5
+6
+7
+8
+9
+temp
+fixed
+p1
+p2
+p3
+p4
+p5
+p6
+p7
+p8
+p9
+Player
+
+======
+RULES
+======
+
+[action player no 1 no fixed ] -> [ player action 1 p1 fixed temp]
+[action player no 2 no fixed ] -> [ player action 2 p2 fixed temp]
+[action player no 3 no fixed ] -> [ player action 3 p3 fixed temp]
+[action player no 4 no fixed ] -> [ player action 4 p4 fixed temp]
+[action player no 5 no fixed ] -> [ player action 5 p5 fixed temp]
+[action player no 6 no fixed ] -> [ player action 6 p6 fixed temp]
+[action player no 7 no fixed ] -> [ player action 7 p7 fixed temp]
+[action player no 8 no fixed ] -> [ player action 8 p8 fixed temp]
+[action player no 9 no fixed ] -> [ player action 9 p9 fixed temp]
+
+
+right [ action num temp | ] -> [ action num temp | > num ]
++ [ perpendicular num | ] -> [ perpendicular num | num ]
+[orthogonal num]->[num]
+
+
+left [ action num temp | ] -> [ action num temp | > num ]
++ [ perpendicular num | ] -> [ perpendicular num | num ]
+[orthogonal num]->[num]
+
+
+up [ action num temp | ] -> [ action num temp | > num ]
++ [ perpendicular num | ] -> [ perpendicular num | num ]
+[orthogonal num]->[num]
+
+
+down [ action num temp | ] -> [ action num temp | > num ]
++ [ perpendicular num | ] -> [ perpendicular num | num ]
+[orthogonal num]->[num]
+
+[temp]->[]
+
+==============
+WINCONDITIONS
+==============
+some 9
+
+=======
+LEVELS
+=======
+
+message CAN YOU COUNT THE NINE COLUORS OF THE RAINBOW?
+
+...........
+...........
+...........
+...........
+...........
+.....p.....
+...........
+...........
+...........
+...........
+...........
+
+message TOP RAINBOW COLUOR COUNTING!  If you liked this, check out the real Vertex Dispenser! :)

@@ -1,0 +1,182 @@
+title Fickle Fred
+author increpare
+homepage www.increpare.com
+
+(new mechanic riffing off David Skinner's microban levels
+www.sneezingtiger.com/sokoban/levels/microbanText.html
+used marcosdon's solver to play around/tweak levels
+https://marcosdon.github.io/PuzzleScriptWithSolver/src/editor.html
+)
+
+require_player_movement
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+PlayerPush
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+PlayerPull
+yellow pink lightblue purple
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = PlayerPush
+* = Crate
+@ = Crate and Target
+O = Target
+
+player = PlayerPush or PlayerPull
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+
+random [ > PlayerPush | Crate ] -> [ > PlayerPull | > Crate ] 
++ [ < PlayerPull | crate ] -> [ < PlayerPush | < Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+message 1/5 Fickle Fred doesn't know what he wants!
+
+(fine)
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+message 2/5 You blow hot and cold, Fred!
+
+(fine)
+..#####...
+###...####
+#.....*..#
+#.#..#.p.#
+#.oo.#*..#
+##########
+
+message 3/5 Are you playing hard-to-get Fred?
+(okay!)
+######.######
+#....###....#
+#.**..p..oo.#
+#.*.#.....o.#
+#...#####...#
+#####...#####
+
+message 4/5 Fred giveth and Fred taketh away
+(actually not so bad - abit interesting to try not mess it up)
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message 5/5 Fred, are you god?
+(tricky!)
+#####.
+#O..##
+#P**.#
+##.*.#
+.##O.#
+..##O#
+...###
+
+message YES I AM GOD AND MY NAME IS FRED.
+
+(easy, ok?)
+( ######## )
+( #......# )
+( #.O@@*P# )
+( #......# )
+( #####..# )
+( ....#### )
+
+( (too easy) )
+( ###### )
+( #....# )
+( #.#P.# )
+( #.*@.# )
+( #.O@.# )
+( #....# )
+( ###### )

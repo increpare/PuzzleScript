@@ -1,0 +1,260 @@
+title BUTTEATER
+author increpare
+homepage www.increpare.com
+
+require_player_movement
+
+debug
+verbose_logging
+color_palette 2
+========
+OBJECTS
+========
+
+Background
+black
+
+
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+
+tail
+green darkgreen
+.000.
+01110
+01110
+01110
+.000.
+
+
+head
+green darkgreen yellow
+.000.
+01110
+02120
+01110
+.000.
+
+crate
+orange red
+..0..
+.010.
+01110
+.010.
+..0..
+
+
+
+c_up
+darkgreen
+..0..
+.....
+.....
+.....
+.....
+
+c_down
+darkgreen
+.....
+.....
+.....
+.....
+..0..
+
+c_left
+darkgreen
+.....
+.....
+0....
+.....
+.....
+
+c_right
+darkgreen
+.....
+.....
+....0
+.....
+.....
+
+
+grow_token
+pink
+.....
+..0..
+.....
+.....
+.....
+
+propagation_token
+lightgreen
+.....
+...0.
+.....
+.....
+.....
+
+tailend
+black
+.....
+.....
+..0..
+.....
+.....
+
+noeat_token
+lightblue
+.....
+.0...
+.....
+.....
+.....
+
+digestion
+brown darkbrown
+.....
+..0..
+.1.1.
+..0..
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = head and c_left
+
+player = head
+
+1 = tail and c_right and tailend
+2 = tail and c_left and c_right
+
+c = c_up or c_down or c_left or c_right
+
+body = player or tail
+m = tail
+
+* = crate
+
+obstacle = body
+
+=======
+SOUNDS
+=======
+ 
+
+sfx1 55932906
+sfx2 4305306
+sfx3 6823106
+sfx4 83937501
+sfx5 65854702
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall, head, tail, crate
+c_up
+c_down
+c_left
+c_right
+tailend
+grow_token
+propagation_token
+noeat_token
+digestion
+
+======
+RULES
+======
+
+[ > player | crate ] -> [ > player | > crate ]
+[ > crate | crate ] -> [ > crate | > crate ]
+
+[ > crate | tail no tailend ] -> cancel
+[ > player | body no tailend ] -> cancel
+[ > player | wall ] -> cancel
+[ > crate | wall ] -> cancel
+
+[ > head | ... | no crate | ...| tail tailend ] -> [ > head noeat_token | ... | | ... | tail tailend ]
+
+up [ > head no noeat_token | > crate | ...  | tail tailend ] -> [ tail c_up | c_down head digestion | ...  | tail tailend ]
+down [ > head no noeat_token | > crate| ...  | tail tailend ] -> [ tail c_down | c_up head digestion | ...  | tail tailend ]
+left [ > head no noeat_token | > crate | ... | tail tailend ] -> [ tail c_left | c_right head digestion | ...  | tail tailend ]
+right [ > head no noeat_token | > crate | ...  | tail tailend ] -> [ tail c_right | c_left head digestion | ...  | tail tailend ]
+
+[ noeat_token ] -> [ ]
+
+(let player move into own tail somehow lol)
+[> head | tail no tailend] -> cancel
+(you can't move into your tail while growing)
+
+[ > player | > crate | no body no crate ] -> [ > player |  | crate ]
+
+[ > crate  | no body no crate ] -> [  | crate ]
+[ > player | > crate | body ] -> [ > player |  | body ]
+
+(snakey movement!)
+
+( [ tailend ] -> [ tailend propagation_token ]  )
+
+(delete the tail end piece, and the connector to it)
+
+random up [moving player] [ tail tailend c_up | c_down ] -> [moving player] [ | tailend ]
++ down [moving player] [ tail tailend c_down | c_up ] -> [moving player] [ | tailend ]
++ left [moving player] [ tail tailend c_left | c_right ] -> [moving player] [ | tailend ]
++ right [moving player] [ tail tailend c_right | c_left ] -> [moving player] [ | tailend ]
+
+up [ > player | ] -> [ tail c_up | c_down player ]
+down [ > player | ] -> [ tail c_down | c_up player ]
+left [ > player | ] -> [ tail c_left | c_right player ]
+right [ > player | ] -> [ tail c_right | c_left player ]
+
+late [ digestion no body ] -> [ wall ]
+
+==============
+WINCONDITIONS
+==============
+
+no crate
+
+=======
+LEVELS
+=======
+
+Message SNAKE EATS WITH BUTT Level 1 of 2
+
+#########
+#.......#
+#.*.*.*.#
+#.......#
+#.1222p.#
+#.......#
+#########
+
+Message OM NOM NOM 2/2
+
+#########
+#.......#
+#.*.*.*.#
+#..*.*..#
+#.*.*.*.#
+#..*.*..#
+#.*.*.*.#
+#.1222p.#
+#########
+
+message Yikesssss!

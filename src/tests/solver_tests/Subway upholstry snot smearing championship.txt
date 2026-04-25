@@ -1,0 +1,289 @@
+title Subway upholstry snot smearing championship
+author increpare
+homepage www.increpare.com
+color_palette 1
+
+run_rules_on_level_start
+
+background_color #131316
+text_color #6abe30
+========
+OBJECTS
+========
+
+Background
+#5b6ee1 #639bff #ac3232
+00011
+10101
+12101
+20201
+10200
+
+tilled 
+#6abe30 #5b6ee1
+01110
+01001
+10101
+10110
+01011
+
+
+
+Wall
+#e7dcc0 #b478cb #e1ae5b #d77bba #76428a
+00000
+01220
+01330
+04330
+00000
+
+wallalt
+#e7dcc0 #e1ae5b #e15b5b #ab7722
+00000
+01120
+01120
+03330
+00000
+
+
+
+wallt
+#fdefd4 #e7dcc0 #42b7f0 #65dadf #54cf6f
+00000
+11111
+12231
+14231
+11111
+
+wallb
+#e7dcc0 #e96ff2 #780d80 #e442f0 #c2bb91
+00000
+01120
+02330
+00000
+44444
+
+walltb
+#fdefd4 #e7dcc0 #6c1710 #ab1d11 #c2bb91
+00000
+11111
+12331
+11111
+44444
+
+walltbalt
+#fdefd4 #e7dcc0 #fbf236 #fba736 #c2bb91
+00000
+11111
+12231
+11111
+44444
+
+
+Player
+#5b6ee1 #524b24 #eec39a #3f3f74 #000000
+01110
+02220
+23332
+03030
+04040
+
+
+Crate
+transparent #99e550 #6abe30
+01110
+12221
+12221
+12221
+01110
+
+void ,
+#131316
+
+
+=======
+LEGEND
+=======
+
+
+. = Background
+# = Wall
+1 = wallt
+2 = wallb
+3 = walltb
+
+
+P = Player
+* = Crate and tilled
+@ = Crate  and tilled
+O = Background
+
+
+walls = Wall or wallt or wallb or walltb  or wallalt or walltbalt
+
+walls_or_void = walls or void
+
+goodstate = walls_or_void or tilled
+=======
+SOUNDS
+=======
+
+Crate MOVE 41474107
+sfx0 3420907 (new snot)
+startlevel 24347308
+endlevel 56675308
+
+================
+COLLISIONLAYERS
+================
+
+Background
+tilled
+Player, walls_or_void, Crate
+
+======
+RULES
+======
+
+down [ no walls | walls | walls ] -> [ | wallt | walls ]
+
+down [ walls | walls | no walls ] -> [ walls | wallb | ]
+
+down [ no walls | walls | no walls ] -> [ | walltb | ]
+
+down [ no wallalt | wall | wall | no wallalt ] -> [ | wall | wallalt | ] 
+
+right [ no walltbalt | walltb | walltb | no walltbalt ] -> [ | walltbalt  | walltb | ] 
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ <  Player | Crate ] -> [  <  Player | < Crate  ]
+
+late [ crate no tilled ] -> [ crate tilled ] sfx0
+
+==============
+WINCONDITIONS
+==============
+
+all Background on goodstate
+
+=======
+LEVELS
+=======
+
+message Go on, smear it ALL around!
+
+message  Carriage 1 of 7
+(level 1)
+133331
+#p.*.#
+#*.1.#
+#..2.#
+#...*#
+233332
+
+
+message Carriage 2 of 7
+(level2)
+133331
+#....#
+#p.**#
+#.1**#
+232332
+
+message Carriage 3 of 7
+(slightly wholesome)
+13331,
+#...21
+#p...#
+21***#
+,21**#
+,,21.#
+,,,232
+
+message Carriage 4 of 7
+(I like this level! has personality)
+,,1331,,,
+132.*2331
+#.*.p...#
+#*3*.1*.#
+#.*..#..#
+233332332
+
+(
+(not actually taht scary, just need to use head a tiny amount)
+133331
+#.***#
+#*3**#
+#****#
+#....#
+#..p.#
+233332
+)
+
+message Carriage 5 of 7
+(pretty nice)
+133331
+#....#
+#.3p.#
+#..**#
+#****#
+#....#
+233332
+
+
+message Carriage 6 of 7
+(ok crate management?)
+133331,13331
+#*.*.232*.*#
+#p.....**3*#
+#...1....*.#
+#*.*#3333332
+23332,,,,,,,
+
+message Carriage 7 of 7
+(Decisions need to be made. ok conceptually?)
+,1313131,
+12.2*2.21
+#.*...*.#
+#3.3.3.3#
+#...*...#
+#3.3.3.3#
+#.*.p.*.#
+21.1.1.12
+,2323232,
+
+message All done!  Very satisfying! 
+
+(
+
+######
+#....#
+#.*.*#
+#p#.*#
+######
+
+
+######
+#p.*.#
+#*.#.#
+#..#.#
+#...*#
+######
+
+######
+#*.###
+#..#.#
+#p*#*#
+#...*#
+######)
+
+(
+
+TRANSFORM
+
+[ player ] -> []
+[ crate ] -> []
+
+choose 4 [ ] - > [ wall ]
+choose 1 [ no wall | no wall ] -> [ player | crate ]
+
+)

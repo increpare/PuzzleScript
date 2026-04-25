@@ -1,0 +1,191 @@
+title Crate Swarp
+author incurpareh
+homepage www.increpare.com
+
+color_palette 6
+
+text_color pink
+
+(levels generated with https://dekeyser.ch/puzzlescriptmis/ )
+
+========
+OBJECTS
+========
+
+Background
+purple
+
+Target1
+darkred red
+.....
+.101.
+.101.
+.101.
+.....
+
+Crate1
+red lightred
+10101
+1...1
+1...1
+1...1
+10101
+
+
+Target2
+darkblue blue
+.....
+.111.
+.000.
+.111.
+.....
+
+Crate2
+blue lightblue
+11111
+0...0
+1...1
+0...0
+11111
+
+
+Wall
+BROWN DARKBROWN BROWN
+10101
+02020
+10101
+02020
+10101
+
+Player
+Black Orange White Blue
+00000
+01010
+00000
+0...0
+0...0
+
+
+
+=======
+LEGEND
+=======
+
+crate = crate1 or Crate2
+
+. = Background
+# = Wall
+P = Player
+A = target1 and Crate2
+B = target2 and crate1
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 50239307
+player move 61796707
+endlevel 41475705
+startgame 88984906
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target1, target2
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+==============
+WINCONDITIONS
+==============
+
+all target1 on Crate1
+all target2 on crate2
+
+=======
+LEVELS
+=======
+
+message Lervel wan of ate
+#########
+###..####
+###..a..#
+#.b.....#
+#..p.#..#
+#########
+
+message Lervel tur of ate
+######
+#..###
+#....#
+#.abp#
+##...#
+######
+
+
+message Lervel twei of ate
+#########
+###..####
+#..a....#
+#....b..#
+###p.####
+#########
+
+
+message Lervel faw of ate
+#########
+###..####
+#...a.b.#
+#.......#
+#..p.####
+#########
+
+message Lervel fif of ate
+(Fascinating and good)
+########
+###..###
+#.a..b.#
+#..p...#
+#####..#
+########
+
+message Lervel shicks of ate
+#######
+##..###
+#...a.#
+#..b.p#
+##..###
+##..###
+#######
+
+
+
+message Lervel shebben of ate
+#######
+##..###
+##..###
+##.a..#
+#...b.#
+#..p###
+#######
+
+message Lervel ate of ate
+
+#######
+##..###
+#p...##
+#.ab.##
+##....#
+###...#
+#######
+
+
+message Crawngragurrarshuns!

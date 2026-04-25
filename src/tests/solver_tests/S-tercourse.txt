@@ -1,0 +1,703 @@
+title S-tercourse 
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+background_color #4e0606
+
+noaction
+
+verbose_logging
+(thanks to ggn2 for testing)
+
+========
+OBJECTS
+========
+
+Background
+#4e0606
+
+Wall
+#730b15 #ab2a2a #a82934
+.000.
+00000
+00000
+00000
+.000.
+
+
+wall_n
+#730b15 #a82934
+00010
+...1.
+...1.
+...1.
+.....
+
+
+wall_s
+#730b15 #a82934
+.....
+...1.
+...1.
+...1.
+00010
+
+
+wall_e
+#730b15 #a82934
+....0
+.1111
+....0
+....0
+....0
+
+
+wall_w
+#730b15 #a82934
+0....
+1111.
+0....
+0....
+0....
+
+wall_blot
+#730b15
+.000.
+00000
+00000
+00000
+.000.
+
+wall_blot_ne
+#730b15 #a82934
+.000.
+11100
+00010
+00010
+.001.
+
+wall_blot_ne_sm
+#730b15 #a82934
+.000.
+00100
+00010
+00000
+.000.
+
+Target
+transparent #e04eb2 #bf258e
+01110
+12221
+12221
+12221
+01110
+
+
+Crate
+transparent #ffffff #e3e3e3
+00220
+01112
+10220
+01000
+00110
+
+
+player_hat
+transparent #ebb176 #d9a066 #d86375 #d25165
+01110
+23432
+22221
+21111
+21111
+
+
+
+
+Player
+#d9a066 #ebb176 transparent
+01111
+01111
+01111
+01110
+20002
+
+
+
+attachment
+transparent #ebb176 #c48d55 #d9a066 #f1bd88
+01110
+23341
+23331
+22331
+02220
+
+
+connection_nw
+#d9a066
+0....
+.....
+.....
+.....
+.....
+
+
+connection_ne
+#d9a066
+....0
+.....
+.....
+.....
+.....
+
+
+connection_sw
+#d9a066
+.....
+.....
+.....
+.....
+0....
+
+
+connection_se
+#d9a066
+.....
+.....
+.....
+.....
+....0
+
+holding_domain
+#ff0000
+.....
+.....
+..0..
+.....
+.....
+
+player_start_location
+transparent
+
+=======
+LEGEND
+=======
+
+canpush = player or player_hat or attachment or Crate
+pushable = crate
+
+self = player or player_hat or attachment
+
+obstacle = player or player_hat or attachment or Crate or wall
+
+connection = connection_nw or connection_ne or connection_sw or connection_se
+connectable = player or attachment
+
+wall_connection = wall_n or wall_s or wall_e or wall_w or wall_blot or wall_blot_ne or wall_blot_ne_sm
+wall_v = wall_n or wall_s
+wall_h = wall_w or wall_e
+. = Background
+# = Wall
+q = player_hat
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+a = attachment
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 39435507
+endlevel 98112905
+startlevel 27288509
+sfx0  97643907 (rearrange)
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, player_hat, attachment, Wall, Crate
+wall_n
+wall_s
+wall_e
+wall_W
+wall_blot
+wall_blot_ne
+wall_blot_ne_sm
+holding_domain
+player_start_location
+
+connection_nw
+connection_ne
+connection_sw
+connection_se
+
+======
+RULES
+======
+
+[moving player]->[moving player player_start_location]
+
+right [ Wall no wall_e | wall no wall_w  ] -> [ wall wall_e | wall wall_w ]
+down [ Wall no wall_s | wall no wall_n  ] -> [ wall wall_s | wall wall_n ]
+[wall_v wall_h no wall_blot ] -> [ wall_v wall_h wall_blot ]
+[wall_s wall_w no wall_blot_ne ] -> [ wall_s wall_w wall_blot_ne ]
+[wall_s wall_w wall_e ] -> [ wall_s wall_w wall_e no wall_blot_ne ]
+[wall no wall_connection ] -> [ wall  wall_blot_ne_sm ]
+
+(editor stuff)
+(
+    
+	down [no player_hat | action player ] -> [ action player_hat  | action player no player_start_location ]
+    
+    
+	(Draw holding domain)
+    right [ | action player | ] -> [ holding_domain | action player holding_domain | holding_domain ]
+    down [ no holding_domain | holding_domain | no holding_domain ] -> [  | holding_domain | holding_domain ]
+	
+    right [action player] [ holding_domain | holding_domain no player | holding_domain ] -> [action player] [ attachment holding_domain | holding_domain | holding_domain attachment ]
+    
+    [holding_domain]->[]
+)
+(end editor stuff)
+
+
+[ > player ] [ stationary self ] -> [ > player ] [ > self] 
+
+[ >  canpush | pushable ] -> [  >  canpush | > pushable  ]
+
+[ > canpush | stationary wall ] -> [ canpush | Wall ]
+[ > canpush | stationary canpush ] -> [ canpush | canpush ]
+[moving player ] [stationary attachment ] -> sfx0
+
+(Draw holding domain)
+late right [ |  player | ] -> [ holding_domain |  player holding_domain | holding_domain ]
+late down [ no holding_domain | holding_domain | no holding_domain ] -> [  | holding_domain | holding_domain ]
+
+late [ attachment no holding_domain ] -> cancel
+late [holding_domain]->[]
+
+
+late down [player_hat | no player ] -> cancel
+late [ player player_start_location ]->cancel
+late [ player_start_location]->[]
+
+(cosmetics)
+late [connection]->[]
+late up [ connectable | no connectable ] -> [connectable | connection_sw connection_se ]
+late down [ connectable | no connectable ] -> [connectable | connection_nw connection_ne ]
+
+late left [ connection_sw | no connectable ] -> [ |  ]
+late left [ connection_nw | no connectable ] -> [ |  ]
+
+late right [ connection_se | no connectable ] -> [ |  ]
+late right [ connection_ne | no connectable ] -> [ |  ]
+
+late right [ | connection_nw ] -> [ connection_ne | connection_nw ]
++ late right [ connection_ne  |  ] -> [ connection_ne | connection_nw ]
+
++ late right [ | connection_sw ] -> [ connection_se | connection_sw ]
++ late  right [ connection_se  |  ] -> [ connection_se | connection_sw ]
+
++ late down [ | connection_nw ] -> [ connection_sw | connection_nw ]
++ late down [ connection_sw|  ] -> [ connection_sw | connection_nw ]
+
++ late down [ | connection_ne ] -> [ connection_se | connection_ne ]
++ late down [ connection_se|  ] -> [ connection_se | connection_ne ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+
+message Level 1 of 12 
+(chill level 2/3? not too hard)
+############
+#..........#
+#..........#
+#..........#
+#..........#
+#..o.o.....#
+##.#.#.##..#
+#.......#..#
+#..*.*.....#
+#..........#
+#...q......#
+#...p...####
+#..a.a..#...
+#.......#...
+#########...
+
+message Level 2 of 12 
+
+(not tooo hard but relies on shape manipulation)
+.#####....
+.#...#####
+.#...#...#
+##.......#
+#o....*..#
+#o...#*..#
+###..#.q.#
+..####.p.#
+.....#a.a#
+.....#####
+
+
+message Level 3 of 12 
+
+(ok possible first level)
+.###....
+.#o#....
+.#.#....
+.#.#####
+.#.....#
+.#.....#
+.#.....#
+##..*..#
+#.q.####
+#.p.#...
+#a.a#...
+#####...
+
+
+
+message Level 4 of 12 
+(super chill/not hard. don't put too early because assumes literacy, but don't leave too late)
+#######
+#ooooo#
+#.....#
+#..*..#
+#.*q*.#
+#.*p*.#
+#*a*a*#
+#.*.*.#
+#.....#
+#ooooo#
+#######
+
+
+message Level 5 of 12 
+
+(not tooo hard maybe? but p. good)
+.####..
+.#..##.
+.#..o#.
+.#...#.
+.#.@.#.
+.#.@.#.
+.#.@.#.
+##.*.##
+#.....#
+#..q..#
+#..p..#
+#.a.a.#
+#.....#
+#######
+
+
+message Level 6 of 12 
+(not hard. not too much manipulation)
+##########
+#........#
+#........#
+#..o.*o..#
+#..*.....#
+#.....*..#
+#..o*.oq.#
+#......p.#
+#.....a.a#
+##########
+
+
+message Level 7 of 12 
+
+(p. ok? medium-solvable, not hard)
+......#######
+#######.....#
+#.....#.....#
+#...........#
+#...**......#
+#.q.*.#ooo..#
+#.p...#######
+#a.a..#......
+#######......
+
+
+message Level 8 of 12 
+
+(enjoyed solving this - fun process)
+.#######.....
+.#oooq.##....
+.#...p..##...
+.#..a.a..##..
+.###..***.##.
+...##......##
+....##......#
+.....##.....#
+......##....#
+.......######
+
+message Level 9 of 12  
+(not too hard, kinda fine)
+.....####..
+.....#o.#..
+.....#o.###
+######....#
+#.q.......#
+#.p.......#
+#a.a.*.*..#
+#..#.#.####
+#......#...
+#......#...
+#......#...
+########...
+
+message Level 10 of 12 
+(slightly tricky but fun?)
+
+#########
+#.oo..q.#
+#.....p.#
+#....a.a#
+##**#####
+.#.....#.
+.#.....#.
+.#..#..#.
+.#.....#.
+.#.....#.
+.#.....#.
+.#######.
+
+message Level 11 of 12 
+(hardish, but satisfying + thinkthroughable shape manipulation)
+########
+#.#..q.#
+#....p.#
+#...a.a#
+#..#...#
+#..*@..#
+#..o@..#
+#......#
+########
+
+message Level 12 of 12 
+(for me super hard but for others possible)
+##########
+#..q.....#
+#..p.....#
+#.a.a....#
+##.*.#*..#
+.#o.o#...#
+.#########
+
+message Congratulations! You now know how to make babies!
+
+
+(
+
+....########.
+....#......#.
+....#.oo...#.
+....#.oo.q.#.
+....#....p.#.
+....#...a.a#.
+....##**####.
+.....#**#....
+######..####.
+#..........#.
+#...#......#.
+#.......#..#.
+#..........#.
+######.....#.
+.....#.....#.
+.....#.....#.
+.....#.....#.
+.....#.....#.
+.....#######.
+
+
+############
+#..........#
+#..........#
+#...**.....#
+#.q.*.#ooo.#
+#.p...######
+#a.a..#.....
+#######.....
+
+
+########
+#......#
+#.o.*o.#
+#.*....#
+#...q*.#
+#.o*po.#
+#..a.a.#
+########
+
+########
+#......#
+#.o*o..#
+#.*.*q.#
+#.o*op.#
+#...a.a#
+########
+
+
+.#####.
+.#..o#.
+.#.@.#.
+.#.@.#.
+.#.@.#.
+##.*.##
+#.....#
+#..q..#
+#..p..#
+#.a.a.#
+#.....#
+#######
+
+#######
+#.....#
+#..q..#
+#..p..#
+#.a.a.#
+#.....#
+##.*.##
+.#.@.#.
+.#.@.#.
+.#..o#.
+.#####.
+
+.....#######
+.....#.....#
+######.....#
+#o......q..#
+#.@@@*..p..#
+#......a.a.#
+######.....#
+.....#.....#
+.....#######
+
+
+##########
+#..q.....#
+#..p.....#
+#.a.a....#
+##.*.#*..#
+#.o.o#...#
+##########
+
+###########
+#...q.....#
+#...p.....#
+#..a.a....#
+#.#.*.#*..#
+#..o.o#...#
+###########
+
+
+..#####....
+###...#####
+#......*..#
+#.....#*..#
+#..#..#.q.#
+#..o.o#.p.#
+#######a.a#
+......#####
+
+########
+#......#
+#..q...#
+#..p...#
+#.a.a..#
+#......#
+#..#...#
+#..*@..#
+#..o@..#
+#......#
+########
+
+#######
+#.....#
+#..q..#
+#..p..#
+#.a.a.#
+#.....#
+#..#..#
+#..*@.#
+#..o@.#
+#.....#
+#######
+
+
+##########
+#........#
+#.#...q..#
+#.*@..p..#
+#.o@.a.a.#
+#........#
+##########
+
+
+################
+#..............#
+#........#.....#
+#..............#
+#..#......o....#
+#...*..q...o...#
+#...*..p.......#
+#.....a.a...#..#
+#..............#
+################
+
+
+#########
+#.......#
+#.......#
+#.q.....#
+#.p.....#
+#a.a....#
+#########
+
+
+###########
+#.........#
+#.........#
+#.........#
+#..q......#
+#..p......#
+#.a.a.....#
+#.........#
+###########
+
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+###########
+)
+(
+====
+TRANSFORMATION
+====
+
+
+choose 5 option 0.5 [no obstacle ]->[wall]
+choose 2 [no obstacle]->[crate]
+choose 2 [ no wall no player no player_hat no attachment ] -> [target]
+)

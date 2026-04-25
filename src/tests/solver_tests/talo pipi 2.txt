@@ -1,0 +1,1570 @@
+(demake of a mechanic in the talos principle 2)
+title Talo Pipi 2
+
+author increpare
+homepage www.increpare.com
+
+color_palette 2
+run_rules_on_level_start
+
+
+( debug )
+( verbose_logging )
+
+again_interval 0.1
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+seethrough
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkgrey
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+grey darkgrey
+10000
+11010
+10000
+11010
+11111
+
+Player
+brown white
+...0.
+...00
+0000.
+.000.
+.0.0.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Shootergun_u a
+darkred red
+.010.
+00100
+01110
+01110
+.000.
+
+Shootergun_d
+darkred red
+.000.
+01110
+01110
+00100
+.010.
+
+Shootergun_l
+darkred red
+.000.
+00110
+11110
+00110
+.000.
+
+Shootergun_r
+darkred red
+.000.
+01100
+01111
+01100
+.000.
+
+
+laser_u
+red transparent
+..1..
+..0..
+.....
+..0..
+.....
+
+laser_d
+red transparent
+.....
+..0..
+.....
+..0..
+..1..
+
+laser_l
+red transparent
+.....
+.....
+10.0.
+.....
+.....
+
+laser_r
+red transparent
+.....
+.....
+.0.01
+.....
+.....
+
+portal_centre_u
+pink transparent yellow
+11111
+11111
+11111
+11111
+00000
+
+portal_centre_d
+pink transparent yellow
+00000
+11111
+11111
+11111
+11111
+
+portal_centre_l
+pink transparent yellow
+11110
+11110
+11110
+11110
+11110
+
+portal_centre_r
+pink transparent yellow
+01111
+01111
+01111
+01111
+01111
+
+
+
+
+
+
+portal_left_u
+pink transparent orange
+00000
+02111
+01111
+01111
+00000
+
+
+portal_left_d
+pink transparent orange
+00000
+11110
+11110
+11120
+00000
+
+portal_left_l
+pink transparent orange
+01110
+01110
+01110
+02110
+00000
+
+portal_left_r
+pink transparent orange
+00000
+01120
+01110
+01110
+01110
+
+
+
+
+
+
+portal_right_u
+pink transparent lightgray
+00000
+11120
+11110
+11110
+00000
+
+portal_right_d
+pink transparent lightgray
+00000
+01111
+01111
+02111
+00000
+
+portal_right_l
+pink transparent lightgray
+00000
+02110
+01110
+01110
+01110
+
+portal_right_r
+pink transparent lightgray
+01110
+01110
+01110
+01120
+00000
+
+
+
+
+
+
+
+hole_boundary_u
+yellow
+00000
+.....
+.....
+.....
+.....
+
+hole_boundary_d
+yellow
+.....
+.....
+.....
+.....
+00000
+
+hole_boundary_l
+yellow
+0....
+0....
+0....
+0....
+0....
+
+hole_boundary_r
+yellow
+....0
+....0
+....0
+....0
+....0
+
+
+moving_portal
+purple
+.....
+.....
+..0..
+.....
+.....
+
+new_portal_centre
+lightblue
+0....
+.....
+.....
+.....
+.....
+
+exit 
+yellow
+..0..
+00000
+.000.
+.0.0.
+0...0
+
+pixel_brown 5
+brown
+
+pixel_red 6
+orange
+
+pixel_white 7
+white
+
+pixel_blue 8
+blue
+
+pixel_yellow 9
+yellow
+
+pixel_green 0
+green
+
+pixel_lightgreen -
+lightgreen
+
+pixel_black =
+black
+
+pixel_halfbrown [
+brown blue
+11110
+11100
+11000
+10000
+00000
+
+=======
+LEGEND
+=======
+
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+1 = Shootergun_u
+2 = Shootergun_d
+3 = Shootergun_l
+4 = Shootergun_r
+; = seethrough
+e = exit
+q = Shootergun_d and target
+w = shootergun_u and target
+r = shootergun_l and target
+t = shootergun_r and target
+y = wall and target
+
+shootergun = Shootergun_u or Shootergun_d or Shootergun_l or Shootergun_r
+laser = laser_u or laser_d or laser_l or laser_r
+portal_centre = portal_centre_u or portal_centre_d or portal_centre_l or portal_centre_r
+portal_left = portal_left_u or portal_left_d or portal_left_l or portal_left_r
+portal_right = portal_right_u or portal_right_d or portal_right_l or portal_right_r
+portal = portal_centre or portal_left or portal_right
+pushable = crate or Shootergun
+obstacle = wall or Shootergun
+hole_boundary = hole_boundary_u or hole_boundary_d or hole_boundary_l or hole_boundary_r
+
+cant_overlap_with_wall = player or crate or shootergun
+
+entity = shootergun or player
+
+=======
+SOUNDS
+=======
+
+Crate move 36772507
+
+shootergun destroy 49307102
+player destroy 65225502
+shootergun move 22249707
+cancel 18085304
+endlevel 49147100
+startgame 41015307
+
+================
+COLLISIONLAYERS
+================
+
+
+portal_left_u 
+portal_left_d 
+portal_left_l 
+portal_left_r
+portal_right_u 
+portal_right_d 
+portal_right_l 
+portal_right_r
+
+
+
+Background
+Target
+
+Wall, seethrough
+
+Player, Crate, shootergun
+exit
+
+
+
+laser_u
+laser_d
+laser_l
+laser_r
+hole_boundary_u
+hole_boundary_d
+hole_boundary_l
+hole_boundary_r
+
+portal_centre_u 
+portal_centre_d 
+portal_centre_l 
+portal_centre_r
+
+moving_portal
+new_portal_centre
+
+5, 6, 7, 8, 9, 0, pixel_lightgreen, pixel_black, pixel_halfbrown
+
+======
+RULES
+======
+
+[ hole_boundary ] -> [ ]
+
+[ laser ]->[]
+
+
+[ > Player | pushable ] -> [ > Player | > pushable ] 
+[ > shootergun | wall ] -> cancel
+[ > shootergun | shootergun ] -> cancel
+
+[ > player | wall ] -> cancel
+[ > pushable | wall ] -> cancel
+
+(if moving a shooter parallel to its shooting direction, don't need to recalculate portals)
+
+[ left 	Shootergun_u ] -> [ left 	Shootergun_u up moving_portal ]
+[ right Shootergun_u ] -> [	right 	Shootergun_u up moving_portal ]
+
+[ left 	Shootergun_d ] -> [ left 	Shootergun_d down moving_portal ]
+[ right Shootergun_d ] -> [ right 	Shootergun_d down moving_portal ]
+
+[ up 	Shootergun_l ] -> [ up 		Shootergun_l left moving_portal ]
+[ down 	Shootergun_l ] -> [ down 	Shootergun_l left moving_portal ]
+
+[ up 	Shootergun_r ] -> [ up 		Shootergun_r right moving_portal ]
+[ down 	Shootergun_r ] -> [ down 	Shootergun_r right moving_portal ]
+
+(extend from moving portal and delete the portal_center you find)
+[ > moving_portal | no obstacle ] -> [ > moving_portal | > moving_portal ]
+
+(remove portal center for actively moved shooter)
+up 		[ up    moving_portal | portal_centre_u ] -> [ up moving_portal | wall no portal_centre_u ]
+down 	[ down 	moving_portal | portal_centre_d ] -> [ down 	moving_portal | wall no portal_centre_d ]
+left	[ left 	moving_portal | portal_centre_l ] -> [ left 	moving_portal | wall no portal_centre_l ]
+right	[ right moving_portal | portal_centre_r ] -> [ right 	moving_portal | wall no portal_centre_r ]
+
+(remove unattached left/right portals - doing this the dumb way)
+right 	[ portal_left_u | no portal_centre_u ] -> [ wall | ] again
+down 	[ portal_left_r | no portal_centre_r ] -> [ wall | ] again
+left 	[ portal_left_d | no portal_centre_d ] -> [ wall | ] again
+up		[ portal_left_l | no portal_centre_l ] -> [ wall | ] again
+
+right 	[ no portal_centre_u | portal_right_u ] -> [ | wall ] again
+down 	[ no portal_centre_r | portal_right_r ] -> [ | wall ] again
+left 	[ no portal_centre_d | portal_right_d ] -> [ | wall ] again
+up		[ no portal_centre_l | portal_right_l ] -> [ | wall ] again
+
+
+(create left bit of portal)
+right	[ wall | portal_centre_u ] -> [ seethrough portal_left_u | portal_centre_u ]
+down 	[ wall | portal_centre_r ] -> [ seethrough portal_left_r | portal_centre_r ]
+left 	[ wall | portal_centre_d ] -> [ seethrough portal_left_d | portal_centre_d ]
+up 	[ wall | portal_centre_l ] -> [ seethrough portal_left_l | portal_centre_l ]
+(create right bit of portal)
+right	[ portal_centre_u | wall ] -> [ portal_centre_u | seethrough portal_right_u ]
+down 	[ portal_centre_r | wall ] -> [ portal_centre_r | seethrough portal_right_r ]
+left 	[ portal_centre_d | wall ] -> [ portal_centre_d | seethrough portal_right_d ]
+up 	[ portal_centre_l | wall ] -> [ portal_centre_l | seethrough portal_right_l ]
+
+(TODO: can't move shooter through its own portal)
+up 		[ > Shootergun_u | portal_centre_u ] -> cancel
+down	[ > Shootergun_d | portal_centre_d ] -> cancel
+left 	[ > Shootergun_l | portal_centre_l ] -> cancel
+right 	[ > Shootergun_r | portal_centre_r ] -> cancel
+
+[moving_portal]->[]
+[ > shootergun] ->[ > shootergun > moving_portal ]
+
+late up [ Shootergun_u ] -> [ Shootergun_u laser_u ]
+late down [ Shootergun_d ] -> [ Shootergun_d laser_d ]
+late left [ Shootergun_l ] -> [ Shootergun_l laser_l ]
+late right [ Shootergun_r ] -> [ Shootergun_r laser_r ]
+
+late up [ laser_u | no obstacle no portal_centre_u ] -> [ laser_u | laser_u ]
+late down [ laser_d | no obstacle no portal_centre_d ] -> [ laser_d | laser_d ]
+late left [ laser_l | no obstacle no portal_centre_l ] -> [ laser_l | laser_l ]
+late right [ laser_r | no obstacle no portal_centre_r ] -> [ laser_r | laser_r ]
+
+
+(when laser hits wall, create a portal centre)
+
+(prioritize creation of portal of most recently moved shooter - bit grotesque...)
+late up 	[ moving_portal laser_u | wall ] -> [ moving_portal laser_u | seethrough portal_centre_u new_portal_centre ]
+late down 	[ moving_portal laser_d | wall ] -> [ moving_portal laser_d | seethrough portal_centre_d new_portal_centre ]
+late left 	[ moving_portal laser_l | wall ] -> [ moving_portal laser_l | seethrough portal_centre_l new_portal_centre ]
+late right 	[ moving_portal laser_r | wall ] -> [ moving_portal laser_r | seethrough portal_centre_r new_portal_centre ]
+late up 	[ moving_portal | ... | laser_u | wall ] -> [ moving_portal | ... |laser_u | seethrough portal_centre_u new_portal_centre ]
+late down 	[ moving_portal | ... |laser_d | wall ] -> [ moving_portal | ... |laser_d | seethrough portal_centre_d new_portal_centre ]
+late left 	[ moving_portal | ... |laser_l | wall ] -> [ moving_portal | ... |laser_l | seethrough portal_centre_l new_portal_centre ]
+late right 	[ moving_portal | ... |laser_r | wall ] -> [ moving_portal | ... |laser_r | seethrough portal_centre_r new_portal_centre ]
+
+
+(create ears of player portal)
+(create left bit of portal)
+late right	[ wall | portal_centre_u ] -> [ seethrough portal_left_u | portal_centre_u ]
+late down 	[ wall | portal_centre_r ] -> [ seethrough portal_left_r | portal_centre_r ]
+late left 	[ wall | portal_centre_d ] -> [ seethrough portal_left_d | portal_centre_d ]
+late up 	[ wall | portal_centre_l ] -> [ seethrough portal_left_l | portal_centre_l ]
+(create right bit of portal)
+late right	[ portal_centre_u | wall ] -> [ portal_centre_u | seethrough portal_right_u ]
+late down 	[ portal_centre_r | wall ] -> [ portal_centre_r | seethrough portal_right_r ]
+late left 	[ portal_centre_d | wall ] -> [ portal_centre_d | seethrough portal_right_d ]
+late up 	[ portal_centre_l | wall ] -> [ portal_centre_l | seethrough portal_right_l ]
+
+
+(potentially repropagate lasers)
+late up [ laser_u | no obstacle no portal_centre_u ] -> [ laser_u | laser_u ]
+late down [ laser_d | no obstacle no portal_centre_d ] -> [ laser_d | laser_d ]
+late left [ laser_l | no obstacle no portal_centre_l ] -> [ laser_l | laser_l ]
+late right [ laser_r | no obstacle no portal_centre_r ] -> [ laser_r | laser_r ]
+
+(lower priority laser portal generation)
+late up 	[ laser_u | wall ] -> [ laser_u | seethrough portal_centre_u new_portal_centre ]
+late down 	[ laser_d | wall ] -> [ laser_d | seethrough portal_centre_d new_portal_centre ]
+late left 	[ laser_l | wall ] -> [ laser_l | seethrough portal_centre_l new_portal_centre ]
+late right 	[ laser_r | wall ] -> [ laser_r | seethrough portal_centre_r new_portal_centre ]
+
+(if our new portal's ears impinge upon a different one, it deletes that other portal and causes it to be recalculated)
+
+late right 	[ portal_centre | portal_centre_u new_portal_centre ] -> [ wall | portal_centre_u new_portal_centre ] again
+late down 	[ portal_centre | portal_centre_r new_portal_centre ] -> [ wall | portal_centre_r new_portal_centre ] again
+late left 	[ portal_centre | portal_centre_d new_portal_centre ] -> [ wall | portal_centre_d new_portal_centre ] again
+late up		[ portal_centre | portal_centre_l new_portal_centre ] -> [ wall | portal_centre_l new_portal_centre ] again
+
+late right 	[ portal_centre_u new_portal_centre | portal_centre ] -> [ portal_centre_u new_portal_centre | wall ] again
+late down 	[ portal_centre_r new_portal_centre | portal_centre ] -> [ portal_centre_r new_portal_centre | wall ] again
+late left 	[ portal_centre_d new_portal_centre | portal_centre ] -> [ portal_centre_d new_portal_centre | wall ] again
+late up		[ portal_centre_l new_portal_centre | portal_centre ] -> [ portal_centre_l new_portal_centre | wall ] again
+
+(if a center is unsupported by a laser, remove it)
+late up 	[ no laser_u | portal_centre_u ] -> [ | wall ] 
+late down 	[ no laser_d | portal_centre_d ] -> [ | wall ] 
+late left 	[ no laser_l | portal_centre_l ] -> [ | wall ] 
+late right 	[ no laser_r | portal_centre_r ] -> [ | wall ] 
+
+(then tidy up unattached ears again)
+late right 	[ portal_left_u | no portal_centre_u ] -> [ wall | ] 
+late down 	[ portal_left_r | no portal_centre_r ] -> [ wall | ] 
+late left 	[ portal_left_d | no portal_centre_d ] -> [ wall | ] 
+late up		[ portal_left_l | no portal_centre_l ] -> [ wall | ] 
+
+late right 	[ no portal_centre_u | portal_right_u ] -> [ | wall ] 
+late down 	[ no portal_centre_r | portal_right_r ] -> [ | wall ] 
+late left 	[ no portal_centre_d | portal_right_d ] -> [ | wall ] 
+late up		[ no portal_centre_l | portal_right_l ] -> [ | wall ] 
+
+late [ new_portal_centre ] -> [ ]
+
+(create left bit of portal)
+late right	[ wall | portal_centre_u ] -> [ seethrough portal_left_u | portal_centre_u ]
+late down 	[ wall | portal_centre_r ] -> [ seethrough portal_left_r | portal_centre_r ]
+late left 	[ wall | portal_centre_d ] -> [ seethrough portal_left_d | portal_centre_d ]
+late up 	[ wall | portal_centre_l ] -> [ seethrough portal_left_l | portal_centre_l ]
+(create right bit of portal)
+late right	[ portal_centre_u | wall ] -> [ portal_centre_u | seethrough portal_right_u ]
+late down 	[ portal_centre_r | wall ] -> [ portal_centre_r | seethrough portal_right_r ]
+late left 	[ portal_centre_d | wall ] -> [ portal_centre_d | seethrough portal_right_d ]
+late up 	[ portal_centre_l | wall ] -> [ portal_centre_l | seethrough portal_right_l ]
+
+late [ player wall ] -> [ wall ]
+late [ shootergun wall ] -> [ wall ] again
+
+late up 		[ portal | no portal ] -> [ portal hole_boundary_u | ] 
+late down 	[ portal | no portal ] -> [ portal hole_boundary_d | ] 
+late left 	[ portal | no portal ] -> [ portal hole_boundary_l | ] 
+late right	[ portal | no portal ] -> [ portal hole_boundary_r | ] 
+
+late [ moving_portal ] -> [  ]
+late [laser wall] -> again
+
+late [ player exit ] -> win
+
+==============
+WINCONDITIONS
+==============
+
+all Target on shootergun
+no exit
+
+
+=======
+LEVELS
+=======
+
+
+
+message 1/8 woof woof I dog
+
+(ok level 1? could replace the above two even...)
+##################
+#................#
+#................#
+#................#
+#......#####.....#
+#......#####.....#
+#....##.....##...#
+#..4.##...o.##...#
+#p.3.##..o..##...#
+#..4.##.o...##...#
+#....##.....##...#
+#......#####.....#
+#......#####.....#
+#................#
+#................#
+#................#
+##################
+
+
+
+message 2/8 my mistress let me out
+
+
+(hmm ok? perhaps a tiny bit simple)
+##############
+#.....##.....#
+#...2.##.....#
+#.p...##..o..#
+#...1.##.....#
+#.....##.....#
+##############
+
+
+
+message 3/8 i have no problem finding food
+
+
+(ok? a non-trivial challenge)
+###############
+#....#........#
+#.3..#........#
+#....#.p.....o#
+#....#.......o#
+######.......o#
+#.............#
+#..........3..#
+#######.......#
+#######.......#
+#....##.......#
+#.4#.##.......#
+#....##.......#
+#....##.......#
+###############
+
+message 4/8 there are so many lovely smells
+
+(you...can kinda just do it? not sure if it's good or not...)
+#########
+######o##
+#o#...###
+##..2..##
+##.4.3.##
+##.p1..##
+###...#o#
+##o######
+#########
+
+
+message 5/8 where did all the people go?
+
+(actually good - somewhat difficult - what's v. good is that knowing the solution i can resolve it straight away)
+###########
+###.....###
+###..2..###
+###.....###
+#o#..1..#o#
+#...p.....#
+###########
+
+
+message 6/8 where are the other doggies?
+
+
+
+
+(bit fiddly/intuitive - but I enjoyed it?)
+(solvable - not sure if easy or hard lol)
+..........#####........
+..........#####........
+..........#####........
+..........#####........
+..........#####........
+.......22.#####........
+..........#####........
+......4...#####........
+..........#####.....e..
+.......11.#####........
+..........#####........
+..........#####........
+......p...#####........
+..........#####........
+..........#####........
+..........#####........
+
+
+message 7/8 I can't smell them any more
+
+
+
+(level 3 maybe? solvable, bit harder than above but not better BUT I HAD FUN JUST NOW)
+#################
+#...............#
+#...............#
+#...............#
+#.....#####.....#
+#.....#####.....#
+#...##.....##...#
+#...##...o.##...#
+#...##..o..##...#
+#...##.o...##...#
+#...##.....##...#
+#.....#####.....#
+#.4...#####.....#
+#..1............#
+#.p.4...........#
+#...............#
+#################
+
+message 8/8 but the sun is lovely!
+
+
+
+(final level: pure brute intuition needed)
+####################
+#......#########...#
+#......#########...#
+#......#########...#
+#......#########...#
+#......#########...#
+#..4...#########...#
+4..4.4.#########...#
+4..4...#########.e.#
+4..4.4.#########...#
+#..4...#########...#
+#......#########...#
+#..p...#########...#
+#......#########...#
+#......#########...#
+####################
+
+
+message WOOF WOOF WOOF
+
+88888888888888888888888888
+88888888888888888888888888
+88899888888888888888888888
+88999988888888888888888888
+88999988888888888888888888
+88899888888888888888888888
+88888888888888855888888888
+88888888888888855588888888
+88888888888888857588888888
+8888888[555555555555=88888
+88888885855555555555588888
+88888885855555555886888888
+88888888858888588888888888
+88888888858888588888888888
+88888888858888588888888888
+0-000000000000000000000000
+000000-00000000-00000000-0
+0000000000-0000000-0000000
+0000-00000000000000000-000
+0-000000000000000000000000
+0000000-00000-0000-000000-
+00000000000000000000000000
+
+message WOOF! WOOF! WOOF!
+
+( SOLVABLE OK LEVELS )
+
+
+
+
+
+
+
+
+
+( JUNKYARD )
+(
+
+DEMOTED:
+
+
+(level 1? linear stretch)
+############
+#.....######
+##.#.....###
+##.####..###
+##.....#.###
+##.1..##.###
+##p##.o....#
+############
+
+(hmmm not sure - maybe level 2? lots of walking about,
+no clear strategy needed)
+###############
+#.............#
+#.............#
+#.............#
+#...#.#.#.#...#
+#.............#
+#...#.###.#...#
+#.....#o#.....#
+#...#.###.#...#
+#....o...o....#
+#...#.#.#.#...#
+#.............#
+#..4...1...3..#
+#....p........#
+###############
+
+
+
+
+(JUNKJARD PROPER)
+
+(not too hard - intermediate)
+########
+##....##
+##.2#..#
+####.1.#
+#o#..o.#
+#...p..#
+########
+
+
+(6474 - bit trivial + claustraphobic and linear start)
+########
+#.#...##
+#......#
+#o.#.4o#
+##2....#
+#p.#...#
+########
+
+
+(2721 - uninteresting)
+########
+#..#.o.#
+#....###
+##.1.w.#
+#...#..#
+#p.#..##
+########
+
+
+
+
+
+(hardish, like a harder version of that other level I like - hmm there is an alternative solution found by the solver I don't like)
+########
+###....#
+#.#4#o.#
+#....#.#
+#.3...o#
+#p...#.#
+########
+
+(test level? pretty sure this was unsolvable...)
+..........#########....
+..........#########....
+..........#########....
+..........#########....
+..........#########....
+...2222...#########....
+..........#########....
+.......4..#########....
+..........#########.e..
+...1111...#########....
+..........#########....
+..........#########....
+......p...#########....
+..........#########....
+..........#########....
+..........#########....
+
+
+
+(test level)
+################
+#.........#....#
+#...3.....##.4.#
+#..............#
+########.......#
+#...........####
+#........2..####
+#..............#
+##.....#########
+##........#....#
+#..1.p....#....#
+#..............#
+################
+
+(test level)
+################
+#.......p.#....#
+#.......3.##.4.#
+#..#...........#
+########.......#
+#...........####
+#........2..####
+#..............#
+##.....#########
+##........#....#
+#..1......#....#
+#..............#
+################
+
+(test level)
+(moving up here twice weird things happen)
+################
+#.........#....#
+#.........##.4.#
+#..#...........#
+########.......#
+#...3.......####
+#...p....2..####
+#..............#
+##.....#########
+##........#....#
+#..1......#....#
+#..............#
+################
+
+(test level)
+(if you move down here, it doesn't propritize the persisting of the moved things portal as it should)
+################
+#.........#....;
+#.........##.4.;
+#..#...........;
+########.......#
+#...........####
+#........2..####
+#.p............#
+##3....#########
+##........#....#
+#1........#....#
+#..............#
+################
+
+(impossible, even with goals added lol)
+##########e
+#..#...#..#
+#..#...#..#
+###.....###
+#....2....#
+#...4.3...#
+#...p1....#
+###.....###
+#..#...#..#
+#..#...#..#
+###########
+
+
+(trivial)
+.....####.....
+.....#.o#.....
+..####..####..
+..#...##...#..
+..#........#..
+###..4..2..###
+#o.#..p...#..#
+#..#......#.o#
+###..1..3..###
+..#........#..
+..#...##...#..
+..####..####..
+.....#o.#.....
+.....####.....
+
+#########
+#o#...#o#
+##.....##
+#...2...#
+#..4.3..#
+#..p1...#
+##.....##
+#o#...#o#
+#########
+
+
+(nice but unsolvable)
+################
+#...#......#...#
+#.o.#......#.o.#
+#...#......#...#
+#####......#####
+#.....4..3.....#
+#..p...........#
+################
+
+
+
+
+
+
+(unsolvable? test level)
+###############
+#...#.....#...#
+#.o.#.....#.o.#
+#...#.....#...#
+####.......####
+#.............#
+#......2......#
+#.....4.3.....#
+#......1......#
+#...p.........#
+####.......####
+#...#.....#...#
+#.o.#.....#.o.#
+#...#.....#...#
+###############
+
+
+(Teaches something about priorities, but not...very fun - needs some more elements maybe?)
+(I just think it's too easy to solve without understanding)
+################
+#....#.........#
+#....#.........#
+#.oo.#...4..3..#
+#....#....p....#
+#....#.........#
+################
+
+
+###############
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#...p.........#
+#.............#
+#.............#
+#.............#
+#.............#
+###############
+
+
+(simple but there is a level there)
+(too simple)
+###############
+#.............#
+#.............#
+#......###....#
+#.....#...#...#
+#.....#.o.#...#
+#.....#.o.#...#
+#.....#...#...#
+#......###....#
+#...p.........#
+#.............#
+#..23.........#
+#.............#
+#.............#
+###############
+
+
+
+
+(like this, but pretty sure it's unsovlable even if i remove the corner blocks)
+(what I should be doing is looking at *why* I find it fun to manipulate things here)
+###############
+#.............#
+#.............#
+#....#######..#
+#....#######..#
+#....##.o.##..#
+#....##.o.##..#
+#....##.o.##..#
+#....#######..#
+#....#######..#
+#..4..........#
+#.p3..........#
+#..4..........#
+#.............#
+###############
+
+
+
+
+(not quite trivial, but much easier than the other possibilities)
+#################
+#...............#
+#...............#
+#...............#
+#.....#####.....#
+#.....#####.....#
+#...##.....##...#
+#...##...o.##...#
+#...##..o..##...#
+#...##.o...##...#
+#...##.....##...#
+#.....#####.....#
+#.4...#####.....#
+#..4............#
+#.p.4...........#
+#...............#
+#################
+
+
+#################
+#...............#
+#.2...........3.#
+#...............#
+#....#######....#
+#...#########...#
+#...##.....##...#
+#...##.o.o.##...#
+#...##.....##...#
+#...##.o.o.##...#
+#...##.....##...#
+#...#########...#
+#..p.#######....#
+#...............#
+#.4...........1.#
+#...............#
+#################
+
+
+(not fun without checkpoints)
+#######################
+#....#................#
+#.3..#................#
+#....#................#
+#....#......#####.....#
+######......#####.....#
+#.........##.....##...#
+#..p......##...o.##...#
+#....3....##..o..##...#
+#.........##.o...##...#
+#######...##.....##...#
+#######.....#####.....#
+#....##.....#####.....#
+#.4..##...............#
+#....##...............#
+#....##...............#
+#######################
+
+
+
+
+(a bit long? lack of checkpoint annoying)
+#################################
+#........##....#................#
+#........##.3..#................#
+#....###.##....#................#
+#....#.#.##....#......#####.....#
+#..3.#.#########......#####.....#
+#....#..............##.....##...#
+#..p.#..............##...o.##...#
+#....#..............##..o..##...#
+#....#..............##.o...##...#
+#....#.##########...##.....##...#
+#....#.#.########.....#####.....#
+#....#.#.##....##.....#####.....#
+#....###.##.4..##...............#
+#........##....##...............#
+#........##....##...............#
+#################################
+
+
+#################
+.......#########.
+.......#########.
+.......#########.
+.......#########.
+.......;########.
+....4..;;#######o
+....4..;;#######o
+.p..4..;;#######o
+....4..;;#######o
+....4..;;#######o
+.......;########.
+.......#########.
+.......#########.
+.......#########.
+#################
+
+####;;;##########
+.......#########.
+.......#########.
+.......#########.
+.......#########.
+...2.1.#########.
+...2.1.#########o
+...2.1.#########o
+...2.1.#########o
+...2.1.#########o
+.p.2.1.#########o
+.......#########.
+.......#########.
+.......#########.
+.......#########.
+#################
+
+####;;;##########
+.......#########.
+.......#########.
+.44444.#########.
+.....4.#########.
+.44444.#########.
+.....4.#########o
+..p..4.#########o
+.....4.#########o
+.44444.#########o
+.....4.#########o
+.44444.#########.
+.....4.#########.
+.......#########.
+.......#########.
+#################
+
+(impossible)
+###############
+#....#...#....#
+#.3..#...#..4.#
+#....#...#....#
+#....#...#....#
+######...######
+#.............#
+#.............#
+#......3......#
+#...p.........#
+#.............#
+#.............#
+#.....ooo.....#
+#.............#
+###############
+
+
+
+
+
+###############
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#####.........#
+#######.......#
+#.....#.......#
+#.1.p.#.......#
+#.....#.......#
+###############
+
+################
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+##.#######.....#
+##.####..#.....#
+##.....#.#.....#
+##.1..##.#.....#
+##p##....#.....#
+################
+
+################
+#..............#
+#..............#
+#..............#
+#####..........#
+#####..........#
+#...#..........#
+#...#..........#
+#..............#
+##.#######.....#
+##.####..#.....#
+##.....#.#.....#
+##.1..##.#.....#
+##p##....#.....#
+################
+
+################
+#..............#
+#..............#
+#..............#
+#..............#
+###########....#
+###########....#
+#...#######....#
+#.........#....#
+##.#..##.##....#
+##.####..##....#
+##.....#.##....#
+##.1..##.##....#
+##p##.o...#....#
+################
+
+############
+############
+#...########
+#.....######
+##.#.....###
+##.####..###
+##.....#.###
+##.1..##.###
+##p##.o....#
+############
+
+
+
+#################
+4.4.4..#########.
+4.4.4..#########.
+4.4.4..#########.
+4.4.4..#########.
+4.4.4..#########.
+4.4.4..#########.
+4.4.4..#########.
+4.4.4..#########e
+4.4.4..#########.
+4.4.4.p#########.
+4.4.4..#########.
+4.4.4..#########.
+4.4.4..#########.
+4.4.4..#########.
+#################
+
+
+###############
+#.............#
+#.#.#.#.#.#.#.#
+#..4.......2..#
+#.#.#.#.#.#.#.#
+#.............#
+#.#.#.....#.#.#
+#.............#
+#.#.#.....#.#.#
+#...p.........#
+#.#.#.#.#.#.#.#
+#..1.......3..#
+#.#.#.#.#.#.#.#
+#.............#
+###############
+
+###############
+#.............#
+#.#.#.#.#.#.#.#
+#..4.......2..#
+#.#.#.#.#.#.#.#
+#.............#
+#.#.#.###.#.#.#
+#.....#o#.....#
+#.#.#.###.#.#.#
+#...p.........#
+#.#.#.#.#.#.#.#
+#..1.......3..#
+#.#.#.#.#.#.#.#
+#.............#
+###############
+
+###############
+#.............#
+#.#.#.#.#.#.#.#
+#.............#
+#.#.#.#.#.#.#.#
+#.............#
+#.#.#.###.#.#.#
+#.....#o#.....#
+#.#.#.###.#.#.#
+#....p........#
+#.#.#.#.#.#.#.#
+#..4...1...3..#
+#.#.#.#.#.#.#.#
+#.............#
+###############
+
+
+###############
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#...1.###.....#
+#...2.###.....#
+#...3.###.....#
+#.............#
+#.............#
+#..........p..#
+#.............#
+#.............#
+e##############
+
+###;;;#########
+#.............#
+#.............#
+#.............#
+#.............#
+#.............#
+#.....###.....#
+;....#...#....#
+;....#####....#
+;....#...#....#
+#.............#
+#....1234..p..#
+#.............#
+#.............#
+e##############
+
+
+..........#########....
+..........#########....
+..........#########....
+..........#########....
+..........#########....
+...2222...#########....
+..........#########....
+.......4..#########....
+..........#########.e..
+...1111...#########....
+..........#########....
+..........#########....
+......p...#########....
+..........#########....
+..........#########....
+..........#########....
+
+
+###############
+#......####...#
+#......####...#
+#......####...#
+#......####...#
+#..4...####...#
+#......####...#
+#..4...####.e.#
+#......####...#
+#...p..####...#
+#......####...#
+#......####...#
+#......####...#
+#......####...#
+###############
+
+###############
+#......####...#
+#......####...#
+#......####...#
+#......####...#
+#...2..####...#
+#......####...#
+#...1..####.e.#
+#......####...#
+#...p..####...#
+#......####...#
+#......####...#
+#......####...#
+#......####...#
+###############
+
+
+
+
+########
+##....##
+#..2#.o#
+#..#...#
+#o#..1.#
+#..p...#
+########
+(damn has a shortcut)
+
+
+
+(thought about this and made a very simple version of it)
+##########
+##....####
+#.2.#..###
+#..#...###
+#o#..1.#o#
+#..p.....#
+##########
+
+
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#p....#
+#######
+
+
+#######
+#.....#
+#.....#
+#.....#
+#p....#
+#######
+
+
+########
+#......#
+#......#
+#......#
+#......#
+#p.....#
+########
+
+)
+( UNCATEGORIZED)
+
+
+
+
+
+
+(level idea: have to destroy a tower)
+
+
+
+
+( 
+
+==========
+TRANSFORM
+==========
+choose 15 [ no player ] -> [ wall ]
+choose 1 [ no wall no player ] -> [ shootergun_r ]
+choose 1 [ no wall no player ] -> [ shootergun_l ]
+choose 2 [ no wall ] -> [ target ]
+
+)

@@ -1,0 +1,831 @@
+title The sponge what lights up the seafloor
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+( verbose_logging )
+
+background_color #097ca9
+
+text_color black
+noaction
+========
+OBJECTS
+========
+
+Background1
+#097ca9 #026f9a
+00000
+00000
+00100
+00000
+00000
+
+
+Background2
+#097ca9 #026f9a
+00000
+00000
+00000
+00000
+00000
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#005373 #0a6284
+00000
+00000
+00000
+00000
+00000
+
+
+Player_tl
+pink red
+01111
+1....
+1....
+1....
+1....
+
+Player_tr
+pink red
+11110
+....1
+....1
+....1
+....1
+
+Player_bl
+pink red
+1....
+1....
+1....
+1....
+01111
+
+Player_br
+pink red
+....1
+....1
+....1
+....1
+11110
+
+sponge_thick
+yellow
+.000.
+00000
+00000
+00000
+.000.
+
+sponge_thin
+yellow
+.000.
+00000
+00000
+00000
+.000.
+
+Crate_tl 
+#b685b5 #8a4288
+00000
+01111
+01111
+01111
+01111
+
+Crate_tr 
+#b685b5 #8a4288
+00000
+11110
+11110
+11110
+11110
+
+Crate_bl 
+#b685b5 #8a4288
+01111
+01111
+01111
+01111
+00000
+
+Crate_br 
+#b685b5  #8a4288
+11110
+11110
+11110
+11110
+00000
+
+sponge_ok
+#ff00ff
+0....
+.....
+.....
+.....
+.....
+
+targetlight
+#83e5f9 #27aeca
+.....
+.....
+..0..
+.....
+.....
+
+skin_tl_loose 
+#d5d156 #d2b140 #af8c18
+.0000
+01212
+02121
+01212
+02121
+
+
+skin_tr_loose
+#d5d156 #d2b140 #af8c18
+0000.
+12120
+21210
+12120
+21210
+
+skin_bl_loose
+#d5d156 #d2b140 #af8c18
+01212
+02121
+01212
+02121
+.0000
+
+skin_br_loose
+#d2b140 #af8c18 #d5d156
+01012
+10102
+01012
+10102
+2222.
+
+
+
+skin_tl_tight
+#d5d156 #9b7907
+.0000
+01111
+01111
+01111
+01111
+
+skin_tr_tight
+#d5d156 #9b7907
+0000.
+11110
+11110
+11110
+11110
+
+skin_bl_tight
+#d5d156 #9b7907
+01111
+01111
+01111
+01111
+.0000
+
+skin_br_tight
+#9b7907 #d5d156
+00001
+00001
+00001
+00001
+1111.
+
+skin_n
+#d5d156
+00000
+.....
+.....
+.....
+.....
+
+skin_s
+#d5d156
+.....
+.....
+.....
+.....
+00000
+
+skin_e
+#d5d156
+....0
+....0
+....0
+....0
+....0
+
+skin_w
+#d5d156
+0....
+0....
+0....
+0....
+0....
+
+face_pressed_eye_l
+#ffffff #639bff
+.....
+..01.
+..00.
+.....
+.....
+
+face_pressed_eye_r
+#ffffff #639bff
+.....
+.01..
+.00..
+.....
+.....
+
+face_normal_eye_l
+#ffffff #639bff
+.....
+.....
+..01.
+..00.
+.....
+
+
+face_normal_eye_r
+#ffffff #639bff
+.....
+.....
+.01..
+.00..
+.....
+
+face_normal_mouth_l
+#000000
+.....
+...00
+....0
+.....
+.....
+
+
+face_normal_mouth_r
+#000000
+.....
+00...
+0....
+.....
+.....
+
+face_pressed_mouth
+#000000
+.....
+..0..
+..0..
+.....
+.....
+
+face_pressed_eyes_both
+#ffffff #639bff #097ca9
+.....
+.....
+01.01
+00.00
+.....
+
+
+face_pressed_horizont_full_l
+#ffffff #639bff #000000
+.....
+.00..
+.01.2
+....2
+.....
+
+
+face_pressed_horizont_full_r
+#ffffff #000000 #639bff
+.....
+..00.
+1.20.
+1....
+.....
+
+forcesponge
+transparent
+
+halttag
+transparent
+
+=======
+LEGEND
+=======
+
+face = face_pressed_eye_l or face_pressed_eye_r or face_normal_eye_l or face_normal_eye_r or face_normal_mouth_l or face_normal_mouth_r or face_pressed_mouth or face_pressed_eyes_both or face_pressed_horizont_full_l or face_pressed_horizont_full_r
+player = Player_tl or Player_tr or Player_bl or Player_br
+crate = Crate_tl or Crate_tr or Crate_bl or Crate_br
+sponge = sponge_thick or sponge_thin 
+obstacle = sponge or wall or Crate
+. = Background1
+, = Background2
+# = Wall and Background1
+q = Player_tl and sponge_thin and Background1
+w = Player_tr and sponge_thin and Background1
+e = Player_bl and sponge_thin and Background1
+r = player_br and sponge_thin and Background1
+O = Target and Background1
+z = crate_tl and Target and Background1
+x = crate_tr and Target and Background1
+c = crate_bl and Target  and Background1
+b = Crate_br and Target and Background1
+a = Crate_tl and Background1
+s = Crate_tr and Background1
+d = Crate_bl and Background1
+f = Crate_br and Background1
+
+skin_flesh = skin_tl_loose or skin_tr_loose or skin_bl_loose or skin_br_loose or skin_tl_tight or skin_tr_tight or skin_bl_tight or skin_br_tight 
+
+skin_barrier =  skin_n or skin_s or skin_e or skin_W
+
+
+skin = skin_flesh or skin_Barrier
+background = Background1 or Background2
+=======
+SOUNDS
+=======
+
+Crate MOVE 2330507
+startlevel 93226500
+endlevel  74584306
+================
+COLLISIONLAYERS
+================
+
+player
+sponge_ok
+
+
+Background1, Background2
+
+sponge, Wall, Crate
+
+Target
+
+skin_flesh
+skin_n
+skin_s
+skin_e
+skin_w
+
+
+face
+targetlight
+
+forcesponge
+halttag
+
+======
+RULES
+======
+
+[moving player] -> again
+
+
+(drawing code begin)
+(
+right [action player] [ Player_tl | ] -> [action player] [ player_tl | Player_tr sponge_thin ]
+down [action player] [ player_tl | ] -> [action player] [ player_tl | Player_bl sponge_thin]
+down [action player] [ player_tr | ] -> [action player] [ player_tr | Player_br sponge_thin]
+
+right [action player] [ Crate_tl target| no Crate ] -> [action player] [ Crate_tl target| Crate_tr target ]
+down [action player] [ Crate_tl target| no Crate] -> [action player] [ Crate_tl target| Crate_bl target]
+down [action player] [ Crate_tr target|no Crate ] -> [action player] [ Crate_tr target| Crate_br target]
+
+right [action player] [ Crate_tl no target| no Crate ] -> [action player] [ Crate_tl no target| Crate_tr  ]
+down [action player] [ Crate_tl no target| no Crate] -> [action player] [ Crate_tl no target| Crate_bl ]
+down [action player] [ Crate_tr no target|no Crate ] -> [action player] [ Crate_tr no target| Crate_br ]
+)
+(drawing code end)
+
+[sponge_ok]->[]
+[moving player sponge] -> [ moving player moving sponge]
+
+[ >  sponge | Crate ] -> [  >  sponge | > Crate  ]
+
+
+(expanding sponge applies force)
+[ stationary player ] [ sponge_thick | crate player ] ->[ stationary player ] [ sponge_thick  forcesponge| > crate player ]
+
+(propagate movements)
+right [moving Crate_tl | stationary Crate_tr ] -> [moving Crate_tl | moving Crate_tr ]
++ right [ stationary Crate_tl | moving Crate_tr ] -> [moving Crate_tl | moving Crate_tr ]  
++ right [moving Crate_bl | stationary Crate_br ] -> [moving Crate_bl | moving Crate_br ]  
++ right [ stationary Crate_bl | moving Crate_br ] -> [moving Crate_bl | moving Crate_br ]  
+
++ down [ moving crate_tl | stationary crate_bl ] -> [ moving crate_tl | moving crate_bl ]  
++ down [ stationary crate_tl | moving crate_bl ] -> [ moving crate_tl | moving crate_bl ]
++ down [ moving crate_tr | stationary crate_br ] -> [ moving crate_tr | moving crate_br ]  
++ down [ stationary crate_tr | moving crate_br ] -> [ moving crate_tr | moving crate_br ]
+
++ [ > crate | stationary crate ] -> [ > crate | > crate ]
+
+
+(unpropagate movements)
+
+[ > crate | stationary obstacle ] ->  [ crate | obstacle ]
++ right [moving Crate_tl | stationary Crate_tr ] -> [ Crate_tl |  Crate_tr ]
++ right [ stationary Crate_tl | moving Crate_tr ] -> [ Crate_tl |  Crate_tr ]  
++ right [moving Crate_bl | stationary Crate_br ] -> [ Crate_bl |  Crate_br ]  
++ right [ stationary Crate_bl | moving Crate_br ] -> [ Crate_bl |  Crate_br ]  
+
++ down [ moving crate_tl | stationary crate_bl ] -> [  crate_tl |  crate_bl ]  
++ down [ stationary crate_tl | moving crate_bl ] -> [  crate_tl |  crate_bl ]
++ down [ moving crate_tr | stationary crate_br ] -> [  crate_tr |  crate_br ]  
++ down [ stationary crate_tr | moving crate_br ] -> [  crate_tr |  crate_br ]
+
+(add halt tag to allcrates)
+[moving crate]->[moving crate halttag]
+(remove halttags along propagation)
+[ sponge | crate halttag ] -> [  sponge |  crate no halttag ]
+
++ right [no halttag Crate_tl | halttag Crate_tr ] -> [ Crate_tl |  Crate_tr ]
++ right [ halttag Crate_tl | no halttag Crate_tr ] -> [ Crate_tl |  Crate_tr ]  
++ right [no halttag Crate_bl | halttag Crate_br ] -> [ Crate_bl |  Crate_br ]  
++ right [ halttag Crate_bl | no halttag Crate_br ] -> [ Crate_bl |  Crate_br ]  
+
++ down [ no halttag crate_tl | halttag crate_bl ] -> [  crate_tl |  crate_bl ]  
++ down [ halttag crate_tl | no halttag crate_bl ] -> [  crate_tl |  crate_bl ]
++ down [ no halttag crate_tr | halttag crate_br ] -> [  crate_tr |  crate_br ]  
++ down [ halttag crate_tr | no halttag crate_br ] -> [  crate_tr |  crate_br ]
+
++ [ > crate no halttag | > crate halttag ] -> [ > crate | > crate ]
+
+[moving crate halttag]->[stationary crate]
+
+(squish sponge if necessary)
+[ > sponge_thin | > sponge_thin | stationary obstacle ] -> [ | sponge_thick  | stationary obstacle ]
+
+[ no sponge | > sponge_thick | no sponge no obstacle ] -> [ | sponge_thin | sponge_thin ]
+late [ sponge no player ] -> cancel
+
+late [  sponge_thick player | no obstacle player] -> [ sponge_thin player | sponge_thin player ]
+
+late [ sponge_thick | no sponge player ] -> [sponge_thick sponge_ok | player ]
+
+late [sponge_thick no sponge_ok ]-> cancel
+
+(draw skin)
+late [skin]->[]
+late [Player_tl sponge_thick ] -> [Player_tl sponge_thick skin_tl_tight ]
+late [Player_tr sponge_thick ] -> [Player_tr sponge_thick skin_tr_tight ]
+late [Player_bl sponge_thick ] -> [Player_bl sponge_thick skin_bl_tight ]
+late [Player_br sponge_thick ] -> [Player_br sponge_thick skin_br_tight ]
+
+late [Player_tl sponge_thin ] -> [Player_tl sponge_thin skin_tl_loose ]
+late [Player_tr sponge_thin ] -> [Player_tr sponge_thin skin_tr_loose ]
+late [Player_bl sponge_thin ] -> [Player_bl sponge_thin skin_bl_loose ]
+late [Player_br sponge_thin ] -> [Player_br sponge_thin skin_br_loose ]
+
+late up [ player sponge_thin | player no sponge ] -> [ player sponge_thin skin_n | player no sponge ]
+late down [ player sponge_thin | player no sponge ] -> [ player sponge_thin skin_s | player no sponge ]
+late left [ player sponge_thin | player no sponge ] -> [ player sponge_thin skin_w | player no sponge ]
+late right [ player sponge_thin | player no sponge ] -> [ player sponge_thin skin_e | player no sponge ]
+
+(draw face (eyes/mouth))
+late [face]->[]
+
+late right [ sponge_thick no face | sponge_thick no face ] -> [ sponge_thick face_pressed_horizont_full_l | sponge_thick  face_pressed_horizont_full_r]
+
+late down [ sponge_thick no face | sponge_thick no face ] -> [ sponge_thick face_pressed_eyes_both | sponge_thick  face_pressed_mouth]
+
+late right [ player_tl sponge_thick | no sponge ] -> [ player_tl sponge_thick face_pressed_eyes_both | no sponge ]
+late left [ player_tr sponge_thick | no sponge ] -> [ player_tr sponge_thick face_pressed_eyes_both | no sponge ]
+
+
+late right [ Player_tl sponge_thin no face ] -> [ player_tl sponge_thin face_normal_eye_l ]
+late right [ Player_tl sponge_thick no face ] -> [ player_tl sponge_thick face_pressed_eye_l ]
+
+late right [ Player_tr sponge_thin no face ] -> [ player_tr sponge_thin face_normal_eye_r ]
+late right [ Player_tr sponge_thick no face ] -> [ player_tr sponge_thick face_pressed_eye_r ]
+
+late right [player_bl sponge_thin no face | player_Br sponge_thin no face ] -> [player_bl sponge_thin face_normal_mouth_l | player_Br sponge_thin face_normal_mouth_r ]
+
+late right [ player_bl sponge no face | no sponge ] ->  [ player_bl sponge face_pressed_mouth |]
+late left [ player_br sponge no face | no sponge ] ->  [ player_br sponge face_pressed_mouth |]
+
+late [ player_bl sponge_thick no face ] -> [ player_bl sponge_thick face_pressed_horizont_full_l ]
+late [ player_bl sponge_thin no face ] -> [ player_bl sponge_thin face_normal_mouth_l ]
+
+
+late [ player_br sponge_thick no face ] -> [ player_br sponge_thick face_pressed_horizont_full_r ]
+late [ player_br sponge_thin no face ] -> [ player_br sponge_thin face_normal_mouth_r ]
+
+(place lights on fulfilled targets)
+late [targetlight]->[]
+late [crate Target ] -> [ crate target targetlight]
+
+
+late [ forcesponge sponge_thick ]->cancel
+late [forcesponge]->[]
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Level 1 of 10 : "I am yellow."
+
+(p.easy)
+,,,,,,,,#####
+#########...#
+#oo.........#
+#oozxzxas.qw#
+###cbcbdf.er#
+,,#.........#
+,,#######...#
+,,,,,,,,#####
+
+
+
+
+message Level 2 of 10 : "You can sqeeze me."
+
+(pretty easy, but fun?)
+,,,,,,,,#####
+,,,,,,###...#
+#######.....#
+#..,..ooqw..#
+#.....ooer.##
+#.as..##oo.#,
+#.df..##oo##,
+#####.....#,,
+,,,,##....#,,
+,,,,,#as..#,,
+,,,,,#df..#,,
+,,,,,#....#,,
+,,,,,######,,
+
+message Level 3 of 10 : "It doesn't hurt at all."
+########
+#......#
+#.##qw.#
+#.##er.#
+#.aszx.#
+#.dfcb.#
+#.oozx.#
+#.oocb.#
+#......#
+########
+
+
+message Level 4 of 10 : "I like to make the lights go on."
+(borderline not cute but tolerable)
+
+######,,,,
+#oo..##,,,
+#oo...##,,
+#qwasas##,
+#erdfdf.##
+###......#
+,,##.....#
+,,,##....#
+,,,,##...#
+,,,,,##oo#
+,,,,,,#oo#
+,,,,,,####
+
+
+message Level 5 of 10 : "It's dark here on the seabed."
+
+(too like original/)
+,,######,,,,
+###....#####
+#.......as.#
+#.......df.#
+#.#....#as.#
+#oo..oo#df.#
+#oo..oo#qw.#
+########er.#
+,,,,,,,#####
+
+message Level 6 of 10 : "I wonder what colour my eyes are."
+(ok not too hard)
+,,,######
+,,##....#
+,,#.zx..#
+###.cb..#
+#.asooqw#
+#.dfooer#
+#.......#
+#########
+
+
+
+
+
+message Level 7 of 10 : "Sometimes corpses fall down from the sky."
+
+(fine. slightly tricky)
+#####,,,
+#.oo#,,,
+#.oo#,,,
+#...#,,,
+#...#,,,
+#...####
+#zx....#
+#cb....#
+#...as.#
+#...df.#
+#...####
+#...#,,,
+#qw.#,,,
+#er.#,,,
+#####,,,
+
+
+message Level 8 of 10 : "The lights twinkle as if to say 'Thank you, spongey!' "
+(p ok! not super easy)
+,,,#########
+,,,#.ooooqw#
+,,,#.ooooer#
+,,,#.asas..#
+,,,#.dfdf..#
+#####..#####
+#......###,,
+#........#,,
+#..#.....#,,
+#.....#..#,,
+#........#,,
+##########,,
+
+
+message Level 9 of 10 : "Am I the only yellow thing in the universe?"
+(I like this one)
+,,,,###########
+,,,##...#...oo#
+,,##as......oo#
+,##.df#...qw..#
+##....#...er..#
+#.............#
+#...###..zx...#
+#....##..cb...#
+##....##......#
+,##....###.#..#
+,,##.......#..#
+,,,##.........#
+,,,,#####.....#
+,,,,,,,,###..##
+,,,,,,,,,,####,
+
+
+message Level 10 of 10 : "It's lonely, here on the seabed."
+(fine/hardosh)
+.########.
+###.oo..##
+###.oo...#
+#..asas..#
+#oodfdfoo#
+#ooasasoo#
+#..dfdfqw#
+#...oo.er#
+##..oo..##
+.########.
+
+message The End : "I hope I was a good sponge.  Was I a good sponge?"
+
+(
+########
+#......#
+#...as.#
+#..#df.#
+#..as..#
+##.df..#
+#aszxo.#
+#dfcbqw#
+#....er#
+########
+
+########
+#......#
+#......#
+#......#
+#..as..#
+##.df..#
+#aszxo.#
+#dfcbqw#
+#....er#
+########
+)
+
+
+(
+
+################
+#oo.....,....oo#
+#oo..........oo#
+#..##..as..##..#
+#..##..df..##..#
+#.....####.....#
+#....##..##....#
+#..as#....#as..#
+#..df#....#df..#
+#....##..##....#
+#.....####.....#
+#..##..as..##..#
+#..##..df..##..#
+#oo......qw..oo#
+#oo......er..oo#
+################
+
+############
+#..........#
+#..,..ooqw.#
+#.....ooer.#
+#.as..##oo.#
+#.df..##oo.#
+#####......#
+....##.....#
+.....#as...#
+.....#df...#
+.....#.....#
+.....#######
+
+
+)
+
+(
+(ok? doesn't involve fancy logic, just pushign things around, but that's ok sometimes?)
+.########.
+##......##
+#...oo.qw#
+#..axzser#
+#.ocfdbo.#
+#.ozsaxo.#
+#..dbcf..#
+#...oo...#
+##......##
+.########.
+)
+
+
+
+(
+(too easy)
+.########.
+##..oo..##
+#...oo...#
+#..asas..#
+#oodfdfoo#
+#ooasasoo#
+#..dfdfqw#
+#...oo.er#
+##..oo..##
+.########.
+
+)
+
+
+
+(above level is just better version of this even if uglier)
+(
+################
+#..............#
+#......qw......#
+#......er......#
+#..............#
+#......as......#
+#......df......#
+#......##......#
+#oo..........oo#
+#oo....as....oo#
+###...#df#...###
+,,#..........#,,
+,,#...#..#...#,,
+,,#...#..#...#,,
+,,#..##..##..#,,
+,,##.##..##.##,,
+,,,#.##..##.#,,,
+,,,#........#,,,
+,,,#........#,,,
+,,,##########,,,
+)

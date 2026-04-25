@@ -1,0 +1,228 @@
+title Recondite Star Sector Sigma
+author increpare
+homepage www.increpare.com
+
+========
+OBJECTS
+========
+
+hintergrund
+black
+
+
+ziel
+pink
+..000
+.00..
+.0.0.
+..00.
+000..
+
+wand
+black gray
+00000
+01010
+00000
+01010
+00000
+
+spieler
+red white
+..0..
+.000.
+.111.
+.111.
+01010
+
+Kiste
+Orange Yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+crate  c
+orange yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+=======
+LEGEND
+=======
+
+player = spieler
+background = hintergrund
+
+. = Background
+# = wand
+P = spieler
+* = kiste
+O = ziel
+
+
+=======
+SOUNDS
+=======
+
+kiste MOVE  74233307
+endlevel 35757708
+startgame 52406508
+sfx0 23411703 (kiste auf ziel)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Spieler, wand, Kiste
+ziel
+crate
+======
+RULES
+======
+
+[ >  Spieler | Kiste ] -> [  >  Spieler | > Kiste  ]
+[ >  Spieler | crate ] -> [  >  Spieler | > crate  ]
+[ > crate |  wand ]-> cancel
+[ > spieler | > kiste | ziel  ] -> [ ziel | spieler  | wand ] sfx0
+
+WINCONDITIONS
+==============
+
+( All Target on Crate )
+no Kiste
+all crate on ziel
+
+=======
+LEVELS
+=======
+
+message Sector 1 of 10: Headway 
+(Easiesh but tricky first level?)
+######
+#o.###
+#p.###
+#.*..#
+#.*..#
+#..###
+######
+
+message Sector 2 of 10: Star-Hopper
+(medium-difficult but maybe ok first level?)
+############
+#....###..##
+#..o*.*..#.#
+#*.........#
+#p..########
+############
+
+message Sector 3  of 10: The dividing wall
+(also ok? quite similar? maybe easier?)
+######
+#...##
+#.*o##
+#p*..#
+#.*..#
+#..###
+######
+
+message Sector 4 of 10: The waiting room
+###########
+########..#
+########..#
+#######...#
+#........o#
+#.#*#*#.###
+#..*.p..###
+###########
+
+
+message Sector 5 of 10: The great pillar
+(good first level?)
+######
+#.*..#
+#.#..#
+#.**.#
+#..p.#
+#...o#
+######
+
+
+message Sector 6 of 10: The ceremony
+(good first level? at least a slightly different concept to the others)
+#########
+#.*...o.#
+#.#.*.#.#
+#...*.p.#
+#########
+
+
+(trivial)
+( ######### )
+( ###p.#### )
+( #.......# )
+( #.#**#*.# )
+( #.o..#..# )
+( ######### )
+
+
+message level 7 of 10: Ancient offering
+(intermediate. not so fun?)
+#########
+##o..####
+#.p**...#
+#.#.*..##
+#....#.##
+#########
+
+message Sector 8 of 10: The Constellation of the Rattlesnake 
+
+(hardish? intermeidate :] )
+#########
+###..####
+#.o...*.#
+#.**.##.#
+#....#.p#
+#########
+
+message Sector 9 of 10: The site of return.
+
+(intermediate ok? not so interesting)
+#########
+###..####
+#..*....#
+#p*..*..#
+#.o.##.##
+#########
+
+
+
+message Sector 10 of 10: Normality
+
+#########
+###..####
+#.oc...o#
+#pc..c..#
+#.o.##.##
+#########
+
+
+message Congratulations!  You have navigated the Recondite Star Sector Sigma.  But nobody will ever believe what you saw.
+
+(
+
+[spieler]->[]
+[kiste]->[]
+[ziel]->[]
+
+choose 2 option 0.5 [ wand | no wand ] -> [ | ]
+choose 2 option 0.5 [ wand | no wand ] -> [ wand | wand ]
+choose 2 [no kiste no wand no spieler ] -> [ kiste ]
+choose 1 [no kiste no wand no spieler ] -> [ ziel ]
+choose 1 [no kiste no wand no spieler ] -> [ spieler ]
+
+)

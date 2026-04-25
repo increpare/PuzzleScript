@@ -1,0 +1,471 @@
+title flesh-handed hot casserole delivery bot
+author increpare
+homepage www.increpare.com
+
+text_color lightblue
+background_color #000000
+
+color_palette 14
+========
+OBJECTS
+========
+
+Background
+darkgreen #335544
+00000
+00000
+00100
+00000
+00000
+
+Target
+black darkgreen
+01110
+11111
+11111
+11111
+01110
+
+Wall
+yellow white lightbrown lightgray
+.000.
+2000.
+20000
+20000
+.222.
+
+Player
+lightgray lightblue #f47fbe darkblue darkgray
+.000.
+.101.
+20002
+..0..
+.343.
+
+Crate
+lightgray brown darkbrown gray
+.000.
+32210
+32120
+32210
+.333.
+
+solidwall ;
+#000000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+pushable = crate or wall
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 18740901
+wall move 17209107
+endlevel 27901109
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate, solidwall
+
+======
+RULES
+======
+
+
+[ > Player | wall ] -> [ > Player | > wall  ] 
+[ > pushable | pushable ] -> [ > pushable | > pushable ]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+message 1/10 I am a wittle wobot with fweshy hands, so ive 2 use oven gwoves
+(579 ok)
+..*o
+#.#.
+....
+.p..
+
+
+
+
+(884 good! level)
+o..;
+.*p.
+##..
+....
+
+message 3/10 Ow the dishs r too hawt
+(hand-made...fine easy?)
+....
+....
+....
+o*..
+o*#.
+o*..
+....
+..p.
+....
+
+
+message 4/10 thank evin for gwoves
+(54538 - p easy - okay?)
+.....
+p#...
+...*#
+..*#.
+.o..o
+
+message 5/10 i wuv gwuvs
+(1880 - not too hard - not bad?)
+..*o
+.#.p
+....
+..*#
+;..o
+
+message 6/10 y bot haf fweshy hans?  bcos werker yunion bannd wobot hans :(
+(23117 intermediate - not so hard?)
+...oo
+..#.#
+..**.
+..p.#
+;....
+
+
+message 7/10 y bot can feel paen?
+
+(40131 trivial bun not bad? you do what you have to do? that you have to I think push weirdly at least once is nice?)
+;...
+.#.o
+.**.
+....
+.o*.
+p..o
+....
+;...
+
+
+
+message 8/10 y no nose 2 smell delishus fud
+
+(9977 I like this level intermediate)
+.op...
+o...;;
+.**#;.
+......
+...;.;
+......
+
+
+message 9/10 no nose only burny hans :(
+(10325 intermediate somewhat busy-workish, but ok?)
+.;;..;
+...p.;
+.;..*.
+.#.*o.
+o.....
+......
+
+
+message 10/10 i no like hot food
+
+(tricky! intermediate)
+......
+.;..p;
+..*.o.
+.##...
+.;..;.
+;....;
+
+message THE END 2morrw u haev salad k?
+
+(
+==========
+
+
+(1498 - not so good)
+..#o
+.#*.
+.#.p
+...@
+
+(33101 meh - not totally trivial but a bit boring)
+...#.o
+...*.p
+...*..
+#o..#.
+......
+
+(13828 meh)
+...o
+.;..
+..@.
+#...
+....
+;#*.
+....
+..p.
+
+(31243 trivial why is this so hard-rated? lol...)
+;...
+;o..
+..o.
+..*.
+.##.
+.*..
+..p.
+;...
+
+
+....
+....
+....
+....
+
+....
+....
+....
+....
+....
+....
+....
+....
+
+....
+....
+....
+....
+....
+
+.....
+.....
+.....
+.....
+.....
+
+......
+......
+......
+......
+......
+
+
+......
+......
+......
+......
+......
+......
+
+
+
+(5729 trivial)
+..@.
+...;
+.##.
+;..;
+..*.
+p...
+....
+;;.o
+
+(7814 hhm bit easy/wild goose chace easy to miss, and not very satisfying)
+......
+;#..o.
+;..;.;
+;..*#.
+...;..
+....p.
+
+(19542 nah)
+...;..
+.p....
+;..;#.
+..*..;
+.#...o
+o.*..;
+
+(18458 meh)
+;.....
+#o..;;
+.#....
+.**.p.
+o.....
+....;.
+
+
+(7176 p. easy, not bad)
+.#.p.
+.#...
+.....
+.**..
+.o#.o
+
+message level 1 of 10
+
+(insoluble)
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+message level 2 of 10
+
+(trivial)
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+(impossiburu)
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+(nope)
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+(insoluble)
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+(insoluble)
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+(insoluble)
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+(boring)
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+(insoluble)
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+(insoluble)
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+
+(
+choose 3 [ ] -> [ solidwall ]
+choose 3 [ no solidwall ] -> [ wall ]
+choose 1 [ no wall  no solidwall  ] -> [ player ]
+choose 2 [ no wall no player  no solidwall  ] -> [ target ]
+choose 2 [ no wall no player  no solidwall  ] -> [ crate ]
+
+)
+
+(1740 - simple but pleasant?)
+..o.
+.p..
+..*o
+.#*.
+...;
+.;..
+.;#.
+....
+
+
+(26797 pleasant! similar to 9977 but easier)
+o...;;
+......
+.*..#.
+..o*..
+..;.p.
+;;....
+
+)

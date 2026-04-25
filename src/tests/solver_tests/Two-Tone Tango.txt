@@ -1,0 +1,577 @@
+title Two-Tone Tango
+author increpare
+homepage www.increpare.com
+
+require_player_movement
+
+
+========
+OBJECTS
+========
+
+Background
+#58875a
+
+
+Target
+transparent #b8ca58
+00000
+00100
+01110
+00100
+00000
+
+
+Wall
+#906f80 #5f4351
+00010
+11111
+01000
+11111
+00010
+
+Player
+lightblue
+
+Freund
+#355278
+
+Crate
+#b39b2a  transparent
+00000
+01110
+01110
+01110
+00000
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+f = Freund
+* = Crate
+@ = Crate and Target
+O = Target
+
+pusher = player or freund or crate
+
+blocker = player or freund or crate or wall
+=======
+SOUNDS
+=======
+
+Crate MOVE 26816907
+sfx1 15668107 (disconnect)
+sfx2 62739107 (connect)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, freund, Wall, Crate
+
+======
+RULES
+======
+
+[ up player | Freund ] -> [ up player | up Freund ]
+[ down player | Freund ] -> [ down player | down Freund ]
+[ left player | Freund ] -> [ left player | left Freund ]
+[ right player | Freund ] -> [ right player | right Freund ]
+
+
+vertical [ up freund | stationary freund ] -> [ up freund | up freund ]
+vertical [ down freund | stationary freund ] -> [ down freund | down freund ]
+vertical [ left freund | stationary freund ] -> [ left freund | left freund ]
+vertical [ right freund | stationary freund ] -> [ right freund | right freund ]
+
+(forward propagation)
+[ >  pusher | Crate ] -> [  >  pusher | > Crate  ]
+
+
+(backwards propagation)
+
+[ > pusher | stationary blocker ] -> [ stationary pusher | stationary blocker ]
++ vertical [ up freund | stationary freund ] -> [ stationary freund | stationary freund ]
++ vertical [ down freund | stationary freund ] -> [ stationary freund | stationary freund ]
++ vertical [ left freund | stationary freund ] -> [ stationary freund | stationary freund ]
++ vertical [ right freund | stationary freund ] -> [ stationary freund | stationary freund ]
+
+(again forwards propagation)
+[ stationary pusher | > crate ] -> [ stationary pusher | stationary crate ]
+
+[stationary player ]->  cancel
+
+[ < player | stationary freund ] -> sfx1
+[ > player | | stationary freund ] -> sfx2
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Level 1/8
+(could be ok level 1?)
+############
+#..........#
+#....*....o#
+#..f...p...#
+#..f#..p#..#
+############
+
+
+message Level 2/8
+(pleasant early)
+#######
+#..f..#
+#..f..#
+#o@...#
+#..p*.#
+#..p#.#
+##....#
+#######
+
+
+message Level 3/8
+(ok level 3? no 2)
+######
+#...o#
+##.f##
+#..f.#
+#..*.#
+#p...#
+#p...#
+######
+
+
+message Level 4/8
+(Really nice intermediate level!)
+#########
+#p..#...#
+#p....#.#
+#.*.....#
+#....f..#
+#...#f.o#
+#...#...#
+#########
+
+( (Easy but not bad. ok first level?) )
+( ###### )
+( #.#..# )
+( #.o..# )
+( #f...# )
+( #f.*p# )
+( #..*p# )
+( #...o# )
+( ###### )
+
+
+( (maybe ok early level? actually kinda tricky? maybe leave out?) )
+( ########## )
+( #..*...o.# )
+( #...f@...# )
+( #p..f....# )
+( #p..#....# )
+( ########## )
+
+( (p. easy. maybe for start of game. maybe leave out? not outstanding, just ok) )
+( ###### )
+( #o...# )
+( #..*o# )
+( #..p.# )
+( #.fp*# )
+( #.f..# )
+( #.*o.# )
+( ###### )
+
+
+( (easy but ok, maybe level 2-3? so lala) )
+( ########## )
+( #..f..o*.# )
+( #o.f..*p.# )
+( #@.....p.# )
+( ##.....### )
+( ########## )
+
+( (pretty ok? level 1 or 2? okish) )
+( ###### )
+( #..f.# )
+( #p.f.# )
+( #p*..# )
+( #.*.o# )
+( #...*# )
+( #o..o# )
+( ###### )
+
+
+( (Early hard. fine? not too memeorable meh) )
+( ###### )
+( #...o# )
+( #o.o*# )
+( #..f.# )
+( #**f.# )
+( #..p.# )
+( #..p.# )
+( ###### )
+
+
+message Level 5/8
+(a bit tricky but I could reason through it, OK)
+######
+#.#.p#
+#...p#
+#o..*#
+#.**o#
+#.f.o#
+#.f..#
+######
+
+
+
+
+message Level 6/8
+(late. pretty fun! nice to figure out / work through, if not exactly a lynchpin level)
+######
+#...o#
+#....#
+#...f#
+#..*f#
+#p**o#
+#p.o.#
+######
+
+
+message Level 7/8
+(INTERESTING intermediate. got stuck for a weird amount of time lol)
+######
+#o*.o#
+#p..f#
+#p*#f#
+#.*..#
+#....#
+#..o.#
+######
+
+
+message Level 8/8
+(funny! late intermediate/early late difficulty. definitely include)
+######
+#p...#
+#p...#
+##*.@#
+#f...#
+#fo..#
+#o.*.#
+######
+
+message Congratulations!  You are the master of tango.
+
+( (got weirdly stuck for a while, but not hard - late early) )
+( ###### )
+( #...o# )
+( #p...# )
+( #p.@.# )
+( #..*.# )
+( #...f# )
+( #...f# )
+( ###### )
+
+( (ok intermediate? feel like I've solved it before though ,but dont' remmber the solution. maybe pass on this one?) )
+( ####### )
+( #.....# )
+( #.....# )
+( #....p# )
+( ##*..p# )
+( #..f@## )
+( #..f.o# )
+( ####### )
+
+( (easy but not appropriate for eearly game IMO. leave out) )
+( ########## )
+( #o.f...*p# )
+( #..f.o*.p# )
+( #........# )
+( ##.#.....# )
+( ########## )
+
+
+( (Easy ish but not so interesting/useful as intro level?) )
+( ######### )
+( #..o*f.o# )
+( #...*fo*# )
+( #p......# )
+( #p......# )
+( ######### )
+
+( (don't like can realize mistake at the end and need to backtrack) )
+( ########## )
+( ##..o..*p# )
+( #.......p# )
+( #...**.f.# )
+( ##..o.of.# )
+( ########## )
+
+( (trivial) )
+( ########## )
+( #.....po.# )
+( #f..*.p..# )
+( #f.....*.# )
+( #..@.o...# )
+( ########## )
+
+( (trivial) )
+( ########## )
+( #...*o..f# )
+( #...@.#.f# )
+( #p.....*.# )
+( #p......o# )
+( ########## )
+
+
+( (meh. not hard. not fun for me) )
+( ########## )
+( ##...pof.# )
+( #...*p.f.# )
+( #.o...*..# )
+( #..o...*.# )
+( ########## )
+
+
+
+( (perfectly chill/lovely/not hard. wtf? I guess i mistranscribed) )
+( ###### )
+( ##...# )
+( ##...# )
+( ##...# )
+( ##...# )
+( ##p..# )
+( #fp..# )
+( #f.*.# )
+( #o..## )
+( ###### )
+
+
+
+( (meh) )
+( ######### )
+( #....po.# )
+( #...#p..# )
+( ##*.....# )
+( #....f.## )
+( #...#f..# )
+( #...#.#.# )
+( ######### )
+
+( (could be ok as intermediate level? not sure it's conceptually sharp though, but I could solve it with my brain) )
+( ###### )
+( #....# )
+( #..o.# )
+( #p**f# )
+( #po*f# )
+( #..*o# )
+( #o..## )
+( ###### )
+
+
+( (trivialish/boring) )
+( ######## )
+( ####...# )
+( ####...# )
+( ####...# )
+( ####..p# )
+( ####*op# )
+( #f*....# )
+( #f.....# )
+( #o.....# )
+( #..o*..# )
+( ######## )
+
+( (trivialish/boring) )
+( ######## )
+( ####...# )
+( ####.op# )
+( ####.op# )
+( ####.*.# )
+( ####*..# )
+( #......# )
+( #f.....# )
+( #fo*...# )
+( #......# )
+( ######## )
+
+( (hard work, accidentally found solution. skip it) )
+( ######## )
+( ####...# )
+( ####...# )
+( ####...# )
+( ####.o.# )
+( ####.p.# )
+( #.f..p*# )
+( #.f..*.# )
+( #..o*.o# )
+( #......# )
+( ######## )
+
+( (trivial) )
+( ######## )
+( ####...# )
+( ####f..# )
+( ####fo.# )
+( ####...# )
+( ####.*.# )
+( #....o.# )
+( #.*..@p# )
+( #.....p# )
+( #......# )
+( ######## )
+
+
+
+( (trivial) )
+( ######## )
+( ####...# )
+( ####o*o# )
+( ####p..# )
+( ####p..# )
+( ####.*.# )
+( #...o.*# )
+( #.f....# )
+( #.f....# )
+( ######## )
+
+( (trivialish. leave it) )
+( ######## )
+( ####...# )
+( ####...# )
+( ####*o.# )
+( ####*..# )
+( ####...# )
+( #..f.*p# )
+( #..f..p# )
+( #....oo# )
+( ######## )
+
+( (can't figure it out. try solve again later. meh solved it what an anticlimax.  screw this level.) )
+( ###### )
+( #f*o.# )
+( #f...# )
+( #*p*o# )
+( #.p*.# )
+( #oo..# )
+( #....# )
+( ###### )
+
+
+( 
+
+
+########
+####...#
+####...#
+####...#
+####...#
+####...#
+#......#
+#......#
+#......#
+#......#
+########
+
+
+##########
+#........#
+#........#
+#........#
+#........#
+##########
+
+############
+#..........#
+#..........#
+#..........#
+#..........#
+############
+
+######
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+######
+
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#######
+
+
+#########
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#########
+
+
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+###########
+
+##########
+######...#
+######...#
+######...#
+######...#
+######...#
+#........#
+#........#
+#........#
+##########
+
+########
+####...#
+####...#
+####...#
+####...#
+####...#
+#......#
+#......#
+#......#
+########
+)
+(transformation
+
+choose 5 [ ] -> [ wall ]
+choose 1 down [ no blocker | no blocker ] -> [ player | player ]
+choose 1 down [ no blocker | no blocker ] -> [ freund | freund ]
+choose 2 down [ no blocker ] -> [ crate ]
+choose 2 down [ no wall no player no freund no target ] -> [ target ]
+)

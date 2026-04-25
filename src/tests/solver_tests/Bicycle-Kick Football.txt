@@ -1,0 +1,526 @@
+(Ziel = Tore = gerichtet!)
+title Bicycle-Kick Football
+author increpare
+homepage www.increpare.com
+
+( verbose_logging )
+run_rules_on_level_start
+
+background_color #305e12
+text_color white
+
+========
+OBJECTS
+========
+
+Background1
+#6a984d 
+
+Background2
+#87b769
+
+target_bg
+darkgray
+
+Target
+#cccccc #9d9d9d
+00000
+01.10
+0.1.0
+01.10
+00000
+
+
+
+Wall
+#305e12 #305e12
+00000
+01000
+00000
+00010
+00000
+
+Stehend
+Black Orange blue white
+.000.
+.111.
+12221
+.333.
+.2.2.
+
+Tritt_Ost
+Black Orange blue white
+....2
+01232
+0123.
+0123.
+....2
+
+Tritt_Nord
+Black Orange blue white
+22..2
+.333.
+.222.
+.111.
+.000.
+
+Tritt_West
+Black Orange blue white
+2....
+.3210
+.3210
+23210
+2....
+
+
+Tritt_Sud
+Black Orange blue white
+.000.
+.111.
+.222.
+.333.
+2..22
+
+Crate
+#dbdbdb #fcfcfc 
+.000.
+01110
+01110
+01110
+.000.
+
+ost_bewegende
+red
+.....
+.....
+....0
+.....
+.....
+
+nord_bewegende
+red
+..0..
+.....
+.....
+.....
+.....
+
+sud_bewegende
+red
+.....
+.....
+.....
+.....
+..0..
+
+west_bewegende
+red
+.....
+.....
+0....
+.....
+.....
+
+border_up 
+#a4c88d
+00000
+.....
+.....
+.....
+.....
+
+
+border_up_right
+#a4c88d
+....0
+.....
+.....
+.....
+.....
+
+
+border_right
+#a4c88d
+....0
+....0
+....0
+....0
+....0
+
+
+border_down_right
+#a4c88d
+.....
+.....
+.....
+.....
+....0
+
+
+border_down
+#a4c88d
+.....
+.....
+.....
+.....
+00000
+
+
+border_down_left
+#a4c88d
+.....
+.....
+.....
+.....
+0....
+
+
+border_left 
+#a4c88d
+0....
+0....
+0....
+0....
+0....
+
+
+border_up_left 
+#a4c88d
+0....
+.....
+.....
+.....
+.....
+
+
+=======
+LEGEND
+=======
+background = Background1 or Background2
+border = border_up or border_up_right or border_right or border_down_right or border_down or border_down_left or border_left or border_up_left
+tritt = Tritt_Ost or Tritt_Nord or Tritt_West or Tritt_Sud
+player = stehend or tritt
+bewegende = nord_bewegende or sud_bewegende or ost_bewegende or west_bewegende
+. = Background1
+# = Wall
+P = stehend
+t = Tritt_Ost
+* = Crate
+@ = Crate and Target and target_bg
+O = Target and target_bg
+obstacle = crate or player or wall
+
+=======
+SOUNDS
+=======
+
+sfx0  29072107 (kick)
+sfx1 83623707 (kickstart)
+sfx2 51785307 (animend)
+
+endlevel 99732902
+endgame 99732902
+startlevel 24368106
+
+================
+COLLISIONLAYERS
+================
+
+bewegende
+
+Background1, Background2
+border_up 
+border_up_right 
+border_right 
+border_down_right 
+border_down 
+border_down_left 
+border_left 
+border_up_left
+target_bg
+player, Wall, Crate
+Target
+
+======
+RULES
+======
+
+right [ Background1 | Background1 | Background1 ] -> [ Background1 | Background2 | Background1 ]
+
+up [ wall | no wall] ->[ wall | border_down ]
+down [ wall | no wall] ->[ wall | border_up ]
+left [ wall | no wall] ->[ wall | border_right ]
+right [ wall | no wall] ->[ wall | border_left ]
+
+
+right [ no wall | no wall border_down ] -> [ border_down_right   | border_down ]
+down [border_down_right|no border_right]->[|] 
+
+
+left [ no wall | no wall border_down ] -> [ border_down_left   | border_down ]
+down [border_down_left|no border_left]->[|] 
+
+right [ no wall | no wall border_up ] -> [ border_up_right | border_up ]
+down [no border_right | border_up_right ] ->[|]
+
+
+left [ no wall | no wall border_up ] -> [ border_up_left | border_up ]
+down [no border_left | border_up_left ] ->[|]
+
+up [ nord_bewegende Crate | no obstacle ] -> [ > nord_bewegende > Crate | ]again
+down [ sud_bewegende Crate | no obstacle ] -> [ > sud_bewegende > Crate | ]again
+left [ west_bewegende Crate | no obstacle ] -> [ > west_bewegende > Crate | ]again
+right [ ost_bewegende Crate | no obstacle ] -> [ > ost_bewegende > Crate | ] again
+
+[tritt_sud ] -> [ Stehend ] sfx2
+[ tritt_west ] -> [ Tritt_Sud ] again
+
+[ tritt_nord ] -> [ Tritt_west ] again
+
+[ tritt_ost ] -> [ Tritt_Nord ] again
+
+[ action Stehend ] -> [ action Tritt_Ost ] again sfx1
+
+right [  Tritt_Ost | crate ] -> [ Tritt_Ost | up crate up nord_bewegende ] again sfx0
+up [  Tritt_nord | crate ] -> [ Tritt_nord | left crate left west_bewegende ] again sfx0
+left [  Tritt_west | crate ] -> [ Tritt_west | down crate down sud_bewegende ] again sfx0
+down [  Tritt_sud | crate ] -> [ Tritt_sud | right crate right ost_bewegende ] again sfx0
+
+
+up [ nord_bewegende  | obstacle ] -> [ | obstacle ]
+down [ sud_bewegende  | obstacle ] -> [ | obstacle ]
+left [ west_bewegende  | obstacle ] -> [ | obstacle ]
+right [ ost_bewegende  | obstacle ] -> [ | obstacle ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Crate on target
+no bewegende
+no tritt
+
+=======
+LEVELS
+=======
+
+message Level 1 of 6 - FOOTBALL FACT: The goal of football is to foot the ball in the goal (with X).
+#################
+#...#..........##
+#........#.....##
+#..............o#
+##..*.p.#......o#
+#..............o#
+#........#.....##
+#...#..........##
+#################
+
+message GOAAAAAL
+
+message Level 2 of 6 - FOOTBALL FACT: The goal only counts while the ball is in the net.
+(bad first level because no freedom)
+(ok)
+######
+#.O###
+#..###
+#oP..#
+#..**#
+#..###
+######
+message GOAAAAAL
+
+message Level 3 of 6 - FOOTBALL FACT: A single goal can be split into many pieces and spread around the field.
+(p. good! not hard)
+#########
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+message GOAAAAAL
+
+message Level 4 of 6 - FOOTBALL FACT: A game of football consists of a single footballer and arbitrarily many balls.
+(not hard, kinda fun )
+######
+#.oo.#
+#.**.#
+#p...#
+#.**.#
+#.oo.#
+######
+message GOAAAAAL
+
+message Level 5 of 6 - FOOTBALL FACT: The only way to lose is to not take part.
+(not too hard, but fun :] )
+#########
+#######o#
+#######o#
+#######o#
+#p.*.*.*#
+#.#.#.#.#
+#.......#
+#########
+
+
+message GOAAAAAL
+
+message Level 6 of 6 : FOOTBALL FACT: A regulation football must fit within a 5x5 sprite.
+(possibly not as awful.  but hard. kinda solved it by trial and error? but still hard?)
+#######
+#*.o.o#
+#.....#
+#..p..#
+#@...*#
+#######
+message GOAAAAAL
+
+message Congratulations!  You are the bicycle kicking champion of the six nations!
+
+(
+(nobody wants to suffer this torture)
+(also p .hard, but smaller at least. you haven't solved yet!  even with a solver it's pretty monstrous. best avoided / nixxed?)
+#######
+#@...@#
+#...o.#
+#.p...#
+#*...@#
+#######
+
+
+(also hard)
+#########
+#*..o..*#
+#.......#
+#.......#
+#p......#
+#.......#
+#@.....o#
+#########
+)
+(
+
+message level 1 of 10
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+(p. good!)
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+)
+(
+[player]->[]
+[crate]->[]
+[target]->[]
+
+choose 2 option 0.5 [wall]->[]
++ option 0.5 []->[]
+
+choose 2 option 0.5 [no wall no player no target]->[wall]
++ option 0.5 []->[]
+
+choose 1 [ no wall]->[player]
+choose 2 [no wall no player no crate]->[crate]
+choose 2 [ no wall no player]->[target]
+
+)

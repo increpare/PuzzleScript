@@ -1,0 +1,1673 @@
+(MOVEMENT SHOULD BE DETERMINED BY TARGET DIRECTION not current one)
+
+title North Wind Simple Sailboat Buoy Collection
+author increpare
+homepage www.increpare.com
+
+background_color #255474
+text_color #caa786
+
+norepeat_action
+run_rules_on_level_start
+again_interval 0.4
+realtime_interval 1
+( debug )
+( verbose_logging )
+
+noundo
+
+========
+OBJECTS
+========
+
+buoy b
+#ac3232 #847e87
+.....
+..10.
+..1..
+..0..
+.000.
+
+Background
+#5fcde4 #48bbd3
+00000
+00100
+01010
+10001
+00000
+
+land
+#37946e #25855e
+00000
+01000
+00000
+00010
+00000
+
+pontoon1 t
+#8d614c #9e7650
+00000
+10101
+10101
+00000
+.0.0.
+
+pontoon2 y
+#8d614c #9e7650
+00000
+01010
+01010
+00000
+.0.0.
+
+pontoon3 u
+#8d614c #9e7650
+00000
+01110
+00000
+01110
+00000
+
+pontoon4 i
+#8d614c #9e7650
+01110
+00000
+01110
+00000
+01110
+
+
+pontoon5 o
+#8d614c #9e7650
+01110
+00000
+01110
+00000
+0...0
+
+mountain1
+#16724c
+....0
+...00
+..000
+.0000
+00.0.
+
+mountain2
+#16724c
+00000
+00000
+00000
+00000
+0.0.0
+
+mountain3
+#16724c
+0....
+00...
+000..
+0000.
+.0.00
+
+mountain4
+#16724c
+.....
+.....
+..0..
+.000.
+00000
+
+tree
+#37946e #8d614c #16724c
+00000
+00200
+02220
+00100
+00000
+
+mountain_blue1
+#306082
+00000
+00000
+00000
+00000
+.....
+
+mountain_blue2
+#306082 #9badb7
+....1
+...11
+..110
+.0000
+00000
+
+mountain_blue3
+#306082 #9badb7
+1....
+11...
+101..
+0000.
+00000
+
+
+rock
+#255474 #306082 #3f7296 #4e7ea1 
+..13.
+.0112
+00121
+01102
+.000.
+
+
+coast_n
+#37946e #25855e #caa786
+22222
+.222.
+.....
+.....
+.....
+
+coast_ne
+#37946e #25855e #caa786 #5fcde4
+22223
+.2222
+...22
+...22
+....2
+
+coast_e
+#37946e #25855e #caa786
+....2
+...22
+...22
+...22
+....2
+
+coast_se
+#37946e #25855e #caa786 #5fcde4
+....2
+....2
+...22
+.2222
+22223
+
+coast_s
+#37946e #25855e #caa786
+.....
+.....
+.....
+.222.
+22222
+
+coast_sw
+#37946e #25855e #caa786 #5fcde4
+2....
+22...
+22...
+2222.
+32222
+
+coast_w
+#37946e #25855e #caa786
+2....
+22...
+22...
+22...
+2....
+
+coast_nw
+#37946e #25855e #caa786 #5fcde4
+32222
+2222.
+22...
+22...
+2....
+
+house1
+#caa786 #8d614c #9e7650
+..000
+..000
+11111
+00000
+00020
+
+house2
+#caa786 #8d614c #9e7650
+.....
+.....
+.....
+...1.
+..111
+
+house3
+#caa786 #8d614c #9e7650
+.....
+11111
+12121
+00000
+00000
+
+house4
+#caa786 #8d614c #9e7650
+.....
+..1..
+.111.
+.000.
+.020.
+
+
+
+
+Player
+#639bff
+.....
+.....
+..0..
+.....
+.....
+
+heading_n
+transparent
+
+heading_ne
+transparent
+
+heading_e
+transparent
+
+heading_se
+transparent
+
+heading_s
+transparent
+
+heading_sw
+transparent
+
+heading_w
+transparent
+
+heading_nw
+transparent
+
+wreck_1
+#667598 #a9b5d0 brown #639bff #ffffff #d2dde3
+.000.
+01310
+01140
+0145.
+.0054
+
+wreck_2
+#667598 #a9b5d0 brown #639bff #ffffff #d2dde3
+.000.
+01110
+.1110
+..110
+.2.0.
+
+hull_n_bow
+#667598 #a9b5d0 brown
+.000.
+01110
+01110
+01110
+01110
+
+hull_n_stern
+#667598 #a9b5d0 brown
+01110
+01110
+.000.
+.....
+.....
+
+hull_n_rl
+#667598 #a9b5d0 brown
+.....
+.....
+.....
+.2...
+2....
+
+hull_n_rc
+#667598 #a9b5d0 brown
+.....
+.....
+.....
+..2..
+..2..
+
+hull_n_rr
+#667598 #a9b5d0 brown
+.....
+.....
+.....
+...2.
+....2
+
+hull_ne_bow
+#667598 #a9b5d0 brown
+.00..
+0110.
+11110
+11110
+1110.
+
+hull_ne_stern
+#667598 #a9b5d0 brown
+.0111
+.0111
+..011
+...00
+.....
+
+
+
+hull_ne_rl
+#667598 #a9b5d0 brown
+.....
+.....
+22...
+.....
+.....
+
+hull_ne_rc
+#667598 #a9b5d0 brown
+.....
+.....
+.....
+.2...
+2....
+
+hull_ne_rr
+#667598 #a9b5d0 brown
+.....
+.....
+.....
+..2..
+..2..
+
+hull_e_bow
+#667598 #a9b5d0 brown
+0000.
+11110
+11110
+11110
+0000.
+
+hull_e_stern
+#667598 #a9b5d0 brown
+...00
+..011
+..011
+..011
+...00
+
+hull_e_rl
+#667598 #a9b5d0 brown
+2....
+.2...
+.....
+.....
+.....
+
+hull_e_rc
+#667598 #a9b5d0 brown
+.....
+.....
+22...
+.....
+.....
+
+hull_e_rr
+#667598 #a9b5d0 brown
+.....
+.....
+.....
+.2...
+2....
+
+
+
+hull_se_bow
+#667598 #a9b5d0 brown
+1110.
+11110
+11110
+0110.
+.00..
+
+hull_se_stern
+#667598 #a9b5d0 brown
+.....
+...00
+..011
+.0111
+.0111
+
+
+hull_se_rl
+#667598 #a9b5d0 brown
+..2..
+..2..
+.....
+.....
+.....
+
+hull_se_rc
+#667598 #a9b5d0 brown
+2....
+.2...
+.....
+.....
+.....
+
+hull_se_rr
+#667598 #a9b5d0 brown
+.....
+.....
+22...
+.....
+.....
+
+
+hull_s_bow
+#667598 #a9b5d0 brown
+01110
+01110
+01110
+01110
+.000.
+
+hull_s_stern
+#667598 #a9b5d0 brown
+.....
+.....
+.000.
+01110
+01110
+
+
+hull_s_rl
+#667598 #a9b5d0 brown
+....2
+...2.
+.....
+.....
+.....
+
+hull_s_rc
+#667598 #a9b5d0 brown
+..2..
+..2..
+.....
+.....
+.....
+
+hull_s_rr
+#667598 #a9b5d0 brown
+2....
+.2...
+.....
+.....
+.....
+
+hull_sw_bow
+#667598 #a9b5d0 brown
+.0111
+01111
+01111
+.0110
+..00.
+
+hull_sw_stern
+#667598 #a9b5d0 brown
+.....
+00...
+110..
+1110.
+1110.
+
+
+hull_sw_rl
+#667598 #a9b5d0 brown
+.....
+.....
+...22
+.....
+.....
+
+hull_sw_rc
+#667598 #a9b5d0 brown
+....2
+...2.
+.....
+.....
+.....
+
+hull_sw_rr
+#667598 #a9b5d0 brown
+..2..
+..2..
+.....
+.....
+.....
+
+hull_w_bow
+#667598 #a9b5d0 brown
+.0000
+01111
+01111
+01111
+.0000
+
+hull_w_stern
+#667598 #a9b5d0 brown
+00...
+110..
+110..
+110..
+00...
+
+
+
+hull_w_rl
+#667598 #a9b5d0 brown
+.....
+.....
+.....
+...2.
+....2
+
+hull_w_rc
+#667598 #a9b5d0 brown
+.....
+.....
+...22
+.....
+.....
+
+hull_w_rr
+#667598 #a9b5d0 brown
+....2
+...2.
+.....
+.....
+.....
+
+
+hull_nw_bow
+#667598 #a9b5d0 brown
+..00.
+.0110
+01111
+01111
+.0111
+
+hull_nw_stern
+#667598 #a9b5d0 brown
+1110.
+1110.
+110..
+00...
+.....
+
+
+
+hull_nw_rl
+#667598 #a9b5d0 brown
+.....
+.....
+.....
+..2..
+..2..
+
+hull_nw_rc
+#667598 #a9b5d0 brown
+.....
+.....
+.....
+...2.
+....2
+
+hull_nw_rr
+#667598 #a9b5d0 brown
+.....
+.....
+...22
+.....
+.....
+
+
+hull_diag_nw
+#667598 #a9b5d0 brown
+.....
+.....
+....0
+...01
+..011
+
+
+hull_diag_ne
+#667598 #a9b5d0 brown
+.....
+.....
+0....
+10...
+110..
+
+
+hull_diag_se
+#667598 #a9b5d0 brown
+110..
+10...
+0....
+.....
+.....
+
+
+
+
+
+hull_diag_sw
+#667598 #a9b5d0 brown
+..011
+...01
+....0
+.....
+.....
+
+sail_n_1
+#d2dde3 white
+..01.
+..1..
+.....
+.....
+.....
+
+sail_n_2
+#d2dde3 white
+.....
+.....
+..1..
+.10..
+..1..
+
+
+sail_ne_1
+#d2dde3 white
+....0
+...11
+.....
+.....
+.....
+
+sail_ne_2
+#d2dde3 white
+1....
+.....
+.....
+.....
+.....
+
+sail_ne_3
+#d2dde3 white
+.....
+.....
+..1..
+.01..
+01...
+
+sail_e_1
+#d2dde3 white
+.....
+.....
+...10
+....1
+.....
+
+sail_e_2
+#d2dde3 white
+.....
+.....
+001..
+11...
+.....
+
+
+sail_se_1
+#d2dde3 white
+.....
+.....
+.....
+...1.
+...10
+
+sail_se_2
+#d2dde3 white
+....1
+.....
+.....
+.....
+.....
+
+sail_se_3
+#d2dde3 white
+0....
+10...
+.11..
+.....
+.....
+
+
+
+sail_s_1
+#d2dde3 white
+.....
+.....
+.....
+..1..
+.10..
+
+sail_s_2
+#d2dde3 white
+..1..
+..01.
+..1..
+.....
+.....
+
+
+sail_sw_1
+#d2dde3 white
+.....
+.....
+.....
+.1...
+01...
+
+sail_sw_2
+#d2dde3 white
+1....
+.....
+.....
+.....
+.....
+
+sail_sw_3
+#d2dde3 white
+....0
+...01
+..11.
+.....
+.....
+
+
+
+
+sail_w_1
+#d2dde3 white
+.....
+.....
+01...
+1....
+.....
+
+sail_w_2
+#d2dde3 white
+.....
+.....
+..100
+...11
+.....
+
+
+sail_nw_1
+#d2dde3 white
+0....
+11...
+.....
+.....
+.....
+
+sail_nw_2
+#d2dde3 white
+....1
+.....
+.....
+.....
+.....
+
+sail_nw_3
+#d2dde3 white
+.....
+.....
+..1..
+..10.
+...10
+
+rudderdir_l
+transparent
+
+rudderdir_c
+transparent
+
+rudderdir_r
+transparent
+
+sail_direction_n
+transparent
+
+sail_direction_ne
+transparent
+
+sail_direction_e
+transparent
+
+sail_direction_se
+transparent
+
+sail_direction_s
+transparent
+
+sail_direction_sw
+transparent
+
+sail_direction_w
+transparent
+
+sail_direction_nw
+transparent
+
+tension_0
+transparent
+
+tension_1
+transparent
+
+tension_2
+transparent
+
+sail_side_right
+transparent
+
+sail_side_left
+transparent
+
+cordslack_0
+transparent
+
+cordslack_1
+transparent
+
+cordslack_2
+transparent
+
+sailcord_n
+#d0535f
+..0..
+..0..
+..0..
+.....
+.....
+
+sailcord_ne
+#d0535f
+....0
+...0.
+..0..
+.....
+.....
+
+sailcord_e
+#d0535f
+.....
+.....
+..000
+.....
+.....
+
+sailcord_se
+#d0535f
+.....
+.....
+..0..
+...0.
+....0
+
+sailcord_s
+#d0535f
+.....
+.....
+..0..
+..0..
+..0..
+
+
+
+sailcord_sw
+#d0535f
+.....
+.....
+..0..
+.0...
+0....
+
+
+sailcord_w
+#d0535f
+.....
+.....
+000..
+.....
+.....
+
+
+
+sailcord_nw
+#d0535f
+0....
+.0...
+..0..
+.....
+.....
+
+
+sailcord_ns
+#d0535f
+..0..
+..0..
+..0..
+..0..
+..0..
+
+sailcord_ew
+#d0535f
+.....
+.....
+00000
+.....
+.....
+
+sailcord_cordslack_south_1
+#d0535f
+.....
+.....
+..0..
+.0.0.
+..0..
+
+sailcord_cordslack_south_2
+#d0535f
+.....
+.....
+.000.
+0...0
+.000.
+
+sailcord_cordslack_south_left
+#d0535f
+.....
+.....
+.....
+..0..
+...00
+
+sailcord_cordslack_south_right
+#d0535f
+.....
+.....
+.....
+..0..
+00...
+
+againing
+transparent
+
+movement_n
+transparent
+
+movement_ne
+transparent
+
+movement_e
+transparent
+
+movement_se
+transparent
+
+movement_s
+transparent
+
+movement_sw
+transparent
+
+movement_w
+transparent
+
+movement_nw
+transparent
+
+movement_target
+transparent
+
+hasturned
+transparent
+
+domove
+transparent
+
+=======
+LEGEND
+=======
+
+house = house1 or house2 or house3 or house4
+coast = coast_n or coast_ne or coast_e or coast_se or coast_s or coast_sw or coast_w or coast_nw
+
+
+sailcord = sailcord_n or sailcord_ne or sailcord_e or sailcord_Se or sailcord_s or sailcord_Sw or sailcord_w or sailcord_nw or sailcord_cordslack_south_1 or sailcord_cordslack_south_2 or sailcord_cordslack_south_left or sailcord_cordslack_south_right or sailcord_ns or sailcord_ew
+
+rudder = hull_n_rl or hull_n_rc or hull_n_rr or hull_ne_rl or hull_ne_rc or hull_ne_rr or hull_e_rl or hull_e_rc or hull_e_rr or hull_se_rl or hull_se_rc or hull_se_rr or hull_s_rl or hull_s_rc or hull_s_rr or hull_sw_rl or hull_sw_rc or hull_sw_rr or hull_w_rl or hull_w_rc or hull_w_rr or hull_nw_rl or hull_nw_rc or hull_nw_rr 
+
+hull = hull_n_bow or hull_n_stern or hull_ne_bow or hull_ne_stern or hull_e_bow or hull_e_stern or hull_se_bow or hull_se_stern or hull_s_bow or hull_s_stern or hull_nw_bow or hull_nw_stern or hull_w_bow or hull_w_stern or hull_sw_bow or hull_sw_stern or hull_diag_ne or hull_diag_se or hull_diag_sw or hull_diag_nw
+
+hull_stern = hull_n_stern or hull_ne_stern or hull_e_stern or hull_se_stern or hull_s_stern or hull_sw_stern or hull_w_stern or hull_nw_stern 
+
+heading = heading_n or heading_ne or heading_e or heading_se or heading_s or heading_sw or heading_w or heading_nw
+
+rudderdir = rudderdir_l or rudderdir_c or rudderdir_r
+
+sail = sail_n_1 or sail_n_2 or sail_ne_1 or sail_ne_2 or sail_ne_3 or sail_e_1 or sail_e_2 or sail_se_1 or sail_se_2 or sail_se_3 or sail_s_1 or sail_s_2 or sail_sw_1 or sail_sw_2 or sail_sw_3 or sail_w_1 or sail_w_2 or sail_nw_1 or sail_nw_2 or sail_nw_3 
+
+sail_direction = sail_direction_n or sail_direction_ne or sail_direction_e or sail_direction_se or sail_direction_s or sail_direction_sw or sail_direction_w or sail_direction_nw 
+
+mountain = mountain1 or mountain2 or mountain3 or mountain4
+mountain_blue = mountain_blue1 or mountain_blue2 or mountain_blue3
+pontoon = pontoon1 or pontoon2 or pontoon3 or pontoon4 or pontoon5
+
+obstacle = land or rock or pontoon
+
+tension = tension_0 or tension_1 or tension_2
+sail_side = sail_side_right or sail_side_left
+cordslack = cordslack_0 or cordslack_1 or cordslack_2
+movement = movement_n or movement_ne or movement_e or movement_se or movement_s or movement_sw or movement_w or movement_nw
+
+wreck = wreck_1 or wreck_2
+
+. = Background
+P = Player and heading_e and rudderdir_c and tension_2 and sail_side_left
+
+w = land and coast_n
+e = land and coast_ne
+d = land and coast_e
+c = land and coast_se
+x = land and coast_s
+z = land and coast_sw
+a = land and coast_w
+q = land and coast_nw
+s = land 
+f = house1 and land
+g = house2 and land
+h = house3 and land
+j = house4 and land
+v = mountain1 and land
+, = mountain2 and land
+n = mountain3 and land
+m = mountain4 and land
+l = mountain_blue1 and land and mountain1
+; = mountain_blue1 and land and mountain3
+' = mountain_blue2 and land  
+# = mountain_blue3 and land  
+- = tree and land
+r = rock
+
+=======
+SOUNDS
+=======
+sfx0 64788707 (tight)
+sfx1 92037307  (tighten sail)
+sfx2 6725507(loose )
+sfx3 72434302 (boat crash)
+sfx5 94572100 (pick up buoy)
+sfx6 23834907(rudder change)
+startlevel 51979900
+endgame 68419109
+
+================
+COLLISIONLAYERS
+================
+
+Background
+land, rock, pontoon
+mountain_blue, tree
+coast, house,mountain, buoy
+rudder
+hull
+wreck
+Player
+sailcord
+sail
+heading
+rudderdir
+sail_direction
+tension
+sail_side
+cordslack
+againing
+movement
+movement_target
+hasturned
+domove
+
+======
+RULES
+======
+
+(start of autotiling code- comment out for release version)
+
+( up [ land no coast | no land ] -> [ land coast_n |] )
+( down [ land no coast | no land ] -> [ land coast_s |] )
+( right [ land no coast | no land ] -> [ land coast_e |] )
+( left [ land no coast | no land ] -> [ land coast_w |] )
+
+( right [coast_n | no land] -> [ coast_ne |] sfx6 )
+( left [coast_n | no land] -> [ coast_nw | ] sfx6 )
+
+( right [coast_s | no land] -> [ coast_se |] )
+( left [coast_s | no land] -> [ coast_sw | ] )
+
+(end of autotiling code- comment out for release version)
+
+
+[ stationary player ] -> [ stationary player againing ]
+( [ moving player ]-> again )
+
+[hull]->[]
+[rudder]->[]
+[sail]->[]
+[cordslack]->[]
+[sailcord]->[]
+
+
+
+( [ action player heading_n ]-> [ player heading_ne ] )
+( [ action player heading_ne ]-> [ player heading_e ] )
+( [ action player heading_e ]-> [ player heading_se ] )
+( [ action player heading_se ]-> [ player heading_s ] )
+( [ action player heading_s ]-> [ player heading_sw ] )
+( [ action player heading_sw ]-> [ player heading_w ] )
+( [ action player heading_w ]-> [ player heading_nw ] )
+( [ action player heading_nw ]-> [ player heading_n ] )
+
+
+[ up player tension_2 ] -> [ player tension_1 ] sfx1
+[ up player tension_1 ] -> [ player tension_0 ] sfx2
+[ down player tension_0 ] -> [ player tension_1 ] sfx1
+[ down player tension_1 ] -> [ player tension_2 ] sfx0
+
+(calculate sail direction / cord slack)
+
+[ heading_n tension_2 sail_side_left  ] -> [ heading_n tension_2 sail_side_left  sail_direction_s cordslack_0 ]
+[ heading_n tension_2 sail_side_right ] -> [ heading_n tension_2 sail_side_right sail_direction_s cordslack_0 ]
+[ heading_n tension_1 sail_side_left  ] -> [ heading_n tension_1 sail_side_left  sail_direction_s cordslack_1 ]
+[ heading_n tension_1 sail_side_right ] -> [ heading_n tension_1 sail_side_right sail_direction_s cordslack_1 ]
+[ heading_n tension_0 sail_side_left  ] -> [ heading_n tension_0 sail_side_left  sail_direction_s cordslack_2 ]
+[ heading_n tension_0 sail_side_right ] -> [ heading_n tension_0 sail_side_right sail_direction_s cordslack_2 ]
+
+
+[ heading_ne tension_2 sail_side_left  ] -> [ heading_ne tension_2 sail_side_right  sail_direction_sw cordslack_0 ]
+[ heading_ne tension_2 sail_side_right ] -> [ heading_ne tension_2 sail_side_right sail_direction_sw cordslack_0 ]
+[ heading_ne tension_1 sail_side_left  ] -> [ heading_ne tension_1 sail_side_right sail_direction_s cordslack_0  ]
+[ heading_ne tension_1 sail_side_right ] -> [ heading_ne tension_1 sail_side_right sail_direction_s cordslack_0  ]
+[ heading_ne tension_0 sail_side_left  ] -> [ heading_ne tension_0 sail_side_right  sail_direction_s cordslack_1  ]
+[ heading_ne tension_0 sail_side_right ] -> [ heading_ne tension_0 sail_side_right sail_direction_s cordslack_1  ]
+
+
+[ heading_e tension_2 sail_side_left  ] -> [ heading_e tension_2 sail_side_right  sail_direction_w cordslack_0 ]
+[ heading_e tension_2 sail_side_right ] -> [ heading_e tension_2 sail_side_right sail_direction_w cordslack_0 ]
+[ heading_e tension_1 sail_side_left  ] -> [ heading_e tension_1 sail_side_right  sail_direction_sw cordslack_0 ]
+[ heading_e tension_1 sail_side_right ] -> [ heading_e tension_1 sail_side_right sail_direction_sw cordslack_0 ]
+[ heading_e tension_0 sail_side_left  ] -> [ heading_e tension_0 sail_side_right  sail_direction_s cordslack_0 ]
+[ heading_e tension_0 sail_side_right ] -> [ heading_e tension_0 sail_side_right sail_direction_s cordslack_0 ]
+
+
+[ heading_se tension_2 sail_side_left  ] -> [ heading_se tension_2 sail_side_right  sail_direction_nw cordslack_0 ]
+[ heading_se tension_2 sail_side_right ] -> [ heading_se tension_2 sail_side_right sail_direction_nw cordslack_0 ]
+[ heading_se tension_1 sail_side_left  ] -> [ heading_se tension_1 sail_side_right  sail_direction_w cordslack_0 ]
+[ heading_se tension_1 sail_side_right ] -> [ heading_se tension_1 sail_side_right sail_direction_w cordslack_0 ]
+[ heading_se tension_0 sail_side_left  ] -> [ heading_se tension_0 sail_side_left  sail_direction_ne cordslack_0 ]
+[ heading_se tension_0 sail_side_right ] -> [ heading_se tension_0 sail_side_right sail_direction_sw cordslack_0 ]
+
+[ heading_s tension_2 sail_side_left  ] -> [ heading_s tension_2 sail_side_left  sail_direction_n cordslack_0 ]
+[ heading_s tension_2 sail_side_right ] -> [ heading_s tension_2 sail_side_right sail_direction_n cordslack_0 ]
+[ heading_s tension_1 sail_side_left  ] -> [ heading_s tension_1 sail_side_left  sail_direction_ne cordslack_0 ]
+[ heading_s tension_1 sail_side_right ] -> [ heading_s tension_1 sail_side_right sail_direction_nw cordslack_0 ]
+[ heading_s tension_0 sail_side_left  ] -> [ heading_s tension_0 sail_side_left  sail_direction_e cordslack_0 ]
+[ heading_s tension_0 sail_side_right ] -> [ heading_s tension_0 sail_side_right sail_direction_w cordslack_0 ]
+
+[ heading_sw tension_2 sail_side_left  ] -> [ heading_sw tension_2 sail_side_left  sail_direction_ne cordslack_0 ]
+[ heading_sw tension_2 sail_side_right ] -> [ heading_sw tension_2 sail_side_left sail_direction_ne cordslack_0 ]
+[ heading_sw tension_1 sail_side_left  ] -> [ heading_sw tension_1 sail_side_left  sail_direction_e cordslack_0 ]
+[ heading_sw tension_1 sail_side_right ] -> [ heading_sw tension_1 sail_side_left sail_direction_e cordslack_0 ]
+[ heading_sw tension_0 sail_side_left  ] -> [ heading_sw tension_0 sail_side_left  sail_direction_se cordslack_0 ]
+[ heading_sw tension_0 sail_side_right ] -> [ heading_sw tension_0 sail_side_left sail_direction_se cordslack_0 ]
+
+[ heading_w tension_2 sail_side_left  ] -> [ heading_w tension_2 sail_side_left  sail_direction_e cordslack_0 ]
+[ heading_w tension_2 sail_side_right ] -> [ heading_w tension_2 sail_side_left sail_direction_e cordslack_0 ]
+[ heading_w tension_1 sail_side_left  ] -> [ heading_w tension_1 sail_side_left  sail_direction_se cordslack_0 ]
+[ heading_w tension_1 sail_side_right ] -> [ heading_w tension_1 sail_side_left sail_direction_se cordslack_0 ]
+[ heading_w tension_0 sail_side_left  ] -> [ heading_w tension_0 sail_side_left  sail_direction_s cordslack_0 ]
+[ heading_w tension_0 sail_side_right ] -> [ heading_w tension_0 sail_side_left sail_direction_s cordslack_0 ]
+
+[ heading_nw tension_2 sail_side_left  ] -> [ heading_nw tension_2 sail_side_left  sail_direction_se cordslack_0 ]
+[ heading_nw tension_2 sail_side_right ] -> [ heading_nw tension_2 sail_side_right sail_direction_se cordslack_0 ]
+[ heading_nw tension_1 sail_side_left  ] -> [ heading_nw tension_1 sail_side_left  sail_direction_s cordslack_0 ]
+[ heading_nw tension_1 sail_side_right ] -> [ heading_nw tension_1 sail_side_right sail_direction_s cordslack_0 ]
+[ heading_nw tension_0 sail_side_left  ] -> [ heading_nw tension_0 sail_side_left  sail_direction_s cordslack_1 ]
+[ heading_nw tension_0 sail_side_right ] -> [ heading_nw tension_0 sail_side_right sail_direction_s cordslack_1 ]
+
+
+
+(rudder steering)
+[ left player rudderdir_c ]->[player rudderdir_l] sfx6
+[ left player rudderdir_r ]->[player rudderdir_c] sfx6
+
+[ right player rudderdir_l ]->[player rudderdir_c] sfx6
+[ right player rudderdir_c ]->[player rudderdir_r] sfx6
+
+
+[ moving player ]->[player]
+
+(Calculating the movement direction! )
+
+( [againing heading_n sail_direction_n  ] -> [againing heading_n sail_direction_n  movement_n ] )
+( [againing heading_n sail_direction_ne ] -> [againing heading_n sail_direction_ne movement_n ] )
+( [againing heading_n sail_direction_e  ] -> [againing heading_n sail_direction_e  movement_n ] )
+( [againing heading_n sail_direction_se ] -> [againing heading_n sail_direction_se movement_n ] )
+[againing heading_n sail_direction_s rudderdir_l ] -> [againing heading_n sail_direction_s rudderdir_l domove ]
+[againing heading_n sail_direction_s rudderdir_r ] -> [againing heading_n sail_direction_s rudderdir_r domove ]
+( [againing heading_n sail_direction_sw ] -> [againing heading_n sail_direction_sw movement_n ] )
+( [againing heading_n sail_direction_w  ] -> [againing heading_n sail_direction_w  movement_n ] )
+( [againing heading_n sail_direction_nw ] -> [againing heading_n sail_direction_nw movement_n ] )
+
+( [againing heading_ne sail_direction_n  ] -> [againing heading_ne sail_direction_n  movement_ne ] )
+( [againing heading_ne sail_direction_ne ] -> [againing heading_ne sail_direction_ne movement_ne ] )
+( [againing heading_ne sail_direction_e  ] -> [againing heading_ne sail_direction_e  movement_ne ] )
+( [againing heading_ne sail_direction_se ] -> [againing heading_ne sail_direction_se movement_ne ] )
+( [againing heading_ne sail_direction_s  ] -> [againing heading_ne sail_direction_s  movement_ne ] )
+[againing heading_ne sail_direction_sw ] -> [againing heading_ne sail_direction_sw domove ]
+( [againing heading_ne sail_direction_w  ] -> [againing heading_ne sail_direction_w  movement_ne ] )
+( [againing heading_ne sail_direction_nw ] -> [againing heading_ne sail_direction_nw movement_ne ] )
+
+( [againing heading_e sail_direction_n  ] -> [againing heading_e sail_direction_n  movement_e ] )
+( [againing heading_e sail_direction_ne ] -> [againing heading_e sail_direction_ne movement_e ] )
+( [againing heading_e sail_direction_e  ] -> [againing heading_e sail_direction_e  movement_e ] )
+( [againing heading_e sail_direction_se ] -> [againing heading_e sail_direction_se movement_e ] )
+( [againing heading_e sail_direction_s  ] -> [againing heading_e sail_direction_s  movement_e ] )
+[againing heading_e sail_direction_sw ] -> [againing heading_e sail_direction_sw domove ]
+( [againing heading_e sail_direction_w  ] -> [againing heading_e sail_direction_w  movement_e ] )
+( [againing heading_e sail_direction_nw ] -> [againing heading_e sail_direction_nw movement_e ] )
+
+( [againing heading_se sail_direction_n  ] -> [againing heading_se sail_direction_n  movement_se ] )
+[againing heading_se sail_direction_ne ] -> [againing heading_se sail_direction_ne domove ]
+( [againing heading_se sail_direction_e  ] -> [againing heading_se sail_direction_e  movement_se ] )
+( [againing heading_se sail_direction_se ] -> [againing heading_se sail_direction_se movement_se ] )
+( [againing heading_se sail_direction_s  ] -> [againing heading_se sail_direction_s  movement_se ] )
+[againing heading_se sail_direction_sw ] -> [againing heading_se sail_direction_sw domove ]
+[againing heading_se sail_direction_w  ] -> [againing heading_se sail_direction_w  domove ]
+[againing heading_se sail_direction_nw ] -> [againing heading_se sail_direction_nw domove ]
+
+( [againing heading_s sail_direction_n  ] -> [againing heading_s sail_direction_n  movement_s ] )
+[againing heading_s sail_direction_ne ] -> [againing heading_s sail_direction_ne domove ]
+[againing heading_s sail_direction_e  ] -> [againing heading_s sail_direction_e  domove ]
+( [againing heading_s sail_direction_se ] -> [againing heading_s sail_direction_se movement_s ] )
+( [againing heading_s sail_direction_s  ] -> [againing heading_s sail_direction_s  movement_s ] )
+( [againing heading_s sail_direction_sw ] -> [againing heading_s sail_direction_sw movement_s ] )
+[againing heading_s sail_direction_w  ] -> [againing heading_s sail_direction_w  domove ]
+[againing heading_s sail_direction_nw ] -> [againing heading_s sail_direction_nw domove ]
+
+( [againing heading_sw sail_direction_n  ] -> [againing heading_sw sail_direction_n  movement_sw ] )
+[againing heading_sw sail_direction_ne ] -> [againing heading_sw sail_direction_ne domove ]
+[againing heading_sw sail_direction_e  ] -> [againing heading_sw sail_direction_e  domove ]
+[againing heading_sw sail_direction_se ] -> [againing heading_sw sail_direction_se domove ]
+( [againing heading_sw sail_direction_s  ] -> [againing heading_sw sail_direction_s  movement_sw ] )
+( [againing heading_sw sail_direction_sw ] -> [againing heading_sw sail_direction_sw movement_sw ] )
+( [againing heading_sw sail_direction_w  ] -> [againing heading_sw sail_direction_w  movement_sw ] )
+[againing heading_sw sail_direction_nw ] -> [againing heading_sw sail_direction_nw domove ]
+
+
+( [againing heading_w sail_direction_n  ] -> [againing heading_w sail_direction_n  movement_w ] )
+( [againing heading_w sail_direction_ne ] -> [againing heading_w sail_direction_ne movement_w ] )
+( [againing heading_w sail_direction_e  ] -> [againing heading_w sail_direction_e  movement_w ] )
+[againing heading_w sail_direction_se ] -> [againing heading_w sail_direction_se domove ]
+( [againing heading_w sail_direction_s  ] -> [againing heading_w sail_direction_s  movement_w ] )
+( [againing heading_w sail_direction_sw ] -> [againing heading_w sail_direction_sw movement_w ] )
+( [againing heading_w sail_direction_w  ] -> [againing heading_w sail_direction_w  movement_w ] )
+( [againing heading_w sail_direction_nw ] -> [againing heading_w sail_direction_nw movement_w ] )
+
+
+( [againing heading_nw sail_direction_n  ] -> [againing heading_nw sail_direction_n  movement_nw ] )
+( [againing heading_nw sail_direction_ne ] -> [againing heading_nw sail_direction_ne movement_nw ] )
+( [againing heading_nw sail_direction_e  ] -> [againing heading_nw sail_direction_e  movement_nw ] )
+[againing heading_nw sail_direction_se ] -> [againing heading_nw sail_direction_se domove ]
+( [againing heading_nw sail_direction_s  ] -> [againing heading_nw sail_direction_s  movement_nw ] )
+( [againing heading_nw sail_direction_sw ] -> [againing heading_nw sail_direction_sw movement_nw ] )
+( [againing heading_nw sail_direction_w  ] -> [againing heading_nw sail_direction_w  movement_nw ] )
+( [againing heading_nw sail_direction_nw ] -> [againing heading_nw sail_direction_nw movement_nw ] )
+
+(rudder rotation)
+
+[ domove no hasturned ] [ rudderdir_l heading_n ]  -> [ domove hasturned ] [ rudderdir_l heading_nw ]
+[ domove no hasturned ] [ rudderdir_l heading_ne ] -> [ domove hasturned ] [ rudderdir_l heading_n ]
+[ domove no hasturned ] [ rudderdir_l heading_e ]  -> [ domove hasturned ] [ rudderdir_l heading_ne ]
+[ domove no hasturned ] [ rudderdir_l heading_se ] -> [ domove hasturned ] [ rudderdir_l heading_e ]
+[ domove no hasturned ] [ rudderdir_l heading_s ]  -> [ domove hasturned ] [ rudderdir_l heading_se ]
+[ domove no hasturned ] [ rudderdir_l heading_sw ] -> [ domove hasturned ] [ rudderdir_l heading_s ]
+[ domove no hasturned ] [ rudderdir_l heading_w ]  -> [ domove hasturned ] [ rudderdir_l heading_sw ]
+[ domove no hasturned ] [ rudderdir_l heading_nw ] -> [ domove hasturned ] [ rudderdir_l heading_w ]
+
+[ domove no hasturned ] [ rudderdir_r heading_n ]  -> [ domove hasturned ] [ rudderdir_r heading_ne ]
+[ domove no hasturned ] [ rudderdir_r heading_ne ] -> [ domove hasturned ] [ rudderdir_r heading_e ]
+[ domove no hasturned ] [ rudderdir_r heading_e ]  -> [ domove hasturned ] [ rudderdir_r heading_se ]
+[ domove no hasturned ] [ rudderdir_r heading_se ] -> [ domove hasturned ] [ rudderdir_r heading_s ]
+[ domove no hasturned ] [ rudderdir_r heading_s ]  -> [ domove hasturned ] [ rudderdir_r heading_sw ]
+[ domove no hasturned ] [ rudderdir_r heading_sw ] -> [ domove hasturned ] [ rudderdir_r heading_w ]
+[ domove no hasturned ] [ rudderdir_r heading_w ]  -> [ domove hasturned ] [ rudderdir_r heading_nw ]
+[ domove no hasturned ] [ rudderdir_r heading_nw ] -> [ domove hasturned ] [ rudderdir_r heading_n ]
+
+[hasturned]->[]
+
+
+[ domove heading_n ] -> [ heading_n movement_n ]
+[ domove heading_ne ] -> [ heading_ne movement_ne ]
+[ domove heading_e ] -> [ heading_e movement_e ]
+[ domove heading_se ] -> [ heading_se movement_se ]
+[ domove heading_s ] -> [ heading_s movement_s ]
+[ domove heading_sw ] -> [ heading_sw movement_sw ]
+[ domove heading_w ] -> [ heading_w movement_w ]
+[ domove heading_nw ] -> [ heading_nw movement_nw ]
+
+right [ movement_ne | ] -> [ | movement_n ]
+right [ movement_se | ] -> [ | movement_s ]
+left  [ movement_nw | ] -> [ | movement_n ]
+left  [ movement_sw | ] -> [ | movement_s ]
+
+up    [ movement_n | ] -> [ | movement_target ]
+right [ movement_e | ] -> [ | movement_target ]
+down  [ movement_s | ] -> [ | movement_target ]
+left  [ movement_w | ] -> [ | movement_target ]
+
+
+( [ movement_target ] [ player heading rudderdir tension sail_side sail_direction ] -> [ player heading rudderdir tension sail_side sail_direction] [] )
+
+(some bug(?) whereby I can't replace the above with the below)
+
+random [ movement_target ] [ player  ] -> [ movement_target player ] []
+random [ movement_target ] [ heading  ] -> [ movement_target heading ] []
+random [ movement_target ] [ rudderdir  ] -> [ movement_target rudderdir ] []
+random [ movement_target ] [ tension  ] -> [ movement_target tension ] []
+random [ movement_target ] [ sail_side  ] -> [ movement_target sail_side ] []
+random [ movement_target ] [ sail_direction ] -> [ movement_target sail_direction ] []
+random [ movement_target]->[]
+
+
+(calculate sail direction / cord slack)
+
+[ heading_n tension_2 sail_side_left  ] -> [ heading_n tension_2 sail_side_left  sail_direction_s cordslack_0 ]
+[ heading_n tension_2 sail_side_right ] -> [ heading_n tension_2 sail_side_right sail_direction_s cordslack_0 ]
+[ heading_n tension_1 sail_side_left  ] -> [ heading_n tension_1 sail_side_left  sail_direction_s cordslack_1 ]
+[ heading_n tension_1 sail_side_right ] -> [ heading_n tension_1 sail_side_right sail_direction_s cordslack_1 ]
+[ heading_n tension_0 sail_side_left  ] -> [ heading_n tension_0 sail_side_left  sail_direction_s cordslack_2 ]
+[ heading_n tension_0 sail_side_right ] -> [ heading_n tension_0 sail_side_right sail_direction_s cordslack_2 ]
+
+
+[ heading_ne tension_2 sail_side_left  ] -> [ heading_ne tension_2 sail_side_right  sail_direction_sw cordslack_0 ]
+[ heading_ne tension_2 sail_side_right ] -> [ heading_ne tension_2 sail_side_right sail_direction_sw cordslack_0 ]
+[ heading_ne tension_1 sail_side_left  ] -> [ heading_ne tension_1 sail_side_right sail_direction_s cordslack_0  ]
+[ heading_ne tension_1 sail_side_right ] -> [ heading_ne tension_1 sail_side_right sail_direction_s cordslack_0  ]
+[ heading_ne tension_0 sail_side_left  ] -> [ heading_ne tension_0 sail_side_right  sail_direction_s cordslack_1  ]
+[ heading_ne tension_0 sail_side_right ] -> [ heading_ne tension_0 sail_side_right sail_direction_s cordslack_1  ]
+
+
+[ heading_e tension_2 sail_side_left  ] -> [ heading_e tension_2 sail_side_right  sail_direction_w cordslack_0 ]
+[ heading_e tension_2 sail_side_right ] -> [ heading_e tension_2 sail_side_right sail_direction_w cordslack_0 ]
+[ heading_e tension_1 sail_side_left  ] -> [ heading_e tension_1 sail_side_right  sail_direction_sw cordslack_0 ]
+[ heading_e tension_1 sail_side_right ] -> [ heading_e tension_1 sail_side_right sail_direction_sw cordslack_0 ]
+[ heading_e tension_0 sail_side_left  ] -> [ heading_e tension_0 sail_side_right  sail_direction_s cordslack_0 ]
+[ heading_e tension_0 sail_side_right ] -> [ heading_e tension_0 sail_side_right sail_direction_s cordslack_0 ]
+
+
+[ heading_se tension_2 sail_side_left  ] -> [ heading_se tension_2 sail_side_right  sail_direction_nw cordslack_0 ]
+[ heading_se tension_2 sail_side_right ] -> [ heading_se tension_2 sail_side_right sail_direction_nw cordslack_0 ]
+[ heading_se tension_1 sail_side_left  ] -> [ heading_se tension_1 sail_side_right  sail_direction_w cordslack_0 ]
+[ heading_se tension_1 sail_side_right ] -> [ heading_se tension_1 sail_side_right sail_direction_w cordslack_0 ]
+[ heading_se tension_0 sail_side_left  ] -> [ heading_se tension_0 sail_side_left  sail_direction_ne cordslack_0 ]
+[ heading_se tension_0 sail_side_right ] -> [ heading_se tension_0 sail_side_right sail_direction_sw cordslack_0 ]
+
+[ heading_s tension_2 sail_side_left  ] -> [ heading_s tension_2 sail_side_left  sail_direction_n cordslack_0 ]
+[ heading_s tension_2 sail_side_right ] -> [ heading_s tension_2 sail_side_right sail_direction_n cordslack_0 ]
+[ heading_s tension_1 sail_side_left  ] -> [ heading_s tension_1 sail_side_left  sail_direction_ne cordslack_0 ]
+[ heading_s tension_1 sail_side_right ] -> [ heading_s tension_1 sail_side_right sail_direction_nw cordslack_0 ]
+[ heading_s tension_0 sail_side_left  ] -> [ heading_s tension_0 sail_side_left  sail_direction_e cordslack_0 ]
+[ heading_s tension_0 sail_side_right ] -> [ heading_s tension_0 sail_side_right sail_direction_w cordslack_0 ]
+
+[ heading_sw tension_2 sail_side_left  ] -> [ heading_sw tension_2 sail_side_left  sail_direction_ne cordslack_0 ]
+[ heading_sw tension_2 sail_side_right ] -> [ heading_sw tension_2 sail_side_left sail_direction_ne cordslack_0 ]
+[ heading_sw tension_1 sail_side_left  ] -> [ heading_sw tension_1 sail_side_left  sail_direction_e cordslack_0 ]
+[ heading_sw tension_1 sail_side_right ] -> [ heading_sw tension_1 sail_side_left sail_direction_e cordslack_0 ]
+[ heading_sw tension_0 sail_side_left  ] -> [ heading_sw tension_0 sail_side_left  sail_direction_se cordslack_0 ]
+[ heading_sw tension_0 sail_side_right ] -> [ heading_sw tension_0 sail_side_left sail_direction_se cordslack_0 ]
+
+[ heading_w tension_2 sail_side_left  ] -> [ heading_w tension_2 sail_side_left  sail_direction_e cordslack_0 ]
+[ heading_w tension_2 sail_side_right ] -> [ heading_w tension_2 sail_side_left sail_direction_e cordslack_0 ]
+[ heading_w tension_1 sail_side_left  ] -> [ heading_w tension_1 sail_side_left  sail_direction_se cordslack_0 ]
+[ heading_w tension_1 sail_side_right ] -> [ heading_w tension_1 sail_side_left sail_direction_se cordslack_0 ]
+[ heading_w tension_0 sail_side_left  ] -> [ heading_w tension_0 sail_side_left  sail_direction_s cordslack_0 ]
+[ heading_w tension_0 sail_side_right ] -> [ heading_w tension_0 sail_side_left sail_direction_s cordslack_0 ]
+
+[ heading_nw tension_2 sail_side_left  ] -> [ heading_nw tension_2 sail_side_left  sail_direction_se cordslack_0 ]
+[ heading_nw tension_2 sail_side_right ] -> [ heading_nw tension_2 sail_side_right sail_direction_se cordslack_0 ]
+[ heading_nw tension_1 sail_side_left  ] -> [ heading_nw tension_1 sail_side_left  sail_direction_s cordslack_0 ]
+[ heading_nw tension_1 sail_side_right ] -> [ heading_nw tension_1 sail_side_right sail_direction_s cordslack_0 ]
+[ heading_nw tension_0 sail_side_left  ] -> [ heading_nw tension_0 sail_side_left  sail_direction_s cordslack_1 ]
+[ heading_nw tension_0 sail_side_right ] -> [ heading_nw tension_0 sail_side_right sail_direction_s cordslack_1 ]
+
+( [ heading_n ] -> again  )
+
+(ship-drawing)
+(orthogonal hull drawing)
+up late [ | player heading_n ] -> [ hull_n_stern | hull_n_bow player heading_n ]
+right late [ | player heading_e ] -> [ hull_e_stern | hull_e_bow player heading_e ]
+down late [ | player heading_s ] -> [ hull_s_stern | hull_s_bow player heading_s ]
+left late [ | player heading_w ] -> [ hull_w_stern | hull_w_bow player heading_w ]
+
+(diagonal hull drawing)
+right late [ | player heading_ne ] -> [ hull_diag_nw heading_ne | hull_ne_bow player heading_ne ]
+up late [ | player heading_ne ] -> [ hull_diag_se | hull_ne_bow player heading_ne ]
+up late [ | hull_diag_nw heading_ne ] -> [ hull_ne_stern | hull_diag_nw ]
+
+down late [ | player heading_se ] -> [ hull_diag_ne heading_se | hull_se_bow player heading_se ]
+right late [ | player heading_se ] -> [ hull_diag_sw | hull_se_bow player heading_se ]
+right late [ | hull_diag_ne heading_se ] -> [ hull_se_stern | hull_diag_ne ]
+
+left late [ | player heading_sw ] -> [ hull_diag_se heading_sw | hull_sw_bow player heading_sw ]
+down late [ | player heading_sw ] -> [ hull_diag_nw | hull_sw_bow player heading_sw ]
+down late [ | hull_diag_se heading_sw ] -> [ hull_sw_stern | hull_diag_se ]
+
+
+up late [ | player heading_nw ] -> [ hull_diag_sw heading_nw | hull_nw_bow player heading_nw ]
+left late [ | player heading_nw ] -> [ hull_diag_ne | hull_nw_bow player heading_nw ]
+left late [ | hull_diag_sw heading_nw ] -> [ hull_nw_stern | hull_diag_sw ]
+
+
+(rudder drawing)
+late [ rudderdir_l ] [ hull_n_stern ] -> [rudderdir_l ] [ hull_n_stern hull_n_rl ]
+late [ rudderdir_c ] [ hull_n_stern ] -> [rudderdir_c ] [ hull_n_stern hull_n_rc ]
+late [ rudderdir_r ] [ hull_n_stern ] -> [rudderdir_r ] [ hull_n_stern hull_n_rr ]
+
+late [ rudderdir_l ] [ hull_ne_stern ] -> [rudderdir_l ] [ hull_ne_stern hull_ne_rl ]
+late [ rudderdir_c ] [ hull_ne_stern ] -> [rudderdir_c ] [ hull_ne_stern hull_ne_rc ]
+late [ rudderdir_r ] [ hull_ne_stern ] -> [rudderdir_r ] [ hull_ne_stern hull_ne_rr ]
+
+late [ rudderdir_l ] [ hull_e_stern ] -> [rudderdir_l ] [ hull_e_stern hull_e_rl ]
+late [ rudderdir_c ] [ hull_e_stern ] -> [rudderdir_c ] [ hull_e_stern hull_e_rc ]
+late [ rudderdir_r ] [ hull_e_stern ] -> [rudderdir_r ] [ hull_e_stern hull_e_rr ]
+
+late [ rudderdir_l ] [ hull_se_stern ] -> [rudderdir_l ] [ hull_se_stern hull_se_rl ]
+late [ rudderdir_c ] [ hull_se_stern ] -> [rudderdir_c ] [ hull_se_stern hull_se_rc ]
+late [ rudderdir_r ] [ hull_se_stern ] -> [rudderdir_r ] [ hull_se_stern hull_se_rr ]
+
+late [ rudderdir_l ] [ hull_s_stern ] -> [rudderdir_l ] [ hull_s_stern hull_s_rl ]
+late [ rudderdir_c ] [ hull_s_stern ] -> [rudderdir_c ] [ hull_s_stern hull_s_rc ]
+late [ rudderdir_r ] [ hull_s_stern ] -> [rudderdir_r ] [ hull_s_stern hull_s_rr ]
+
+late [ rudderdir_l ] [ hull_sw_stern ] -> [rudderdir_l ] [ hull_sw_stern hull_sw_rl ]
+late [ rudderdir_c ] [ hull_sw_stern ] -> [rudderdir_c ] [ hull_sw_stern hull_sw_rc ]
+late [ rudderdir_r ] [ hull_sw_stern ] -> [rudderdir_r ] [ hull_sw_stern hull_sw_rr ]
+
+late [ rudderdir_l ] [ hull_w_stern ] -> [rudderdir_l ] [ hull_w_stern hull_w_rl ]
+late [ rudderdir_c ] [ hull_w_stern ] -> [rudderdir_c ] [ hull_w_stern hull_w_rc ]
+late [ rudderdir_r ] [ hull_w_stern ] -> [rudderdir_r ] [ hull_w_stern hull_w_rr ]
+
+late [ rudderdir_l ] [ hull_nw_stern ] -> [rudderdir_l ] [ hull_nw_stern hull_nw_rl ]
+late [ rudderdir_c ] [ hull_nw_stern ] -> [rudderdir_c ] [ hull_nw_stern hull_nw_rc ]
+late [ rudderdir_r ] [ hull_nw_stern ] -> [rudderdir_r ] [ hull_nw_stern hull_nw_rr ]
+
+(sail-drawing)
+
+late up [ sail_direction_n | ] -> [ sail_direction_n sail_n_1 | sail_n_2 ]
+late right [ sail_direction_e | ] -> [ sail_direction_e sail_e_1 | sail_e_2 ]
+late down [ sail_direction_s | ] -> [ sail_direction_s sail_s_1 | sail_s_2 ]
+late left [ sail_direction_w | ] -> [ sail_direction_w sail_w_1 | sail_w_2 ]
+
+late right [ sail_direction_ne |  ] -> [sail_direction_ne sail_ne_1 | sail_ne_2]
+late up [ sail_ne_2 |  ] -> [sail_ne_2 | sail_ne_3 ]
+
+late down [ sail_direction_se |  ] -> [sail_direction_se sail_se_1 | sail_se_2]
+late right [ sail_se_2 |  ] -> [sail_se_2 | sail_se_3 ]
+
+late down [ sail_direction_sw |  ] -> [sail_direction_sw sail_sw_1 | sail_sw_2]
+late left [ sail_sw_2 |  ] -> [sail_sw_2 | sail_sw_3 ]
+
+late left [ sail_direction_nw |  ] -> [sail_direction_nw sail_nw_1 | sail_nw_2]
+late up [ sail_nw_2 |  ] -> [sail_nw_2 | sail_nw_3 ]
+
+
+(sailcord drawing omg I'm so sorry this is terrible)
+
+late right [cordslack_1] [ sail_s_2 | hull_nw_stern ] -> [cordslack_1] [ sail_s_2 sailcord_cordslack_south_left | hull_nw_stern sailcord_sw ]
+late right [cordslack_0] [ sail_s_2 | hull_nw_stern ] -> [cordslack_0] [ sail_s_2 sailcord_e | hull_nw_stern sailcord_w ]
+
+
+late down [ hull_w_stern | sail_se_3 ] ->  [ hull_w_stern sailcord_s | sail_se_3 sailcord_n ]
+late  [ sail_s_2 ] [ hull_w_stern ] -> [ sail_s_2 sailcord_ne ] [ hull_w_stern sailcord_sw ]
+
+late down [ hull_sw_stern | sail_e_2 ] -> [ hull_sw_stern sailcord_s | sail_e_2 sailcord_n ] 
+late down [ hull_sw_stern | | sail_se_3 ] -> [  hull_sw_stern sailcord_s | sailcord_ns | sail_se_3 sailcord_n ] 
+late right [ sail_nw_3 | | hull_sw_stern ] ->  [ sail_nw_3 sailcord_e | sailcord_ew | hull_sw_stern sailcord_w ]
+
+late down [ cordslack_1 | sail_s_2 hull_n_stern ] -> [ cordslack_1 | sail_s_2 hull_n_stern cordslack_1 sailcord_cordslack_south_1 ]
+late down [ cordslack_2 | sail_s_2 hull_n_stern  ] -> [ cordslack_2 | sail_s_2 hull_n_stern  sailcord_cordslack_south_2 ]
+
+late right [ hull_s_stern | sail_ne_3 ] ->  [ hull_s_stern sailcord_e | sail_ne_3  sailcord_w ]
+late [ hull_s_stern ] [ sail_e_2 ] -> [ hull_s_stern sailcord_se ] [ sail_e_2 sailcord_nw ] 
+late right [ sail_nw_3 | hull_s_stern ] -> [ sail_nw_3 sailcord_e | hull_s_stern sailcord_w ]
+late [ sail_w_2 ] [hull_s_stern ] -> [ sail_w_2 sailcord_ne ] [hull_s_stern sailcord_sw ]
+
+late right [cordslack_1] [ hull_ne_stern | sail_s_2 ] -> [cordslack_1] [ hull_ne_stern sailcord_se | sail_s_2 sailcord_cordslack_south_right ]
+late right [cordslack_0] [ hull_ne_stern | sail_s_2 ] -> [cordslack_0] [ hull_ne_stern sailcord_e | sail_s_2 sailcord_w ]
+
+late [ hull_e_stern ] [ sail_s_2 ] -> [ hull_e_stern sailcord_se] [ sail_s_2 sailcord_nw ] 
+late down [hull_e_stern | sail_sw_3 ]->[hull_e_stern sailcord_s| sail_sw_3 sailcord_n]
+
+late down [ hull_se_stern | sail_w_2 ] -> [ hull_se_stern sailcord_s | sail_w_2 sailcord_n ] 
+late down [ hull_se_stern | | sail_sw_3 ] -> [ hull_se_stern sailcord_s |sailcord_ns| sail_sw_3 sailcord_n ] 
+late right [hull_se_stern | | sail_ne_3 ] -> [hull_se_stern sailcord_e  | sailcord_ew | sail_ne_3 sailcord_w ]
+
+late [ againing ] ->[]
+late [ movement ] ->[]
+
+
+late [ hull obstacle ] [ player ] -> [ hull obstacle ] [ no player wreck_1 ] sfx3
+late [ wreck_1 ] [hull_stern] -> [ wreck_1] [wreck_2]
+late [wreck_1] [hull] ->[wreck_1] [no hull]
+
+late [ hull buoy ] -> [ hull ] sfx5
+
+==============
+WINCONDITIONS
+==============
+
+no buoy
+
+=======
+LEVELS
+=======
+
+
+message The wind comes from the north. Press left and right to adjust rudder. Press up and down to adjust the sail tension. The goal is to collect all the buoys.
+
+message Lake 1 of 3 
+
+q-xxxxxxxxxxxxsj
+sd............zs
+-c.............a
+d..............i
+d..............u
+d..............i
+d..........b...u
+d..............i
+he..p..........u
+sc.............i
+d..............a
+d..........b...a
+d..............a
+d.............qs
+d.............as
+swwwwwwwwwwwww'#
+
+
+message Lake 2 of 3 
+
+sssss-ssxxss--sssss-sxx--sss
+sshsxxxc..zxxxxxsgsxc..zssm'
+sjsc............afd.....zv,;
+ssc.............zxc......ass
+sd..........b............zss
+sse.......................a-
+ssd......qwe..............ss
+ssc.......aswwwwwe.....b...a
+-d........z-sm'#mswe.......a
+sd.........zv,;l,n-d.......a
+jd..p.......asxs-sxc......s-
+jd.........qsc.zxc........a-
+jd.........zc.............a-
+-se.......................as
+ssc.............b....e...qss
+sd..................qje..ahs
+sse.................ahswwsss
+shswwe.qwwwwwwwe.qwwsssss-sc
+ssss-swshjs--sjswm-smss-s-c.
+
+
+message Lake 3 of 3
+
+sssxxxxxxxxxxxxxxxxxxxshsjs-
+ssc.....r.............zxjshs
+sc...r..........r.......zhgs
+d...........r............zfj
+d.........................zs
+d..p....r............r.....a
+d................r.........a
+d.......qwwwwwe............a
+d......qsxc...zwwwwe.......a
+d.....qhd.......zxjc.......a
+d....qjsc.........c....qe..a
+d...qssc..b..e.........d...a
+d..qm-d.....qse.......qd...a
+swwv,nse...qs-swwwwwwwj-wwws
+-s------wwws-s--s-j-s-ss-s--
+
+
+message Congratulations: you are the best sailer in the world!

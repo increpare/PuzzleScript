@@ -1,0 +1,451 @@
+title Van-to-Mobile-Living-Space-Conversion Window-Frame-Installation
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+background_color lightblue
+
+text_color black
+
+(levels made with the assistance of PuzzlescriptMIS https://dekeyser.ch/puzzlescriptmis/ )
+
+(thanks an toombercazz für feedback)
+========
+OBJECTS
+========
+
+Background
+gray
+
+sky ,
+lightblue
+
+Target
+lightblue
+.000.
+00000
+00000
+00000
+.000.
+
+Wall
+darkgray
+
+front1 a
+#697175 lightblue
+10000
+00000
+00000
+00000
+00000
+
+front2 s
+#5bb4e0
+
+front3a d
+#000000 lightblue
+11100
+11100
+11100
+11100
+11100
+
+front3b f
+#697175 #000000
+00000
+00000
+11000
+11000
+11000
+
+wheel1 
+#697175 #000000
+00000
+00011
+00111
+01110
+01100
+
+wheel2 
+#697175 #000000
+00000
+11000
+11100
+01110
+00110
+
+wheel3 j
+#000000 #697175 #595652 lightblue
+30011
+30001
+33000
+33300
+22222
+ 
+wheel4 k
+#697175 #000000 #595652 lightblue
+00113
+01113
+11133
+11333
+22222
+
+roada l
+#595652 lightblue
+11111
+11111
+11111
+11111
+00000
+
+
+roadb ;
+#595652
+
+exhaust '
+#b2dcef #9badb7
+00000
+11111
+11111
+11111
+00000
+
+Player_G
+#99e550
+
+
+
+Player_B
+#639bff
+
+eye_l
+#99e550 #ffffff #000000 #ec4353
+00000
+00100
+01210
+00103
+00000
+
+eye_r
+#639bff #ffffff #000000 #ec4353
+00000
+00100
+01210
+30100
+00000
+
+
+Crate
+black
+.000.
+0...0
+0...0
+0...0
+.000.
+
+=======
+LEGEND
+=======
+
+cosmetic = front1 or front2 or front3a or front3b or wheel1 or wheel2 or wheel3 or wheel4 or roada or roadb or exhaust
+
+
+player = Player_G or Player_B
+eye = eye_l or eye_r
+
+. = Background
+# = Wall
+q = Player_G
+w = Player_B
+* = Crate
+@ = Crate and Target
+O = Target
+
+g = wheel1 and Wall
+h = wheel2 and Wall
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 16975107
+endlevel 87300305
+startlevel 7208105
+
+================
+COLLISIONLAYERS
+================
+
+Background
+sky
+Target
+Player, Wall, Crate
+eye
+cosmetic
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ >  Crate | Crate ] -> [  >  Crate | > Crate  ]
+
+late [ eye ] ->[]
+late  [Player_G ]->[Player_G eye_l ]
+late  [Player_b ]->[Player_b eye_r ]
+late right [ eye_l | no eye_r ] -> [ | ]
+late right [ no eye_l | eye_r ] -> [ | ]
+late down [ eye | eye ] -> [ eye | ]
+
+late down [player_g no eye_l | player_g no eye_l ] -> cancel
+
+late down [ no player_g | Player_G | no Player_G ] -> cancel
+late down [ no player_b | Player_b | no Player_b ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+
+message Level 1 of 14 - I cut out the holes, now just to slot in the window frames!
+
+(possible first level, easy and requires you to take on both shapes)
+,,,,#########,
+,a###...o..##,
+,ss##......##,
+,ss##.*.*.###,
+,####.qw...##,
+,####.qwo..##,
+,####...#..##,
+dfgh#####gh#',
+lljkllllljklll
+;;;;;;;;;;;;;;
+
+
+message Level 2 of 14 - It looks so much brighter now!
+(super easy but pleasing manouevre)
+,,,,,,#######,
+,,,,,##....##,
+,a####.....##,
+,ss##.*o...##,
+,ss##.qw...##,
+,####.qw...##,
+,####.o*...##,
+dfgh#####gh#',
+lljkllllljklll
+;;;;;;;;;;;;;;
+
+
+message Level 3 of 14 - It makes the space look so much bigger.
+(easy, some satisfying manouevres!)
+,,,,#########,
+,a###......##,
+,ss##......##,
+,ss##.o**..##,
+,####.qw...##,
+,####oqw.#.##,
+,####..#...##,
+dfgh#####gh#',
+lljkllllljklll
+;;;;;;;;;;;;;;
+
+
+message Level 4 of 14 - It's like a real house but I can put windows wherever I want!
+(late easy ok )
+,,,,,,,,,#######,
+,a##,,,,,#....##,
+,ss#,,####....##,
+,ss####o##....##,
+,####qw...*...##,
+,####qwo...*..##,
+,####.......#.##,
+dfghgh####ghgh#',
+lljkjklllljkjklll
+;;;;;;;;;;;;;;;;;
+
+
+message Level 5 of 14 - Stupid normie houses with their square-edged windows.
+(3552)
+(fine! late-easy)
+,,,,,#######,
+,,,,,#..#.##,
+,,,,,#..oo##,
+,,,,,#*...##,
+,a####...###,
+,ss#qw..*###,
+,ss#qw....##,
+,####.....##,
+,####.....##,
+dfgh#####gh',
+lljkllllljkll
+;;;;;;;;;;;;;
+
+
+message Level 6 of 14 - I can't wait to go curtain-shopping!
+(12442)
+(fun early intermediate)
+,,,,,,,######,
+,,,,,,##....#,
+,,,####.....#,
+,a##.....#..#,
+,ss#.*......#,
+,ss#.oqw*o.##,
+,####.qw..##,,
+,#####....#,,,
+,###,#..###,,,
+dfgh,#gh#',,,,
+lljklljkllllll
+;;;;;;;;;;;;;;
+
+
+
+
+message Level 7 of 14 - The view is stunning!
+
+(Early intermediate reduction of the fun part of 3718. I like it!)
+,,,,,,,,,,,,,,,
+,,,,,######,,,,
+,a####..o.####,
+,ss#......o.##,
+,ss#qw.*..*.##,
+,###qw.#....##,
+,########...##,
+dfgh,,,,##gh#',
+lljklllllljklll
+;;;;;;;;;;;;;;;
+
+
+message Level 8 of 14 - Safety first!
+(mmeehg ok? can cut tho. early-intermediate.  )
+(6174)
+,,,,,######,,,
+,,,,##.##.#,,,
+,,,,#.....###,
+,a###..o...##,
+,ss##..*...##,
+,ss##qw..*.##,
+,####qwo##.##,
+,#####..##.##,
+,###,#..#####,
+dfgh,#gh#',,,,
+lljklljkllllll
+;;;;;;;;;;;;;;
+
+
+message Level 9 of 14 - If it's not perfect, I can always add more windows!
+(ok early intermediate, based on 2911)
+,,,,####,,,,,,
+,,,,#..##,,,,,
+,a###o..###,,,
+,ss##..*.o###,
+,ss##.qw**.##,
+,####.qw...##,
+,####...o..##,
+dfgh########',
+lljkllllljklll
+;;;;;;;;;;;;;;
+
+
+message Level 10 of 14 - When I see a wall without a window I...I just feel pity.
+
+(25260)
+(hearly-hard. kind of solved by trial and error? but i can remember the concept at least?)
+,,,,,,#######,,
+,,,,,##..#..##,
+,,,,,#.......#,
+,a##,#.....*.#,
+,ss###.#.....#,
+,ss##..qw.#.##,
+,####.*qw.###,,
+,####.....#,,,,
+,####.o.o.#,,,,
+dfgh#####gh',,,
+lljkllllljkllll
+;;;;;;;;;;;;;;;
+
+
+
+
+
+message Level 11 of 14 - The window on a camper van is the window to its soul.
+(pretty nice? intermediate. otoh the key trick was...discovering some new state rather than deduction)
+(16261)
+,,,,,,,,###,,
+,,,,#####.##,
+,,,,#.##...#,
+,a###......#,
+,ss##..*...#,
+,ss##.oqw*.#,
+,####o.qw..#,
+,####..#..##,
+,####..#..#',
+dfgh####gh#,,
+lljklllljklll
+;;;;;;;;;;;;;
+
+
+
+
+
+
+message Level 12 of 14 - If you're building a double-decker camper van, remember to have windows on both levels! 
+(intermediate. kinda fine? can solve it intentionally)
+(8577)
+
+,,########,,,
+,,#......###,
+,,#.......o#,
+,,#.*......#,
+,a####.#..##,
+,ss#.qw..o.#,
+,ss#.qw*...#,
+,###.#.....#,
+,###.....###,
+dfgh#######',
+lljklllljklll
+;;;;;;;;;;;;;
+
+
+
+
+
+message Level 13 of 14 - BRRRR goes my skull when I rest it against the windowpane.
+(fun late intermediate)
+,,,,,#######,,
+,a####...#.##,
+,ss#........#,
+,ss#.qw..*..#,
+,###.qw.*o..#,
+,###....#.o.#,
+,########..##,
+dfgh,,,,#gh#',
+lljkllllljklll
+;;;;;;;;;;;;;;
+
+
+
+
+
+message Level 14 of 14 - These windows won't need updating!
+
+(intermediate.  fine?)
+
+,a##,############,
+,ss###o......#.##,
+,ss##........*.##,
+,####qw.*..*...##,
+,####qw.##..o.o##,
+,####..###.....##,
+dfgh##gh,#gh##gh',
+lljklljklljklljkll
+;;;;;;;;;;;;;;;;;;
+
+
+message Congratulations!! You're a master of your craft!

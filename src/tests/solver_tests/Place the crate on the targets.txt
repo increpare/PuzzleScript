@@ -1,0 +1,134 @@
+title Place the crate on the targets
+author increpare
+homepage increpare.com
+
+(level shape from david skinner's microban)
+
+========
+OBJECTS
+========
+
+Background
+GREEN
+
+target
+darkblue
+
+grass q
+lightgreen
+
+
+Wall1 1
+BROWN 
+
+wall2 2
+darkbrown
+
+player1 3
+Black 
+
+player2 4
+lightbrown 
+
+player3 5
+White 
+
+player4 6
+Blue
+
+
+crate 8
+orange
+
+=======
+LEGEND
+=======
+player = player1 or player2 or player3 or player4
+. = Background
+, = target
+O = Target
+wall = wall1 or wall2
+=======
+SOUNDS
+=======
+
+crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+target
+grass
+Player, wall1, wall2, player, crate
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > crate | crate ]->[> Crate|> crate ]
+
+[ > crate | wall ]->[ crate | wall ]
+[ > crate | stationary crate ]-> [ crate | crate ]
+[> player | wall ]-> cancel
+[> player | stationary crate ]->cancel
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message level 1 of 1
+
+11121111211112111121..........
+22222222222222222222q....q....
+12111121111211112111...q....q.
+22222222222222222222..........
+11121111211112111121.q....q...
+11121..........11121..........
+22222q....q,,,.22222q....q....
+12111...q..,.,.12111...q....q.
+22222......,,,.22222..........
+11121.q....q...11121.q....q...
+11121..........111211112111121
+22222q....q....222222222222222
+12111...q....q.121111211112111
+22222..........222222222222222
+11121.q....q...111211112111121
+11121......333...........11121
+22222q,,,.q444.q....q....22222
+12111.,.,.55555...q....q.12111
+22222.,,,..666...........22222
+11121..q...6.6..q....q...11121
+11121....................11121
+22222q....q....q....q....22222
+12111...q....q....q....q.12111
+22222....................22222
+11121.q....q....q....q...11121
+11121..........88888.....11121
+22222q....q....8...8q....22222
+12111...q....q.8..q8...q.12111
+22222..........8...8.....22222
+11121.q....q...88888.q...11121
+11121..........111211112111121
+22222q....q....222222222222222
+12111...q....q.121111211112111
+22222..........222222222222222
+11121.q....q...111211112111121
+11121111211112111121..........
+22222222222222222222q....q....
+12111121111211112111...q....q.
+22222222222222222222..........
+11121111211112111121.q....q...
+
+message congratulations to all of you!

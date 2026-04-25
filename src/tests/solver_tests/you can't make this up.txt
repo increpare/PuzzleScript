@@ -1,0 +1,122 @@
+title You can't make this up!
+author increpare
+homepage www.increpare.com
+
+
+background_color #b7885b
+
+text_color black
+
+=======
+OBJECTS
+=======
+
+Background
+#eec39a
+
+Player
+#99e550
+
+topmarker
+red
+.....
+.....
+.....
+.....
+.....
+
+Box1
+#df7126
+
+Box2
+#5fcde4
+
+Box3
+#d77bba
+
+Box4
+#fbf236
+
+Wall
+#b7885b
+
+======
+LEGEND
+======
+
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+3 = Box3
+4 = Box4
+# = Wall
+q = topmarker and 1
+w = topmarker and 2
+e = topmarker and 3
+r = topmarker and 4
+
+Box = Box1 or Box2 or Box3 or Box4
+
+======
+SOUNDS
+======
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, Wall
+topmarker
+
+=====
+RULES
+=====
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+
+
+[ moving Box1 | Box1 ] -> [ moving Box1 | moving Box1 ]
++ [ moving Box2 | Box2 ] -> [ moving Box2 | moving Box2 ]
++ [ moving Box3 | Box3 ] -> [ moving Box3 | moving Box3 ]
++ [ moving Box4 | Box4 ] -> [ moving Box4 | moving Box4 ]
++ [ > Box | Box ] -> [ > Box | > Box ]
+
+
+
+[ > Box | Wall ] -> cancel
+
+[ moving box topmarker] ->[moving box moving topmarker]
+
+late right [ topmarker box1 | | topmarker box2 | | topmarker box3 | player | topmarker box4 ] -> win
+late right [ topmarker box1 | | topmarker box2 || | topmarker box3 | player | topmarker box4 ] -> win
+
+=============
+WINCONDITIONS
+=============
+
+======
+LEVELS
+======
+
+message Level 1 of 1 : You can't make this up!
+
+##################
+#................#
+#................#
+#................#
+#......w.........#
+#....eq2r........#
+#....3124...@....#
+#....3144........#
+#....3111........#
+#................#
+#................#
+#................#
+#................#
+##################
+
+
+message NVM I guess you can. 

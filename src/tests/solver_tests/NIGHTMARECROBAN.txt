@@ -1,0 +1,303 @@
+title NIGHTMARECROBAN
+author increpare 
+homepage www.increpare.com
+
+run_rules_on_level_start
+noaction
+
+color_palette 13
+
+background_color black
+text_color darkblue
+
+(remixes of levels from david skinner's microban using  https://dekeyser.ch/puzzlescriptmis/  )
+
+
+========
+OBJECTS
+========
+
+Background
+black black
+11111
+01111
+11101
+11111
+10111
+
+
+ziel
+lightblue
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+ darkblue darkgray
+00010
+11111
+01000
+11111
+00010
+
+Player
+red
+00.00
+0...0
+.....
+0...0
+00.00
+
+Crate
+yellow
+.000.
+0...0
+0...0
+0...0
+.000.
+
+
+p_u u
+gray
+.....
+..0..
+.0.0.
+.....
+.....
+
+p_d d
+gray
+.....
+.....
+.0.0.
+..0..
+.....
+
+p_l l 
+gray
+.....
+..0..
+.0...
+..0..
+.....
+
+p_r r
+gray
+.....
+..0..
+...0.
+..0..
+.....
+
+tick
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player and p_u
+* = Crate and p_u
+z = ziel and p_u
+target = ziel
+o = ziel and p_u
+@ = crate and p_u and ziel
+
+pfeil = p_d or p_u or p_l or p_r
+
+w = crate and p_u
+s = crate and p_d
+a = crate and p_l
+t = crate and p_r
+
+
+i = crate and p_u and ziel
+k = crate and p_d and ziel
+j = crate and p_l and ziel
+y = crate and p_r and ziel
+
+
+
+1 = p_u and ziel
+2 = p_d and ziel
+3 = p_l and ziel
+4 = p_r and ziel
+
+obstacle = crate or wall or player
+
+
+inanimate = wall or Crate
+
+
+0 = player and p_l
+5 = player and p_r
+6 = ziel and player and p_d
+7 = player and p_u
+8 = player and p_d
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 11944102
+
+================
+COLLISIONLAYERS
+================
+
+Background
+ziel
+Player, Wall, Crate
+pfeil
+tick
+
+======
+RULES
+======
+
+up [  crate p_u tick | no inanimate ] ->  [ p_u > crate | ]
+down [  crate p_d tick | no inanimate ] -> [ p_d > crate | ]
+left [  crate p_l tick | no inanimate ] -> [ p_l > crate | ]
+right [  crate p_r tick | no inanimate ] -> [ p_r > crate | ]
+
+[> crate | player ] -> [ > crate | > player ]
+[tick]->[]
+
+
+[ > player | crate ] -> [ > player | > crate > tick] again
+
+[ > obstacle | stationary obstacle ] -> cancel
+
+
+late up [  crate p_u tick |  inanimate ] ->  [ p_u  crate |inanimate ]
+late down [  crate p_d tick | inanimate ] -> [ p_d  crate | inanimate]
+late left [  crate p_l tick | inanimate ] -> [ p_l  crate | inanimate]
+late right [  crate p_r tick | inanimate ] -> [ p_r  crate | inanimate]
+
+
+==============
+WINCONDITIONS
+==============
+
+all crate on ziel
+no tick
+
+=======
+LEVELS
+=======
+
+
+
+message level 1 of 7
+(ok level 1)
+####..
+#lu#..
+#sl###
+#r8kr#
+#lll2#
+#dl###
+####..
+
+
+message level 2 of 7
+(ok level 2)
+######
+#lu3l#
+#a#rl#
+#rlkd#
+#wdrd#
+#84dl#
+######
+
+
+
+message level 3 of 7
+(easy, level 2isch)
+########
+#rwr4ud#
+#2ddidl#
+#u8lrua#
+#####ud#
+....####
+
+
+message level 4 of 7
+(tricky/meh, but ok level 3)
+..####...
+###rd####
+#8rrl1u4#
+#d#ls#wd#
+#llur#rr#
+#########
+
+
+
+
+message level 5 of 7
+(ok penultimate)
+######.#####
+#rlrk###rdl#
+#lsruru5d#r#
+#ua1#ld4lrr#
+#rru########
+#####.......
+
+
+
+(ok final level)
+message level 6 of 7
+
+.#######
+.#rddtr#
+.#d2dlr#
+##durwd#
+#dr1sdd#
+#lrkd6r#
+########
+
+
+(final)
+message level 7 of 7
+
+#######
+#lrrll#
+#u4w2r#
+#d13wa#
+#udt35#
+#3drtu#
+#uwllr#
+#######
+
+
+
+
+message You won.  I'm so sorry!
+
+
+(
+
+==========
+GENERATION
+==========
+
+[pfeil]->[]
+
+choose 2 [Crate][Target] -> [][]
+choose 2 [No Wall No Player no crate ][No Wall No Player no target] -> [Crate][Target]
+
+
+choose 200 option 0.2 [ no wall no pfeil ] -> [ p_u ]
++  option 0.2 [ no wall no pfeil ] -> [ p_d ]
++  option 0.2 [ no wall no pfeil ] -> [ p_l ]
++  option 0.2 [ no wall no pfeil ] -> [ p_r ]
+
+
+choose 1 [ player ] [ no player no wall no crate ] -> [ ] [ player ]
+
+)

@@ -1,0 +1,415 @@
+title Neoprenanzieher
+author increpare
+homepage www.increpare.com
+noaction
+(thanks to auditoriumjohnson + oeschmid + bvoq + plurmorant  for testing)
+
+run_rules_on_level_start
+
+verbose_logging
+
+========
+OBJECTS
+========
+
+Background
+orange lightbrown
+11111
+10111
+11111
+11101
+11111
+
+
+rock
+gray darkgray
+00000
+00000
+01000
+00100
+00000
+
+Playerbody_main
+#f9d9bb
+
+Playerfeet
+#f9d9bb
+
+playerhead
+#f9d9bb #5b6ee1 #d95763
+00000
+01010
+00000
+02220
+00000
+
+anzug_membran_schwarz
+black 
+
+anzug_membran_obenhalbschwarz
+black
+00000
+00000
+00000
+.....
+.....
+
+anzug_membran_untenhalbschwarz
+black
+.....
+.....
+00000
+00000
+00000
+
+anzuggesicht
+black
+00000
+0...0
+0...0
+0...0
+00000
+
+anzug_l l
+black darkgray
+.000.
+.000.
+100.1
+00000
+.0000
+
+anzug_r r
+black darkgray
+.000.
+.000.
+1.001
+00000
+0000.
+
+anzug_band_dick
+black darkgray
+1111.
+00000
+00000
+00001
+1111.
+
+anzug_band_dunn
+black darkgray
+.....
+11111
+00000
+11111
+.....
+
+
+water  w
+#5b6ee1 lightblue
+11111
+11011
+10101
+01110
+11111
+
+haligned
+transparent
+
+ziehbarrieredown
+#00ffff
+..0..
+.....
+.....
+.....
+.....
+
+ziehbarriereup
+white
+....0
+.....
+.....
+.....
+.....
+
+membrane_oben
+red
+.....
+....0
+.....
+.....
+.....
+
+membrane_unten
+yellow
+.....
+.....
+....0
+.....
+.....
+
+ziehend_nördlich
+pink
+.....
+.....
+.....
+....0
+.....
+
+ziehend_südlich
+purple
+.....
+.....
+.....
+.....
+....0
+
+anzugdehnen
+transparent
+
+=======
+LEGEND
+=======
+
+ziehend = ziehend_nördlich or ziehend_südlich
+anzug_membran = anzug_membran_schwarz or anzug_membran_obenhalbschwarz or anzug_membran_untenhalbschwarz 
+ziehbarriere = ziehbarrieredown or ziehbarriereup
+playerbody = Playerbody_main
+player = Playerbody or playerhead or Playerfeet
+anzug_band = anzug_band_dick or anzug_band_dunn
+anzug = anzug_l or anzug_r or anzug_band
+pushable = player or anzug_l or anzug_r
+noplayerpushable =  anzug_l or anzug_r
+anzugrand = anzug_l or anzug_r
+irgendangezug = anzug_membran or anzuggesicht
+anzugprop = rock 
+membrane = membrane_oben or membrane_unten
+. = Background
+# = rock
+P = Playerbody_main
+h = playerhead
+f = Playerfeet
+kanntrag = player or rock
+
+
+=======
+SOUNDS
+=======
+
+sfx0 83395901 (suit fit)
+sfx1 51989101 (waterstep)
+
+================
+COLLISIONLAYERS
+================
+
+haligned
+membrane
+ziehbarriere
+ziehend
+anzugdehnen
+
+Background
+water
+Player, rock, anzug_l, anzug_r
+anzug_band, anzuggesicht
+anzug_membran
+
+======
+RULES
+======
+
+[player]->again
+
+horizontal [ > player  | anzug_membran_schwarz no player | no player ]->cancel 
+
+right [ anzug_l | playerhead ziehend_nördlich no ziehbarriere | no ziehbarriere  | anzug_r ] -> [ | playerhead anzuggesicht | | ] sfx0
+right [ anzug_l | no ziehbarriere  | no ziehbarriere  playerhead ziehend_nördlich| anzug_r ] -> [ | | playerhead anzuggesicht | ] sfx0
+
+(allow you to push band from middle if you are membranized and hitting it with a new part of your body)
+vertical [ > player anzug_membran_schwarz | no player anzug_band ] [anzug_l] [anzug_r] -> [ > player anzug_membran_schwarz | anzug_band ] [> anzug_l] [> anzug_r]
+
+right [anzug_l | right player ] -> [ right anzug_l | right player ]
+left [anzug_r | left player ] -> [ left anzug_r | left player ]
+[ > player | rock ] -> cancel
+[ > player | anzugrand | ziehbarriere ] -> cancel
+[ > player | anzugrand | rock ] -> cancel
+
+[ > player | pushable ] -> [ > player | > pushable ]
+
+right [ horizontal anzug_l | | | stationary anzug_r ] ->  [ horizontal anzug_l | | | horizontal anzug_r ]
+right [ stationary anzug_l | | | horizontal anzug_r ] ->  [ horizontal anzug_l | | | horizontal anzug_r ]
+right [ vertical anzug_l | ... | stationary anzug_r ] ->  [ vertical anzug_l | ... | vertical anzug_r ]
+right [ stationary anzug_l | ... | vertical anzug_r ] ->  [ vertical anzug_l | ... | vertical anzug_r ]
+
+[ vertical anzug_l ] [ anzug_band ] -> [ vertical anzug_l ] [ vertical anzug_band ] 
+
+right [ anzug_l | moving player | |  player | anzug_r ] -> [ moving anzug_l | moving player | |  player | moving anzug_r ]
+
+(start tracking membrane points)
+down [ > anzug_band no kanntrag | kanntrag no anzug_membran ] -> [ > anzug_band | kanntrag membrane_oben ]
+[ up anzug_band membrane_oben  ] -> [ up anzug_band ]
+
+up [ > anzug_band no kanntrag | kanntrag no anzug_membran ] -> [ > anzug_band | kanntrag membrane_unten ]
+[ down anzug_band membrane_unten  ] -> [ down anzug_band ]
+
+
+[ stationary player ] [ anzug_l |...|anzug_r] -> [ stationary player ]  [ > anzug_l | ...|< anzug_r]
+[ stationary player ] [ anzug_l | | |anzug_r] -> [ stationary player ] [ stationary anzug_l | | | stationary anzug_r]
+
+[ > anzugrand | ziehbarriere ] -> [ anzugrand | ziehbarriere ]
+
+(if player is pushing an anzugbarriere from the outside, cancel moveoment)
+
+horizontal [ > player no anzug_membran |  anzug_membran] ->cancel
+
+(ziehend moves with player)
+[ moving player ziehend ] -> [ moving player moving ziehend ]
+
+
+
+
+(going down to put things on)
+down [ > player no ziehend | anzug_band ] -> [ > player > ziehend_nördlich | anzug_band ]
+up [ > player no ziehend | anzug_band ] -> [ > player > ziehend_südlich | anzug_band ]
+(going up to remove things)
+up [ > player  anzug_band ziehend_nördlich ] -> [ > player   anzug_band ]
+down [ > player  anzug_band ziehend_südlich ] -> [ > player   anzug_band ]
+
+
+
+
+late [ anzuggesicht ] [ playerhead no anzuggesicht ] -> [ anzuggesicht ] [ playerhead anzuggesicht ]
+late [ anzuggesicht no playerhead ]  -> [  ]
+
+late right [ anzug_l | | anzug_r ] -> cancel
+
+(require suit to be horizontally aligned)
+late right [anzug_l | ... | anzug_r ] -> [ anzug_l haligned | ... | anzug_r ]
+late [anzug_l no haligned ] -> cancel
+late [haligned ]->[]
+
+late [ anzug_band]->[]
+late right [anzug_l | | | anzug_r ] -> [anzug_l | anzug_band_dick |  anzug_band_dick | anzug_r ] 
+late right [ anzug_l | no anzug_band ] -> [anzug_l | anzug_band_dunn ]
+late right [ anzug_band_dunn| no anzug_r ] -> [ anzug_band_dunn| anzug_band_dunn]
+
+(draw membrane)
+late [ anzug_membran ] -> []
+late [ ziehbarriere ] -> []
+
+(down)
+
+late down [ membrane_oben | no ziehbarrieredown ] -> [ membrane_oben | ziehbarrieredown ]
+late down [ ziehbarrieredown | no ziehbarrieredown ] -> [ ziehbarrieredown | ziehbarrieredown ]
+
+
+late down [  membrane_oben  anzug_band ] -> [membrane_oben  anzug_band anzug_membran_obenhalbschwarz]
+late down [  membrane_oben no anzug_band ] -> [membrane_oben anzug_membran_schwarz]
+late down [  anzug_membran_schwarz  | ziehbarrieredown no anzug_membran_schwarz no anzug_band ] -> [anzug_membran_schwarz |anzug_membran_schwarz]
+late down [ anzug_membran_schwarz | anzug_band ] -> [ anzug_membran_schwarz | anzug_band anzug_membran_obenhalbschwarz ]
+
+
+(and up)
+
+late up [ membrane_unten | no ziehbarriereup ] -> [ membrane_unten | ziehbarriereup ]
+late up [ ziehbarriereup | no ziehbarriereup ] -> [ ziehbarriereup | ziehbarriereup ]
+
+late up [  membrane_unten  anzug_band ] -> [membrane_unten  anzug_band anzug_membran_untenhalbschwarz]
+late up [  membrane_unten no anzug_band ] -> [membrane_unten anzug_membran_schwarz]
+late up [  anzug_membran_schwarz  | ziehbarriereup no anzug_membran_schwarz no anzug_band ] -> [anzug_membran_schwarz |anzug_membran_schwarz]
+late up [ anzug_membran_schwarz | anzug_band ] -> [ anzug_membran_schwarz | anzug_band anzug_membran_untenhalbschwarz ]
+
+
+
+
+
+late down [ player ziehend_südlich | player anzug_band no ziehend_südlich ] ->  [ player ziehend_südlich | player anzug_band ziehend_südlich ]
+late up [ player ziehend_nördlich | player anzug_band no ziehend_nördlich ] ->  [ player ziehend_nördlich | player anzug_band ziehend_nördlich ]
+
+
+(tidy up ziehends that are north of band, but also remove them as they leave)
+late down [ ziehend_nördlich | anzug_band ] -> [ |anzug_band]
+late up [ ziehend_südlich | anzug_band ] -> [ |anzug_band]
+
+(draw suit on person)
+late [ anzug_band ziehend_nördlich ] -> [  anzug_band ziehend_nördlich anzug_membran_untenhalbschwarz ]
+late [ anzug_band ziehend_südlich ] -> [  anzug_band ziehend_südlich anzug_membran_obenhalbschwarz ]
+late [ no anzug_band ziehend ] -> [ ziehend anzug_membran_schwarz ]
+
+(Draw stretched head bit)
+
+late up [ playerhead no anzuggesicht ziehend_nördlich anzug_membran_schwarz | ] -> [ playerhead ziehend_nördlich anzug_membran_schwarz |anzugdehnen]
+late up [ no anzug_band anzugdehnen |   ] -> [ anzugdehnen  | anzugdehnen ]
+late [anzugdehnen no anzug_band ] -> [ anzugdehnen anzug_membran_schwarz ]
+late [anzugdehnen anzug_band ] -> [ anzugdehnen anzug_membran_untenhalbschwarz ]
+late [anzugdehnen  ziehbarriere ]->cancel
+late [anzugdehnen  rock ]->cancel
+late [anzugdehnen  anzugrand ]->cancel
+late [anzugdehnen]->[]
+
+(Draw stretched leg big)
+
+late down [ Playerfeet ziehend_südlich anzug_membran_schwarz | ] -> [ Playerfeet ziehend_südlich anzug_membran_schwarz |anzugdehnen]
+late down [ no anzug_band anzugdehnen |   ] -> [ anzugdehnen  | anzugdehnen ]
+late [anzugdehnen no anzug_band ] -> [ anzugdehnen anzug_membran_schwarz ]
+late [anzugdehnen anzug_band ] -> [ anzugdehnen anzug_membran_obenhalbschwarz ]
+late [anzugdehnen  ziehbarriere ]->cancel
+late [anzugdehnen  rock ]->cancel
+late [anzugdehnen  anzugrand ]->cancel
+late [anzugdehnen]->[]
+
+late [ anzuggesicht ]  -> [ anzuggesicht no anzug_membran_schwarz ]
+
+late horizontal [ziehbarriere ziehend anzug_band |no ziehbarriere  ziehend  ]-> cancel
+late [ player no irgendangezug water ]->cancel
+
+late [ player irgendangezug water ] -> sfx1
+
+
+(stop stretched bits from going OOB)
+
+==============
+WINCONDITIONS
+==============
+some anzuggesicht
+all player on water
+some anzuggesicht
+
+
+=======
+LEVELS
+=======
+
+message Level 1 von 1
+
+message Kann kaum warten in den See zu springen.  Muss aber erst meinen Neoprenanzug anziehen...
+
+######################################
+##############..........##############
+############..............############
+#######......................#########
+######...........................#####
+######....................h.......####
+#####...................ppppp......###
+#####....................pfp........##
+#####....................p.p........##
+#####..............#.....f.f.........#
+#####.......#......#.................#
+#####..............#.......l..r......#
+#####................................#
+###ww................................#
+##wwwww..............................#
+##wwwwwww...........................##
+##wwwwwwwww.........................##
+#wwwwwwwwwwwww......................##
+#wwwwwwwwwwwwwwww...#####..........###
+#wwwwwwwwwwwwwwwwwwww#####......######
+#wwwwwwwwwwwwwwwwwwww#################
+#wwwwwwwwwwwwwwwwwwww#################
+##wwwwwwwwwwwwwwwwww##################
+###wwwwwwwwwwwwwww####################
+####wwwwwwwwwww#######################
+######################################
+
+
+
+message  Scheisse! Das Wasser is so verdammt kalt!

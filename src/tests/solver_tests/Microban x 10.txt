@@ -1,0 +1,197 @@
+title Microban x 10
+author David Skinner, assembled by increpare
+homepage www.sneezingtiger.com/sokoban/levels/microbanText.html
+
+
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+GREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+ DARKBROWN
+
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+fill
+transparent
+
+redzone r
+lightred
+.....
+.....
+..0..
+.....
+.....
+
+redPlayer
+red red red red
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+redcrate 
+#ff0000 
+00000
+0...0
+0...0
+0...0
+00000
+
+yellowplayer
+#ffff00 #ffff00 #ffff00 #ffff00 
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+yellowcrate 
+#ffff00 
+00000
+0...0
+0...0
+0...0
+00000
+
+=======
+LEGEND
+=======
+
+canremove = player or crate or target
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+t = redzone and Player
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+sfx0 7217302
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+fill
+redcrate
+redzone
+redplayer 
+yellowplayer
+yellowcrate
+
+======
+RULES
+======
+
+[yellowplayer]->[]
+[yellowcrate]->[]
+[> player | Crate | no wall no crate ] -> [ > player | yellowplayer crate | no wall no crate yellowcrate ]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+
+
+late [no wall] -> [fill]
+
+late [target no crate fill]->[target]
+late [fill| no wall no fill]->[|]
+
+late [fill Player ]->[fill]
+late [fill crate ]->[fill]
+late [fill target ]->[fill]
+late [fill]->[]
+
+late [redplayer]->[]
+late [redcrate]->[]
+
+late [crate redzone]->cancel sfx0 
+late [ player | crate | redzone ] -> [ player redplayer | crate redcrate | redzone ]
+
+
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message This is a compilation of 10 of my favourite levels from microban by David Skinner, where it turns out you can solve all of them simultaneously.  Standard sokoban rules, with some helper visualisations.
+
+message levels 10 of 10
+
+
+###############################
+########rrrrrr#################
+########ro@@*t#rrrr###rrr######
+########r....r#r**.....#t######
+############rr#r*.#ooo..r######
+#ro#####rr#####rrr#############
+#..###r....*r#######rrrrr######
+#@p.r#r#..#*r#rrrrr#ro*or#root#
+#..*r#ro.o#tr#.o*or#r*o*r#r**r#
+#rr###########.*p*r#ro*or##.###
+####rrrr#...#r.o*or#r*o*r##.###
+####r#pr#...#rrrrrr#rrtrr##.###
+####r*@r###################.###
+####ro@r#o.r#o.r########r...###
+####rrrr#o#r#t**r#######r#..r##
+#########o#r##r..#######r..#r##
+###rp.*.*.*r###r.#########rrr##
+###r#.#.#.######o##############
+###rrrrrrr#####################
+###############################
+
+
+
+message congratulations x 10!

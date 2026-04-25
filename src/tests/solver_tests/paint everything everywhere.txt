@@ -1,0 +1,1098 @@
+title paint everything everywhere!
+author increpare + pancelor
+homepage www.pancelor.com (increpare.com)
+
+background_color #db7f00
+text_color #126a10
+
+again_interval 0.05
+run_rules_on_level_start
+( verbose_logging )
+
+========
+OBJECTS
+========
+
+Background
+#ff00ff 
+canvas 
+#F5ECE0 
+
+Wall
+#51984f #ffb910
+00000
+01110
+01110
+01110
+00000
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate1Base
+#af101d
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate1L0
+#af101d 
+0....
+0....  
+0....  
+0....  
+0....
+
+Crate1R0
+#af101d 
+....0
+....0
+....0
+....0
+....0
+
+Crate1U0
+#af101d 
+00000
+.....
+.....
+.....
+.....
+
+Crate1D0
+#af101d 
+.....
+.....
+.....
+.....
+00000
+
+Crate1Z0
+#af101d
+.....
+.....
+.....
+.....
+.....
+
+Crate2Base
+#7cecec 
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate2L0
+#7cecec 
+0....  
+0....  
+0....  
+0....  
+0....
+
+Crate2R0
+#7cecec 
+....0
+....0
+....0
+....0
+....0
+
+
+Crate2U0
+#7cecec 
+00000
+.....
+.....
+.....
+.....
+
+Crate2D0
+#7cecec 
+.....
+.....
+.....
+.....
+00000
+
+Crate2Z0
+#7cecec #F5ECE0
+.....
+.....
+.....
+.....
+.....
+
+Paint1
+#CC2936
+.....
+00000
+00000
+.....
+00000
+
+Paint2
+#2897B0
+....0
+....0
+.0000
+.00..
+000.0
+
+slideright
+transparent
+
+slidedown
+transparent
+
+slideleft
+transparent
+
+slideup
+transparent
+
+winning
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background and canvas
+# = Wall
+P = Player
+1 = Crate1Base and canvas and paint1
+2 = Crate2Base and canvas and paint2
+
+Crate1=Crate1Base or Crate1L0 or Crate1R0 or Crate1U0 or Crate1D0 or Crate1Z0
+Crate2=Crate2Base or Crate2L0 or Crate2R0 or Crate2U0 or Crate2D0 or Crate2Z0
+CrateL=Crate1L0 or Crate2L0
+CrateR=Crate1R0 or Crate2R0
+CrateU=Crate1U0 or Crate2U0
+CrateD=Crate1D0 or Crate2D0
+CrateZ=Crate1Z0 or Crate2Z0
+Crate=Crate1 or Crate2
+
+paint=paint1 or paint2
+slidetag = slideleft or slideup or slideright or slidedown
+obs = wall or crate
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 30943107
+
+( sfx0 19998706 (paint1 ) )
+( sfx1 382306 (paint2 ) )
+
+sfx0 19045907
+( sfx0 129314260 )
+( sfx0 321260 )
+( sfx0 5212604 )
+( 1779703 )
+( 42076907 )
+( sfx1 56671706 )
+sfx1 99909509
+
+endlevel 74970903
+( endlevel 57283503 )
+( endlevel 34632303 )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+canvas
+paint1
+paint2
+Crate1Base,Crate2Base
+Player
+Wall, CrateZ
+CrateL
+CrateR
+CrateU
+CrateD
+slidetag
+winning
+
+======
+RULES
+======
+
+(startup visuals)
+[Crate1Base] -> [Crate1L0 Crate1R0 Crate1U0 Crate1D0 Crate1Z0]
+left [Crate1L0|Crate1R0]->[|]
+up   [Crate1U0|Crate1D0]->[|]
+[Crate2Base] -> [Crate2L0 Crate2R0 Crate2U0 Crate2D0 Crate2Z0]
+left [Crate2L0|Crate2R0]->[|]
+up   [Crate2U0|Crate2D0]->[|]
+
+[player] -> [player wall winning]
+
+[> player slidetag]->[> player]
+
+[ up player ] -> [ player slideup ] again
+[ down player ] -> [ player slidedown ] again
+[ left player ] -> [ player slideleft ] again
+[ right player ] -> [ player slideright ] again
+
+[ slideup ] [ crate ] -> [ slideup ] [ up crate ] again
+[ slidedown ] [ crate ] -> [ slidedown ] [ down crate ] again
+[ slideleft ] [ crate ] -> [ slideleft ] [ left crate ] again
+[ slideright ] [ crate ] -> [ slideright ] [ right crate ] again
+
+[ > crate | stationary obs ] -> [ crate | stationary obs ]
++ [ up crate1 | stationary crate1 ] -> [ stationary crate1 | stationary crate1 ]
++ [ up crate2 | stationary crate2 ] -> [ stationary crate2 | stationary crate2 ]
++ [ down crate1 | stationary crate1 ] -> [ stationary crate1 | stationary crate1 ]
++ [ down crate2 | stationary crate2 ] -> [ stationary crate2 | stationary crate2 ]
++ [ left crate1 | stationary crate1 ] -> [ stationary crate1 | stationary crate1 ]
++ [ left crate2 | stationary crate2 ] -> [ stationary crate2 | stationary crate2 ]
++ [ right crate1 | stationary crate1 ] -> [ stationary crate1 | stationary crate1 ]
++ [ right crate2 | stationary crate2 ] -> [ stationary crate2 | stationary crate2 ]
+
+[> crate][winning] -> [> crate][]
+
+late [ crate1 no paint1 ] -> [ crate1 paint1 ] sfx0
+late [ crate2 no paint2 ] -> [ crate2 paint2 ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+all canvas on Paint1
+all canvas on Paint2
+some winning
+
+=======
+LEVELS
+=======
+
+message Level 1 of 20
+(increpare:perfectly fine little level)
+(pancelor: these are both quite nice)
+######p
+#.....#
+#....##
+##.#.1#
+#..2..#
+#######
+
+message Level 2 of 20
+(increpare:also a perfectly fine little level)
+######p
+#.....#
+#.....#
+#..#..#
+#...###
+###1.2#
+#######
+
+message Level 3 of 20
+(increpare: level with rotational symmetry - this is somethign I repeat in some later levels - not sure if that means it's worth avoiding here)
+(pancelor: satisfying to fill all the corners. I went back and forth on whether to cut this level or not, but decided not to )
+###########p
+###.......##
+#.........##
+#......22..#
+#..11..22..#
+#..11......#
+##.........#
+##.......###
+############
+
+message Level 4 of 20
+(increpare: I kinda like this one)
+(pancelor: same! feels like a racetrack)
+###########p
+#11.#......#
+#11.#......#
+#......#.22#
+#......#.22#
+#...####...#
+#..........#
+#..........#
+############
+
+message Level 5 of 20
+(pancelor: i like it okay; i was a bit large IMO (made execution feel slow) -- I've compressed it a bit
+  (increpare: kinda like this one?)
+  #############p
+  #11..........#
+  #11..........#
+  #....#.......#
+  #....#.......#
+  #..######....#
+  #....####....#
+  #....####....#
+  #....####....#
+  #....######..#
+  #.......#....#
+  #.......#....#
+  #..........22#
+  #..........22#
+  ##############
+  (pancelor: here's a variation that encourages some fun swirls:)
+  p#############
+  #11..........#
+  #11..........#
+  #.....#......#
+  #.....#......#
+  #.....###....#
+  #..######....#
+  #....####....#
+  #....######..#
+  #....###.....#
+  #......#.....#
+  #......#.....#
+  #..........22#
+  #..........22#
+  ##############
+  )           
+#############
+#22.........#
+#22.........#
+#....#......#
+#....#......#
+#..#####....#
+#....###....#
+#....#####..#
+#......#....#
+#......#....#
+#.........11#
+#.........11#
+p############
+
+message Level 6 of 20
+(pancelor: really satisfying to play! lots of good swirling)
+(increpare: v. nice!)
+p##############
+###11#####22###
+###....#....###
+###....#....###
+#....#####....#
+#....#####....#
+###.........###
+#####.....#####
+###############
+
+(
+(increpare: fine, maybe, but like other levels)
+(pancelor: I think this one introduces some new ideas in a nice small playground. you could probably figure them out in the next level too but I like that this one also exists)
+(pancelor: now that we have so many levels I think we should cut this)
+###########p
+#..........#
+#..........#
+#..........#
+#...111#...#
+#...1212...#
+#...1212...#
+#...#222...#
+#..........#
+#..........#
+#..........#
+############
+)
+
+message Level 7 of 20
+(pancelor: fun! based on your level ("compressed it a bit" above))
+(increpare: like it)
+p########
+#......1#
+#.......#
+#..###..#
+#..###..#
+#..##...#
+#.......#
+#2.....##
+#########
+
+message Level 8 of 20
+(pancelor: not too hard)
+(increpare yeah fine!)
+#######p#
+##...####
+##....###
+##....2##
+##....2##
+##....2##
+##..#..##
+##.....##
+##1....##
+##11...##
+#########
+
+message Level 9 of 20
+(increpare: more involved version of the above. better?)
+(pancelor: I think both levels are good, but keep this one and cut the above one if you think we need to cut down on levels)
+#################p
+#................#
+#................#
+#................#
+#....1.111#......#
+#....1.121222....#
+#....111212.2....#
+#......#222.2....#
+#................#
+#................#
+#................#
+##################
+
+(
+(pancelor: ok? cut it for now b/c we have so many levels)
+p########
+#......1#
+#.......#
+#..###..#
+#..###..#
+#..###..#
+#.......#
+#2..##..#
+#########
+)
+
+(
+(pancelor: ok? I like the feeling of stair-stepping)
+(increpare: easy + ok)
+#######p
+##....##
+#1....2#
+#11..22#
+#.1#.2.#
+#..#...#
+#......#
+#......#
+#......#
+#.....##
+##...###
+########
+)
+
+message Level 10 of 20
+(pancelor: a nice simple level that pretty clearly asks you to swap positions. I made this from one of your sketches:
+  (bad because dead end)
+  ######p
+  ##....#
+  #.....#
+  #12...#
+  #1##..#
+  #######)
+  
+  (increpare:nice!)
+p######
+#####.#
+##....#
+#.....#
+#....1#
+#.##21#
+#######
+
+message Level 11 of 20
+(increpare: decent level - has some satisfying block-pushing I think!)
+(pancelor: oh this is very cute -- one of my favorite levels! I like the way you need to them to help each other travel. I also like how it requires a lot of swapping -- swapping sides, swapping which piece goes left first. very nice)
+###########p
+###....#...#
+#..........#
+#.....#....#
+#111...#.22#
+############
+
+message Level 12 of 20
+(pancelor: based on a dead-end level you made; I liked the feeling of getting the triangles hooked together and then unhooking them.
+  (increpare: solvabe but early+subtle dead end possible :[ )
+  (pancelor: this one gave me a lot of trouble, until I read your comment about dead ends! then two more tries and I got it.)
+  ##########p
+  ##1.......#
+  #11.......#
+  #......#..#
+  #.........#
+  #.........#
+  #.........#
+  #.........#
+  #..#......#
+  #.......22#
+  #.......2##
+  ###########)
+p#############
+##........####
+#..........1##
+#...#......11#
+#............#
+#............#
+#............#
+#22......#...#
+##2..........#
+####........##
+##############
+
+message Level 13 of 20
+(pancelor: an okay level, not particularly different but requires the brushes to support each other many times)
+(increpare:good)
+############p
+###111......#
+#...........#
+#...........#
+#...........#
+#......#....#
+#...#......2#
+##.........2#
+##.........2#
+##.........##
+#############
+
+message Level 14 of 20
+(pancelor: hard ish but maybe not too satisfying? the little 1x1 slot is hard to paint with the smaller brush -- probably will find it by brute force)
+(increpare: easy)
+############p#
+##1.....######
+#111111.....##
+#1...........#
+#............#
+#...#........#
+#..........2.#
+#..........22#
+#..........2##
+#....#.#######
+##############
+
+(
+(pancelor: an okay level, there's a cute reversal you have to do to paint the last square. not too hard)
+(increpare: ok!)
+###########
+p#....#####
+##....22..#
+#....#211.#
+#....22...#
+#.........#
+#........##
+#........##
+###....####
+###########
+)
+
+message Level 15 of 20
+(increpare: a solid level! - strategic + no dead ends)
+(pancelor: really really nice! fun to swap them around.)
+#############p
+#######..#####
+#####......###
+###..........#
+#.....12.....#
+#...111222...#
+#...1....2...#
+#..........###
+###......#####
+#####..#######
+##############
+
+message Level 16 of 20
+(pancelor: an okay level, many fun little challenges to fill in the last corners of the board; none are too difficult)
+(increpare: way nicer than expected)
+##########p
+#.....1####
+#.....1111#
+#.......1.#
+#....#....#
+#.........#
+##........#
+#..#......#
+#.........#
+##...2....#
+####.2222##
+###########
+
+message Level 17 of 20
+(pancelor: maybe my favorite level?! a much harder variation of the my "pretty clearly asks you to swap positions" level. I think both levels can exist?)
+(pancelor: this one is hard because it goes through an easy-to-miss narrow chokepoint in state-space. the last couple moves are a bit tricky too)
+(increpare: nice!)
+p########## 
+##...###### 
+#......#### 
+#......#### 
+##.....22## 
+##.....22## 
+####.....## 
+####.....## 
+##.......## 
+##.....111# 
+##.....111# 
+###########
+
+(
+(pancelor: tricky, but sorta unfocused. probably feels brute-forcey)
+(increpare: pretty gruelling. maybe cut?)
+#############p
+#######....###
+###222......1#
+###......#..1#
+#...#........#
+#.....#......#
+###..........#
+######....####
+##############
+)
+
+message Level 18 of 20
+(pancelor: an okay level, about getting the two blocks to swap places)
+(increpare: I think this is hard but enjoyable?)
+###############p
+####.........22#
+##...........22#
+##.............#
+##............##
+###............#
+###............#
+#111...........#
+#111..........##
+#111........####
+################
+
+message Level 19 of 20
+(pancelor: a very thinky level; one of my favorite levels)
+(increpare pretty exhausting - i got it ish)
+p###########
+#.........2#
+#.####...###
+#.#.####.###
+#.#......###
+#.###.##.###
+#.##......##
+#.....##..##
+#######1.###
+############
+
+(
+(pancelor: very hard but not in a satisfying way; the last corners are hard to hunt down. (the one square on the right side is kinda neat) idk I might cut this)
+###p################
+####################
+#########....#....##
+#########.........##
+###................#
+#............#.....#
+###................#
+##..............111#
+###...............1#
+#................11#
+###...............1#
+###222..........111#
+####################
+####################
+)
+
+message Level 20 of 20
+(increpare: I'm ok with this, but maybe too similar to the level I described as "a solid level" which I think is better)
+((pancelor: I like the concept :) but also: agreed on all points... idk I think it's a nice large+relaxing final level)
+#################p
+#######.....######
+#######.....######
+#####.......######
+#####.........####
+###...........####
+###.............##
+#...............##
+#................#
+#....111..222....#
+#.....1...2.2....#
+#.....1...222....#
+#.....1...2......#
+#....111..2......#
+#................#
+#................#
+##...............#
+##.............###
+####...........###
+####.........#####
+######.......#####
+######.....#######
+######.....#######
+##################
+
+message whoa! you painted everything! congratulations!
+
+
+
+(
+
+(increpare: has a dead end :[ )
+######p
+#....##
+#..222#
+#....##
+##...1#
+#######
+
+(pancelor: seems impossible? I assume it is, but if I write "seems impossible" on one of these and it turns out it's actually not then maybe we should include it)
+#############p
+######..######
+####......####
+####....2.####
+##......2...##
+##....22222.##
+#.......2....#
+#....11.2....#
+##...11.....##
+##..........##
+####......####
+####......####
+######..######
+##############
+
+(pancelor: seems impossible)
+###########p
+###......###
+###....2.###
+#......2...#
+#....22222.#
+#......2...#
+#...11.2...#
+#...11.....#
+#..........#
+###......###
+###......###
+############
+
+(pancelor: seems impossible)
+###############
+######...####p#
+####.......####
+####.......####
+##.......2...##
+##.......2...##
+#......22222..#
+#........2....#
+#.....11.2....#
+##....11.....##
+##...........##
+####.......####
+####.......####
+######...######
+###############
+
+(increpare: not as good as above level )
+(pancelor: fun! but yeah this is pretty similar to some earlier levels)
+##########p
+##.......##
+#.........#
+#..1...2..#
+#.111#222.#
+#..1...2..#
+#.........#
+##.......##
+########### 
+
+(increpare: bad because dead end)
+(pancelor: cool level! unfortunate that there's a dead end)
+######p
+#..1.##
+##....#
+#.....#
+##22..#
+#######
+
+
+
+
+
+(increpare: <no comment>)
+((pancelor: seems impossible ;) )
+###########p
+#..........#
+#..........#
+#..........#
+#..........#
+############
+
+###########p
+#..........#
+#..........#
+#..........#
+#..........#
+############
+
+######p
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#######
+
+###########p
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+############
+
+(increpare: <no comment>)
+(pancelor: I like the level! and not just for the aesthetic haha. but it's similar to some other ones so I can see why you cut it)
+#################p
+#..............###
+#..............###
+#.....222........#
+#.....2.2.#......#
+#.....22222......#
+#......11111.....#
+#......#.1.1.....#
+#........111.....#
+###..............#
+###..............#
+##################
+
+(increpare: <no comment>)
+(pancelor: seems impossible)
+##########p
+#11......##
+#1........#
+#.........#
+#.....#...#
+#.........#
+#.........#
+#...#.....#
+#.........#
+#........2#
+##......22#
+###########
+)
+
+
+
+
+
+(
+(pancelor: has a dead-end... in fact the reason I think it's cool is because of what you have to do to avoid the dead end! oh well)
+p########
+#......1#
+#.......#
+#..###..#
+#..###..#
+#..###..#
+#.......#
+#2..#...#
+#########
+
+(pancelor: really tricky and feels different from most other levels, but probably just feels like brute force work to solve)
+(pancelor: I think this is beatable but I don't remember)
+p#######################
+######22.....###########
+#####22.......##########
+####.2........##########
+###...........##########
+##...#........##########
+#........##...##########
+#........#...###########
+#.......#...############
+#......#...#############
+#.........##############
+#1.......###############
+#1......################
+########################
+########################
+########################
+########################
+
+(pancelor: no win)
+########p##
+###....####
+##.....####
+#.1....####
+#.1#22.####
+#.122..####
+#..2...####
+#......####
+#......####
+#.....#####
+#.##.######
+###########
+
+(pancelor: no win)
+###########p
+##...###.1##
+#.....#.111#
+#.....#..1.#
+##....#....#
+###........#
+##.........#
+#..........#
+#..........#
+#22........#
+#22........#
+##........##
+############
+
+(pancelor: no win)
+##############p
+#####.....#####
+####.......####
+##...........##
+#.............#
+#.............#
+#...........1.#
+#.22.......111#
+##22..###...1##
+###############
+
+(pancelor: fine? not terribly interesting)
+p#######
+#..211.#
+#..#...#
+##....##
+##..#..#
+##.....#
+########
+
+(pancelor: REALLY SATSIFYING. but too simple...? todo: feed to MIS -- delete some walls?)
+###############
+##############p
+###############
+###############
+###..##########
+###..##########
+##1....2#######
+##1....2#######
+#####..########
+#####..########
+###############
+###############
+###############
+###############
+
+(pancelor: kinda cool? idk it's fine)
+############p#
+#222...1111###
+#.....#....###
+#..........###
+##......#....#
+##...........#
+##.........###
+##.........###
+##.........###
+##############
+  (pancelor: it's essentially just this which isn't a new concept:
+  p###########
+  #222...1111#
+  #.....#....#
+  #..........#
+  ####....####
+  ############)
+
+(pancelor: unbeatable; can't get into the last corner. feed to MIS?)
+###########p##
+##.....2222###
+#............#
+#.......#....#
+#11........###
+####....######
+####....######
+###.....######
+#.......######
+##############
+
+(pancelor: not very unique; could cut this one. satisfying to play, I think. feels a bit like pacman)
+(pancelor: this turned into my 1x1 corridor maze level, so I cut this version)
+p########
+#..2....#
+#..2....#
+#.#####.#
+#...#...#
+#.......#
+###....##
+#....#..#
+#.......#
+#.###...#
+#...1..##
+#...1..##
+#########
+
+(pancelor: not possible)
+###p################
+####################
+#................###
+#..................#
+#..................#
+#..........#.......#
+#..................#
+#..................#
+#.....#.......111..#
+#2..............1..#
+#222..........1.1..#
+#2............111###
+####################
+####################
+
+(pancelor: not possible)
+#############p
+#............#
+#............#
+#....222222..#
+#..2......2..#
+#..2......2..#
+#..2..##..2..#
+#..2...#..2..#
+#..2.#....2..#
+#..2.....12..#
+#..22222222..#
+#............#
+#............#
+##############
+
+(pancelor: not possible)
+p###################
+####################
+####################
+#.........##########
+#.111111...#########
+#.1.............####
+#.1......11111...###
+#.1...#......1...###
+#.1..22#.....1...###
+#.1..2.##....1...###
+#.1.......##.1...###
+#.1......##..1...###
+#.11111......1...###
+#.....11111111...###
+#................###
+#####............###
+####################
+####################
+
+(pancelor: not possible)
+##########################p
+##.......................##
+##.......................##
+##.......................##
+##......2222222..........##
+##............2..........##
+##......11111.2...1......##
+##......1.2.1.2...1.......#
+#.......1.2...2...1.......#
+#.......1.22222...1.......#
+#.......1.........1.......#
+#.......11111111111.......#
+#.........................#
+#.........................#
+#.........................#
+#.........................#
+#.........................#
+#.........................#
+#.........................#
+#.........................#
+##.......................##
+###########################
+
+)

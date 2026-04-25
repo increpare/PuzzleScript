@@ -1,0 +1,811 @@
+title Tugging a trapped [...] hair [...]
+author increpare
+homepage www.increpare.com
+
+noaction
+
+background_color darkblue
+
+text_color #d9a066
+
+(debug)
+(verbose_logging)
+
+========
+OBJECTS
+========
+
+Background
+#306082
+
+
+skin
+#d9a066
+
+darkskin
+#ba7d3f
+
+glans
+#d95763
+
+pants
+#3f3f74
+
+selected
+yellow
+
+
+hair_core
+black black
+.....
+..0..
+.010.
+..0..
+.....
+
+hair_up
+black black
+.010.
+.010.
+.....
+.....
+.....
+
+
+hair_down
+black black
+.....
+.....
+.....
+.010.
+.010.
+
+hair_left
+black black
+.....
+00...
+11...
+00...
+.....
+
+
+hair_right
+black black
+.....
+...00
+...11
+...00
+.....
+
+hair_root
+black black
+.000.
+01110
+01110
+01110
+.000.
+
+hair_end 
+red
+.....
+.....
+..0..
+.....
+.....
+
+retract
+transparent
+
+delve
+transparent
+
+newselection_horizontal
+pink
+.....
+.....
+.000.
+.....
+.....
+
+
+newselection_vertical
+lightgreen
+.....
+..0..
+..0..
+..0..
+.....
+
+inside
+red
+
+guide_up
+yellow
+..0..
+.....
+.....
+.....
+.....
+
+guide_down
+yellow
+.....
+.....
+.....
+.....
+..0..
+
+guide_left
+yellow
+.....
+.....
+0....
+.....
+.....
+
+guide_right
+yellow
+.....
+.....
+....0
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+Player = selected
+
+& = inside and guide_down
+
+| = inside and guide_right
+
+{ = hair_core and hair_up and hair_end and inside and guide_down
+\ = hair_core and hair_down and hair_end and inside and guide_down
+~ = hair_core and hair_up and hair_end and inside and guide_right
+` = hair_core and hair_left and hair_end and inside and guide_down
+¬ = hair_core and hair_right and hair_end and inside and guide_down
+
+} = hair_core and hair_up and hair_down and inside 
+
+
+
+z = hair_core and hair_down and inside
+x = hair_core and hair_left  and inside
+c = hair_core and hair_right and inside
+
+
+b = hair_core and hair_up and hair_left and inside
+n = hair_core and hair_up and hair_right and inside
+
+m = hair_core and hair_down and hair_left and inside
+: = hair_core and hair_down and hair_right and inside
+
+@ = hair_core and hair_left and hair_right and inside
+
+
+
+
+
+1 = hair_core and hair_up and hair_end
+2 = hair_core and hair_down
+3 = hair_core and hair_left 
+4 = hair_core and hair_right
+
+
+5 = hair_core and hair_up and hair_down
+6 = hair_core and hair_up and hair_left
+7 = hair_core and hair_up and hair_right
+
+8 = hair_core and hair_down and hair_left
+9 = hair_core and hair_down and hair_right
+
+0 = hair_core and hair_left and hair_right
+
+
+
+q = hair_root and hair_up 
+w = hair_root and hair_down 
+e = hair_root and hair_left 
+r = hair_root and hair_right  
+
+
+
+a = hair_core and hair_up and selected
+s = hair_core and hair_down and selected
+d = hair_core and hair_left  and selected
+f = hair_core and hair_right and selected
+
+
+g = hair_core and hair_up and hair_down and selected
+h = hair_core and hair_up and hair_left and selected
+j = hair_core and hair_up and hair_right and selected
+
+k = hair_core and hair_down and hair_left and selected
+l = hair_core and hair_down and hair_right and selected
+
+; = hair_core and hair_left and hair_right and selected
+
+! = hair_core
+
+/ = hair_end and hair_down and hair_core 
+
+hair_connection = hair_up or hair_down or hair_left or hair_right
+
+newselection = newselection_horizontal or newselection_vertical
+
+guide = guide_up or guide_down or guide_left or guide_right
+wall = skin or glans or pants or darkskin
+
+# = skin
+% = darkskin
+
+" = pants
+£ = glans
+
+=======
+SOUNDS
+=======
+startlevel 3474903
+endlevel 99809305
+sfx0 22765907 (yank)
+cancel 68802704
+sfx1 53944706 (change selection)
+================
+COLLISIONLAYERS
+================
+
+hair_end
+retract
+delve
+guide
+
+
+newselection_horizontal
+newselection_vertical
+
+Background
+inside
+selected
+Wall
+hair_core, hair_root
+hair_up
+hair_down
+hair_left
+hair_right
+
+======
+RULES
+======
+
+[ down selected inside ] -> cancel
+[ left selected inside ] -> cancel
+[ right selected inside ] -> cancel
+
+
+ [action player ] [hair_core no hair_connection | inside ] ->  [action player ] [hair_core  inside | inside ]
+up [action player ] [ hair_core no hair_connection | hair_end ] -> [action player ] [ hair_end hair_up hair_core | hair_down ]
+down [action player ] [ hair_core no hair_connection | hair_end ] -> [action player ] [ hair_end hair_down hair_core | hair_up ]
+left [action player ] [ hair_core no hair_connection | hair_end ] -> [action player ] [ hair_end hair_left hair_core | hair_right ]
+right [action player ] [ hair_core no hair_connection | hair_end ] -> [action player ] [ hair_end hair_right hair_core | hair_left ]
+
+[ down selected  hair_end] -> cancel
+[ down selected  hair_root] -> cancel
+
+(code for selected segment here)
+
+down [ no selected | up selected | up selected ] -> [ no selected |  selected  newselection_horizontal | up selected ] sfx1
+up [ no selected | down selected | down selected ] -> [ no selected |  selected  newselection_horizontal | down selected ] sfx1
+
+left [ no selected | right selected | right selected ] -> [ no selected |  selected  newselection_vertical | right selected ] sfx1
+right [ no selected | left selected | left selected ] -> [ no selected |  selected  newselection_vertical | left selected ] sfx1
+
+
+(if player is moving into an unconnected hair, then nope out)
+up [ > selected  | hair_core no hair_down ] -> cancel
+down [ > selected  | hair_core no hair_up ] -> cancel
+left [ > selected  | hair_core no hair_right ] -> cancel
+right [ > selected  | hair_core no hair_left ] -> cancel
+
+
+(removing existing selection)
+[ newselection ] [ selected ] -> [ newselection ] [  ]
+
+(grow new selection)
+right [ newselection_horizontal hair_right | ] -> [ newselection_horizontal hair_right | newselection_horizontal ]
+left [ newselection_horizontal hair_left | ] -> [ newselection_horizontal hair_left | newselection_horizontal ]
+
+up [ newselection_vertical hair_up | ] -> [ newselection_vertical hair_up | newselection_vertical ]
+down [ newselection_vertical hair_down | ] -> [ newselection_vertical hair_down | newselection_vertical ]
+
+
+
+[newselection]->[selected]
+
+
+
+
+
+(if player is reducing a lump, then remove some bits in the way )
+	(either it's straight or it's bending away)
+left [ > selected hair_left |  hair_left hair_right hair_core ] -> [ > selected hair_left delve | ]
+left [ > selected hair_left |  hair_up hair_right hair_core ] -> [ > selected hair_up delve| ]
+left [ > selected hair_left |  hair_down hair_right hair_core ] -> [ > selected hair_down delve| ]
+
+right [ > selected hair_right |  hair_right hair_left hair_core ] -> [ > selected hair_right delve | ]
+right [ > selected hair_right |  hair_up hair_left hair_core ] -> [ > selected hair_up delve| ]
+right [ > selected hair_right |  hair_down hair_left hair_core ] -> [ > selected hair_down delve| ]
+
+
+
+down [ > selected hair_down |  hair_down hair_up hair_core ] -> [ > selected hair_down delve | ]
+down [ > selected hair_down |  hair_right hair_up hair_core ] -> [ > selected hair_right delve| ]
+down [ > selected hair_down |  hair_left hair_up hair_core ] -> [ > selected hair_left delve| ]
+
+
+
+up [ > selected hair_up |  hair_up hair_down hair_core ] -> [ > selected hair_up delve | ]
+up [ > selected hair_up |  hair_right hair_down hair_core ] -> [ > selected hair_right delve| ]
+up [ > selected hair_up |  hair_left hair_down hair_core ] -> [ > selected hair_left delve| ]
+
+(moves rest of hair with selection)
+[ > selected hair_connection hair_core ] -> [ > player > hair_connection > hair_core ]
+
+
+(if there's a gap, fill the gap)
+late right [ hair_right | no hair_left | hair_left selected ] -> [ hair_right | hair_left hair_core hair_right retract| hair_left selected ]
+late left [ hair_left | no hair_right | hair_right selected ] -> [ hair_left | hair_right hair_core hair_left retract| hair_right selected ]
+late up [ hair_up | no hair_down | hair_down selected ] -> [ hair_up | hair_down hair_core hair_up retract| hair_down selected ]
+late down [ hair_down | no hair_up  | hair_up selected ] -> [ hair_down | hair_up hair_core hair_down retract| hair_up selected ]
+
+
+late down [ retract ] [ hair_core hair_down | hair_core hair_up hair_end ] -> [] [ hair_core hair_end guide_down |] sfx0
++late up [ retract ] [ hair_core hair_up | hair_core hair_down hair_end ] -> [] [ hair_core hair_end guide_up |] sfx0
++late left [ retract ] [ hair_core hair_left | hair_core hair_right hair_end ] -> [] [ hair_core hair_end guide_left |] sfx0
++late right [ retract ] [ hair_core hair_right | hair_core hair_left hair_end ] -> [] [ hair_core hair_end guide_right |] sfx0
+
+late up [ delve ] [  hair_core  hair_end guide_up | ] -> [] [ hair_core  hair_up | hair_down hair_core  hair_end] sfx0
++late down [ delve ] [  hair_core  hair_end guide_down | ] -> [] [ hair_core  hair_down | hair_up hair_core  hair_end] sfx0
++late left [ delve ] [  hair_core  hair_end guide_left | ] -> [] [ hair_core  hair_left | hair_right hair_core  hair_end] sfx0
++late right [ delve ] [  hair_core  hair_end guide_right | ] -> [] [ hair_core  hair_right | hair_left hair_core  hair_end] sfx0
+
+late [hair_core wall ] -> cancel
+
+
+(Expand selection)
+late up [ hair_up no selected | selected | selected ] -> [ hair_up selected | selected |selected ]
+late down [ hair_down no selected | selected | selected ] -> [ hair_down selected | selected |selected ]
+late left [ hair_left no selected | selected | selected ] -> [ hair_left selected | selected |selected ]
+late right [ hair_right no selected | selected | selected ] -> [ hair_right selected | selected |selected ]
+
+late [selected wall]->cancel
+
+
+==============
+WINCONDITIONS
+==============
+ no hair_core on inside 
+
+=======
+LEVELS
+=======
+
+message Level 1 of 5
+
+"""""""""""""""""""""""""""""""
+""""........"""""""""""""""""""
+""""....908."""""""""""""""""""
+""""....5.5."""""""""""""""""""
+"""".9006.5."""""""""""""""""""
+"""".5....5."""""""""""""""""""
+"""".5...96."""""""""""""""""""
+"""".j;k.5.."""""""""""""""""""
+""""...5.708............"""""""
+"".....5...5£££.£££..........."
+"..####q#.#}£££££££&#.######...
+".#######.#}£££££££&#.#######..
+..#######.#}£££££££&#.#######..
+.########.#}£££££££&#.########.
+.########.#}£££££££&#.########.
+.#######..#}£££££££&#.########.
+.#######.#\}£££££££&#.########.
+.#######.#}nm#####&&#.########.
+.#######.#n@b#####&&#.########.
+.#######..##########..########.
+.########..#########.#########.
+
+message Unnnh! So great!
+
+message Level 2 of 5
+
+"""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""
+""""""9000008""""""""""""""""""""
+""""""5.....5""""""""""""""""""""
+""""""5.....5""""""""""""""""""""
+""""""7k.9006""""""""""""""""""""
+""""""9h.7008""""""""""""""""""""
+""""""5908906""""""""""""""""""""
+""""""76.55.."......"""""""""""""
+""""""98.55...££.££..""""""""""""
+"""...5706708£££££££.........."""
+""..##q##.##}£££££££&#.######..""
+"".#####.#:@b£££££££&#.#######.""
+"..#####.#n@m£££££££&#.#######.."
+".######.#:@b£££££££&#.########."
+".######.#n@m£££££££&#.########."
+".######..#:b£££££££&#.########."
+".#######.#n@`#####&&#.########."
+".#######..##########..########."
+
+message I feel so good!
+
+message Level 3 of 5
+
+"""""""""""""""""""""""""""""""""""""""""
+"""90008....908""""""""""""""""""""""""""
+"""5...5....5.5""""""""""""""""""""""""""
+"""5...5908.5.5""""""""""""""""""""""""""
+"""708.55.5.5.5""""""""""""""""""""""""""
+"""..5965.706.5""""""""""""""""""""""""""
+"""9065.7008..5""""""""""""""""""""""""""
+"""5..5....5.96""""""""""""""""""""""""""
+"""5..7008.5.5.""""""""""""""""""""""""""
+"""5.l;k.5.5.5.............."""""""""""""
+"""706.5.706.5.£££££.££££££..........."""
+""..###q##.##}££££££££££££££|#.######..""
+"".######.#:@b££££££££££££££|#.#######.."
+"..######.#n@m££££££££££££££|#.#######.."
+".#######.#:@b££££££££££££££|#.########."
+".#######.#n@m££££££££££££££|#.########."
+".#######.#:@b££££££££££££££|#.########."
+".#######.#n@m££££££££££££££|#.########."
+".#######.#:@b££££££££££££££|#.########."
+".#######.#n@m££££££££££££££|#.########."
+".#######.#:@b££££££££££££££|#.########."
+".#######.#n@m££££££££££££££|#.########."
+".#######..##~||##########|||#.########."
+".#########..################.#########."
+
+
+message I live for moments like this!
+
+
+message Level 4 of 5
+
+
+""""""""""""""""""""""""""""""
+""""900000008"""""""""""""""""
+""""789890085"""""""""""""""""
+"""".76769855"""""""""""""""""
+"""".90085765"""""""""""""""""
+"""".5.965906"""""""""""""""""
+"""".78785708"""""""""""""""""
+""""..59678.5"""""""""""""""""
+"""".lh7006.5......"""""""""""
+"""..5.....96££.££........."""
+""..#q###.#nm£££££&#.#####..""
+"".######.#:b£££££&#.######.."
+"..######.#nm£££££&#.######.."
+".#######.#:b£££££&#.#######."
+".#######.#n`&###&&#.#######."
+".#######..########..#######."
+".########..######..########."
+".#########.######.#########."
+
+message What a rush!
+
+message Level 5 of 5
+
+"""""""""""""""""""""""""""""""""""""""
+"""""...9008900008"""""""""""""""""""""
+"""""...5..55....5"""""""""""""""""""""
+"""""9006.965..906"""""""""""""""""""""
+"""""789085.5985.."""""""""""""""""""""
+""""".76.5706576.."""""""""""""""""""""
+""""".lk.5.90698.........."""""""""""""
+"""...5706.70065££££.££££..........."""
+""..##q#####.##}£££££££££&#.#######..""
+"".########.#:@b£££££££££&#.########.."
+"..########.#n@m£££££££££&#.#########."
+".#########.#:@b£££££££££&#.#########."
+".#########.#n@m£££££££££&#.#########."
+".#########.#:@b£££££££££&#.#########."
+".#########.#n@m£££££££££&#.#########."
+".#########.#:@b£££££££££&#.#########."
+".#########.#~|||#######&&#.#########."
+".##########.#############.##########."
+
+message Congratulations! You are pubic hair yanking champion of the universe!
+(
+###########
+#900000008#
+#789890085#
+#.76769855#
+#.90085765#
+#.5.965906#
+#.78785708#
+#..59678.5#
+#.lh7006.5#
+#.5.....96#
+##q#####}##
+########nm#
+########:b#
+########nm#
+########:b#
+########{##
+###########
+###########
+
+
+message Level 1
+###########
+#........##
+#....908.##
+#....5.5.##
+#.9006.5.##
+#.5....5.##
+#.5...96.##
+#.j;k.5..##
+#...5.708##
+#...5...5##
+####q###}##
+########}##
+########}##
+########}##
+########}##
+########}##
+########}##
+########{##
+########&##
+########&##
+###########
+
+message Level 2
+###########
+###########
+##l;;;;;k##
+##5.....5##
+##5.....5##
+##78.9006##
+##96.7008##
+##5908906##
+##76.55..##
+##98.55..##
+##5706708##
+##q#####}##
+########}##
+########}##
+########}##
+########{##
+########&##
+########&##
+###########
+
+message Level 3
+###########
+#900000008#
+#789890085#
+#.76769855#
+#.90085765#
+#.5.965906#
+#.78785708#
+#..59678.5#
+#.lh7006.5#
+#.5.....96#
+##q#####}##
+########nm#
+########:b#
+########nm#
+########:b#
+########{##
+###########
+###########
+
+
+message Level 4
+##############
+#90008....908#
+#5...5....5.5#
+#5...5908.5.5#
+#708.55.5.5.5#
+#..5965.706.5#
+#9065.7008..5#
+#5..5....5.96#
+#5..7008.5.5##
+#5.l;k.5.5.5##
+#706.5.706.5##
+#####q#####}##
+##########:b&#
+##########n@m#
+##########:@b#
+##########n@m#
+##########:@b#
+##########n@m#
+##########:@b#
+##########n@m#
+##########:@b#
+##########n@m#
+###########¬b#
+##############
+
+(hard)
+message Level 5
+###############
+#...9008900008#
+#...5..55....5#
+#9006.965..906#
+#789085.5985..#
+#.76.5706576..#
+#.lk.5.90698..#
+#.5706.70065..#
+##q########}###
+###########}:m#
+###########}}}#
+###########nb}#
+###########:m}#
+###########}nb#
+###########n@m#
+###########:@b#
+###########~||#
+###############
+
+(
+##############
+#............#
+#............#
+#............#
+#............#
+#............#
+#............#
+#............#
+#...........##
+#...........##
+#..../......##
+#####q#####&##
+##########&&&#
+##########&&&#
+##########&&&#
+##########&&&#
+##############
+
+###########
+#900000008#
+#789890085#
+#.76769855#
+#.90085765#
+#.5.965906#
+#.78785708#
+#..59678.5#
+#.lh7006.5#
+#.5.....96#
+##q#####}##
+########nm#
+########:b#
+########nm#
+########cb#
+###########
+
+
+###########
+#900000008#
+#789890085#
+#.76769855#
+#.90085765#
+#.5.965906#
+#.78785708#
+#..59678.5#
+#.lh7006.5#
+#.5.....96#
+##q#####}##
+########}##
+########}##
+########}##
+########1##
+###########
+
+
+###############
+#...9008900008#
+#...5..55....5#
+#9006.965..906#
+#789085.5985..#
+#.76.5706576..#
+#.lk.5.90698..#
+#.5706.70065..#
+##q########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########}###
+###########{###
+###########&###
+###########&###
+###############
+###############
+
+
+
+###########
+###########
+##l;;;;;k##
+##5.....5##
+##5.....5##
+##5.....5##
+##5.....5##
+##5908906##
+##76.55..##
+##98.55..##
+##5706708##
+##q#####}##
+########}##
+########}##
+########}##
+########{##
+###########
+
+
+########### 
+#.........#
+#...9008..#
+#...5..5..#
+#...7896..#
+#....55...#
+#.lk.55...#
+#.5706708.#
+##q#####5##
+########5##
+########5##
+########1##
+########.##
+###########
+
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+#.........#
+#.lk......#
+#.5{!.....#
+##q#####.##
+########.##
+########.##
+########.##
+########.##
+###########
+
+###########
+#.........#
+#..9008...#
+#..7k.5...#
+#...g.5...#
+#...g.708.#
+#.90h...5.#
+#.5.....5.#
+##q#####}##
+########}##
+########}##
+########}##
+########{##
+###########
+))

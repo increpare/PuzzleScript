@@ -1,0 +1,798 @@
+title ecosystem generator
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+color_palette 5
+
+text_color gray
+background_color black
+
+require_player_movement
+
+( debug )
+verbose_logging
+
+========
+OBJECTS
+========
+
+background
+black
+
+sidepanel
+black
+
+Land 
+black black
+00000
+00000
+00100
+00000
+00000
+
+sea 
+black black
+00000
+00000
+00100
+00000
+00000
+
+sky 
+black black
+00000
+00000
+00100
+00000
+00000
+
+Land_real
+green green
+11111
+01111
+11101
+11111
+10111
+
+sea_real
+darkblue darkblue
+01001
+00000
+00010
+10000
+00100
+
+sky_real 
+lightblue lightblue
+00000
+00000
+00100
+00000
+00000
+
+button_off
+darkred lightgrey
+11111
+11011
+10001
+11011
+11111
+
+button_on
+red lightgrey
+11111
+11011
+10001
+11011
+11111
+
+Wall
+gray darkgray 
+00010
+11111
+01000
+11111
+00010
+
+Player
+yellow
+..0..
+00000
+.000.
+.0.0.
+0...0
+
+
+Sprite_0_0
+#df7126 #595652 
+..000
+.00.0
+00...
+.001.
+..0..
+
+Sprite_1_0
+#df7126 white #595652 
+.000.
+01210
+02220
+00000
+0...0
+
+Sprite_2_0
+#df7126 #595652 
+000..
+0.00.
+...00
+.100.
+..0..
+
+Sprite_0_1
+#663931 #8f563b 
+...00
+..000
+.0.00
+0..0.
+...1.
+
+Sprite_1_1
+#663931 #8f563b 
+00000
+00000
+00000
+0.000
+1....
+
+Sprite_2_1
+#663931 #8f563b 
+00000
+00000
+00000
+0.0.0
+..1.1
+
+Sprite_3_1
+#663931 black white #8f563b 
+0....
+102..
+00203
+.....
+.....
+
+Sprite_0_2
+#ac3232 #8c1a1a 
+.0000
+00000
+11000
+..111
+.....
+
+Sprite_1_2
+#ac3232 #d95763 #45283c #8c1a1a 
+00111
+00012
+00020
+32233
+2....
+
+Sprite_2_2
+#d95763 #45283c #ac3232 #8c1a1a 
+00000
+11110
+22221
+33331
+.111.
+
+Sprite_3_2
+#d95763 #8c1a1a #45283c 
+.....
+0....
+0111.
+2222.
+..2.2
+
+Sprite_0_3
+#663931 #696a6a #595652 
+..000
+.0110
+01101
+01022
+0....
+
+Sprite_1_3
+#663931 #696a6a black #595652 
+00.00
+10001
+12021
+30003
+.0.0.
+
+Sprite_2_3
+#663931 #696a6a #595652 
+000..
+0110.
+10110
+22010
+....0
+
+Sprite_0_4
+#3f3f74 #cbdbfc 
+000..
+.1000
+..100
+...00
+....1
+
+Sprite_1_4
+#3f3f74 #cbdbfc 
+...00
+00100
+00010
+11000
+11111
+
+Sprite_2_4
+#3f3f74 #313162 #cbdbfc 
+....0
+00000
+00000
+01002
+200..
+
+Sprite_3_4
+#3f3f74 #cbdbfc 
+000..
+11000
+00011
+1111.
+.....
+
+Sprite_0_5
+#df7126 #d9a066 
+00..0
+.00..
+..111
+.00..
+00..0
+
+Sprite_1_5
+#df7126 #d9a066 #eec39a #f4eab5 
+0....
+11111
+22222
+33333
+0...0
+
+Sprite_2_5
+#d9a066 #eec39a #f4eab5 #df7126 
+.....
+00000
+11111
+22222
+3...3
+
+Sprite_3_5
+#d9a066 #eec39a black #df7126 #f4eab5 
+.....
+000..
+11211
+3444.
+.....
+
+Sprite_0_6
+#663931 #8f563b 
+.010.
+01010
+10.01
+01.01
+0...0
+
+Sprite_1_6
+#663931 #8f563b 
+010..
+1010.
+0.10.
+0.010
+...01
+
+Sprite_2_6
+#663931 #37946e #8f563b 
+..010
+.0200
+020..
+20...
+0....
+
+Sprite_0_7
+#306082 #524b24 #8d9d78 #37946e 
+000..
+.0001
+..012
+.0003
+000..
+
+Sprite_1_7
+#306082 #524b24 #8d9d78 #37946e 
+00011
+11112
+32323
+20232
+00033
+
+Sprite_2_7
+#524b24 #8d9d78 #37946e #306082 
+00000
+01010
+12121
+21212
+33223
+
+Sprite_3_7
+#524b24 #8d9d78 #37946e #306082 #9badb7 black
+00...
+1500.
+21100
+32140
+32.4.
+
+Sprite_0_8
+#45283c #663931 
+..011
+.0001
+00000
+00...
+.....
+
+Sprite_1_8
+#663931 #222034 #8f563b #eec39a 
+00.12
+22023
+00022
+...30
+..3.0
+
+Sprite_2_8
+#8f563b #222034 #663931 #eec39a 
+01.22
+30200
+00222
+23...
+2.3..
+
+Sprite_3_8
+#663931 #45283c 
+001..
+0111.
+11111
+...11
+.....
+
+Sprite_0_9
+#df7126 #c45f1a 
+.00..
+0..00
+...11
+...1.
+...11
+
+Sprite_1_9
+#c45f1a #df7126 
+.....
+01010
+10000
+1..0.
+.1.00
+
+Sprite_2_9
+#df7126 #663931 
+..0..
+00010
+00000
+0....
+.0...
+
+letter_a 
+white 
+..00.
+.0..0
+.0000
+.0..0
+.0..0
+
+letter_b
+white 
+.000.
+.0..0
+.000.
+.0..0
+.000.
+
+letter_c
+white 
+..00.
+.0..0
+.0...
+.0..0
+..00.
+
+letter_e
+white 
+.0000
+.0...
+.000.
+.0...
+.0000
+
+letter_i
+white 
+.000.
+..0..
+..0..
+..0..
+.000.
+
+letter_k
+white 
+.0..0
+.0.0.
+.00..
+.0.0.
+.0..0
+
+letter_o
+white 
+..00.
+.0..0
+.0..0
+.0..0
+..00.
+
+letter_p
+white 
+.000.
+.0..0
+.000.
+.0...
+.0...
+
+letter_r
+white 
+.000.
+.0..0
+.000.
+.0..0
+.0..0
+
+letter_t
+white 
+00000
+..0..
+..0..
+..0..
+..0..
+
+letter_notword
+gray
+
+letter_word
+orange
+
+ui_animal_0 0
+black
+
+ui_animal_1 1
+black
+
+ui_animal_2 2
+black
+
+ui_animal_3 3
+black
+
+ui_animal_4 4
+black
+
+ui_animal_5 5
+black
+
+ui_animal_6 6
+black
+
+ui_animal_7 7
+black
+ 
+ui_animal_8 8
+black
+
+ui_animal_9 9
+black
+
+token_was_off
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+
+value_a
+white
+
+value_b
+white
+
+value_c
+white
+
+value_e
+white
+
+value_i
+white
+
+value_k
+white
+
+value_o
+white
+
+value_p
+white
+
+value_r
+white
+
+value_t
+white
+
+=======
+LEGEND
+=======
+
+. = land
+' = sky
+, = sea
+- = background and sidepanel
+$ = button_off
+
+# = Wall
+@ = Player and sky
+
+a=letter_a 
+b=letter_b 
+c=letter_c 
+e=letter_e 
+i=letter_i 
+k=letter_k 
+o=letter_o 
+p=letter_p 
+r=letter_r 
+t=letter_t 
+
+terrain = land or sea or sky
+letter = letter_a or letter_b or letter_c or letter_e or letter_i or letter_k or letter_o or letter_p or letter_r or letter_t
+
+ape_1 = Sprite_0_0
+ape_2 = sprite_1_0
+ape_3 = sprite_2_0
+
+boar_1 = sprite_0_1
+boar_2 = sprite_1_1
+boar_3 = sprite_2_1
+boar_4 = sprite_3_1
+
+tick_1 = sprite_0_2
+tick_2 = sprite_1_2
+tick_3 = sprite_2_2
+tick_4 = sprite_3_2
+
+bat_1 = sprite_0_3
+bat_2 = sprite_1_3
+bat_3 = sprite_2_3
+
+orca_1 = sprite_0_4
+orca_2 = sprite_1_4
+orca_3 = sprite_2_4
+orca_4 = sprite_3_4
+
+pike_1 = sprite_0_5
+pike_2 = sprite_1_5
+pike_3 = sprite_2_5
+pike_4 = sprite_3_5
+
+boa_1 = sprite_0_6
+boa_2 = sprite_1_6
+boa_3 = sprite_2_6
+
+carp_1 = sprite_0_7
+carp_2 = sprite_1_7
+carp_3 = sprite_2_7
+carp_4 = sprite_3_7
+
+kite_1 = sprite_0_8
+kite_2 = sprite_1_8
+kite_3 = sprite_2_8
+kite_4 = sprite_3_8
+
+cat_1 = sprite_0_9
+cat_2 = sprite_1_9
+cat_3 = sprite_2_9
+
+ape = ape_1 or ape_2 or ape_3
+boar = boar_1 or boar_2 or boar_3 or boar_4
+tick = tick_1 or tick_2 or tick_3 or tick_4
+bat = bat_1 or bat_2 or bat_3 
+orca = orca_1 or orca_2 or orca_3 or orca_4
+pike = pike_1 or pike_2 or pike_3 or pike_4
+boa = boa_1 or boa_2 or boa_3 
+carp = carp_1 or carp_2 or carp_3 or carp_4
+kite = kite_1 or kite_2 or kite_3 or kite_4
+cat = cat_1 or cat_2 or cat_3
+
+animal = ape or boar or tick or bat or orca or pike or boa or carp or kite or cat
+
+ui_animal = ui_animal_0 or ui_animal_1 or ui_animal_2 or ui_animal_3 or ui_animal_4 or ui_animal_5 or ui_animal_6 or ui_animal_7 or ui_animal_8 or ui_animal_9
+
+pushable = animal or letter
+pusher = player or animal or letter
+terrain_real = sky_real or Land_real or sea_real
+letter_bg = letter_word or letter_notword
+button = button_off or button_on
+
+value = value_a or value_b or value_c or value_e or value_i or value_k or value_o or value_p or value_r or value_t
+
+equiv_a = letter_a or ape_1 or boar_3 or bat_2 or orca_4 or boa_3 or carp_2 or cat_2
+equiv_b = letter_b or boar_1 or bat_1 or boa_1
+equiv_c = letter_c or tick_3 or orca_3 or carp_1 or cat_1
+equiv_e = letter_e or ape_3 or pike_4 or kite_4
+equiv_i = letter_i or tick_2 or pike_2 or kite_2
+equiv_k = letter_k or tick_4 or pike_3 or kite_1
+equiv_o = letter_o or boar_2 or orca_1 or boa_2
+equiv_p = letter_p or ape_2 or pike_1 or carp_4
+equiv_r = letter_r or boar_4 or orca_2 or carp_3
+equiv_t = letter_t or tick_1 or bat_3 or kite_3 or cat_3
+
+equiv = equiv_a or equiv_b or equiv_c or equiv_e or equiv_i or equiv_k or equiv_o or equiv_p or equiv_r or equiv_t
+
+anyterrain = terrain or terrain_real
+
+=======
+SOUNDS
+=======
+
+sfx0 20273300
+sfx1 79513702
+pushable move 82819307
+endlevel 87887708
+
+================
+COLLISIONLAYERS
+================
+
+Background
+terrain, terrain_real, sidepanel
+button
+letter_word, letter_notword
+Player, Wall,letter, animal, ui_animal
+token_was_off
+value
+
+======
+RULES
+======
+
+[ > pusher | pushable ] -> [ > pusher | > pushable ]
+
+[ > player | button ] -> [ > player | button ] again
+
+late [ letter no terrain ] -> [ letter sky ]
+late [ letter_bg ] -> [ ]
+late [ equiv anyterrain ] -> [ equiv anyterrain letter_notword ]
+
+late [ equiv_a anyterrain ] -> [ equiv_a anyterrain value_a ]
+late [ equiv_b anyterrain ] -> [ equiv_b anyterrain value_b ]
+late [ equiv_c anyterrain ] -> [ equiv_c anyterrain value_c ]
+late [ equiv_e anyterrain ] -> [ equiv_e anyterrain value_e ]
+late [ equiv_i anyterrain ] -> [ equiv_i anyterrain value_i ]
+late [ equiv_k anyterrain ] -> [ equiv_k anyterrain value_k ]
+late [ equiv_o anyterrain ] -> [ equiv_o anyterrain value_o ]
+late [ equiv_p anyterrain ] -> [ equiv_p anyterrain value_p ]
+late [ equiv_r anyterrain ] -> [ equiv_r anyterrain value_r ]
+late [ equiv_t anyterrain ] -> [ equiv_t anyterrain value_t ]
+
+late right [ no value |  value_a | value_p | value_e  | no value ] -> [ |  value_a letter_word | value_p letter_word | value_e letter_word  | ]
+late right [ no value |  value_b | value_o | value_a | value_r  | no value ] -> [ |  value_b letter_word | value_o letter_word | value_a letter_word | value_r letter_word  | ]
+late right [ no value |  value_t | value_i | value_c | value_k  | no value ] -> [ |  value_t letter_word | value_i letter_word | value_c letter_word | value_k letter_word  | ]
+late right [ no value |  value_b | value_a | value_t  | no value ] -> [ |  value_b letter_word | value_a letter_word | value_t letter_word  | ]
+late right [ no value |  value_o | value_r | value_c | value_a  | no value ] -> [ |  value_o letter_word | value_r letter_word | value_c letter_word | value_a letter_word  | ]
+late right [ no value |  value_p | value_i | value_k | value_e  | no value ] -> [ |  value_p letter_word | value_i letter_word | value_k letter_word | value_e letter_word  | ]
+late right [ no value |  value_b | value_o | value_a  | no value ] -> [ |  value_b letter_word | value_o letter_word | value_a letter_word  | ]
+late right [ no value |  value_c | value_a | value_r | value_p  | no value ] -> [ |  value_c letter_word | value_a letter_word | value_r letter_word | value_p letter_word  | ]
+late right [ no value |  value_k | value_i | value_t | value_e  | no value ] -> [ |  value_k letter_word | value_i letter_word | value_t letter_word | value_e letter_word  | ]
+late right [ no value |  value_c | value_a | value_t  | no value ] -> [ |  value_c letter_word | value_a letter_word | value_t letter_word  | ]
+
+
+(cul-de-sac words:
+bear, cobra, crab, koi, rat, tapir
+)
+
+late right [ no value |  value_b | value_e | value_a | value_r  | no value ] -> [ |  value_b letter_word | value_e letter_word | value_a letter_word | value_r letter_word  | ]
+late right [ no value |  value_c | value_o | value_b | value_r  | value_a | no value ] -> [ |  value_c letter_word | value_o letter_word | value_b letter_word | value_r letter_word | value_a letter_word | ]
+late right [ no value |  value_c | value_r | value_a | value_b  | no value ] -> [ |  value_c letter_word | value_r letter_word | value_a letter_word | value_b letter_word  | ]
+late right [ no value |  value_k | value_o | value_i | no value ] -> [ |  value_k letter_word | value_o letter_word | value_i letter_word | ]
+late right [ no value |  value_r | value_a | value_t  | no value ] -> [ |  value_r letter_word | value_a letter_word | value_t letter_word  | ]
+late right [ no value |  value_t | value_a | value_p | value_i | value_r  | no value ] -> [ |  value_t letter_word | value_a letter_word | value_p letter_word | value_i letter_word | value_r letter_word  | ]
+late right [ no value |  value_p | value_i | value_k | value_a  | no value ] -> [ |  value_p letter_word | value_i letter_word | value_k letter_word | value_a letter_word  | ]
+
+
+late [ button_off ] -> [ button_on token_was_off ]
+late [ letter_notword ] [ button_on ] -> [ letter_notword ] [ button_off ]
+late [ button_on token_was_off ] -> sfx0
+late [ token_was_off] -> [ ]
+
+(step 1, background transformation)
+late right [ player button_on ] [ sky ] ->  [ player button_on ] [ sky_real ]
+late right [ player button_on ] [ Land ] ->  [ player button_on ] [ land_real ]
+late right [ player button_on ] [ sea ] ->  [ player button_on ] [ sea_real ]
+
+late right  [ player button_on ] [ terrain_real value_a letter_word | value_p | value_e ] ->  [ player button_on ] [ terrain_real ape_1 letter_word | ape_2 | ape_3 ]
+late right  [ player button_on ] [ terrain_real value_b letter_word | value_o | value_a | value_r ] ->  [ player button_on ] [ terrain_real boar_1 letter_word | boar_2 | boar_3 | boar_4 ]
+late right  [ player button_on ] [ terrain_real value_t letter_word | value_i | value_c | value_k ] ->  [ player button_on ] [ terrain_real tick_1 letter_word | tick_2 | tick_3 | tick_4 ]
+late right  [ player button_on ] [ terrain_real value_b letter_word | value_a | value_t ] ->  [ player button_on ] [ terrain_real bat_1 letter_word | bat_2 | bat_3 ]
+late right  [ player button_on ] [ terrain_real value_o letter_word | value_r | value_c | value_a ] ->  [ player button_on ] [ terrain_real orca_1 letter_word | orca_2 | orca_3 | orca_4 ]
+late right  [ player button_on ] [ terrain_real value_p letter_word | value_i | value_k | value_e ] ->  [ player button_on ] [ terrain_real pike_1 letter_word | pike_2 | pike_3 | pike_4 ]
+late right  [ player button_on ] [ terrain_real value_b letter_word | value_o | value_a ] ->  [ player button_on ] [ terrain_real boa_1 letter_word | boa_2 | boa_3 ]
+late right  [ player button_on ] [ terrain_real value_c letter_word | value_a | value_r | value_p ] ->  [ player button_on ] [ terrain_real carp_1 letter_word | carp_2 | carp_3 | carp_4 ]
+late right  [ player button_on ] [ terrain_real value_k letter_word | value_i | value_t | value_e ] ->  [ player button_on ] [ terrain_real kite_1 letter_word | kite_2 | kite_3 | kite_4 ]
+late right   [ player button_on ] [ terrain_real value_c letter_word | value_a | value_t ] ->  [ player button_on ] [ terrain_real cat_1 letter_word | cat_2 | cat_3 ]
+
+late right [ ape_1 terrain_real ] [ ui_animal_0 | ui_animal_0 | ui_animal_0  ] -> [ ape_1 terrain_real ]  [ ape_1 | ape_2 | ape_3  ]
+late right [ boar_1 terrain_real ] [ ui_animal_1 | ui_animal_1 | ui_animal_1 | ui_animal_1 ] -> [ boar_1 terrain_real ]  [ boar_1 | boar_2 | boar_3 | boar_4 ]
+late right [ tick_1 terrain_real ] [ ui_animal_2 | ui_animal_2 | ui_animal_2 | ui_animal_2 ] -> [ tick_1 terrain_real ]  [ tick_1 |tick_2 | tick_3 | tick_4 ]
+late right [ bat_1 terrain_real ] [ ui_animal_3 | ui_animal_3 | ui_animal_3  ] -> [ bat_1 terrain_real ]  [ bat_1 | bat_2 | bat_3  ]
+late right [ orca_1 terrain_real ] [ ui_animal_4 | ui_animal_4 | ui_animal_4| ui_animal_4 ] -> [ orca_1 terrain_real ]  [ orca_1 | orca_2 | orca_3 | orca_4 ]
+late right [ pike_1 terrain_real ] [ ui_animal_5 | ui_animal_5 | ui_animal_5 | ui_animal_5 ] -> [ pike_1 terrain_real ]  [ pike_1 | pike_2 | pike_3 | pike_4 ]
+late right [ boa_1 terrain_real ] [ ui_animal_6 | ui_animal_6 | ui_animal_6  ] -> [ boa_1 terrain_real ]  [ boa_1 | boa_2 | boa_3 ]
+late right [ carp_1 terrain_real ] [ ui_animal_7 | ui_animal_7 | ui_animal_7 | ui_animal_7 ] -> [ carp_1 terrain_real ]  [ carp_1 | carp_2 | carp_3 | carp_4 ]
+late right [ kite_1 terrain_real ] [ ui_animal_8 | ui_animal_8 | ui_animal_8 | ui_animal_8 ] -> [ kite_1 terrain_real ]  [ kite_1 | kite_2 | kite_3 | kite_4 ]
+late right [ cat_1 terrain_real ] [ ui_animal_9 | ui_animal_9 | ui_animal_9  ] -> [ cat_1 terrain_real ]  [ cat_1 | cat_2 | cat_3 ]
+
+
+late [letter_bg no value ] -> [ ]
+
+late [value]->[]
+
+late [ player button_on ] -> sfx1 
+
+==============
+WINCONDITIONS
+==============
+
+all ui_animal on animal
+
+=======
+LEVELS
+=======
+
+message when everything is animals, you can progress
+
+
+####################
+#000-#'''''''''''''#
+#1111#'a'a'b'c'e'i'#
+#2222#'''''''''''''#
+#333-#''k'o'p'r't''#
+#4444#'''@'''''''''#
+#5555#$.......,,,,,#
+#666-#......,,,,,,,#
+#7777#.......,,,,,,#
+#8888#.......,,,,,,#
+#999-#........,,,,,#
+####################
+
+message Congratulations! You understand words are more real than things, and that letters are even more real than words!
+
+(just as letters cannot be realized outside of words, so animals cannot exist outside of ecosystems)

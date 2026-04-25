@@ -1,0 +1,404 @@
+title Putting Bicycle Helmets on Young Children
+author increpare
+homepage www.increpare.com
+
+color_palette 4
+
+verbose_logging
+again_interval 0.1
+
+noaction
+
+background_color #4a7aff
+text_color Yellow
+========
+OBJECTS
+========
+
+Background
+lightblue
+
+silhouette
+#98cce3
+
+Player
+Orange Orange Orange Orange
+..000
+..110
+0.111
+.0333
+..000
+
+hair
+Yellow 
+
+fixedhair
+Yellow lightred
+00000
+00000
+00000
+01010
+11111
+
+skin
+lightred
+
+boundary
+#062fa1
+
+helmet
+blue
+
+helmetbg
+#4a7aff
+
+
+
+strapsource_l
+black
+00000
+00000
+.000.
+.000.
+.000.
+
+strapsource_r
+black
+00000
+00000
+.000.
+.000.
+.000.
+
+strap
+black
+.....
+00000
+00000
+00000
+.....
+
+
+connectedhairto_n
+white
+..0..
+.....
+.....
+.....
+.....
+
+connectedhairto_s
+white
+.....
+.....
+.....
+.....
+..0..
+
+connectedhairto_e
+white
+.....
+.....
+....0
+.....
+.....
+
+connectedhairto_w
+white
+.....
+.....
+0....
+.....
+.....
+
+connected
+red
+.....
+.....
+..0..
+.....
+.....
+
+eye1
+white
+
+eye2
+blue
+
+mouth 
+red
+
+
+
+zipper_l
+black orange
+00111
+00111
+10111
+01111
+00111
+
+
+zipper_r
+black orange
+00111
+00111
+10111
+01111
+00111
+
+
+zipper_l_retract
+black orange
+00111
+00111
+10111
+01111
+00111
+
+
+zipper_r_retract
+black orange
+00111
+00111
+10111
+01111
+00111
+
+
+strapstart
+black
+00000
+00000
+00000
+.....
+.....
+
+=======
+LEGEND
+=======
+
+
+strapsource = strapsource_l or strapsource_r
+connectedtotoken = connectedhairto_n or connectedhairto_s or connectedhairto_e or connectedhairto_w
+
+connectedhairto_horizontal = connectedhairto_e or connectedhairto_w
+connectedhairto_vertical = connectedhairto_n or connectedhairto_s
+
+pushing = player or hair or helmet or strapsource
+pushable = hair or helmet or strapsource
+obstacle = hair or helmet or strapsource or boundary or skin
+
+helmetpiece = helmet or strapsource
+
+zipper = zipper_l or zipper_r or zipper_l_retract or zipper_r_retract
+
+. = Background
+, = boundary
+# = skin 
+; = hair
+f = fixedhair and hair
+P = Player
+h = helmet
+l = strapsource_l
+r = strapsource_r
+~ = silhouette
+e = eye1 and skin
+g = eye2 and skin
+m = mouth and skin
+% = helmetbg
+
+=======
+SOUNDS
+=======
+
+sfx0 74339307 (snap)
+sfx1 50788707 (unsnap)
+sfx2 3464107 (zip)
+sfx3 54163106 (unzip)
+sfx4 27135507 (flip)
+endlevel 99085705
+
+================
+COLLISIONLAYERS
+================
+connectedhairto_n
+connectedhairto_s
+connectedhairto_e
+connectedhairto_w
+connected
+
+
+Background
+helmetbg
+silhouette
+strapstart
+Player, hair, skin, boundary, strap, helmet,strapsource, zipper_l , zipper_r,zipper_l_retract ,zipper_r_retract
+fixedhair
+eye1,eye2, mouth
+
+======
+RULES
+======
+
+ [connectedtotoken]->[]
+ [connected ] ->[]
+ 
+ 
+random left [ zipper_l_retract  strapstart | ] -> [ no strap  strapsource_l no strap | Player ] sfx1
+random left [ zipper_l_retract | strapstart | ] -> [ no strap | strapsource_l no strap | Player ]  sfx1
+random left [ zipper_l_retract | strap ] -> [  | zipper_l_retract ] sfx3
+
+random right [ zipper_r_retract  strapstart | ] -> [ no strap  strapsource_r no strap | Player ]  sfx1
+random right [ zipper_r_retract | strapstart | ] -> [ no strap | strapsource_r no strap | Player ]  sfx1
+random right [ zipper_r_retract | strap ] -> [  | zipper_r_retract ]  sfx3
+
+random right [ zipper_r | strapsource_r ] [skin no helmetbg ]-> [zipper_l_retract | strapsource_r]  [skin no helmetbg ]
+random right [ zipper_r | strapsource_r | ] -> [ strap | strap strapstart | Player ] sfx0
+random right [ zipper_r | obstacle ] -> [zipper_l_retract | obstacle]  sfx4
+random right [ zipper_r | no obstacle ] -> [ strap | zipper_r ] sfx2
+
+random left [ zipper_l | strapsource_l ] [skin no helmetbg ]-> [zipper_r_retract | strapsource_l]  [skin no helmetbg ]
+random left [ zipper_l | strapsource_l | ] -> [ strap | strap strapstart | Player ] sfx0
+random left [ zipper_l | obstacle ] -> [zipper_r_retract |obstacle ]  sfx4
+random left [ zipper_l | no obstacle ] -> [ strap | zipper_l ] sfx2
+
+[ > Player | strapsource_l ] -> [|strapstart zipper_r] 
+[ > Player | strapsource_r ] -> [| strapstart zipper_l] 
+
+(propagate movements)
+[ >  pushing | pushable ] -> [  >  pushing | > pushable  ]
++ [ moving helmetpiece ] [stationary helmetpiece ] -> [moving helmetpiece ] [ moving helmetpiece ]
+
+
+
+(backwards propagation)
+
+( [ obstacle |  )
+
+[ > pushable | stationary obstacle ] -> cancel
+
+[ moving helmet] [ helmetbg] ->[ moving helmet ] [ moving helmetbg ]
+
+late [ fixedhair | hair ] -> [ fixedhair | hair connected ]
+late right [fixedhair  | no hair ] -> [ fixedhair  | connectedhairto_w ]
+late left [fixedhair  | no hair ] -> [ fixedhair  | connectedhairto_e ]
+late down [fixedhair  | no hair ] -> [ fixedhair  | connectedhairto_n ]
+late up [fixedhair  | no hair ] -> [ fixedhair  | connectedhairto_s ]
+
+
+late [ hair connected | hair ] -> [ hair connected | hair connected ]
++ late right [hair connected | no hair ] -> [ hair connected | connectedhairto_w ]
++ late left [hair connected | no hair ] -> [ hair connected | connectedhairto_e ]
++ late down [hair connected | no hair ] -> [ hair connected | connectedhairto_n ]
++ late up [hair connected | no hair ] -> [ hair connected | connectedhairto_s ]
+
++ late horizontal [hair no connected | connectedhairto_vertical ] -> [ hair connected | connectedhairto_vertical]
++ late vertical [hair no connected | connectedhairto_horizontal ] -> [ hair connected | connectedhairto_horizontal]
+
+late [hair no connected ] -> cancel
+late [ fixedhair no hair ] -> cancel
+
+late  [zipper]->again
+==============
+WINCONDITIONS
+==============
+
+all skin on helmetbg
+no strapsource
+
+=======
+LEVELS
+=======
+
+message Level 1 of 3: Cycling back from the barber's.
+
+,,,,,,,,,,,,,,,,,,,,,,,,
+,......................,
+,......................,
+,......hh%hhhh%hh......,
+,.....hhh%hhhh%hhh.....,
+,....hhh%%%%%%%%hhh....,
+,....hh%%%%%%%%%%hh....,
+,...hhh%%%%%%%%%%hhh...,
+,...hh%%%%%%%%%%%%hh...,
+,...hh%%%%%%%%%%%%hh...,
+,...hh%%%%%%%%%%%%hh...,
+,...hh%%%%%%%%%%%%hh...,
+,....l............r....,
+,......................,
+,......................,
+,..............;.......,
+,.........;;;;;........,
+,........;fffff;.......,
+,........;ee#ee;.......,
+,.........eg#ge........,
+,.p.......#####........,
+,.........#mmm#........,
+,........~#####~.......,
+,.......~.~~~~~.~......,
+,.......~.~~~~~.~......,
+,,,,,,,,,,,,,,,,,,,,,,,,
+
+
+message  Level 2 of 3: Cycling to the playground.
+
+,,,,,,,,,,,,,,,,,,,,,,,,
+,......................,
+,......................,
+,......hh%hhhh%hh......,
+,.....hhh%hhhh%hhh.....,
+,....hhh%%%%%%%%hhh....,
+,....hh%%%%%%%%%%hh....,
+,...hhh%%%%%%%%%%hhh...,
+,...hh%%%%%%%%%%%%hh...,
+,...hh%%%%%%%%%%%%hh...,
+,...hh%%%%%%%%%%%%hh...,
+,...hh%%%%%%%%%%%%hh...,
+,....l............r....,
+,..........;;;;........,
+,.......;;;.;;;........,
+,.......;;;;;;;;;;.....,
+,.......;;;;;;;;;;.....,
+,......;;;fffff;;;.....,
+,.......;;ee#ee;;.;....,
+,........;eg#ge;.......,
+,.p.......#####........,
+,.........#mmm#........,
+,........~#####~.......,
+,.......~.~~~~~.~......,
+,.......~.~~~~~.~......,
+,,,,,,,,,,,,,,,,,,,,,,,,
+
+
+message  Level 3 of 3: Time to cycle to the barber's again.
+
+,,,,,,,,,,,,,,,,,,,,,,,,
+,......................,
+,......................,
+,......hh%hhhh%hh......,
+,.....hhh%hhhh%hhh.....,
+,....hhh%%%%%%%%hhh....,
+,....hh%%%%%%%%%%hh....,
+,...hhh%%%%%%%%%%hhh...,
+,...hh%%%%%%%%%%%%hh...,
+,...hh%%%%%%%%%%%%hh...,
+,...hh%%%%%%%%%%%%hh...,
+,...hh%%%%%%%%%%%%hh...,
+,....l............r....,
+,......;...;;;;;.......,
+,.......;.;;.;.........,
+,.......;.;;;;;.;.;....,
+,.....;;;;;;;;;;;;.....,
+,...;;;;;;fffff;;;;....,
+,..;.;..;;ee#ee;;..;...,
+,...;;;;;;eg#ge;.;;....,
+,.p..;.;..#####..;;....,
+,.....;.;.#mmm#.;;.;...,
+,.....;;.~#####~;.;....,
+,....;.;~.~~~~~.~.;....,
+,.......~.~~~~~.~......,
+,,,,,,,,,,,,,,,,,,,,,,,,
+
+
+message  Congratulations: you have completed the cycle.

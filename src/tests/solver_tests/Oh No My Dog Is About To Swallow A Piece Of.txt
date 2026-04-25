@@ -1,0 +1,1299 @@
+title Oh No My Dog Is About To Swallow A Piece Of Chocolate
+author increpare
+homepage www.increpare.com
+
+key_repeat_interval 0.1
+again_interval 0.1
+
+background_color #1e432e
+text_color #e06f8b
+
+noaction
+
+( debug )
+( verbose_logging )
+
+
+
+========
+OBJECTS
+========
+
+Background
+#345e46
+
+
+Player
+#31a2f2
+
+dogskin1
+#a46422
+00000
+00000
+00000
+00000
+00000
+
+dogskin2
+#a46422 #945718
+00000
+00000
+00010
+00010
+00010
+
+dogskin3
+#a46422 #392a16 #e3e2a8
+00000
+01121
+01112
+01111
+01111
+
+dogskin4
+#a46422
+.....
+....0
+...00
+..000
+.0000
+
+dogskin5
+#945718 #a46422 #e06f8b
+00001
+11111
+11111
+11111
+11112
+
+dogskin6
+#a46422 #e06f8b #e3e2a8
+00000
+00000
+00000
+11111
+.2.2.
+
+dogskin7
+#a46422 #e06f8b #e3e2a8
+00000
+00000
+00000
+11111
+2.2.2
+
+dogskin8
+#a46422 #392a16 #e06f8b #e3e2a8
+00011
+00011
+00000
+22222
+.3.3.
+
+dogskin9
+#a46422 #e06f8b
+00001
+00001
+00001
+00001
+00001
+
+dogskin10
+#a46422 #945718
+..000
+..000
+00000
+00000
+10000
+
+dogskin11
+#a46422 #e06f8b
+00001
+00000
+00000
+00000
+00000
+
+dogskin12
+#a42544 #e3e2a8 #e06f8b #a46422
+01010
+22222
+33333
+33333
+33333
+
+dogskin13
+#e3e2a8 #a42544 #e06f8b #a46422
+01010
+22222
+33333
+33333
+33333
+
+dogskin14
+#a42544 #e3e2a8 #e06f8b #a46422
+01.1.
+22222
+33333
+33333
+3333.
+
+dogskin15
+#945718 #a46422
+01111
+00111
+00111
+00011
+10011
+
+dogskin16
+#a46422 #945718
+00000
+00000
+00000
+00111
+01111
+
+dogskin17
+#a46422 #945718
+00000
+00000
+00000
+11111
+11111
+
+dogskin18
+#a46422 #945718
+00000
+00000
+00000
+11110
+11111
+
+dogskin19
+#a46422
+00000
+00000
+00000
+00000
+0000.
+
+dogskin20
+#a46422
+00000
+00000
+0000.
+0000.
+0000.
+
+dogskin21
+#a46422
+0000.
+0000.
+0000.
+0000.
+0000.
+
+dogskin22
+#a46422
+0000.
+0000.
+0000.
+00000
+00000
+
+dogskin23
+#a46422
+0000.
+0000.
+0000.
+.0000
+..000
+
+deaddogskin
+#392a16 #a46422
+01110
+10101
+11011
+10101
+01110
+
+dogclosedskin1
+#a46422 #945718
+00000
+00000
+00000
+00000
+11111
+
+dogclosedskin2
+#a46422 #392a16 #945718
+00011
+00011
+00000
+00000
+22222
+
+dogclosedskin3
+#e06f8b #a46422
+00000
+11111
+11111
+11111
+11111
+
+dogclosedskin4
+#e06f8b #a46422
+00000
+11111
+11111
+11111
+1111.
+
+
+playerskin1
+#4d0400 #973530 #d3abab #130800
+00000
+10101
+11110
+22211
+23211
+
+playerskin2
+#4d0400 #973530
+0000.
+00000
+10000
+01000
+10000
+
+playerskin3 (x2)
+#973530
+00000
+00000
+00000
+00000
+00000
+
+playerskin4
+#973530 #4d0400
+00111
+01011
+00101
+00011
+0000.
+
+playerskin5
+#800700 #973530 #db5fa0 #b13978
+.0000
+.1111
+22221
+33331
+.1111
+
+playerskin7
+#973530
+0000.
+0000.
+0000.
+0000.
+0000.
+
+playerskin8 (x2)
+#4a9022
+00000
+00000
+00000
+00000
+00000
+
+playerskin9
+#4a9022 #367413
+00001
+00001
+00001
+00001
+00001
+
+(then 8,9,8)
+
+playerskin10
+#973530 #800700
+00000
+11000
+00000
+11000
+00000
+
+playerskin11
+#367413 #4a9022
+00001
+11111
+11111
+11111
+11111
+
+playerskin12
+#4a9022 #367413
+00001
+00010
+00100
+00100
+01000
+
+playerskin13
+#367413 #4a9022
+00000
+11111
+11111
+11111
+11111
+
+playerskin14
+#367413 #4a9022
+01111
+11111
+11111
+11111
+11111
+
+playerskin15 (x3)
+#31a2f2
+00000
+00000
+00000
+00000
+00000
+
+playerskin16
+#31a2f2 #167ec8
+00001
+00011
+00111
+01111
+11111
+
+(15)
+
+playerskin17
+#167ec8
+00000
+00000
+00000
+00000
+00000
+
+(15,17)
+
+playerskin18
+#a44951 #930e19 #d3a1a5
+01010
+01010
+00000
+11111
+22222
+
+playerskin19
+#a44951 #930e19 #d3a1a5
+00000
+00000
+00000
+11111
+22222
+
+playerskin20
+#90383f #800711 #ac767b
+00000
+00000
+11111
+22222
+.....
+
+chocolateskin
+#5d2816 #8c5340 #1f0c06
+01111
+20001
+20001
+20001
+22220
+
+
+DogHead 
+pink
+
+DogNeck 
+red
+
+DogBottom 
+purple
+
+dumbbellskin1
+#2a425b #1b2632 #26384b
+.0.0.
+12020
+12020
+12020
+12020
+
+dumbbellskin2
+#1b2632 #26384b
+01010
+01010
+01010
+01010
+01010
+
+dumbbellskin3
+#1b2632 #26384b
+01010
+01010
+01010
+00000
+.0.0.
+
+
+dumbbellskin4
+#8b8b8b #c8c8c8 #777777
+00000
+11111
+00000
+22222
+22222
+
+chairskin1
+#8b4b09 #bc7a36 #a46422
+01111
+02222
+02222
+02222
+00000
+
+chairskin2
+#bc7a36 #a46422 #8b4b09
+0000.
+11110
+11101
+11101
+21101
+
+chairskin3 (x2)
+#8b4b09 #a46422 #bc7a36
+01121
+01121
+01121
+01121
+01121
+
+chairskin4
+#8b4b09 #a46422 #bc7a36
+01121
+01111
+01111
+01111
+00000
+
+chairskin5
+#bc7a36 #a46422 #8b4b09
+00000
+11111
+11111
+11111
+22222
+
+chairskin6
+#bc7a36 #a46422 #8b4b09
+00000
+11110
+11110
+11110
+22221
+
+chairskin7
+#8b4b09 #a46422 #bc7a36
+.0110
+.0111
+.0112
+.0112
+.0112
+
+chairskin8
+#8b4b09 #a46422 #bc7a36
+.0112
+.0112
+.0112
+.0112
+.0000
+
+chairskin9
+#8b4b09 #a46422 #bc7a36
+0110.
+0111.
+0112.
+0112.
+0112.
+
+chairskin10
+#8b4b09 #a46422 #bc7a36
+0112.
+0112.
+0112.
+0112.
+0000.
+
+tableskin1
+#bc7a36 #8b4b09 #a46422
+.0000
+12222
+12222
+12222
+12222
+
+tableskin2
+#bc7a36 #a46422
+00000
+11111
+11111
+11111
+11111
+
+tableskin3
+#bc7a36 #a46422
+0000.
+11100
+11110
+11110
+11110
+
+tableskin4
+#8b4b09 #a46422
+01111
+01111
+01111
+01111
+01111
+
+tableskin5
+#a46422
+00000
+00000
+00000
+00000
+00000
+
+tableskin6
+#a46422 #bc7a36
+00001
+00001
+00001
+00001
+00001
+
+tableskin7
+#8b4b09 #a46422
+01111
+01111
+01111
+00111
+.0000
+
+tableskin8
+#a46422 #8b4b09
+00000
+00000
+00000
+00000
+11111
+
+tableskin9
+#a46422 #bc7a36 #8b4b09
+00001
+00001
+00001
+00001
+2222.
+
+tableskin10
+#8b4b09 #a46422 #bc7a36
+00000
+00001
+00111
+00121
+00121
+
+tableskin11
+#8b4b09 #a46422 #bc7a36
+00121
+00121
+00121
+00121
+00121
+
+tableskin12
+#8b4b09 #a46422 #bc7a36
+00121
+00121
+00121
+00121
+.012.
+
+rightskin1
+#bc7a36 #a46422 #8b4b09
+.0000
+11111
+12111
+12111
+12111
+
+rightskin2
+#bc7a36 #a46422 #8b4b09
+00000
+11110
+11110
+11110
+22211
+
+
+rightskin3
+#a46422 #8b4b09 #bc7a36
+01001
+01000
+01002
+01002
+01002
+
+
+rightskin4
+#a46422 #8b4b09 #bc7a36
+01002
+01002
+01002
+01002
+01002
+
+
+
+rightskin5
+#a46422 #bc7a36 #8b4b09
+01111
+20000
+20000
+20000
+22222
+
+
+
+rightskin6
+#a46422 #8b4b09 #bc7a36
+01002
+00002
+00002
+00002
+11111
+
+
+
+
+
+
+
+DogTongue 
+#a42544
+.....
+.....
+.....
+.....
+0....
+
+
+
+boundary
+#846610
+
+
+
+pushable 
+#24c1ca #0d9ea6
+00000
+01110
+01110
+01110
+00000
+
+pushable_connection_up
+yellow
+..0..
+.....
+.....
+.....
+.....
+
+pushable_connection_down
+yellow
+.....
+.....
+.....
+.....
+..0..
+
+pushable_connection_left
+yellow
+.....
+.....
+0....
+.....
+.....
+
+pushable_connection_right
+yellow
+.....
+.....
+....0
+.....
+.....
+
+chocolate
+pink
+0....
+.....
+.....
+.....
+.....
+
+dogstretch 
+#0000ff
+.....
+.0...
+.....
+.....
+.....
+
+cantcontract
+#ff0000
+.....
+.....
+.....
+...0.
+.....
+
+cancontracttoken
+transparent
+
+
+=======
+LEGEND
+=======
+
+
+obstacle = pushable or doghead or dogneck or dogbottom or boundary or player
+pushable_connection = pushable_connection_up or pushable_connection_down or pushable_connection_left or pushable_connection_right
+
+dogblock = DogHead or DogNeck or DogBottom
+dogblock_noneck = DogHead or DogNeck or DogBottom
+
+pushable_piece_nodog = pushable 
+pushing_piece_nodog = pushable or Player
+
+pushable_piece = pushable or dogblock
+pushing_piece = pushable or dogblock or Player
+
+
+q = DogHead
+a = DogNeck
+z = DogBottom 
+d = DogTongue
+w = boundary
+
+( 1 = pushable and chocolate )
+
+2 = pushable and pushable_connection_up
+3 = pushable and pushable_connection_down
+4 = pushable and pushable_connection_left
+5 = pushable and pushable_connection_right
+
+6 = pushable and pushable_connection_up and pushable_connection_down
+7 = pushable and pushable_connection_up and pushable_connection_left
+8 = pushable and pushable_connection_up and pushable_connection_right
+
+9 = pushable and pushable_connection_down and pushable_connection_left
+0 = pushable and pushable_connection_down and pushable_connection_right
+
+- = pushable and pushable_connection_left and pushable_connection_right
+
+
++ = pushable and pushable_connection_up and pushable_connection_down and pushable_connection_left 
+! = pushable and pushable_connection_up and pushable_connection_down and pushable_connection_right
+" = pushable and pushable_connection_up and pushable_connection_left and pushable_connection_right
+£ = pushable and pushable_connection_down and pushable_connection_left and pushable_connection_right
+
+$ = pushable and pushable_connection_up and pushable_connection_down and pushable_connection_left and pushable_connection_right
+
+. = Background
+P = Player
+
+α = player and playerskin1
+β = player and playerskin2
+γ = player and playerskin3
+δ = player and playerskin4
+ε = player and playerskin5
+ζ = player and playerskin7
+η = player and playerskin8
+θ = player and playerskin9
+ι = player and playerskin10
+κ = player and playerskin11
+λ = player and playerskin12
+μ = player and playerskin13
+ν = player and playerskin14
+ξ = player and playerskin15
+ο = player and playerskin16
+π = player and playerskin17
+ρ = player and playerskin18
+σ = player and playerskin19
+τ = player and playerskin20
+
+playerskins = playerskin1 or playerskin2 or playerskin3 or playerskin4 or playerskin5 or playerskin7 or playerskin8 or playerskin9 or playerskin10 or playerskin11 or playerskin12 or playerskin13 or playerskin14 or playerskin15 or playerskin16 or playerskin17 or playerskin18 or playerskin19 or playerskin20
+
+dumbbellskins = dumbbellskin1 or dumbbellskin2 or dumbbellskin3 or dumbbellskin4
+
+chairskins = chairskin1 or chairskin2 or chairskin3 or chairskin4 or chairskin5 or chairskin6 or chairskin7 or chairskin8 or chairskin9 or chairskin10
+
+tableskins = tableskin1 or tableskin2 or tableskin3 or tableskin4 or tableskin5 or tableskin6 or tableskin7 or tableskin8 or tableskin9 or tableskin10 or tableskin11 or tableskin12
+
+rightskins = rightskin1 or rightskin2 or rightskin3 or rightskin4 or rightskin5 or rightskin6
+
+dogskins = dogskin1 or dogskin2 or dogskin3 or dogskin4 or dogskin5 or dogskin6 or dogskin7 or dogskin8 or dogskin9 or dogskin10 or dogskin11 or dogskin12 or dogskin13 or dogskin14 or dogskin15 or dogskin16 or dogskin17 or dogskin18 or dogskin19 or dogskin20 or dogskin21 or dogskin22 or dogskin23 or deaddogskin or dogclosedskin1 or dogclosedskin2 or dogclosedskin3 or dogclosedskin4
+
+
+skins = playerskins or dumbbellskins or chairskins or tableskins or rightskins or chocolateskin or dogskins
+
+
+υ = dumbbellskin1 and pushable and pushable_connection_down
+φ = dumbbellskin1 and pushable and pushable_connection_down
+χ = dumbbellskin2 and pushable and pushable_connection_up and pushable_connection_right and pushable_connection_down
+ψ = dumbbellskin4 and pushable and pushable_connection_left and pushable_connection_right
+ω = dumbbellskin4 and pushable and pushable_connection_left and pushable_connection_right
+А = dumbbellskin2 and pushable and pushable_connection_up and pushable_connection_left and pushable_connection_down
+Б = dumbbellskin3 and pushable and pushable_connection_up
+В = dumbbellskin3 and pushable and pushable_connection_up
+
+Г = chairskin1  and pushable and pushable_connection_right
+Д = chairskin2  and pushable and pushable_connection_left and pushable_connection_down
+Е = chairskin3  and pushable and pushable_connection_up and pushable_connection_down
+Ё = chairskin4  and pushable and pushable_connection_up and pushable_connection_down and pushable_connection_right
+Ж = chairskin5 and pushable and pushable_connection_left and pushable_connection_right
+З = chairskin6 and pushable and pushable_connection_left and pushable_connection_down
+И = chairskin7  and pushable and pushable_connection_up and pushable_connection_down
+Й = chairskin9  and pushable and pushable_connection_up and pushable_connection_down
+К = chairskin8  and pushable and pushable_connection_up 
+Л = chairskin10 and pushable and pushable_connection_up 
+
+Щ = rightskin1 and pushable and pushable_connection_down and pushable_connection_right
+Ъ = rightskin2 and pushable and pushable_connection_left
+Ы = rightskin3 and pushable and pushable_connection_up and pushable_connection_down
+Ь = rightskin4 and pushable and  pushable_connection_up and pushable_connection_down
+Э = rightskin5 and pushable and  pushable_connection_right and pushable_connection_down
+Ю = rightskin6 and pushable and  pushable_connection_left and pushable_connection_down and pushable_connection_up
+(ТУФХЦЧ)
+
+М = tableskin1 and pushable and pushable_connection_down and pushable_connection_right
+Н = tableskin2 and pushable and pushable_connection_left and pushable_connection_down and pushable_connection_right
+О = tableskin3 and pushable and pushable_connection_down and pushable_connection_left
+П = tableskin4 and pushable and pushable_connection_down and pushable_connection_right and pushable_connection_up
+Р = tableskin5 and pushable and pushable_connection_down and pushable_connection_right and pushable_connection_up and pushable_connection_left
+С = tableskin6 and pushable and pushable_connection_down and pushable_connection_left and pushable_connection_up
+Т = tableskin7 and pushable and pushable_connection_up and pushable_connection_right
+У = tableskin8 and pushable and pushable_connection_up and pushable_connection_right and pushable_connection_left and pushable_connection_down
+Ф = tableskin9 and pushable and pushable_connection_up and pushable_connection_left
+Х = tableskin10 and pushable and pushable_connection_down and pushable_connection_up
+Ц = tableskin11 and pushable and pushable_connection_down and pushable_connection_up
+Ч = tableskin12 and pushable and pushable_connection_up
+Ш = tableskin8 and pushable and pushable_connection_up and pushable_connection_right and pushable_connection_left
+
+Я = chocolateskin and DogBottom and chocolate
+
+
+丁 = DogHead and dogskin1
+上 = doghead and dogskin2
+下 = doghead and dogskin3
+不 = doghead and dogskin4
+且 = doghead and dogskin5
+世 = doghead and dogskin6
+丙 = doghead and dogskin7
+並 = doghead and dogskin8
+中 = DogNeck and dogskin1
+丸 = DogNeck and dogskin9
+
+主 = DogBottom and dogskin10
+乂 = DogBottom and dogskin1
+乃 = DogBottom and dogskin11
+之 = DogBottom and dogskin12
+乎 = DogBottom and dogskin13
+九 = DogBottom and dogskin14
+也 = DogBottom and dogskin15
+事 = DogBottom and dogskin16
+二 = DogBottom and dogskin17
+五 = DogBottom and dogskin18
+亡 = DogBottom and dogskin19
+交 = DogBottom and dogskin20
+亦 = DogBottom and dogskin21
+京 = DogBottom and dogskin22
+亭 = DogBottom and dogskin23
+
+(丁上下不且世丙並
+中丸
+主乂乃之乎九也事二五亡交亦京亭人)
+
+
+(
+仕仙令以仰任伊伏伐伯似位佐何作佳使來侈侍俊俗俠信修俯俶倫假傅傍催傳傷傾僚儀優兄充光克兒入內兩八公兵其具典再冠冥冬凋凌出分切刑列初別利刻則劍力功助劭勉勒動務勞勸勿化匡匪千升卑南即卿厥厭去及友叔取受叛口古可史右合吉吊同名君吹呂周命和咸哉唐唱問啟善嗣嘉嘗嘯器嚴囊四回因困國園圓圖土在地坐垂垢垣城執基堂堅場塞增墨墳壁士壹夏夕外夙多夜大天夫奄奉奏女好如妍妙妾始姑委姜姿威婦嫡子孔字存孝孟孤孰學宅宇守安宗官宙定宜宣宮宰宴家容宿寂密富寐寒寓寔察寡寥實寧審寫寵寶寸封射將尊尋對少尹尺居履屬岡岩岫岱岳嵇川州工左巧巨己巾市布帝師席帳帶帷常平年并幸幾床府庭庶康庸廉廊廟廣建弁弊引弗弟弦弱張形彩彼往徊律後得徘從御微德心必忘忠念思性恃恐恥恬恭息悅悚悲情惟惠惡想惶惻意愚愛感慈慎慕慮慶懷懸懼戎成我戚戶房所扇手才扶承投抗抽招拜拱持指振捕接推搖摩操據攝收攸改政故效敕敢散敦敬文斡斬斯新方於施既日旦昃昆明易星映是時晉晚晝晦景暉暑曜曠曦曰曲更書最會月有服朗朝木本李杜束杯東杳杷松枇林果枝染柰根桐桓條梧棠植楚業極楹榮槐樂樓機橫次欣欲歌歡止正此步武歲歷歸殆殊殷殿毀母每比毛民氣水永求池沉沙沛河治法泰洛洞洪流浮浴海涇涼淑淡深淵清渠渭游湯溪溫滅滿漆漠漢潔潛澄濟火為烝烹焉無煌煒照煩熟熱營燭爵父牆牒牧物特犢猶猷獨獲獸玄率玉王玩珍珠理琴瑟璇璣璧環甘甚生用田甲男畏畝畫異當疏疑疲登發白百的皆皇皋盈益盛盜盟盡盤目直相省真眠眺睦瞻矜矢知矩短矯石碑碣磨磻祀祗祜神祭祿禍福禪禮禹禽秉秋秦移稅稱稷稼稽稿積穡空立竟章竭端競竹笑笙筆等筍答策筵箋箱箴節篤簡籍精糟糠糧約紈納紙紛素紡索紫累終組結絜給絲絳綏經維綺綿緣縣縻績續纓罔罪羅羊羌美羔群義羽習翔翠翦翳老者而耳耽聆聖聚聞聲職聽肆肥育背能腸膳臣臨自致與興舉舊舍良色芥若英茂草荒荷莊莫莽菜華萬落葉蒙蓋薄薪藍藏藝蘭處虛虞號虢虧蚤行衡衣表被裳製西要覆見規親觀解觴言訓設詠詩詳誅誌誚語誠誡說誰調談論諸謂謙謝謹譏譽讀讓谷豈象豫貌貞貢貴貽資賊賓賞賢賤賴贊赤起超趙足跡路踐躍身躬車軍軻載輕輦輶轂轉辨辭辰辱農近退逍逐途通造連逸逼運過遐道達遙遠遣適遵邇邈邑邙郡都酒釋重野量金釣鈞銀銘鐘鑒長門閏閒闕阜阮阿陋陛陟陪陰陳陶陽階隨隱隸雁雅集雞離難雨雲霄霜露霸靈青靜非靡面鞠韓音頓頗領願顙顛顧顰飄飛食飫飯飽養餐餘饑首馨馳駒駕駭騰騾驅驚驢驤骸體高鬱魄魏魚鱗鳥鳳鳴鶤麗黃黍黎默黜鼓龍
+)
+=======
+SOUNDS
+=======
+
+pushable move 72882707
+dogblock move 25942907
+startgame 38015704
+endlevel 9541904
+
+
+================
+COLLISIONLAYERS
+================
+
+pushable_connection_up
+pushable_connection_down
+pushable_connection_left
+pushable_connection_right
+chocolate
+dogstretch
+cantcontract
+cancontracttoken
+
+Player, DogHead, DogNeck,DogBottom
+
+pushable
+
+Background
+boundary
+
+DogTongue
+(skins layer)
+
+
+skins
+
+
+======
+RULES
+======
+
+[player]->again
+
+
+(replace chocolate with pushable if moving horizontally)
+[ horizontal player ] [ chocolate chocolateskin DogBottom ] -> [ horizontal player ] [ chocolate chocolateskin pushable ]
+
+(replace chocolate with pushable if no dogbody below)
+
+down [ chocolate chocolateskin DogBottom  | no dogskin12 no dogskin13 no dogskin14 ] -> [ chocolate chocolateskin pushable | ]
+
+(DOG HEAD CONTRACT)
+
+(only contracts when player's not moving, and they're not in touch shouldn't be necessary but just in case)
+[ > player ] [dogblock ] -> [ > player ] [ dogblock cantcontract ]
+down [ DogHead | DogBottom ] [ dogblock ] -> [ DogHead | DogBottom ] [dogblock cantcontract]
+down [DogHead | pushable no chocolate ] -> [ doghead cantcontract | pushable ]
+[ DogHead cantcontract ] [ DogHead no cantcontract ] -> [DogHead cantcontract ] [DogHead cantcontract ]
+
+up [ DogBottom | pushable no chocolate ] -> [ DogBottom cantcontract | pushable ]
+
+
+[ DogBottom cantcontract ] [ DogBottom no cantcontract ] -> [DogBottom cantcontract ] [DogBottom cantcontract ]
+[ DogHead no cantcontract ] [ DogHead  cantcontract ] -> [ DogHead cantcontract ] [ DogHead cantcontract ]
+
+(parity problem when head + body try to clamp shut when thyey're 1 distance away from eachother - give the head right of way)
+down [ doghead no cantcontract | no dogblock | DogBottom no cantcontract  ] -> [ doghead  |  | DogBottom  cantcontract  ] 
+
+(and you neeed to repropagate)
+[ DogBottom cantcontract ] [ DogBottom no cantcontract ] -> [DogBottom cantcontract ] [DogBottom cantcontract ]
+[ DogHead no cantcontract ] [ DogHead  cantcontract ] -> [ DogHead cantcontract ] [ DogHead cantcontract ]
+
+
+[DogHead no cantcontract ] -> [down  DogHead ]
+[DogBottom no cantcontract ] -> [up DogBottom ]
+
+down [ down doghead | DogNeck ] -> [ down doghead | no dogskins ]
+up [ up DogBottom | DogNeck ] -> [ up DogBottom | no dogskins ]
+
+late [ cantcontract ] -> [ ]
+
+(SETUP FOR CONNECTIONS)
+( right [ pushable | pushable ] -> [ pushable pushable_connection_right | pushable pushable_connection_left ] )
+( down [ pushable | pushable ] -> [ pushable pushable_connection_down | pushable pushable_connection_up ] )
+
+
+(propagate movements)
+
+(propagate movements first ignoring dog)
+
+[ > pushing_piece_nodog | pushable_piece_nodog ] -> [ > pushing_piece_nodog | > pushable_piece_nodog ]
++ up [ moving pushable pushable_connection_up | pushable pushable_connection_down ] ->  [ moving pushable moving pushable_connection_up | moving pushable moving pushable_connection_down ]
++ down [ moving pushable pushable_connection_down | pushable pushable_connection_up ] ->  [ moving pushable moving pushable_connection_down | moving pushable moving pushable_connection_up ]
++ left [ moving pushable pushable_connection_left | pushable pushable_connection_right ] ->  [ moving pushable moving pushable_connection_left  | moving pushable moving pushable_connection_right ]
++ right [ moving pushable pushable_connection_right | pushable pushable_connection_left ] ->  [ moving pushable moving pushable_connection_right | moving pushable moving pushable_connection_left ]
+
+vertical [> pushing_piece_nodog | DogBottom ] [ > pushing_piece_nodog | DogHead ] ->  [> pushing_piece_nodog | > DogBottom ] [ > pushing_piece_nodog | > DogHead ]
+[moving DogHead ] [stationary DogHead ] -> [moving DogHead ] [moving DogHead]
+[moving DogBottom ] [stationary DogBottom ] -> [moving DogBottom ] [moving DogBottom]
+( allow to push chocolate into mouth)
+
+( right [ DogNeck | no obstacle | chocolateskin chocolate DogBottom | < pushing_piece ] -> [ DogNeck | chocolateskin chocolate DogBottom | | < pushable ] )
+
+(DOG NECK STRETCH)
+
+(either top is held stationary and bottom is moved down)
+(stationary pushable vs stationary obstacle because level boundary geometry can't access inside of mouth/small of back)
+down [ stationary DogHead |  stationary pushable no chocolate ] [ > pushing_piece_nodog | DogBottom ] -> [ dogstretch DogHead |  pushable] [ > pushing_piece_nodog | > DogBottom ]
+
+
+(or bottom is held stationary and top is movedup)
+down [ stationary pushable no chocolate | stationary DogBottom ] [ DogHead | < pushing_piece_nodog ] -> [ stationary pushable | dogstretch DogBottom ] [ < DogHead | < pushing_piece_nodog ]
+
+
+[ DogHead dogstretch | DogHead no dogstretch ] -> [ DogHead dogstretch | DogHead dogstretch ]
+[ DogBottom dogstretch | DogBottom no dogstretch ] -> [ DogBottom dogstretch | DogBottom dogstretch ]
+
+(DOG NECK SQEEZE)
+
+
+
+(either top is held stationary and bottom is moved up)
+down [ stationary obstacle | stationary DogHead ] [  DogBottom | < pushing_piece_nodog] -> [  obstacle | DogHead cancontracttoken] [  < DogBottom | < pushing_piece_nodog ]
+
+
+(or bottom is held stationary and top is moved down)
+down [ stationary DogBottom | stationary obstacle  ] [ > pushing_piece_nodog | DogHead] -> [  DogBottom  cancontracttoken | obstacle  ] [ > pushing_piece_nodog | DogHead ]
+
+random right [cancontracttoken] [DogNeck | DogNeck ] -> [] [ no skins|no skins]
+[cancontracttoken]->[]
+
+(DOG NECK COMPRESS)
+
+[ > pushing_piece | pushable_piece no dogstretch ] -> [ > pushing_piece | > pushable_piece ]
++ up [ moving pushable pushable_connection_up | pushable pushable_connection_down ] ->  [ moving pushable moving pushable_connection_up | moving pushable moving pushable_connection_down ]
++ down [ moving pushable pushable_connection_down | pushable pushable_connection_up ] ->  [ moving pushable moving pushable_connection_down | moving pushable moving pushable_connection_up ]
++ left [ moving pushable pushable_connection_left | pushable pushable_connection_right ] ->  [ moving pushable moving pushable_connection_left  | moving pushable moving pushable_connection_right ]
++ right [ moving pushable pushable_connection_right | pushable pushable_connection_left ] ->  [ moving pushable moving pushable_connection_right | moving pushable moving pushable_connection_left ]
++ [ moving dogblock no dogstretch | stationary dogblock no dogstretch ] -> [ moving dogblock | moving dogblock  ]
+
+[ > pushing_piece | stationary obstacle ] -> cancel
+
+up [ moving dogbottom | DogTongue ] -> [ moving DogBottom | moving DogTongue ]
+right [ pushable chocolate chocolateskin | moving DogTongue ] -> [moving pushable moving chocolate moving chocolateskin | moving DogTongue ]
+
+right [ stationary pushable | < pushable < chocolate < chocolateskin ] -> [ pushable | pushable chocolate chocolateskin ]
+
+[ moving DogBottom chocolate chocolateskin ] -> [ moving DogBottom moving chocolate moving chocolateskin]
+[ moving pushable chocolate chocolateskin ] -> [ moving pushable moving chocolate moving chocolateskin]
+
+
+[ moving pushable_piece skins ] -> [ moving  pushable_piece moving skins  ]
+[ moving Player playerskins ] -> [ moving  Player moving playerskins  ]
+
+(LATE)
+
+late down [ dogskin4 | no DogNeck no obstacle ] [ dogskin5 | no DogNeck no obstacle ] -> [ dogskin4 | DogNeck ] [dogskin5 | DogNeck ]
+
+
+late vertical [ DogNeck | no DogHead no DogBottom ] -> [ DogNeck | DogNeck ]
+late right [ dogneck no dogskins | dogneck no dogskins ] -> [  中 |  丸 ]
+(replace chocolate pushable with dogbottom)
+
+late [chocolate chocolateskin pushable] -> [chocolate chocolateskin DogBottom]
+
+
+(move to start for visualisation purposes)
+late [ dogstretch ] -> [  ]
+
+
+==============
+WINCONDITIONS
+==============
+no DogNeck
+no deaddogskin
+
+=======
+LEVELS
+=======
+
+message NO DON'T YOU DARE SWALLOW THAT
+
+
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w........υ..υ.υ..υ.......................................w
+w........χψψа.χψψа.......................................w
+w........б..б.б..б.......................................w
+w..................................гд..............щъ....w
+w...................................е....мнннно....ы.....w
+w........................αβ.........е....пррррс....ь.....w
+w.......................γγδ.........ёжз..пррррс..эжю.....w
+w........................εζ.........и.й..пррррс..и.й.....w
+w........................ηη.........к.л..пррррс..к.л.....w
+w.............丁上下........θη..............пррррс..........w
+w.............不且世丙並......θη..............пррррс..........w
+w.............中丸.яd.....ικλ..............пррррс..........w
+w.........主乂乂乂乂乃之乎九......μν........гд....пррррс....щъ....w
+w.........也事二五乂亡.........ξο.........е....пррррс....ы.....w
+w.........交...亦..........ξπ.........е....пррррс....ь.....w
+w.........京...亭..........ξπ.........ёжз..тушшуф..эжю.....w
+w........................ξπ.........и.й...х..х...и.й.....w
+w.......................ρστ.........к.л...ц..ц...к.л.....w
+w.........................................ц..ц...........w
+w.........................................ч..ч...........w
+w........................................................w
+w........................................................w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+message YOU ARE SUCH A SHITEHAWK OF A DOG
+
+(
+
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w..........................гд............................w
+w...........................е............................w
+w...........................е............................w
+w...........................ёжз..........................w
+w...........................и.й..........................w
+w...........................к.л..........................w
+w.............................щъ.........................w
+w.............................ы..........................w
+w.............................ь..........................w
+w...........................эжю..........................w
+w....υ..υ...................и.й..........................w
+w....χψψа...................к.л..........................w
+w....б..б................................................w
+w........................................................w
+w..............αβ........................................w
+w.............γγδ........................................w
+w..............εζ........................................w
+w..............ηη........................................w
+w..............θη........................мнннно..........w
+w..............θη........................пррррс..........w
+w.............ικλ........................пррррс..........w
+w..............μν........................пррррс..........w
+w..............ξο........................пррррс..........w
+w..............ξπ........................пррррс..........w
+w..............ξπ........................пррррс..........w
+w..............ξπ........................пррррс..........w
+w............яρστ..................гд....пррррс....щъ....w
+w........丁上下........................е....пррррс....ы.....w
+w........不且世丙並......................е....пррррс....ь.....w
+w........中丸υ..υ.....................ёжз..тушшуф..эжю.....w
+w........中丸χψψа.....................и.й...х..х...и.й.....w
+w........中丸б.dб.....................к.л...ц..ц...к.л.....w
+w....主乂乂乂乂乃之乎九............................ц..ц...........w
+w....也事二五乂亡...............................ч..ч...........w
+w....交...亦...............................................w
+w....京...亭...............................................w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+
+
+
+
+(move left and dog has bad time)
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w..........................гд............................w
+w...........................е............................w
+w...........................е............................w
+w...........................ёжз..........................w
+w...........................и.й..........................w
+w...........................к.л..........................w
+w.............................щъ.........................w
+w.............................ы..........................w
+w.............................ь..........................w
+w...........................эжю..........................w
+w....υ..υ...................и.й..........................w
+w....χψψа...................к.л..........................w
+w....б..б................................................w
+w........................................................w
+w........................................................w
+w........................................................w
+w............αβ..........................................w
+w...........γγδ..........................................w
+w............εζ..........................мнннно..........w
+w............ηη..........................пррррс..........w
+w............θη..........................пррррс..........w
+w............θη..........................пррррс..........w
+w...........ικλ..........................пррррс..........w
+w............μν..........................пррррс..........w
+w............ξο..........................пррррс..........w
+w............ξπ..........................пррррс..........w
+w...........яξπ....................гд....пррррс....щъ....w
+w......丁上下...ξπ.....................е....пррррс....ы.....w
+w......不且世丙並ρστ.....................е....пррррс....ь.....w
+w......中丸..υ..υ.....................ёжз..тушшуф..эжю.....w
+w......中丸..χψψа.....................и.й...х..х...и.й.....w
+w......中丸..б..б.....................к.л...ц..ц...к.л.....w
+w..主乂乂乂乂乃之乎九..............................ц..ц...........w
+w..也事二五乂亡.................................ч..ч...........w
+w..交...亦.................................................w
+w..京...亭.................................................w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+
+
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+w......丁上下.................гд............................w
+w......不且世丙並................е............................w
+w......中丸υ.яυ...............е............................w
+w......中丸χψψа..αβ...........ёжз..........................w
+w......中丸б..б.γγδ...........и.й..........................w
+w......中丸......εζ...........к.л..........................w
+w......中丸......ηη........................................w
+w..υ..υ中丸......θη........................................w
+w..χψψа中丸....щъθη........................................w
+w..б..б中丸....ыικλ........................................w
+w..主乂乂乂乂乃之乎九.ь.μν........................................w
+w..也事二五乂亡..эжю.ξο........................................w
+w..交...亦...и.й.ξπ........................................w
+w..京...亭...к.л.ξπ........................................w
+w..............ξπ........................................w
+w.............ρστ........................................w
+w........................................................w
+w........................................................w
+w........................................мнннно..........w
+w........................................пррррс..........w
+w........................................пррррс..........w
+w........................................пррррс..........w
+w........................................пррррс..........w
+w........................................пррррс..........w
+w........................................пррррс..........w
+w........................................пррррс..........w
+w..................................гд....пррррс....щъ....w
+w...................................е....пррррс....ы.....w
+w...................................е....пррррс....ь.....w
+w...................................ёжз..тушшуф..эжю.....w
+w...................................и.й...х..х...и.й.....w
+w...................................к.л...ц..ц...к.л.....w
+w.........................................ц..ц...........w
+w.........................................ч..ч...........w
+w........................................................w
+w........................................................w
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+)

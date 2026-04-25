@@ -1,0 +1,434 @@
+title Attractor Net
+author increpare
+homepage www.increpare.com
+
+(require_player_movement)
+
+========
+OBJECTS
+========
+
+Background
+darkgray
+
+Target
+#7eb44a
+00000
+00000
+00000
+00000
+00000
+
+
+Wall
+#2c2c2c
+
+player1 1
+blue lightblue
+.0000
+01.1.
+0....
+01.1.
+0....
+
+player2 2
+blue lightblue
+00000
+.1.1.
+.....
+.1.1.
+.....
+
+player3 3
+blue lightblue
+0000.
+.1.10
+....0
+.1.10
+....0
+
+player4 4
+blue lightblue
+0....
+01.1.
+0....
+01.1.
+0....
+
+player5 5
+lightblue
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+player6 6
+lightblue blue
+....1
+.0.01
+....1
+.0.01
+....1
+
+player7 7
+blue lightblue
+0....
+01.1.
+0....
+01.1.
+.0000
+
+player8 8
+lightblue blue
+.....
+.0.0.
+.....
+.0.0.
+11111
+
+player9 9
+lightblue blue
+....1
+.0.01
+....1
+.0.01
+1111.
+
+Crate
+#ff6fd0 #d248a5 #ff3fc0
+.000.
+1.2.0
+12220
+1.2.0
+.111.
+
+outerwall 
+black
+
+
+=======
+LEGEND
+=======
+
+player = player1 or player2 or player3 or player4 or player5 or player6 or player7 or player8 or player9
+
+a = player1 and crate
+s = player2 and crate
+d = player3 and crate
+f = player4 and crate
+g = player5 and crate
+h = player6 and crate
+j = player7 and crate
+k = player8 and crate
+l = player9 and Crate
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+, = outerwall and wall
+
+=======
+SOUNDS
+=======
+
+startlevel 4424703
+endlevel 73919502
+Crate MOVE 99195907
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Wall
+player
+Crate
+outerwall
+
+======
+RULES
+======
+
+[ > player | outerwall ] -> cancel
+
+[ > Player Crate ] -> [  >  Player  > Crate  ]
+[ > crate | crate ] -> [ > crate | > crate ]
+
+[ > crate | wall ] -> [ crate | wall ]
+
+
+==============
+WINCONDITIONS
+==============
+
+all crate on Target
+
+=======
+LEVELS
+=======
+
+
+message level 1 of 10
+
+(level 1? not trivial!)
+,,,,,,,,,,,
+,#########,
+,#o.....o#,
+,#.......#,
+,#.......#,
+,#..*.*..#,
+,#..123..#,
+,#..456..#,
+,#..789..#,
+,#########,
+,,,,,,,,,,,
+
+
+message level 2 of 10
+
+(ok for a level 2?)
+,,,,,,,,,
+,o.....o,
+,.......,
+,..***..,
+,..123##,
+,..456..,
+,..789..,
+,......o,
+,,,,,,,,,
+
+
+
+message level 3 of 10
+(slightly harder level 1)
+,,,,,,,,
+,..#.#.,
+,.123.*,
+,.456..,
+,.789..,
+,.#...#,
+,#..#.o,
+,,,,,,,,
+
+
+message level 4 of 10
+
+
+(satisfying + not hard, but only given that i thought about it in advance)
+,,,,,,,,
+,.*....,
+,.123o.,
+,.456..,
+,.789.@,
+,...*..,
+,....o.,
+,,,,,,,,
+
+
+message level 5 of 10
+
+(Easy but maybe ok?)
+,,,,,,,,
+,.o@*o.,
+,.123..,
+,o456*.,
+,.j89*o,
+,......,
+,......,
+,,,,,,,,
+
+
+message level 6 of 10
+
+(not too hard with two crates)
+,,,,,,,,
+,.#.#.o,
+,.1s3..,
+,.456.#,
+,#789..,
+,...o#.,
+,...*..,
+,,,,,,,,
+
+
+message level 7 of 10
+
+(3175)
+(not too hard but I got stuck for a weird amount of time)
+,,,,,,,,,
+,...o...,
+,.123...,
+,.456##*,
+,.789.*.,
+,.......,
+,o......,
+,.......,
+,,,,,,,,,
+
+
+
+
+message level 8 of 10
+(nontrivial - arrange multiple pieces on your body to solve in the end)
+,,,,,,,,
+,..#..o,
+,.123..,
+,.45h..,
+,.7kl..,
+,..o...,
+,o..#..,
+,,,,,,,,
+
+
+
+
+message level 9 of 10
+(cute idea)
+,,,,,,,,
+,......,
+,.123.o,
+,.456.*,
+,.78k.o,
+,...*.o,
+,...@.@,
+,,,,,,,,
+
+
+
+message level  10 of 10
+(enjoyed solving this one)
+,,,,,,,,
+,....oo,
+,.1s3..,
+,.456#.,
+,.789.#,
+,#....*,
+,.*o...,
+,,,,,,,,
+
+message Congratulations!  You are the most adroitly attractive entity in the known universe.
+
+(
+message level 11 of 11
+
+(very hard - needed a hint :'[ )
+,,,,,,,,
+,.o.o..,
+,.123..,
+,o456#.,
+,.789..,
+,..*.#.,
+,.*.*..,
+,,,,,,,,
+
+
+
+
+(wasn't able to solve)
+,,,,,,,,
+,.#...o,
+,.123..,
+,.4g6*.,
+,o789..,
+,...#..,
+,#@....,
+,,,,,,,,
+
+
+
+
+
+(too hard)
+,,,,,,,,
+,.*...o,
+,.123#.,
+,.456.#,
+,@789..,
+,..*##.,
+,.....o,
+,,,,,,,,
+
+(ok level 1?)
+,,,,,,,,
+,###..#,
+,.123.#,
+,.456..,
+,#789.#,
+,o....*,
+,......,
+,,,,,,,,
+
+
+,,,,,,,,
+,...#.o,
+,.123#.,
+,.456..,
+,.789..,
+,..#...,
+,o*#*#.,
+,,,,,,,,
+
+,,,,,,,,
+,......,
+,.123..,
+,.456..,
+,.789..,
+,......,
+,......,
+,,,,,,,,
+
+,,,,,,,,,
+,.......,
+,.123...,
+,.456...,
+,.789...,
+,.......,
+,.......,
+,.......,
+,,,,,,,,,
+
+
+
+,,,,,,,,,
+,.......,
+,.123...,
+,.456...,
+,.789...,
+,.......,
+,.......,
+,.......,
+,.......,
+,.......,
+,,,,,,,,,
+
+,,,,,,,,,,,
+,.........,
+,.123.....,
+,.456.....,
+,.789.....,
+,.........,
+,.........,
+,.........,
+,.........,
+,.........,
+,,,,,,,,,,,
+)
+
+(
+
+==========
+TRANSFORM
+==========
+
+choose 5 option 0.5 [ no wall no player ] -> [ wall ]
++ option 0.5 []->[]
+
+choose 2 [ no wall no player ] -> [ target ]
+choose 2 [ no wall ] -> [ crate ]
+
+)

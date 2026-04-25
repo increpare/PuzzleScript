@@ -1,0 +1,438 @@
+title Resin-Caster
+author increpare
+homepage www.increpare.com
+
+background_color darkblue
+
+(
+
+tools used during creation:
+
+https://dekeyser.ch/puzzlescriptmis/
+https://marcosdon.github.io/PuzzleScriptWithSolver/editor.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+darkblue
+
+Wall
+#aa00ff
+.000.
+00000
+00000
+00000
+.000.
+
+Player
+Orange Orange Orange Orange
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate1
+red
+.000.
+00000
+00000
+00000
+.000.
+
+
+Crate2
+blue
+.000.
+00000
+00000
+00000
+.000.
+
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = crate1
+@ = crate2
+* = crate2
+crate = crate1 or crate2
+obstacle = player or wall or Crate1
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, crate1, crate2
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > crate1 | crate2 ] -> [ | wall ]
+[ > crate2 | crate1 ] -> [ | wall ]
+
+==============
+WINCONDITIONS
+==============
+
+no crate
+
+=======
+LEVELS
+=======
+
+message When the two compounds are combined they set into a hard purple resin.
+
+message 1 of 10
+(fine!)
+######
+#....#
+#p@o.#
+#....#
+#@..o#
+######
+
+message 2 of 10
+(fine-ish?)
+#########
+#..o.@..#
+#..op@..#
+#########
+
+message 3 of 10
+(good hard level 1 or nice level 2)
+######
+#.@..#
+#..@.#
+#oo..#
+#.#.p#
+######
+
+message 4 of 10
+(ok? looks nice and has a solution that's not totally trivial but also not exactly something you can deduce without trying out - you won't necessarily know after the fact *why* the solkution is a solution)
+######
+#..o.#
+#.o@.#
+#o@..#
+#.p.@#
+######
+
+message 5 of 10
+(fine?)
+..####
+.##.o#
+##...#
+#..#.#
+#.@o.#
+#.p@.#
+######
+
+message 6 of 10
+(good intermediate)
+######
+#p...#
+#.o@@#
+#oo..#
+#.#@.#
+######
+
+
+message 7 of 10
+(kinda ok?)
+#######
+#.....#
+#...#.#
+#@#o@o#
+#.#.#.#
+#..p..#
+#######
+
+message 8 of 10
+(kinda fun?)
+######
+#@o.o#
+#.o.@#
+#@.@o#
+#.p..#
+######
+
+
+message 9 of 10
+(actually ok?)
+..####...
+###@.####
+#..@....#
+#.#.o#o.#
+#....#p.#
+#########
+
+message 10 of 10
+(had the solution spoiled but it's also fine :] )
+######
+#oo.@#
+#.@@o#
+#o.@.#
+#.p..#
+######
+
+message Congratulations!  You're an exceptionally very competent resin-caster.
+
+(nice level, but maybe not include? not totally feeling it)
+( ###### )
+( #@.o.# )
+( #o.o.# )
+( #@o@.# )
+( #@..p# )
+( ###### )
+
+(eeeh it's fine but I solved it directly by avoiding doing the obvious thing which is BORING)
+( ###### )
+( #.o.p# )
+( #@@oo# )
+( #....# )
+( #@#..# )
+( ###### )
+
+(too much like other level)
+( ###### )
+( #@o.@# )
+( #...o# )
+( #o@o@# )
+( #p...# )
+( ###### )
+
+(kinda ok? I like the interlacing style.  but not the best level of all time)
+( ###### )
+( #..@.# )
+( #o#@.# )
+( #.@..# )
+( #...o# )
+( #.o.p# )
+( ###### )
+
+(
+######
+#....#
+#....#
+#....#
+#....#
+######
+
+
+######
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+######
+
+
+####
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+#..#
+####
+
+
+######
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+#....#
+######
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#######
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#######
+
+#########
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#########
+
+#########
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#########
+)
+(
+message level 1 of 10
+
+####..
+#.O#..
+#..###
+#@P..#
+#....#
+#..###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#..@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+..####...
+###..####
+#.......#
+#.#..#..#
+#.O.*#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+)
+
+
+(
+Transformation
+
+[ player ] -> []
+[ crate ] -> []
+
+( choose 2 [ player ] -> [ ] )
+
+choose 3 [ ] -> [ wall ]
+choose 1 [ no obstacle ] -> [ player ]
+choose 2 [ no obstacle ] -> [ crate1 ]
+choose 2 [ no obstacle ] -> [ crate2 ]
+
+)

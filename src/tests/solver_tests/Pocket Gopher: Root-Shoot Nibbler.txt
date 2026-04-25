@@ -1,0 +1,586 @@
+title Pocket Gopher: Root-Shoot Nibbler
+author increpare
+homepage www.increpare.com
+
+background_color darkblue
+
+========
+OBJECTS
+========
+
+Background
+darkgreen darkblue
+00000
+00000
+00000
+00000
+00000
+
+nothingness ,
+black
+
+fallen
+red
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+Wall
+darkred darkblue
+00000
+00010
+00000
+01000
+00000
+
+
+Player
+brown black orange yellow 
+.000.
+01010
+00100
+00300
+0...0
+
+Player_sad
+brown black orange yellow blue
+.000.
+00000
+01010
+40100
+0...0
+
+
+vine_empty i
+green lightgreen
+.....
+..1..
+.101.
+..1..
+.....
+
+
+
+vine_n 1
+green lightgreen
+.101.
+.101.
+.101.
+..1..
+.....
+
+vine_s 2
+green lightgreen
+.....
+..1..
+.101.
+.101.
+.101.
+
+vine_e 3
+green lightgreen
+.....
+.1111
+10000
+.1111
+.....
+
+
+vine_w 4
+green lightgreen
+.....
+1111.
+00001
+1111.
+.....
+
+vine_ns 5
+green lightgreen
+.101.
+.101.
+.101.
+.101.
+.101.
+
+vine_ne 6
+green lightgreen
+.101.
+.1011
+.1000
+..111
+.....
+
+
+vine_nw 7
+green lightgreen
+.101.
+1101.
+0001.
+111..
+.....
+
+
+vine_se 8 
+green lightgreen
+.....
+..111
+.1000
+.1011
+.101.
+
+
+vine_sw 9
+green lightgreen
+.....
+111..
+0001.
+1101.
+.101.
+
+
+vine_ew 0
+green lightgreen
+.....
+11111
+00000
+11111
+.....
+
+
+vine_nse q
+green lightgreen
+.101.
+.1011
+.1000
+.1011
+.101.
+
+
+vine_nsw r
+green lightgreen
+.101.
+1101.
+0001.
+1101.
+.101.
+
+vine_new t
+green lightgreen
+.101.
+11011
+00000
+11111
+.....
+
+vine_sew y
+green lightgreen
+.....
+11111
+00000
+11011
+.101.
+
+
+vine_nsew u
+green lightgreen
+.101.
+11011
+00000
+11011
+.101.
+
+n
+transparent
+
+s
+transparent
+
+e
+transparent
+
+w
+transparent
+
+spawn
+transparent
+
+=======
+LEGEND
+=======
+
+vine_end = vine_n or vine_s or vine_e or vine_w or vine_empty
+vine_body = vine_ns or vine_ne or vine_nw or vine_se or vine_sw or vine_ew or vine_nse or vine_nsw or vine_new or vine_sew or vine_nsew
+
+
+o = nothingness and vine_n
+b = nothingness and vine_s
+a = nothingness and vine_e
+d = nothingness and vine_w
+f = nothingness and vine_ns
+g = nothingness and vine_ne
+h = nothingness and vine_nw
+j = nothingness and vine_se
+- = nothingness and vine_sw
+k = nothingness and vine_ew
+l = nothingness and vine_nse
+z = nothingness and vine_nsw
+x = nothingness and vine_new
+c = nothingness and vine_sew
+m = nothingness and vine_nsew
+
+vine = vine_body or vine_end
+
+plant = vine_body or vine_end or Player
+
+dir = n or s or e or w
+. = Background
+# = Wall
+P = Player
+
+occupancy = wall or plant
+
+=======
+SOUNDS
+=======
+
+sfx0 86710504 (eat)
+sfx1 73200307 (move vine)
+endlevel 52752109
+
+================
+COLLISIONLAYERS
+================
+
+Background
+nothingness
+Player, Wall, vine,Player_sad
+n
+s
+e
+w
+spawn
+fallen
+
+======
+RULES
+======
+
+(don't forget about the case where you're chasing your tail)
+( [ > player | vine ] -> cancel )
+
+[ moving player ] -> again
+
+[vine_n]->[vine_n n]
+[vine_s]->[vine_s s]
+[vine_e]->[vine_e e]
+[vine_w]->[vine_w w]
+
+[vine_ns]->[vine_ns n s]
+[vine_ne]->[vine_ne n e]
+[vine_nw]->[vine_nw n w]
+
+[vine_se]->[vine_se s e]
+[vine_sw]->[vine_sw s w]
+
+[vine_ew]->[vine_ew e w]
+
+[vine_nse]->[vine_nse n s e]
+[vine_nsw]->[vine_nsw n s w]
+[vine_new]->[vine_new n e w]
+[vine_sew]->[vine_sew s e w]
+
+[vine_nsew]->[vine_nsew n s e w]
+
+[ > player | vine_end ] -> [ > player | no n no s no e no w ] sfx0 (munch)
+
+[ > player | vine_body ] -> [ > player | > vine_body ] sfx1
+
+[ > vine | vine ] -> [ > vine | > vine ]
++ up [ n moving vine | vine ] -> [ n moving vine | moving vine ]
++ down [ s moving vine | vine ] -> [ s moving vine | moving vine ]
++ left [ w moving vine | vine ] -> [ w moving vine | moving vine ]
++ right [ e moving vine | vine ] -> [ e moving vine | moving vine ]
+
+[ > vine | wall ] -> cancel
+[ > player | wall ] -> cancel
+[ > player | nothingness ] -> cancel
+
+up [ n | no s ] -> [  spawn | ]
+down [ s | no n ] -> [  spawn | ]
+left [ w  | no e ] -> [  spawn | ]
+right [ e  | no w ] -> [  spawn | ]
+
+[ n s e spawn ] -> [ vine_nse ]
+[ n s w spawn ] -> [ vine_nsw ]
+[ n e w spawn ] -> [ vine_new ]
+[ s e w spawn ] -> [ vine_sew ]
+
+[ n s spawn ] -> [ vine_ns ]
+[ n e spawn ] -> [ vine_ne ]
+[ n w spawn ] -> [ vine_nw ]
+
+[ s e spawn ] -> [ vine_se ]
+[ s w spawn ] -> [ vine_sw ]
+
+[ e w spawn ] -> [ vine_ew ]
+
+[ n spawn ] -> [ vine_n ]
+[ s spawn ] -> [ vine_s ]
+[ e spawn ] -> [ vine_e ]
+[ w spawn ] -> [ vine_w ]
+
+[  spawn ] -> [ vine_empty ]
+
+[dir]->[]
+
+late [vine_n]->[vine_n n]
+late [vine_s]->[vine_s s]
+late [vine_e]->[vine_e e]
+late [vine_w]->[vine_w w]
+
+late [vine_ns]->[vine_ns n s]
+late [vine_ne]->[vine_ne n e]
+late [vine_nw]->[vine_nw n w]
+
+late [vine_se]->[vine_se s e]
+late [vine_sw]->[vine_sw s w]
+
+late [vine_ew]->[vine_ew e w]
+
+late [vine_nse]->[vine_nse n s e]
+late [vine_nsw]->[vine_nsw n s w]
+late [vine_new]->[vine_new n e w]
+late [vine_sew]->[vine_sew s e w]
+
+late [vine_nsew]->[vine_nsew n s e w]
+
+late [ nothingness vine ] -> [nothingness vine fallen ]
+
+late up [ n vine no fallen | vine ] -> [ n vine | no fallen vine ]
++ late down [ s  vine no fallen | vine ] -> [ s vine | no fallen vine ]
++ late left [ w  vine no fallen | vine ] -> [ w vine | no fallen vine ]
++ late right [ e  vine no fallen | vine ] -> [ e vine | no fallen vine ]
+
+late [dir]->[]
+
+late [fallen] [player]->[fallen][Player_sad]
+==============
+WINCONDITIONS
+==============
+no vine
+
+=======
+LEVELS
+=======
+
+
+
+message Level 1 of 5
+
+message I like eating roots, but only from the end.
+
+#############
+#...........#
+#....p......#
+#...........#
+#.2892.,,,,,#
+#.5555.,89..#
+#.6767.,11..#
+#......,....#
+#......,....#
+#############
+
+
+message Level 2 of 5
+
+message who starts eating roots from the middle? That's ridiculous.
+
+###########
+#.........#
+#.........#
+#....2....#
+#...amd...#
+#...,o,...#
+#...,b,...#
+#...amd...#
+#....1..2.#
+#......37.#
+#........p#
+###########
+
+
+message Level 3 of 5
+message Would you eat a banana from the middle?  Why would you eat roots from the middle, then?!
+
+###########
+#.........#
+#.........#
+#...304...#
+#.........#
+#.2.222.2.#
+#.5.fff.5.#
+#.1.111.1.#
+#.........#
+#.p.304...#
+#.........#
+#.........#
+###########
+
+
+message Level 4 of 5
+message Would you read a book from the middle?  You wouldn't; that's just stupid!
+
+#########
+#.......#
+#.,,,,,.#
+#.,jk-,.#
+#.,fbf,.#
+#.,fgh,.#
+#..1....#
+#....804#
+#....5p.#
+#....1..#
+#########
+
+
+message Level 5 of 5
+message Would you like to be born middle-aged and grow younger and older at the same time? NO YOU WOULDN'T!
+
+###########
+#.........#
+#.........#
+#...304...#
+#.........#
+#.2.bbb.2.#
+#.5.fff.5.#
+#.1.111.1.#
+#.........#
+#.p.304...#
+#.........#
+#.........#
+###########
+
+message Congratulations! You reached the end of the game, which is the best part!
+
+(
+
+###########
+#.........#
+#.........#
+#....2....#
+#...amd...#
+#...,o,...#
+#...,b,...#
+#...amd...#
+#....1..2.#
+#......37.#
+#........p#
+###########
+
+#############
+#...........#
+#...,,,bjd,.#
+#...ba-lhb,.#
+#.39fjzfjh,.#
+#..6mzgxz,,.#
+#..3hlcdo,,.#
+#.p.aho,,,,.#
+#...........#
+#############
+
+
+###########
+#.........#
+#.........#
+#..84.39..#
+#..1...1..#
+#...bbb...#
+#...fff...#
+#...111...#
+#..2...2..#
+#..64.37..#
+#....p....#
+#.........#
+###########
+
+#####################
+#...................#
+#...................#
+#.......j4.3-.......#
+#.......1...1.......#
+#...................#
+#.......2...2.......#
+#.......g4.3h.......#
+#...................#
+#...................#
+#.........2.........#
+#.........5.........#
+#.......30u04.......#
+#.........5.........#
+#.......p.1.........#
+#...................#
+#####################
+
+#####################
+#...................#
+#.......,,.,,.......#
+#......,j4.3-,......#
+#......,1...1,......#
+#...................#
+#......,2...2,......#
+#......,g4.3h,......#
+#.......,,.,,.......#
+#...................#
+#.........2.........#
+#.........5.........#
+#.......30u04.......#
+#.........5.........#
+#.......p.1.........#
+#...................#
+#####################
+
+##################
+#...........,....#
+#...........,....#
+#...........,....#
+#...........,....#
+#.......2...,....#e
+#......3u4..,....#
+#..309..1...,....#
+#....5......,..34#
+#..p.1..2...,,,.,#
+#......3u4.....,.#
+#.......1........#
+#................#
+#................#
+##################
+
+
+
+###############################################
+#.......................,...............,.....#
+#.......................,...............,.....#
+#......................2................,.....#
+#.....................p5.2..............,.....#
+#......................60780004.........,.....#
+#.......................,.5.............,.....#
+#.......................,.5.............,.....#
+#.......................,.5.............,.....#
+#.......................,.6000484.....39,.....#
+#.......................,......5.......5a4....#
+#.......................,......5.......5,.....#
+#.......................,......5.......5a4....#
+#.......................,......5.......5,.....#
+#.......................,......5.......5a4....#
+#.......................,......5.......5,.....#
+#.......................,......5.......5a4....#
+#.......................,......600000007,.....#
+#.......................,...............,.....#
+#.......................,,,,,,,,,,,,,,,,,.....#
+#.............................................#
+###############################################
+
+
+)

@@ -1,0 +1,699 @@
+title SLIME VAT FILLER
+author increpare
+homepage www.increpare.com
+
+background_color darkgreen
+text_color yellow
+
+run_rules_on_level_start
+
+color_palette 1
+
+========
+OBJECTS
+========
+
+Background
+darkblue
+
+wall
+blue
+
+player
+pink red
+.000.
+.000.
+00000
+.111.
+.1.1.
+
+blob
+green darkgreen
+.000.
+01110
+01110
+01110
+.000.
+
+
+blob_l
+green darkgreen
+.0000
+01111
+00101
+01111
+.0000
+
+
+blob_r
+green darkgreen
+0000.
+11110
+10100
+11110
+0000.
+
+
+blob_u
+green darkgreen
+.000.
+01010
+01110
+01010
+01110
+
+
+blob_d
+green darkgreen
+01110
+01010
+01110
+01010
+.000.
+
+blob_h
+green darkgreen
+00000
+11111
+10101
+11111
+00000
+
+blob_v
+green darkgreen
+01110
+01010
+01110
+01010
+01110
+
+
+
+target 
+yellow
+0...0
+.....
+.....
+.....
+0...0
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = wall
+P = Player
+b = blob
+l = blob_l
+r = blob_r
+u = blob_u
+d = blob_d
+h = blob_h
+v = blob_v
+t = target
+
+k = player and target
+
+
+* = blob
+@ = blob and Target
+O = Target
+
+
+
+goostuff = blob or blob_l or blob_r or blob_u or blob_d or blob_h or blob_v
+
+obstacle = wall or goostuff
+
+0 = blob_l and target
+
+=======
+SOUNDS
+=======
+sfx1 78001905
+sfx2 95814301
+endlevel 17589703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, wall, goostuff
+Target
+
+======
+RULES
+======
+
+
+
+(was passiert, wenn man in der mitte ist? -_-)
+
+(2x1 -> 1x1 )
+
+right [ > player  | blob_l | blob_r ] -> [ > player |  | blob ] sfx2
+left [ > player  | blob_r | blob_l ] -> [ > player |  | blob ] sfx2
+up [ > player  | blob_d | blob_u ] -> [ > player |  | blob ] sfx2
+down [ > player  | blob_u | blob_d ] -> [ > player |  | blob ] sfx2
+
+
+( (n+1)x1 -> (n)x1 )
+
+right [ > player  | blob_l | blob_h ] -> [ > player | | blob_l ] sfx2
+left [ > player  | blob_r | blob_h ] -> [ > player | | blob_r ] sfx2
+up [ > player  | blob_d | blob_v ] -> [ > player | | blob_d ] sfx2
+down [ > player  | blob_u | blob_v ] ->  [ > player | | blob_u ] sfx2
+
+
+
+(1x1 -> 2x1)
+right [ no obstacle | < player | blob ] -> [ player | blob_l | blob_r ] sfx1
+left [ no obstacle | < player | blob ] -> [ player | blob_r | blob_l ] sfx1
+up [ no obstacle | < player | blob ] -> [ player | blob_d | blob_u ] sfx1
+down [ no obstacle | < player | blob ] -> [ player | blob_u | blob_d ] sfx1
+
+
+
+( (n)x1 -> (n+1)x1)
+right [ no obstacle | < player | blob_l ] -> [ player | blob_l | blob_h ] sfx1
+left [ no obstacle | < player | blob_r ] -> [ player | blob_r | blob_h ] sfx1
+up [ no obstacle | < player | blob_d ] -> [ player | blob_d | blob_v ] sfx1
+down [ no obstacle | < player | blob_u ] -> [ player | blob_u | blob_v ] sfx1
+
+
+([ > player | blob ] -> [ > player | > blob ])
+
+[ > goostuff | wall ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+all blob on target
+all goostuff on target
+
+=======
+LEVELS
+=======
+
+message Get the slime into the yellow vats! Fill all the vats this way with slime!
+
+message level  1 of 10
+######
+#....#
+#.b..#
+#....#
+#p.t.#
+#....#
+######
+
+
+message level 2  of 10
+
+######
+#....#
+#.tt.#
+#.bb.#
+#....#
+#.p..#
+######
+
+message level 3 of 10
+
+######
+#....#
+#...b#
+#.b.t#
+#..t.#
+#p...#
+######
+
+
+message level 4 of 10
+
+(Easy but ok)
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 5 of 10
+
+(hardish)
+####..
+#@.#..
+#..###
+#.t..#
+#..b.#
+#p.###
+####..
+
+message level 6 of 10
+
+#########
+#.......#
+#.......#
+#.b.t...#
+#.b.pt..#
+#.b...t.#
+#.......#
+#.......#
+#########
+
+message level 7 of 10
+(hard)
+######
+#....#
+#.#p.#
+#.b.b#
+#.t.t#
+#....#
+######
+
+
+message level 8 of 10
+(good, medium-hard)
+#########
+#.......#
+#.......#
+#...t...#
+#..tpt..#
+#...t...#
+#.......#
+#...b...#
+#..b.b..#
+#...b...#
+#.......#
+#.......#
+#########
+
+message level 9 of 10
+(not so hard, but 75% chance of being amusing?)
+#########
+#...#...#
+#.p.b.t.#
+#.......#
+##b.t.b##
+#.......#
+#.t.b.t.#
+#...#...#
+#########
+
+message level 10 of 10
+
+message MY PASSPORT HAS EXPIRED.  I need to take a new photo. NO SILLY FACES ALLOWED.
+(cripes!)
+#######
+##...##
+#.b.b.#
+#.t.t.#
+#..@..#
+##p..##
+#######
+
+message Congratulations - you got your new passport
+
+........
+........
+...##...
+..####..
+..####..
+...##...
+........
+..####..
+........
+..####..
+........
+........
+
+message The End
+
+
+(
+
+
+########
+#......#
+#.p....#
+#..bbt.#
+#.t....#
+#......#
+########
+
+
+(early level?)
+########
+#...0r.#
+#.O.p..#
+#.lr...#
+#####..#
+....####
+
+
+
+
+(too easy)
+..####...
+###..####
+#.t....@#
+#.#b.#..#
+#....#p.#
+#########
+
+#########
+#...#...#
+#...b.t.#
+#.......#
+##b.t.b##
+#.......#
+#.tpb.t.#
+#...#...#
+#########
+
+
+#########
+#...u...#
+#...d...#
+#b.lhr.b#
+#...u...#
+#.p.v...#
+#...d...#
+#########
+
+#########
+#...#...#
+#.t.u.t.#
+#...d...#
+##b.lhr##
+#...u...#
+#.t.d.t.#
+#p..#...#
+#########
+
+
+#######
+#..u..#
+#..d..#
+#b.lhr#
+#..u..#
+#p.d..#
+#######
+
+##########
+#..uuuu..#
+#..dddd..#
+#lhhrplhr#
+#..uuuu..#
+#..dddd..#
+##########
+
+#########
+#...#...#
+#...u.t.#
+#...d...#
+##b.0hr##
+#...u...#
+#.t.d.t.#
+#.p.#...#
+#########
+
+#########
+#.......#
+#.......#
+#...t...#
+#..tpt..#
+#...t...#
+#.......#
+#...b...#
+#..b.b..#
+#...b...#
+#.......#
+#.......#
+#########
+
+#########
+#.......#
+#...t...#
+#..t.t..#
+#...t...#
+#.......#
+#...p...#
+#.......#
+#...b...#
+#..b.b..#
+#...b...#
+#.......#
+#########
+
+
+
+#########
+#.......#
+#..ttt..#
+#..t.t..#
+#..ttt..#
+#.......#
+#...p...#
+#.......#
+#..bbb..#
+#..b.b..#
+#..bbb..#
+#.......#
+#########
+
+
+######
+#....#
+#.b..#
+#....#
+#p.t.#
+#....#
+######
+
+
+
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+
+
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+
+######.#####
+#....###...#
+#........#p#
+#.bt#.tb...#
+#...########
+#####.......
+
+message level 2 of 10
+
+
+message level 3 of 10
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+
+
+
+######
+#....#
+#.b0r#
+#...t#
+#.p..#
+######
+
+
+
+########
+#......#
+#.b....#
+#..tp..#
+#......#
+#......#
+########
+
+
+#########
+#.......#
+#.......#
+#.......#
+#.......#
+#.lr....#
+#.t..p..#
+#@......#
+#########
+
+
+(soll schwierig sein)
+#######
+##...##
+#.b.b.#
+#.t.t.#
+#..@..#
+##p..##
+#######
+
+)
+
+(
+
+
+
+choose 1 option 0.1 [no wall]->[wall]
++ option 0.1 [wall]->[no wall]
++ option 0.1 [target] [ no target no wall ] -> [ ] [ target ]
++ option 0.1 [ target ] [ blob ] [ no target no wall ] [ no obstacle ] -> [ ] [ ] [ target ] [ blob ]
+
+
+(
+[target]->[]
+[blob]->[]
+[player]->[]
+)
+(
+choose 1 [no wall] -> [ player ]
+choose 1 option 0.1 [ no target no wall ] [ no obstacle ] -> [ target ] [ blob ]
+)
+(
+choose 1 option 0.1 [no target ] -> [ target ]
+option 0.1 [ target | no target no wall] ->[target | target]
+)
+
+(choose 10 option 0.1 right [ no wall|blob | no obstacle|no wall] -> [| blob_l | blob_r |]
++ option 0.1 down [ no wall|blob | no obstacle | no wall ] -> [ |blob_u | blob_d |]
++ option 0.1 right [no wall| no obstacle | blob_l |no wall] -> [| blob_l | blob_h |]
++ option 0.1 down [no wall| no obstacle | blob_u |no wall] -> [ |blob_u | blob_v |]
++ option 0.1 []->[])
+
+
+choose 4 [no wall no target ] -> [ target ]r
+
+
+
+()()()()()()()()
+
+
+choose 1 [ no obstacle ] -> [ player ]
+
+choose 1 [ no obstacle ]  ->[blob target  ]
+
+
+choose 1 [ no obstacle ] [no target ] ->[blob]  [target  ]
+
+choose 10 option 0.1 right [ |blob | no obstacle|] -> [| blob_l | blob_r |]
++ option 0.1 down [ |blob | no obstacle |  ] -> [ |blob_u | blob_d |]
++ option 0.1 right [| no obstacle | blob_l |] -> [| blob_l | blob_h |]
++ option 0.1 down [| no obstacle | blob_u |] -> [ |blob_u | blob_v |]
++ option 0.1 []->[]
+
+
+right [ wall | blob_l | blob_h | blob_h | blob_r ] -> [  wall | blob_l | blob_h |  blob_r | ]
+down [ wall | blob_u | blob_h | blob_h | blob_l ] -> [  wall | blob_u | blob_h |  blob_l | ]
+
+
+
+
+
+
+)

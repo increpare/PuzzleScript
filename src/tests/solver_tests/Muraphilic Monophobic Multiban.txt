@@ -1,0 +1,213 @@
+title Muraphilic Monophobic Multiban
+author increpare
+homepage www.increpare.com
+
+color_palette 5
+(Based on my favourite set of sokoban levels: microban by David Skinner.
+www.sneezingtiger.com/sokoban/levels/microbanText.html
+)
+
+
+========
+OBJECTS
+========
+
+Background
+lightgreen green
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+brown darkbrown
+00010
+11111
+01000
+11111
+00010
+
+Player
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+pushable = wall or crate
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | pushable | pushable ] -> [ > Player | > pushable | > pushable ] 
+[ > pushable | pushable ] -> [ > pushable | > pushable ]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+message 1/8 I'm mighty but it's beneath me to use my brute strength to push a single object.
+
+..........
+..........
+..####....
+..#.O#....
+..#..###..
+..#@P..#..
+..#..*.#..
+..#..###..
+..####....
+..........
+..........
+
+message level 2 of 8
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 8
+
+.............
+.............
+....####.....
+..###..####..
+..#.....*.#..
+..#.#..#*.#..
+..#.o.o#p.#..
+..#########..
+.............
+.............
+
+message level 4 of 8
+
+............
+............
+..########..
+..#......#..
+..#.o@@.p#..
+..#...*..#..
+..#####..#..
+......####..
+............
+............
+
+message level 5 of 8
+
+(kinda easy)
+..........
+..........
+..#####...
+..#o..##..
+..#p**.#..
+..##...#..
+...##..#..
+....##o#..
+.....###..
+..........
+..........
+
+message level 6 of 8
+
+................
+................
+..######.#####..
+..#....###...#..
+..#.**.....#p#..
+..#.*.#ooo...#..
+..#...########..
+..#####.........
+................
+................
+
+
+
+message level 7 of 8
+
+(p. trivial?)
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 8 of 8
+
+
+............
+............
+...#######..
+...#.....#..
+...#.o*o.#..
+..##.*.*.#..
+..#.po*o.#..
+..#......#..
+..########..
+............
+............
+
+message Congratulations!  Even though some things are beneath you, you can still do everything!
+

@@ -1,0 +1,713 @@
+title 15 push pull levels
+author increpare
+homepage www.increpare.com
+
+color_palette 4
+
+( https://dekeyser.ch/puzzlescriptmis/ used for puzzle-generation )
+
+========
+OBJECTS
+========
+
+Background
+darkgray gray
+11111
+01111
+11101
+11111
+10111
+
+Target
+darkgreen
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+darkgray black
+00010
+11111
+01000
+11111
+00010
+
+Player
+black yellow purple blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+pushCrate
+orange
+00000
+0...0
+0...0
+0...0
+00000
+
+pullcrate
+green lightgreen
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+crate = pullCrate or pushcrate
+
+. = Background
+# = Wall
+P = Player
+* = PushCrate
+@ = PushCrate and Target
+$ = pullcrate
+% = pullcrate and Target
+O = Target
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | pushCrate ] -> [ > Player | > pushCrate ] 
+[ < player | pullcrate ] -> [ < player | < pullcrate ]
+
+==============
+WINCONDITIONS
+==============
+
+all Target on Crate
+
+=======
+LEVELS
+=======
+
+message level 1 of 15 Some games have strong heroes that can push crates with their muscles.
+
+
+(2143 easy but I like it!)
+######
+#o..$#
+#....#
+#o.o##
+#*p*.#
+#....#
+######
+
+message level 2 of 15 Some games have sneaky heroes that can slip around with crates in tow.
+
+(1940 really easy but kinda nice? i had fun i can't deny it)
+######
+#o...#
+#..*p#
+#$.*.#
+#..oo#
+#....#
+######
+
+message level 3 of 15 I'm not strong or sneaky.
+
+(6799 kinda fun! not too hard)
+######
+#.#..#
+#.*.o#
+#o..$#
+#..p.#
+#.o*.#
+######
+
+message level 4 of 15 Some crates just want to be pushed,
+
+(6019 fine! not the simplest)
+######
+#p.o.#
+#..o##
+#.**.#
+#...$#
+#.o.##
+######
+
+message level 5 of 15 and some crates just want to be pulled.
+
+(3975 kinda special experience? not trivial, not hard)
+######
+#o*$.#
+#...%#
+#o*..#
+#.o#.#
+##.p.#
+######
+
+message level 6 of 15 Some games have carefully-crafted mechanics.
+
+(1748 - pleasant but don't I have enough easy levels already? it does look nice though with its setup)
+######
+#.o..#
+#.$.@#
+#.p..#
+#.@..#
+#....#
+######
+
+message level 7 of 15 Some games have beautifully-designed levels.
+
+(1805 easy but I like even this one!)
+######
+#.o@.#
+##.o.#
+#..*$#
+#...p#
+#....#
+######
+
+message level 8 of 15 I barely have any design at all,
+
+(15546 easy but kinda fun/intentional setup?)
+######
+#..p$#
+#....#
+##.*.#
+#.*.o#
+#.o.o#
+######
+
+
+message level 9 of 15 just some mechanics to be understood,
+
+(8812 - fine but not particularly hard?)
+######
+#$.o.#
+#p*..#
+#.*.##
+#....#
+#..oo#
+######
+
+message level 10 of 15 and some levels to be solved.
+
+(35516 fine? medium)
+######
+#.o..#
+#*.p.#
+#.@..#
+#..$.#
+#oo.$#
+######
+
+
+message level 11 of 15 A sunbeam alights on the push-block.
+
+(406362 I didn't solve it with a big plan, but by playing carefully - kinda fun but hard?)
+######
+#.o..#
+#.*o@#
+#.oo.#
+#..*p#
+#$%.$#
+######
+
+message level 12 of 15 Moonlight comes to rest on the pull-block.
+
+(126391 difficultish - but careful solving sovled it)
+######
+#poo.#
+#%o.$#
+#.**.#
+#.o*%#
+#....#
+######
+
+message level 13 of 15 Sun and moon, push-block and pull-block.
+
+(10876 hard)
+######
+#$%.$#
+#.*o.#
+#p.oo#
+#.*.@#
+#o...#
+######
+
+
+message level 14 of 15 I don't know if it's night.
+
+(229189 hard but i solved it by being careful? ----)
+######
+#$..%#
+#..@p#
+#%.o.#
+#*..*#
+#.o.o#
+######
+
+message level 15 of 15 I can't tell if it's day.
+
+(41050 Hard but I just had to plan it out and execute? so not so bad? okay final level?)
+######
+#..o.#
+#$@oo#
+#..p.#
+#$*.##
+#...##
+######
+
+message When the eclipse was over, the warehouse vanished into the fog.
+
+(
+
+(meh! ok!)
+####..
+#.o#..
+#..###
+#%p..#
+#..*.#
+#..###
+####..
+
+(ok! second thouhgts: meh)
+#########
+#.......#
+#...#...#
+#..%*%..#
+#..%o%..#
+#...p...#
+#.......#
+#########
+
+
+(elegant. second thoughts: ok!)
+.......#####
+.......#...#
+########.#.#
+#o.o.$.*...#
+####.#.#...#
+...#..p....#
+...#########
+
+
+
+######
+#....#
+#....#
+#....#
+#....#
+######
+
+######
+#....#
+#....#
+#....#
+#....#
+#....#
+######
+
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#.....#
+#######
+
+###########
+#.........#
+#.........#
+#.........#
+#.........#
+###########
+
+########
+#......#
+#......#
+#......#
+#......#
+#......#
+#......#
+########
+
+
+(839 - so la la - really hard for me for some reason at first, but not conceptually interseting)
+######
+#$...#
+#..@##
+#...p#
+#..o.#
+###### 
+
+(1370 boring)
+######
+#....#
+#*o$o#
+#o*.$#
+##...#
+#o.p.#
+######
+
+(17544 possible to work out in advnace, which is good, but execution isn't interesting)
+######
+#.o..#
+#$p.*#
+#.*oo#
+#o...#
+#.$#.#
+###### 
+
+(77070 interseting to think about but execution not so interesting)
+######
+#po.o#
+#.*.o#
+#....#
+#..*.#
+#.o$$#
+######
+
+
+(tidied up - pretty ok?)
+######
+#..###
+#o..##
+#.p*.#
+#.o.$#
+#%...#
+######
+
+(12640 meh okay?)
+######
+#@..o#
+#$@p.#
+#...*#
+#$.o.#
+#%..o#
+######
+
+(2312 kinda trivial /uninterseting to think about)
+#######
+#..o..#
+#...$.#
+#$.o%.#
+#...@.#
+##.p..#
+#######
+
+(107816 tooo fk hard)
+######
+#.o..#
+#o*p$#
+#o.oo#
+#*$@.#
+#$...#
+######
+
+(5009 trivial)
+###########
+#...#.....#
+#.o*#o.*..#
+#$.op.#.%.#
+#...#.....#
+###########
+
+(unsolvable)
+#####..
+#o$.##.
+#p...##
+##....#
+.##.@.#
+..##..#
+...####
+
+(only interesting if you know the original version)
+########
+#......#
+#.o@%*p#
+#......#
+#####..#
+....####
+
+(not much going on)
+.#######
+.#.....#
+.#.o$o.#
+##.*p*.#
+#..o$o.#
+#......#
+########
+
+(not interesting)
+######.#####
+#....###...#
+#.$$..p..#.#
+#.*.#ooo...#
+#...##..####
+#########...
+
+
+(34427 normie meh - i moved the bottom o to the opposite corner )
+######
+#oo$.#
+#.*.$#
+#..*.#
+#.p.o#
+#...o#
+######
+
+
+
+(51243 trivial)
+######
+#o.p%#
+#$...#
+#..oo#
+#.**.#
+#....#
+######
+
+
+
+(15414 trivial)
+######
+#.o.o#
+#o..p#
+#.*..#
+#.*..#
+#$...#
+######
+
+(15382 easy - not good enough but almost interesting)
+######
+#...o#
+##*..#
+#$..o#
+#o*p.#
+#....#
+######
+
+(13930 absolutely trivial)
+######
+#.o.$#
+#.**.#
+#....#
+#p..o#
+#..#o#
+######
+
+(6289 eeh fine ok not great)
+######
+#.#o.#
+#...*#
+#...o#
+#p.*.#
+#.$o.#
+######
+
+
+(1940 modified - no normie crats so i don't like it)
+######
+#....#
+#.%o.#
+##...#
+###p$#
+######
+######
+
+(1609 too easy)
+######
+#.p$o#
+#..o*#
+#.*.o#
+#...##
+#.%.##
+######
+
+(1370 bit too easy)
+######
+#....#
+#*o$o#
+#o*.$#
+##...#
+#o.p.#
+######
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+..........#####
+..........#...#
+###########.#.#
+#oo.o.$.*.*...#
+#####.#.#.#...#
+....#....p....#
+....###########
+
+..........#####
+..........#...#
+###########.#.#
+#oo.o.$.*.*...#
+#####.#.#.#...#
+....#....p..#.#
+....#######...#
+..........#####
+
+......###..
+......#.###
+......#o..#
+......#o#.#
+#######o#.#
+#.p.$.*.*.#
+#.#.#.#...#
+#.......###
+#########..
+
+....#####..
+....#...#..
+....#.#.###
+....#..o..#
+....###o#.#
+#######o#.#
+#.p.$.*.*.#
+#.#.#.#...#
+#.........#
+###########
+
+message congratulations!
+)
+
+
+(
+
+choose 5 [ ] -> [ wall ]
+choose 1 [ no wall ] -> [ player ]
+choose 1 [ no wall no player no crate ] -> [ pushcrate ]
+choose 1 [ no wall no player no crate ] -> [ pullcrate ]
+choose 2 [ no wall no player no target ] -> [ target ]
+
+
+)
+
+
+(
+
+choose 5 [ ] -> [ wall ]
+choose 1 [ no wall ] -> [ player ]
+choose 1 [ no wall no player no crate | no wall no player no crate ] -> [ pullcrate | target ]
+choose 3 [ no wall no player no crate ] -> [ pushcrate target ]
+
+)
+

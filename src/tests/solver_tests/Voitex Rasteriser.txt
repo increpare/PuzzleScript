@@ -1,0 +1,229 @@
+title Voitex Rasteriser [Demake of Vertex Dispenser Puzzle Mode]
+author increpare
+homepage www.increpare.com
+
+(inspired by https://store.steampowered.com/app/102400/Vertex_Dispenser/ )
+
+run_rules_on_level_start
+
+background_color darkblue
+text_color lightgreen
+
+color_palette 1
+
+========
+OBJECTS
+========
+
+Background
+black black
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+
+Player
+gray
+00.00
+0...0
+.....
+0...0
+00.00
+
+
+
+1
+purple
+.....
+.....
+..0..
+.....
+.....
+
+
+
+2
+red
+.....
+.0...
+.....
+...0.
+.....
+
+
+3
+pink
+.....
+.0...
+..0..
+...0.
+.....
+
+
+4
+yellow
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+
+5
+lightgreen
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+
+6
+green
+.....
+.000.
+.....
+.000.
+.....
+
+
+
+place 
+darkgray
+
+no1 
+transparent
+
+no2
+transparent
+
+no3
+transparent
+
+no4
+transparent
+
+no5
+transparent
+
+no6
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Target
+
+
+
+num = 1 or 2 or 3 or 4 or 5 or 6
+
+nonum = no1 or no2 or no3 or no4 or no5 or no6
+
+=======
+SOUNDS
+=======
+ 
+
+sfx1 55932906
+sfx2 4305306
+sfx3 6823106
+sfx4 83937501
+sfx5 65854702
+
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+num
+no1
+no2
+no3
+no4
+no5
+no6
+place
+Player, Wall
+
+======
+RULES
+======
+
+
+[nonum] -> []
+[ 1 | place no num ] -> [ 1 | place no1 ]
+[ 2 | place no num ] -> [ 2 | place no2 ]
+[ 3 | place no num ] -> [ 3 | place no3 ]
+[ 4 | place no num ] -> [ 4 | place no4 ]
+[ 5 | place no num ] -> [ 5 | place no5 ]
+[ 6 | place no num ] -> [ 6 | place no6 ]
+
+[place no1 no2 no3 no4 no5 ] -> [ 6 ]
+[place no1 no2 no3 no4 ] -> [ 5 ] sfx5
+[place no1 no2 no3 ] -> [ 4 ] sfx4
+[place no1 no2 ] -> [ 3 ] sfx3
+[place no1 ] -> [ 2 ] sfx2
+[place  ] -> [ 1 ] sfx1
+
+[action player no num] -> [ player action place ] again
+
+
+==============
+WINCONDITIONS
+==============
+some 5
+
+=======
+LEVELS
+=======
+
+.........
+.........
+.........
+.........
+....p....
+.........
+.........
+.........
+.........
+
+message Congrats!  If you liked this, check out the real Vertex Dispenser! :)
+
+11111111111
+12222222221
+12333333321
+12344444321
+12345554321
+12345654321
+12345554321
+12344444321
+12333333321
+12222222221
+11111111111

@@ -1,0 +1,250 @@
+title Legend of Swixero
+author increpare
+homepage www.increpare.com
+color_palette c64
+background_color darkblue
+text_color green
+(
+My favourite set of sokoban levels - here're the first ten of the Microban set.
+
+I tried contacting this guy, but he seems to have vanished from the net. The levels are in lots of places online, so I'm just chancing my arm by including them.  BUT BE WARNED.
+)
+
+========
+OBJECTS
+========
+
+Background
+darkgreen darkblue
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+green
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+gray darkgray
+00010
+11111
+01000
+11111
+00010
+
+Player
+red pink White Blue
+.000.
+01110
+22222
+.333.
+.3.3.
+
+dead
+#ff0000
+..0..
+0....
+...0.
+.....
+.0...
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+flipped
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+endlevel 83744503
+startgame 92244503
+sfx1 26528702 (dead)
+sfx2 19029907 (flip)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+dead
+flipped
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+[ > Crate | Target no Crate ] -> [ > Crate | Target no Crate flipped] sfx2
+
+late [ flipped] [ player target no flipped] -> [flipped] [ dead crate flipped] sfx1
+late [flipped] [crate no target no flipped] -> [flipped] [target flipped]
+late [flipped] [target no crate no flipped] -> [flipped] [crate flipped]
+late [ flipped]->[]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+
+message level 1 of 5
+(OK)
+######
+#.O###
+#..###
+#@P..#
+#..*.#
+#..###
+######
+
+(EZ)
+(can remove)(
+#######
+#....##
+#p**..#
+##..o.# 
+###.o.#
+####..#
+#######)
+
+
+(ezish)
+(can remove)(
+###########
+#####.o...#
+#####.o.#.#
+#####.o.#.#
+#.p.*.*.*.#
+#.#.#.#.###
+#.......###
+###########)
+(
+###########
+#######o..#
+#######.#.#
+#######o#.#
+#.p.*.*o*.#
+#.#.#.#.###
+#.......###
+###########
+
+###########
+#######o..#
+#######.#.#
+#######...#
+##p.*.*o*.#
+###...#.###
+#...#.o.###
+###########
+)
+
+message level 2 of 5
+(INTERMEDIATE)
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 5
+(EASY/FUN)
+(keep it)
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+
+(fine)(
+#######
+##...##
+#.***.#
+#..p..#
+#.ooo.#
+##...##
+#######)
+
+
+message level 4 of 5
+(intermediate hard)
+(meh remove?)
+(#########
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########)
+
+(nice ideer)
+###########
+####.#.####
+####.#.####
+#.*.@.@.*.#
+#.#.....#.#
+#.o..p..o.#
+###########
+
+(zu schweirig)
+(#########
+####.####
+####.####
+#.*.@p*.#
+#.#...#.#
+#.o.@.o.#
+####.####
+####.####
+#########)
+
+message level 5 of 5
+(HARD)
+############
+#....###...#
+#.**.....#p#
+#.*.#ooo...#
+#...#...####
+############
+
+
+
+message congratulations!

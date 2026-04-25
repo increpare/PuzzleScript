@@ -1,0 +1,927 @@
+title Yellow Box
+author increpare
+homepage www.increpare.com
+text_color #b1aa11
+run_rules_on_level_start
+
+background_color #373737
+
+========
+OBJECTS
+========
+
+Background
+#6f727a
+
+
+Pedestrian
+#823123 #4e88f1 #639bff #822c1d #4b193b #646464
+..0..
+.12..
+1.22.
+3.4.3
+.4.4.
+
+Wall
+#373737
+
+
+car_v
+#000000 #30823f #1e6a2b #85c6ca #41a352 #398144 #9fdadd #151515
+01110
+23334
+25554
+26664
+04447
+
+
+car_h
+#000000 #30823f #1e6a2b #85c6ca #398144 #9fdadd #41a352 #151515
+01110
+23456
+23456
+23456
+06667
+
+
+crash_n
+#000000 #30823f #ac3232 #1e6a2b #85c6ca #41a352 #398144 #823123 #4681eb #151515
+01120
+32445
+26762
+32885
+05859
+
+crash_s
+#151515 #30823f #4681eb #000000 #1e6a2b #ac3232 #41a352 #398144 #823123 #85c6ca
+01213
+42256
+57875
+49956
+35663
+
+crash_e
+#000000 #30823f #ac3232 #1e6a2b #398144 #41a352 #4681eb #823123 #85c6ca #151515
+01210
+32425
+66785
+36482
+95250
+
+crash_w
+#000000 #30823f #ac3232 #151515 #85c6ca #398144 #4681eb #41a352 #1e6a2b #823123
+01213
+24567
+84966
+82527
+07270
+
+skid_n
+#545862 #6f727a
+0...0
+0...0
+....0
+.....
+.....
+
+
+skid_s
+#545862
+.....
+.....
+0....
+0...0
+0...0
+
+
+skid_e
+#545862
+...00
+.....
+.....
+.....
+..000
+
+
+skid_w
+#545862
+000..
+.....
+.....
+.....
+00...
+
+
+
+moveup
+#ff0000
+..0..
+.....
+.....
+.....
+.....
+
+movedown
+#ff0000
+.....
+.....
+.....
+.....
+..0..
+
+moveleft 
+#ff0000
+.....
+.....
+0....
+.....
+.....
+
+moveright
+#ff0000
+.....
+.....
+....0
+.....
+.....
+
+player_1 1
+#b1aa11 #fbf236
+00000
+0.1..
+01.1.
+0...1
+01.1.
+ 
+player_2 2
+#b1aa11 #fbf236
+00000
+.1...
+1.1.1
+...1.
+1.1.1
+
+player_3 3
+#b1aa11 #fbf236
+00000
+1...0
+.1.10
+..1.0
+.1.10
+
+player_4 4
+#b1aa11 #fbf236
+0.1..
+01.1.
+0...1
+01.1.
+0.1..
+
+player_5 5
+#fbf236
+.0...
+0.0.0
+...0.
+0.0.0
+.0...
+
+player_6 6
+#fbf236 #b1aa11
+0...1
+.0.01
+..0.1
+.0.01
+0...1
+
+player_7 7
+#b1aa11 #fbf236
+01.1.
+0...1
+01.1.
+0.1..
+00000
+
+player_8 8
+#fbf236 #b1aa11
+0.0.0
+...0.
+0.0.0
+.0...
+11111
+
+player_9 9
+#fbf236 #b1aa11
+.0.01
+..0.1
+.0.01
+0...1
+11111
+
+player_q q
+#b1aa11 #fbf236
+00000
+01...
+0.1.1
+0..1.
+0.1.1
+
+player_w w
+#b1aa11 #fbf236
+00000
+1...0
+.1.10
+..1.0
+.1.10
+
+player_e e 
+#b1aa11 #fbf236
+01...
+0.1.1
+0..1.
+0.1.1
+00000
+
+player_r r
+#fbf236 #b1aa11
+0...1
+.0.01
+..0.1
+.0.01
+11111
+
+player_t t
+#b1aa11 #fbf236 #868890
+00000
+01210
+02120
+01210
+00000
+
+=======
+LEGEND
+=======
+player = player_1 or player_2 or player_3 or player_4 or player_5 or player_6 or player_7 or player_8 or player_9 or player_q or player_w or player_e or player_r or player_t
+skid = skid_n or skid_s or skid_e or skid_w
+
+crash = crash_n or crash_s or crash_e or crash_w
+move = moveup or movedown or moveleft or moveright
+car = car_h or car_v
+. = Background
+# = Wall
+P = Player_1
+c = car_h
+d = car_v
+o = Pedestrian
+@ = player_1 and Pedestrian
+obstacle = car or Wall or crash
+
+z = player_1 and Pedestrian
+x = player_2 and Pedestrian
+b = player_3 and Pedestrian
+n = player_4 and Pedestrian
+m = player_5 and Pedestrian
+, = player_6 and Pedestrian
+' = player_7 and Pedestrian
+/ = player_8 and Pedestrian
+; = player_9 and Pedestrian
+
+=======
+SOUNDS
+=======
+sfx0 76358502 (crash)
+endlevel 61183702
+startlevel 81279102
+showmessage 42778506
+
+sfx1 11424307 (move vehicle)
+
+================
+COLLISIONLAYERS
+================
+
+move
+Background
+
+skid_n
+skid_s
+skid_e
+skid_w
+
+player
+
+Wall, car, Pedestrian, crash
+
+======
+RULES
+======
+
+
+up [ stationary moveup car | Wall ] -> [ car | wall] 
+down [ stationary movedown car | Wall ] -> [ car | wall] 
+left [ stationary moveleft car | Wall ] -> [ car | wall] 
+right [ stationary moveright car | Wall ] -> [ car | wall] 
+
+
+up [ stationary moveup car | car no moveup ] -> [ car | car] 
+down [ stationary movedown car | car no movedown ] -> [ car | car] 
+left [ stationary moveleft car | car no moveleft ] -> [ car | car] 
+right [ stationary moveright car | car no moveright ] -> [ car | car] 
+
+
+up [ stationary moveup car | Pedestrian ] -> [ skid_n | crash_s ]  sfx0
+down [ stationary movedown car | Pedestrian ] -> [ skid_s | crash_n ] sfx0
+left [ stationary moveleft car | Pedestrian ] -> [ skid_w | crash_e ]  sfx0
+right [ stationary moveright car | Pedestrian ] -> [ skid_e | crash_w ] sfx0
+
+
+up [ stationary moveup car | no obstacle ] -> [ | action moveup car ] again sfx1
+down [ stationary movedown car | no obstacle ] -> [ | action movedown car ] again sfx1
+left [ stationary moveleft car | no obstacle ] -> [ | action moveleft car ] again sfx1
+right [ stationary moveright car | no obstacle ] -> [ | action moveright car ] again sfx1
+
+
+up [ > player | car ] -> [ > player | movedown car_v ] again
+down [ > player | car ] -> [ > player | moveup car_v ] again
+left [ > player | car ] -> [ > player | moveright car_h ] again
+right [ > player | car ] -> [ > player | moveleft car_h ] again
+
+[ > player | wall ] -> cancel
+
+late [ car move no player ] -> [ car ]
+
+==============
+WINCONDITIONS
+==============
+
+no Pedestrian
+
+=======
+LEVELS
+=======
+
+message Level 1 of 18 - Whatever vehicle moves into a yellow box remains in motion until it has left.
+
+(tolerable level 1)
+########
+#o.....#
+#.....c#
+#..qw..#
+#..er..#
+#......#
+#.c..o.#
+########
+
+
+message Level 2 of 18 - The laws of Road are inviolable
+(Easy!)
+#######
+#.c...#
+#.123o#
+#o456.#
+#.789.#
+#.c...#
+#######
+
+
+message Level 3 of 18 - Respect the yellow box!
+(fine easy engaging)
+###########
+#.........#
+#..c..o...#
+#.........#
+#.c..o..c.#
+#..123....#
+#..456....#
+#..789...o#
+#.........#
+#.........#
+###########
+
+message Level 4 of 18 - You ever feel like you're at a junction in life?  
+(very slightly less easy)
+#######
+#...c.#
+#.12bc#
+#.456.#
+#.789.#
+#o....#
+#######
+
+
+
+message Level 5 of 18 - Yellow is my favourite colour!
+(not hard. medium-engaging)
+###########
+#.........#
+#..c....co#
+#.o123....#
+#..n56....#
+#..789....#
+#..c......#
+###########
+
+message Level 6 of 18 - Houserule: NO turning in the yellow box.  
+(not too hard. kionda engaging)
+###########
+#.c..oc...#
+#.c.......#
+#..123....#
+#..456....#
+#..789..o.#
+#........o#
+###########
+
+message Level 7 of 18 - Prefer death to stalling in the middle of a yellow box.
+(i got it! humane! early intermediate)
+#######
+#.o..c#
+#cz2bc#
+#.45,.#
+#.789.#
+#o..cc#
+#######
+
+message Level 8 of 18 - I don't care if you're speeding.
+(interesting intermediate puzzler!)
+#######
+#.c...#
+#..c..#
+#o..c.#
+#.t...#
+##o#.o#
+#######
+
+
+message Level 9 of 18 - I ... I guess you can reverse through instead if you want?
+(Easy-intermediate + fun)
+#######
+#c.ccc#
+#o12bo#
+#cnm6c#
+#o789.#
+#.occo#
+#######
+
+message Level 10 of 18 - One car in, one car out!
+(not too trivial, netertaining to solve?)
+###########
+#.........#
+#.o.123o..#
+#...456c..#
+#.c.789...#
+#......o..#
+#...c..oc.#
+###########
+
+message Level 11 of 18 - Why are all cars green anyway?
+(fine. intermediate)
+#######
+#cc...#
+#.123.#
+#.456o#
+#c'8;c#
+#co.o.#
+#######
+
+
+message Level 12 of 18 - Pedestrians are p. dumb yeah.
+(fine)
+#######
+#c.cco#
+#.12bc#
+#o456.#
+#o'/9o#
+#ccocc#
+#######
+
+message Level 13 of 18 - No yellow boxes were harmed in the making of this game.
+(fine)
+#######
+#cc.cc#
+#c12bo#
+#on56.#
+#o7/;c#
+#.coc.#
+#######
+
+message Level 14 of 18 - Some days I'm big, some days I'm small.  That's just life as a yellow box.
+(kinda fun later intermediate)
+###########
+#.........#
+#...c...c.#
+#..123....#
+#..456..o.#
+#..789oo.c#
+#...o...c.#
+###########
+
+message Level 15 of 18 - You can't outrun the yellow box!
+(not too hard. kinda fun)
+######
+#oocc#
+#1x3c#
+#4nmc#
+#789c#
+######
+
+message Level 16 of 18 - Sometimes I feel like cars wouldn't move at all if it wasn't for my gentle encouragement.
+(hardish but ok?)
+#######
+#c.coc#
+#czx3c#
+#cn56.#
+#c789o#
+#ooo.c#
+#######
+
+message Level 17 of 18 - I gained consciusness back when I was a bucket of paint. Rough year, that!
+(hardish - I like this level)
+######
+#cocc#
+#zx3c#
+#nm,c#
+#789c#
+######
+
+message Level 18 of 18 - Sometimes I wonder what the future has in store for a little yellow box like me?
+(challenging? ok last level?)
+######
+#...c#
+#123c#
+#4m,c#
+#789o#
+#coco#
+######
+
+message Congratulations!  Your ferociousness has earned the respect of drivers and pedestrians alike across the globe.
+
+(CUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUT:)
+(
+########
+#oo....#
+#.c...c#
+#.ppp..#
+#.ppp..#
+#.pppo.#
+#.c....#
+########
+
+(trivial/boring)
+######
+#.coo#
+#.o..#
+#....#
+#.p..#
+#.cc.#
+######
+
+(should be ok but can't solve x| )
+#######
+#...o.#
+#.ppp.#
+#.ppp.#
+#cpppc#
+#....o#
+#######
+
+(should be interesting but can't solve)
+#######
+#c....#
+#.ppp.#
+#.ppp.#
+#.@@@c#
+#....c#
+#######
+
+
+(middle-hard, eeeh)
+#######
+#.ccco#
+#op@po#
+#.pp@.#
+#o@ppc#
+#ccocc#
+#######
+
+(didn't solve. dead end. meh)
+########
+#.....o#
+#..c..o#
+#..o.c.#
+#ppp...#
+#ppp...#
+#pppc..#
+########
+
+(didn't solve)
+########
+#......#
+#..c.o.#
+#...o..#
+#ppp.c.#
+#ppp.c.#
+#@p@.c.#
+########
+
+
+(cannae solve it -_- )
+########
+#.....o#
+#......#
+#..o..o#
+#ppp.o.#
+#ppp.cc#
+#ppp.cc#
+########
+
+(Easy)
+###########
+#....o.c..#
+#c.o...o.c#
+#..ppp...o#
+#..ppp....#
+#.cppp....#
+#.........#
+###########
+
+(trivial)
+###########
+#.........#
+#...ppp..c#
+#...ppp...#
+#...ppp.oc#
+#co....o..#
+#co.......#
+###########
+
+(too similar to other level)
+###########
+#.c.o.....#
+#...ppp...#
+#.c.pppco.#
+#.c.ppp...#
+#.........#
+#......oo.#
+###########
+
+
+(trivial)
+######
+#cooc#
+#ppp.#
+#pppo#
+#pppc#
+######
+
+(couldn't do - might've been interesting)
+######
+#ccoc#
+#p@pc#
+#p@po#
+#ppp.#
+######
+
+
+(coudlnt' figure out, but because of one person I couldn't figure out how to kill)
+######
+#coc.#
+#pppo#
+#p@@c#
+#pppc#
+######
+
+(interesting, but I can't solve!)
+######
+#cc.c#
+#p@pc#
+#p@po#
+#p@p.#
+######
+
+(looks fun. can't solve)
+######
+#..cc#
+#pp@c#
+#ppp.#
+#@@@.#
+#...c#
+######
+
+(don't like walls)
+########
+##.o...#
+#c..c..#
+#oo.cc.#
+#ppp.#.#
+#ppp...#
+#pp@...#
+########
+
+(dont' like this)
+########
+#.cooc.#
+#......#
+#c.....#
+#pppc..#
+#@pp...#
+#@pp...#
+########
+
+(meh. don't like walls)
+########
+#..#.c.#
+#......#
+#.coco.#
+#pp@...#
+#ppp.o##
+#pppc..#
+########
+
+(don't like walls)
+########
+#..o.c.#
+##.c...#
+#cco...#
+#ppp..##
+#ppp...#
+#pppoo.#
+########
+
+(don't like walls)
+########
+#.oo.o.#
+#cco..c#
+#......#
+#ppp..##
+#pppc..#
+#ppp.#.#
+########
+
+
+
+(damnit wanted to find interesting but reallly hard)
+#######
+#....o#
+#.@@p.#
+#.ppp.#
+#.ppp.#
+#.ccc.#
+#######
+
+(like other level but easier)
+######
+#.ccc#
+#@@@c#
+#@@@c#
+#pppc#
+######
+
+
+(too similar to others)
+######
+#c.cc#
+#@@p.#
+#@@@c#
+#pppc#
+######
+
+(CBA)
+######
+#oc..#
+#pp@o#
+#p@pc#
+#pppo#
+#.ccc#
+######
+
+
+(meh)
+######
+#cooc#
+#pppc#
+#ppp.#
+#pp@o#
+#c.oc#
+######
+
+
+###########
+#.........#
+#.........#
+#.........#
+#...ppp...#
+#...ppp...#
+#...ppp...#
+#.........#
+#.........#
+#.........#
+###########
+
+###########
+#.........#
+#.........#
+#..ppp....#
+#..ppp....#
+#..ppp....#
+#.........#
+###########
+
+
+###########
+#.........#
+#...ppp...#
+#...ppp...#
+#...ppp...#
+###########
+
+#################
+#...............#
+#......ppp......#
+#......ppp......#
+#......ppp......#
+#################
+
+###########
+#.........#
+#.........#
+#..ppp....#
+#..ppp....#
+#..ppp....#
+#.........#
+###########
+
+########
+#......#
+#......#
+#.ppp..#
+#.ppp..#
+#.ppp..#
+#......#
+########
+
+#######
+#.....#
+#.ppp.#
+#.ppp.#
+#.ppp.#
+#.....#
+#######
+
+######
+#....#
+#ppp.#
+#ppp.#
+#ppp.#
+######
+
+######
+#....#
+#ppp.#
+#ppp.#
+#ppp.#
+#....#
+######
+
+#########
+#.......#
+#.......#
+#.......#
+#.p.....#
+#.......#
+#########
+
+######
+#....#
+#....#
+#....#
+#.p..#
+#....#
+######
+
+########
+#......#
+#......#
+#......#
+#ppp...#
+#ppp...#
+#ppp...#
+########
+
+########
+#......#
+#......#
+#......#
+#ppp...#
+#ppp.cc#
+#ppp.cc#
+########
+
+########
+#oo..oo#
+#......#
+#......#
+#ppp...#
+#ppp.cc#
+#ppp.cc#
+########
+)

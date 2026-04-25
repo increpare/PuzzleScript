@@ -1,0 +1,224 @@
+title All Green and Blue on Yellow
+author increpare
+homepage www.increpare.com
+noaction
+
+color_palette 4
+
+background_color darkbrown
+text_color orange
+
+
+(
+many levels made with the puzzlescript level generators  
+
+https://dekeyser.ch/puzzlescriptmis/
+
+or
+
+https://marcosdon.github.io/PuzzleScriptWithSolver/editor.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+gray
+
+
+Target
+yellow
+.....
+.000.
+.000.
+.000.
+.....
+
+Wall
+darkBROWN 
+
+Player
+red darkred
+..0..
+..1..
+01010
+..1..
+..0..
+
+CrateH 
+blue Yellow transparent darkblue
+00000
+20002
+22322
+20002
+00000
+
+
+
+CrateV 
+transparent orange green darkgreen
+20002
+22022
+22322
+22022
+20002
+
+=======
+LEGEND
+=======
+
+crate = crateh or cratev
+
+
+. = Background
+# = Wall
+P = Player
+h = crateh
+v = cratev
+a = crateh and target
+m = cratev and target
+l = player and target
+O = Target
+obstacle = wall or player or crateh or cratev
+@ = cratev and target
+
+* = cratev
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+horizontal [ >  Player | Cratev ] -> [  >  Player | > Cratev  ]
+vertical [ >  Player | Crateh ] -> [  >  Player | > Crateh  ]
+
+[> crate | obstacle ] -> cancel
+
+horizontal [  > Player | Crateh | no obstacle ] -> [   | Crateh | player ]
+vertical [  > Player | Cratev | no obstacle ] -> [   | Cratev | player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Level 1 of 5
+(ok starting level?)
+######
+#.o###
+#h.###
+#...p#
+#.h..#
+#o.###
+######
+
+
+message Level 2 of 5
+(simple but ok!)
+######
+#....#
+#.ho.#
+#pva.#
+#.om.#
+#....#
+######
+
+
+message Level 3 of 5
+(pleasing - nicht so schwierig!)
+..m.
+om..
+pava
+....
+
+
+message Level 4 of 5
+(middle-hard, but decent!)
+.#..
+.m..
+..va
+#.m.
+p..o
+
+
+message Level 5 of 5
+
+(hard!)
+#.a.
+ohv.
+p.m.
+aoh.
+..o.
+
+(
+
+
+######
+#..p.#
+#.va.#
+#.om.#
+#....#
+######
+
+)
+
+
+(
+
+==========
+GENERATION
+==========
+
+choose 8 option 0.6 [Wall] -> []
++[]->[]
+
+choose 8 option 0.6 [No Obstacle] -> [Wall]
++[]->[]
+
+choose 2 option 0.5 [ no wall no crate no player ] [no wall no player no target ] -> [ crateh ] [ target]
++ option 0.5 [ no wall no crate no player ] [no wall no player no target ] -> [ cratev ] [ target]
+
+
+
+
+==========
+GENERATION
+==========
+
+= randomly remove or add 20 walls with prob. 0.4
+choose 4 option 0.5 [crate] -> [crateh]
++ option 0.5 [crate]->[cratev]
++ option 0.1 [ crate | no crate no wall no player] -> [ | crate] 
++ option 0.05 [ no crate no wall no player ] [ no target no wall ]-> [ crateh ] [ target]
++ option 0.05 [ no crate no wall no player ] [no target no wall ]-> [ cratev] [target]
++ option 0.05 [ player ] [ no player no crate no wall]->[] [player]
++ option 0.1 [ crate ] [ target ]->[ no crate] [ ]
+
+
+choose 2 option 0.5 [ wall]->[]
++ option 0.6 []->[]
++ option 0.3 [no wall no player ] -> [wall]
+
+
+
+)

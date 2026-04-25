@@ -1,0 +1,224 @@
+title Hole-Stuffer
+author increpare
+homepage www.increpare.com
+
+
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+
+Wall
+#493c2b #664b28
+00000
+01000
+00100
+00010
+00000
+ 
+
+
+Player
+green
+
+
+
+wintoken
+transparent
+
+randommoved
+transparent
+
+
+player_1
+#2f484e #c62a6f #852e55 #af2f68
+01111
+23333
+23313
+23133
+23333
+
+player_2
+#c62a6f #af2f68 #852e55 #ffffff
+00000
+11211
+12021
+20302
+22022
+
+player_3
+#c62a6f #2f484e #af2f68
+00001
+22220
+20220
+22020
+22220
+
+player_4
+#852e55 #af2f68 #c62a6f
+01212
+01212
+01212
+01212
+01212
+
+
+player_5
+#852e55 #af2f68 #c62a6f #2f484e
+01212
+01212
+01212
+01112
+30003
+
+
+
+crate
+#2f484e #fca556 #bd5d07 #eb8931
+01110
+23331
+23331
+23331
+02220
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = wall and randommoved
+
+obstacle = wall or crate
+pusher = crate or player
+
+
+sprite_player = player_1 or player_2 or player_3 or player_4 or player_5 
+
+
+sprite = sprite_player  
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+wintoken
+randommoved
+sprite
+
+
+======
+RULES
+======
+
+
+[ stationary randommoved ] [ >  pusher | stationary Crate ] -> [ action randommoved]  [  >  pusher | > Crate  ]
+
+[ action randommoved ] [ >  pusher | stationary Crate ] -> cancel
+
+[ > pusher | wall ] -> cancel 
+
+
+
+late [ sprite ] -> []
+
+
+late down [ no player | player | obstacle | obstacle | obstacle ] -> [ | player wintoken | obstacle | obstacle | obstacle ] again
+
+
+
+
+late right [ player | player | player ] -> [ player player_1 | player player_2 | player player_3 ]
+late down [ player_1 | | | ] ->  [ player_1 | player_4 | player_4 | player_5 ]
+late down [ player_3 | | | ] ->  [ player_3 | player_4 | player_4 | player_5 ]
+==============
+WINCONDITIONS
+==============
+
+some wintoken
+
+=======
+LEVELS
+=======
+
+message Level 1 of 4
+
+@###########
+#..........#
+#..........#
+#..........#
+#.ppp......#
+#.p.p......#
+#.p.p..***.#
+#.p.p......#
+#..........#
+#..........#
+############
+
+message Level 2 of 4
+
+
+@########
+#..ppp..#
+#..p.p..#
+#..p.p..#
+#..p.p..#
+#..***..#
+#.......#
+#.......#
+#########
+
+
+message Level 3 of 4
+
+@######
+#.....#
+#.....#
+#.....#
+#.....#
+#...*.#
+#ppp..#
+#p.p*.#
+#p.p..#
+#p.p*.#
+#######
+
+message Level 4 of 4
+
+@########
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#.......#
+#..***..#
+#..ppp..#
+#..p.p..#
+#..p.p..#
+#..p.p..#
+#########
+
+message Congratulations, you aul hole-stuffer.
+
+

@@ -1,0 +1,159 @@
+title Moved by leaves of grass
+author increpare
+homepage increpare.com
+
+(level shape from david skinner's microban)
+
+========
+OBJECTS
+========
+
+Background
+GREEN
+
+altbg
+darkblue
+
+player q
+lightgreen
+
+Target w
+green
+
+Wall1 1
+BROWN 
+
+wall2 2
+darkbrown
+
+wall3 3
+Black 
+
+wall4 4
+Orange 
+
+wall5 5
+White 
+
+wall6 6
+Blue
+
+
+crate1 7
+Orange 
+
+crate2 8
+orange
+
+
+crate4 10
+orange
+
+=======
+LEGEND
+=======
+crate3 = wall3 or wall4 or wall5 or wall6
+crate = crate1 or crate2 or crate3 or crate4 
+. = Background
+, =altbg
+O = Target
+f = crate1 and target
+e = target and player
+wall = wall1 or wall2
+=======
+SOUNDS
+=======
+
+crate1 MOVE 36772507
+crate2 MOVE 36772507
+crate3 MOVE 36772507
+crate4 MOVE 36772507
+endlevel 83744503
+startgame 92244503
+
+================
+COLLISIONLAYERS
+================
+
+Background
+altbg
+Target
+Player, wall1, wall2, wall3, wall4, wall5, wall6, Crate1, crate2, crate3, crate4 
+
+======
+RULES
+======
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+[> crate| crate]->[> crate | > crate]
++ [moving crate1 | stationary crate1 ]-> [moving crate1 | moving crate1]
++ [moving crate2 | stationary crate2 ]-> [moving crate2 | moving crate2]
++ [moving crate3 | stationary crate3 ]-> [moving crate3 | moving crate3]
++ [moving crate4 | stationary crate4 ]-> [moving crate4 | moving crate4]
+
+[ > crate | wall ]-> [ crate | wall]
+[stationary crate1 ] [ moving crate1]-> [stationary crate1] [ stationary crate1]
++[stationary crate2 ] [ moving crate2]-> [stationary crate2] [ stationary crate2]
++[stationary crate3 ] [ moving crate3]-> [stationary crate3] [ stationary crate3]
++[stationary crate4 ] [ moving crate4]-> [stationary crate4] [ stationary crate4]
++ [ > crate | stationary crate ]->[stationary crate | stationary crate]
++ [> player | wall] -> [ player | wall ]
++ [> player | stationary player ] -> [ player | player ]
++ [> player | stationary crate ] -> [ player | crate ]
++ [ > crate | stationary player ]-> [ crate | player]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message level 1 of 1
+
+11121111211112111121..........
+22222222222222222222q....q....
+12111121111211112111...q....q.
+22222222222222222222..........
+11121111211112111121.q....q...
+11121.....wwwww11121..........
+22222q....e,,,w22222q....q....
+12111...q.w,.,w12111...q....q.
+22222.....w,,,w22222..........
+11121.q...wewww11121.q....q...
+11121..........111211112111121
+22222q....q....222222222222222
+12111...q....q.121111211112111
+22222..........222222222222222
+11121.q....q...111211112111121
+11121fffff.333...........11121
+22222f,,,fq444.q....q....22222
+12111f,.,f55555...q....q.12111
+22222f,,,f.666...........22222
+11121fffff.6.6..q....q...11121
+11121....................11121
+22222q....q....q....q....22222
+12111...q....q....q....q.12111
+22222....................22222
+11121.q....q....q....q...11121
+11121..........88888.....11121
+22222q....q....8...8q....22222
+12111...q....q.8..q8...q.12111
+22222..........8...8.....22222
+11121.q....q...88888.q...11121
+11121..........111211112111121
+22222q....q....222222222222222
+12111...q....q.121111211112111
+22222..........222222222222222
+11121.q....q...111211112111121
+11121111211112111121..........
+22222222222222222222q....q....
+12111121111211112111...q....q.
+22222222222222222222..........
+11121111211112111121.q....q...
+
+message: congratulations! you gone went and won it

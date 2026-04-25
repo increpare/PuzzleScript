@@ -1,0 +1,107 @@
+title NO FORBIDDEN SYMBOLS
+author increpare
+homepage www.increpare.com
+
+========
+OBJECTS
+========
+
+Background
+white
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+
+Player
+gray gray gray gray
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+#e22118
+
+horizont
+transparent
+
+vert
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 32154907
+startgame 9465903
+endgame 73573102
+sfx0 27796903
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate
+horizont
+vert
+
+======
+RULES
+======
+
+[horizont]->[]
+[vert]->[]
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late horizontal [crate | crate | crate ] -> [ crate | crate horizont | crate ]
+
+late vertical [ crate | crate horizont | crate ] -> [ | vert | ]  again sfx0
+late horizontal [crate |  vert | crate ] -> [  | vert |  ]
+
+==============
+WINCONDITIONS
+==============
+
+no crate
+no vert
+
+=======
+LEVELS
+=======
+
+message level 1 of 1
+
+.......
+.......
+..*.*..
+.*.*.*.
+.......
+...p...
+.......
+
+message As you can see, this game is forbidden-symbol-free!
+
+message Thanks for playing! :)

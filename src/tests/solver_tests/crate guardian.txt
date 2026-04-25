@@ -1,0 +1,335 @@
+title crate guardian
+author increpare
+homepage www.increpare.com
+run_rules_on_level_start
+background_color darkgreen
+
+(
+
+thanks to youatexample for some title advice
+
+other possible titles:
+īdōlum cistae sānctum
+great idol of the crates
+crate idol
+
+
+)
+( verbose_logging )
+( debug )
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+
+( Target1 )
+( #4b1116 )
+( ..... )
+( .000. )
+( .0.0. )
+( .000. )
+( ..... )
+
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#1b2632
+
+Player
+#c8727a
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+Crate
+#746cc2
+00000
+0...0
+0...0
+0...0
+00000
+
+
+statue2
+blue  
+00.00
+.000.
+.000.
+00.00
+.0.0.
+
+
+aura2
+#383185
+
+
+=======
+LEGEND
+=======
+
+
+statue = statue2
+pushable = crate or statue
+pusher = crate or statue or player
+aura = aura2
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+q = Target
+
+2 = statue2
+3 = crate and target
+4 = crate and target
+7 = statue2 and target
+8 = statue2 and target
+
+obstacle = crate or statue or wall or player
+0 = wall and aura2
+9 = aura2
+a = statue2 and aura2
+e = target and aura2
+f = target and crate and aura2
+
+player_or_statue1_or_wall = player  or wall
+crate_or_wall = crate or wall
+j = player and aura2
+m = target and statue2 and aura2
+
+=======
+SOUNDS
+=======
+
+statue2 move 95968304
+Crate MOVE 53883107
+endlevel 25071300
+startlevel 46394106
+
+================
+COLLISIONLAYERS
+================
+
+Background
+aura2
+Target
+Player, Wall, Crate, statue
+
+======
+RULES
+======
+
+[ >  pusher | pushable ] -> [  >  pusher | > pushable  ]
+[ > pushable | wall ] -> cancel
+
+late [ aura ] -> [ ]
+
+late right [ | statue2 | ] -> [ aura2 | aura2 statue2 | aura2 ]
+late down [ no aura2 | aura2 | no aura2  ] -> [ aura2 | aura2 | aura2 ]
+
+
+late [ player_or_statue1_or_wall aura2 ] -> cancel
+
+==============
+WINCONDITIONS
+==============
+
+all crate on target
+
+=======
+LEVELS
+=======
+
+
+
+message Level 1 of 6
+(ok level 1)
+.#######.
+.#.....#.
+.#..p..#.
+.#.....#.
+.#.***.#.
+.#.999.#.
+##.9a9.##
+#..999..#
+#..ooo..#
+#.......#
+##..#..##
+.#.....#.
+.#######.
+
+message Level 2 of 6
+(I dunno?)
+#######
+#.....#
+#..3..#
+#.9e9.#
+#.9a9.#
+#.999.#
+#..*..#
+#.....#
+#..p..#
+#.....#
+#######
+
+message Level 3 of 6
+.#######.
+.#.p...#.
+.#.***.#.
+##.999.##
+#..eme..#
+#..999..#
+#...#...#
+###...###
+..#####..
+
+
+message Level 4 of 6
+(OK)
+##########
+#........#
+#.*999...#
+#..9a9.o.#
+#.p9e90000
+#...*.0...
+#.....0...
+#######...
+
+
+message Level 5 of 6
+(OK)
+######....
+#....#....
+#....##...
+#ooo..##..
+#......##.
+##......##
+.##..999.#
+..##.9a9.#
+...##999.#
+...#.....#
+...#.***.#
+...#.....#
+...#..p..#
+...#.....#
+...#######
+
+message Level 6 of 6
+(ok final level! I used my brain and solved it)
+#########
+#...p...#
+#..o.o..#
+#.o***o.#
+#..*a*..#
+#.o***o.#
+#..o.o..#
+#.......#
+#########
+
+message Congratulations.  You learned how to work with the guardian of the crates.  She still keeps you at a distance, but you have earned her respect.
+
+( 00000000000 )
+( 0.........0 )
+( 0....p....0 )
+( 0...o.o...0 )
+( 0..o***o..0 )
+( 0...*a*...0 )
+( 0..o***o..0 )
+( 0...o.o...0 )
+( 0.........0 )
+( 0.........0 )
+( 00000000000 )
+
+( ####### )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( #.....# )
+( ####### )
+
+
+( ######## )
+( #......# )
+( #......# )
+( #......# )
+( #..p...# )
+( #.pp...# )
+( #ppp...# )
+( ######## )
+
+(
+
+Transformations
+
+choose 4 [] -> [ wall ]
+choose 1 [ no obstacle ] -> [ statue1 ]
+choose 1 [ no obstacle ] -> [ statue2 ]
+
+
+right [ | statue1 | ] -> [ aura1 | aura1 statue1 | aura1 ]
+right [ | statue2 | ] -> [ aura2 | aura2 statue2 | aura2 ]
+down [ no aura1 | aura1 | no aura1  ] -> [ aura1 | aura1 | aura1 ]
+down [ no aura2 | aura2 | no aura2  ] -> [ aura2 | aura2 | aura2 ]
+
+choose 1 [ no aura2 no obstacle ] -> [ player ]
+
+choose 2 [no aura1 no obstacle ] -> [ crate ]
+choose 2 [ no wall no player ] -> [ target ]
+
+
+alt transform
+
+
+choose 11 [ player ] -> [ no player ]
+
+choose 4[ no player ] -> [ wall aura12 ]
+(choose 1 [ no wall | no obstacle | no wall ] -> [ | statue1|  ]
+right [ | statue1 | ] -> [ aura1 | aura1 statue1 | aura1 ]
+down [ no aura1 | aura1 | no aura1  ] -> [ aura1 | aura1 | aura1 ])
+
+choose 1 [ no wall no aura1 no player | no obstacle no aura1 no player | no wall no aura1 no player ] -> [ |statue2| ]
+right [ | statue2 | ] -> [ aura2 | aura2 statue2 | aura2 ]
+down [ no aura2 | aura2 | no aura2  ] -> [ aura2 | aura2 | aura2 ]
+
+(choose 1 [ no aura2 no obstacle ] -> [ player ])
+
+choose 3 [no aura1 no obstacle ] -> [ crate ]
+choose 3 [ no wall no player ] -> [ target ]
+
+[aura12 wall aura1] ->[aura1]
+[aura12 wall aura2] ->[aura2]
+
+
+==========
+
+choose 5 [ player ] -> [ no player ]
+
+choose 4[ no player ] -> [ wall  ]
+
+choose 1 [ no wall  no player | no obstacle no player | no wall  no player ] -> [ |statue2| ]
+right [ | statue2 | ] -> [ aura2 | aura2 statue2 | aura2 ]
+down [ no aura2 | aura2 | no aura2  ] -> [ aura2 | aura2 | aura2 ]
+
+(choose 1 [ no aura2 no obstacle ] -> [ player ])
+
+choose 3 [ no obstacle ] -> [ crate ]
+choose 3 [ no wall no player ] -> [ target ]
+
+)

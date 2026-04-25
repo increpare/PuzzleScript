@@ -1,0 +1,376 @@
+title Varifocal Nightmare
+author increpare
+homepage www.increpare.com
+
+color_palette c64
+( verbose_logging )
+
+text_color blue
+========
+OBJECTS
+========
+
+Background
+darkred
+
+
+Target1a
+red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target1b
+red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target1c
+red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Crate1a
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate1b
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate1c
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+target2a
+red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+target2b
+red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+
+target2c
+red
+.....
+.000.
+.0.0.
+.000.
+.....
+
+crate2a
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+crate2b
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+crate2c
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+Wall
+darkblue black
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange #999999 purple
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+
+
+=======
+LEGEND
+=======
+target1 = Target1a or Target1b or Target1c
+target2 = target2a or target2b or target2c
+crate1 = Crate1a or Crate1b or Crate1c
+crate2 = crate2a or crate2b or crate2c
+
+crate = crate1 or crate2
+target = target1 or target2
+. = Background
+# = Wall
+P = Player
+
+1 = Crate1a
+2 = crate1b 
+3 = crate1c
+4 = Target1a
+5 = Target1b
+6 = Target1c
+
+7 = Target1a and Crate1a
+8 = Target1b and crate1b 
+9 = Target1c and Crate1c
+
+
+q = Crate2a
+w = crate2b 
+e = crate2c
+r = Target2a
+t = Target2b
+y = Target2c
+
+u = Target2a and Crate2a
+i = Target2b and crate2b 
+o = Target2c and Crate2c
+
+=======
+SOUNDS
+=======
+sfx0 10654107 (crate push)
+startlevel 39415905
+endlevel 15587500
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target1, target2
+Player, crate1, crate2, wall
+
+======
+RULES
+======
+
+
+[ > player | Crate1a | no wall no crate ] [ target2a | no wall no target  ] -> [ | player | crate1a ] [ | target2a ] sfx0
+[ > player | crate1b | no wall no crate ] [ target2b | no wall no target  ] -> [ | player | crate1b ] [ | target2b ] sfx0
+[ > player | crate1c | no wall no crate ] [ target2c | no wall no target  ] -> [ | player | crate1c ] [ | target2c ] sfx0
+[ > player | crate2a | no wall no crate ] [ target1a | no wall no target  ] -> [ | player | crate2a ] [ | target1a ] sfx0
+[ > player | crate2b | no wall no crate ] [ target1b | no wall no target  ] -> [ | player | crate2b ] [ | target1b ] sfx0
+[ > player | crate2c | no wall no crate ] [ target1c | no wall no target  ] -> [ | player | crate2c ] [ | target1c ] sfx0
+
+[ > player | no wall no crate ] -> [ | player ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Level 1 of 5 Exits exist
+
+###########
+#....#....#
+#.#.1#.#.r#
+#243.#tqy.#
+#....#....#
+#56.p#we.p#
+###########
+
+message Level 2 of 5 Thus shut
+###########
+#..###..###
+#r.###1.###
+#pt..#p2..#
+#q.w.#4.5.#
+#..###..###
+###########
+
+
+message Level 3 of 5 Fist fits
+###########
+#.4.##.q.##
+#.1.p#.r.p#
+##.2.##.t.#
+###.5###.w#
+####.####.#
+###########
+
+message Level 4 of 5 Pest pets
+#########
+###..####
+#..8....#
+#.#.p#.1#
+#.4..#..#
+#########
+###..####
+#..i....#
+#.#.p#.r#
+#.q..#..#
+#########
+
+message Level 5 of 5 Best bets
+
+#############
+#######...###
+#######.#.###
+#....4p1..###
+#.#.#.#.#####
+#.2..9.5#...#
+#########.#.#
+###....qpr..#
+###.#.#.#.###
+###.t..o.w###
+#############
+
+message Congratulations Congratulasiont
+
+
+(
+message level 1 of 10
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+)

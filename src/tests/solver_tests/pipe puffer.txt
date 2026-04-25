@@ -1,0 +1,818 @@
+title pipe puffer
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+background_color #472f37
+(verbose_logging)
+( debug )
+
+========
+OBJECTS
+========
+
+Background
+#524740 #5a4f48
+00000
+01110
+01110
+01110
+00000
+
+
+
+
+Wall
+#472f37
+
+wall_s
+transparent transparent #291c21
+00000
+11111
+11111
+11111
+22222
+
+
+wall_n
+#5f454e transparent transparent
+00000
+11111
+11111
+11111
+22222
+
+wall_o
+transparent transparent #5f454e
+01112
+01112
+01112
+01112
+01112
+
+wall_w
+#291c21 transparent transparent
+01112
+01112
+01112
+01112
+01112
+
+wall_nw
+#472f37
+0....
+.....
+.....
+.....
+.....
+
+wall_so
+#472f37
+.....
+.....
+.....
+.....
+....0
+
+Player
+transparent #a69326 #cdb844 #e3d060 #bfaa38 #000000
+01230
+34233
+22522
+11241
+01230
+
+
+rohr_no e
+#005784 #006ea6 #524740 #acacac #cccccc #656d71
+00010 
+23431
+23540
+22330
+22220
+
+rohr_ns x
+#005784 #006ea6 #524740 #acacac #cccccc #e6e6e6 #656d71
+00010
+23452
+23652
+23452
+00010
+
+rohr_nw q
+#005784 #006ea6 #acacac #cccccc #e6e6e6 #524740 #656d71
+00010
+12345
+03645
+02255
+05555
+
+
+rohr_so c
+#524740 #005784 #e6e6e6 #006ea6 #acacac #cccccc #656d71
+00001
+00223
+04651
+04541
+11131
+
+rohr_sw z
+#005784 #524740 #006ea6 #e6e6e6 #cccccc #acacac #656d71
+01111
+23311
+04631
+05431
+00020
+
+rohr_ow a
+#005784 #524740 #006ea6 #e6e6e6 #cccccc #acacac #656d71
+01110
+23332
+04640
+05550
+01110
+
+outlet_n 
+#005784 #006ea6 transparent #e6e6e6 #cccccc #acacac #656d71
+01000 
+23452
+22622
+22222
+22222
+
+outlet_s 
+transparent #cccccc #acacac #e6e6e6 #005784 #006ea6 #656d71
+00000
+00000
+00600
+02130
+44454
+
+outlet_o 
+transparent #005784 #e6e6e6 #006ea6 #cccccc #acacac #656d71
+00001
+00023
+00641
+00051
+00001
+
+outlet_w 
+#005784 transparent #acacac #cccccc #006ea6 #e6e6e6 #656d71
+01111
+02111
+03611
+45111
+01111
+
+inlet
+blue
+.....
+.....
+..0..
+.....
+.....
+
+pust_n
+#cccccc
+.000.
+0...0
+..0..
+..0..
+.....
+
+
+pust_s
+#cccccc
+.....
+..0..
+..0..
+0...0
+.000.
+
+pust_o
+#cccccc
+...0.
+....0
+.00.0
+....0
+...0.
+
+pust_w
+#cccccc
+.0...
+0....
+0.00.
+0....
+.0...
+
+
+
+flow
+blue
+.....
+.....
+..0..
+.....
+.....
+
+=======
+LEGEND
+=======
+
+wall_überlagung = wall_s or wall_n or wall_o or wall_w or wall_nw or wall_so
+
+rohr = rohr_no or rohr_ns or rohr_nw or rohr_so or rohr_sw or rohr_ow
+outlet = outlet_n or outlet_s or outlet_o or outlet_w
+
+öffnung_n = rohr_no or rohr_ns or rohr_nw or outlet_n
+öffnung_s = rohr_ns or rohr_sw or rohr_so or outlet_s
+öffnung_o = rohr_no or rohr_so or rohr_ow or outlet_o
+öffnung_w = rohr_nw or rohr_sw or rohr_ow or outlet_w
+
+wall_thing = wall or outlet 
+
+rohr_or_öffnung = rohr or outlet
+
+. = Background
+# = Wall
+P = Player
+
+1 = outlet_n and wall
+2 = outlet_s and wall
+3 = outlet_o and wall
+4 = outlet_w and wall
+
+5 = outlet_n and inlet and wall
+6 = outlet_s and inlet and wall
+7 = outlet_o and inlet and wall
+8 = outlet_w and inlet and wall
+
+pust = pust_n or pust_s or pust_o or pust_w
+
+obstacle = wall_thing or rohr or player
+
+rohr_or_player = rohr or player
+
+=======
+SOUNDS
+=======
+sfx0 39858907 (pusten)
+sfx1 96276907 (rohrdurchpusten)
+rohr move 73985107 (rohrbewegen)
+startlevel 38142502
+endlevel 45497300
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, rohr
+wall_s
+wall_n
+wall_o
+wall_w
+wall_nw
+wall_so
+outlet
+inlet
+flow
+pust_n
+pust_s
+pust_o
+pust_w
+
+======
+RULES
+======
+
+up [ wall | no wall_thing ] -> [ wall wall_n | ]
+down [ wall | no wall_thing ] -> [ wall wall_s | ]
+left [ wall | no wall_thing ] -> [ wall wall_w | ]
+right [ wall | no wall_thing ] -> [ wall wall_o | ]
+
+
+[ wall_s wall_o ] -> [ wall_s wall_o wall_so ]
+[ wall_n wall_w ] -> [ wall_n wall_w wall_nw ]
+
+[ > player | obstacle ] -> cancel
+[pust]->[]
+
+right [ | action player | ] -> [ pust_w | action player | pust_o ] again sfx0
+up [ | action player | ] -> [ pust_s | player | pust_n ] again
+
+
+right [ rohr_so pust_n |  ] -> [ rohr_so | pust_o ] sfx1
++ down [ rohr_so pust_w | ] -> [ rohr_so | pust_s ] sfx1
+
++ up [ rohr_ns pust_n |  ] -> [ rohr_ns | pust_n ] sfx1
++ down [ rohr_ns pust_s |  ] -> [ rohr_ns | pust_s ] sfx1
+
++ left [ rohr_sw pust_n |  ] -> [ rohr_sw | pust_w ] sfx1
++ down [ rohr_sw pust_o |  ] -> [ rohr_sw | pust_s ] sfx1
+
++ right [ rohr_ow pust_o |  ] -> [ rohr_ow | pust_o ] sfx1
++ left [ rohr_ow pust_w |  ] -> [ rohr_ow | pust_w ] sfx1
+
++ right [ rohr_no pust_s |  ] -> [ rohr_no | pust_o ] sfx1
++ up [ rohr_no pust_w |  ] -> [ rohr_no | pust_n ] sfx1
+
++ left [ rohr_nw pust_s |  ] -> [ rohr_nw | pust_w ] sfx1
++ up [ rohr_nw pust_o | ] -> [ rohr_nw | pust_n ] sfx1
+
+[ pust_n rohr ] -> [ pust_n up rohr ]
+[ pust_s rohr ] -> [ pust_s down rohr ]
+[ pust_o rohr ] -> [ pust_o right rohr ]
+[ pust_w rohr ] -> [ pust_w left rohr ]
+
+[pust outlet ] -> [ outlet ]
+
+[ > rohr_or_player | rohr_or_player ] -> [ > rohr_or_player | > rohr_or_player ]
+
+( [ >  Player | Crate ] -> [  >  Player | > Crate  ] )
+
+late [flow]->[]
+
+late [ inlet ] -> [ inlet flow ]
+
+late up [ öffnung_n flow | öffnung_s no flow ] -> [ öffnung_n flow | öffnung_s  flow ]
++ late  down [ öffnung_s flow | öffnung_n no flow ] -> [ öffnung_s flow | öffnung_n  flow ]
++ late  right [ öffnung_o flow | öffnung_w no flow ] -> [ öffnung_o flow | öffnung_w  flow ]
++ late  left [ öffnung_w flow | öffnung_o no flow ] -> [ öffnung_w flow | öffnung_o  flow ]
+
+==============
+WINCONDITIONS
+==============
+
+all outlet on flow
+
+=======
+LEVELS
+=======
+
+
+message Oh no the factory is falling apart!  Can the pipe puffer put it back together?
+
+message Level 1 of 8 
+
+(kinda like. fine. best of that kind of level?)
+####6##
+#.....#
+#.....4
+#.xea.#
+##....#
+##..p.#
+#######
+
+message Level 2 of 8
+(I like this)
+#######
+#.....#
+#.c.8.#
+#.xa..#
+#.x...#
+#.1.p.#
+#.....#
+#######
+
+( (jokey? not hard? intermediate?) )
+( ########### )
+( #.........# )
+( #...c.z...# )
+( #...xax...# )
+( #.caqxeaz.# )
+( #..x...x..# )
+( #.x.....x.# )
+( #.x.a.a.x.# )
+( #.x.....x.# )
+( #.x..p..x.# )
+( ##5#####1## )
+
+
+message Level 3 of 8
+
+###########
+#.....2####
+#..caaq6###
+#..x...x..#
+#..x...x..#
+#..x.a.x..#
+#..ea.aq..#
+#.........#
+#....p....#
+###########
+
+
+message Level 4 of 8
+#########
+#.......#
+#...c8..#
+#.6.e4..#
+#..x....#
+#.1.a...#
+#.x..cz.#
+#..p.15.#
+#.......#
+#########
+
+
+
+
+
+message Level 5 of 8
+(intermediate. multiple solutions. doesn't mandate the solution I like the most tho >:[ )
+###########
+#.........#
+#.p..7aaaz#
+#..c....x.#
+#........x#
+#........q#
+########1##
+
+message Level 6 of 8
+(tricky)
+#########....
+#.......#....
+#......c8####
+#......x#...#
+#......eaaz.#
+#..p.x......#
+#.........1.#
+#......######
+#......#.....
+########.....
+
+message Level 7 of 8
+( (or maybe not that hard?) hard)
+########
+#......#
+7aaaaaz#
+#....x.#
+##3...q#
+#.....##
+#.p.cz.#
+#..aqe.#
+#......#
+########
+
+
+
+
+message Level 8 of 8
+(not great but ok)
+########6##
+#.....#.x.#
+#.......x.#
+#.....caq.#
+#..a..eaz.#
+#...x..x..#
+#.....a.x.#
+#..p...cq.#
+#......x#.#
+#......x#.#
+#######1###
+
+message Thank you! The factory is back up and running.  You are verily the premier pipe puffer!
+
+( (not sure if I want this or not) )
+( (fine, solvable wiht brain-usage. doesn't use puffing though sadface) )
+( ###6### )
+( #.....# )
+( #.#..a4 )
+( #...x.# )
+( #.ea..# )
+( ##p...# )
+( ####### )
+
+( (ok silly last level? ) )
+( ############## )
+( #............# )
+( #....6..2....# )
+( #...cq..ez...# )
+( #...ez...q...# )
+( #...cq..ez...# )
+( #...ez..cq...# )
+( #...cq..ez...# )
+( #...ez..cq...# )
+( #...cq..ez...# )
+( #...ez..cq...# )
+( #....1..5....# )
+( #.....p......# )
+( ############## )
+
+
+( ###6#### )
+( #......# )
+( #..a..a4 )
+( #....x.# )
+( #..ea..# )
+( ###p...# )
+( ######## )
+
+( (hard? not yet solved unsolvable lol) )
+( ###6### )
+( #.....# )
+( ##.x.a4 )
+( #.....# )
+( #.ea#.# )
+( #.p...# )
+( ####### )
+
+
+
+(
+(simple. pleasing)
+##62###
+##.x..#
+#.e...#
+#..q..#
+##....#
+.#p.###
+.####..
+
+(similarly simple/pleasing)
+###6##
+#....4
+##.a.#
+#.e..#
+#p...#
+######
+
+(whatever)
+###6##
+#..x.4
+#.ec.#
+#..q.#
+#p...#
+######
+
+(slightly harder)
+###6##
+#..x.4
+#.cq.#
+#.e..#
+#...p#
+######
+
+(fineish)
+###6##
+###.##
+#..a.4
+#..x.#
+#.e..#
+#..p.#
+######
+
+(i remember how to do this one, which is good, but it's alos not great)
+###62###
+#......#
+#..x#..#
+#...q..#
+#x.e...#
+#....p.#
+########
+
+
+( ###6## )
+( #..ea4 )
+( #....# )
+( #.p..# )
+( #....# )
+( ###### )
+
+( ###6## )
+( #..xc4 )
+( #..eq# )
+( #.p..# )
+( #....# )
+( ###### )
+
+
+( ##62## )
+( #.eq.# )
+( #....# )
+( #.p..# )
+( #....# )
+( ###### )
+
+( ##62### )
+( #.eq..# )
+( #.....# )
+( #.p...# )
+( #.....# )
+( #.....# )
+( ####### )
+
+( ###62### )
+( #..xx..# )
+( #..eq..# )
+( #......# )
+( #......# )
+( #....p.# )
+( ######## )
+
+
+##62###
+#.xx..#
+#.eq..#
+#.p...#
+#.....#
+#.....#
+#######
+
+####6##
+#...ea4
+#.....#
+#.....#
+#.p...#
+#.....#
+#######
+
+####6##
+#...xc4
+#...eq#
+#.....#
+#.p...#
+#.....#
+#######
+
+###6###
+#..x..#
+#..eaa4
+#.....#
+#.p...#
+#.....#
+#######
+
+###62###
+#..eq..#
+#......#
+#.p....#
+#......#
+#......#
+########
+
+########
+#......#
+#......#
+#..62..#
+#..eq..#
+#.p....#
+########
+
+####6##
+#...ea4
+#.....#
+#.....#
+#.p...#
+#.....#
+#######
+
+#######
+#.....#
+#.cz..#
+#.x5p.#
+#.x2..#
+#.eq..#
+#.....#
+#######
+
+###6###
+#..ez.#
+#...ea4
+#.....#
+#.p...#
+#.....#
+#######
+
+
+
+(trivial)
+####6##
+#.....#
+#..x..4
+#..ea.#
+#.p...#
+#.....#
+#######
+
+
+####6##
+#.....#
+#..x..4
+#..ea.#
+#.p...#
+#.....#
+#######
+
+
+####6##
+#.....#
+#.c.q.#
+#p.a..4
+#.x.z.#
+#.....#
+#######
+
+##6##
+#...#
+#.p.#
+#...4
+#####
+
+.....
+.....
+.....
+.....
+.....
+
+
+( #########.... )
+( #.......6#### )
+( #.......x...# )
+( #...c.a.eaaz# )
+( #....p......# )
+( #...a.x.caaq# )
+( #.......x...# )
+( #.......1#### )
+( #########.... )
+
+
+( #########...... )
+( #.......6###### )
+( #.......x.....# )
+( #...c.a.eaaaaz# )
+( #....p........# )
+( #...a.x.caaaaq# )
+( #.......x.....# )
+( #.......1###### )
+( #########...... )
+
+
+( #########....... )
+( #.......6####### )
+( #.......x......# )
+( #..c.a..eaaaaz.# )
+( #...p..........# )
+( #..a.x..caaaaq.# )
+( #.......x......# )
+( #.......1####### )
+( #########....... )
+
+( #########....... )
+( #.......#....... )
+( #.......6####### )
+( #.......x......# )
+( #..c.a..eaaaaz.# )
+( #...p..........# )
+( #..a.x..caaaaq.# )
+( #.......x......# )
+( #.......1####### )
+( #.......#....... )
+( #########....... )
+
+( ################ )
+( #..............# )
+( #.......c8###### )
+( #.......x......# )
+( #..c.z..eaaaaz.# )
+( #...p..........# )
+( #..a.x..caaaaq.# )
+( #.......x......# )
+( #.......e4###### )
+( #..............# )
+( ################ )
+
+( ################ )
+( #..............# )
+( #.......c8###### )
+( #..c.z..x......# )
+( #...p...eaaaaz.# )
+( #..a.x.........# )
+( #.......caaaaq.# )
+( #..e.q..x......# )
+( #.......e4###### )
+( #..............# )
+( ################ )
+
+)
+
+(
+transformation
+
+[player]->[]
+
+choose 15 [ rohr ] [ no obstacle ] -> [ ] [ rohr ] 
+(choose 1 [ player ] [ no obstacle ] -> [ ] [ player ])
+(choose 5 [ outlet ] [ wall ] -> [ wall ] [ outlet ]
+choose 1 [ flow no outlet ] [ outlet no flow ] -> [ ] [ outlet flow ])
+
+
+choose 1 [ no obstacle ] -> [ player ]
+
+choose 10 option 0.5 [ no obstacle ] -> [ wall ]
++ option 0.5 [] -> [ ]
+)
+
+

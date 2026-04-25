@@ -1,0 +1,226 @@
+title Don't let your goals slip away
+author increpare [riff on david skinner's levels]
+homepage www.sneezingtiger.com/sokoban/levels/microbanText.html
+background_color green
+
+
+color_palette 2
+========
+OBJECTS
+========
+
+Background
+GREEN green
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+black
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+DARKBROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+lightgray lightgray lightgray lightgray
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+obstacle = crate or wall
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 78774307
+target move 81495507
+endlevel 52446100
+startgame 73236703
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+( [ > player | wall ] -> cancel )
+[ > player | crate | obstacle ] -> cancel
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+[ > player | target ] -> [ > player | > target ] 
+[ > target | target ] -> [ > target | > target ]
+[ > target | wall ] -> [ target | wall ]
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message level 1 of 8
+
+(funny therefore good)
+####..
+#o*#..
+#..###
+#....#
+#.o*.#
+#.p###
+####..
+
+(meh)
+( ####.. )
+( #.o#.. )
+( #..### )
+( #o...# )
+( #*.*.# )
+( #.p### )
+( ####.. )
+
+
+message level 2 of 8
+
+
+(p. good!)
+..####...
+###..####
+#....*o.#
+#.#..#.o#
+#..*.#p.#
+#########
+
+( (Easy but funny) )
+( ###### )
+( #.*..# )
+( #.#.*# )
+( #....# )
+( #p*o.# )
+( #.oo.# )
+( ###### )
+
+
+message level 3 of 8
+
+(not bad)
+######
+##o..#
+#.#oo#
+#.*..#
+#.*..#
+#p*..#
+######
+
+message level 4 of 8
+
+########
+#...*..#
+#.o#.@p#
+#..*...#
+#####.o#
+....####
+
+message level 5 of 8
+
+
+
+(decent!)
+#####.
+#.*.##
+#.o.p#
+##.o.#
+.##.*#
+..##.#
+...###
+
+message level 6 of 8
+
+(fine right?)
+......###.
+#######o##
+#...*o...#
+#.#.#.#.##
+#.p.*...#.
+#########.
+
+message level 7 of 8
+(no idea. damnit spoiled but also ok.)
+####..
+#..#..
+#.*###
+#..*p#
+#..o.#
+#o.###
+####..
+
+
+
+message level 8 of 8
+(Tricky but also decent? involves fun manipulations)
+#######
+#..#..#
+#.o*o.#
+#.*p*##
+#.o*o.#
+#..#..#
+#######
+
+
+message Congratulations! You didn't let your goals run away from you.
+
+(transform
+
+[player]->[]
+[target]->[]
+[crate]->[]
+
+choose 2 [] -> [ wall ]
+choose 1 [ no obstacle ] -> [ player ]
+choose 2 [ no obstacle ] -> [ crate ]
+choose 2 [ no wall no player ] -> [ target ] 
+
+)

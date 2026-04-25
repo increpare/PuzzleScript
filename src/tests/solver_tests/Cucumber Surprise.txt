@@ -1,0 +1,396 @@
+title Cucumber Surprise
+author increpare
+homepage www.increpare.com
+
+background_color #595652
+text_color white
+
+again_interval 0.01
+
+(thanks to bvoq for Puzzlescript+MIS https://dekeyser.ch/puzzlescriptmis/ also testing. also thanks to ggn and meepmeep13 for testing)
+
+========
+OBJECTS
+========
+
+Background
+#595652 #696a6a
+00000
+00000
+00100
+00000
+00000
+
+
+
+ziel
+#595652 #eec39a #d9a066 #e1b489
+.111.
+23331
+23331
+23331
+.222.
+
+
+wand
+#696a6a #847e87
+00010
+11111
+01000
+11111
+00010
+
+
+player
+#595652 #ac3232 #8a6f30 #5b6ee1
+.111.
+.222.
+.222.
+13331
+.1.1.
+
+
+katze
+#000000 
+0..00
+.0.00
+.000.
+.0.0.
+.0.0.
+
+gurke
+transparent #99e550 #6abe30
+00100
+02110
+02110
+02110
+00200
+
+push_up
+transparent
+
+push_down
+transparent
+
+push_left
+transparent
+
+push_right
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+g = gurke
+p = player
+* = katze
+# = wand
+@ = katze and ziel
+O = ziel
+m = gurke and ziel
+
+obstacle = player or katze or wand or gurke
+push = push_up or push_down or push_left or push_right
+
+=======
+SOUNDS
+=======
+
+sfx0 23445905 (katzenschreck)
+startgame 90870106
+startlevel 90870106
+endlevel 78627300
+gurke move 70216507
+katze move 45785907
+================
+COLLISIONLAYERS
+================
+
+Background
+ziel
+Player, katze, gurke, wand
+push
+======
+RULES
+======
+
+[moving player] [ push ] -> [ moving player ] [ ]
+
+up [ push_up stationary katze | no obstacle ] -> [ | push_up action katze ] again
++ down [ push_down stationary katze | no obstacle ] -> [ | push_down action katze ] again
++ left [ push_left stationary katze | no obstacle ] -> [ | push_left action katze ] again
++ right [ push_right stationary katze | no obstacle ] -> [ | push_right action katze ] again
+
+
+[ >  Player | gurke | no obstacle ] -> [  >  Player | > gurke | no obstacle  ] again
+
+
+[ < player | katze ] -> [ < player | < katze ] again
+
+late up [ gurke | katze | no obstacle] -> [ gurke | push_up katze | no obstacle] sfx0
+late down [ gurke | katze | no obstacle] -> [ gurke | push_down katze | no obstacle] sfx0
+late left [ gurke | katze | no obstacle] -> [ gurke | push_left katze | no obstacle] sfx0
+late right [ gurke | katze | no obstacle] -> [ gurke | push_right katze | no obstacle] sfx0
+
+late up [ gurke | katze ] -> [ gurke | push_up katze ]
+late down [ gurke | katze ] -> [ gurke | push_down katze ]
+late left [ gurke | katze ] -> [ gurke | push_left katze ]
+late right [ gurke | katze ] -> [ gurke | push_right katze ]
+
+==============
+WINCONDITIONS
+==============
+
+all katze on ziel
+
+=======
+LEVELS
+=======
+
+(wanna hand make the first few levels)
+
+
+message Put your doting cats to bed.
+message Level 1/20 
+.....#####
+######...#
+#...o..#.#
+#.p..*o*.#
+##########
+
+
+message Who left that cucumber there?
+message Level 2/20 
+##########
+#........#
+#........#
+#.g.p.*.o#
+#........#
+#........#
+##########
+
+message Level 3/20
+(The only thing cats love more than you is hating cucumbers)
+(not so hard, could be an ok level 2)
+######
+#...o#
+#.#..#
+#*.g.#
+#..p.#
+#....#
+######
+
+message Level 4/20
+(almost trivial)
+#######
+#.o...#
+#..g..#
+#.o..p#
+#...*.#
+#.....#
+#..*..#
+#######
+
+
+message Level 5/20
+(easy enough - could be level 2?)
+.#######
+.#...*.#
+.#..*..#
+##.p.o.#
+#.g....#
+#o.....#
+########
+
+
+
+message Level 6/20
+(reasonable. could be level 2)
+..####...
+###..####
+#....p..#
+#.#.*#m.#
+#....#..#
+#########
+
+
+message Level 7/20
+(ok early level 1-2)
+######
+#o...#
+#.m.*#
+#....#
+#.*p.#
+######
+
+
+
+message Level 8/20
+(nice level. could be #2 or 3)
+..####.
+###o.##
+#..g..#
+#.#..##
+#*..p#.
+######.
+
+
+message Level 9/20
+(nice level. could be level 3/4)
+########
+#...*o.#
+#.*....#
+#..p.g.#
+#####.o#
+....####
+
+
+
+
+message Level 10/20
+(haven't solved this yet - tricky / hard to find the solution? but once I tried and concentrated I was able to ?)
+######
+#o..p#
+#.#..#
+#o.g.#
+#*...#
+#..*.#
+######
+
+
+message Level 11/20
+(ok late intermediate)
+######
+#po.o#
+#.#g.#
+#*...#
+#....#
+#.*..#
+######
+
+
+
+message Level 12/20
+( ok level, but not an ok first level )
+####..
+#*o#..
+#..###
+#.g.p#
+#....#
+#..###
+####..
+
+
+message Level 13/20
+(two gurkins! not hard! pleasing!)
+#######
+#...g.#
+#..#..#
+#....g#
+#.*#..#
+##....#
+#o..p.#
+#######
+
+
+message Level 14/20
+(ok latish intermediate!)
+#####.
+#o..##
+#....#
+##pg.#
+.##..#
+..##*#
+...###
+
+
+message Level 15/20
+(ok late intermediate level)
+#######
+#.o...#
+#..g..#
+#.#...#
+#.o.#.#
+#....*#
+#p.#.*#
+#######
+
+
+
+
+
+message Level 16/20
+(bit trial+errory. not high-concept)
+#######
+#.#p..#
+#.**..#
+#.#...#
+#...g##
+#....o#
+#o.#..#
+#######
+
+
+message Level 17/20
+(a bit tricky - the solution was not hard but finding it was a bit indirected / trial+errory)
+#######
+##o...#
+#.o#.*#
+#.....#
+#.##..#
+#..g..#
+#.*.p.#
+#######
+
+
+
+message Level 18/20
+(unsolved. wtf.)
+..######
+..#....#
+..#..g.#
+####.###
+#..o.##.
+#.#.p.#.
+#...#.#.
+###*..#.
+..#####.
+
+
+
+
+message Level 19/20
+(ok hardish level)
+....#########...
+#####..o.o..####
+#.g...#.#.#....#
+#...*...p...*..#
+################
+
+
+message Level 20/20
+(intermediate. pleasing)
+......#####
+......#...#
+......#.#.#
+#######g#.#
+#....p..o.#
+#o#*#.#.###
+#......*#..
+#########..
+
+message Congratulations.  All the cats are in bed, having cucumbers nightmares.
+
+(
+( super hard. do not include)
+......#####
+......#...#
+......#.#.#
+#######.#.#
+#....**...#
+#.#m#.#.###
+#.....po#..
+#########..
+)

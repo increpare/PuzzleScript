@@ -1,0 +1,504 @@
+title 5-junctions-maker / 5kreuzungenmacher
+author increpare
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+noaction
+
+
+========
+OBJECTS
+========
+
+Background
+black
+
+
+a_up
+black green
+..1..
+.111.
+11111
+..1..
+..1..
+
+
+
+a_down
+black blue
+..1..
+..1..
+11111
+.111.
+..1..
+
+
+a_left
+black pink
+..1..
+.11..
+11111
+.11..
+..1..
+
+a_right
+black red
+..1..
+..11.
+11111
+..11.
+..1..
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+darkblue
+00000
+0...0
+0...0
+0...0
+00000
+
+Player
+yellow
+00.00
+0...0
+.....
+0...0
+00.00
+
+Crate
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+quelle 
+white 
+00000
+00000
+00000
+00000
+00000
+
+quelle_kreuzung 
+white
+.....
+.....
+..0..
+.....
+.....
+
+quelle_verbindung_n
+lightgray
+..0..
+..0..
+.....
+.....
+.....
+
+quelle_verbindung_s
+lightgray
+.....
+.....
+.....
+..0..
+..0..
+
+quelle_verbindung_e
+lightgray
+.....
+.....
+...00
+.....
+.....
+
+quelle_verbindung_w
+lightgray
+.....
+.....
+00...
+.....
+.....
+
+counter 1
+darkblue darkblue
+..0..
+..0..
+00100
+..0..
+..0..
+
+counterfill
+gray lightgray
+..0..
+..0..
+00100
+..0..
+..0..
+
+deckle
+black
+
+temp t
+green
+
+
+
+e_0_0 g 
+#8a8a8a white
+..0..
+..0..
+00100
+..0..
+..0..
+
+e_1_0 h 
+#8a8a8a white
+..0..
+..0..
+00100
+.....
+.....
+
+e_2_0 j 
+#8a8a8a white
+..0..
+..0..
+00100
+.....
+.....
+
+e_3_0 k
+#8a8a8a white
+...0.
+...0.
+00010
+.....
+.....
+
+e_4_0 ?
+#8a8a8a white
+..0..
+..0..
+00100
+..0..
+..0..
+
+e_0_1 b
+#8a8a8a white
+..0..
+..0..
+001..
+..0..
+..0..
+
+e_1_1 n
+white
+0..0.
+0..0.
+0000.
+...0.
+0000.
+
+e_2_1 m 
+white
+0000.
+0..0.
+0..0.
+0..0.
+0000.
+
+e_3_1 ,
+white
+0..0.
+0..0.
+0..0.
+0..0.
+0000.
+
+e_4_1 2
+#8a8a8a white
+..0..
+..0..
+..100
+..0..
+..0..
+
+e_0_2 3
+#8a8a8a white
+..0..
+..0..
+00100
+..0..
+..0..
+
+e_1_2 4
+#8a8a8a
+.....
+.....
+00000
+.....
+.....
+
+e_2_2 5
+#8a8a8a
+.....
+.....
+00000
+.....
+.....
+
+e_3_2 6
+#8a8a8a
+.....
+.....
+00000
+.....
+.....
+
+e_4_2 7
+#8a8a8a white
+..0..
+..0..
+00100
+..0..
+..0..
+
+e_0_3 8
+#8a8a8a
+..0..
+..0..
+..0..
+..0..
+..0..
+
+e_1_3 9
+white
+0.0.0
+0.0.0
+0.0.0
+0.0.0
+00000
+
+e_2_3 0
+white
+.000.
+..0..
+..0..
+..0..
+.000.
+
+e_3_3 d
+white
+.00..
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+
+e_4_3 f
+#8a8a8a
+..0..
+..0..
+..0..
+..0..
+..0..
+
+e_0_4 w
+#8a8a8a white
+..0..
+..0..
+00100
+..0..
+..0..
+
+e_1_4 e
+#8a8a8a white
+.....
+.....
+00100
+..0..
+..0..
+
+e_2_4 y
+#8a8a8a white
+.....
+.....
+00100
+..0..
+..0..
+
+e_3_4 u
+#8a8a8a white
+.....
+.....
+00100
+..0..
+..0..
+
+e_4_4 i
+#8a8a8a white
+..0..
+..0..
+001..
+.....
+.....
+
+
+=======
+LEGEND
+=======
+
+. = Background and deckle
+# = Wall and deckle
+* = Crate and deckle
+@ = Crate and Target and deckle
+O = Target and deckle
+a = a_up or a_down or a_left or a_right
+s = player and a_up and deckle
+p = player and a_down and deckle
+q = player and a_left and deckle
+r = player and a_right and deckle
+
+z = a_up and deckle
+x = a_down and deckle
+c = a_left and deckle
+v = a_right and deckle
+
+l = quelle and deckle
+quelle_verbindung = quelle_verbindung_n or quelle_verbindung_s or quelle_verbindung_e or quelle_verbindung_w
+
+
+
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+a
+deckle
+Player, Wall, Crate
+quelle
+quelle_verbindung_n
+quelle_verbindung_s
+quelle_verbindung_e
+quelle_verbindung_w
+quelle_kreuzung
+counter
+counterfill
+temp
+g,h,j,k,e_4_0,b,n,m,e_3_1,2,3,4,5,6,7,8,9,0,d,f,w,e,t,y,u,i
+
+======
+RULES
+======
+
+[ > player | wall ] -> cancel
+[ > player | quelle ] -> cancel
+
+[ >  Player | Crate ] -> [  >  Player | > Crate  ]
+
+late up [ no quelle no wall | player ] -> [ a_up | player ]
+late down [ no quelle no wall | player ] -> [ a_down | player ]
+late left [ no quelle no wall | player ] -> [ a_left | player ]
+late right [ no quelle no wall | player ] -> [ a_right | player ]
+
+late [ quelle_verbindung ] -> []
+late [ quelle_kreuzung ] -> []
+
+late [ player ] -> [ player no a]
+
+
+late up [ a_up | no wall no quelle no a_down ] -> [ a_up quelle_verbindung_n | quelle_verbindung_s]
+late down [ a_down | no wall no quelle no a_up ] -> [ a_down quelle_verbindung_s | quelle_verbindung_n]
+late left [ a_left | no wall no quelle no a_right ] -> [ a_left quelle_verbindung_w | quelle_verbindung_e]
+late right [ a_right | no wall no quelle no a_left ] -> [ a_right quelle_verbindung_e | quelle_verbindung_w]
+
+
+
+late up [ quelle | no a_down no wall ] -> [ quelle | quelle_kreuzung quelle_verbindung_s ]
+late down [ quelle | no a_up no wall ] -> [ quelle | quelle_kreuzung quelle_verbindung_n ]
+late left [ quelle | no a_right no wall ] -> [ quelle | quelle_kreuzung quelle_verbindung_e ]
+late right [ quelle | no a_left no wall ] -> [ quelle | quelle_kreuzung quelle_verbindung_w ]
+
+late left [ a_left quelle_kreuzung quelle_verbindung_w | no quelle_kreuzung quelle_verbindung_e ] -> [ a_left quelle_kreuzung quelle_verbindung_w | quelle_kreuzung quelle_verbindung_e ] 
++ late right [ a_right quelle_kreuzung quelle_verbindung_e | no quelle_kreuzung quelle_verbindung_w ] -> [ a_right quelle_kreuzung quelle_verbindung_e | quelle_kreuzung quelle_verbindung_w ] 
++ late up [ a_up quelle_kreuzung quelle_verbindung_n | no quelle_kreuzung quelle_verbindung_s ] -> [ a_up quelle_kreuzung quelle_verbindung_n | quelle_kreuzung quelle_verbindung_s ] 
++ late down [ a_down quelle_kreuzung quelle_verbindung_s | no quelle_kreuzung quelle_verbindung_n ] -> [ a_down quelle_kreuzung quelle_verbindung_s | quelle_kreuzung quelle_verbindung_n ] 
+
+late [ quelle_verbindung no quelle_kreuzung ] -> []
+
+late left [ quelle_verbindung_w | no quelle_verbindung_e no quelle ] -> [ | ]
+late right [ quelle_verbindung_e | no quelle_verbindung_w no quelle ] -> [ | ]
+late up [ quelle_verbindung_n | no quelle_verbindung_s no quelle ] -> [ | ]
+late down [ quelle_verbindung_s | no quelle_verbindung_n no quelle ] -> [ | ]
+
+
+late [counterfill] -> []
+
+late [ quelle_kreuzung quelle_verbindung_n quelle_verbindung_s quelle_verbindung_e quelle_verbindung_w no temp ] [ counter no counterfill ] -> [ quelle_kreuzung quelle_verbindung_n quelle_verbindung_s quelle_verbindung_e quelle_verbindung_w temp ] [ counter counterfill ]
+
+late [ temp ] -> []
+
+==============
+WINCONDITIONS
+==============
+
+all counter on counterfill
+
+=======
+LEVELS
+=======
+
+
+message Level 1 of/von 1
+
+....#################
+....#xxxxxxxxxzxcvzx#
+#####xxxxxxxxxzxcvzx#
+#...#xxxxxxxxzxxvzxx#
+#.1.#xxxxzxxxxvxxcvx#
+#...#xxvclvcxvxxxccx#
+#.1.#xxxxxxxxvzxcvzx#
+#...#xxxxzxxxzxzxzxx#
+#.1.#xxxxxxxxzxzxzxx#
+#...#xxxxxxxxzxxxzxx#
+#.1.#xxxxzcvxxxsccvx#
+#...#xxvclvcxvclvccx#
+#.1.#xxxxxvzxxxxcvzx#
+#...#xxxxzzxxxxzvzxx#
+#####xxxxxcvxxxzxcvx#
+....#xxxxxcvxxxzxcvx#
+....#################
+
+
+message Very smoothly is encarring thusly ensured / Reibungslos ist ein Verkehssystem so entwickelt
+
+ghjk?
+bnm,2
+34567
+b90d2
+weyui
+
+
+
+

@@ -1,0 +1,474 @@
+title short adventure in sticky wall land
+author increpare
+homepage www.increpare.com
+
+background_color #1d4765
+text_color #99e550
+run_rules_on_level_start
+
+
+========
+OBJECTS
+========
+
+Background
+#396c90 #457da4
+00000
+00000
+00100
+00000
+00000
+
+
+Target
+#fbf236 transparent
+00100
+01110
+11111
+01110
+00100
+
+
+Wall
+#99e550 #99e550 #99e550
+01110
+12221
+12221
+12221
+01110
+
+wall_grenze_N
+#6abe30
+00000
+.....
+.....
+.....
+.....
+
+wall_grenze_S
+#6abe30
+.....
+.....
+.....
+.....
+00000
+
+wall_grenze_O
+#6abe30
+....0
+....0
+....0
+....0
+....0
+
+wall_grenze_W
+#6abe30
+0....
+0....
+0....
+0....
+0....
+
+wall_grenze_NO
+#396c90
+....0
+.....
+.....
+.....
+.....
+
+wall_grenze_SO
+#396c90
+.....
+.....
+.....
+.....
+....0
+
+wall_grenze_SW
+#396c90
+.....
+.....
+.....
+.....
+0....
+
+wall_grenze_NW
+#396c90
+0....
+.....
+.....
+.....
+.....
+
+Player
+transparent #b13030 #a96c30 #4e0b0b
+01110
+11110
+02220
+33333
+03030
+
+
+Crate
+#8f563b #743a1f #b4643d #b76640
+00000
+01220
+03120
+03310
+00000
+
+
+
+=======
+LEGEND
+=======
+
+wall_dekoration_ortho = wall_grenze_N or wall_grenze_S or wall_grenze_O or wall_grenze_W
+
+wall_dekoration_eck = wall_grenze_NW or wall_grenze_SW or wall_grenze_SO or wall_grenze_NO
+
+wall_dekoration = wall_dekoration_eck or wall_dekoration_ortho
+
+. = Background
+# = Wall
+P = Player
+* = Crate
+@ = Crate and Target
+O = Target
+
+obstacle = crate or wall
+
+=======
+SOUNDS
+=======
+
+Crate MOVE 76571107
+wall move 95423307
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall, Crate
+wall_grenze_N 
+wall_grenze_S
+wall_grenze_O
+wall_grenze_W
+wall_grenze_NO
+wall_grenze_SO 
+wall_grenze_SW
+wall_grenze_NW
+Target
+
+======
+RULES
+======
+(
+[ > player | crate | obstacle ] -> cancel
+[ > player | wall ] -> cancel
+
+
+[ >  Player | Crate | ] -> [  >  Player |  | Crate  ]
+[ wall | > player | ] -> [ wall | wall | player ]
+
+)
+
+(it's very possible someone's come up with this set of rules already - but if they have I haven't seen it yet)
+
+[ > player | crate ] -> [ > player | > crate ]
+[ wall | > player ] -> [ > wall | > player ]
+
+late [ wall_dekoration ] -> []
+late up [ wall | no wall ] -> [ wall wall_grenze_N | ]
+late down [ wall | no wall ] -> [ wall wall_grenze_S | ]
+late right [ wall | no wall ] -> [ wall wall_grenze_O | ]
+late left [ wall | no wall ] -> [ wall wall_grenze_W | ]
+
+late [ wall_grenze_N wall_grenze_O ] -> [  wall_grenze_N wall_grenze_O wall_grenze_NO ]
+late [ wall_grenze_S wall_grenze_O ] -> [  wall_grenze_S wall_grenze_O wall_grenze_SO ]
+late [ wall_grenze_N wall_grenze_W ] -> [  wall_grenze_N wall_grenze_W wall_grenze_NW ]
+late [ wall_grenze_S wall_grenze_W ] -> [  wall_grenze_S wall_grenze_W wall_grenze_SW ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+
+=======
+LEVELS
+=======
+
+message Level 1 of 3
+
+(kinda like)
+.........
+.#######.
+.#..*..#.
+.#..p..#.
+.#..o..#.
+.#######.
+.........
+
+message Level 2 of 3
+
+
+(ok)
+........
+.####...
+.#.o#...
+.#..###.
+.#@p..#.
+.#..*.#.
+.#..###.
+.####...
+........
+
+message Level 3 of 3
+
+(mildly entertaining. possibly slightly harder?)
+.......
+.#####.
+.#.*.#.
+.#...#.
+.#.p.#.
+.#...#.
+.#.o.#.
+.#####.
+.......
+
+message Congratulations. Thank you for playing!
+
+(
+#..##
+p...o
+.#..#
+..*.#
+o*##.
+
+##.##
+.o.*#
+....#
+#*.o.
+#.p..
+
+...##
+.o.*#
+.....
+#*.o.
+##..p
+
+(haven't solved, don't like)
+#..##
+.o.*#
+.p...
+#*.o.
+##..#
+
+(better. still don't like though)
+#..#.
+.o.*#
+..p..
+#*.o.
+.#..#
+
+#....
+.o.*#
+#.p.#
+#*.o.
+....#
+
+(easy-ish, but ok? NO BAD)
+#.#..
+.o.*#
+..p..
+#*.o.
+..#.#
+
+
+....
+....
+....
+....
+
+
+.....
+.....
+.....
+.....
+.....
+
+.....
+.....
+.....
+.....
+.....
+
+.......
+.......
+.......
+.......
+.......
+.......
+.......
+
+.......
+.#####.
+.#.*.#.
+.#.p.#.
+.#.o.#.
+.#####.
+.......
+
+.........
+.#######.
+.#..*..#.
+.#..p..#.
+.#..o..#.
+.#######.
+.........
+
+.p..
+o...
+.*@.
+#..#
+
+(possible to get to a dead end wtihout knowing really - so bad?)
+.....
+.o#..
+.*#*.
+.o#p.
+.....
+
+(ok, not so dead endy, but is it good? hardish)
+.....
+.opo.
+.*.*.
+.###.
+.....
+
+(easy but ok)
+.....
+.o#..
+.@#..
+.#*p.
+.....
+
+........
+.####...
+.#.o#...
+.#..###.
+.#@p..#.
+.#..*.#.
+.#..###.
+.####...
+........
+
+
+message level 1 of 10
+
+####..
+#.O#..
+#..###
+#@P..#
+#..*.#
+#..###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+..####...
+###..####
+#.....*.#
+#.#..#*.#
+#.O.O#P.#
+#########
+
+message level 4 of 10
+
+########
+#......#
+#.O@@*P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.OOP#
+..#.**.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##O#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+)

@@ -1,0 +1,543 @@
+title Vexatious Match 3 
+author increpare [riff on something from Jack Lance's VEXT EDIT]
+homepage www.increpare.com
+
+run_rules_on_level_start
+
+norepeat_action
+
+background_color darkblue
+
+
+(
+
+HEAVILY INSPIRED BY VEXT EDIT by the inimitable  https://twitter.com/Jack_L_Lance/status/1149348574750269440
+
+made with the assistance of these two tools:
+
+
+https://dekeyser.ch/puzzlescriptmis/
+
+
+https://marcosdon.github.io/PuzzleScriptWithSolver/editor.html
+
+)
+
+========
+OBJECTS
+========
+
+Background
+black
+
+
+placecursor
+lightblue
+0...0
+.....
+.....
+.....
+0...0
+
+selectcuror_top
+gray
+0...0
+.....
+.....
+.....
+.....
+
+selectcuror_bottom
+gray
+.....
+.....
+.....
+.....
+0...0
+
+
+1
+red
+.....
+.....
+..0..
+.....
+.....
+
+
+2
+orange
+.....
+.0...
+.....
+...0.
+.....
+
+
+3
+yellow
+.....
+.0...
+..0..
+...0.
+.....
+
+4
+green
+.....
+.0.0.
+.....
+.0.0.
+.....
+
+
+5
+blue
+.....
+.0.0.
+..0..
+.0.0.
+.....
+
+
+6
+pink pink
+.....
+.010.
+.....
+.010.
+.....
+
+
+7
+yellow orange
+.....
+.010.
+..0..
+.010.
+.....
+
+
+8
+yellow orange
+.....
+.010.
+.1.1.
+.010.
+.....
+
+
+9
+yellow orange
+.....
+.010.
+.101.
+.010.
+.....
+
+tophighlight 
+darkgreen
+
+bottomhighlight
+darkgray
+
+wintoken
+lightblue
+
+cursorglow_upper
+yellow
+0...0
+.....
+.....
+.....
+.....
+
+cursorglow_lower
+yellow
+.....
+.....
+.....
+.....
+0...0
+
+=======
+LEGEND
+=======
+
+player = selectcuror_top or selectcuror_bottom or placecursor
+. = Background
+p = selectcuror_top
+
+num = 1 or 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9
+bignum = 2 or 3 or 4 or 5 or 6 or 7 or 8 or 9 
+
+
+0 = selectcuror_top and 2
+a = selectcuror_bottom and 4
+b = selectcuror_bottom and 2
+c = selectcuror_bottom
+d = selectcuror_top and 4
+e = selectcuror_bottom and 1
+f = selectcuror_top and 6
+g = selectcuror_bottom and 5
+h = selectcuror_top and 1 and cursorglow_upper
+i = selectcuror_bottom and 2 and cursorglow_lower
+! = selectcuror_top and 5
+
+
+=======
+SOUNDS
+=======
+
+sfx1 40752500 (match3)
+sfx2 72680706 (select)
+sfx3 69295706 (deselect)
+sfx4 99783507 (setzt)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+tophighlight, bottomhighlight
+wintoken
+Player
+num
+cursorglow_upper, cursorglow_lower
+======
+RULES
+======
+
+[cursorglow_upper]->[]
+[cursorglow_lower]->[]
+
+down [ action selectcuror_top num | selectcuror_bottom num ] -> [ placecursor tophighlight num | bottomhighlight num ] sfx2
+
+
+
+down [ action placecursor num | ] [ tophighlight | bottomhighlight] -> [ selectcuror_top num | selectcuror_bottom ] [ | ] sfx3
+
+down [ | action placecursor num ] [ tophighlight | bottomhighlight] -> [selectcuror_top | selectcuror_bottom num ] [ | ] sfx3
+
+[ action placecursor no num ] [ tophighlight num ] [ bottomhighlight 1 ] -> [ selectcuror_top num ] [ ] [  ] sfx3 sfx4
+[ action placecursor no num ] [ tophighlight num ] [ bottomhighlight 2 ] -> [ placecursor num ] [tophighlight num] [ bottomhighlight 1] sfx4
+[ action placecursor no num ] [ tophighlight num ] [ bottomhighlight 3 ] -> [ placecursor num ] [tophighlight num][ bottomhighlight 2] sfx4
+[ action placecursor no num ] [ tophighlight num ] [ bottomhighlight 4 ] -> [ placecursor num ] [tophighlight num][ bottomhighlight 3] sfx4
+[ action placecursor no num ] [ tophighlight num ] [ bottomhighlight 5 ] -> [ placecursor num ] [tophighlight num][ bottomhighlight 4] sfx4
+[ action placecursor no num ] [ tophighlight num ] [ bottomhighlight 6 ] -> [ placecursor num ] [tophighlight num][ bottomhighlight 5] sfx4
+
+
+
+(
+[wintoken]->[]
+
+late [ 1|1|1]->[wintoken 1|wintoken 1|wintoken 1] sfx1 
+late [ 2|2|2]->[wintoken 2|wintoken 2|wintoken 2] sfx1 
+late [ 3|3|3]->[wintoken 3|wintoken 3|wintoken 3] sfx1 
+late [ 4|4|4]->[wintoken 4|wintoken 4|wintoken 4] sfx1 
+late [ 5|5|5]->[wintoken 5|wintoken 5|wintoken 5] sfx1 
+late [ 6|6|6]->[wintoken 6|wintoken 6|wintoken 6] sfx1 
+
+late [wintoken num]->[]
+)
+
+[wintoken num]->[]
+
+late [ 1|1|1]->[wintoken 1|wintoken 1|wintoken 1] sfx1 again
+late [ 2|2|2]->[wintoken 2|wintoken 2|wintoken 2] sfx1 again
+late [ 3|3|3]->[wintoken 3|wintoken 3|wintoken 3] sfx1 again
+late [ 4|4|4]->[wintoken 4|wintoken 4|wintoken 4] sfx1 again
+late [ 5|5|5]->[wintoken 5|wintoken 5|wintoken 5] sfx1 again
+late [ 6|6|6]->[wintoken 6|wintoken 6|wintoken 6] sfx1 again
+
+
+
+
+late down [ selectcuror_top num | selectcuror_bottom num ] -> [ selectcuror_top num cursorglow_upper | selectcuror_bottom num cursorglow_lower]
+
+late down [ tophighlight no num | bottomhighlight ] [ placecursor | ] -> [ | ] [  selectcuror_top | ] sfx3
+late down [ tophighlight  | bottomhighlight no num ] [ placecursor | ] -> [ | ] [  selectcuror_top | ] sfx3
+
+late down [ tophighlight no num | bottomhighlight ] [  | placecursor ] -> [ | ] [  selectcuror_top | ] sfx3
+late down [ tophighlight  | bottomhighlight no num ] [  | placecursor] -> [ | ] [  selectcuror_top | ] sfx3
+
+
+
+late [selectcuror_bottom]->[]
+late down [ selectcuror_top|]->[selectcuror_top|selectcuror_bottom]
+
+
+==============
+WINCONDITIONS
+==============
+
+no num
+(some wintoken)
+
+=======
+LEVELS
+=======
+
+message Get three in a row to make them vanish. Clear the board to win.
+
+message level 1 of 5
+.......
+.......
+..123..
+.p456..
+.c.....
+.......
+
+
+message level 2 of 5
+.......
+.......
+...0...
+...i...
+.......
+.......
+
+message Level 3 of 5
+
+(messy but ok)
+.f.
+.6.
+...
+22.
+
+
+
+message Level 4 of 5
+
+22.5
+...5
+p...
+c.55
+
+message Level 5 of 5
+(OK!)
+p51
+c.5
+
+
+message The end :) Lesson Learned? You don't need to choose between being a numerator and being a denominator : you can be both!
+
+
+(
+...1...
+...2...
+...3...
+.p.4...
+...5...
+...6...
+
+
+66..
+.5p.
+.5c.
+33..
+
+....
+.p6.
+.c6.
+....
+
+
+...
+.f.
+.6.
+...
+
+...
+2.p
+266
+...
+
+5p1
+2c1
+
+16p
+.2c
+
+
+(easy but tractible?)
+
+3p1	
+.c4
+
+
+501
+.c2
+
+
+
+p61
+c.5
+
+p61
+c.2
+
+.h6
+.i2
+
+4p3.
+3c..
+
+50..
+6c.1
+
+.p.
+...
+
+.p..
+....
+
+
+.p...
+.....
+
+
+
+.p....
+......
+
+46p
+2.c
+..4
+
+(hard?)
+.4f
+.1c
+..4
+
+
+5.d
+.4e
+..6
+
+..5
+..d
+..c
+3.6
+
+
+
+5.p
+..b
+2.3
+
+(hard?)
+.2p
+.4c
+...
+
+
+5.d
+.4e
+..6
+
+..5
+..d
+..c
+3.6
+
+
+
+.4p
+.4.
+...
+
+.......
+.......
+..6.p..
+..6....
+.......
+.......
+
+
+.......
+.......
+..6.p..
+..6....
+.......
+.......
+
+5p.
+..2
+2.3
+
+
+3p2
+.21
+23.
+
+p.2
+.21
+...
+
+..p
+...
+...
+
+(hard?)
+62.
+4p5
+..4
+
+
+..p
+...
+...
+
+...
+..p
+...
+...
+
+....
+..p.
+....
+....
+
+......
+....p.
+..22..
+..11..
+......
+......
+
+
+(hard?)
+
+......
+....5p
+...1..
+......
+2.....
+2...5.
+
+
+
+5p1
+2c1
+
+)
+
+
+(
+
+
+==========
+GENERATION
+==========
+
+[num]->[]
+= remove one crate/target pair if it exists and add one
+choose 1 option 0.1 []->[1]
++ option 0.1 []->[2]
++ option 0.1 []->[3]
++ option 0.1 []->[4]
++ option 0.1 []->[5]
++ option 0.1 []->[6]
+
+)

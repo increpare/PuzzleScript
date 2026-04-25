@@ -1,0 +1,630 @@
+(
+TO DO LIST:
+
+DONE 1 - groundedness
+DONE 2 - raise unobstructed active leg, inactive leg grounded
+DONE 3 - lower ungrounded active leg into space 
+DONE 4 - raise active leg (inactive leg ungrounded) = lower inactive leg + lower head
+DONE 5 - lower grounded active leg pushing the body up
+DONEISH 6 - walk forward (active grounded, inactive ungrounded)
+7 - walk back (active ungrounded, inactive grounded)
+DONE 8 - limit leg length
+
+can walk = 'walking leg' higher than 'non-walking' one
+
+thanks to youAtExample for testing :]
+)
+
+
+title  REALTIME DOG MOUNTAIN RESCUE
+author increpare
+homepage www.increpare.com
+
+realtime_interval 10
+
+run_rules_on_level_start
+
+verbose_logging
+
+background_color #4953b4
+text_color #cbdbfc
+
+========
+OBJECTS
+========
+
+Background
+#8c95e6
+
+Target
+#5fcde4
+
+Wall
+#cbdbfc
+
+
+face_tl q
+#daab05 #aa5a1d
+.0000
+00000
+01001
+01001
+01001
+
+
+face_tr w
+#daab05 #000000
+000..
+0000.
+0110.
+0110.
+0000.
+
+face_bl a
+#daab05 #aa5a1d
+00110
+00000
+00000
+00000
+00000
+
+
+face_br 
+#daab05 #f7cea7 #000000 #ac3232 #8c95e6
+00112
+01111
+01134
+00034
+00004
+
+leg_inactive e
+red
+
+foot_inactive d
+red
+0000.
+00000
+00000
+00000
+00000
+
+leg_active r 
+lightgreen
+
+foot_active 
+lightgreen
+0000.
+00000
+00000
+00000
+00000
+
+leg_bg 
+#aa5a1d 
+
+foot_bg 
+#aa5a1d 
+0000.
+00000
+00000
+00000
+00000
+
+leg_fg 
+#daab05 
+
+foot_fg 
+#daab05 
+0000.
+00000
+00000
+00000
+00000
+
+
+
+
+foot_bg_outline
+transparent #aa5a1d
+01010
+00000
+00001
+00000
+01010
+
+
+
+
+nope
+#ff0000 transparent
+01110
+10101
+11011
+10101
+01110
+
+ok
+#99e550
+.....
+..0..
+.0.0.
+..0..
+.....
+
+active_grounded
+yellow
+0....
+.....
+.....
+.....
+.....
+
+inactive_grounded
+purple
+.0...
+.....
+.....
+.....
+.....
+
+
+active_foot_raise_obstructed
+#00ff00
+..0..
+.....
+.....
+.....
+.....
+
+moved_inactive
+#0000ff
+...0.
+.....
+.....
+.....
+.....
+
+frontlegforward 
+#ff00ff
+.....
+0....
+.....
+.....
+.....
+
+rescue_head @
+#d77bba #8c95e6
+.000.
+00000
+00000
+00000
+.0000
+
+starter_body }
+#d77bba
+
+rescue_body {
+#d77bba
+
+rescue_head_partial
+#d77bba #306082
+.010.
+01010
+10101
+01010
+.0101
+
+rescue_body_partial
+#d77bba #306082
+01010
+10101
+01010
+10101
+01010
+
+rescue_head_frozen
+#306082
+.000.
+00000
+00000
+00000
+.000.
+
+
+rescue_body_frozen
+#306082
+
+sadwuffed
+transparent
+
+=======
+LEGEND
+=======
+
+
+player = face_Br 
+
+face = face_tl or face_tr or face_bl or face_br
+limb = leg_inactive or leg_active or foot_inactive or foot_active
+active = leg_active or foot_active
+inactive = leg_inactive or foot_inactive
+
+limb_fg = leg_fg or foot_fg
+limb_bg = leg_Bg or foot_bg
+
+limb_cosmetic = limb_fg or limb_bg
+
+foot_outline = foot_bg_outline
+
+dog_not_active = face or inactive
+dog_not_inactive = face or active
+dog = face or active or inactive
+
+. = Background
+# = Wall
+P = Player and frontlegforward
+O = Target
+
+t = foot_inactive and leg_active and foot_bg_outline
+f = foot_active 
+moveconfirmation = nope or ok
+
+tags = inactive_grounded or active_grounded or active_foot_raise_obstructed or moved_inactive
+
+rescue = rescue_head or rescue_body or rescue_head_frozen or rescue_body_frozen or rescue_head_partial or rescue_body_partial or starter_body
+
+" = sadwuffed and Wall
+=======
+SOUNDS
+=======
+sfx0 26832704 (partial freeze)
+sfx1 14141502 (freeze)
+sfx2 87054902 (head partial freeze)
+sfx3 37766702 (head full freeze)
+startlevel 47855706
+endlevel 85788701
+sfx4 80124702 (found body)
+================
+COLLISIONLAYERS
+================
+
+active_grounded
+inactive_grounded
+active_foot_raise_obstructed
+moved_inactive
+frontlegforward
+
+
+Background
+Target
+Wall
+face
+inactive
+active
+moveconfirmation
+limb_bg
+limb_fg
+
+foot_outline
+
+rescue
+
+sadwuffed
+
+======
+RULES
+======
+
+
+random right [stationary player ] [ rescue_head_partial | no starter_body no rescue_body no rescue_body_partial] -> [ stationary player ] [ rescue_head_frozen | ] sfx3
++right [stationary player ] [ rescue_head | no starter_body no rescue_body no rescue_body_partial] -> [ stationary player ] [ rescue_head_partial | ] sfx2
++right [stationary player ] [ rescue_body_partial | no starter_body no rescue_body no rescue_body_partial ] -> [ stationary player ] [ rescue_body_frozen | ] sfx1
++right [stationary player ] [ rescue_body | no starter_body no rescue_body no rescue_body_partial ] -> [ stationary player ] [ rescue_body_partial | ] sfx0
++[stationary player ] [ starter_body ] -> [ stationary player ] [ rescue_body ]
+
+[moveconfirmation]->[]
+
+(pressing action when you're right above a foot is the same as pressing up)
+down [ action player | foot_inactive ] -> [ up player | foot_inactive ]
+
+
+
+(2 -  raise unobstructed active leg, inactive leg grounded)
+down [ up player no active_foot_raise_obstructed inactive_grounded| active | active ] [ foot_active ] -> [ up player | | active ] [ up foot_active ]
+
+(note to self: moved the following line up here from somewhere near the end. hope it doesn't break things, but if something breaks its probably this)
+(propagate foot movements to leg)
+[up foot_active ] [ leg_active ] -> [ up foot_active ] [ up leg_active ]
+
+(3 - lower ungrounded active leg into space)
+random down [ down player no active_grounded ] [ foot_active ]  [ leg_active | no leg_active ]  -> [ down player no active_grounded ][ down foot_active ]  [ leg_active | leg_active ] 
+
+
+
+
+(4 - raise active leg (inactive leg ungrounded) = lower inactive leg + lower head )
+	(tell every non-active thing to move down)
+down [ up player no inactive_grounded | active ] [ dog_not_active no player ] ->  [ up player no inactive_grounded | active ] [ down dog_not_active ]
+	(remove topmost active leg segment)
+down [ up player no inactive_grounded | active ] -> [ | player ]
+
+(5 - lower grounded active leg pushing the body up)
+down [ down player active_grounded ] [ dog_not_active no player ] ->  [ down player active_grounded ]  [ up dog_not_active ]
+down [ | face_tr | down player active_grounded ] -> [ face_tr |  player active_grounded | leg_active ]
+
+
+(6 - walk forward (active grounded, inactive ungrounded))
+	(inactive foot has to be not just ungrounded, but above the active one (to ensure it can move without friction))
+    down [ right player active_grounded  ] [  foot_inactive | no leg_active ] -> cancel
+    
+    
+	(first all faces try to move right)
+	(remove movement if activity is wrong)
+right [ right player no active_grounded ] -> cancel
+( right [ right player inactive_grounded ] -> cancel )
+
+
+(toggle frontlegforward)
+[right player no frontlegforward active_grounded ] -> [ right player right frontlegforward active_grounded]
+[right player stationary frontlegforward active_grounded ] -> [ right player active_grounded]
+
+	(move face)
+    
+[ right player active_grounded  ] [ face ] -> [ right player active_grounded  no inactive_grounded ] [ right face ] 
+right [ right face | no face ] -> [ | face moved_inactive ]
+
+(move back leg forward (inactive->active) )
+right [player moved_inactive ] [ leg_inactive | | ] -> [player moved_inactive ]  [ | | leg_active ]
+right [player moved_inactive ] [ foot_inactive | | ] -> [player moved_inactive ]  [ | | foot_active ]
+
+(turn active leg inactive (active->inactive))
+down [ face_bl moved_inactive | leg_active ] -> [ face_bl moved_inactive | leg_inactive ]
+down [ leg_inactive | leg_active ] -> [ leg_inactive | leg_inactive ]
+right [leg_inactive | foot_active ] -> [ leg_inactive | foot_inactive ]
+
+(remove moved tags)
+[moved_inactive]->[]
+
+(7 - walk back (active ungrounded, inactive grounded))
+	(inactive foot has to  be not just ungrounded, but above the active one (to ensure it can move without friction))
+    down [ left player inactive_grounded  ] [ foot_inactive leg_active ] -> cancel
+    
+	(first all faces try to move left)
+	(remove movement if activity is wrong)
+	(right [ right player no active_grounded ] -> cancel)
+	(right [ right player inactive_grounded ] -> cancel)
+
+
+(toggle frontlegforward)
+[left player no frontlegforward inactive_grounded ] -> [ left player left frontlegforward inactive_grounded]
+[left player stationary frontlegforward inactive_grounded ] -> [ left player inactive_grounded ]
+
+	(move face)
+[ left player inactive_grounded ] [ face ] -> [  left player inactive_grounded no active_grounded] [ left face ] 
+left [ left face | no face ] -> [ | face moved_inactive ]
+
+
+	(move front leg back (active->inactive) )
+right [player moved_inactive ] [ | | leg_active ] -> [player moved_inactive ]  [ leg_inactive | | ]
+right [player moved_inactive ] [ | | foot_active ] -> [player moved_inactive ]  [ foot_inactive | | ]
+
+
+	(turn inactive leg active (inactive->active))
+down [ face_br moved_inactive |  ] -> [ face_br moved_inactive | leg_active no leg_inactive]
+down [ leg_active | leg_inactive ] -> [ leg_active | leg_active ]
++ down [ leg_active | no leg_active | leg_inactive ] -> [ leg_active | leg_active | leg_active ]
+right [leg_active | foot_inactive ] -> [ leg_active | foot_active ]
+
+(10 - action to shrink)
+	(can't schrink into back foot)
+	down[ action player | foot_inactive]->cancel
+
+random down [ action player | leg_active | no leg_active ] [ foot_active | ] -> [ action player | | leg_active ] [ | foot_active ]
+down [ action player | leg_active ] -> [action player | ]
+down [ action player] [ face_bl | leg_inactive ] -> [ action player ] [ face_bl|]
+[action player ] [ face no player ] -> [ action player ] [down face]
+[action player]->[down player]
+
+down [ down player | no dog ] -> [ | player ]
+(remove moved tags)
+[moved_inactive]->[]
+
+
+
+[moving player]->[player]
+
+
+(if you have a frontlegforward, move it to player position)
+late [ frontlegforward ] [ player no frontlegforward ] -> [] [  player  frontlegforward ] 
+
+(leg-drawing)
+late [limb_cosmetic]->[]
+
+late [ player frontlegforward ] [ leg_active ] -> [ player frontlegforward ] [ leg_active leg_fg ]
+late [ player frontlegforward ] [ foot_active ] -> [ player frontlegforward ] [ foot_active foot_fg ]
+
+late [ player frontlegforward ] [ leg_inactive ] -> [ player frontlegforward ] [ leg_inactive leg_bg ]
+late [ player frontlegforward ] [ foot_inactive ] -> [ player frontlegforward ] [ foot_inactive foot_bg ]
+
+
+late [ player no frontlegforward ] [ leg_active ] -> [ player  ] [ leg_active leg_bg ]
+late [ player no frontlegforward ] [ foot_active ] -> [ player  ] [ foot_active foot_bg ]
+
+late [ player no frontlegforward ] [ leg_inactive ] -> [ player  ] [ leg_inactive leg_fg ]
+late [ player no frontlegforward ] [ foot_inactive ] -> [ player  ] [ foot_inactive foot_fg ]
+
+
+(draw inactive foot outline)
+late [ foot_bg_outline ] [ foot_bg no foot_bg_outline ] -> [] [  foot_bg  foot_bg_outline ] 
+
+
+(remove tags)
+late [ tags ] -> []
+ 
+(1 - groundedness)
+late down [ player ] [ active | wall ] -> [ player active_grounded ] [ active | wall ]
+late down [ player ] [ inactive | wall ] -> [ player inactive_grounded ] [ inactive | wall ]
+late up [ player ] [foot_active | wall] -> [ player active_foot_raise_obstructed ] [foot_active | wall]
+
+(limit leg length to 5)
+( down [ leg_active | leg_active |leg_active |leg_active | leg_active | leg_active ] -> cancel )
+( down [ leg_inactive | leg_inactive |leg_inactive | leg_active |leg_inactive | leg_inactive  ] -> cancel )
+
+
+(leg can't be shorter than 1)
+right  [ player | foot_active ] -> cancel
+
+
+(collision)
+late [dog wall ] -> cancel
+
+late [dog | rescue_head ] -> win
+late [dog | rescue_head_partial ] -> win
+
+late [ dog | rescue_head_frozen ] [sadwuffed ]->[ dog | rescue_head_frozen ] [ ] sfx4 message sad wuff :(
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+message Rescue 1 of 3  Rescue the body before it freezes!
+"#######################################
+#......................................#
+#......................................#
+#......................................#
+#......................................#
+#......................................#
+#......................................#
+#......................................#
+#......................................#
+#......................................#
+#......................................#
+#...qw.................................#
+#...ap.................................#
+#...er.................................#
+#...etf....##......##.....##....@{{}...#
+########################################
+########################################
+
+message You rescued me!  You're my doggy hero!
+
+message Rescue 2 of 3 [In case you didn't realize, you can press X to shrink]
+"############################################
+#..........#####............................#
+#............#..............................#
+#............#..............................#
+#............#..............................#
+#............#..............................#
+#............#..............................#
+#............#..............................#
+#...........##..............................#
+#...........##..............................#
+###.qw......................................#
+#...ap......................................#
+#...er.............................#..@{{}..#
+##..etf..##................#.....############
+##############...........#.###..#############
+#################...###.#####################
+#################...#########################
+#############################################
+
+message My saviour!  Are you an angel?
+
+
+
+message Rescue 3 of 3
+
+
+"###################################################
+#######.....#............###.......................#
+#######.....#.............#........................#
+#######.....#.............#........................#
+#######.....#.............#........................#
+#######.....#.............#........................#
+#######.....#.............#........................#
+#######.....#.............#........................#
+#######.....#.............#........................#
+#######.....#.............#........................#
+#######...................#........................#
+#######...................#........................#
+#######...................#........................#
+#######...................#........................#
+#######...############....#........................#
+#######......#########....#........................#
+#######......####.........#........................#
+#######......####.........#........................#
+#######......####.........#........................#
+#######......####.........#........................#
+#######......####.........#........................#
+#######......####.........#........................#
+#######......####.........#........................#
+#######......####.........#........................#
+#########....####.........#........................#
+#............###..........#........................#
+#............###.....######........................#
+#............##.............................@{{{{}.#
+#.qw.........##...........................##########
+#.ap.....######..........................###########
+#.er....########..............######################
+#.etf..################...##########################
+####################################################
+####################################################
+
+message Amazing! You have a great future ahead of you, hero rescue dog!
+
+(
+#...........................................
+#...........................................
+#...........................................
+#...........................................
+#...........##..............................
+#...........##..............................
+#...qw......................................
+#...ap......................................
+#...er.............................#..@{{{..
+##..etf..##................#.....###########
+##############...........#.###..############
+#################...###.####################
+#################...########################
+############################################
+############################################
+
+#...........................................
+#...........................................
+#...........................................
+#...........................................
+#...........##..............................
+##..........##..............................
+####qw......................................
+#...ap......................................
+#...er.............................#..@{{...
+##..etf..##................#.....###########
+##############...........#.###..############
+#################...###.####################
+#################...########################
+############################################
+############################################
+
+
+.......................
+.......................
+.......................
+.......................
+.......................
+............##.........
+....qw......##.........
+....ap.................
+....er.................
+....er.................
+##..etf..##............
+##....########.........
+#################...###
+#################...###
+#################...###
+#######################
+)

@@ -1,0 +1,1085 @@
+(to add: 
+x to claw ball sfx. 
+x to unclaw ball sfx.
+levels lol
+done baloon
+done sfx for switching claws
+
+BALLOONS! Maybe popping balloons shold be the goal.  Do they automiatically fly up? do they have their own threads? who knows!
+)
+
+title Wool-Clawer
+author increpare
+homepage www.increpare.com
+
+
+background_color  #104062
+text_color #709fc2
+
+run_rules_on_level_start
+( debug )
+( verbose_logging )
+norepeat_action
+
+========
+OBJECTS
+========
+
+background
+transparent
+
+Background1
+#306f82
+
+background2 
+#306082
+
+Wall
+#8f563b #a16549 #d9a066 
+00000
+02120
+01210
+02120
+00000
+
+Wall_0000
+#8f563b #a16549 #d9a066 
+00000
+02120
+01210
+02120
+00000
+
+Wall_0001
+#8f563b #a16549 #d9a066 
+00000
+02121
+01211
+02121
+00000
+
+Wall_0010
+#8f563b #a16549 #d9a066 
+00000
+12120
+11210
+12120
+00000
+
+Wall_0100
+#8f563b #a16549 #d9a066 
+00000
+02120
+01210
+02120
+01110
+
+Wall_0101
+#8f563b #a16549 #d9a066 
+00000
+02121
+01211
+02121
+01111
+
+Wall_0110
+#8f563b #a16549 #d9a066 
+00000
+12120
+11210
+12120
+11110
+
+Wall_0111
+#8f563b #a16549 #d9a066 
+00000
+12121
+11211
+12121
+11111
+
+Wall_1000
+#8f563b #a16549 #d9a066 
+01110
+02120
+01210
+02120
+00000
+
+wall_1001
+#8f563b #a16549 #d9a066 
+01111
+02121
+01211
+02121
+00000
+
+Wall_1010
+#8f563b #a16549 #d9a066 
+11110
+12120
+11210
+12120
+00000
+
+Wall_1011
+#8f563b #a16549 #d9a066 
+11111
+12121
+11211
+12121
+00000
+
+Wall_1101
+#8f563b #a16549 #d9a066 
+01111
+02121
+01211
+02121
+01111
+
+Wall_1110
+#8f563b #a16549 #d9a066 
+11110
+12120
+11210
+12120
+11110
+
+Wall_1111
+#8f563b #a16549 #d9a066 
+11111
+12121
+11211
+12121
+11111
+
+Wall_1100
+#8f563b #a16549 #d9a066 
+01110
+02220
+01110
+02220
+01110
+
+wall_0011
+#8f563b #a16549 #d9a066 
+00000
+12121
+12121
+12121
+00000
+
+
+
+claw_mark
+#1f100d
+.....
+.....
+0.0.0
+.....
+.....
+
+cat_whiskers
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+.....
+.....
+.....
+.....
+4...4
+
+cat_claw_l
+white
+.....
+.....
+0.0.0
+0.0.0
+0.0.0
+
+
+cat_claw_r
+white
+.....
+.....
+0.0.0
+0.0.0
+0.0.0
+
+cat_paw_left_claws_velvet
+#df7126 #ba5917 #563823 white #d0c8c8
+20202
+00000
+01000
+.0004
+.0100
+
+
+cat_paw_left_claws_extended
+#df7126 #ba5917 #563823 white #d0c8c8
+30303
+00000
+01000
+.0004
+.0100
+
+cat_paw_right_claws_velvet
+#df7126 #ba5917 #563823 white #d0c8c8
+20202
+00000
+0001.
+4000.
+0001.
+
+
+cat_paw_right_claws_extended
+#df7126 #ba5917 #563823 white #d0c8c8
+30303
+00000
+0001.
+4000.
+0001.
+
+cat_elbow_left
+#df7126 #ba5917 #563823 white #d0c8c8
+.1004
+.0010
+.0104
+..100
+....0
+
+cat_head
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+40504
+40004
+06060
+00000
+70007
+
+cat_elbow_right
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+4001.
+0100.
+4010.
+001..
+0....
+
+cat_torso
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+00100
+01110
+00100
+01110
+00100
+
+cat_knee_left
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+..000
+.0010
+00001
+00100
+00010
+
+cat_butt
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+01110
+00100
+01110
+00000
+00100
+
+cat_knee_right
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+000..
+0100.
+10000
+00110
+01000
+
+cat_foot_left
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+01000
+00000
+00500
+05050
+.000.
+
+cat_tail
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+..01.
+...0.
+.1.1.
+.0.0.
+..1..
+
+cat_foot_right
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+00010
+00000
+00500
+05050
+.000.
+
+ball1_tl
+#d95763 #ac3232
+..001
+.0110
+00001
+01000
+10100
+
+ball1_tr
+#d95763 #ac3232
+000..
+1000.
+01000
+10100
+01010
+
+ball1_bl
+#d95763 #ac3232
+01010
+00100
+00001
+.0110
+..001
+
+ball1_br
+#d95763 #ac3232
+00101
+10010
+01010
+1000.
+000..
+
+ball2_tl
+#d95763 #ac3232
+..000
+.0001
+01010
+01001
+10100
+
+ball2_tr
+#d95763 #ac3232
+100..
+0110.
+10000
+00100
+01010
+
+ball2_bl
+#d95763 #ac3232
+01010
+00101
+00010
+.0001
+..000
+
+ball2_br
+#d95763 #ac3232
+00101
+00010
+10000
+0110.
+100..
+
+yarn_h
+#94313a #721515
+10101
+.....
+.....
+.....
+.....
+
+yarn_v
+#94313a #721515
+....1
+....0
+....1
+....0
+....1
+
+balloon_tl
+#fbf236 white
+..000
+.0000
+00000
+00000
+00000
+
+balloon_tr
+#fbf236 white
+000..
+0100.
+10100
+01000
+00000
+
+balloon_bl
+#fbf236 white
+00000
+00000
+.0000
+..000
+...00
+
+balloon_br
+#fbf236 white
+00000
+00000
+0000.
+100..
+00...
+
+
+balloon_popped_tl
+#bab31d
+.....
+.....
+...0.
+..000
+..000
+
+
+balloon_popped_tr
+#bab31d
+.....
+.....
+.....
+.....
+00...
+
+balloon_popped_bl
+#bab31d
+....0
+.....
+.....
+.....
+.....
+
+balloon_popped_br
+#bab31d
+00...
+.00..
+0....
+.....
+.....
+
+blocked
+yellow
+.....
+.....
+..0..
+.....
+.....
+
+clawed
+purple
+.....
+.....
+..0..
+.....
+.....
+
+wall_connection_u
+red
+..0..
+.....
+.....
+.....
+.....
+
+wall_connection_d
+red
+.....
+.....
+.....
+.....
+..0..
+
+wall_connection_l
+red
+.....
+.....
+0....
+.....
+.....
+
+wall_connection_r
+red
+.....
+.....
+....0
+.....
+.....
+
+box_nw
+#d9a066 #885036
+00000
+01111
+01111
+01111
+01111
+
+box_n
+#d9a066 #885036
+00000
+11111
+11111
+11111
+11111
+
+box_ne
+#d9a066 #885036
+00000
+11110
+11110
+11110
+11110
+
+box_w
+#d9a066 #885036
+01111
+01111
+01111
+01111
+01111
+
+box_c
+#d9a066 #885036
+11111
+11111
+11111
+11111
+11111
+
+box_e
+#d9a066 #885036
+11110
+11110
+11110
+11110
+11110
+
+box_sw
+#d9a066 #885036
+01111
+01111
+01111
+01111
+00000
+
+box_s
+#d9a066 #885036
+11111
+11111
+11111
+11111
+00000
+
+box_se
+#d9a066 #885036
+11110
+11110
+11110
+11110
+00000
+
+catbox_1
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+.....
+..000
+.0014
+.0100
+.0004
+
+catbox_2
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+.....
+4...4
+40504
+40004
+06060
+
+catbox_3
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+.....
+000..
+4100.
+0010.
+4000.
+
+catbox_4
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+.0010
+.0100
+.0000
+..000
+...00
+
+catbox_5
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+00000
+20002
+00100
+01110
+00100
+
+catbox_6
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+0100.
+0010.
+0000.
+000..
+00...
+
+catbox_7
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+...00
+..001
+.0000
+.0010
+.0001
+
+catbox_8
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+01110
+00100
+01110
+00100
+01110
+
+catbox_9
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+00...
+100..
+0000.
+0110.
+1000.
+
+catbox_10
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+.0100
+.0010
+.0000
+..000
+.....
+
+catbox_11
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+00000
+00100
+00010
+01001
+.....
+
+
+catbox_12
+#df7126 #ba5917 #563823 white #d0c8c8 #f7acdf #37946c #8f563b
+0010.
+0100.
+0000.
+000..
+.....
+
+
+=======
+LEGEND
+=======
+
+box = box_nw or box_n or box_ne or box_w or box_c or box_e or box_sw or box_s or box_se
+
+cat = cat_paw_left_claws_velvet or cat_paw_left_claws_extended or cat_paw_right_claws_velvet or cat_paw_right_claws_extended or cat_elbow_left or cat_head or cat_elbow_right or cat_torso or cat_knee_left or cat_butt or cat_knee_right or cat_foot_left or cat_tail or cat_foot_right 
+
+claws = cat_claw_l or cat_claw_r
+player = cat or claws or cat_whiskers
+
+catbox = catbox_1 or catbox_2 or catbox_3 or catbox_4 or catbox_5 or catbox_6 or catbox_7 or catbox_8 or catbox_9 or catbox_10 or catbox_11 or catbox_12 
+
+wall_decoration = Wall_0000 or Wall_0001 or Wall_0010 or Wall_0100 or Wall_0101 or Wall_0110 or Wall_0111 or Wall_1000 or Wall_1010 or Wall_1011 or Wall_1101 or Wall_1110 or Wall_1111 or Wall_1100 or wall_0011 or wall_1001
+
+ball_tl = ball1_tl or ball2_tl
+ball_tr = ball1_tr or ball2_tr
+ball_bl = ball1_bl or ball2_bl
+ball_br = ball1_br or ball2_br
+
+ball_l = ball_tl or ball_bl
+ball_r = ball_tr or ball_br
+ball_t = ball_tl or ball_tr
+ball_b = ball_bl or ball_br
+
+balloon_l = balloon_tl or balloon_bl
+balloon_r = balloon_tr or balloon_br
+balloon_t = balloon_tl or balloon_tr
+balloon_b = balloon_bl or balloon_br
+
+ball = ball_tl or ball_tr or ball_bl or ball_br
+
+balloon_popped = balloon_popped_tl or balloon_popped_tr or balloon_popped_bl or balloon_popped_br
+
+balloon = balloon_tl or balloon_tr or balloon_bl or balloon_br
+
+ball_or_balloon = ball or balloon
+
+background_tile = Background1 or background2
+
+cat_paw = cat_paw_left_claws_velvet or cat_paw_right_claws_velvet or cat_paw_left_claws_extended or cat_paw_right_claws_extended
+
+cat_foot = cat_foot_left or cat_foot_right
+outside_box_cat = cat_paw or cat_whiskers or claws or cat_foot or cat_tail
+
+. = background
+, = background
+# = wall
+p = cat_head
+a = ball1_tl
+s = box_n
+d = ball1_tl and box_n
+b = balloon_tl
+l = balloon_tl and box_n
+
+pushable = cat or ball or balloon
+
+
+=======
+SOUNDS
+=======
+
+ball move 57929907
+balloon move 1546907
+claw_mark create 72894501
+sfx0 87189707 (put claw into wool)
+sfx1 85577901 (retract)
+sfx2 3527308 (cat purr in box)
+sfx3 28829902
+sfx4 93375309 (switch claws)
+================
+COLLISIONLAYERS
+================
+
+Background
+background_tile
+box
+yarn_h
+yarn_v
+balloon_popped_tl
+balloon_popped_tr
+balloon_popped_bl
+balloon_popped_br
+Wall, cat, ball, balloon, catbox
+wall_decoration
+claw_mark
+cat_claw_l, cat_claw_r, cat_whiskers
+blocked, clawed
+wall_connection_u
+wall_connection_d
+wall_connection_l
+wall_connection_r
+
+======
+RULES
+======
+
+
+(this stuff only needs to be run on level load to populate the map)
+
+(wall autotiles)
+down [wall no wall_decoration | wall no wall_decoration ] -> [ wall wall_connection_d | wall wall_connection_u ]
+right [wall no wall_decoration | wall no wall_decoration ] -> [ wall  wall_connection_r | wall  wall_connection_l ]
+
+[ wall no wall_decoration no wall_connection_u no wall_connection_d no wall_connection_l no wall_connection_r ] -> [ wall wall_0000 ]
+[ wall no wall_decoration no wall_connection_u no wall_connection_d no wall_connection_l    wall_connection_r ] -> [ wall wall_0001 ]
+[ wall no wall_decoration no wall_connection_u no wall_connection_d    wall_connection_l no wall_connection_r ] -> [ wall wall_0010 ]
+[ wall no wall_decoration no wall_connection_u no wall_connection_d    wall_connection_l    wall_connection_r ] -> [ wall wall_0011 ]
+[ wall no wall_decoration no wall_connection_u    wall_connection_d no wall_connection_l no wall_connection_r ] -> [ wall wall_0100 ]
+[ wall no wall_decoration no wall_connection_u    wall_connection_d no wall_connection_l    wall_connection_r ] -> [ wall wall_0101 ]
+[ wall no wall_decoration no wall_connection_u    wall_connection_d    wall_connection_l no wall_connection_r ] -> [ wall wall_0110 ]
+[ wall no wall_decoration no wall_connection_u    wall_connection_d    wall_connection_l    wall_connection_r ] -> [ wall wall_0111 ]
+[ wall no wall_decoration    wall_connection_u no wall_connection_d no wall_connection_l no wall_connection_r ] -> [ wall wall_1000 ]
+[ wall no wall_decoration    wall_connection_u no wall_connection_d no wall_connection_l    wall_connection_r ] -> [ wall wall_1001 ]
+[ wall no wall_decoration    wall_connection_u no wall_connection_d    wall_connection_l no wall_connection_r ] -> [ wall wall_1010 ]
+[ wall no wall_decoration    wall_connection_u no wall_connection_d    wall_connection_l    wall_connection_r ] -> [ wall wall_1011 ]
+[ wall no wall_decoration    wall_connection_u    wall_connection_d no wall_connection_l no wall_connection_r ] -> [ wall wall_1100 ]
+[ wall no wall_decoration    wall_connection_u    wall_connection_d no wall_connection_l    wall_connection_r ] -> [ wall wall_1101 ]
+[ wall no wall_decoration    wall_connection_u    wall_connection_d    wall_connection_l no wall_connection_r ] -> [ wall wall_1110 ]
+[ wall no wall_decoration    wall_connection_u    wall_connection_d    wall_connection_l    wall_connection_r ] -> [ wall wall_1111 ]
+
+(draw cat)
+right [ no cat_elbow_left | stationary cat_head | no cat_elbow_right ] -> [ cat_elbow_left | cat_head | cat_elbow_right ] 
+
+down [ no cat_claw_l | no cat_paw_left_claws_extended | stationary cat_elbow_left | | no cat_knee_left | no cat_foot_left ] -> [ cat_claw_l | cat_paw_left_claws_extended | cat_elbow_left | | cat_knee_left | cat_foot_left ]
+down [ no cat_whiskers | stationary cat_head | no cat_torso | no cat_butt | no cat_tail ] -> [ cat_whiskers | cat_head | cat_torso | cat_butt | cat_tail ]
+down [  no cat_paw_right_claws_velvet | stationary cat_elbow_right | | no cat_knee_right | no cat_foot_right ] -> [  cat_paw_right_claws_velvet | cat_elbow_right | | cat_knee_right | cat_foot_right ]
+
+(draw background)
+[ stationary cat_head ] [ background_tile ] -> [ stationary cat_head ] [  ]
+[ stationary cat_head ] -> [ stationary cat_head background2 ]
+[ background2 | no wall ] -> [ background2 | background1 ]
++ [ background1 | no wall ] -> [ background1 | background2 ]
+
+(draw box)
+right [ no box_nw | box_n | no box_ne ] -> [ box_nw | box_n | box_ne ]
+down [ box_nw | no box_w | no box_w | no box_sw ] -> [ box_nw | box_w | box_w | box_sw ]
+down [ box_n | no box_c | no box_c | no box_s ] -> [ box_n | box_c | box_c | box_s ]
+down [ box_ne | no box_e | no box_e | no box_se ] -> [ box_ne | box_e | box_e | box_se ]
+
+(draw balls)
+down [ ball1_tl | no ball1_bl ] -> [ball1_tl | ball1_bl ]
+right [ ball1_tl | no ball1_tr ] -> [ball1_tl | ball1_tr ]
+right [ ball1_bl | no ball1_br ] -> [ball1_bl | ball1_br ]
+
+
+(draw balloons)
+down [ balloon_tl | no balloon_bl ] -> [balloon_tl | balloon_bl ]
+right [ balloon_tl | no balloon_tr ] -> [balloon_tl | balloon_tr ]
+right [ balloon_bl | no balloon_br ] -> [balloon_bl | balloon_br ]
+
+(end of drawing code)
+
+(claw switch)
+
+down  [ action cat_head ] [ cat_claw_l | cat_paw_left_claws_extended ] [  | cat_paw_right_claws_velvet ] ->  [ cat_head ] [  | cat_paw_left_claws_velvet ] [ cat_claw_r | cat_paw_right_claws_extended ] sfx4
+
+down  [ action cat_head ] [ cat_claw_r | cat_paw_right_claws_extended ] [  | cat_paw_left_claws_velvet ] ->  [ cat_head ] [  | cat_paw_right_claws_velvet ] [ cat_claw_l | cat_paw_left_claws_extended ] sfx4
+
+(pull balls with you - propagate movement in direction of move)
+up [ vertical claws ball_bl | ball_tl ] -> [ vertical claws vertical ball_bl | vertical ball_tl ]
+up [ vertical claws ball_br | ball_tr ] -> [ vertical claws vertical ball_br | vertical ball_tr ]
+right [ horizontal claws ball_bl | ball_br ] -> [ horizontal claws horizontal ball_bl | horizontal ball_br ]
+right [  ball_bl | horizontal claws ball_br ] -> [  horizontal ball_bl | horizontal claws horizontal ball_br ]
+
+up [ vertical claws balloon_bl | balloon_tl ] -> [ vertical claws vertical balloon_bl | vertical balloon_tl ]
+up [ vertical claws balloon_br | balloon_tr ] -> [ vertical claws vertical balloon_br | vertical balloon_tr ]
+right [ horizontal claws balloon_bl | balloon_br ] -> [ horizontal claws horizontal balloon_bl | horizontal balloon_br ]
+right [  balloon_bl | horizontal claws balloon_br ] -> [  horizontal balloon_bl | horizontal claws horizontal balloon_br ]
+
+(claws in wall + horizontal movement = cancel )
+[ horizontal claws wall ] -> cancel
+
+(can't slide into wall)
+horizontal [ > claws | wall ] -> cancel
+
+( [ down claws wall ] -> cancel )
+
+(detaching possibility if you're moving downwards - need to be careful because this could be indirection)
+
+(pushing code)
+horizontal [ > claws | pushable ] -> [ > claws | > pushable ]
+[ > pushable | pushable ] -> [ > pushable | > pushable ] 
++ right [ perpendicular ball_l | stationary ball_r ] -> [ perpendicular ball_l | perpendicular ball_r ]
++ right [ stationary ball_l | perpendicular ball_r ] -> [ perpendicular ball_l | perpendicular ball_r ]
++ down [ perpendicular ball_t | stationary ball_b ] -> [ perpendicular ball_t | perpendicular ball_b ]
++ down [ stationary ball_t | perpendicular ball_b ] -> [ perpendicular ball_t | perpendicular ball_b ]
++ right [ perpendicular balloon_l | stationary balloon_r ] -> [ perpendicular balloon_l | perpendicular balloon_r ]
++ right [ stationary balloon_l | perpendicular balloon_r ] -> [ perpendicular balloon_l | perpendicular balloon_r ]
++ down [ perpendicular balloon_t | stationary balloon_b ] -> [ perpendicular balloon_t | perpendicular balloon_b ]
++ down [ stationary balloon_t | perpendicular balloon_b ] -> [ perpendicular balloon_t | perpendicular balloon_b ]
+
+(backpropagate stuck tokens for detatching in the case that a ball is pushing downwards against a wall)
+
+down [ > ball_or_balloon | wall ] -> [ blocked ball_or_balloon | wall ] sfx1
+
+[ > pushable | pushable blocked ] -> [ pushable blocked | pushable blocked ] 
++ right [ blocked ball_l | down ball_r ] -> [ blocked ball_l | blocked ball_r ]
++ right [ down ball_l | blocked ball_r ] -> [ blocked ball_l | blocked ball_r ]
++ right [ blocked balloon_l | down balloon_r ] -> [ blocked balloon_l | blocked balloon_r ]
++ right [ down balloon_l | blocked balloon_r ] -> [ blocked balloon_l | blocked balloon_r ]
+
+[ blocked cat ] -> cancel 
+
+[ blocked ] -> []
+
+(rotate any moving balls if not clawed)
+[ moving claws ball ] -> [ moving claws clawed ball ]
+(propagate clawed to ball horizontall then upwards)
+right [ clawed ball_bl | ball_br ] -> [ clawed ball_bl | clawed ball_br ]
+right [ ball_bl | clawed ball_br ] -> [ clawed ball_bl | clawed ball_br ]
+up [ clawed ball_b | ball_t ] -> [ clawed ball_b | clawed ball_t ]
+
+
+(rotate moving balls and mark them as 'clawed' to stop further rotation)
+
+[ moving ball1_tl no clawed ] -> [ moving ball2_tl clawed ]
+[ moving ball1_tr no clawed ] -> [ moving ball2_tr clawed ]
+[ moving ball1_bl no clawed ] -> [ moving ball2_bl clawed ]
+[ moving ball1_br no clawed ] -> [ moving ball2_br clawed ]
+[ moving ball2_tl no clawed ] -> [ moving ball1_tl clawed ]
+[ moving ball2_tr no clawed ] -> [ moving ball1_tr clawed ]
+[ moving ball2_bl no clawed ] -> [ moving ball1_bl clawed ]
+[ moving ball2_br no clawed ] -> [ moving ball1_br clawed ]
+
+
+
+[ clawed ] -> [ ]
+
+(place yarn)
+right [ > ball_bl | ] -> [ > ball_bl  | yarn_h ]
+up [ > ball_bl | ] -> [ > ball_bl  | yarn_v ]
+down [ > ball_bl  | ] -> [ > ball_bl yarn_v |  ]
+left [ > ball_bl  | ] -> [ > ball_bl yarn_h |  ]
+
+[ > pushable | wall ] -> cancel
+
+up [ > claws | ball_b ] -> sfx0
+
+late right [ | cat_head box_n | ] -> [ catbox_1 | catbox_2 box_n | catbox_3 ]
+late down [ catbox_1 | no catbox_4 | no catbox_7 | no catbox_10 ] -> [ catbox_1 | catbox_4 | catbox_7 | catbox_10 ]
+late down [ catbox_2 | no catbox_5 | no catbox_8 | no catbox_11 ] -> [ catbox_2 | catbox_5 | catbox_8 | catbox_11 ]
+late down [ catbox_3 | no catbox_6 | no catbox_9 | no catbox_12 ] -> [ catbox_3 | catbox_6 | catbox_9 | catbox_12 ]
+
+late [ catbox_1 ] [ outside_box_cat ] -> [ catbox_1 ] [ ] sfx2
+
+
+(prepare balloons for popping)
+late [ claws balloon ] -> [ claws clawed balloon ]
+(propagate clawed to balloon horizontall then upwards)
+late right [ clawed balloon_bl | balloon_br ] -> [ clawed balloon_bl | clawed balloon_br ]
+late right [ balloon_bl | clawed balloon_br ] -> [ clawed balloon_bl | clawed balloon_br ]
+late up [ clawed balloon_b | balloon_t ] -> [ clawed balloon_b | clawed balloon_t ]
+
+late [balloon_tl clawed] -> [ balloon_popped_tl ] sfx3
+late [balloon_tr clawed] -> [ balloon_popped_tr ] sfx3
+late [balloon_bl clawed] -> [ balloon_popped_bl ] sfx3
+late [balloon_br clawed] -> [ balloon_popped_br ] sfx3
+
+late [ claws wall no claw_mark ] -> [ claws wall claw_mark ]
+
+==============
+WINCONDITIONS
+==============
+
+some catbox
+
+=======
+LEVELS
+=======
+
+message Level 1 of 6
+(levl 1? similar to level below)
+.######
+##,.,.#
+#..,s,#
+#...a.#
+##.,.,#
+.#,.,.#
+.##,.,#
+,#,.,.#
+.#.,.,#
+,#,.p.#
+.#.,.,#
+,#,.,.#
+.#.,.,#
+,######
+
+message Level 2 of 6
+(bit tight, quite easy? might be fiddly, might be nice? too similar to above?)
+########
+#.,.,.,#
+#,.s.,.#
+#.a.,###
+#,.,.###
+##,.,.,#
+#,.,.,.#
+#.,.p.,#
+#,.,.,.#
+#.,.,.,#
+#,.,.,.#
+########
+
+message Level 3 of 6
+(p. good fun balloon manipulation? bit easy? maybe that's ok?)
+,,,,,,,,,,#####,,,,,,
+###########,,,#######
+#,.,.,.,.,#,s,#,.,..#
+#.,.,.,.,.,a,.,.,.,.#
+#,.,.b.b.,.,.,.,.,..#
+#.,.,.,.,.#.,.#.,p,.#
+#,.,.,.,.,.,.,.,.,..#
+#.,.,.,.,.,.,.,.,.,.#
+#,.,.,.,.,.,.,.,.,..#
+#.,.,.,.,.,.,.,.,.,.#
+#,.,.,.,.,.,.,.,.,..#
+#####################
+
+message Level 4 of 6
+(some fun bits!)
+..#####.##############
+..#...#.#............#
+..#.s.###............#
+###..................#
+#..........p.........#
+#....a.#.............#
+###....#............##
+..#....#.......#...a.#
+..#...#........#.....#
+..#............#.....#
+..#............#.....#
+..#............#.....#
+..#............###...#
+..#............#.#...#
+..##############.#.a.#
+...............###...#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#.....#
+...............#######
+
+
+message Level 5 of 6
+
+(decent level, but a bit tricky?)
+.,#####################
+###.,.,#,.,.,.#.,.,.,.#
+#,.,d,.#.,.,.,#,.,.,.,#
+#.,.,.,.,.a.,.,.b.,.,.#
+###,.,.,.,.,.,.,.,.,.,#
+,.#.,.,#,.,.,.#.,.,.,.#
+.,#,.,#,.,.,.,#,.,.,.,#
+,.#.,.,.,.p.,.,.,.,.,.#
+.,#,.,.,.,.,.,.,.,.,.,#
+,.#.,.,.,.,.,.,.,.,.,.#
+.,#,.,.,.,.,.,.,.,.,.,#
+,.#.,.,.,.,.,.,.,.,.,.#
+.,#####################
+
+message Level 6 of 6
+
+...######.......
+...#....######..
+...#.........#..
+...#.........#..
+...#..p......#..
+...#.........#..
+...#.........##.
+...#........a.#.
+...#..s.#.....##
+...#..a.#......#
+...#....#.a....#
+...#....#......#
+####...........#
+#..#..#........#
+#.....##.......#
+#......#.......#
+#..........#...#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#.....##########
+#######.........
+
+
+message The end.  Good job, cat!
+

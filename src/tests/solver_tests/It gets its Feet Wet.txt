@@ -1,0 +1,322 @@
+title It gets its Feet Wet
+author increpare
+homepage www.increpare.com
+
+norepeat_action
+color_palette 4
+
+( debug )
+( verbose_logging )
+
+
+
+========
+OBJECTS
+========
+
+face_pixel_brown 1
+brown
+
+face_pixel_black 2
+black
+
+face_pixel_lightbrown 3
+lightbrown
+
+face_pixel_pink 4
+pink
+
+leg_pixel_highlighted q
+lightbrown
+
+leg_pixel_unhighlighted w
+brown
+
+Background
+lightblue
+
+
+
+Wall
+green
+
+player
+green
+
+
+legswitchmarker
+transparent
+
+object1  o
+gray
+
+object2  k
+lightgray
+
+object3  l
+darkgray
+
+
+nofallmarker 
+red
+00...
+0....
+.....
+.....
+.....
+
+leggrounded
+red
+..0..
+..00.
+.....
+.....
+.....
+
+inactivelegair
+red
+.....
+.....
+.....
+.0...
+0....
+
+bodygrounded
+red
+....0
+....0
+.....
+.....
+.....
+
+bodyraisedtag
+red
+.....
+.....
+.....
+...0.
+....0
+
+domoveleft
+transparent
+
+domoveright
+transparent 
+
+canmoveleft
+yellow
+0....
+.....
+.....
+.....
+.....
+
+canmoveright
+yellow
+....0
+.....
+.....
+.....
+.....
+
+canmoveup
+yellow
+..0..
+.....
+.....
+.....
+.....
+
+water c
+blue
+
+=======
+LEGEND
+=======
+
+face_pixel = face_pixel_brown or face_pixel_black or face_pixel_lightbrown or face_pixel_pink
+
+leg = leg_pixel_highlighted or leg_pixel_unhighlighted
+object = object1 or object2 or object3
+
+
+gondola = leg or face_pixel
+obstacle = face_pixel or wall  or leg or object
+nongondolaobject =  wall   or object
+nonactivegondola = face_pixel or leg_pixel_unhighlighted
+
+movable = gondola or object
+
+. = Background
+# = Wall
+P = Player
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+water
+Player, Wall,face_pixel,leg_pixel_highlighted, leg_pixel_unhighlighted, object
+legswitchmarker
+nofallmarker
+leggrounded
+bodygrounded
+bodyraisedtag
+inactivelegair
+domoveleft
+domoveright
+canmoveup
+canmoveleft
+canmoveright
+
+======
+RULES
+======
+
+[ movable ] -> [ movable canmoveleft canmoveright canmoveup ]
+
+right [ canmoveright | wall ] -> [ | wall ]
+right [ obstacle canmoveright | obstacle no canmoveright ] -> [ obstacle | obstacle ]
++ [ object1 no canmoveright ] [object1 canmoveright ] -> [ object1 ] [ object1 ]
++ [ object2 no canmoveright ] [object2 canmoveright ] -> [ object2 ] [ object2 ]
++ [ object3 no canmoveright ] [object3 canmoveright ] -> [ object3 ] [ object3 ]
++ [ nonactivegondola no canmoveright ] [nonactivegondola canmoveright ] -> [ nonactivegondola ] [ nonactivegondola ]
++ [ leg_pixel_highlighted no canmoveright ] [leg_pixel_highlighted canmoveright ] -> [ leg_pixel_highlighted ] [ leg_pixel_highlighted ]
+
+left [ canmoveleft | wall ] -> [ | wall ]
+left [ obstacle canmoveleft | obstacle no canmoveleft ] -> [ obstacle | obstacle ]
++ [ object1 no canmoveleft ] [object1 canmoveleft ] -> [ object1 ] [ object1 ]
++ [ object2 no canmoveleft ] [object2 canmoveleft ] -> [ object2 ] [ object2 ]
++ [ object3 no canmoveleft ] [object3 canmoveleft ] -> [ object3 ] [ object3 ]
++ [ nonactivegondola no canmoveleft ] [nonactivegondola canmoveleft ] -> [ nonactivegondola ] [ nonactivegondola ]
++ [ leg_pixel_highlighted no canmoveleft ] [leg_pixel_highlighted canmoveleft ] -> [ leg_pixel_highlighted ] [ leg_pixel_highlighted ]
+
+
+up [ canmoveup | wall ] -> [ | wall ]
+up [ obstacle canmoveup | obstacle no canmoveup ] -> [ obstacle | obstacle ]
++ [ object1 no canmoveup ] [object1 canmoveup ] -> [ object1 ] [ object1 ]
++ [ object2 no canmoveup ] [object2 canmoveup ] -> [ object2 ] [ object2 ]
++ [ object3 no canmoveup ] [object3 canmoveup ] -> [ object3 ] [ object3 ]
++ [ nonactivegondola no canmoveup ] [nonactivegondola canmoveup ] -> [ nonactivegondola ] [ nonactivegondola ]
++ [ leg_pixel_highlighted no canmoveup ] [leg_pixel_highlighted canmoveup ] -> [ leg_pixel_highlighted ] [ leg_pixel_highlighted ]
+
+down [ leg | nongondolaobject ] -> [ leg leggrounded | nongondolaobject ]
+up [ leggrounded | leg ] -> [ leggrounded | leg leggrounded ]
+[ leggrounded ] [ gondola ] -> [ leggrounded ] [ gondola bodygrounded ]
+
+down [leg_pixel_unhighlighted | no obstacle ] [player] -> [leg_pixel_unhighlighted | ] [ player inactivelegair ]
+
+
+(inactive leg grounded if head resting on something)
+
+down [ face_pixel | nongondolaobject ] [ leg_pixel_unhighlighted ] [player] -> [ face_pixel | nongondolaobject ] [ leg_pixel_unhighlighted leggrounded ] [ player no inactivelegair ]
+
+(distribute movements to leg parts)
+[stationary player ] [ gondola ] -> [stationary player ] [ down gondola ] again
+
+(if gondola is pushing into object during gravity phase, cancel turn)
+down [down gondola | nongondolaobject ] -> [ gondola nofallmarker | nongondolaobject ] again
+[nofallmarker]->cancel
+
+
+(swap legs if you press action)
+[ action player ] [ leg_pixel_highlighted ] -> [ action player ] [ leg_pixel_unhighlighted legswitchmarker ] 
+[ action player ] [ leg_pixel_unhighlighted no legswitchmarker] -> [ action player ] [ leg_pixel_highlighted legswitchmarker ] 
+[legswitchmarker] -> []
+
+
+(propagate motion from player to leg parts)
+[orthogonal player] [ leg_pixel_highlighted ] -> [ orthogonal player ] [ orthogonal leg_pixel_highlighted ] again
+
+
+(raise leg)
+up [ up leg_pixel_highlighted | leg_pixel_highlighted | face_pixel_brown ] -> [ | leg_pixel_highlighted | face_pixel_brown  ]
+
+(lower leg into empty space if leg not grounded)
+down [orthogonal player] [ down leg_pixel_highlighted no leggrounded | no obstacle ] -> [ player] [ down leg_pixel_highlighted | leg_pixel_highlighted ]
+
+(lower leg, pushing body up)
+
+(if pushing down while current leg is grounded, and while you have headspace, push whole gondola up)
+up [down player] [  leggrounded canmoveup ] [ gondola no bodyraisedtag | no obstacle ] -> [down player] [ leggrounded canmoveup ] [ | stationary gondola bodyraisedtag]
+
+down [bodyraisedtag] [leg_pixel_highlighted | no obstacle ] -> [bodyraisedtag]  [ leg_pixel_highlighted | leg_pixel_highlighted ]
+
+[bodyraisedtag]->[]
+
+(if active leg cannot move in the direction it would want to, mark the other leg as honorarily airborn)
+[ left player ] [ leg_pixel_highlighted no canmoveleft ]  -> [ left player inactivelegair ] [ leg_pixel_highlighted leggrounded ]
+[ right  player ] [ leg_pixel_highlighted no canmoveright ]  -> [ right player inactivelegair ] [ leg_pixel_highlighted leggrounded ]
+
+(if moving current *grounded* leg left while other leg in air, keep it stationary and move body right instead)
+[ left player inactivelegair ] [ leg_pixel_highlighted leggrounded ] [ nonactivegondola canmoveright ] -> [ left player inactivelegair ] [ leg_pixel_highlighted leggrounded ] [ nonactivegondola domoveright ]
+
+[ domoveright ] [ moving gondola]  -> [ domoveright ] [ gondola]
+
+right [ domoveright gondola | no obstacle ] -> [ | gondola ]
+
+
+
+(if moving current *grounded* leg right while other leg in air, keep it stationary and move body left  instead)
+[ right player inactivelegair ] [leg_pixel_highlighted leggrounded]  [ nonactivegondola canmoveleft ] -> [ right player inactivelegair ] [leg_pixel_highlighted leggrounded] [ nonactivegondola domoveleft ]
+
+[ domoveleft ] [ moving gondola]  -> [ domoveleft ] [ gondola]
+
+left [ domoveleft gondola | no obstacle ] -> [ | gondola ]
+
+(restrict horizontal leg movement)
+late up [leg_pixel_highlighted | no gondola ] -> cancel
+late up [leg_pixel_highlighted | face_pixel_pink ] -> cancel
+late up [leg_pixel_unhighlighted | no gondola ] -> cancel
+late up [leg_pixel_unhighlighted | face_pixel_pink ] -> cancel
+
+(maximum leg length)
+late down [ leg | leg | leg | leg | leg]->cancel
+
+
+
+late [leggrounded]->[]
+late [bodygrounded]->[]
+late [inactivelegair]->[]
+
+late [canmoveleft]->[]
+late [canmoveright]->[]
+late [ canmoveup ]->[]
+
+==============
+WINCONDITIONS
+==============
+some gondola on water
+
+=======
+LEVELS
+=======
+
+message Level 1 of 1
+
+................................................................
+................................................................
+................................................................
+..................................#.............................
+..............................................#..#..#...........
+#......................###......................................
+#...............................................................
+#...............................................................
+#..12121...........................###..#.......................
+#..13231...........................###........#..#..#...........
+#..11411.....................#.#...###..........................
+#..w...q...............##################################.....##
+#..w...q............#####################################ccccc##
+#..w...q.........########################################ccccc##
+#..w...q......###########################################ccccc##
+################################################################
+##p#############################################################
+
+message It dips its toes in the water.
