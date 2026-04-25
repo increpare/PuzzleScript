@@ -3671,6 +3671,50 @@ bool areAllGroupsCompilable(const std::vector<std::vector<puzzlescript::Rule>>& 
     });
 }
 
+bool isKnownCompiledTickCommandName(std::string_view name) {
+    if (name == "again"
+        || name == "cancel"
+        || name == "checkpoint"
+        || name == "message"
+        || name == "restart"
+        || name == "win") {
+        return true;
+    }
+    if (name.size() <= 3 || name.substr(0, 3) != "sfx") {
+        return false;
+    }
+    return std::all_of(name.begin() + 3, name.end(), [](const char ch) {
+        return ch >= '0' && ch <= '9';
+    });
+}
+
+std::string compiledTickCommandStatusForGroups(const std::vector<std::vector<puzzlescript::Rule>>& groups) {
+    bool sawCommand = false;
+    for (const auto& group : groups) {
+        for (const auto& rule : group) {
+            for (const auto& command : rule.commands) {
+                sawCommand = true;
+                if (!isKnownCompiledTickCommandName(command.name)) {
+                    return "unknown_interpreter";
+                }
+            }
+        }
+    }
+    return sawCommand ? "known_interpreter" : "none";
+}
+
+std::string compiledTickCommandStatus(const puzzlescript::Game& game) {
+    const std::string earlyStatus = compiledTickCommandStatusForGroups(game.rules);
+    const std::string lateStatus = compiledTickCommandStatusForGroups(game.lateRules);
+    if (earlyStatus == "unknown_interpreter" || lateStatus == "unknown_interpreter") {
+        return "unknown_interpreter";
+    }
+    if (earlyStatus == "known_interpreter" || lateStatus == "known_interpreter") {
+        return "known_interpreter";
+    }
+    return "none";
+}
+
 bool ruleHasEllipsis(const puzzlescript::Rule& rule) {
     for (const int32_t count : rule.ellipsisCount) {
         if (count != 0) {
@@ -4396,13 +4440,26 @@ void appendCompiledRulesCoverageJsonFields(std::ostream& out, const CompiledRule
     out << "}";
 }
 
-void appendCompiledTickAggregateJsonFields(std::ostream& out, size_t sourceCount, size_t earlyRuleLoopsGenerated, size_t lateRuleLoopsGenerated) {
+void appendCompiledTickAggregateJsonFields(
+    std::ostream& out,
+    size_t sourceCount,
+    size_t earlyRuleLoopsGenerated,
+    size_t lateRuleLoopsGenerated,
+    size_t commandNone,
+    size_t commandKnown,
+    size_t commandUnknown
+) {
     out << "\"compiled_tick\":{"
         << "\"sources\":" << sourceCount
         << ",\"backend_codegen_available\":" << sourceCount
         << ",\"early_rule_loops_generated\":" << earlyRuleLoopsGenerated
         << ",\"late_rule_loops_generated\":" << lateRuleLoopsGenerated
         << ",\"fully_generated\":0"
+        << ",\"command_status_counts\":{"
+        << "\"none\":" << commandNone
+        << ",\"known_interpreter\":" << commandKnown
+        << ",\"unknown_interpreter\":" << commandUnknown
+        << "}"
         << ",\"misses\":{";
     if (sourceCount > 0) {
         out << "\"interpreter_delegation\":" << sourceCount;
@@ -4410,7 +4467,12 @@ void appendCompiledTickAggregateJsonFields(std::ostream& out, size_t sourceCount
     out << "}}";
 }
 
-void appendCompiledTickSourceJsonFields(std::ostream& out, bool earlyRuleLoopsGenerated, bool lateRuleLoopsGenerated) {
+void appendCompiledTickSourceJsonFields(
+    std::ostream& out,
+    bool earlyRuleLoopsGenerated,
+    bool lateRuleLoopsGenerated,
+    std::string_view commandStatus
+) {
     out << "\"compiled_tick\":{"
         << "\"backend_codegen_available\":true"
         << ",\"step_entry\":true"
@@ -4422,7 +4484,7 @@ void appendCompiledTickSourceJsonFields(std::ostream& out, bool earlyRuleLoopsGe
                 ? "early_late_generated"
                 : (earlyRuleLoopsGenerated ? "early_generated_late_interpreter" : "interpreter")
         )
-        << ",\"commands\":\"interpreter\""
+        << ",\"commands\":" << jsonStringLiteral(commandStatus)
         << ",\"movement\":\"interpreter\""
         << ",\"win_conditions\":\"interpreter\""
         << ",\"level_transitions\":\"interpreter\""
@@ -4440,6 +4502,9 @@ std::string generateCompiledRulesCoverageJson(
     std::ostringstream out;
     size_t earlyRuleLoopsGenerated = 0;
     size_t lateRuleLoopsGenerated = 0;
+    size_t commandNone = 0;
+    size_t commandKnown = 0;
+    size_t commandUnknown = 0;
     for (const CodegenSource& source : sources) {
         if (source.game && areAllGroupsCompilable(source.game->rules, options)) {
             ++earlyRuleLoopsGenerated;
@@ -4447,13 +4512,31 @@ std::string generateCompiledRulesCoverageJson(
         if (source.game && areAllGroupsCompilable(source.game->lateRules, options)) {
             ++lateRuleLoopsGenerated;
         }
+        const std::string commandStatus = source.game
+            ? compiledTickCommandStatus(*source.game)
+            : "unknown_interpreter";
+        if (commandStatus == "none") {
+            ++commandNone;
+        } else if (commandStatus == "known_interpreter") {
+            ++commandKnown;
+        } else {
+            ++commandUnknown;
+        }
     }
     out << "{\n"
         << "  \"max_rows\":" << options.maxRows << ",\n"
         << "  \"aggregate\":{";
     appendCompiledRulesCoverageJsonFields(out, aggregateCoverage);
     out << ",";
-    appendCompiledTickAggregateJsonFields(out, sources.size(), earlyRuleLoopsGenerated, lateRuleLoopsGenerated);
+    appendCompiledTickAggregateJsonFields(
+        out,
+        sources.size(),
+        earlyRuleLoopsGenerated,
+        lateRuleLoopsGenerated,
+        commandNone,
+        commandKnown,
+        commandUnknown
+    );
     out << "},\n"
         << "  \"sources\":[\n";
     for (size_t index = 0; index < sources.size(); ++index) {
@@ -4470,7 +4553,8 @@ std::string generateCompiledRulesCoverageJson(
         appendCompiledTickSourceJsonFields(
             out,
             sources[index].game && areAllGroupsCompilable(sources[index].game->rules, options),
-            sources[index].game && areAllGroupsCompilable(sources[index].game->lateRules, options)
+            sources[index].game && areAllGroupsCompilable(sources[index].game->lateRules, options),
+            sources[index].game ? compiledTickCommandStatus(*sources[index].game) : "unknown_interpreter"
         );
         out << "}";
         if (index + 1 < sources.size()) {

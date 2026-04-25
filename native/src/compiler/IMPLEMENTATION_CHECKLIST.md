@@ -322,6 +322,18 @@ Status markers:
 
 ## Command Handling
 
+- [x] Classify command shapes in compiled tick coverage.
+
+  Intent: make the command tail measurable before moving behavior out of the
+  interpreter.
+
+  Acceptance criteria:
+
+  - Coverage distinguishes games with no rule commands, known interpreted
+    command shapes, and unknown command shapes.
+  - Aggregate counts are emitted alongside per-source feature status.
+  - Classification uses stable strings that can be tracked over time.
+
 - [ ] Generate command queue shape for supported games.
 
   Intent: avoid dynamic string command handling where the command set is known.
