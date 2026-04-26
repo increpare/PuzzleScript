@@ -604,7 +604,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 - [x] Reuse compact solver child scratch during interpreter-backed edges.
 
   Intent: make the current compact-node path cheaper and shape the solver loop
-  around a single edge boundary that a future compact tick can replace.
+  around a single edge boundary that a future compact turn can replace.
 
   Current behavior:
 
@@ -629,7 +629,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Conclusion: compact storage is now a small end-to-end win while doing exactly
   the same search work. The remaining dominant costs are still interpreter
   stepping and compact heuristic evaluation, so the next priority is a real
-  compact tick edge.
+  compact turn edge.
 
 - [?] Prototype compact solver state for one simple focus game.
 
@@ -728,42 +728,42 @@ attribute graph cost -> no-allocation hash -> flat visited table
     compact_timeout_regressions=2
   ```
 
-- [ ] Add a generated compact tick prototype.
+- [ ] Add a generated compact turn prototype.
 
   Intent: once compact state exists, whole-game compilation should target it
-  directly: `tick(compact_state, input) -> compact_state`, with `Session`
+  directly: `turn(compact_state, input) -> compact_state`, with `Session`
   retained as oracle and fallback rather than as the hot state container.
 
   Near-term task list:
 
-  - [x] Add a separate compact tick backend type and weak finder instead of changing
+  - [x] Add a separate compact turn backend type and weak finder instead of changing
     the existing `CompiledTickBackend` layout.
   - [x] Attach the compact backend by source hash next to compiled rules/tick.
   - [x] Add solver-side capability checks and counters that distinguish:
-    `compact_tick_attempt`, `compact_tick_hit`, `compact_tick_fallback`, and
-    `compact_tick_unsupported`.
-  - [x] Try compact tick before the interpreter-backed scratch fallback when a
+    `compact_turn_attempt`, `compact_turn_hit`, `compact_turn_fallback`, and
+    `compact_turn_unsupported`.
+  - [x] Try compact turn before the interpreter-backed scratch fallback when a
     supported compact backend is attached.
   - [x] Generate a `handled=false` compact backend stub so linkage, dispatch, and
     counters are proven before behavior moves.
   - [x] Refactor the current solver edge into a named helper with two
-    implementations: compact tick first, interpreter-backed scratch fallback
+    implementations: compact turn first, interpreter-backed scratch fallback
     second.
   - [x] Pick one deterministic, no-random, no-again, no-restart focus fixture for
-    the first `handled=true` compact tick.
+    the first `handled=true` compact turn.
     First target: `src/tests/solver_smoke_tests/one_move.txt`.
   - [x] Generate direct object-bitset input seeding and fixed movement execution
     for that fixture.
-  - [x] Generalize simple push compact ticks to multiple pushed objects on one
+  - [x] Generalize simple push compact turns to multiple pushed objects on one
     collision layer, including property/aggregate push cells whose possible
     object ids are all in the pushed-object set.
   - [x] Generalize compact win checks from one object pair to multiple simple
     `all subject on target` object pairs.
-  - [x] Support no-win-condition compact ticks for command-free movement-only
+  - [x] Support no-win-condition compact turns for command-free movement-only
     and simple-push games by reporting `won=false`.
-  - [x] Compare the compact tick output against the interpreter fallback inside a
+  - [x] Compare the compact turn output against the interpreter fallback inside a
     debug/oracle mode before allowing solver use.
-  - [ ] Only then fold compact heuristic/hash computation into the compact tick
+  - [ ] Only then fold compact heuristic/hash computation into the compact turn
     result when it can reuse touched state.
 
   Current first-slice behavior:
@@ -781,10 +781,10 @@ attribute graph cost -> no-allocation hash -> flat visited table
     only the pushed objects and all pushed objects share one collision layer.
   - Supports games with no win conditions only when the compact-supported rule
     shape has no commands, so `win` commands cannot be missed.
-  - Generated compact tick falls back if audio emission is requested; solver
+  - Generated compact turn falls back if audio emission is requested; solver
     calls use `emitAudio=false`, so sound declarations do not block compact
     state stepping.
-  - Generated compact tick mutates object-major `objectBits` directly, handles
+  - Generated compact turn mutates object-major `objectBits` directly, handles
     directional/action inputs, reports `changed`, and evaluates the simple win
     condition.
   - Unsupported games still attach a compact backend with
@@ -796,42 +796,42 @@ attribute graph cost -> no-allocation hash -> flat visited table
   ```text
   one_move.txt specialized compact solver:
     solution=right
-    compact_tick_attempts=1
-    compact_tick_hits=1
-    compact_tick_fallbacks=0
-    compact_tick_unsupported=0
+    compact_turn_attempts=1
+    compact_turn_hits=1
+    compact_turn_fallbacks=0
+    compact_turn_unsupported=0
     step_ms=0.000084
 
   push_goal.txt specialized compact solver:
     solution=right,right
-    compact_tick_attempts=6
-    compact_tick_hits=6
-    compact_tick_fallbacks=0
-    compact_tick_unsupported=0
+    compact_turn_attempts=6
+    compact_turn_hits=6
+    compact_turn_fallbacks=0
+    compact_turn_unsupported=0
     interpreted_step_ms=0.021585
     compact_step_ms=0.000375
 
-  solver_tests compact tick source support:
+  solver_tests compact turn source support:
     before simple-push win orientation expansion: 4/182
     after simple-push win orientation expansion: 5/182
     after multi-win aggregate-push expansion: 6/182
 
   a cliche for bedtime.txt specialized compact solver:
-    compact_tick_attempts=1498591
-    compact_tick_hits=1498572
-    compact_tick_fallbacks=19
-    compact_tick_unsupported=0
+    compact_turn_attempts=1498591
+    compact_turn_hits=1498572
+    compact_turn_fallbacks=19
+    compact_turn_unsupported=0
 
   crate swap.txt specialized compact solver:
-    compact_tick_attempts=73676
-    compact_tick_hits=73676
-    compact_tick_fallbacks=0
-    compact_tick_unsupported=0
+    compact_turn_attempts=73676
+    compact_turn_hits=73676
+    compact_turn_fallbacks=0
+    compact_turn_unsupported=0
     interpreted_step_ms=90.6633
     compact_step_ms=2.0415
     step_speedup=44.4x
 
-  testdata.js compact tick source support:
+  testdata.js compact turn source support:
     before no-win simple-push support: 22/452
     after no-win simple-push support: 23/452
     after win-mask expansion: 25/452
@@ -851,52 +851,52 @@ attribute graph cost -> no-allocation hash -> flat visited table
     status parity: exhausted/exhausted/exhausted
     expanded parity: 24149
     generated parity: 120745
-    compact_tick_attempts=120745
-    compact_tick_hits=120740
-    compact_tick_fallbacks=5
-    compact_tick_unsupported=0
+    compact_turn_attempts=120745
+    compact_turn_hits=120740
+    compact_turn_fallbacks=5
+    compact_turn_unsupported=0
     interpreted_step_ms=149.630
     compact_step_ms=3.441
     step_speedup=43.5x
 
-  compact tick oracle mode:
-    option: --compact-tick-oracle
-    behavior: materializes each generated compact tick parent through the
+  compact turn oracle mode:
+    option: --compact-turn-oracle
+    behavior: materializes each generated compact turn parent through the
       interpreter and compares solver-relevant step flags plus resulting compact
       object bits, movement words, and RNG state for non-terminal edges.
-    make target: make compact_tick_oracle_smoke
+    make target: make compact_turn_oracle_smoke
     solver_smoke_tests specialized:
-      compact_tick_oracle_checks=18
-      compact_tick_oracle_failures=0
+      compact_turn_oracle_checks=18
+      compact_turn_oracle_failures=0
     compact parity harness:
       command: node src/tests/run_solver_compact_parity.js <specialized-solver>
-        src/tests/solver_smoke_tests --compact-tick-oracle
+        src/tests/solver_smoke_tests --compact-turn-oracle
         --require-compact-oracle-checks
-      compact_tick_oracle_checks=18
-      compact_tick_oracle_failures=0
+      compact_turn_oracle_checks=18
+      compact_turn_oracle_failures=0
     crate swap.txt level=1 bfs:
-      compact_tick_attempts=28589
-      compact_tick_hits=28589
-      compact_tick_oracle_checks=28589
-      compact_tick_oracle_failures=0
-    full testdata.js compact tick oracle:
-      make target: make compact_tick_simulation_tests
+      compact_turn_attempts=28589
+      compact_turn_hits=28589
+      compact_turn_oracle_checks=28589
+      compact_turn_oracle_failures=0
+    full testdata.js compact turn oracle:
+      make target: make compact_turn_simulation_tests
       cases=469
-      compact_tick_oracle_checks=16554
-      compact_tick_oracle_handled=16554
-      compact_tick_oracle_failures=0
+      compact_turn_oracle_checks=16554
+      compact_turn_oracle_handled=16554
+      compact_turn_oracle_failures=0
   ```
 
   Acceptance criteria:
 
-  - One supported game has a generated C++ compact tick entrypoint.
+  - One supported game has a generated C++ compact turn entrypoint.
   - The entrypoint reads/writes compact state directly for the supported turn
     slice.
-  - The compact tick result reports changed, won, game-over/restart, and
+  - The compact turn result reports changed, won, game-over/restart, and
     unsupported/fallback status without heap allocation.
-  - Interpreter parity compares compact tick output against
+  - Interpreter parity compares compact turn output against
     `interpreterStep`/`interpreterTick` materialized through `Session`.
-  - Solver can choose compact tick for supported states and fall back cleanly
+  - Solver can choose compact turn for supported states and fall back cleanly
     before mutating state when unsupported behavior is encountered.
 
   Validation:
@@ -1996,7 +1996,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Recommended default: C++-only until state layout stabilizes, then wrap in C.
 
-- [ ] Define a compact tick result.
+- [ ] Define a compact turn result.
 
   Acceptance criteria:
 

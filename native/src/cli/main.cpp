@@ -347,7 +347,7 @@ bool replayInputTokens(
             if (!ps_session_compact_tick_oracle_check(session, *input, &oracleInfo)) {
                 ++oracleStats->compactTickFailures;
                 if (oracleStats->firstFailure.empty()) {
-                    oracleStats->firstFailure = "compact tick oracle API failure before input token: " + token;
+                    oracleStats->firstFailure = "compact turn oracle API failure before input token: " + token;
                 }
                 return false;
             }
@@ -362,7 +362,7 @@ bool replayInputTokens(
                 if (!oracleInfo.matched) {
                     ++oracleStats->compactTickFailures;
                     if (oracleStats->firstFailure.empty()) {
-                        oracleStats->firstFailure = "compact tick oracle mismatch before input token: "
+                        oracleStats->firstFailure = "compact turn oracle mismatch before input token: "
                             + token
                             + compactTickOracleMismatchSummary(oracleInfo);
                     }
@@ -2103,9 +2103,9 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
         } else if (arg == "--quiet") {
             options.quiet = true;
             options.progressEvery = 0;
-        } else if (arg == "--compact-tick-oracle") {
+        } else if (arg == "--compact-turn-oracle" || arg == "--compact-tick-oracle") {
             options.compactTickOracle = true;
-        } else if (arg == "--require-compact-tick-oracle-checks") {
+        } else if (arg == "--require-compact-turn-oracle-checks" || arg == "--require-compact-tick-oracle-checks") {
             options.requireCompactTickOracleChecks = true;
         } else {
             throw std::runtime_error("Unsupported simulation-testdata argument: " + arg);
@@ -2626,7 +2626,7 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
     }
     if (options.requireCompactTickOracleChecks && compactTickOracleChecks == 0) {
         ++failed;
-        std::cerr << "compact tick oracle checks were required but none ran\n";
+        std::cerr << "compact turn oracle checks were required but none ran\n";
     }
     std::vector<int64_t> replayUsByRepeat;
     std::vector<int64_t> sourceCompileUsByRepeat;
@@ -2649,10 +2649,10 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
               << " repeats=" << options.repeat << " jobs=" << options.jobs
               << " elapsed_ms=" << usToMs(wallUs);
     if (options.compactTickOracle || compactTickOracleChecks > 0 || compactTickOracleFailures > 0) {
-        std::cout << " compact_tick_oracle_checks=" << compactTickOracleChecks
-                  << " compact_tick_oracle_handled=" << compactTickOracleHandled
-                  << " compact_tick_oracle_state_checks=" << compactTickOracleStateChecks
-                  << " compact_tick_oracle_failures=" << compactTickOracleFailures;
+        std::cout << " compact_turn_oracle_checks=" << compactTickOracleChecks
+                  << " compact_turn_oracle_handled=" << compactTickOracleHandled
+                  << " compact_turn_oracle_state_checks=" << compactTickOracleStateChecks
+                  << " compact_turn_oracle_failures=" << compactTickOracleFailures;
     }
     std::cout << "\n";
     if (options.profileTimers) {
@@ -5697,7 +5697,7 @@ void appendCompactTickAggregateJsonFields(
         "rules_not_compact",
         "push_layer_mixed_not_compact",
     };
-    out << "\"compact_tick\":{"
+    out << "\"compact_turn\":{"
         << "\"sources\":" << sourceCount
         << ",\"backend_codegen_available\":" << sourceCount
         << ",\"whole_turn_supported\":" << supported
@@ -5718,7 +5718,7 @@ void appendCompactTickSourceJsonFields(
     std::ostream& out,
     const CompactTickSupport& support
 ) {
-    out << "\"compact_tick\":{"
+    out << "\"compact_turn\":{"
         << "\"backend_codegen_available\":true"
         << ",\"step_entry\":true"
         << ",\"whole_turn_supported\":" << (support.supported ? "true" : "false")
@@ -6423,7 +6423,7 @@ std::string generateCompiledRulesCpp(
             << "    tick_step_source_" << sourceIndex << ",\n"
             << "    tick_source_" << sourceIndex << ",\n"
             << "    {" << (!compactTickOnly && tickSupport.wholeTurnSupported ? "true" : "false")
-            << ", " << cppStringLiteral(compactTickOnly ? "compact_tick_only" : tickSupport.wholeTurnFallbackReason) << "},\n"
+            << ", " << cppStringLiteral(compactTickOnly ? "compact_turn_only" : tickSupport.wholeTurnFallbackReason) << "},\n"
             << "};\n\n"
             << "CompiledCompactTickApplyOutcome compact_tick_step_source_" << sourceIndex << "(\n"
             << "    const Game& game,\n"
@@ -7067,7 +7067,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
             symbol = argv[index];
         } else if (arg == "--stats-only") {
             statsOnly = true;
-        } else if (arg == "--compact-tick-only") {
+        } else if (arg == "--compact-turn-only" || arg == "--compact-tick-only") {
             compactTickOnly = true;
         } else if (arg == "--max-rows") {
             if (++index >= argc) {
@@ -7180,7 +7180,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
               << " max_rows=" << options.maxRows
               << " groups=" << coverage.compiledGroups
               << " rules=" << coverage.compiledRules
-              << (compactTickOnly ? " compact_tick_only=true" : "")
+              << (compactTickOnly ? " compact_turn_only=true" : "")
               << " output=" << outputPath
               << " wrote=" << wroteCount
               << "\n";
@@ -7637,13 +7637,13 @@ void printCompileRulesHelp() {
     std::cout
         << "Usage: puzzlescript_cpp compile-rules game.txt --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
-        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N] [--compact-tick-only] [--max-compiled-rules-per-source N] [--max-generated-lines-per-source N]\n"
+        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N] [--compact-turn-only] [--max-compiled-rules-per-source N] [--max-generated-lines-per-source N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus --stats-only [--max-rows N] [--coverage-json out.json]\n\n"
         << "Emits C++ compiled-rule kernels for conservative deterministic rule groups.\n"
         << "The generated file, or sharded source directory, is meant to be linked into\n"
         << "solver/generator builds through the Makefile SPECIALIZE=true workflow. Use\n"
         << "--stats-only to print coverage and miss buckets without writing generated code. --coverage-json writes per-source coverage. --max-rows defaults to 1;\n"
-        << "--compact-tick-only emits compact tick backends and registry stubs without generated rule kernels, useful for compact oracle coverage builds.\n"
+        << "--compact-turn-only emits compact turn backends and registry stubs without generated rule kernels, useful for compact oracle coverage builds. --compact-tick-only remains as a compatibility alias.\n"
         << "higher values enable experimental deterministic multi-row kernels. --max-compiled-rules-per-source and --max-generated-lines-per-source skip oversized sharded sources so the runtime can fall back for those games.\n\n"
         << "Examples:\n"
         << "  puzzlescript_cpp compile-rules src/demo/sokoban_basic.txt --emit-cpp build/compiled-rules/sokoban.cpp --symbol sokoban\n"
@@ -7655,7 +7655,7 @@ void printCompileRulesHelp() {
 void printTestHelp() {
     std::cout
         << "Usage: puzzlescript_cpp test js-parity generated-js-parity-data.json [options]\n"
-        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--compact-tick-oracle] [--require-compact-tick-oracle-checks] [--quiet]\n"
+        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--compact-turn-oracle] [--require-compact-turn-oracle-checks] [--quiet]\n"
         << "       puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js [--progress-every N]\n"
         << "       puzzlescript_cpp test diagnostics parser-corpus.bundle.ndjson\n\n"
         << "simulation-corpus and diagnostics-corpus read the original testdata.js and\n"
@@ -7664,8 +7664,8 @@ void printTestHelp() {
         << "from the original JavaScript implementation for deeper runtime trace checks.\n\n"
         << "simulation-corpus profiling reports source compile/load/replay/serialize timings\n"
         << "plus runtime counters for rule scans, pattern tests, replacements, mask rebuilds, and compiled dispatch.\n\n"
-        << "With --compact-tick-oracle, simulation-corpus checks linked generated compact tick\n"
-        << "entrypoints against the interpreter before replaying each ordinary input.\n\n"
+        << "With --compact-turn-oracle, simulation-corpus checks linked generated compact turn\n"
+        << "entrypoints against the interpreter before replaying each ordinary input. --compact-tick-oracle remains as a compatibility alias.\n\n"
         << "For optimization work, --top-slow-cases lists the slowest games by phase, and\n"
         << "--case-index/--case-name reruns one slow case with counters and repeats.\n\n"
         << "Usually use the Makefile wrappers:\n"

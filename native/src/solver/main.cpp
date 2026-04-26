@@ -87,7 +87,7 @@ struct Options {
     bool requireCompiledTick = false;
     bool exactStateKeys = true;
     bool compactNodeStorage = false;
-    bool compactTickOracle = false;
+    bool compactTurnOracle = false;
     int32_t astarWeight = 2;
 };
 
@@ -184,15 +184,15 @@ struct Result {
     uint32_t workerId = 0;
     bool compiledRulesAttached = false;
     bool compiledTickAttached = false;
-    bool compiledCompactTickAttached = false;
+    bool specializedCompactTurnAttached = false;
     bool compactNodeStorage = false;
     int32_t astarWeight = 2;
-    uint64_t compactTickAttempts = 0;
-    uint64_t compactTickHits = 0;
-    uint64_t compactTickFallbacks = 0;
-    uint64_t compactTickUnsupported = 0;
-    uint64_t compactTickOracleChecks = 0;
-    uint64_t compactTickOracleFailures = 0;
+    uint64_t compactTurnAttempts = 0;
+    uint64_t compactTurnHits = 0;
+    uint64_t compactTurnFallbacks = 0;
+    uint64_t compactTurnUnsupported = 0;
+    uint64_t compactTurnOracleChecks = 0;
+    uint64_t compactTurnOracleFailures = 0;
     Timing timing;
 };
 
@@ -471,7 +471,7 @@ bool matchesGameFilter(const std::string& relativeName, const std::optional<std:
 Options parseArgs(int argc, char** argv) {
     Options options;
     options.jobs = 1;
-    constexpr const char* usage = "Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage] [--compact-tick-oracle] [--astar-weight N]";
+    constexpr const char* usage = "Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage] [--compact-turn-oracle] [--astar-weight N]";
     if (argc < 2) {
         throw std::runtime_error(usage);
     }
@@ -539,9 +539,9 @@ Options parseArgs(int argc, char** argv) {
             options.compactNodeStorage = true;
             continue;
         }
-        if (arg == "--compact-tick-oracle") {
+        if (arg == "--compact-turn-oracle" || arg == "--compact-tick-oracle") {
             options.compactNodeStorage = true;
-            options.compactTickOracle = true;
+            options.compactTurnOracle = true;
             continue;
         }
         if (arg == "--astar-weight" && index + 1 < argc) {
@@ -733,7 +733,7 @@ void recordCompactStateStorage(Timing& timing, const CompactState& state) {
     timing.compactMaxStateBytes = std::max(timing.compactMaxStateBytes, bytes);
 }
 
-struct CompactTickTryResult {
+struct CompactTurnTryResult {
     bool attempted = false;
     bool handled = false;
     CompactState compact;
@@ -743,7 +743,7 @@ struct CompactTickTryResult {
 struct SolverEdgeStep {
     std::unique_ptr<Session> ownedChild;
     Session* child = nullptr;
-    CompactTickTryResult compactTick;
+    CompactTurnTryResult compactTurn;
     ps_step_result stepResult{};
     bool oracleMismatch = false;
     std::string oracleError;
@@ -794,7 +794,7 @@ std::string compactStateDiffSummary(const CompactState& lhs, const CompactState&
     return " state_equal";
 }
 
-CompactTickTryResult tryCompiledCompactTick(
+CompactTurnTryResult trySpecializedCompactTurn(
     const Game& game,
     const CompactState& parent,
     ps_input input,
@@ -803,7 +803,7 @@ CompactTickTryResult tryCompiledCompactTick(
     int32_t currentLevelIndex,
     puzzlescript::RuntimeStepOptions options
 ) {
-    CompactTickTryResult result;
+    CompactTurnTryResult result;
     if (game.compiledCompactTick == nullptr || game.compiledCompactTick->step == nullptr) {
         return result;
     }
@@ -840,7 +840,7 @@ SolverEdgeStep stepSolverEdge(
     int32_t height,
     Session& childScratch,
     Result& result,
-    bool compactTickOracle
+    bool compactTurnOracle
 ) {
     constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
         .playableUndo = false,
@@ -849,13 +849,13 @@ SolverEdgeStep stepSolverEdge(
     };
     SolverEdgeStep edge;
     if (compactNodeStorage) {
-        const puzzlescript::CompiledCompactTickBackend* compactTick = game ? game->compiledCompactTick : nullptr;
-        if (compactTick != nullptr && compactTick->step != nullptr) {
-            if (compactTick->support.wholeTurnSupported) {
-                ++result.compactTickAttempts;
+        const puzzlescript::CompiledCompactTickBackend* compactTurn = game ? game->compiledCompactTick : nullptr;
+        if (compactTurn != nullptr && compactTurn->step != nullptr) {
+            if (compactTurn->support.wholeTurnSupported) {
+                ++result.compactTurnAttempts;
                 {
                     ScopedTimer timer(result.timing.stepNs);
-                    edge.compactTick = tryCompiledCompactTick(
+                    edge.compactTurn = trySpecializedCompactTurn(
                         *game,
                         parentNode.compact,
                         input,
@@ -865,10 +865,10 @@ SolverEdgeStep stepSolverEdge(
                         solverStepOptions
                     );
                 }
-                if (edge.compactTick.handled) {
-                    ++result.compactTickHits;
-                    if (compactTickOracle) {
-                        ++result.compactTickOracleChecks;
+                if (edge.compactTurn.handled) {
+                    ++result.compactTurnHits;
+                    if (compactTurnOracle) {
+                        ++result.compactTurnOracleChecks;
                         {
                             ScopedTimer timer(result.timing.cloneNs);
                             prepareSolverChildSessionFromParent(childScratch, parentSession);
@@ -878,37 +878,37 @@ SolverEdgeStep stepSolverEdge(
                             ScopedTimer timer(result.timing.stepNs);
                             oracleStepResult = puzzlescript::turn(childScratch, input, solverStepOptions);
                         }
-                        const bool terminalEdge = edge.compactTick.stepResult.won
+                        const bool terminalEdge = edge.compactTurn.stepResult.won
                             || oracleStepResult.won
-                            || edge.compactTick.stepResult.transitioned
+                            || edge.compactTurn.stepResult.transitioned
                             || oracleStepResult.transitioned
-                            || edge.compactTick.stepResult.restarted
+                            || edge.compactTurn.stepResult.restarted
                             || oracleStepResult.restarted;
                         CompactState oracleCompact;
                         if (!terminalEdge) {
                             oracleCompact = compactStateWithTiming(childScratch, result.timing);
                         }
-                        if (!equivalentSolverStepResult(edge.compactTick.stepResult, oracleStepResult)
-                            || (!terminalEdge && !(edge.compactTick.compact == oracleCompact))) {
-                            ++result.compactTickOracleFailures;
+                        if (!equivalentSolverStepResult(edge.compactTurn.stepResult, oracleStepResult)
+                            || (!terminalEdge && !(edge.compactTurn.compact == oracleCompact))) {
+                            ++result.compactTurnOracleFailures;
                             edge.oracleMismatch = true;
-                            edge.oracleError = "compact tick oracle mismatch input=" + inputName(input)
+                            edge.oracleError = "compact turn oracle mismatch input=" + inputName(input)
                                 + " depth=" + std::to_string(parentNode.depth)
-                                + " compact_step=" + stepResultSummary(edge.compactTick.stepResult)
+                                + " compact_step=" + stepResultSummary(edge.compactTurn.stepResult)
                                 + " interpreter_step=" + stepResultSummary(oracleStepResult)
-                                + compactStateDiffSummary(edge.compactTick.compact, oracleCompact);
+                                + compactStateDiffSummary(edge.compactTurn.compact, oracleCompact);
                         }
                     }
                 } else {
-                    ++result.compactTickFallbacks;
+                    ++result.compactTurnFallbacks;
                 }
             } else {
-                ++result.compactTickUnsupported;
+                ++result.compactTurnUnsupported;
             }
         }
     }
 
-    if (!edge.compactTick.handled) {
+    if (!edge.compactTurn.handled) {
         ScopedTimer timer(result.timing.cloneNs);
         if (!compactNodeStorage) {
             edge.ownedChild = std::make_unique<Session>(parentSession);
@@ -919,8 +919,8 @@ SolverEdgeStep stepSolverEdge(
         }
     }
 
-    if (edge.compactTick.handled) {
-        edge.stepResult = edge.compactTick.stepResult;
+    if (edge.compactTurn.handled) {
+        edge.stepResult = edge.compactTurn.stepResult;
     } else {
         ScopedTimer timer(result.timing.stepNs);
         edge.stepResult = puzzlescript::turn(*edge.child, input, solverStepOptions);
@@ -1344,7 +1344,7 @@ Result runSearch(
     uint32_t workerId,
     bool exactStateKeys,
     bool compactNodeStorage,
-    bool compactTickOracle,
+    bool compactTurnOracle,
     int32_t astarWeight
 ) {
     Result result;
@@ -1357,7 +1357,7 @@ Result runSearch(
     result.workerId = workerId;
     result.compiledRulesAttached = game && game->compiledRules != nullptr;
     result.compiledTickAttached = game && game->compiledTick != nullptr;
-    result.compiledCompactTickAttached = game && game->compiledCompactTick != nullptr;
+    result.specializedCompactTurnAttached = game && game->compiledCompactTick != nullptr;
     result.compactNodeStorage = compactNodeStorage;
     result.astarWeight = astarWeight;
     result.timing.compileNs = compileNs;
@@ -1483,7 +1483,7 @@ Result runSearch(
                 searchHeight,
                 *childScratch,
                 result,
-                compactTickOracle
+                compactTurnOracle
             );
             if (edge.oracleMismatch) {
                 result.status = "level_error";
@@ -1500,7 +1500,7 @@ Result runSearch(
             bool solved = false;
             {
                 ScopedTimer timer(result.timing.solvedCheckNs);
-                solved = edge.compactTick.handled ? stepResult.won : solvedByStep(stepResult, *edge.child, levelIndex);
+                solved = edge.compactTurn.handled ? stepResult.won : solvedByStep(stepResult, *edge.child, levelIndex);
             }
             if (solved) {
                 result.status = "solved";
@@ -1511,8 +1511,8 @@ Result runSearch(
                 continue;
             }
 
-            CompactState compact = edge.compactTick.handled
-                ? std::move(edge.compactTick.compact)
+            CompactState compact = edge.compactTurn.handled
+                ? std::move(edge.compactTurn.compact)
                 : compactStateWithTiming(*edge.child, result.timing);
             const StateKey key = compactStateKey(compact, result.timing);
             const uint32_t childDepth = parentDepth + 1;
@@ -1581,12 +1581,12 @@ void mergeStats(Result& target, const Result& source) {
     target.uniqueStates += source.uniqueStates;
     target.duplicates += source.duplicates;
     target.maxFrontier = std::max(target.maxFrontier, source.maxFrontier);
-    target.compactTickAttempts += source.compactTickAttempts;
-    target.compactTickHits += source.compactTickHits;
-    target.compactTickFallbacks += source.compactTickFallbacks;
-    target.compactTickUnsupported += source.compactTickUnsupported;
-    target.compactTickOracleChecks += source.compactTickOracleChecks;
-    target.compactTickOracleFailures += source.compactTickOracleFailures;
+    target.compactTurnAttempts += source.compactTurnAttempts;
+    target.compactTurnHits += source.compactTurnHits;
+    target.compactTurnFallbacks += source.compactTurnFallbacks;
+    target.compactTurnUnsupported += source.compactTurnUnsupported;
+    target.compactTurnOracleChecks += source.compactTurnOracleChecks;
+    target.compactTurnOracleFailures += source.compactTurnOracleFailures;
     target.timing.loadNs += source.timing.loadNs;
     target.timing.cloneNs += source.timing.cloneNs;
     target.timing.stepNs += source.timing.stepNs;
@@ -1621,7 +1621,7 @@ Result solveLevel(
     uint32_t workerId,
     bool exactStateKeys,
     bool compactNodeStorage,
-    bool compactTickOracle,
+    bool compactTurnOracle,
     int32_t astarWeight
 ) {
     const TimePoint searchStart = Clock::now();
@@ -1634,13 +1634,13 @@ Result solveLevel(
     };
 
     if (strategy == Strategy::Bfs) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight));
     }
     if (strategy == Strategy::WeightedAStar) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight));
     }
     if (strategy == Strategy::Greedy) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight));
     }
 
     Result combined;
@@ -1653,13 +1653,13 @@ Result solveLevel(
     combined.workerId = workerId;
     combined.compiledRulesAttached = game && game->compiledRules != nullptr;
     combined.compiledTickAttached = game && game->compiledTick != nullptr;
-    combined.compiledCompactTickAttached = game && game->compiledCompactTick != nullptr;
+    combined.specializedCompactTurnAttached = game && game->compiledCompactTick != nullptr;
     combined.compactNodeStorage = compactNodeStorage;
     combined.astarWeight = astarWeight;
     combined.timing.compileNs = compileNs;
 
     const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
-    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight);
+    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight);
     mergeStats(combined, bfs);
     if (bfs.status == "solved" || bfs.status == "skipped_message" || bfs.status == "level_error") {
         bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
@@ -1667,7 +1667,7 @@ Result solveLevel(
     }
 
     if (Clock::now() < deadline) {
-        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight);
+        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight);
         mergeStats(combined, weighted);
         if (weighted.status == "solved" || weighted.status == "level_error") {
             combined.status = weighted.status;
@@ -1858,15 +1858,15 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"timeout_ms\":" << result.timeoutMs;
     out << ",\"compiled_rules_attached\":" << (result.compiledRulesAttached ? "true" : "false");
     out << ",\"compiled_tick_attached\":" << (result.compiledTickAttached ? "true" : "false");
-    out << ",\"compiled_compact_tick_attached\":" << (result.compiledCompactTickAttached ? "true" : "false");
+    out << ",\"specialized_compact_turn_attached\":" << (result.specializedCompactTurnAttached ? "true" : "false");
     out << ",\"compact_node_storage\":" << (result.compactNodeStorage ? "true" : "false");
     out << ",\"astar_weight\":" << result.astarWeight;
-    out << ",\"compact_tick_attempts\":" << result.compactTickAttempts;
-    out << ",\"compact_tick_hits\":" << result.compactTickHits;
-    out << ",\"compact_tick_fallbacks\":" << result.compactTickFallbacks;
-    out << ",\"compact_tick_unsupported\":" << result.compactTickUnsupported;
-    out << ",\"compact_tick_oracle_checks\":" << result.compactTickOracleChecks;
-    out << ",\"compact_tick_oracle_failures\":" << result.compactTickOracleFailures;
+    out << ",\"compact_turn_attempts\":" << result.compactTurnAttempts;
+    out << ",\"compact_turn_hits\":" << result.compactTurnHits;
+    out << ",\"compact_turn_fallbacks\":" << result.compactTurnFallbacks;
+    out << ",\"compact_turn_unsupported\":" << result.compactTurnUnsupported;
+    out << ",\"compact_turn_oracle_checks\":" << result.compactTurnOracleChecks;
+    out << ",\"compact_turn_oracle_failures\":" << result.compactTurnOracleFailures;
     out << ",\"compile_ms\":" << ms(result.timing.compileNs);
     out << ",\"load_ms\":" << ms(result.timing.loadNs);
     out << ",\"clone_ms\":" << ms(result.timing.cloneNs);
@@ -1903,12 +1903,12 @@ void printJson(const std::vector<Result>& results) {
     Timing timing{};
     uint64_t expanded = 0;
     uint64_t generated = 0;
-    uint64_t compactTickAttempts = 0;
-    uint64_t compactTickHits = 0;
-    uint64_t compactTickFallbacks = 0;
-    uint64_t compactTickUnsupported = 0;
-    uint64_t compactTickOracleChecks = 0;
-    uint64_t compactTickOracleFailures = 0;
+    uint64_t compactTurnAttempts = 0;
+    uint64_t compactTurnHits = 0;
+    uint64_t compactTurnFallbacks = 0;
+    uint64_t compactTurnUnsupported = 0;
+    uint64_t compactTurnOracleChecks = 0;
+    uint64_t compactTurnOracleFailures = 0;
     for (const auto& result : results) {
         solved += result.status == "solved";
         timeout += result.status == "timeout";
@@ -1917,12 +1917,12 @@ void printJson(const std::vector<Result>& results) {
         errors += result.status == "compile_error" || result.status == "level_error";
         expanded += result.expanded;
         generated += result.generated;
-        compactTickAttempts += result.compactTickAttempts;
-        compactTickHits += result.compactTickHits;
-        compactTickFallbacks += result.compactTickFallbacks;
-        compactTickUnsupported += result.compactTickUnsupported;
-        compactTickOracleChecks += result.compactTickOracleChecks;
-        compactTickOracleFailures += result.compactTickOracleFailures;
+        compactTurnAttempts += result.compactTurnAttempts;
+        compactTurnHits += result.compactTurnHits;
+        compactTurnFallbacks += result.compactTurnFallbacks;
+        compactTurnUnsupported += result.compactTurnUnsupported;
+        compactTurnOracleChecks += result.compactTurnOracleChecks;
+        compactTurnOracleFailures += result.compactTurnOracleFailures;
         timing.compileNs += result.timing.compileNs;
         timing.loadNs += result.timing.loadNs;
         timing.cloneNs += result.timing.cloneNs;
@@ -1963,12 +1963,12 @@ void printJson(const std::vector<Result>& results) {
     std::cout << ",\"errors\":" << errors;
     std::cout << ",\"expanded\":" << expanded;
     std::cout << ",\"generated\":" << generated;
-    std::cout << ",\"compact_tick_attempts\":" << compactTickAttempts;
-    std::cout << ",\"compact_tick_hits\":" << compactTickHits;
-    std::cout << ",\"compact_tick_fallbacks\":" << compactTickFallbacks;
-    std::cout << ",\"compact_tick_unsupported\":" << compactTickUnsupported;
-    std::cout << ",\"compact_tick_oracle_checks\":" << compactTickOracleChecks;
-    std::cout << ",\"compact_tick_oracle_failures\":" << compactTickOracleFailures;
+    std::cout << ",\"compact_turn_attempts\":" << compactTurnAttempts;
+    std::cout << ",\"compact_turn_hits\":" << compactTurnHits;
+    std::cout << ",\"compact_turn_fallbacks\":" << compactTurnFallbacks;
+    std::cout << ",\"compact_turn_unsupported\":" << compactTurnUnsupported;
+    std::cout << ",\"compact_turn_oracle_checks\":" << compactTurnOracleChecks;
+    std::cout << ",\"compact_turn_oracle_failures\":" << compactTurnOracleFailures;
     std::cout << ",\"compile_ms\":" << ms(timing.compileNs);
     std::cout << ",\"load_ms\":" << ms(timing.loadNs);
     std::cout << ",\"clone_ms\":" << ms(timing.cloneNs);
@@ -2187,7 +2187,7 @@ std::vector<Result> runCorpus(const Options& options) {
                     workerId,
                     options.exactStateKeys,
                     options.compactNodeStorage,
-                    options.compactTickOracle,
+                    options.compactTurnOracle,
                     options.astarWeight
                 );
                 results[item.resultIndex] = std::move(result);
@@ -2259,12 +2259,12 @@ int main(int argc, char** argv) {
                       << " compiled_tick_attempts=" << runtimeCounters.compiled_tick_attempts
                       << " compiled_tick_hits=" << runtimeCounters.compiled_tick_hits
                       << " compiled_tick_fallbacks=" << runtimeCounters.compiled_tick_fallbacks
-                      << " compact_tick_attempts=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickAttempts; })
-                      << " compact_tick_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickHits; })
-                      << " compact_tick_fallbacks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickFallbacks; })
-                      << " compact_tick_unsupported=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickUnsupported; })
-                      << " compact_tick_oracle_checks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickOracleChecks; })
-                      << " compact_tick_oracle_failures=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickOracleFailures; })
+                      << " compact_turn_attempts=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnAttempts; })
+                      << " compact_turn_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnHits; })
+                      << " compact_turn_fallbacks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnFallbacks; })
+                      << " compact_turn_unsupported=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnUnsupported; })
+                      << " compact_turn_oracle_checks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnOracleChecks; })
+                      << " compact_turn_oracle_failures=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnOracleFailures; })
                       << "\n";
         }
         if (options.requireCompiledTick && runtimeCounters.compiled_tick_hits == 0) {

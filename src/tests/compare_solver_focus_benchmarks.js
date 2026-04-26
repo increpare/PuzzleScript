@@ -64,7 +64,10 @@ function formatDelta(newValue, oldValue, digits = 1) {
 }
 
 function metricMedian(summary, key) {
-    const value = summary && summary.median && summary.median[key];
+    let value = summary && summary.median && summary.median[key];
+    if (!Number.isFinite(value) && key.startsWith('compact_turn_')) {
+        value = summary && summary.median && summary.median[key.replace('compact_turn_', 'compact_tick_')];
+    }
     return Number.isFinite(value) ? value : null;
 }
 
@@ -466,10 +469,10 @@ printMedianMetric('visited_max_probe', 'visited_max_probe');
 printMedianMetric('visited_key_collisions', 'visited_key_collisions');
 printMedianMetric('compact_state_bytes', 'compact_state_bytes');
 printMedianMetric('compact_max_state_bytes', 'compact_max_state_bytes');
-printMedianMetric('compact_tick_attempts', 'compact_tick_attempts');
-printMedianMetric('compact_tick_hits', 'compact_tick_hits');
-printMedianMetric('compact_tick_fallbacks', 'compact_tick_fallbacks');
-printMedianMetric('compact_tick_unsupported', 'compact_tick_unsupported');
+printMedianMetric('compact_turn_attempts', 'compact_turn_attempts');
+printMedianMetric('compact_turn_hits', 'compact_turn_hits');
+printMedianMetric('compact_turn_fallbacks', 'compact_turn_fallbacks');
+printMedianMetric('compact_turn_unsupported', 'compact_turn_unsupported');
 printMedianMetricSum('frontier_ms', ['frontier_pop_ms', 'frontier_push_ms']);
 printMedianMetric('node_store_ms', 'node_store_ms');
 printMedianMetric('heuristic_ms', 'heuristic_ms');

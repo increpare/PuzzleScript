@@ -20,7 +20,7 @@
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
-	compiled_rules_simulation_suite_coverage compiled_tick_dispatch_smoke compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
+	compiled_rules_simulation_suite_coverage compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
@@ -123,9 +123,11 @@ COMPILED_RULES_BUILD_GENERATOR_SUFFIX = $(if $(COMPILED_RULES_CMAKE_GENERATOR),-
 COMPILED_RULES_BUILD_ROOT ?= $(BUILD_DIR)/compiled-rules-builds$(COMPILED_RULES_BUILD_GENERATOR_SUFFIX)
 COMPILED_RULES_ARTIFACT_ROOT ?= $(BUILD_DIR)/compiled-rules
 COMPILED_RULES_SIMULATION_SUITE_COVERAGE_JSON ?= $(COMPILED_RULES_ARTIFACT_ROOT)/simulation-suite-coverage.json
-COMPACT_TICK_COVERAGE_JSON ?= $(COMPILED_RULES_ARTIFACT_ROOT)/compact-testdata-coverage.json
+COMPACT_TURN_COVERAGE_JSON ?= $(COMPILED_RULES_ARTIFACT_ROOT)/compact-testdata-coverage.json
+COMPACT_TICK_COVERAGE_JSON ?= $(COMPACT_TURN_COVERAGE_JSON)
 COMPILED_RULES_MAX_ROWS ?= 1
-COMPACT_TICK_TESTDATA_MAX_ROWS ?= 99
+COMPACT_TURN_TESTDATA_MAX_ROWS ?= 99
+COMPACT_TICK_TESTDATA_MAX_ROWS ?= $(COMPACT_TURN_TESTDATA_MAX_ROWS)
 COMPILED_RULES_LTO ?= false
 COMPILED_RULES_LINK_DEDUP ?= false
 COMPILED_RULES_EXPORT_SYMBOLS ?= false
@@ -282,9 +284,9 @@ help:
 	@echo "  make solver_tests                  Run native solver and JS comparison solver"
 	@echo "  make solver_compact_parity_smoke   Compare normal vs compact solver storage on smoke games"
 	@echo "  make solver_compact_parity         Compare normal vs compact solver storage on non-random corpus games"
-	@echo "  make compact_tick_oracle_smoke     Run generated compact ticks against interpreter oracle"
-	@echo "  make compact_tick_simulation_tests Run testdata.js through generated compact tick oracle"
-	@echo "  make compact_tick_coverage         Report native-vs-bridge compact tick coverage"
+	@echo "  make compact_turn_oracle_smoke     Run specialized compact turns against interpreter oracle"
+	@echo "  make compact_turn_simulation_tests Run testdata.js through specialized compact turn oracle"
+	@echo "  make compact_turn_coverage         Report native-vs-bridge compact turn coverage"
 	@echo "  make generator_smoke_tests         Run native generator smoke tests"
 	@echo "  make generator_benchmark           Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
@@ -519,7 +521,9 @@ compiled_tick_dispatch_smoke: build
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 	$(NODE) src/tests/run_solver_smoke_assert.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests --timeout-ms 1000 --require-compiled-tick
 
-compact_tick_oracle_smoke: build
+compact_tick_oracle_smoke: compact_turn_oracle_smoke
+
+compact_turn_oracle_smoke: build
 	@set -e; \
 	$(COMPILED_RULES_BOOTSTRAP_CPP); \
 	hash=$$(find src/tests/solver_smoke_tests -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
@@ -531,9 +535,11 @@ compact_tick_oracle_smoke: build
 	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/solver_smoke_tests,solver_smoke_$$hash); \
 	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
-	$(NODE) src/tests/run_solver_smoke_assert.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests --timeout-ms 1000 --compact-tick-oracle --require-compact-oracle-checks
+	$(NODE) src/tests/run_solver_smoke_assert.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests --timeout-ms 1000 --compact-turn-oracle --require-compact-oracle-checks
 
-compact_tick_simulation_tests: build
+compact_tick_simulation_tests: compact_turn_simulation_tests
+
+compact_turn_simulation_tests: build
 	@set -e; \
 	$(COMPILED_RULES_BOOTSTRAP_CPP); \
 	hash=$$(shasum -a 256 src/tests/resources/testdata.js | awk '{print $$1}'); \
@@ -542,17 +548,19 @@ compact_tick_simulation_tests: build
 	out_cpp_dir="$$out_dir/sources"; \
 	sources_file="$$out_dir/sources.txt"; \
 	mkdir -p "$$out_dir"; \
-	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/resources/testdata.js,testdata_compact_$$hash,--compact-tick-only,$(COMPACT_TICK_TESTDATA_MAX_ROWS)); \
+	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/resources/testdata.js,testdata_compact_$$hash,--compact-turn-only,$(COMPACT_TURN_TESTDATA_MAX_ROWS)); \
 	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_cpp; \
-	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0 --compact-tick-oracle --require-compact-tick-oracle-checks
+	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0 --compact-turn-oracle --require-compact-turn-oracle-checks
 
-compact_tick_coverage:
+compact_tick_coverage: compact_turn_coverage
+
+compact_turn_coverage:
 	@set -e; \
 	$(COMPILED_RULES_BOOTSTRAP_CPP); \
-	mkdir -p "$$(dirname "$(COMPACT_TICK_COVERAGE_JSON)")"; \
-	$(PUZZLESCRIPT_CPP) compile-rules src/tests/resources/testdata.js --stats-only --max-rows $(COMPACT_TICK_TESTDATA_MAX_ROWS) --coverage-json "$(COMPACT_TICK_COVERAGE_JSON)"; \
-	$(NODE) -e 'const fs=require("fs"); const path=process.argv[1]; const j=JSON.parse(fs.readFileSync(path,"utf8")); const c=j.aggregate.compact_tick; const sources=c.sources; const native=c.native_kernel_supported; const bridge=c.interpreter_bridge_supported; const callable=c.whole_turn_supported; const pct=n=>sources?((100*n/sources).toFixed(1)+"%"):"n/a"; console.log(""); console.log("compact_tick_coverage"); console.log("  json: "+path); console.log("  unique_sources: "+sources); console.log("  callable_compact_backends: "+callable+"/"+sources+" ("+pct(callable)+")"); console.log("  native_compact_kernels: "+native+"/"+sources+" ("+pct(native)+")"); console.log("  interpreter_bridge_backends: "+bridge+"/"+sources+" ("+pct(bridge)+")"); console.log("  max_rows: "+j.max_rows);' "$(COMPACT_TICK_COVERAGE_JSON)"
+	mkdir -p "$$(dirname "$(COMPACT_TURN_COVERAGE_JSON)")"; \
+	$(PUZZLESCRIPT_CPP) compile-rules src/tests/resources/testdata.js --stats-only --max-rows $(COMPACT_TURN_TESTDATA_MAX_ROWS) --coverage-json "$(COMPACT_TURN_COVERAGE_JSON)"; \
+	$(NODE) -e 'const fs=require("fs"); const path=process.argv[1]; const j=JSON.parse(fs.readFileSync(path,"utf8")); const c=j.aggregate.compact_turn||j.aggregate.compact_tick; const sources=c.sources; const native=c.native_kernel_supported; const bridge=c.interpreter_bridge_supported; const callable=c.whole_turn_supported; const pct=n=>sources?((100*n/sources).toFixed(1)+"%"):"n/a"; console.log(""); console.log("compact_turn_coverage"); console.log("  json: "+path); console.log("  unique_sources: "+sources); console.log("  callable_compact_backends: "+callable+"/"+sources+" ("+pct(callable)+")"); console.log("  native_compact_kernels: "+native+"/"+sources+" ("+pct(native)+")"); console.log("  interpreter_bridge_backends: "+bridge+"/"+sources+" ("+pct(bridge)+")"); console.log("  max_rows: "+j.max_rows);' "$(COMPACT_TURN_COVERAGE_JSON)"
 
 solver_determinism_tests: $(SOLVER_TARGET_PREREQ)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \

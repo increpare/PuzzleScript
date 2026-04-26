@@ -35,8 +35,8 @@ CompactState + SpecializedTurn + SpecializedRulegroups + AgainPolicy::Drain
 - [x] Run `make build` if the build is not known-good.
 - [x] Run `make solver_smoke_tests`.
 - [x] Run `make solver_compact_parity`.
-- [ ] Run `make compact_tick_coverage` and record callable/native/bridge counts.
-- [ ] Run `make compact_tick_simulation_tests` if iteration time is acceptable.
+- [x] Run `make compact_turn_coverage` and record callable/native/bridge counts.
+- [x] Run `make compact_turn_simulation_tests` if iteration time is acceptable.
 - [ ] Save baseline notes in the first implementation commit message or a short doc update.
 
 ## Phase 1: Rename Solver Compact State
@@ -54,7 +54,7 @@ Goal: replace the misleading solver-local name `CompactSolverState` with `Compac
 - [x] Confirm equality includes object bitsets and full RNG state.
 - [x] Confirm `byteSize()` includes object bitsets and full RNG state.
 - [x] Confirm materialization still zero-initializes movement words.
-- [x] Confirm compact tick view still passes null/zero movement words from solver compact state.
+- [x] Confirm compact turn view still passes null/zero movement words from solver compact state.
 
 Acceptance:
 
@@ -103,7 +103,7 @@ Goal: make solver/generator call the unified turn path with `AgainPolicy::Drain`
 - [x] Replace generator solver-loop `step(...)` plus `settlePendingAgain(...)` call sites with the unified interpreted turn using `AgainPolicy::Drain`.
 - [x] Preserve solver semantics for terminal edges.
 - [x] Preserve solver treatment of `restart` as a failed/terminal edge.
-- [x] Preserve compact tick oracle behavior: compact result compared to interpreted drained result where solver expects drained states.
+- [x] Preserve compact turn oracle behavior: compact result compared to interpreted drained result where solver expects drained states.
 - [x] Check that normal player/runtime call sites still use `AgainPolicy::Yield`.
 - [x] Keep public C API behavior unchanged in this phase.
 
@@ -120,38 +120,38 @@ Acceptance:
 
 Goal: stop using `tick` as an architecture term for compact execution.
 
-- [ ] Rename internal compact tick counters to compact turn counters.
-- [ ] Rename JSON fields:
-  - [ ] `compiled_compact_tick_attached` -> `specialized_compact_turn_attached`
-  - [ ] `compact_tick_attempts` -> `compact_turn_attempts`
-  - [ ] `compact_tick_hits` -> `compact_turn_hits`
-  - [ ] `compact_tick_fallbacks` -> `compact_turn_fallbacks`
-  - [ ] `compact_tick_unsupported` -> `compact_turn_unsupported`
-  - [ ] `compact_tick_oracle_checks` -> `compact_turn_oracle_checks`
-  - [ ] `compact_tick_oracle_failures` -> `compact_turn_oracle_failures`
-- [ ] Update benchmark comparison scripts to read the new fields.
-- [ ] Add temporary fallback reads for old JSON fields only if needed for comparing older benchmark files.
-- [ ] Rename Make targets:
-  - [ ] `compact_tick_oracle_smoke` -> `compact_turn_oracle_smoke`
-  - [ ] `compact_tick_simulation_tests` -> `compact_turn_simulation_tests`
-  - [ ] `compact_tick_coverage` -> `compact_turn_coverage`
-- [ ] Add temporary Make aliases from old target names to new target names if useful for muscle memory.
-- [ ] Rename CLI flags:
-  - [ ] `--compact-tick-oracle` -> `--compact-turn-oracle`
-  - [ ] `--require-compact-tick-oracle-checks` -> `--require-compact-turn-oracle-checks`
-- [ ] Add temporary CLI flag aliases if tests/scripts still need to migrate in separate commits.
-- [ ] Update human-readable output text.
-- [ ] Update docs and checklist references.
+- [x] Rename internal compact tick counters to compact turn counters.
+- [x] Rename JSON fields:
+  - [x] `compiled_compact_tick_attached` -> `specialized_compact_turn_attached`
+  - [x] `compact_tick_attempts` -> `compact_turn_attempts`
+  - [x] `compact_tick_hits` -> `compact_turn_hits`
+  - [x] `compact_tick_fallbacks` -> `compact_turn_fallbacks`
+  - [x] `compact_tick_unsupported` -> `compact_turn_unsupported`
+  - [x] `compact_tick_oracle_checks` -> `compact_turn_oracle_checks`
+  - [x] `compact_tick_oracle_failures` -> `compact_turn_oracle_failures`
+- [x] Update benchmark comparison scripts to read the new fields.
+- [x] Add temporary fallback reads for old JSON fields only if needed for comparing older benchmark files.
+- [x] Rename Make targets:
+  - [x] `compact_tick_oracle_smoke` -> `compact_turn_oracle_smoke`
+  - [x] `compact_tick_simulation_tests` -> `compact_turn_simulation_tests`
+  - [x] `compact_tick_coverage` -> `compact_turn_coverage`
+- [x] Add temporary Make aliases from old target names to new target names if useful for muscle memory.
+- [x] Rename CLI flags:
+  - [x] `--compact-tick-oracle` -> `--compact-turn-oracle`
+  - [x] `--require-compact-tick-oracle-checks` -> `--require-compact-turn-oracle-checks`
+- [x] Add temporary CLI flag aliases if tests/scripts still need to migrate in separate commits.
+- [x] Update human-readable output text.
+- [x] Update docs and checklist references.
 
 Acceptance:
 
-- [ ] `make build`
-- [ ] `make compact_turn_oracle_smoke`
-- [ ] `make compact_turn_simulation_tests`
-- [ ] `make compact_turn_coverage`
-- [ ] `make solver_compact_parity`
-- [ ] `rg "compact_tick" native/src src Makefile Refactor.md RefactorImplementation.md ProgressReport.md` only finds intentional compatibility aliases or historical notes.
-- [ ] Commit: `Rename compact tick tooling to compact turn`
+- [x] `make build`
+- [x] `make compact_turn_oracle_smoke`
+- [x] `make compact_turn_simulation_tests`
+- [x] `make compact_turn_coverage`
+- [x] `make solver_compact_parity`
+- [x] `rg "compact_tick" native/src src Makefile Refactor.md RefactorImplementation.md ProgressReport.md` only finds intentional compatibility aliases or historical notes.
+- [x] Commit: `Rename compact tick tooling to compact turn`
 
 ## Phase 5: Rename Specialized Compact Backend Types
 
@@ -327,7 +327,7 @@ This refactor should mostly preserve performance, except where `AgainPolicy::Dra
   - [ ] `Rename CompactSolverState to CompactState`
   - [ ] `Introduce interpreted turn and again policy`
   - [ ] `Use drained turns in solver and generator`
-  - [ ] `Rename compact tick tooling to compact turn`
+  - [ ] `Rename compact turn tooling to compact turn`
   - [ ] `Rename specialized compact turn backend types`
   - [ ] `Rename compiled rules to specialized rulegroups`
 - [ ] Never include unrelated user-owned working tree changes in these commits.

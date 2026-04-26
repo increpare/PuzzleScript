@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_compact_parity.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--strategy NAME] [--max-games N] [--compact-tick-oracle] [--require-compact-oracle-checks]');
+    console.error('Usage: node src/tests/run_solver_compact_parity.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--strategy NAME] [--max-games N] [--compact-turn-oracle] [--require-compact-oracle-checks]');
     process.exit(1);
 }
 
@@ -20,7 +20,7 @@ const corpusPath = path.resolve(args[1]);
 let timeoutMs = 1000;
 let strategy = 'bfs';
 let maxGames = null;
-let compactTickOracle = false;
+let compactTurnOracle = false;
 let requireCompactOracleChecks = false;
 
 function parsePositiveInt(value, label) {
@@ -39,8 +39,8 @@ for (let index = 2; index < args.length; index++) {
         strategy = args[++index];
     } else if (arg === '--max-games' && index + 1 < args.length) {
         maxGames = parsePositiveInt(args[++index], '--max-games');
-    } else if (arg === '--compact-tick-oracle') {
-        compactTickOracle = true;
+    } else if (arg === '--compact-turn-oracle' || arg === '--compact-tick-oracle') {
+        compactTurnOracle = true;
     } else if (arg === '--require-compact-oracle-checks') {
         requireCompactOracleChecks = true;
     } else {
@@ -113,8 +113,8 @@ function runSolver(gameName, compact) {
     ];
     if (compact) {
         solverArgs.push('--compact-node-storage');
-        if (compactTickOracle) {
-            solverArgs.push('--compact-tick-oracle');
+        if (compactTurnOracle) {
+            solverArgs.push('--compact-turn-oracle');
         }
     }
     const result = spawnSync(solverPath, solverArgs, {
@@ -185,6 +185,12 @@ function compareResults(normalResult, compactResult) {
     return null;
 }
 
+function total(json, field, oldField = null) {
+    if (json.totals[field] !== undefined) return json.totals[field];
+    if (oldField !== null && json.totals[oldField] !== undefined) return json.totals[oldField];
+    return 0;
+}
+
 const allGames = walkTxtFiles(corpusPath);
 const eligibleGames = [];
 const randomExcluded = [];
@@ -214,10 +220,10 @@ for (let index = 0; index < selectedGames.length; index++) {
     process.stderr.write(`solver_compact_parity ${index + 1}/${selectedGames.length} ${gameName}\n`);
     const normal = runSolver(gameName, false);
     const compact = runSolver(gameName, true);
-    compactOracleChecks += compact.totals.compact_tick_oracle_checks || 0;
-    compactOracleFailures += compact.totals.compact_tick_oracle_failures || 0;
-    if ((compact.totals.compact_tick_oracle_failures || 0) !== 0) {
-        throw new Error(`compact tick oracle failures=${compact.totals.compact_tick_oracle_failures} game=${gameName}`);
+    compactOracleChecks += total(compact, 'compact_turn_oracle_checks', 'compact_tick_oracle_checks');
+    compactOracleFailures += total(compact, 'compact_turn_oracle_failures', 'compact_tick_oracle_failures');
+    if (total(compact, 'compact_turn_oracle_failures', 'compact_tick_oracle_failures') !== 0) {
+        throw new Error(`compact turn oracle failures=${total(compact, 'compact_turn_oracle_failures', 'compact_tick_oracle_failures')} game=${gameName}`);
     }
     const normalByKey = new Map(normal.results.map((result) => [resultKey(result), result]));
     const compactByKey = new Map(compact.results.map((result) => [resultKey(result), result]));
@@ -253,12 +259,12 @@ for (let index = 0; index < selectedGames.length; index++) {
     totalLevels += normal.results.length;
 }
 if (requireCompactOracleChecks && compactOracleChecks === 0) {
-    throw new Error('compact tick oracle checks were required but no generated compact tick was checked');
+    throw new Error('compact turn oracle checks were required but no generated compact turn was checked');
 }
 process.stdout.write(
     `solver_compact_parity passed games=${selectedGames.length}/${eligibleGames.length}`
     + ` levels=${totalLevels} random_excluded=${randomExcluded.length}`
     + ` compact_timeout_regressions=${compactTimeoutRegressions}`
-    + (compactTickOracle ? ` compact_tick_oracle_checks=${compactOracleChecks} compact_tick_oracle_failures=${compactOracleFailures}` : '')
+    + (compactTurnOracle ? ` compact_turn_oracle_checks=${compactOracleChecks} compact_turn_oracle_failures=${compactOracleFailures}` : '')
     + ` strategy=${strategy} timeout_ms=${timeoutMs}\n`
 );

@@ -5,7 +5,7 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--require-compiled-tick] [--compact-tick-oracle] [--require-compact-oracle-checks]');
+    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--require-compiled-tick] [--compact-turn-oracle] [--require-compact-oracle-checks]');
     process.exit(1);
 }
 
@@ -24,13 +24,19 @@ for (let index = 2; index < args.length; index++) {
         timeoutMs = Number.parseInt(args[++index], 10);
     } else if (args[index] === '--require-compiled-tick') {
         extraSolverArgs.push('--require-compiled-tick');
-    } else if (args[index] === '--compact-tick-oracle') {
-        extraSolverArgs.push('--compact-tick-oracle');
+    } else if (args[index] === '--compact-turn-oracle' || args[index] === '--compact-tick-oracle') {
+        extraSolverArgs.push('--compact-turn-oracle');
     } else if (args[index] === '--require-compact-oracle-checks') {
         requireCompactOracleChecks = true;
     } else {
         throw new Error(`Unsupported argument: ${args[index]}`);
     }
+}
+
+function total(json, field, oldField = null) {
+    if (json.totals[field] !== undefined) return json.totals[field];
+    if (oldField !== null && json.totals[oldField] !== undefined) return json.totals[oldField];
+    return 0;
 }
 
 function runSolver(extraArgs = []) {
@@ -68,11 +74,13 @@ function assertSmoke(json) {
     if (json.totals.skipped_message !== 1) throw new Error(`skipped ${json.totals.skipped_message}, expected 1`);
     if (json.totals.timeout !== 0) throw new Error(`timeout ${json.totals.timeout}, expected 0`);
     if (json.totals.errors !== 0) throw new Error(`errors ${json.totals.errors}, expected 0`);
-    if (json.totals.compact_tick_oracle_failures !== undefined && json.totals.compact_tick_oracle_failures !== 0) {
-        throw new Error(`compact_tick_oracle_failures ${json.totals.compact_tick_oracle_failures}, expected 0`);
+    const compactTurnOracleFailures = total(json, 'compact_turn_oracle_failures', 'compact_tick_oracle_failures');
+    const compactTurnOracleChecks = total(json, 'compact_turn_oracle_checks', 'compact_tick_oracle_checks');
+    if (compactTurnOracleFailures !== 0) {
+        throw new Error(`compact_turn_oracle_failures ${compactTurnOracleFailures}, expected 0`);
     }
-    if (requireCompactOracleChecks && !(json.totals.compact_tick_oracle_checks > 0)) {
-        throw new Error(`compact_tick_oracle_checks ${json.totals.compact_tick_oracle_checks}, expected > 0`);
+    if (requireCompactOracleChecks && !(compactTurnOracleChecks > 0)) {
+        throw new Error(`compact_turn_oracle_checks ${compactTurnOracleChecks}, expected > 0`);
     }
 
     const expected = new Map([
@@ -110,8 +118,10 @@ function assertSmoke(json) {
 const json = runSolver();
 assertSmoke(json);
 let suffix = '';
-if (json.totals.compact_tick_oracle_checks > 0 || json.totals.compact_tick_oracle_failures > 0 || requireCompactOracleChecks) {
-    suffix += ` compact_tick_oracle_checks=${json.totals.compact_tick_oracle_checks}`;
-    suffix += ` compact_tick_oracle_failures=${json.totals.compact_tick_oracle_failures}`;
+const compactTurnOracleChecks = total(json, 'compact_turn_oracle_checks', 'compact_tick_oracle_checks');
+const compactTurnOracleFailures = total(json, 'compact_turn_oracle_failures', 'compact_tick_oracle_failures');
+if (compactTurnOracleChecks > 0 || compactTurnOracleFailures > 0 || requireCompactOracleChecks) {
+    suffix += ` compact_turn_oracle_checks=${compactTurnOracleChecks}`;
+    suffix += ` compact_turn_oracle_failures=${compactTurnOracleFailures}`;
 }
 process.stdout.write(`solver_smoke_assert passed cases=7${suffix}\n`);

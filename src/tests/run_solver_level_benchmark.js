@@ -101,10 +101,10 @@ const timingFields = [
     'visited_key_collisions',
     'compact_state_bytes',
     'compact_max_state_bytes',
-    'compact_tick_attempts',
-    'compact_tick_hits',
-    'compact_tick_fallbacks',
-    'compact_tick_unsupported',
+    'compact_turn_attempts',
+    'compact_turn_hits',
+    'compact_turn_fallbacks',
+    'compact_turn_unsupported',
     'node_store_ms',
     'heuristic_ms',
     'solved_check_ms',
@@ -113,9 +113,18 @@ const timingFields = [
     'unattributed_ms',
 ];
 
+function readField(source, name, oldName = null) {
+    if (source[name] !== undefined) return source[name];
+    if (oldName !== null && source[oldName] !== undefined) return source[oldName];
+    return undefined;
+}
+
 function copyTimingFields(target, source) {
-    for (const field of timingFields) {
-        target[field] = source[field];
+    for (const fieldName of timingFields) {
+        const oldField = fieldName.startsWith('compact_turn_')
+            ? fieldName.replace('compact_turn_', 'compact_tick_')
+            : null;
+        target[fieldName] = oldField === null ? source[fieldName] : readField(source, fieldName, oldField);
     }
 }
 
@@ -201,7 +210,7 @@ function runTarget(target, runIndex, strategy, timeoutMs) {
         timeout_ms: solverResult.timeout_ms,
         compiled_rules_attached: Boolean(solverResult.compiled_rules_attached),
         compiled_tick_attached: Boolean(solverResult.compiled_tick_attached),
-        compiled_compact_tick_attached: Boolean(solverResult.compiled_compact_tick_attached),
+        specialized_compact_turn_attached: Boolean(readField(solverResult, 'specialized_compact_turn_attached', 'compiled_compact_tick_attached')),
         compile_ms: solverResult.compile_ms,
         load_ms: solverResult.load_ms,
         clone_ms: solverResult.clone_ms,
