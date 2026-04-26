@@ -5,7 +5,7 @@ specific enough that a person or agent can pick the next unchecked item, make a
 small commit, and know how to prove it.
 
 The north star is a generated per-game execution path: conceptually,
-`tick(state, input) -> state`. The interpreter remains the reference
+`turn(state, input) -> state`. The interpreter remains the reference
 implementation until the generated path has earned every piece of behavior.
 
 ## How To Use This File
@@ -27,9 +27,8 @@ Status markers:
 
 ## Always-On Guardrails
 
-- [ ] Preserve `interpreterStep` and `interpreterTick` as the behavior oracle.
-  Generated code may call them directly, or decline handling so dispatch falls
-  through to them.
+- [ ] Preserve the interpreted turn path as the behavior oracle. Generated code
+  may call it directly, or decline handling so dispatch falls through to it.
 
 - [ ] Preserve debug behavior. If a `PS_DEBUG_*` mode would lose information on
   the generated path, dispatch must choose the interpreter until trace parity is
@@ -43,7 +42,7 @@ Status markers:
   single generated game source where practical; corpus-wide generation remains a
   proving rig.
 
-- [ ] Keep fallback cheap enough to be useful. A generated tick function should
+- [ ] Keep fallback cheap enough to be useful. A generated turn function should
   be allowed to bail out without rebuilding a whole second world around the
   interpreter.
 
@@ -53,25 +52,25 @@ Status markers:
 
 ## Current Groundwork
 
-- [x] Compiled rule-group kernels exist and attach by source hash.
+- [x] Specialized rulegroup kernels exist and attach by source hash.
 
 - [x] `compile-rules --coverage-json` reports aggregate and per-source coverage.
 
 - [x] `make compiled_rules_simulation_suite_coverage` writes a reusable
   simulation-suite coverage JSON file.
 
-- [x] With `COMPILED_RULES_MAX_ROWS=99`, compiled rules cover 452/452 unique
-  simulation-suite source texts.
+- [x] With `COMPILED_RULES_MAX_ROWS=99`, specialized rulegroups cover 452/452
+  unique simulation-suite source texts.
 
 - [x] Solver and generator can opt into generated rule code with
   `SPECIALIZE=true`.
 
-- [x] Public `step` / `tick` dispatch can try a `CompiledTickBackend`.
+- [x] Public `step` / `tick` dispatch can try a `SpecializedFullTurnBackend`.
 
-- [x] `interpreterStep` / `interpreterTick` name the reference engine path.
+- [x] The interpreted turn path names the reference engine behavior.
 
-- [x] Generated sources export a compiled tick backend that currently delegates
-  to `interpreterStep` / `interpreterTick`.
+- [x] Generated sources export a specialized full-turn backend that currently
+  delegates to the interpreted turn path when it cannot own the behavior.
 
 ## Current Push: Solver Focus 2x Performance
 
@@ -133,9 +132,9 @@ lab bench, not the full corpus.
   make solver_focus_perf_report
   ```
 
-  Done means: the report can show slowest/fastest targets, compiled tick hits,
-  compiled rule hits, pattern tests, candidate cells, row scans, and mask rebuild
-  counters.
+  Done means: the report can show slowest/fastest targets, specialized
+  full-turn hits, specialized rulegroup hits, pattern tests, candidate cells,
+  row scans, and mask rebuild counters.
 
 - [x] Add solver timing breakdown to focus benchmark outputs.
 
@@ -306,8 +305,9 @@ lab bench, not the full corpus.
 
   Acceptance criteria:
 
-  - The perf report flags or fails when `compiled_tick_hits` unexpectedly drops.
-  - It flags rising `compiled_tick_fallbacks` or
+  - The perf report flags or fails when specialized full-turn hit counters
+    unexpectedly drop.
+  - It flags rising specialized full-turn fallbacks or
     `compiled_rule_group_fallbacks`.
   - It can compare `mask_rebuild_calls`, `row_scans`, `candidate_cells_tested`,
     and `pattern_tests` against a previous compiled focus output.
@@ -321,16 +321,16 @@ lab bench, not the full corpus.
 
 ### Solver State And Graph Overhead Track
 
-Intent: compiled rules have made the turn-step path faster, but focus runs now
-show a large amount of elapsed time outside generated rule evaluation. This
-track makes solver graph overhead visible first, then attacks it in low-risk
-layers before introducing a compact state ABI.
+Intent: specialized rulegroups have made the turn-step path faster, but focus
+runs now show a large amount of elapsed time outside generated rule evaluation.
+This track makes solver graph overhead visible first, then attacks it in
+low-risk layers before introducing a compact state ABI.
 
 The preferred order is:
 
 ```text
 attribute graph cost -> no-allocation hash -> flat visited table
--> compact solver state prototype -> generated tick over compact state
+-> generated compact turn over compact state
 ```
 
 - [x] Add explicit graph-overhead timing buckets to the solver.
@@ -409,14 +409,14 @@ attribute graph cost -> no-allocation hash -> flat visited table
 - [?] Add no-allocation or streaming solver state hashing.
 
   Status: investigated before implementation. The current
-  `sessionStateKey(...)` path is already streaming and allocation-free: it
-  walks existing `Session` fields and object words into a 128-bit `StateKey`.
-  The surrounding costs are the full `Session` clone, node storage, and visited
+  `fullStateKey(...)` path is already streaming and allocation-free: it
+  walks existing `FullState` fields and object words into a 128-bit `StateKey`.
+  The surrounding costs are the full `FullState` clone, node storage, and visited
   table operations. Keep this item open for semantic expansion of the solver
   key, but do not expect a big win from removing a hash temporary.
 
   Intent: the current solver state key path builds a `StateKey` from a full
-  `Session`. The first low-risk replacement should preserve semantics while
+  `FullState`. The first low-risk replacement should preserve semantics while
   avoiding avoidable temporary allocation and runtime traversal work.
 
   Acceptance criteria:
@@ -424,7 +424,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - A new solver hash path can hash canonical solver-node state:
     quiescent object occupancy for deterministic focus games.
   - A parity test compares the new hash/key path against the existing
-    `sessionStateKey` path for solver smoke states and replay-derived states.
+    `fullStateKey` path for solver smoke states and replay-derived states.
   - Search behavior is unchanged: same solution status, same solution where the
     strategy is deterministic, and same generated/expanded counts on smoke
     targets.
@@ -447,7 +447,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   explicit growth, preserves stale-pop `<` and child-duplicate `<=` semantics,
   and reports probe/growth counters in solver JSON and focus benchmark JSON.
   The normal path now treats `StateKey` as a probe accelerator only. Matching
-  entries must also compare equal under the solver-semantic `Session` fields.
+  entries must also compare equal under the solver-semantic `FullState` fields.
   `--hash-state-keys` is available only as an explicit performance experiment
   that treats the 128-bit key as identity.
 
@@ -488,19 +488,22 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Status: first solver-side boundary is implemented. Solver nodes now carry a
   canonical compact state made from object-major occupancy bitsets. Random-rule
-  games are excluded from focus mining for now, so RNG state is deliberately
-  outside this compact solver identity. The interpreter `Session` is still
-  retained for tick execution, fallback, and solution reconstruction.
+  games are usually excluded from focus mining for fast iteration, but the
+  architecture direction is that `CompactState` includes complete RNG state
+  whenever random-capable compact execution is used. The interpreter
+  `FullState` is still retained for turn execution, fallback, and solution
+  reconstruction.
 
   Recommended default: introduce a compact state only for solver/generator hot
-  paths first, leaving player/API paths on `Session`.
+  paths first, leaving player/API paths on `FullState`.
 
   Acceptance criteria:
 
   - The compact state explicitly owns:
     - canonical object occupancy for one fixed level
-  - It explicitly does not own RNG state in the current focus pipeline:
-    games with `random` or `randomDir` rules are excluded before focus mining.
+  - It owns complete RNG state when random or randomDir behavior is permitted
+    through the compact path. A seed or identity is not enough for deterministic
+    replay.
   - It explicitly does not own live movements at solver-node boundaries:
     movement state must be settled and zero before a state enters the graph.
   - It explicitly does not own current level index: the level is a fixed search
@@ -513,8 +516,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
     on solver hot paths.
   - It may omit proven-inert content such as static background/wall cells, but
     only with a conservative proof that those bytes cannot affect future turns.
-  - Conversion from `Session` to compact state is defined.
-  - Conversion from compact state back to `Session` is defined for fallback,
+  - Conversion from `FullState` to compact state is defined.
+  - Conversion from compact state back to `FullState` is defined for fallback,
     parity checks, serialization, and debugging.
   - Unsupported games or unsupported runtime features decline the compact path
     cleanly.
@@ -553,12 +556,12 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Any hash collision or hash-equivalent but byte-different state is handled by
     probing onward and counted.
   - A validation mode compares compact byte equality against materialized
-    interpreter `Session` equality on smoke/focus states.
+    interpreter `FullState` equality on smoke/focus states.
 
 - [x] Avoid transient full-node storage for duplicate exact states.
 
   Intent: exact visited equality should not require moving every candidate
-  child `Session` into solver node storage before discovering that the state is
+  child `FullState` into solver node storage before discovering that the state is
   already dominated.
 
   Current behavior:
@@ -569,7 +572,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Duplicate/dominated candidates are discarded without a push/pop of a full
     `Node`.
   - Surviving candidates are then stored once with compact identity plus the
-    `Session` still needed for the current interpreter tick path.
+    `FullState` still needed for the current interpreted turn path.
 
 - [x] Reduce weighted-A* heuristic allocation overhead.
 
@@ -608,13 +611,13 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Current behavior:
 
-  - Compact-node mode keeps a reusable parent scratch `Session` for
-    `CompactSolverState -> Session` materialization.
-  - Compact-node mode now also keeps a reusable child scratch `Session` for
-    each candidate input instead of heap-allocating a transient child session
+  - Compact-node mode keeps a reusable parent scratch `FullState` for
+    `CompactState -> FullState` materialization.
+  - Compact-node mode now also keeps a reusable child scratch `FullState` for
+    each candidate input instead of heap-allocating a transient child full state
     per generated edge.
   - Child preparation copies only semantic turn-start state, level objects,
-    solver-relevant flags, and random state; it preserves scratch-vector
+    solver-relevant flags, and complete RNG state; it preserves scratch-vector
     capacity and marks masks dirty for the runtime step.
 
   Current evidence on the 50-target focus group, one run, weighted A*, 500 ms
@@ -622,7 +625,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   ```text
   mode                  solved   median_elapsed   median_generated   median_clone
-  stored Session nodes  50/50    290.5 ms         41595.5            33.75 ms
+  stored FullState nodes  50/50    290.5 ms         41595.5            33.75 ms
   compact child scratch 50/50    276.5 ms         41595.5            8.12 ms
   ```
 
@@ -634,14 +637,14 @@ attribute graph cost -> no-allocation hash -> flat visited table
 - [?] Prototype compact solver state for one simple focus game.
 
   Status: `puzzlescript_solver --compact-node-storage` stores solver nodes
-  without retained `Session`s and materializes a scratch `Session` from compact
+  without retained `FullState`s and materializes a scratch `FullState` from compact
   occupancy when a node is expanded. Smoke-level correctness passes, but the
   prototype is not a default: on `pushit.txt#5` weighted A* it kept identical
   expanded/generated counts while increasing elapsed time because every
   materialized parent forces mask/cache rebuild work inside `step`. The
   compact-node path now also evaluates the win-condition heuristic directly
   from compact occupancy, proving the solver can ask heuristic questions of the
-  compact state without a retained `Session`.
+  compact state without a retained `FullState`.
 
   Suggested first candidates:
 
@@ -653,18 +656,19 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   - The prototype is isolated behind a capability check or internal flag.
   - Compact clone is a direct copy of fixed-size or tightly packed state data,
-    not a full `Session` copy.
-  - Compact hash avoids materializing a full `Session`.
-  - The solver can still materialize a scratch `Session` for the existing
-    interpreter or compiled-rule path when the tick implementation requires it.
+    not a full `FullState` copy.
+  - Compact hash avoids materializing a full `FullState`.
+  - The solver can still materialize a scratch `FullState` for the existing
+    interpreter or specialized-rulegroup path when the turn implementation
+    requires it.
   - The prototype reports compact materialization under `clone_ms`; split it
     into a separate `materialize_ms` counter before judging the next iteration.
   - Solver parity remains green for the supported game.
 
   Next improvement: materialize row/column/board masks and object-cell bitsets
-  directly from compact occupancy, or move generated tick to consume compact
+  directly from compact occupancy, or move generated compact turns to consume compact
   occupancy without rebuilding interpreter caches. The generic compact
-  heuristic is slower than the current `Session` heuristic on `pushit.txt#5`;
+  heuristic is slower than the current `FullState` heuristic on `pushit.txt#5`;
   a generated/baked heuristic should specialize the masks and object ids rather
   than use the generic compact matcher.
 
@@ -672,7 +676,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   ```text
   pushit.txt#5 weighted-astar 1000ms:
-    session nodes: expanded=26226 generated=131129 elapsed_ms=385 heuristic_ms=27.4
+    full-state nodes: expanded=26226 generated=131129 elapsed_ms=385 heuristic_ms=27.4
     compact nodes: expanded=26226 generated=131129 elapsed_ms=395 heuristic_ms=43.0
   ```
 
@@ -692,13 +696,13 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Acceptance criteria:
 
   - [x] Supported-game nodes retain compact state bytes plus parent/input metadata,
-    not `std::unique_ptr<Session>`.
-  - [x] A per-search scratch `Session` is reused for materialization when required.
+    not `std::unique_ptr<FullState>`.
+  - [x] A per-search scratch `FullState` is reused for materialization when required.
   - [ ] `node_store_ms`, clone time, memory use, and generated/sec improve on at
     least one focus target.
-  - [x] Unsupported games continue to use the existing `Session` node path.
+  - [x] Unsupported games continue to use the existing `FullState` node path.
   - [x] Solution reconstruction still uses parent/input links and does not require
-    retained full sessions.
+    retained full states.
   - [x] Add a compact representability parity harness that compares normal node
     storage against compact node storage for non-random/randomDir games.
 
@@ -731,14 +735,15 @@ attribute graph cost -> no-allocation hash -> flat visited table
 - [ ] Add a generated compact turn prototype.
 
   Intent: once compact state exists, whole-game compilation should target it
-  directly: `turn(compact_state, input) -> compact_state`, with `Session`
+  directly: `turn(compact_state, input) -> compact_state`, with `FullState`
   retained as oracle and fallback rather than as the hot state container.
 
   Near-term task list:
 
   - [x] Add a separate compact turn backend type and weak finder instead of changing
-    the existing `CompiledTickBackend` layout.
-  - [x] Attach the compact backend by source hash next to compiled rules/tick.
+    the existing `SpecializedFullTurnBackend` layout.
+  - [x] Attach the compact backend by source hash next to specialized
+    rulegroups and specialized full-turn backends.
   - [x] Add solver-side capability checks and counters that distinguish:
     `compact_turn_attempt`, `compact_turn_hit`, `compact_turn_fallback`, and
     `compact_turn_unsupported`.
@@ -863,7 +868,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
     option: --compact-turn-oracle
     behavior: materializes each generated compact turn parent through the
       interpreter and compares solver-relevant step flags plus resulting compact
-      object bits, movement words, and RNG state for non-terminal edges.
+      object bits, complete RNG state, and the settled movement-zero invariant
+      for non-terminal edges.
     make target: make compact_turn_oracle_smoke
     solver_smoke_tests specialized:
       compact_turn_oracle_checks=18
@@ -894,8 +900,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
     slice.
   - The compact turn result reports changed, won, game-over/restart, and
     unsupported/fallback status without heap allocation.
-  - Interpreter parity compares compact turn output against
-    `interpreterStep`/`interpreterTick` materialized through `Session`.
+  - Interpreter parity compares compact turn output against the interpreted turn
+    path materialized through `FullState`.
   - Solver can choose compact turn for supported states and fall back cleanly
     before mutating state when unsupported behavior is encountered.
 
@@ -1144,13 +1150,13 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 ### Runtime Coverage And Routing
 
-- [x] Classify focus targets by actual compiled-rule usage.
+- [x] Classify focus targets by actual specialized rulegroup usage.
 
   Done means:
 
   - The detailed report separates:
-    - `compiled_tick_hits == 0 && specialized_rulegroup_hits == 0`
-    - `compiled_tick_hits > 0 && specialized_rulegroup_hits == 0`
+    - `specialized_full_turn_hits == 0 && specialized_rulegroup_hits == 0`
+    - `specialized_full_turn_hits > 0 && specialized_rulegroup_hits == 0`
     - `specialized_rulegroup_hits > 0`
   - The summary prints counts for each bucket.
   - The slowest table includes the bucket label.
@@ -1169,27 +1175,28 @@ attribute graph cost -> no-allocation hash -> flat visited table
   make solver_focus_perf_report SOLVER_FOCUS_RUNS=1
   ```
 
-- [x] Explain zero compiled-rule hits per target.
+- [x] Explain zero specialized rulegroup hits per target.
 
   Done means:
 
   - For every zero-hit focus target, the report can say whether the source was
-    skipped by compile budget, unsupported by generated tick routing, or simply
-    did not execute compiled groups on that solve path.
+    skipped by compile budget, unsupported by specialized full-turn routing, or
+    simply did not execute specialized rulegroups on that solve path.
   - The explanation is machine-readable enough to sort by reason.
 
   Current report fields:
 
   - `specialized_rulegroups_attached`
   - `compiled_rules_attached` compatibility alias
-  - `compiled_tick_attached`
+  - `specialized_full_turn_attached`
+  - `compiled_tick_attached` compatibility alias
   - `compiled_usage_reasons`
   - per-target `reason=...` in the detail table
 
   Note: `specialized_rulegroup_hits` counts generated rulegroup dispatch through
   the interpreted turn. Specialized rule loops can still bypass that generic
   per-group counter, so `compiled_tick_bypassed_generic_rule_counter` means the
-  generated tick backend ran but the per-group counter is not the right
+  specialized full-turn backend ran but the per-group counter is not the right
   measurement point.
 
 - [x] Fix source-hash mismatches caused by missing trailing newlines.
@@ -1199,12 +1206,14 @@ attribute graph cost -> no-allocation hash -> flat visited table
   the file lacks one. Without this, generated backends existed for some focus
   games but were registered under a hash the runtime never asked for.
 
-- [ ] Fix generated tick routes that call the wrapper but no rule kernels.
+- [ ] Fix specialized full-turn routes that call the wrapper but no rule
+  kernels.
 
   Acceptance criteria:
 
-  - Targets with `compiled_tick_hits > 0` and `specialized_rulegroup_hits == 0`
-    either gain rule hits or explain why no compiled groups are reachable.
+  - Targets with `specialized_full_turn_hits > 0` and
+    `specialized_rulegroup_hits == 0` either gain rule hits or explain why no
+    specialized rulegroups are reachable.
   - Solver generated counts remain identical.
   - No target regresses from solved to timeout.
 
@@ -1212,17 +1221,17 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - For the supported focus slice, generated tick performs the turn phases it
-    claims instead of immediately delegating to `interpreterStep` /
-    `interpreterTick`.
-  - `compiled_tick_hits > 0`.
-  - `compiled_tick_fallbacks == 0` for supported targets.
+  - For the supported focus slice, specialized full-turn code performs the turn
+    phases it claims instead of immediately delegating to the interpreted turn
+    path.
+  - `specialized_full_turn_hits > 0`.
+  - `specialized_full_turn_fallbacks == 0` for supported targets.
   - Coverage no longer reports `interpreter_delegation` for those sources.
 
   Validation:
 
   ```sh
-  make compiled_tick_dispatch_smoke
+  make specialized_full_turn_dispatch_smoke
   make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
   ```
 
@@ -1230,7 +1239,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - Solver/generator load paths cache compiled tick/backend support decisions
+  - Solver/generator load paths cache specialized full-turn support decisions
     after the game is loaded.
   - Per-state expansion does not repeat source hashing, backend lookup, or
     support scans.
@@ -1419,21 +1428,21 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Generated code skips impossible groups with one or a few board-mask checks.
   - Prechecks do not change random, rigid, or command semantics.
 
-### Whole-Tick Work That Directly Affects Solver Speed
+### Whole-Turn Work That Directly Affects Solver Speed
 
 - [ ] Move more early/late rule traversal out of generic runtime fallback.
 
   Acceptance criteria:
 
-  - A focus target with real compiled rule hits spends fewer steps in generic
-    `applyRuleGroup`.
+  - A focus target with real specialized rulegroup hits spends fewer steps in
+    interpreted `applyRuleGroup`.
   - `compiled_rule_group_fallbacks` decreases or is explained.
 
 - [ ] Generate the supported turn skeleton instead of delegating.
 
   Acceptance criteria:
 
-  - Generated `step` / `tick` performs clear movement, movement seeding, early
+  - Generated full-turn code performs clear movement, movement seeding, early
     rules, movement resolution hook, late rules, result assembly, and final mask
     state for a narrow supported slice.
   - Unsupported title-screen, message, debug, or metadata cases fall back
@@ -1448,11 +1457,11 @@ attribute graph cost -> no-allocation hash -> flat visited table
   make solver_parity_smoke SPECIALIZE=true
   ```
 
-- [ ] Specialize the no-input solver tick path.
+- [ ] Specialize the no-input solver turn path.
 
   Acceptance criteria:
 
-  - Solver no-input expansions can call generated tick without interpreter turn
+  - Solver no-input expansions can call specialized turn code without interpreter turn
     setup for supported games.
   - Final state and generated counts match the interpreter.
 
@@ -1468,7 +1477,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - State clone/hash cost is measured against the current `Session` clone path.
+  - State clone/hash cost is measured against the current `FullState` clone path.
   - Solver parity stays green.
   - The prototype is isolated behind capability checks.
 
@@ -1566,19 +1575,20 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Done means: target count, excluded games, median interpreted elapsed, median
   compiled elapsed, and generated counts are recorded.
 
-## Generated Tick Observability
+## Specialized Full-Turn Observability
 
-- [x] Add runtime counters for compiled tick attempts, hits, and fallbacks.
+- [x] Add runtime counters for specialized full-turn attempts, hits, and
+  fallbacks.
 
   Intent: make it obvious whether a solver/generator run is actually entering
-  generated tick dispatch.
+  specialized full-turn dispatch.
 
   Acceptance criteria:
 
   - Counters are available through the existing runtime-counter snapshot path.
   - Existing counter callers remain source-compatible.
-  - The profile output can distinguish compiled-rule hits from compiled-tick
-    hits.
+  - The profile output can distinguish specialized rulegroup hits from
+    specialized full-turn hits.
 
   Validation:
 
@@ -1588,14 +1598,15 @@ attribute graph cost -> no-allocation hash -> flat visited table
   make solver_smoke_tests SPECIALIZE=true
   ```
 
-- [x] Add a focused generated-tick dispatch smoke test.
+- [x] Add a focused specialized full-turn dispatch smoke test.
 
-  Intent: prove the generated tick backend is found by source hash and called,
-  even while it still delegates to the interpreter.
+  Intent: prove the specialized full-turn backend is found by source hash and
+  called, even while it still delegates to the interpreter.
 
   Acceptance criteria:
 
-  - Test fails if `ps_compiled_tick_find_backend` is not linked or not found.
+  - Test fails if `ps_specialized_full_turn_find_backend` is not linked or not
+    found.
   - Test proves both `step` and `tick` dispatch can be attempted.
   - Test does not depend on timing.
 
@@ -1603,11 +1614,11 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   - Generate C++ for `src/demo/sokoban_basic.txt`.
   - Link a specialized test binary or use an existing specialized smoke path.
-  - Assert compiled tick attempt/hit counters changed.
+  - Assert specialized full-turn attempt/hit counters changed.
 
 - [ ] Add a debug-gating smoke test.
 
-  Intent: ensure generated tick dispatch does not bypass debug traces by
+  Intent: ensure specialized full-turn dispatch does not bypass debug traces by
   accident.
 
   Acceptance criteria:
@@ -1616,17 +1627,18 @@ attribute graph cost -> no-allocation hash -> flat visited table
     proves dispatch chooses the interpreter.
   - Counter output or test plumbing makes that choice visible.
 
-## Generated Tick Owns Rule-Group Dispatch
+## Specialized Full-Turn Owns Rulegroup Dispatch
 
-- [x] Move early rule-group loop selection into generated tick code.
+- [x] Move early rulegroup loop selection into specialized full-turn code.
 
-  Intent: generated tick should iterate the game-specific early rule groups and
-  call compiled group kernels directly, instead of entering the generic
-  `applyRuleGroups` loop first.
+  Intent: specialized full-turn code should iterate the game-specific early
+  rulegroups and call specialized rulegroup kernels directly, instead of
+  entering the generic `applyRuleGroups` loop first.
 
   Implementation notes:
 
-  - Start with games whose early groups are all covered by compiled rules.
+  - Start with games whose early groups are all covered by specialized
+    rulegroups.
   - Preserve loop-point behavior exactly.
   - Preserve banned rigid-group behavior by falling back if unsupported.
   - Keep late rules on the interpreter path for the first commit if that makes
@@ -1634,8 +1646,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - Generated tick handles at least one simple non-rigid game without calling
-    generic rule-group dispatch.
+  - Specialized full-turn code handles at least one simple non-rigid game
+    without calling generic rulegroup dispatch.
   - It falls back for games or states outside the supported slice.
   - Simulation parity remains green.
 
@@ -1647,14 +1659,14 @@ attribute graph cost -> no-allocation hash -> flat visited table
   make solver_smoke_tests SPECIALIZE=true
   ```
 
-- [x] Move late rule-group loop selection into generated tick code.
+- [x] Move late rulegroup loop selection into specialized full-turn code.
 
-  Intent: generated tick owns both early and late rule traversal for supported
-  games.
+  Intent: specialized full-turn code owns both early and late rule traversal for
+  supported games.
 
   Acceptance criteria:
 
-  - Late rule groups call compiled kernels directly.
+  - Late rulegroups call specialized kernels directly.
   - Late loop points behave identically to the interpreter.
   - Unsupported late groups force a clean fallback.
 
@@ -1677,19 +1689,20 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 - [x] Generate direct group coverage predicates.
 
-  Intent: a generated tick function should know at compile time whether every
+  Intent: specialized full-turn code should know at compile time whether every
   group it needs is compiled.
 
   Acceptance criteria:
 
   - No runtime scan is needed to decide rule-loop eligibility.
-  - The generated backend declines handling if any required group is missing.
+  - The generated backend declines handling if any required specialized
+    rulegroup is missing.
   - Coverage JSON and generated-code eligibility agree.
 
-- [x] Remove redundant rule backend lookup inside generated tick.
+- [x] Remove redundant rule backend lookup inside specialized full-turn code.
 
-  Intent: once generated tick owns rule traversal, it should call local generated
-  functions directly rather than re-finding the same backend.
+  Intent: once specialized full-turn code owns rule traversal, it should call
+  local generated functions directly rather than re-finding the same backend.
 
   Acceptance criteria:
 
@@ -1730,8 +1743,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 - [x] Generate a supported-game predicate for the turn skeleton.
 
-  Intent: generated tick should handle only games whose required skeleton pieces
-  have been implemented.
+  Intent: specialized full-turn code should handle only games whose required
+  skeleton pieces have been implemented.
 
   Acceptance criteria:
 
@@ -1739,17 +1752,20 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Unsupported commands or metadata choose fallback.
   - The reason for fallback can be observed in debug/profile mode.
 
-- [ ] Implement generated no-input `tick` for the simplest supported games.
+- [ ] Implement generated no-input turn handling for the simplest supported
+  games.
 
-  Intent: make `tick(session, options)` do real generated work for games without
-  player-input complications.
+  Intent: make `turn(full_state, PS_INPUT_TICK, options)` do real generated
+  work for games without player-input complications.
 
   Acceptance criteria:
 
-  - Generated tick executes early rules, movement resolution by fallback or
-    generated helper, late rules, and result assembly for a narrow slice.
-  - `step(session, PS_INPUT_TICK, options)` and `tick(session, options)` agree.
-  - Unsupported cases delegate to `interpreterTick`.
+  - Specialized full-turn code executes early rules, movement resolution by
+    fallback or generated helper, late rules, and result assembly for a narrow
+    slice.
+  - `turn(full_state, PS_INPUT_TICK, options)` and existing public tick
+    behavior agree.
+  - Unsupported cases delegate to `interpreted turn`.
 
 - [ ] Implement generated directional/action `step` entry.
 
@@ -1765,7 +1781,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 ## Command Handling
 
-- [x] Classify command shapes in compiled tick coverage.
+- [x] Classify command shapes in specialized full-turn coverage.
 
   Intent: make the command tail measurable before moving behavior out of the
   interpreter.
@@ -1908,7 +1924,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   - `transitioned` and `won` fields match interpreter behavior.
   - Message levels and title/text mode are either handled or fall back.
-  - Prepared-session state remains consistent after transition.
+  - Prepared full-state data remains consistent after transition.
 
 - [ ] Specialize `run_rules_on_level_start`.
 
@@ -1929,7 +1945,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
     hot paths.
   - Constants match the loaded runtime game.
 
-- [ ] Emit mask tables used by generated tick.
+- [ ] Emit mask tables used by specialized full-turn code.
 
   Acceptance criteria:
 
@@ -1958,13 +1974,13 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Options:
 
-  - Keep using `Session` and specialize only code first.
-  - Introduce a compact generated state alongside `Session`.
+  - Keep using `FullState` and specialize only code first.
+  - Introduce a compact generated state alongside `FullState`.
   - Introduce a compact state only for solver/generator, leaving player/API
-    paths on `Session`.
+    paths on `FullState`.
 
-  Recommended default: keep using `Session` until generated tick has meaningful
-  behavior, then introduce compact solver/generator state.
+  Recommended default: keep using `FullState` until specialized full-turn code
+  has meaningful behavior, then introduce compact solver/generator state.
 
 - [ ] Add state-layout notes once the boundary is chosen.
 
@@ -1975,13 +1991,13 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Solver-node invariants state that movements are zero, pending-again is
     exhausted, current level is a search parameter, checkpoint is ignored, and
     restart is a game-over/dead-edge result.
-  - Conversion to/from `Session` is defined for fallback and testing.
+  - Conversion to/from `FullState` is defined for fallback and testing.
 
 - [ ] Prototype compact solver/generator state for one simple game.
 
   Acceptance criteria:
 
-  - State clone cost is lower than `Session` clone cost.
+  - State clone cost is lower than `FullState` clone cost.
   - Hashing and serialization for tests remain available.
   - Interpreter fallback remains possible through a conversion path.
 
@@ -2016,60 +2032,67 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - One generated game can be stepped without going through public `Session`
+  - One generated game can be stepped without going through public `FullState`
     dispatch.
   - Result and serialized final state match interpreter behavior.
 
 ## Solver Integration
 
-- [ ] Add a solver flag or internal capability path for compiled tick.
+- [ ] Add a solver flag or internal capability path for specialized full-turn
+  execution.
 
-  Intent: distinguish "compiled rules are linked" from "whole tick is actually
-  handling solver steps".
+  Intent: distinguish "specialized rulegroups are linked" from "whole-turn code
+  is actually handling solver steps".
 
   Acceptance criteria:
 
-  - Solver can report compiled tick attempts/hits/fallbacks.
+  - Solver can report specialized full-turn attempts/hits/fallbacks.
   - `SPECIALIZE=true` remains the user-facing Makefile entry.
   - Unsupported games still solve through the interpreter.
 
-- [ ] Add solver parity target focused on compiled tick.
+- [ ] Add solver parity target focused on specialized full-turn execution.
 
   Acceptance criteria:
 
   - Runs a small representative game set.
-  - Fails if compiled tick silently falls back for every case when it should not.
+  - Fails if specialized full-turn execution silently falls back for every case
+    when it should not.
   - Still verifies final solver results.
 
 - [ ] Benchmark one-game solver hot loop.
 
   Acceptance criteria:
 
-  - Compare `SPECIALIZE=false`, compiled rules only, and compiled tick handling.
+  - Compare `SPECIALIZE=false`, specialized rulegroups only, and specialized
+    full-turn handling.
   - Report build time separately from solve time.
   - Include at least one Sokoban-like and one rule-heavy fixture.
 
 ## Generator Integration
 
-- [ ] Add generator capability reporting for compiled tick.
+- [ ] Add generator capability reporting for specialized full-turn execution.
 
   Acceptance criteria:
 
-  - Generator can report whether generated tick handled candidate steps.
+  - Generator can report whether specialized full-turn code handled candidate
+    steps.
   - Fallback behavior is visible in quiet logs or profiling output.
 
-- [ ] Add generator parity/smoke target focused on compiled tick.
+- [ ] Add generator parity/smoke target focused on specialized full-turn
+  execution.
 
   Acceptance criteria:
 
   - Existing `generator_smoke_tests` remains green.
-  - A compiled-tick-specific path proves generated dispatch is exercised.
+  - A specialized-full-turn-specific path proves generated dispatch is
+    exercised.
 
 - [ ] Benchmark generator candidate evaluation.
 
   Acceptance criteria:
 
-  - Compare generated tick against interpreter path on the same preset and seed.
+  - Compare specialized full-turn execution against the interpreter path on the
+    same preset and seed.
   - Separate generation/build time from candidate evaluation throughput.
 
 ## Build And Codegen Ergonomics
@@ -2078,7 +2101,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - Stamps include any options that change generated tick output.
+  - Stamps include any options that change specialized full-turn output.
   - Reuse never hides stale generated code after CLI changes.
   - `COMPILED_RULES_REUSE_SINGLE_CPP=false` still forces regeneration.
 
@@ -2086,8 +2109,10 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - `--emit-cpp-dir` emits both rule and tick backend accessors per source.
-  - `registry.cpp` links all generated rule and tick backends.
+  - `--emit-cpp-dir` emits rulegroup, specialized full-turn, and compact-turn
+    backend accessors per source.
+  - `registry.cpp` links all generated rulegroup, specialized full-turn, and
+    compact-turn backends.
   - Corpus generation remains useful for coverage and smoke tests.
 
 - [ ] Split generated code when compile time demands it.
@@ -2112,7 +2137,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 ## Coverage And Eligibility Reporting
 
-- [x] Extend coverage JSON from compiled rules to compiled tick eligibility.
+- [x] Extend coverage JSON from specialized rulegroups to specialized full-turn
+  eligibility.
 
   Acceptance criteria:
 
@@ -2121,7 +2147,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
     or fallback-only.
   - Aggregate counts are easy to read from a one-line Node or jq command.
 
-- [x] Add human-readable miss reasons for compiled tick.
+- [x] Add human-readable miss reasons for specialized full-turn execution.
 
   Acceptance criteria:
 
@@ -2129,12 +2155,13 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Examples: `unsupported_command`, `movement_rigid`, `message_level`,
     `debug_trace`, `state_layout`.
 
-- [x] Track "fully generated tick" count separately from "compiled rules"
+- [x] Track "fully specialized turn" count separately from "specialized rulegroups"
   coverage.
 
   Acceptance criteria:
 
-  - Coverage can say "rules compile" and "whole tick handles" independently.
+  - Coverage can say "rulegroups specialize" and "whole turn handles"
+    independently.
   - The distinction is reflected in docs and CLI output.
 
 ## Correctness Test Matrix
@@ -2209,7 +2236,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Acceptance criteria:
 
   - Measure nodes/second or equivalent existing solver output.
-  - Compare against non-specialized and compiled-rule-only baselines.
+  - Compare against non-specialized and specialized-rulegroup-only baselines.
 
 - [ ] Track generator throughput.
 
@@ -2224,7 +2251,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 - [ ] Update this checklist when a milestone is completed.
 
-- [ ] Add a short user-facing note once compiled tick does real work.
+- [ ] Add a short user-facing note once specialized full-turn execution does
+  real work.
 
   Acceptance criteria:
 
@@ -2241,18 +2269,18 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 ## Open Decisions To Revisit
 
-- [?] Should generated tick and compiled rules remain under the `compile-rules`
+- [?] Should specialized full-turn generation and specialized rulegroups remain under the `compile-rules`
   command, or should the CLI grow a clearer `compile-game` command once whole
-  tick generation is real?
+  turn generation is real?
 
 - [?] Should coverage files use one combined schema or separate
-  compiled-rules/compiled-tick schemas?
+  specialized-rulegroups/specialized-full-turn schemas?
 
-- [?] How much trace parity is enough before generated tick may run under
+- [?] How much trace parity is enough before specialized full-turn execution may run under
   `PS_DEBUG_*` flags?
 
 - [?] When compact state exists, should interpreter fallback convert compact
-  state to `Session`, or should unsupported cases be rejected before entering
+  state to `FullState`, or should unsupported cases be rejected before entering
   compact-state execution?
 
 - [x] Which benchmark should be the "north-star" solver benchmark for this
@@ -2268,9 +2296,9 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 This is the next practical sequence from the current focus-group checkpoint:
 
-1. Classify every focus target by compiled tick/rule hit bucket.
-2. Explain zero compiled-rule hits per target.
-3. Fix generated tick routes that enter the wrapper but do not reach rule
+1. Classify every focus target by specialized full-turn/rulegroup hit bucket.
+2. Explain zero specialized rulegroup hits per target.
+3. Fix specialized full-turn routes that enter the wrapper but do not reach rule
    kernels.
 4. Add a mask correctness verifier for generated paths.
 5. Reduce mask rebuild pressure on the slowest focus outliers.
