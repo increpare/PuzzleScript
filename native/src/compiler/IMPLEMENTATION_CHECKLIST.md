@@ -720,13 +720,16 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - [x] Add a separate compact tick backend type and weak finder instead of changing
     the existing `CompiledTickBackend` layout.
   - [x] Attach the compact backend by source hash next to compiled rules/tick.
-  - [ ] Add solver-side capability checks and counters that distinguish:
+  - [x] Add solver-side capability checks and counters that distinguish:
     `compact_tick_attempt`, `compact_tick_hit`, `compact_tick_fallback`, and
     `compact_tick_unsupported`.
-  - [ ] Refactor the current solver edge into one helper with two implementations:
-    compact tick first, interpreter-backed scratch fallback second.
-  - [ ] Generate a `handled=false` compact backend stub so linkage, dispatch, and
+  - [x] Try compact tick before the interpreter-backed scratch fallback when a
+    supported compact backend is attached.
+  - [x] Generate a `handled=false` compact backend stub so linkage, dispatch, and
     counters are proven before behavior moves.
+  - [ ] Refactor the current solver edge into a named helper with two
+    implementations: compact tick first, interpreter-backed scratch fallback
+    second.
   - [ ] Pick one deterministic, no-random, no-again, no-restart focus fixture for
     the first `handled=true` compact tick.
   - [ ] Generate direct object-bitset input seeding and fixed rule-group execution

@@ -170,8 +170,13 @@ struct Result {
     uint32_t workerId = 0;
     bool compiledRulesAttached = false;
     bool compiledTickAttached = false;
+    bool compiledCompactTickAttached = false;
     bool compactNodeStorage = false;
     int32_t astarWeight = 2;
+    uint64_t compactTickAttempts = 0;
+    uint64_t compactTickHits = 0;
+    uint64_t compactTickFallbacks = 0;
+    uint64_t compactTickUnsupported = 0;
     Timing timing;
 };
 
@@ -691,6 +696,40 @@ void recordCompactStateStorage(Timing& timing, const CompactSolverState& state) 
     timing.compactMaxStateBytes = std::max(timing.compactMaxStateBytes, bytes);
 }
 
+struct CompactTickTryResult {
+    bool attempted = false;
+    bool handled = false;
+    CompactSolverState compact;
+    ps_step_result stepResult{};
+};
+
+CompactTickTryResult tryCompiledCompactTick(
+    const Game& game,
+    const CompactSolverState& parent,
+    ps_input input,
+    int32_t width,
+    int32_t height,
+    puzzlescript::RuntimeStepOptions options
+) {
+    CompactTickTryResult result;
+    if (game.compiledCompactTick == nullptr || game.compiledCompactTick->step == nullptr) {
+        return result;
+    }
+    result.attempted = true;
+    result.compact = parent;
+    puzzlescript::CompiledCompactTickStateView view{
+        result.compact.objectBits.empty() ? nullptr : result.compact.objectBits.data(),
+        result.compact.objectBits.size(),
+        width,
+        height,
+    };
+    const puzzlescript::CompiledCompactTickApplyOutcome outcome =
+        game.compiledCompactTick->step(game, view, input, options);
+    result.handled = outcome.handled;
+    result.stepResult = outcome.result;
+    return result;
+}
+
 std::shared_ptr<const Game> compileGame(
     const std::string& source,
     std::string& errorMessage
@@ -1119,6 +1158,7 @@ Result runSearch(
     result.workerId = workerId;
     result.compiledRulesAttached = game && game->compiledRules != nullptr;
     result.compiledTickAttached = game && game->compiledTick != nullptr;
+    result.compiledCompactTickAttached = game && game->compiledCompactTick != nullptr;
     result.compactNodeStorage = compactNodeStorage;
     result.astarWeight = astarWeight;
     result.timing.compileNs = compileNs;
@@ -1234,26 +1274,49 @@ Result runSearch(
                 break;
             }
 
+            constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
+                .playableUndo = false,
+                .emitAudio = false,
+            };
             std::unique_ptr<Session> ownedChild;
             Session* child = nullptr;
-            {
+            CompactTickTryResult compactTickResult;
+            if (compactNodeStorage) {
+                const puzzlescript::CompiledCompactTickBackend* compactTick = game ? game->compiledCompactTick : nullptr;
+                if (compactTick != nullptr && compactTick->step != nullptr) {
+                    if (compactTick->support.wholeTurnSupported) {
+                        ++result.compactTickAttempts;
+                        {
+                            ScopedTimer timer(result.timing.stepNs);
+                            compactTickResult = tryCompiledCompactTick(*game, parentNode.compact, input, searchWidth, searchHeight, solverStepOptions);
+                        }
+                        if (compactTickResult.handled) {
+                            ++result.compactTickHits;
+                        } else {
+                            ++result.compactTickFallbacks;
+                        }
+                    } else {
+                        ++result.compactTickUnsupported;
+                    }
+                }
+            }
+
+            if (!compactTickResult.handled) {
                 ScopedTimer timer(result.timing.cloneNs);
-                if (compactNodeStorage) {
-                    prepareSolverChildSessionFromParent(*childScratch, parentSession);
-                    child = childScratch.get();
-                } else {
+                if (!compactNodeStorage) {
                     ownedChild = std::make_unique<Session>(parentSession);
                     child = ownedChild.get();
+                } else {
+                    prepareSolverChildSessionFromParent(*childScratch, parentSession);
+                    child = childScratch.get();
                 }
             }
 
             ps_step_result stepResult{};
-            {
+            if (compactTickResult.handled) {
+                stepResult = compactTickResult.stepResult;
+            } else {
                 ScopedTimer timer(result.timing.stepNs);
-                constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
-                    .playableUndo = false,
-                    .emitAudio = false,
-                };
                 stepResult = puzzlescript::step(*child, input, solverStepOptions);
                 puzzlescript::settlePendingAgain(*child, solverStepOptions);
             }
@@ -1266,7 +1329,7 @@ Result runSearch(
             bool solved = false;
             {
                 ScopedTimer timer(result.timing.solvedCheckNs);
-                solved = solvedByStep(stepResult, *child, levelIndex);
+                solved = compactTickResult.handled ? stepResult.won : solvedByStep(stepResult, *child, levelIndex);
             }
             if (solved) {
                 result.status = "solved";
@@ -1277,7 +1340,9 @@ Result runSearch(
                 continue;
             }
 
-            CompactSolverState compact = compactStateWithTiming(*child, result.timing);
+            CompactSolverState compact = compactTickResult.handled
+                ? std::move(compactTickResult.compact)
+                : compactStateWithTiming(*child, result.timing);
             const StateKey key = compactStateKey(compact, result.timing);
             const uint32_t childDepth = parentDepth + 1;
             uint32_t childIndex = static_cast<uint32_t>(nodes.size());
@@ -1345,6 +1410,10 @@ void mergeStats(Result& target, const Result& source) {
     target.uniqueStates += source.uniqueStates;
     target.duplicates += source.duplicates;
     target.maxFrontier = std::max(target.maxFrontier, source.maxFrontier);
+    target.compactTickAttempts += source.compactTickAttempts;
+    target.compactTickHits += source.compactTickHits;
+    target.compactTickFallbacks += source.compactTickFallbacks;
+    target.compactTickUnsupported += source.compactTickUnsupported;
     target.timing.loadNs += source.timing.loadNs;
     target.timing.cloneNs += source.timing.cloneNs;
     target.timing.stepNs += source.timing.stepNs;
@@ -1410,6 +1479,7 @@ Result solveLevel(
     combined.workerId = workerId;
     combined.compiledRulesAttached = game && game->compiledRules != nullptr;
     combined.compiledTickAttached = game && game->compiledTick != nullptr;
+    combined.compiledCompactTickAttached = game && game->compiledCompactTick != nullptr;
     combined.compactNodeStorage = compactNodeStorage;
     combined.astarWeight = astarWeight;
     combined.timing.compileNs = compileNs;
@@ -1614,8 +1684,13 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"timeout_ms\":" << result.timeoutMs;
     out << ",\"compiled_rules_attached\":" << (result.compiledRulesAttached ? "true" : "false");
     out << ",\"compiled_tick_attached\":" << (result.compiledTickAttached ? "true" : "false");
+    out << ",\"compiled_compact_tick_attached\":" << (result.compiledCompactTickAttached ? "true" : "false");
     out << ",\"compact_node_storage\":" << (result.compactNodeStorage ? "true" : "false");
     out << ",\"astar_weight\":" << result.astarWeight;
+    out << ",\"compact_tick_attempts\":" << result.compactTickAttempts;
+    out << ",\"compact_tick_hits\":" << result.compactTickHits;
+    out << ",\"compact_tick_fallbacks\":" << result.compactTickFallbacks;
+    out << ",\"compact_tick_unsupported\":" << result.compactTickUnsupported;
     out << ",\"compile_ms\":" << ms(result.timing.compileNs);
     out << ",\"load_ms\":" << ms(result.timing.loadNs);
     out << ",\"clone_ms\":" << ms(result.timing.cloneNs);
@@ -1989,6 +2064,10 @@ int main(int argc, char** argv) {
                       << " compiled_tick_attempts=" << runtimeCounters.compiled_tick_attempts
                       << " compiled_tick_hits=" << runtimeCounters.compiled_tick_hits
                       << " compiled_tick_fallbacks=" << runtimeCounters.compiled_tick_fallbacks
+                      << " compact_tick_attempts=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickAttempts; })
+                      << " compact_tick_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickHits; })
+                      << " compact_tick_fallbacks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickFallbacks; })
+                      << " compact_tick_unsupported=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickUnsupported; })
                       << "\n";
         }
         if (options.requireCompiledTick && runtimeCounters.compiled_tick_hits == 0) {

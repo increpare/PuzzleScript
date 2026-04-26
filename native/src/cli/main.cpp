@@ -4902,7 +4902,8 @@ std::string generateCompiledRulesCpp(
     const CompiledRulesOptions& options,
     bool emitGlobalFinder = true,
     std::string_view backendAccessorSymbol = {},
-    std::string_view tickBackendAccessorSymbol = {}
+    std::string_view tickBackendAccessorSymbol = {},
+    std::string_view compactTickBackendAccessorSymbol = {}
 ) {
     std::ostringstream out;
     const std::string safeSymbol = safeCppIdentifier(symbol);
@@ -5162,6 +5163,24 @@ std::string generateCompiledRulesCpp(
             << "    tick_source_" << sourceIndex << ",\n"
             << "    {" << (tickSupport.wholeTurnSupported ? "true" : "false")
             << ", " << cppStringLiteral(tickSupport.wholeTurnFallbackReason) << "},\n"
+            << "};\n\n"
+            << "CompiledCompactTickApplyOutcome compact_tick_step_source_" << sourceIndex << "(\n"
+            << "    const Game& game,\n"
+            << "    CompiledCompactTickStateView state,\n"
+            << "    ps_input input,\n"
+            << "    RuntimeStepOptions options\n"
+            << ") {\n"
+            << "    (void)game;\n"
+            << "    (void)state;\n"
+            << "    (void)input;\n"
+            << "    (void)options;\n"
+            << "    return {false, {}};\n"
+            << "}\n\n"
+            << "const CompiledCompactTickBackend compact_tick_backend_" << sourceIndex << " = {\n"
+            << "    " << source.hash << "ULL,\n"
+            << "    " << cppStringLiteral(source.path.string()) << ",\n"
+            << "    compact_tick_step_source_" << sourceIndex << ",\n"
+            << "    {false, \"interpreter_delegation\"},\n"
             << "};\n\n";
     }
 
@@ -5181,6 +5200,15 @@ std::string generateCompiledRulesCpp(
             << "    switch (sourceHash) {\n";
         for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
             out << "        case " << sources[sourceIndex].hash << "ULL: return &tick_backend_" << sourceIndex << ";\n";
+        }
+        out << "        default: return nullptr;\n"
+            << "    }\n"
+            << "}\n\n";
+        out << "extern \"C\" const puzzlescript::CompiledCompactTickBackend* "
+            << "ps_compiled_compact_tick_find_backend(uint64_t sourceHash) {\n"
+            << "    switch (sourceHash) {\n";
+        for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
+            out << "        case " << sources[sourceIndex].hash << "ULL: return &compact_tick_backend_" << sourceIndex << ";\n";
         }
         out << "        default: return nullptr;\n"
             << "    }\n"
@@ -5207,6 +5235,15 @@ std::string generateCompiledRulesCpp(
             << safeTickBackendAccessor << "() {\n"
             << "    return &tick_backend_0;\n"
             << "}\n\n";
+        const std::string safeCompactTickBackendAccessor = safeCppIdentifier(
+            compactTickBackendAccessorSymbol.empty()
+                ? std::string(safeSymbol + "_compact_tick_backend")
+                : std::string(compactTickBackendAccessorSymbol)
+        );
+        out << "extern \"C\" const puzzlescript::CompiledCompactTickBackend* "
+            << safeCompactTickBackendAccessor << "() {\n"
+            << "    return &compact_tick_backend_0;\n"
+            << "}\n\n";
     }
     out << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_rule_count = " << totalCompiledRules << "U;\n"
         << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_group_count = " << totalCompiledGroups << "U;\n";
@@ -5218,6 +5255,7 @@ std::string generateCompiledRulesRegistryCpp(
     std::string_view symbol,
     const std::vector<std::string>& backendAccessorSymbols,
     const std::vector<std::string>& tickBackendAccessorSymbols,
+    const std::vector<std::string>& compactTickBackendAccessorSymbols,
     const CompiledRulesCoverage& coverage
 ) {
     std::ostringstream out;
@@ -5231,6 +5269,10 @@ std::string generateCompiledRulesRegistryCpp(
     }
     for (const auto& backendSymbol : tickBackendAccessorSymbols) {
         out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
+            << safeCppIdentifier(backendSymbol) << "();\n";
+    }
+    for (const auto& backendSymbol : compactTickBackendAccessorSymbols) {
+        out << "extern \"C\" const puzzlescript::CompiledCompactTickBackend* "
             << safeCppIdentifier(backendSymbol) << "();\n";
     }
     out << "\nextern \"C\" const puzzlescript::CompiledRulesBackend* "
@@ -5252,6 +5294,16 @@ std::string generateCompiledRulesRegistryCpp(
     }
     out << "        default: return nullptr;\n"
         << "    }\n"
+        << "}\n\n";
+    out << "extern \"C\" const puzzlescript::CompiledCompactTickBackend* "
+        << "ps_compiled_compact_tick_find_backend(uint64_t sourceHash) {\n"
+        << "    switch (sourceHash) {\n";
+    for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
+        out << "        case " << sources[sourceIndex].hash << "ULL: return "
+            << safeCppIdentifier(compactTickBackendAccessorSymbols[sourceIndex]) << "();\n";
+    }
+    out << "        default: return nullptr;\n"
+        << "    }\n"
         << "}\n\n"
         << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_rule_count = " << coverage.compiledRules << "U;\n"
         << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_group_count = " << coverage.compiledGroups << "U;\n";
@@ -5270,10 +5322,12 @@ uint32_t writeCompiledRulesCppDirectory(
     std::vector<std::filesystem::path> generatedPaths;
     std::vector<std::string> backendAccessorSymbols;
     std::vector<std::string> tickBackendAccessorSymbols;
+    std::vector<std::string> compactTickBackendAccessorSymbols;
     uint32_t wroteCount = 0;
     generatedPaths.reserve(sources.size() + 1);
     backendAccessorSymbols.reserve(sources.size());
     tickBackendAccessorSymbols.reserve(sources.size());
+    compactTickBackendAccessorSymbols.reserve(sources.size());
 
     for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
         std::ostringstream hashHex;
@@ -5283,15 +5337,18 @@ uint32_t writeCompiledRulesCppDirectory(
         const std::string sourceSymbol = safeSymbol + "_source_" + hashSuffix;
         const std::string backendSymbol = safeSymbol + "_backend_" + hashSuffix;
         const std::string tickBackendSymbol = safeSymbol + "_tick_backend_" + hashSuffix;
+        const std::string compactTickBackendSymbol = safeSymbol + "_compact_tick_backend_" + hashSuffix;
         backendAccessorSymbols.push_back(backendSymbol);
         tickBackendAccessorSymbols.push_back(tickBackendSymbol);
+        compactTickBackendAccessorSymbols.push_back(compactTickBackendSymbol);
         const std::string generated = generateCompiledRulesCpp(
             std::vector<CodegenSource>{sources[sourceIndex]},
             sourceSymbol,
             options,
             false,
             backendSymbol,
-            tickBackendSymbol
+            tickBackendSymbol,
+            compactTickBackendSymbol
         );
         if (writeFileIfChanged(cppPath, generated)) {
             ++wroteCount;
@@ -5302,7 +5359,14 @@ uint32_t writeCompiledRulesCppDirectory(
     const std::filesystem::path registryPath = emitCppDir / "registry.cpp";
     if (writeFileIfChanged(
         registryPath,
-        generateCompiledRulesRegistryCpp(sources, symbol, backendAccessorSymbols, tickBackendAccessorSymbols, coverage)
+        generateCompiledRulesRegistryCpp(
+            sources,
+            symbol,
+            backendAccessorSymbols,
+            tickBackendAccessorSymbols,
+            compactTickBackendAccessorSymbols,
+            coverage
+        )
     )) {
         ++wroteCount;
     }
@@ -5355,7 +5419,8 @@ std::vector<CodegenSource> selectCompiledRuleSourcesForEmission(
                 options,
                 false,
                 "compiled_rules_line_budget_probe_backend",
-                "compiled_rules_line_budget_probe_tick_backend"
+                "compiled_rules_line_budget_probe_tick_backend",
+                "compiled_rules_line_budget_probe_compact_tick_backend"
             );
             const uint64_t generatedLines = static_cast<uint64_t>(
                 std::count(generated.begin(), generated.end(), '\n') + 1
