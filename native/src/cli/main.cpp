@@ -4645,11 +4645,6 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
         for (const int32_t playerObjectId : playerObjectIds) {
             playerCount += countObjectInLevel(game, level, playerObjectId);
         }
-        const bool requiresSinglePlayerInstance = simplePush;
-        if (playerObjectIds.size() == 1 && requiresSinglePlayerInstance && playerCount != 1) {
-            support.fallbackReason = "level_player_count_not_one";
-            return support;
-        }
         if (playerObjectIds.size() > 1 && playerCount == 0) {
             support.fallbackReason = "level_player_count_zero";
             return support;

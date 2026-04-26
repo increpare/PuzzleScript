@@ -844,6 +844,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
     after non-player movement-clear direct-cell expansion: 75/452
     after sound-only command allowance for compact movement shapes: 76/452
     after rule-derived push candidate fallback: 77/452
+    after multi-player simple-push level allowance: 79/452
     callable compact backends through native-or-bridge: 452/452
 
   testdata.js#1 sokoban no win condition:
