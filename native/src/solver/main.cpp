@@ -966,12 +966,12 @@ std::vector<std::string> reconstructSolution(const std::vector<Node>& nodes, uin
     return reversed;
 }
 
-bool solvedByStep(const ps_step_result& stepResult, ps_session* session, int32_t levelIndex) {
+bool solvedByStep(const ps_step_result& stepResult, ps_full_state* state, int32_t levelIndex) {
     if (stepResult.won) {
         return true;
     }
-    ps_session_status_info status{};
-    ps_session_status(session, &status);
+    ps_full_state_status_info status{};
+    ps_full_state_status(state, &status);
     return status.current_level_index != levelIndex;
 }
 

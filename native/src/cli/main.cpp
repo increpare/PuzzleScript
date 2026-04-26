@@ -288,7 +288,7 @@ struct ReplayOracleStats {
     std::string firstFailure;
 };
 
-std::string compactTurnOracleMismatchSummary(const ps_compact_tick_oracle_info& info) {
+std::string compactTurnOracleMismatchSummary(const ps_compact_turn_oracle_info& info) {
     std::ostringstream out;
     out << " handled=" << (info.handled ? 1 : 0)
         << " state_checked=" << (info.state_checked ? 1 : 0)
@@ -343,7 +343,7 @@ bool replayInputTokens(
         }
 
         if (oracleStats != nullptr) {
-            ps_compact_tick_oracle_info oracleInfo{};
+            ps_compact_turn_oracle_info oracleInfo{};
             if (!ps_full_state_compact_turn_oracle_check(session, *input, &oracleInfo)) {
                 ++oracleStats->compactTurnFailures;
                 if (oracleStats->firstFailure.empty()) {
