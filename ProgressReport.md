@@ -94,20 +94,16 @@ This fallback is useful for two reasons:
 
 For solver performance, bridge-backed games are not the destination. They mainly protect correctness and keep the ABI honest while native compact kernels are filled in.
 
-## Important Design Issue: movementWords
+## Movement Words (Resolved)
 
-`CompactSolverState` currently contains `movementWords`. That is probably wrong for solver graph identity.
+`CompactSolverState` previously contained `movementWords`. That was wrong for solver graph identity because solver nodes are end-of-turn states, and after an input fully resolves there is no outstanding movement to remember. The field has been removed:
 
-Movement words are useful inside a turn while rules and movement resolution are still running. Solver graph nodes, however, are end-of-turn states. Once an input has fully resolved, there should be no outstanding movement to remember. Including movement data in equality, hashing, storage, or materialization risks making the compact state larger and more semantically confusing than it needs to be.
+- `CompactSolverState` no longer has a `movementWords` member.
+- `compactStateKey` skips movement words entirely; equality and `byteSize()` only cover object bits and RNG.
+- `materializeCompactStateIntoSession` zero-initialises `liveMovements`.
+- `tryCompiledCompactTick` passes `nullptr`/`0` for the movement fields of `CompiledCompactTickStateView`. The bridge already coped: when movement words are missing it zeroes `liveMovements` on materialise and skips copy-back.
 
-The likely fix is:
-
-- Remove `movementWords` from `CompactSolverState`.
-- Remove movement words from compact solver equality, byte-size accounting, and hashing.
-- Materialize solver fallback sessions with zeroed `liveMovements`.
-- Keep movement buffers, if needed, inside `CompiledCompactTickStateView` or bridge scratch state as a transitional runtime detail rather than as part of node identity.
-
-This should be handled before treating compact solver storage as architecturally settled.
+The C API oracle (`CompactOracleState` in `runtime/c_api.cpp`) is independent and still tracks movement words for runtime parity checks against the interpreter. That can stay as it is for now — its scope is intra-turn comparison, not solver node identity.
 
 ## Randomness
 
@@ -121,7 +117,6 @@ So RNG fields should remain in equality, hashing, materialization, and oracle co
 
 The main missing pieces are native behavior coverage and solver-oriented cleanup.
 
-- Remove `movementWords` from compact solver node identity.
 - Keep RNG in compact solver node identity, while continuing to exclude random games from focus-group mining when that improves iteration stability.
 - Continue replacing interpreter bridge cases with native compact kernels.
 - Add native compact support for remaining PuzzleScript features: complex movement creation, ellipsis patterns, commands, `again`, `cancel`, `restart`, `checkpoint`, `win`, rigid groups, random/randomDir if they return to scope, late rules, and more complex multi-cell/multi-row patterns.
@@ -131,9 +126,7 @@ The main missing pieces are native behavior coverage and solver-oriented cleanup
 
 ## Near-Term Checklist
 
-1. Remove `movementWords` from solver node identity.
-2. Re-run `make compact_tick_simulation_tests`.
-3. Re-run compact solver parity/smoke targets.
-4. Confirm `make compact_tick_coverage` still reports `452/452` callable compact backends.
-5. Measure `make solver_focus_compare` before and after the compact state cleanup.
-6. Resume native compact kernel coverage work, using `compact_tick_coverage` as the progress counter.
+1. Resume native compact kernel coverage work, using `compact_tick_coverage` as the progress counter. Largest remaining buckets: `late_rules_not_compact` (176) and `rules_not_compact` (132).
+2. Extend `compactLooksLikeDirectCellObjectGroups` past 1×1 patterns so multi-cell late and early cell-object replacements (no movement) can be classified native — this is the cheapest unlock for the `late_rules_not_compact` bucket.
+3. Measure `make solver_focus_compare` to track real solver impact of native coverage gains.
+4. Re-run `make compact_tick_simulation_tests`, `make compact_tick_coverage`, and `make solver_compact_parity` after each kernel extension.
