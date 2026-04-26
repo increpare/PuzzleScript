@@ -836,6 +836,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
     after no-win simple-push support: 23/452
     after win-mask expansion: 25/452
     after conservative push-chain expansion: 25/452
+    after direct one-cell object-rule expansion: 27/452
     callable compact backends through native-or-bridge: 452/452
 
   testdata.js#1 sokoban no win condition:

@@ -3863,6 +3863,7 @@ struct CompactTickSupport {
     std::string fallbackReason = "interpreter_delegation";
     bool interpreterBridge = false;
     std::string nativeFallbackReason = "interpreter_delegation";
+    bool directCellObjectRules = false;
     bool simplePush = false;
     bool simplePushChain = false;
     int32_t playerObjectId = -1;
@@ -4155,6 +4156,37 @@ bool compactLooksLikePushChainRules(
     return sawPlayerPush && sawPushPush;
 }
 
+bool compactLooksLikeDirectCellObjectRules(const puzzlescript::Game& game) {
+    if (game.rules.empty() || !game.lateRules.empty()) {
+        return false;
+    }
+    for (const auto& group : game.rules) {
+        if (group.empty()) {
+            return false;
+        }
+        for (const auto& rule : group) {
+            if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+                return false;
+            }
+            if (rule.patterns.size() != 1 || rule.patterns.front().size() != 1) {
+                return false;
+            }
+            const auto& pattern = rule.patterns.front().front();
+            if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern
+                || pattern.hasMovementsPresent
+                || pattern.hasMovementsMissing
+                || !pattern.replacement.has_value()
+                || pattern.replacement->hasRandomEntityMask
+                || pattern.replacement->hasRandomDirMask
+                || maskHasAnyBit(game, pattern.replacement->movementsClear, game.movementWordCount)
+                || maskHasAnyBit(game, pattern.replacement->movementsSet, game.movementWordCount)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 std::vector<int32_t> compactPushCandidatesFromRules(
     const puzzlescript::Game& game,
     int32_t playerObjectId
@@ -4283,6 +4315,7 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
     }
     const bool movementOnly = game.rules.empty();
     std::vector<int32_t> simplePushObjectIds;
+    bool directCellObjectRules = false;
     if (!game.rules.empty()) {
         if (playerObjectIds.size() != 1) {
             support.fallbackReason = "aggregate_player_rules_not_compact";
@@ -4313,13 +4346,16 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
         } else if (compactLooksLikePushChainRules(game, support.playerObjectId, subjectCandidates)) {
             simplePushObjectIds = std::move(subjectCandidates);
             support.simplePushChain = true;
+        } else if (compactLooksLikeDirectCellObjectRules(game)) {
+            directCellObjectRules = true;
         }
     }
     const bool simplePush = !simplePushObjectIds.empty();
-    if (!movementOnly && !simplePush) {
+    if (!movementOnly && !simplePush && !directCellObjectRules) {
         support.fallbackReason = game.rules.empty() ? "win_subject_not_player" : "rules_not_compact";
         return support;
     }
+    support.directCellObjectRules = directCellObjectRules;
     if (simplePush) {
         support.simplePush = true;
         support.pushObjectIds = simplePushObjectIds;
@@ -5438,6 +5474,7 @@ void appendCompactTickSourceJsonFields(
         << ",\"features\":{"
         << "\"state_layout\":\"compact_object_bits\""
         << ",\"movement\":" << jsonStringLiteral(support.simplePush ? "simple_push" : "simple_movement")
+        << ",\"rules\":" << jsonStringLiteral(support.directCellObjectRules ? "direct_cell_object" : "movement_shape")
         << ",\"win_conditions\":" << jsonStringLiteral(support.winConditions.empty() ? "none" : "generic_masks")
         << "}"
         << ",\"misses\":{";
@@ -5464,6 +5501,43 @@ std::string compactObjectMaskMatchExpression(
         }
         out << "((state.objectBits[static_cast<size_t>(" << objectIds[index]
             << ") * cellWordCount + " << wordExpr << "] & " << bitExpr << ") != 0)";
+    }
+    out << ")";
+    return out.str();
+}
+
+std::string compactCellPatternMatchExpression(
+    const puzzlescript::Game& game,
+    const puzzlescript::Pattern& pattern,
+    std::string_view wordExpr,
+    std::string_view bitExpr
+) {
+    std::vector<std::string> terms;
+    for (const int32_t objectId : objectIdsInMask(game, pattern.objectsPresent)) {
+        std::ostringstream term;
+        term << "((state.objectBits[static_cast<size_t>(" << objectId
+             << ") * cellWordCount + " << wordExpr << "] & " << bitExpr << ") != 0)";
+        terms.push_back(term.str());
+    }
+    for (const int32_t objectId : objectIdsInMask(game, pattern.objectsMissing)) {
+        std::ostringstream term;
+        term << "((state.objectBits[static_cast<size_t>(" << objectId
+             << ") * cellWordCount + " << wordExpr << "] & " << bitExpr << ") == 0)";
+        terms.push_back(term.str());
+    }
+    for (const auto& anyObjectIds : pattern.anyObjectAnchorIds) {
+        terms.push_back(compactObjectMaskMatchExpression(anyObjectIds, false, wordExpr, bitExpr));
+    }
+    if (terms.empty()) {
+        return "true";
+    }
+    std::ostringstream out;
+    out << "(";
+    for (size_t index = 0; index < terms.size(); ++index) {
+        if (index > 0) {
+            out << " && ";
+        }
+        out << terms[index];
     }
     out << ")";
     return out.str();
@@ -5995,7 +6069,60 @@ std::string generateCompiledRulesCpp(
                 << "    }\n"
                 << "    const size_t playerBase = static_cast<size_t>(kPlayerObject) * cellWordCount;\n"
                 << "    bool hasPlayer = false;\n"
-                << "    bool moved = false;\n";
+                << "    bool moved = false;\n"
+                << "    bool seeded = false;\n"
+                << "    if (directionMask != 0) {\n"
+                << "        for (size_t word = 0; word < cellWordCount; ++word) {\n"
+                << "            if (state.objectBits[playerBase + word] != 0) {\n"
+                << "                seeded = true;\n"
+                << "                break;\n"
+                << "            }\n"
+                << "        }\n"
+                << "    }\n"
+                << "    bool ruleChanged = false;\n";
+            if (compactTickSupport.directCellObjectRules) {
+                for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
+                    const auto& group = game.rules[groupIndex];
+                    out << "    {\n"
+                        << "        bool groupChanged = true;\n"
+                        << "        int loopCount = 0;\n"
+                        << "        while (groupChanged && loopCount++ < 200) {\n"
+                        << "            groupChanged = false;\n";
+                    for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                        const auto& rule = group[ruleIndex];
+                        const auto& pattern = rule.patterns.front().front();
+                        const auto& replacement = *pattern.replacement;
+                        const std::vector<int32_t> clearObjectIds = objectIdsInMask(game, replacement.objectsClear);
+                        const std::vector<int32_t> setObjectIds = objectIdsInMask(game, replacement.objectsSet);
+                        out << "            for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
+                            << "                const size_t tileWord = static_cast<size_t>(tile >> 6);\n"
+                            << "                const uint64_t tileBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);\n"
+                            << "                if (!" << compactCellPatternMatchExpression(game, pattern, "tileWord", "tileBit") << ") {\n"
+                            << "                    continue;\n"
+                            << "                }\n"
+                            << "                bool cellChanged = false;\n";
+                        for (const int32_t objectId : clearObjectIds) {
+                            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) != 0) {\n"
+                                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] &= ~tileBit;\n"
+                                << "                    cellChanged = true;\n"
+                                << "                }\n";
+                        }
+                        for (const int32_t objectId : setObjectIds) {
+                            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) == 0) {\n"
+                                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] |= tileBit;\n"
+                                << "                    cellChanged = true;\n"
+                                << "                }\n";
+                        }
+                        out << "                if (cellChanged) {\n"
+                            << "                    groupChanged = true;\n"
+                            << "                    ruleChanged = true;\n"
+                            << "                }\n"
+                            << "            }\n";
+                    }
+                    out << "        }\n"
+                        << "    }\n";
+                }
+            }
             const bool multiPlayerMovementOnly = !compactTickSupport.simplePush && compactTickSupport.playerObjectIds.size() > 1;
             if (multiPlayerMovementOnly) {
                 out << "    if (directionMask != 0) {\n"
@@ -6218,7 +6345,7 @@ std::string generateCompiledRulesCpp(
             }
             out
                 << "    ps_step_result result{};\n"
-                << "    result.changed = (directionMask != 0 && hasPlayer) || moved;\n"
+                << "    result.changed = seeded || ruleChanged || moved;\n"
                 << "    result.won = won;\n"
                 << "    return {true, result};\n"
                 << "}\n\n";
