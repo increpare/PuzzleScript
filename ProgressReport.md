@@ -113,19 +113,16 @@ This should be handled before treating compact solver storage as architecturally
 
 Random state is currently present in `CompactSolverState`, because random rules can make two visually identical boards have different futures.
 
-For the immediate solver/generator focus group, random and `randomDir` games are being excluded. Under that policy, random state does not need to participate in compact solver node identity. There are two reasonable next steps:
+It should stay there. Even if the immediate solver/generator focus group excludes random and `randomDir` games for iteration stability, that exclusion is a benchmark-selection policy, not a compact-state simplification. The compact representation should remain semantically complete enough that a compact state can be materialized back into a valid runtime state.
 
-- Gate compact solver node storage to deterministic games and remove RNG from `CompactSolverState`.
-- Or keep RNG fields only for broader simulation/oracle coverage, but keep deterministic solver/generator paths explicitly free of random-state hashing.
-
-The first option is simpler for solver performance. The second option is safer for eventually supporting random games in compact simulation tests.
+So RNG fields should remain in equality, hashing, materialization, and oracle comparison unless we introduce a separate explicitly deterministic-only representation. If that ever happens, it should be a distinct type or mode, not an implicit weakening of `CompactSolverState`.
 
 ## Missing Functionality
 
 The main missing pieces are native behavior coverage and solver-oriented cleanup.
 
 - Remove `movementWords` from compact solver node identity.
-- Decide whether solver compact state excludes RNG entirely when random games are not admitted.
+- Keep RNG in compact solver node identity, while continuing to exclude random games from focus-group mining when that improves iteration stability.
 - Continue replacing interpreter bridge cases with native compact kernels.
 - Add native compact support for remaining PuzzleScript features: complex movement creation, ellipsis patterns, commands, `again`, `cancel`, `restart`, `checkpoint`, `win`, rigid groups, random/randomDir if they return to scope, late rules, and more complex multi-cell/multi-row patterns.
 - Move more solver heuristics toward compact or generated code so the solver avoids repeated materialization.
