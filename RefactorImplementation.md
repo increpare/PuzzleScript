@@ -19,7 +19,7 @@ CompactState + SpecializedTurn + SpecializedRulegroups + AgainPolicy::Drain
 
 - [x] Do not mix large renames with semantic changes unless the semantic change is necessary to keep behavior identical.
 - [x] Stage only files touched by the current checklist item.
-- [ ] Commit after each coherent green slice.
+- [x] Commit after each coherent green slice.
 - [ ] Keep compatibility aliases only while they are actively helping a staged migration.
 - [ ] Remove aliases before declaring a rename track complete, unless a compatibility decision explicitly keeps them.
 - [ ] Keep `PS_INPUT_TICK` unchanged as a PuzzleScript input value.
@@ -68,31 +68,31 @@ Acceptance:
 
 Goal: add the new turn concepts while keeping old `step`/`tick` names as forwarding shims.
 
-- [ ] Add `enum class AgainPolicy { Yield, Drain };`.
-- [ ] Add or rename toward `TurnOptions`.
-- [ ] Keep existing option fields: playable undo behavior and audio emission.
-- [ ] Add `AgainPolicy againPolicy = AgainPolicy::Yield` to the interpreted/full-state turn options.
-- [ ] Introduce a single interpreted turn implementation that accepts `ps_input`, including `PS_INPUT_TICK`.
-- [ ] Make `PS_INPUT_TICK` flow through the same interpreted turn API as player inputs.
-- [ ] Preserve title-screen and message-screen behavior for `PS_INPUT_ACTION`.
-- [ ] Preserve `PS_INPUT_TICK` behavior as direction mask `0`.
-- [ ] Preserve playable undo behavior: player inputs can push undo; `PS_INPUT_TICK` should not accidentally gain player-input undo behavior.
-- [ ] Preserve audio behavior.
-- [ ] Preserve restart/checkpoint behavior.
-- [ ] Preserve win/transition behavior.
-- [ ] Preserve the existing `again` scheduling behavior for `AgainPolicy::Yield`.
-- [ ] Implement `AgainPolicy::Drain` by applying the input once, then applying `PS_INPUT_TICK` until `pendingAgain` is false or the existing maximum again iteration limit is reached.
-- [ ] Define how multiple drained turn results merge: preserve any `changed`, `won`, `restarted`, or `transitioned` signal from the chain.
-- [ ] Keep `step`, `tick`, `interpreterStep`, and `interpreterTick` as wrappers during this phase.
+- [x] Add `enum class AgainPolicy { Yield, Drain };`.
+- [x] Add or rename toward `TurnOptions`.
+- [x] Keep existing option fields: playable undo behavior and audio emission.
+- [x] Add `AgainPolicy againPolicy = AgainPolicy::Yield` to the interpreted/full-state turn options.
+- [x] Introduce a single interpreted turn implementation that accepts `ps_input`, including `PS_INPUT_TICK`.
+- [x] Make `PS_INPUT_TICK` flow through the same interpreted turn API as player inputs.
+- [x] Preserve title-screen and message-screen behavior for `PS_INPUT_ACTION`.
+- [x] Preserve `PS_INPUT_TICK` behavior as direction mask `0`.
+- [x] Preserve playable undo behavior: player inputs can push undo; `PS_INPUT_TICK` should not accidentally gain player-input undo behavior.
+- [x] Preserve audio behavior.
+- [x] Preserve restart/checkpoint behavior.
+- [x] Preserve win/transition behavior.
+- [x] Preserve the existing `again` scheduling behavior for `AgainPolicy::Yield`.
+- [x] Implement `AgainPolicy::Drain` by applying the input once, then applying `PS_INPUT_TICK` until `pendingAgain` is false or the existing maximum again iteration limit is reached.
+- [x] Define how multiple drained turn results merge: preserve any `changed`, `won`, `restarted`, or `transitioned` signal from the chain.
+- [x] Keep `step`, `tick`, `interpreterStep`, and `interpreterTick` as wrappers during this phase.
 - [ ] Mark wrappers as transitional in comments if helpful.
 
 Acceptance:
 
-- [ ] `make build`
-- [ ] `make simulation_tests_cpp`
-- [ ] `make solver_smoke_tests`
-- [ ] `make solver_parity_smoke`
-- [ ] `make solver_compact_parity`
+- [x] `make build`
+- [x] `make simulation_tests_cpp`
+- [x] `make solver_smoke_tests`
+- [x] `make solver_parity_smoke`
+- [x] `make solver_compact_parity`
 - [ ] Commit: `Introduce interpreted turn and again policy`
 
 ## Phase 3: Move Solver And Generator To Drain Policy

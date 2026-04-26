@@ -5054,7 +5054,18 @@ bool compiledTickDispatchEnabled() {
         && !audioDebugEnabled();
 }
 
-ps_step_result interpreterStepWithCompiledRuleLoops(
+void mergeDrainedTurnResult(ps_step_result& result, const ps_step_result& tickResult) {
+    result.changed = result.changed || tickResult.changed;
+    result.won = result.won || tickResult.won;
+    result.transitioned = result.transitioned || tickResult.transitioned;
+    result.restarted = result.restarted || tickResult.restarted;
+    result.audio_event_count = tickResult.audio_event_count;
+    result.audio_events = tickResult.audio_events;
+    result.ui_audio_event_count = tickResult.ui_audio_event_count;
+    result.ui_audio_events = tickResult.ui_audio_events;
+}
+
+ps_step_result interpretedTurnOnceWithCompiledRuleLoops(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
@@ -5107,8 +5118,38 @@ ps_step_result interpreterStepWithCompiledRuleLoops(
     });
 }
 
-ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options) {
-    return interpreterStepWithCompiledRuleLoops(session, input, options, nullptr, nullptr);
+ps_step_result interpretedTurnWithCompiledRuleLoops(
+    Session& session,
+    ps_input input,
+    RuntimeStepOptions options,
+    CompiledTickRuleGroupsFn applyEarlyRules,
+    CompiledTickRuleGroupsFn applyLateRules
+) {
+    RuntimeStepOptions yieldOptions = options;
+    yieldOptions.againPolicy = AgainPolicy::Yield;
+    ps_step_result result = interpretedTurnOnceWithCompiledRuleLoops(
+        session,
+        input,
+        yieldOptions,
+        applyEarlyRules,
+        applyLateRules
+    );
+    if (options.againPolicy != AgainPolicy::Drain) {
+        return result;
+    }
+
+    constexpr int kMaxAgainIterations = 500;
+    for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
+        const ps_step_result tickResult = interpretedTurnOnceWithCompiledRuleLoops(
+            session,
+            PS_INPUT_TICK,
+            yieldOptions,
+            applyEarlyRules,
+            applyLateRules
+        );
+        mergeDrainedTurnResult(result, tickResult);
+    }
+    return result;
 }
 
 ps_step_result interpreterTickWithCompiledRuleLoops(
@@ -5124,6 +5165,34 @@ ps_step_result interpreterTickWithCompiledRuleLoops(
         .applyEarlyRules = applyEarlyRules,
         .applyLateRules = applyLateRules,
     });
+}
+
+ps_step_result interpretedTurn(Session& session, ps_input input, RuntimeStepOptions options) {
+    return interpretedTurnWithCompiledRuleLoops(session, input, options, nullptr, nullptr);
+}
+
+ps_step_result interpreterStepWithCompiledRuleLoops(
+    Session& session,
+    ps_input input,
+    RuntimeStepOptions options,
+    CompiledTickRuleGroupsFn applyEarlyRules,
+    CompiledTickRuleGroupsFn applyLateRules
+) {
+    if (options.againPolicy == AgainPolicy::Drain) {
+        return interpretedTurnWithCompiledRuleLoops(session, input, options, applyEarlyRules, applyLateRules);
+    }
+    RuntimeStepOptions yieldOptions = options;
+    yieldOptions.againPolicy = AgainPolicy::Yield;
+    return interpretedTurnOnceWithCompiledRuleLoops(session, input, yieldOptions, applyEarlyRules, applyLateRules);
+}
+
+ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options) {
+    if (options.againPolicy == AgainPolicy::Drain) {
+        return interpretedTurn(session, input, options);
+    }
+    RuntimeStepOptions yieldOptions = options;
+    yieldOptions.againPolicy = AgainPolicy::Yield;
+    return interpretedTurnOnceWithCompiledRuleLoops(session, input, yieldOptions, nullptr, nullptr);
 }
 
 ps_step_result interpreterTick(Session& session, RuntimeStepOptions options) {
@@ -5173,8 +5242,10 @@ ps_step_result tick(Session& session) {
 
 void settlePendingAgain(Session& session, RuntimeStepOptions options) {
     constexpr int kMaxAgainIterations = 500;
+    RuntimeStepOptions yieldOptions = options;
+    yieldOptions.againPolicy = AgainPolicy::Yield;
     for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
-        (void)tick(session, options);
+        (void)tick(session, yieldOptions);
     }
 }
 

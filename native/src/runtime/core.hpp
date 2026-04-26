@@ -440,10 +440,18 @@ ps_step_result step(Session& session, ps_input input);
 ps_step_result tick(Session& session);
 void settlePendingAgain(Session& session);
 
-struct RuntimeStepOptions {
+enum class AgainPolicy {
+    Yield,
+    Drain,
+};
+
+struct TurnOptions {
     bool playableUndo = true;
     bool emitAudio = true;
+    AgainPolicy againPolicy = AgainPolicy::Yield;
 };
+
+using RuntimeStepOptions = TurnOptions;
 
 struct CompiledTickRuleGroupsOutcome;
 using CompiledTickRuleGroupsFn = CompiledTickRuleGroupsOutcome (*)(Session& session, CommandState& commands, std::vector<bool>* bannedGroups);
@@ -452,6 +460,14 @@ std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& 
 bool restart(Session& session, RuntimeStepOptions options);
 ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result interpreterTick(Session& session, RuntimeStepOptions options);
+ps_step_result interpretedTurnWithCompiledRuleLoops(
+    Session& session,
+    ps_input input,
+    RuntimeStepOptions options,
+    CompiledTickRuleGroupsFn applyEarlyRules,
+    CompiledTickRuleGroupsFn applyLateRules
+);
+ps_step_result interpretedTurn(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result interpreterStepWithCompiledRuleLoops(
     Session& session,
     ps_input input,
