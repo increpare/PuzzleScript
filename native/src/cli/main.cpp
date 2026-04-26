@@ -3749,6 +3749,7 @@ struct CompactTickSupport {
     std::string fallbackReason = "interpreter_delegation";
     bool simplePush = false;
     int32_t playerObjectId = -1;
+    std::vector<int32_t> playerObjectIds;
     int32_t playerLayer = -1;
     std::vector<int32_t> playerLayerObjectIds;
     int32_t pushObjectId = -1;
@@ -3905,6 +3906,35 @@ bool compactLooksLikeSimplePushRules(
     return true;
 }
 
+std::vector<int32_t> compactPushCandidatesFromRules(
+    const puzzlescript::Game& game,
+    int32_t playerObjectId
+) {
+    std::vector<int32_t> candidates;
+    if (game.rules.size() != 1) {
+        return candidates;
+    }
+    for (const auto& rule : game.rules.front()) {
+        if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+            return {};
+        }
+        for (const auto& row : rule.patterns) {
+            for (const auto& pattern : row) {
+                if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern) {
+                    return {};
+                }
+                for (const int32_t objectId : objectIdsInMask(game, pattern.objectsPresent)) {
+                    if (objectId != playerObjectId
+                        && std::find(candidates.begin(), candidates.end(), objectId) == candidates.end()) {
+                        candidates.push_back(objectId);
+                    }
+                }
+            }
+        }
+    }
+    return candidates;
+}
+
 CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
     CompactTickSupport support;
     if (!game.lateRules.empty()) {
@@ -3915,32 +3945,35 @@ CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
         support.fallbackReason = "rigid_not_compact";
         return support;
     }
-    for (const auto& [key, value] : game.metadataMap) {
-        (void)value;
-        if (key == "run_rules_on_level_start") {
-            support.fallbackReason = "metadata_not_compact";
-            return support;
-        }
-    }
     if (game.playerMaskAggregate) {
         support.fallbackReason = "aggregate_player_not_compact";
         return support;
     }
-    const auto playerObjectId = singleObjectIdInMask(game, game.playerMask);
-    if (!playerObjectId.has_value()) {
+    std::vector<int32_t> playerObjectIds = objectIdsInMask(game, game.playerMask);
+    if (playerObjectIds.empty()) {
         support.fallbackReason = "player_mask_not_single_object";
         return support;
     }
-    if (*playerObjectId < 0 || static_cast<size_t>(*playerObjectId) >= game.objectsById.size()) {
-        support.fallbackReason = "player_object_missing";
-        return support;
+    int32_t playerLayer = -1;
+    for (const int32_t playerObjectId : playerObjectIds) {
+        if (playerObjectId < 0 || static_cast<size_t>(playerObjectId) >= game.objectsById.size()) {
+            support.fallbackReason = "player_object_missing";
+            return support;
+        }
+        const int32_t objectLayer = game.objectsById[static_cast<size_t>(playerObjectId)].layer;
+        if (objectLayer < 0 || static_cast<size_t>(objectLayer) >= game.layerMaskOffsets.size()) {
+            support.fallbackReason = "player_layer_missing";
+            return support;
+        }
+        if (playerLayer < 0) {
+            playerLayer = objectLayer;
+        } else if (playerLayer != objectLayer) {
+            support.fallbackReason = "player_layer_mixed_not_compact";
+            return support;
+        }
     }
-    support.playerObjectId = *playerObjectId;
-    const int32_t playerLayer = game.objectsById[static_cast<size_t>(*playerObjectId)].layer;
-    if (playerLayer < 0 || static_cast<size_t>(playerLayer) >= game.layerMaskOffsets.size()) {
-        support.fallbackReason = "player_layer_missing";
-        return support;
-    }
+    support.playerObjectIds = playerObjectIds;
+    support.playerObjectId = support.playerObjectIds.front();
     support.playerLayer = playerLayer;
     for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
         if (static_cast<size_t>(objectId) < game.objectsById.size()
@@ -3952,10 +3985,7 @@ CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
         support.fallbackReason = "player_layer_empty";
         return support;
     }
-    if (game.winConditions.empty()) {
-        support.fallbackReason = "win_condition_not_single";
-        return support;
-    }
+    const bool hasWinConditions = !game.winConditions.empty();
     std::vector<int32_t> winSubjects;
     std::vector<int32_t> winTargets;
     for (const auto& condition : game.winConditions) {
@@ -3973,27 +4003,38 @@ CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
         winTargets.push_back(*winTarget);
         support.winObjectPairs.emplace_back(*winSubject, *winTarget);
     }
-    support.winSubjectObjectId = winSubjects.front();
-    support.winTargetObjectId = winTargets.front();
+    if (hasWinConditions) {
+        support.winSubjectObjectId = winSubjects.front();
+        support.winTargetObjectId = winTargets.front();
+    }
     const bool movementOnly = game.rules.empty()
-        && std::all_of(winSubjects.begin(), winSubjects.end(), [&](int32_t objectId) { return objectId == *playerObjectId; });
+        && (!hasWinConditions || std::all_of(winSubjects.begin(), winSubjects.end(), [&](int32_t objectId) {
+            return std::find(playerObjectIds.begin(), playerObjectIds.end(), objectId) != playerObjectIds.end();
+        }));
     std::vector<int32_t> simplePushObjectIds;
     if (!game.rules.empty()) {
+        if (playerObjectIds.size() != 1) {
+            support.fallbackReason = "aggregate_player_rules_not_compact";
+            return support;
+        }
         std::vector<int32_t> subjectCandidates;
         std::vector<int32_t> targetCandidates;
         for (const int32_t objectId : winSubjects) {
-            if (objectId != *playerObjectId && std::find(subjectCandidates.begin(), subjectCandidates.end(), objectId) == subjectCandidates.end()) {
+            if (objectId != support.playerObjectId && std::find(subjectCandidates.begin(), subjectCandidates.end(), objectId) == subjectCandidates.end()) {
                 subjectCandidates.push_back(objectId);
             }
         }
         for (const int32_t objectId : winTargets) {
-            if (objectId != *playerObjectId && std::find(targetCandidates.begin(), targetCandidates.end(), objectId) == targetCandidates.end()) {
+            if (objectId != support.playerObjectId && std::find(targetCandidates.begin(), targetCandidates.end(), objectId) == targetCandidates.end()) {
                 targetCandidates.push_back(objectId);
             }
         }
-        if (compactLooksLikeSimplePushRules(game, *playerObjectId, targetCandidates)) {
+        if (!hasWinConditions) {
+            targetCandidates = compactPushCandidatesFromRules(game, support.playerObjectId);
+        }
+        if (compactLooksLikeSimplePushRules(game, support.playerObjectId, targetCandidates)) {
             simplePushObjectIds = std::move(targetCandidates);
-        } else if (compactLooksLikeSimplePushRules(game, *playerObjectId, subjectCandidates)) {
+        } else if (compactLooksLikeSimplePushRules(game, support.playerObjectId, subjectCandidates)) {
             simplePushObjectIds = std::move(subjectCandidates);
         }
     }
@@ -4038,8 +4079,16 @@ CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
         if (level.isMessage) {
             continue;
         }
-        if (countObjectInLevel(game, level, *playerObjectId) != 1) {
+        int32_t playerCount = 0;
+        for (const int32_t playerObjectId : playerObjectIds) {
+            playerCount += countObjectInLevel(game, level, playerObjectId);
+        }
+        if (playerObjectIds.size() == 1 && playerCount != 1) {
             support.fallbackReason = "level_player_count_not_one";
+            return support;
+        }
+        if (playerObjectIds.size() > 1 && playerCount == 0) {
+            support.fallbackReason = "level_player_count_zero";
             return support;
         }
     }
@@ -5513,29 +5562,83 @@ std::string generateCompiledRulesCpp(
                 << "    }\n"
                 << "    const size_t playerBase = static_cast<size_t>(kPlayerObject) * cellWordCount;\n"
                 << "    bool hasPlayer = false;\n"
-                << "    bool moved = false;\n"
-                << "    if (directionMask != 0) {\n"
-                << "        for (size_t sourceWordIndex = 0; sourceWordIndex < cellWordCount; ++sourceWordIndex) {\n"
-                << "            uint64_t players = state.objectBits[playerBase + sourceWordIndex];\n"
-                << "            while (players != 0) {\n"
-                << "                const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(players));\n"
-                << "                const int32_t tile = static_cast<int32_t>(sourceWordIndex * 64 + bit);\n"
-                << "                players &= players - 1;\n"
-                << "                if (tile >= tileCount) {\n"
-                << "                    continue;\n"
-                << "                }\n"
-                << "                hasPlayer = true;\n"
-                << "                const int32_t x = tile / height;\n"
-                << "                const int32_t y = tile % height;\n"
-                << "                const int32_t targetX = x + dx;\n"
-                << "                const int32_t targetY = y + dy;\n"
-                << "                if (targetX < 0 || targetX >= width || targetY < 0 || targetY >= height) {\n"
-                << "                    continue;\n"
-                << "                }\n"
-                << "                const int32_t targetTile = targetX * height + targetY;\n"
-                << "                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);\n"
-                << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
-                << "                bool blocked = false;\n";
+                << "    bool moved = false;\n";
+            const bool multiPlayerMovementOnly = !compactTickSupport.simplePush && compactTickSupport.playerObjectIds.size() > 1;
+            if (multiPlayerMovementOnly) {
+                out << "    if (directionMask != 0) {\n"
+                    << "        std::vector<uint64_t> pending(cellWordCount, 0);\n";
+                for (const int32_t objectId : compactTickSupport.playerObjectIds) {
+                    out << "        for (size_t word = 0; word < cellWordCount; ++word) {\n"
+                        << "            pending[word] |= state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + word];\n"
+                        << "        }\n";
+                }
+                out << "        for (size_t word = 0; word < cellWordCount; ++word) {\n"
+                    << "            if (pending[word] != 0) {\n"
+                    << "                hasPlayer = true;\n"
+                    << "                break;\n"
+                    << "            }\n"
+                    << "        }\n"
+                    << "        bool scanMoved = directionMask != 16;\n"
+                    << "        while (scanMoved) {\n"
+                    << "            scanMoved = false;\n"
+                    << "            for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
+                    << "                const size_t sourceWordIndex = static_cast<size_t>(tile >> 6);\n"
+                    << "                const uint64_t sourceBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);\n"
+                    << "                if ((pending[sourceWordIndex] & sourceBit) == 0) {\n"
+                    << "                    continue;\n"
+                    << "                }\n"
+                    << "                const int32_t x = tile / height;\n"
+                    << "                const int32_t y = tile % height;\n"
+                    << "                const int32_t targetX = x + dx;\n"
+                    << "                const int32_t targetY = y + dy;\n"
+                    << "                if (targetX < 0 || targetX >= width || targetY < 0 || targetY >= height) {\n"
+                    << "                    continue;\n"
+                    << "                }\n"
+                    << "                const int32_t targetTile = targetX * height + targetY;\n"
+                    << "                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);\n"
+                    << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
+                    << "                bool blocked = false;\n";
+                for (const int32_t objectId : compactTickSupport.playerLayerObjectIds) {
+                    out << "                blocked = blocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0);\n";
+                }
+                out << "                if (blocked) {\n"
+                    << "                    continue;\n"
+                    << "                }\n";
+                for (const int32_t objectId : compactTickSupport.playerLayerObjectIds) {
+                    out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + sourceWordIndex] & sourceBit) != 0) {\n"
+                        << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + sourceWordIndex] &= ~sourceBit;\n"
+                        << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] |= targetBit;\n"
+                        << "                }\n";
+                }
+                out << "                pending[sourceWordIndex] &= ~sourceBit;\n"
+                    << "                moved = true;\n"
+                    << "                scanMoved = true;\n"
+                    << "            }\n"
+                    << "        }\n"
+                    << "    }\n";
+            } else {
+                out << "    if (directionMask != 0) {\n"
+                    << "        for (size_t sourceWordIndex = 0; sourceWordIndex < cellWordCount; ++sourceWordIndex) {\n"
+                    << "            uint64_t players = state.objectBits[playerBase + sourceWordIndex];\n"
+                    << "            while (players != 0) {\n"
+                    << "                const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(players));\n"
+                    << "                const int32_t tile = static_cast<int32_t>(sourceWordIndex * 64 + bit);\n"
+                    << "                players &= players - 1;\n"
+                    << "                if (tile >= tileCount) {\n"
+                    << "                    continue;\n"
+                    << "                }\n"
+                    << "                hasPlayer = true;\n"
+                    << "                const int32_t x = tile / height;\n"
+                    << "                const int32_t y = tile % height;\n"
+                    << "                const int32_t targetX = x + dx;\n"
+                    << "                const int32_t targetY = y + dy;\n"
+                    << "                if (targetX < 0 || targetX >= width || targetY < 0 || targetY >= height) {\n"
+                    << "                    continue;\n"
+                    << "                }\n"
+                    << "                const int32_t targetTile = targetX * height + targetY;\n"
+                    << "                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);\n"
+                    << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
+                    << "                bool blocked = false;\n";
             if (compactTickSupport.simplePush) {
                 out << "                int32_t pushedObject = -1;\n"
                     << "                size_t pushBase = 0;\n";
@@ -5581,8 +5684,10 @@ std::string generateCompiledRulesCpp(
                 << "                moved = true;\n"
                 << "            }\n"
                 << "        }\n"
-                << "    }\n"
-                << "    bool won = true;\n"
+                << "    }\n";
+            }
+            out
+                << "    bool won = " << (compactTickSupport.winObjectPairs.empty() ? "false" : "true") << ";\n"
                 << "    for (size_t word = 0; word < cellWordCount && won; ++word) {\n";
             for (const auto& [subjectObjectId, targetObjectId] : compactTickSupport.winObjectPairs) {
                 out << "        if ((state.objectBits[static_cast<size_t>(" << subjectObjectId << ") * cellWordCount + word] & ~state.objectBits[static_cast<size_t>(" << targetObjectId << ") * cellWordCount + word]) != 0) {\n"

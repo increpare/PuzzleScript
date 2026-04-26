@@ -759,6 +759,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
     object ids are all in the pushed-object set.
   - [x] Generalize compact win checks from one object pair to multiple simple
     `all subject on target` object pairs.
+  - [x] Support no-win-condition compact ticks for command-free movement-only
+    and simple-push games by reporting `won=false`.
   - [ ] Compare the compact tick output against the interpreter fallback inside a
     debug/oracle mode before allowing solver use.
   - [ ] Only then fold compact heuristic/hash computation into the compact tick
@@ -777,6 +779,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
     with `all Target1 on Crate1` and `all Target2 on Crate2`.
   - Supports property/aggregate push cells when the aggregate is known to contain
     only the pushed objects and all pushed objects share one collision layer.
+  - Supports games with no win conditions only when the compact-supported rule
+    shape has no commands, so `win` commands cannot be missed.
   - Generated compact tick falls back if audio emission is requested; solver
     calls use `emitAudio=false`, so sound declarations do not block compact
     state stepping.
@@ -826,6 +830,22 @@ attribute graph cost -> no-allocation hash -> flat visited table
     interpreted_step_ms=90.6633
     compact_step_ms=2.0415
     step_speedup=44.4x
+
+  testdata.js compact tick source support:
+    before no-win simple-push support: 22/452
+    after no-win simple-push support: 23/452
+
+  testdata.js#1 sokoban no win condition:
+    status parity: exhausted/exhausted/exhausted
+    expanded parity: 24149
+    generated parity: 120745
+    compact_tick_attempts=120745
+    compact_tick_hits=120740
+    compact_tick_fallbacks=5
+    compact_tick_unsupported=0
+    interpreted_step_ms=149.630
+    compact_step_ms=3.441
+    step_speedup=43.5x
   ```
 
   Acceptance criteria:
