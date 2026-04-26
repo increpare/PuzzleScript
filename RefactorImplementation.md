@@ -295,32 +295,37 @@ Goal: align the external C API with the architecture terms once internals are st
 
 - [x] Add `ps_full_state` as the new public alias for the existing opaque state
   type.
-- [ ] Rename opaque C type `ps_session` -> `ps_full_state`.
+- [x] Rename opaque C type `ps_session` -> `ps_full_state`, with `ps_session`
+  retained as a compatibility typedef.
 - [ ] Rename constructor/destructor:
   - [x] Add `ps_full_state_create`.
   - [x] Add `ps_full_state_create_with_loaded_level_seed`.
   - [x] Add `ps_full_state_clone`.
   - [x] Add `ps_full_state_destroy`.
-  - [ ] Remove or formally deprecate the old `ps_session_*` constructor/destructor names.
+  - [x] Formally deprecate the old `ps_session_*` constructor/destructor names
+    in the public header compatibility block.
 - [ ] Rename turn functions:
   - [x] Add `ps_full_state_turn`.
-  - [ ] `ps_session_tick` -> remove or alias to `ps_full_state_turn(state, PS_INPUT_TICK)`
-  - [ ] Remove or formally deprecate `ps_session_step`.
+  - [x] `ps_session_tick` aliases to `ps_full_state_turn(state, PS_INPUT_TICK)`.
+  - [x] `ps_session_step` aliases to `ps_full_state_turn(state, input)`.
+  - [x] Formally deprecate `ps_session_step` / `ps_session_tick` in the
+    public header compatibility block.
 - [x] Add `ps_full_state_*` status/accessor wrappers.
 - [x] Add `ps_full_state_compact_turn_oracle_check` as the compact-turn name
   for the legacy compact-tick oracle check.
-- [ ] Rename status/accessor functions consistently to `ps_full_state_*`.
+- [x] Rename status/accessor functions consistently to `ps_full_state_*`, with
+  old `ps_session_*` names retained as compatibility aliases.
 - [x] Update CLI and SDL player call sites.
-- [ ] Update tests and helper scripts.
-- [ ] Add compatibility wrappers only if downstream consumers require them.
-- [ ] If wrappers remain, mark them deprecated in comments and docs.
+- [x] Update tests and helper scripts.
+- [x] Add compatibility wrappers only if downstream consumers require them.
+- [x] If wrappers remain, mark them deprecated in comments and docs.
 
 Acceptance:
 
-- [ ] `make build`
+- [x] `make build`
 - [ ] `make simulation_tests_cpp`
 - [ ] `make solver_smoke_tests`
-- [ ] Run/player compile target if separate from `make build`.
+- [x] Run/player compile target if separate from `make build`.
 - [ ] `rg "ps_session" native/src src Makefile` only finds intentional compatibility wrappers or historical notes.
 - [ ] Commit: `Rename public session API to full state API`
 

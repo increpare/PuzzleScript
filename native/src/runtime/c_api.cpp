@@ -25,7 +25,7 @@ struct ps_game {
     std::shared_ptr<const Game> impl;
 };
 
-struct ps_session {
+struct ps_full_state {
     std::unique_ptr<FullState> impl;
 };
 
@@ -344,6 +344,16 @@ size_t ps_full_state_list_inputs(const ps_full_state* state, ps_input* output, s
     return ps_session_list_inputs(state, output, capacity);
 }
 
+bool ps_benchmark_full_state_clone_hash(
+    const ps_full_state* state,
+    uint32_t iterations,
+    uint32_t thread_count,
+    ps_benchmark_result* out_result,
+    ps_error** out_error
+) {
+    return ps_benchmark_clone_hash(state, iterations, thread_count, out_result, out_error);
+}
+
 bool ps_session_create(const ps_game* game, ps_session** out_session, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;
@@ -354,7 +364,7 @@ bool ps_session_create(const ps_game* game, ps_session** out_session, ps_error**
         }
         return false;
     }
-    auto* wrapper = new ps_session();
+    auto* wrapper = new ps_full_state();
     wrapper->impl = puzzlescript::createFullState(game->impl);
     *out_session = wrapper;
     return true;
@@ -378,7 +388,7 @@ bool ps_session_create_with_loaded_level_seed(
     if (!loaded_level_seed_utf8) {
         return ps_session_create(game, out_session, out_error);
     }
-    auto* wrapper = new ps_session();
+    auto* wrapper = new ps_full_state();
     wrapper->impl = puzzlescript::createFullStateWithLoadedLevelSeed(game->impl, loaded_level_seed_utf8);
     *out_session = wrapper;
     return true;
@@ -394,7 +404,7 @@ bool ps_session_clone(const ps_session* session, ps_session** out_session, ps_er
         }
         return false;
     }
-    auto* wrapper = new ps_session();
+    auto* wrapper = new ps_full_state();
     wrapper->impl = std::make_unique<FullState>(*session->impl);
     *out_session = wrapper;
     return true;
@@ -431,17 +441,11 @@ bool ps_session_load_level(ps_session* session, int32_t level_index, ps_error** 
 }
 
 ps_step_result ps_session_step(ps_session* session, ps_input input) {
-    if (!session) {
-        return ps_step_result{};
-    }
-    return puzzlescript::step(*session->impl, input);
+    return ps_full_state_turn(session, input);
 }
 
 ps_step_result ps_session_tick(ps_session* session) {
-    if (!session) {
-        return ps_step_result{};
-    }
-    return puzzlescript::tick(*session->impl);
+    return ps_full_state_turn(session, PS_INPUT_TICK);
 }
 
 bool ps_session_compact_tick_oracle_check(

@@ -10,8 +10,8 @@ extern "C" {
 #endif
 
 typedef struct ps_game ps_game;
-typedef struct ps_session ps_session;
-typedef ps_session ps_full_state;
+typedef struct ps_full_state ps_full_state;
+typedef ps_full_state ps_session;
 typedef struct ps_compile_result ps_compile_result;
 typedef struct ps_error ps_error;
 typedef struct ps_level_view ps_level_view;
@@ -164,8 +164,14 @@ ps_hash128 ps_full_state_hash128(const ps_full_state* state);
 char* ps_full_state_serialize_test_string(const ps_full_state* state);
 char* ps_full_state_export_snapshot(const ps_full_state* state);
 size_t ps_full_state_list_inputs(const ps_full_state* state, ps_input* output, size_t capacity);
+bool ps_benchmark_full_state_clone_hash(
+    const ps_full_state* state,
+    uint32_t iterations,
+    uint32_t thread_count,
+    ps_benchmark_result* out_result,
+    ps_error** out_error);
 
-/* Legacy session API names retained for compatibility. */
+/* Deprecated compatibility names retained for downstream callers. */
 bool ps_session_create(const ps_game* game, ps_session** out_session, ps_error** out_error);
 bool ps_session_create_with_loaded_level_seed(
     const ps_game* game,

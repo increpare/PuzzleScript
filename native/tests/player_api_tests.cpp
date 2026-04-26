@@ -73,8 +73,8 @@ struct CompileHandle {
 };
 
 struct SessionHandle {
-    ps_session* session = nullptr;
-    ~SessionHandle() { ps_session_destroy(session); }
+    ps_full_state* state = nullptr;
+    ~SessionHandle() { ps_full_state_destroy(state); }
 };
 
 } // namespace
@@ -109,23 +109,23 @@ int main() {
 
     SessionHandle session;
     ps_error* error = nullptr;
-    assert(ps_session_create(game, &session.session, &error));
-    assert(ps_session_cell_has_object(session.session, 0, 0, 1));
+    assert(ps_full_state_create(game, &session.state, &error));
+    assert(ps_full_state_cell_has_object(session.state, 0, 0, 1));
 
-    const ps_step_result result = ps_session_step(session.session, PS_INPUT_ACTION);
+    const ps_step_result result = ps_full_state_turn(session.state, PS_INPUT_ACTION);
     assert(result.changed);
-    ps_session_status_info status{};
-    ps_session_status(session.session, &status);
+    ps_full_state_status_info status{};
+    ps_full_state_status(session.state, &status);
     assert(status.mode == PS_SESSION_MODE_MESSAGE);
-    assert(std::string(ps_session_message_text(session.session)) == "Hello native player");
+    assert(std::string(ps_full_state_message_text(session.state)) == "Hello native player");
 
-    const ps_step_result closeResult = ps_session_step(session.session, PS_INPUT_ACTION);
+    const ps_step_result closeResult = ps_full_state_turn(session.state, PS_INPUT_ACTION);
     assert(closeResult.changed);
-    ps_session_status(session.session, &status);
+    ps_full_state_status(session.state, &status);
     assert(status.mode == PS_SESSION_MODE_LEVEL);
-    assert(std::string(ps_session_message_text(session.session)).empty());
+    assert(std::string(ps_full_state_message_text(session.state)).empty());
 
-    const ps_step_result moveResult = ps_session_step(session.session, PS_INPUT_RIGHT);
+    const ps_step_result moveResult = ps_full_state_turn(session.state, PS_INPUT_RIGHT);
     assert(moveResult.changed);
     assert(moveResult.audio_event_count == 1);
     assert(moveResult.audio_events[0].seed == 222222);
