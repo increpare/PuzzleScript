@@ -22,11 +22,21 @@ CompactState + SpecializedTurn + SpecializedRulegroups + AgainPolicy::Drain
 - [x] Commit after each coherent green slice.
 - [x] Keep compatibility aliases only while they are actively helping a staged migration.
 - [x] Remove aliases before declaring a rename track complete, unless a compatibility decision explicitly keeps them.
-- [ ] Keep `PS_INPUT_TICK` unchanged as a PuzzleScript input value.
-- [ ] Keep complete RNG state in `CompactState` identity.
-- [ ] Keep transient movement words out of solver/generator `CompactState`.
-- [ ] Treat `restart` as a terminal failed edge for solver/generator compact-state work.
-- [ ] Treat `again` as drained before solver/generator graph insertion.
+- [x] Keep `PS_INPUT_TICK` unchanged as a PuzzleScript input value.
+  - Verified in `native/include/puzzlescript/puzzlescript.h`: `PS_INPUT_TICK = 5`.
+- [x] Keep complete RNG state in `CompactState` identity.
+  - Verified in `native/src/solver/main.cpp`: `CompactState` equality and
+    hashing include all 256 RNG bytes plus `i`, `j`, and `valid`.
+- [x] Keep transient movement words out of solver/generator `CompactState`.
+  - Verified in `native/src/solver/main.cpp`: solver `CompactState` contains
+    object bitsets and RNG only; materialization recreates zeroed movement
+    words in the scratch `FullState`.
+- [x] Treat `restart` as a terminal failed edge for solver/generator compact-state work.
+  - Verified in `native/src/solver/main.cpp`: restarted solver edges are
+    skipped before solved checks, hashing, and graph insertion.
+- [x] Treat `again` as drained before solver/generator graph insertion.
+  - Verified in `native/src/solver/main.cpp` and `native/src/generator/main.cpp`:
+    solver/generator turn calls use `AgainPolicy::Drain`.
 
 ## Baseline Snapshot
 
@@ -37,7 +47,8 @@ CompactState + SpecializedTurn + SpecializedRulegroups + AgainPolicy::Drain
 - [x] Run `make solver_compact_parity`.
 - [x] Run `make compact_turn_coverage` and record callable/native/bridge counts.
 - [x] Run `make compact_turn_simulation_tests` if iteration time is acceptable.
-- [ ] Save baseline notes in the first implementation commit message or a short doc update.
+- [x] Save baseline notes in the first implementation commit message or a short doc update.
+  - Current baseline notes live in `native/src/compiler/BASELINE_MEASUREMENTS.md`.
 
 ## Phase 1: Rename Solver Compact State
 
