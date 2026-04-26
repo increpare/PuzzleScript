@@ -4409,6 +4409,28 @@ std::vector<int32_t> compactPushCandidatesFromRules(
     return candidates;
 }
 
+bool compactObjectIdsShareOneLayer(
+    const puzzlescript::Game& game,
+    const std::vector<int32_t>& objectIds
+) {
+    int32_t layer = -1;
+    for (const int32_t objectId : objectIds) {
+        if (objectId < 0 || static_cast<size_t>(objectId) >= game.objectsById.size()) {
+            return false;
+        }
+        const int32_t objectLayer = game.objectsById[static_cast<size_t>(objectId)].layer;
+        if (objectLayer < 0) {
+            return false;
+        }
+        if (layer < 0) {
+            layer = objectLayer;
+        } else if (layer != objectLayer) {
+            return false;
+        }
+    }
+    return layer >= 0;
+}
+
 CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& game) {
     CompactTickSupport support;
     if (game.rigid) {
@@ -4530,21 +4552,33 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
                 targetCandidates.push_back(objectId);
             }
         }
+        std::vector<int32_t> ruleCandidates = compactPushCandidatesFromRules(game, support.playerObjectId);
         if (!hasWinConditions) {
-            targetCandidates = compactPushCandidatesFromRules(game, support.playerObjectId);
+            targetCandidates = ruleCandidates;
         }
-        if (compactLooksLikeSimplePushRules(game, support.playerObjectId, targetCandidates)) {
+        if (compactObjectIdsShareOneLayer(game, targetCandidates)
+            && compactLooksLikeSimplePushRules(game, support.playerObjectId, targetCandidates)) {
             simplePushObjectIds = std::move(targetCandidates);
-        } else if (compactLooksLikeSimplePushRules(game, support.playerObjectId, subjectCandidates)) {
+        } else if (compactObjectIdsShareOneLayer(game, subjectCandidates)
+                   && compactLooksLikeSimplePushRules(game, support.playerObjectId, subjectCandidates)) {
             simplePushObjectIds = std::move(subjectCandidates);
-        } else if (compactLooksLikePushChainRules(game, support.playerObjectId, targetCandidates)) {
+        } else if (compactObjectIdsShareOneLayer(game, ruleCandidates)
+                   && compactLooksLikeSimplePushRules(game, support.playerObjectId, ruleCandidates)) {
+            simplePushObjectIds = std::move(ruleCandidates);
+        } else if (compactObjectIdsShareOneLayer(game, targetCandidates)
+                   && compactLooksLikePushChainRules(game, support.playerObjectId, targetCandidates)) {
             simplePushObjectIds = std::move(targetCandidates);
             support.simplePushChain = true;
-        } else if (compactLooksLikePushChainRules(game, support.playerObjectId, subjectCandidates)) {
+        } else if (compactObjectIdsShareOneLayer(game, subjectCandidates)
+                   && compactLooksLikePushChainRules(game, support.playerObjectId, subjectCandidates)) {
             simplePushObjectIds = std::move(subjectCandidates);
+            support.simplePushChain = true;
+        } else if (compactObjectIdsShareOneLayer(game, ruleCandidates)
+                   && compactLooksLikePushChainRules(game, support.playerObjectId, ruleCandidates)) {
+            simplePushObjectIds = std::move(ruleCandidates);
             support.simplePushChain = true;
         } else {
-            std::vector<int32_t> consumeCandidates = compactPushCandidatesFromRules(game, support.playerObjectId);
+            std::vector<int32_t> consumeCandidates = std::move(ruleCandidates);
             if (compactLooksLikeSimpleConsumeRules(game, support.playerObjectId, consumeCandidates)) {
                 simpleConsumeObjectIds = std::move(consumeCandidates);
             } else if (auto clearTargetObjectIds = compactSimpleClearTargetObjectIds(game, support.playerObjectId);
