@@ -571,6 +571,36 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Surviving candidates are then stored once with compact identity plus the
     `Session` still needed for the current interpreter tick path.
 
+- [x] Reduce weighted-A* heuristic allocation overhead.
+
+  Intent: keep A* as the strong default while making its per-node heuristic
+  cost cheaper. BFS avoids heuristic work but loses too much search guidance on
+  the focus group.
+
+  Current behavior:
+
+  - `winConditionHeuristicScore` can reuse a per-search `HeuristicScratch`
+    instead of allocating distance vectors on every heuristic call.
+  - `puzzlescript_solver --astar-weight N` exposes the weighted-A* multiplier
+    for experiments; default remains `2`.
+  - `run_solver_level_benchmark.js --solver-arg ARG` can pass solver-specific
+    benchmark flags such as `--astar-weight`.
+
+  Current evidence on the 50-target focus group, one run, 500 ms timeout:
+
+  ```text
+  strategy/weight   solved   median_elapsed   median_generated   median_heuristic
+  bfs               30/50    399 ms           53192              0.0 ms
+  weighted w=1      44/50    306.5 ms         41387              12.6 ms
+  weighted w=2      50/50    272 ms           41595.5            12.6 ms
+  weighted w=3      48/50    290.5 ms         33497              13.9 ms
+  weighted w=4      47/50    307 ms           34758              14.8 ms
+  greedy            36/50    321 ms           32018.5            16.5 ms
+  ```
+
+  Conclusion: keep weighted A* weight `2` as the focus default; it is the best
+  solve-rate/elapsed tradeoff in this sample.
+
 - [?] Prototype compact solver state for one simple focus game.
 
   Status: `puzzlescript_solver --compact-node-storage` stores solver nodes

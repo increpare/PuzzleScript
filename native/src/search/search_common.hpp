@@ -89,13 +89,17 @@ inline StateKey sessionStateKey(const Session& session, bool includeRandomState)
     return sessionStateKey(session, includeRandomState, [](size_t, MaskWord word) { return word; });
 }
 
-inline int32_t priorityFor(SearchMode mode, uint32_t depth, int32_t heuristic) {
+inline int32_t priorityFor(SearchMode mode, uint32_t depth, int32_t heuristic, int32_t weightedAStarWeight) {
     switch (mode) {
         case SearchMode::Bfs: return static_cast<int32_t>(depth);
-        case SearchMode::WeightedAStar: return static_cast<int32_t>(depth) + heuristic * 2;
+        case SearchMode::WeightedAStar: return static_cast<int32_t>(depth) + heuristic * weightedAStarWeight;
         case SearchMode::Greedy: return heuristic;
     }
     return static_cast<int32_t>(depth);
+}
+
+inline int32_t priorityFor(SearchMode mode, uint32_t depth, int32_t heuristic) {
+    return priorityFor(mode, depth, heuristic, 2);
 }
 
 inline const MaskWord* maskPtr(const Game& game, MaskOffset offset) {
@@ -142,13 +146,23 @@ inline int32_t distanceOrFallback(int32_t distance) {
     return distance == std::numeric_limits<int32_t>::max() ? kNoMatchingDistance : distance;
 }
 
-inline std::vector<int32_t> matchingDistanceField(const Session& session, const MaskWord* filter, bool aggregate) {
+struct HeuristicScratch {
+    std::vector<int32_t> distanceField;
+    std::vector<std::vector<int32_t>> conditionDistances;
+};
+
+inline void matchingDistanceField(
+    const Session& session,
+    const MaskWord* filter,
+    bool aggregate,
+    std::vector<int32_t>& distances
+) {
     const int32_t width = session.liveLevel.width;
     const int32_t height = session.liveLevel.height;
     const int32_t tileCount = width * height;
-    std::vector<int32_t> distances(static_cast<size_t>(tileCount), std::numeric_limits<int32_t>::max());
+    distances.assign(static_cast<size_t>(tileCount), std::numeric_limits<int32_t>::max());
     if (filter == nullptr) {
-        return distances;
+        return;
     }
 
     for (int32_t tile = 0; tile < tileCount; ++tile) {
@@ -179,6 +193,11 @@ inline std::vector<int32_t> matchingDistanceField(const Session& session, const 
             if (y + 1 < height) relax(tile, x * height + (y + 1));
         }
     }
+}
+
+inline std::vector<int32_t> matchingDistanceField(const Session& session, const MaskWord* filter, bool aggregate) {
+    std::vector<int32_t> distances;
+    matchingDistanceField(session, filter, aggregate, distances);
     return distances;
 }
 
@@ -187,7 +206,7 @@ struct HeuristicOptions {
     bool includePlayerDistance = false;
 };
 
-inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptions options = {}) {
+inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptions options, HeuristicScratch& scratch) {
     const Game& game = *session.game;
     if (game.winConditions.empty()) {
         return 0;
@@ -201,7 +220,7 @@ inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptio
         if (filter1 == nullptr || filter2 == nullptr) {
             continue;
         }
-        const std::vector<int32_t> filter2Distances = matchingDistanceField(session, filter2, condition.aggr2);
+        matchingDistanceField(session, filter2, condition.aggr2, scratch.distanceField);
         if (condition.quantifier == 1) {
             for (int32_t tile = 0; tile < tileCount; ++tile) {
                 const MaskWord* cell = cellObjects(session, tile);
@@ -211,7 +230,7 @@ inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptio
                 if (matchesFilter(filter2, game.wordCount, condition.aggr2, cell)) {
                     continue;
                 }
-                score += 10 + distanceOrFallback(filter2Distances[static_cast<size_t>(tile)]);
+                score += 10 + distanceOrFallback(scratch.distanceField[static_cast<size_t>(tile)]);
             }
         } else if (condition.quantifier == 0) {
             bool passed = false;
@@ -225,7 +244,7 @@ inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptio
                     passed = true;
                     break;
                 }
-                best = std::min(best, distanceOrFallback(filter2Distances[static_cast<size_t>(tile)]));
+                best = std::min(best, distanceOrFallback(scratch.distanceField[static_cast<size_t>(tile)]));
             }
             score += passed ? 0 : best;
         } else if (options.includeNoQuantifierPenalty && condition.quantifier == -1) {
@@ -243,17 +262,17 @@ inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptio
         const MaskWord* playerMask = maskPtr(game, game.playerMask);
         bool hasPlayer = false;
         int32_t best = kNoMatchingDistance;
-        std::vector<std::vector<int32_t>> conditionDistances;
-        conditionDistances.reserve(game.winConditions.size());
-        for (const auto& condition : game.winConditions) {
-            conditionDistances.push_back(matchingDistanceField(session, maskPtr(game, condition.filter1), condition.aggr1));
+        scratch.conditionDistances.resize(game.winConditions.size());
+        for (size_t index = 0; index < game.winConditions.size(); ++index) {
+            const auto& condition = game.winConditions[index];
+            matchingDistanceField(session, maskPtr(game, condition.filter1), condition.aggr1, scratch.conditionDistances[index]);
         }
         for (int32_t player = 0; player < tileCount; ++player) {
             if (!matchesFilter(playerMask, game.wordCount, game.playerMaskAggregate, cellObjects(session, player))) {
                 continue;
             }
             hasPlayer = true;
-            for (const auto& distances : conditionDistances) {
+            for (const auto& distances : scratch.conditionDistances) {
                 best = std::min(best, distanceOrFallback(distances[static_cast<size_t>(player)]));
             }
         }
@@ -263,6 +282,11 @@ inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptio
     }
 
     return score;
+}
+
+inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptions options = {}) {
+    HeuristicScratch scratch;
+    return winConditionHeuristicScore(session, options, scratch);
 }
 
 } // namespace puzzlescript::search

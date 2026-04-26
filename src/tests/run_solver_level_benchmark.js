@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_level_benchmark.js <puzzlescript_solver> <solver_tests_dir> <manifest> [--runs N] [--out PATH] [--timeout-ms N] [--strategy NAME] [--game NAME] [--level N] [--profile-runtime-counters]');
+    console.error('Usage: node src/tests/run_solver_level_benchmark.js <puzzlescript_solver> <solver_tests_dir> <manifest> [--runs N] [--out PATH] [--timeout-ms N] [--strategy NAME] [--game NAME] [--level N] [--profile-runtime-counters] [--solver-arg ARG ...]');
     process.exit(1);
 }
 
@@ -25,6 +25,7 @@ let strategyOverride = null;
 let gameFilter = null;
 let levelFilter = null;
 let profileRuntimeCounters = false;
+const solverExtraArgs = [];
 
 function parsePositiveInt(value, label) {
     const parsed = Number.parseInt(value, 10);
@@ -58,6 +59,8 @@ for (let index = 3; index < args.length; index++) {
         levelFilter = parseNonNegativeInt(args[++index], '--level');
     } else if (arg === '--profile-runtime-counters') {
         profileRuntimeCounters = true;
+    } else if (arg === '--solver-arg' && index + 1 < args.length) {
+        solverExtraArgs.push(args[++index]);
     } else {
         throw new Error(`Unsupported argument: ${arg}`);
     }
@@ -156,6 +159,7 @@ function runTarget(target, runIndex, strategy, timeoutMs) {
     if (profileRuntimeCounters) {
         solverArgs.push('--profile-runtime-counters');
     }
+    solverArgs.push(...solverExtraArgs);
     const started = process.hrtime.bigint();
     const result = spawnSync(solverPath, solverArgs, {
         encoding: 'utf8',
@@ -283,6 +287,7 @@ const output = {
     jobs: '1',
     runs_per_target: runs,
     profile_runtime_counters: profileRuntimeCounters,
+    solver_extra_args: solverExtraArgs,
     target_count: summaries.length,
     filters: {
         game: gameFilter,

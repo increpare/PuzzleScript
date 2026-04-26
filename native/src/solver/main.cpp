@@ -86,6 +86,7 @@ struct Options {
     bool requireCompiledTick = false;
     bool exactStateKeys = true;
     bool compactNodeStorage = false;
+    int32_t astarWeight = 2;
 };
 
 struct CompactSolverState {
@@ -170,6 +171,7 @@ struct Result {
     bool compiledRulesAttached = false;
     bool compiledTickAttached = false;
     bool compactNodeStorage = false;
+    int32_t astarWeight = 2;
     Timing timing;
 };
 
@@ -449,12 +451,12 @@ Options parseArgs(int argc, char** argv) {
     Options options;
     options.jobs = 1;
     if (argc < 2) {
-        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage]");
+        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage] [--astar-weight N]");
     }
     for (int index = 1; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--help" || arg == "-h") {
-            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage]");
+            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage] [--astar-weight N]");
         }
         if (arg == "--timeout-ms" && index + 1 < argc) {
             options.timeoutMs = std::max<int64_t>(1, std::stoll(argv[++index]));
@@ -513,6 +515,10 @@ Options parseArgs(int argc, char** argv) {
         }
         if (arg == "--compact-node-storage") {
             options.compactNodeStorage = true;
+            continue;
+        }
+        if (arg == "--astar-weight" && index + 1 < argc) {
+            options.astarWeight = std::max<int32_t>(1, std::stoi(argv[++index]));
             continue;
         }
         if (arg == "--quiet") {
@@ -705,11 +711,11 @@ bool solvedByStep(const ps_step_result& stepResult, ps_session* session, int32_t
     return status.current_level_index != levelIndex;
 }
 
-int32_t heuristicScore(const Session& session) {
+int32_t heuristicScore(Session& session, puzzlescript::search::HeuristicScratch& scratch) {
     puzzlescript::search::HeuristicOptions options;
     options.includeNoQuantifierPenalty = true;
     options.includePlayerDistance = true;
-    return puzzlescript::search::winConditionHeuristicScore(session, options);
+    return puzzlescript::search::winConditionHeuristicScore(session, options, scratch);
 }
 
 bool compactObjectPresent(
@@ -1073,7 +1079,8 @@ Result runSearch(
     TimePoint deadline,
     uint32_t workerId,
     bool exactStateKeys,
-    bool compactNodeStorage
+    bool compactNodeStorage,
+    int32_t astarWeight
 ) {
     Result result;
     result.game = gameName;
@@ -1086,6 +1093,7 @@ Result runSearch(
     result.compiledRulesAttached = game && game->compiledRules != nullptr;
     result.compiledTickAttached = game && game->compiledTick != nullptr;
     result.compactNodeStorage = compactNodeStorage;
+    result.astarWeight = astarWeight;
     result.timing.compileNs = compileNs;
 
     std::unique_ptr<Session> initial;
@@ -1115,6 +1123,7 @@ Result runSearch(
     FlatBestDepth bestDepth(result.timing, exactStateKeys);
     bestDepth.reserve(16384);
     result.uniqueStates = 1;
+    puzzlescript::search::HeuristicScratch heuristicScratch;
 
     CompactSolverState initialCompact = compactStateWithTiming(*initial, result.timing);
     const StateKey initialKey = compactStateKey(initialCompact, result.timing);
@@ -1123,7 +1132,7 @@ Result runSearch(
         ScopedTimer timer(result.timing.heuristicNs);
         initialHeuristic = compactNodeStorage
             ? compactHeuristicScore(initialCompact, *game, searchWidth, searchHeight)
-            : heuristicScore(*initial);
+            : heuristicScore(*initial, heuristicScratch);
     }
     {
         ScopedTimer timer(result.timing.nodeStoreNs);
@@ -1137,7 +1146,7 @@ Result runSearch(
     std::priority_queue<QueueEntry, std::vector<QueueEntry>, QueueEntryGreater> frontier;
     {
         ScopedTimer timer(result.timing.frontierPushNs);
-        frontier.push(QueueEntry{priorityFor(mode, 0, initialHeuristic), 0, 0});
+        frontier.push(QueueEntry{priorityFor(mode, 0, initialHeuristic, astarWeight), 0, 0});
     }
     result.maxFrontier = 1;
 
@@ -1252,7 +1261,7 @@ Result runSearch(
                     ScopedTimer timer(result.timing.heuristicNs);
                     childHeuristic = compactNodeStorage
                         ? compactHeuristicScore(compact, *game, searchWidth, searchHeight)
-                        : heuristicScore(*child);
+                        : heuristicScore(*child, heuristicScratch);
                 }
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
@@ -1274,7 +1283,7 @@ Result runSearch(
                     ScopedTimer timer(result.timing.heuristicNs);
                     childHeuristic = compactNodeStorage
                         ? compactHeuristicScore(compact, *game, searchWidth, searchHeight)
-                        : heuristicScore(*child);
+                        : heuristicScore(*child, heuristicScratch);
                 }
                 childIndex = static_cast<uint32_t>(nodes.size());
                 {
@@ -1285,7 +1294,7 @@ Result runSearch(
             }
             {
                 ScopedTimer timer(result.timing.frontierPushNs);
-                frontier.push(QueueEntry{priorityFor(mode, childDepth, childHeuristic), nextTie++, childIndex});
+                frontier.push(QueueEntry{priorityFor(mode, childDepth, childHeuristic, astarWeight), nextTie++, childIndex});
             }
             result.maxFrontier = std::max<uint64_t>(result.maxFrontier, frontier.size());
         }
@@ -1333,7 +1342,8 @@ Result solveLevel(
     Strategy strategy,
     uint32_t workerId,
     bool exactStateKeys,
-    bool compactNodeStorage
+    bool compactNodeStorage,
+    int32_t astarWeight
 ) {
     const TimePoint searchStart = Clock::now();
     const TimePoint deadline = searchStart + std::chrono::milliseconds(timeoutMs);
@@ -1345,13 +1355,13 @@ Result solveLevel(
     };
 
     if (strategy == Strategy::Bfs) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys, compactNodeStorage));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys, compactNodeStorage, astarWeight));
     }
     if (strategy == Strategy::WeightedAStar) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, astarWeight));
     }
     if (strategy == Strategy::Greedy) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys, compactNodeStorage));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys, compactNodeStorage, astarWeight));
     }
 
     Result combined;
@@ -1365,10 +1375,11 @@ Result solveLevel(
     combined.compiledRulesAttached = game && game->compiledRules != nullptr;
     combined.compiledTickAttached = game && game->compiledTick != nullptr;
     combined.compactNodeStorage = compactNodeStorage;
+    combined.astarWeight = astarWeight;
     combined.timing.compileNs = compileNs;
 
     const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
-    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys, compactNodeStorage);
+    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys, compactNodeStorage, astarWeight);
     mergeStats(combined, bfs);
     if (bfs.status == "solved" || bfs.status == "skipped_message" || bfs.status == "level_error") {
         bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
@@ -1376,7 +1387,7 @@ Result solveLevel(
     }
 
     if (Clock::now() < deadline) {
-        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage);
+        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, astarWeight);
         mergeStats(combined, weighted);
         if (weighted.status == "solved" || weighted.status == "level_error") {
             combined.status = weighted.status;
@@ -1568,6 +1579,7 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"compiled_rules_attached\":" << (result.compiledRulesAttached ? "true" : "false");
     out << ",\"compiled_tick_attached\":" << (result.compiledTickAttached ? "true" : "false");
     out << ",\"compact_node_storage\":" << (result.compactNodeStorage ? "true" : "false");
+    out << ",\"astar_weight\":" << result.astarWeight;
     out << ",\"compile_ms\":" << ms(result.timing.compileNs);
     out << ",\"load_ms\":" << ms(result.timing.loadNs);
     out << ",\"clone_ms\":" << ms(result.timing.cloneNs);
@@ -1869,7 +1881,8 @@ std::vector<Result> runCorpus(const Options& options) {
                     options.strategy,
                     workerId,
                     options.exactStateKeys,
-                    options.compactNodeStorage
+                    options.compactNodeStorage,
+                    options.astarWeight
                 );
                 results[item.resultIndex] = std::move(result);
                 const size_t done = completed.fetch_add(1) + 1;
