@@ -323,13 +323,14 @@ Goal: align the external C API with the architecture terms once internals are st
 Acceptance:
 
 - [x] `make build`
-- [ ] `make simulation_tests_cpp`
+- [x] `make simulation_tests_cpp`
 - [x] `make solver_smoke_tests`
 - [x] Run/player compile target if separate from `make build`.
 - [x] `rg "ps_session" native/src src Makefile` only finds intentional compatibility wrappers or historical notes.
   - Remaining `ps_session` hits are public compatibility typedefs/prototypes and
     compatibility wrapper implementations in `native/src/runtime/c_api.cpp`.
-- [ ] Commit: `Rename public session API to full state API`
+- [x] Commit the public API rename track in smaller slices, ending with
+  `Mark full-state API smoke green`.
 
 ## Phase 9: Final Hygiene Pass
 
