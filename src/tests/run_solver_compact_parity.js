@@ -1,0 +1,212 @@
+#!/usr/bin/env node
+'use strict';
+
+const { spawnSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
+
+function usage() {
+    console.error('Usage: node src/tests/run_solver_compact_parity.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--strategy NAME] [--max-games N]');
+    process.exit(1);
+}
+
+const args = process.argv.slice(2);
+if (args.length < 2) {
+    usage();
+}
+
+const solverPath = path.resolve(args[0]);
+const corpusPath = path.resolve(args[1]);
+let timeoutMs = 1000;
+let strategy = 'bfs';
+let maxGames = null;
+
+function parsePositiveInt(value, label) {
+    const parsed = Number.parseInt(value, 10);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+        throw new Error(`${label} must be a positive integer: ${value}`);
+    }
+    return parsed;
+}
+
+for (let index = 2; index < args.length; index++) {
+    const arg = args[index];
+    if (arg === '--timeout-ms' && index + 1 < args.length) {
+        timeoutMs = parsePositiveInt(args[++index], '--timeout-ms');
+    } else if (arg === '--strategy' && index + 1 < args.length) {
+        strategy = args[++index];
+    } else if (arg === '--max-games' && index + 1 < args.length) {
+        maxGames = parsePositiveInt(args[++index], '--max-games');
+    } else {
+        usage();
+    }
+}
+
+function walkTxtFiles(root) {
+    const out = [];
+    const stack = [root];
+    while (stack.length > 0) {
+        const current = stack.pop();
+        for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+            const full = path.join(current, entry.name);
+            if (entry.isDirectory()) {
+                stack.push(full);
+            } else if (entry.isFile() && entry.name.endsWith('.txt')) {
+                out.push(full);
+            }
+        }
+    }
+    return out.sort((a, b) => a.localeCompare(b));
+}
+
+function normalizedSectionName(line) {
+    return line.replace(/=/g, '').trim().toUpperCase();
+}
+
+function randomRuleHits(gameFile) {
+    const knownSections = new Set([
+        'OBJECTS',
+        'LEGEND',
+        'SOUNDS',
+        'COLLISIONLAYERS',
+        'RULES',
+        'WINCONDITIONS',
+        'LEVELS',
+    ]);
+    const lines = fs.readFileSync(gameFile, 'utf8').split(/\r?\n/);
+    const hits = [];
+    let inRules = false;
+    for (let index = 0; index < lines.length; index++) {
+        const line = lines[index];
+        const trimmed = line.trim();
+        const section = normalizedSectionName(line);
+        if (knownSections.has(section)) {
+            inRules = section === 'RULES';
+            continue;
+        }
+        if (!inRules || trimmed.length === 0 || trimmed.startsWith('(')) {
+            continue;
+        }
+        if (/\brandom(?:dir)?\b/i.test(line)) {
+            hits.push(index + 1);
+        }
+    }
+    return hits;
+}
+
+function runSolver(gameName, compact) {
+    const solverArgs = [
+        corpusPath,
+        '--timeout-ms', String(timeoutMs),
+        '--jobs', '1',
+        '--strategy', strategy,
+        '--game', gameName,
+        '--no-solutions',
+        '--quiet',
+        '--json',
+    ];
+    if (compact) {
+        solverArgs.push('--compact-node-storage');
+    }
+    const result = spawnSync(solverPath, solverArgs, {
+        encoding: 'utf8',
+        maxBuffer: 512 * 1024 * 1024,
+    });
+    if (result.error) {
+        throw result.error;
+    }
+    if (result.status !== 0) {
+        throw new Error(`solver exited ${result.status} game=${gameName} compact=${compact}\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`);
+    }
+    return JSON.parse(result.stdout);
+}
+
+function resultKey(result) {
+    return `${result.game}#${result.level}`;
+}
+
+function compareResults(normalResult, compactResult) {
+    if (normalResult.status === 'solved') {
+        if (compactResult.status !== 'solved') {
+            return `normal solved but compact status=${compactResult.status}`;
+        }
+        const normalSolution = normalResult.solution || [];
+        const compactSolution = compactResult.solution || [];
+        if (JSON.stringify(normalSolution) !== JSON.stringify(compactSolution)) {
+            return `solution normal=${JSON.stringify(normalSolution)} compact=${JSON.stringify(compactSolution)}`;
+        }
+        return null;
+    }
+    if (normalResult.status === 'exhausted' || normalResult.status === 'skipped_message') {
+        if (compactResult.status !== normalResult.status) {
+            return `normal status=${normalResult.status} compact status=${compactResult.status}`;
+        }
+        return null;
+    }
+    if (normalResult.status === 'timeout') {
+        if (compactResult.status === 'solved' || compactResult.status === 'timeout') {
+            return null;
+        }
+        return `normal timeout but compact status=${compactResult.status}`;
+    }
+    if (compactResult.status !== normalResult.status) {
+        return `normal status=${normalResult.status} compact status=${compactResult.status}`;
+    }
+    return null;
+}
+
+const allGames = walkTxtFiles(corpusPath);
+const eligibleGames = [];
+const randomExcluded = [];
+for (const gameFile of allGames) {
+    const hits = randomRuleHits(gameFile);
+    if (hits.length > 0) {
+        randomExcluded.push({
+            game: path.relative(corpusPath, gameFile),
+            hits,
+        });
+        continue;
+    }
+    eligibleGames.push(gameFile);
+}
+const selectedGames = maxGames === null ? eligibleGames : eligibleGames.slice(0, maxGames);
+if (selectedGames.length === 0) {
+    throw new Error('no non-random games available for compact parity');
+}
+
+let totalLevels = 0;
+for (let index = 0; index < selectedGames.length; index++) {
+    const gameFile = selectedGames[index];
+    const gameName = path.relative(corpusPath, gameFile);
+    process.stderr.write(`solver_compact_parity ${index + 1}/${selectedGames.length} ${gameName}\n`);
+    const normal = runSolver(gameName, false);
+    const compact = runSolver(gameName, true);
+    const normalByKey = new Map(normal.results.map((result) => [resultKey(result), result]));
+    const compactByKey = new Map(compact.results.map((result) => [resultKey(result), result]));
+    const mismatches = [];
+    for (const [key, normalResult] of normalByKey) {
+        const compactResult = compactByKey.get(key);
+        if (!compactResult) {
+            mismatches.push(`${key}: missing compact result`);
+            continue;
+        }
+        const mismatch = compareResults(normalResult, compactResult);
+        if (mismatch !== null) {
+            mismatches.push(`${key}: ${mismatch}`);
+        }
+    }
+    for (const key of compactByKey.keys()) {
+        if (!normalByKey.has(key)) {
+            mismatches.push(`${key}: extra compact result`);
+        }
+    }
+    if (mismatches.length > 0) {
+        throw new Error(`compact parity mismatches=${mismatches.length} game=${gameName}\n${mismatches.slice(0, 20).join('\n')}`);
+    }
+    totalLevels += normal.results.length;
+}
+process.stdout.write(
+    `solver_compact_parity passed games=${selectedGames.length}/${eligibleGames.length}`
+    + ` levels=${totalLevels} random_excluded=${randomExcluded.length}`
+    + ` strategy=${strategy} timeout_ms=${timeoutMs}\n`
+);

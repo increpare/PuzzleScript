@@ -691,22 +691,40 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - Supported-game nodes retain compact state bytes plus parent/input metadata,
+  - [x] Supported-game nodes retain compact state bytes plus parent/input metadata,
     not `std::unique_ptr<Session>`.
-  - A per-search scratch `Session` is reused for materialization when required.
-  - `node_store_ms`, clone time, memory use, and generated/sec improve on at
+  - [x] A per-search scratch `Session` is reused for materialization when required.
+  - [ ] `node_store_ms`, clone time, memory use, and generated/sec improve on at
     least one focus target.
-  - Unsupported games continue to use the existing `Session` node path.
-  - Solution reconstruction still uses parent/input links and does not require
+  - [x] Unsupported games continue to use the existing `Session` node path.
+  - [x] Solution reconstruction still uses parent/input links and does not require
     retained full sessions.
+  - [x] Add a compact representability parity harness that compares normal node
+    storage against compact node storage for non-random/randomDir games.
 
   Validation:
 
   ```sh
+  make solver_compact_parity_smoke
+  make solver_compact_parity SOLVER_COMPACT_PARITY_MAX_GAMES=5
   make solver_smoke_tests
   make solver_determinism_tests
   make solver_parity_smoke
   make solver_focus_compare SOLVER_FOCUS_RUNS=1
+  ```
+
+  Current evidence:
+
+  ```text
+  solver_compact_parity_smoke:
+    games=5/5
+    levels=7
+    random_excluded=0
+
+  solver_compact_parity SOLVER_COMPACT_PARITY_MAX_GAMES=5:
+    games=5/153
+    levels=90
+    random_excluded=31
   ```
 
 - [ ] Add a generated compact tick prototype.

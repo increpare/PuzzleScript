@@ -18,7 +18,7 @@
 .PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	compiled_rules_simulation_suite_coverage compiled_tick_dispatch_smoke \
 	rule_plan_parity_tests \
@@ -48,6 +48,11 @@ SOLVER_STRATEGY ?= portfolio
 SOLVER_PROGRESS_EVERY ?= game
 SOLVER_OUTPUT_ARGS ?= --summary-only
 SOLVER_SOLUTIONS_DIR ?= $(BUILD_DIR)/solver-solutions
+SOLVER_COMPACT_PARITY_CORPUS ?= src/tests/solver_tests
+SOLVER_COMPACT_PARITY_TIMEOUT_MS ?= $(SOLVER_TIMEOUT_MS)
+SOLVER_COMPACT_PARITY_STRATEGY ?= bfs
+SOLVER_COMPACT_PARITY_MAX_GAMES ?=
+SOLVER_COMPACT_PARITY_MAX_GAMES_ARG = $(if $(SOLVER_COMPACT_PARITY_MAX_GAMES),--max-games $(SOLVER_COMPACT_PARITY_MAX_GAMES),)
 SOLVER_BENCH_RUNS ?= 5
 SOLVER_BENCH_TIMEOUT_MS ?= 250
 SOLVER_BENCH_CORPUS ?= src/tests/solver_tests
@@ -273,6 +278,8 @@ help:
 	@echo "  make profile_simulation_tests_32   Profile the 32-bit-mask C++ simulation path"
 	@echo "  make tests                         Run the full native correctness suite"
 	@echo "  make solver_tests                  Run native solver and JS comparison solver"
+	@echo "  make solver_compact_parity_smoke   Compare normal vs compact solver storage on smoke games"
+	@echo "  make solver_compact_parity         Compare normal vs compact solver storage on non-random corpus games"
 	@echo "  make generator_smoke_tests         Run native generator smoke tests"
 	@echo "  make generator_benchmark           Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
@@ -542,6 +549,12 @@ solver_parity_smoke: $(SOLVER_TARGET_PREREQ)
 	else \
 		$(NODE) src/tests/run_solver_parity_smoke.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests; \
 	fi
+
+solver_compact_parity_smoke: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/run_solver_compact_parity.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests --timeout-ms 1000 --strategy bfs
+
+solver_compact_parity: $(PUZZLESCRIPT_SOLVER)
+	$(NODE) src/tests/run_solver_compact_parity.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_COMPACT_PARITY_CORPUS) --timeout-ms $(SOLVER_COMPACT_PARITY_TIMEOUT_MS) --strategy $(SOLVER_COMPACT_PARITY_STRATEGY) $(SOLVER_COMPACT_PARITY_MAX_GAMES_ARG)
 
 generator_smoke_tests: $(GENERATOR_TARGET_PREREQ)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
