@@ -727,7 +727,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
     supported compact backend is attached.
   - [x] Generate a `handled=false` compact backend stub so linkage, dispatch, and
     counters are proven before behavior moves.
-  - [ ] Refactor the current solver edge into a named helper with two
+  - [x] Refactor the current solver edge into a named helper with two
     implementations: compact tick first, interpreter-backed scratch fallback
     second.
   - [x] Pick one deterministic, no-random, no-again, no-restart focus fixture for
@@ -763,6 +763,15 @@ attribute graph cost -> no-allocation hash -> flat visited table
     compact_tick_fallbacks=0
     compact_tick_unsupported=0
     step_ms=0.000084
+
+  push_goal.txt specialized compact solver:
+    solution=right,right
+    compact_tick_attempts=6
+    compact_tick_hits=6
+    compact_tick_fallbacks=0
+    compact_tick_unsupported=0
+    interpreted_step_ms=0.021585
+    compact_step_ms=0.000375
   ```
 
   Acceptance criteria:

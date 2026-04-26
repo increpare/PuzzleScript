@@ -703,6 +703,13 @@ struct CompactTickTryResult {
     ps_step_result stepResult{};
 };
 
+struct SolverEdgeStep {
+    std::unique_ptr<Session> ownedChild;
+    Session* child = nullptr;
+    CompactTickTryResult compactTick;
+    ps_step_result stepResult{};
+};
+
 CompactTickTryResult tryCompiledCompactTick(
     const Game& game,
     const CompactSolverState& parent,
@@ -728,6 +735,63 @@ CompactTickTryResult tryCompiledCompactTick(
     result.handled = outcome.handled;
     result.stepResult = outcome.result;
     return result;
+}
+
+SolverEdgeStep stepSolverEdge(
+    const std::shared_ptr<const Game>& game,
+    const Node& parentNode,
+    const Session& parentSession,
+    ps_input input,
+    bool compactNodeStorage,
+    int32_t width,
+    int32_t height,
+    Session& childScratch,
+    Result& result
+) {
+    constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
+        .playableUndo = false,
+        .emitAudio = false,
+    };
+    SolverEdgeStep edge;
+    if (compactNodeStorage) {
+        const puzzlescript::CompiledCompactTickBackend* compactTick = game ? game->compiledCompactTick : nullptr;
+        if (compactTick != nullptr && compactTick->step != nullptr) {
+            if (compactTick->support.wholeTurnSupported) {
+                ++result.compactTickAttempts;
+                {
+                    ScopedTimer timer(result.timing.stepNs);
+                    edge.compactTick = tryCompiledCompactTick(*game, parentNode.compact, input, width, height, solverStepOptions);
+                }
+                if (edge.compactTick.handled) {
+                    ++result.compactTickHits;
+                } else {
+                    ++result.compactTickFallbacks;
+                }
+            } else {
+                ++result.compactTickUnsupported;
+            }
+        }
+    }
+
+    if (!edge.compactTick.handled) {
+        ScopedTimer timer(result.timing.cloneNs);
+        if (!compactNodeStorage) {
+            edge.ownedChild = std::make_unique<Session>(parentSession);
+            edge.child = edge.ownedChild.get();
+        } else {
+            prepareSolverChildSessionFromParent(childScratch, parentSession);
+            edge.child = &childScratch;
+        }
+    }
+
+    if (edge.compactTick.handled) {
+        edge.stepResult = edge.compactTick.stepResult;
+    } else {
+        ScopedTimer timer(result.timing.stepNs);
+        edge.stepResult = puzzlescript::step(*edge.child, input, solverStepOptions);
+        puzzlescript::settlePendingAgain(*edge.child, solverStepOptions);
+    }
+    return edge;
 }
 
 std::shared_ptr<const Game> compileGame(
@@ -1274,52 +1338,18 @@ Result runSearch(
                 break;
             }
 
-            constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
-                .playableUndo = false,
-                .emitAudio = false,
-            };
-            std::unique_ptr<Session> ownedChild;
-            Session* child = nullptr;
-            CompactTickTryResult compactTickResult;
-            if (compactNodeStorage) {
-                const puzzlescript::CompiledCompactTickBackend* compactTick = game ? game->compiledCompactTick : nullptr;
-                if (compactTick != nullptr && compactTick->step != nullptr) {
-                    if (compactTick->support.wholeTurnSupported) {
-                        ++result.compactTickAttempts;
-                        {
-                            ScopedTimer timer(result.timing.stepNs);
-                            compactTickResult = tryCompiledCompactTick(*game, parentNode.compact, input, searchWidth, searchHeight, solverStepOptions);
-                        }
-                        if (compactTickResult.handled) {
-                            ++result.compactTickHits;
-                        } else {
-                            ++result.compactTickFallbacks;
-                        }
-                    } else {
-                        ++result.compactTickUnsupported;
-                    }
-                }
-            }
-
-            if (!compactTickResult.handled) {
-                ScopedTimer timer(result.timing.cloneNs);
-                if (!compactNodeStorage) {
-                    ownedChild = std::make_unique<Session>(parentSession);
-                    child = ownedChild.get();
-                } else {
-                    prepareSolverChildSessionFromParent(*childScratch, parentSession);
-                    child = childScratch.get();
-                }
-            }
-
-            ps_step_result stepResult{};
-            if (compactTickResult.handled) {
-                stepResult = compactTickResult.stepResult;
-            } else {
-                ScopedTimer timer(result.timing.stepNs);
-                stepResult = puzzlescript::step(*child, input, solverStepOptions);
-                puzzlescript::settlePendingAgain(*child, solverStepOptions);
-            }
+            SolverEdgeStep edge = stepSolverEdge(
+                game,
+                parentNode,
+                parentSession,
+                input,
+                compactNodeStorage,
+                searchWidth,
+                searchHeight,
+                *childScratch,
+                result
+            );
+            const ps_step_result& stepResult = edge.stepResult;
             ++result.generated;
 
             if (stepResult.restarted) {
@@ -1329,7 +1359,7 @@ Result runSearch(
             bool solved = false;
             {
                 ScopedTimer timer(result.timing.solvedCheckNs);
-                solved = compactTickResult.handled ? stepResult.won : solvedByStep(stepResult, *child, levelIndex);
+                solved = edge.compactTick.handled ? stepResult.won : solvedByStep(stepResult, *edge.child, levelIndex);
             }
             if (solved) {
                 result.status = "solved";
@@ -1340,9 +1370,9 @@ Result runSearch(
                 continue;
             }
 
-            CompactSolverState compact = compactTickResult.handled
-                ? std::move(compactTickResult.compact)
-                : compactStateWithTiming(*child, result.timing);
+            CompactSolverState compact = edge.compactTick.handled
+                ? std::move(edge.compactTick.compact)
+                : compactStateWithTiming(*edge.child, result.timing);
             const StateKey key = compactStateKey(compact, result.timing);
             const uint32_t childDepth = parentDepth + 1;
             uint32_t childIndex = static_cast<uint32_t>(nodes.size());
@@ -1362,11 +1392,11 @@ Result runSearch(
                     ScopedTimer timer(result.timing.heuristicNs);
                     childHeuristic = compactNodeStorage
                         ? compactHeuristicScore(compact, *game, searchWidth, searchHeight)
-                        : heuristicScore(*child, heuristicScratch);
+                        : heuristicScore(*edge.child, heuristicScratch);
                 }
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(ownedChild), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(edge.ownedChild), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
                     recordCompactStateStorage(result.timing, nodes.back().compact);
                 }
             } else {
@@ -1384,12 +1414,12 @@ Result runSearch(
                     ScopedTimer timer(result.timing.heuristicNs);
                     childHeuristic = compactNodeStorage
                         ? compactHeuristicScore(compact, *game, searchWidth, searchHeight)
-                        : heuristicScore(*child, heuristicScratch);
+                        : heuristicScore(*edge.child, heuristicScratch);
                 }
                 childIndex = static_cast<uint32_t>(nodes.size());
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(ownedChild), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(edge.ownedChild), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
                     recordCompactStateStorage(result.timing, nodes.back().compact);
                 }
             }
