@@ -353,7 +353,7 @@ bool ps_session_compact_tick_oracle_check(
         return false;
     }
     const Session& original = *session->impl;
-    if (original.preparedSession.titleScreen || original.preparedSession.textMode) {
+    if (original.preparedFullState.titleScreen || original.preparedFullState.textMode) {
         return true;
     }
     const SpecializedCompactTurnBackend* backend = original.game->specializedCompactTurn;
@@ -374,7 +374,7 @@ bool ps_session_compact_tick_oracle_check(
         &compact.randomState.i,
         &compact.randomState.j,
         &compact.randomState.valid,
-        original.preparedSession.currentLevelIndex,
+        original.preparedFullState.currentLevelIndex,
     };
     RuntimeStepOptions options{};
     options.emitAudio = false;
@@ -451,29 +451,29 @@ void ps_session_status(const ps_session* session, ps_session_status_info* out_st
     if (!session || !out_status) {
         return;
     }
-    out_status->mode = session->impl->preparedSession.titleScreen
+    out_status->mode = session->impl->preparedFullState.titleScreen
         ? PS_SESSION_MODE_TITLE
-        : (session->impl->preparedSession.textMode ? PS_SESSION_MODE_MESSAGE : PS_SESSION_MODE_LEVEL);
-    out_status->current_level_index = session->impl->preparedSession.currentLevelIndex;
-    out_status->has_current_level_target = session->impl->preparedSession.currentLevelTarget.has_value();
-    out_status->current_level_target = session->impl->preparedSession.currentLevelTarget.value_or(0);
+        : (session->impl->preparedFullState.textMode ? PS_SESSION_MODE_MESSAGE : PS_SESSION_MODE_LEVEL);
+    out_status->current_level_index = session->impl->preparedFullState.currentLevelIndex;
+    out_status->has_current_level_target = session->impl->preparedFullState.currentLevelTarget.has_value();
+    out_status->current_level_target = session->impl->preparedFullState.currentLevelTarget.value_or(0);
     out_status->width = session->impl->liveLevel.width;
     out_status->height = session->impl->liveLevel.height;
-    out_status->title_mode = session->impl->preparedSession.titleMode;
-    out_status->title_selection = session->impl->preparedSession.titleSelection;
+    out_status->title_mode = session->impl->preparedFullState.titleMode;
+    out_status->title_selection = session->impl->preparedFullState.titleSelection;
     out_status->can_undo = session->impl->canUndo;
-    out_status->winning = session->impl->preparedSession.winning;
-    out_status->title_screen = session->impl->preparedSession.titleScreen;
-    out_status->text_mode = session->impl->preparedSession.textMode;
-    out_status->title_selected = session->impl->preparedSession.titleSelected;
-    out_status->message_selected = session->impl->preparedSession.messageSelected;
+    out_status->winning = session->impl->preparedFullState.winning;
+    out_status->title_screen = session->impl->preparedFullState.titleScreen;
+    out_status->text_mode = session->impl->preparedFullState.textMode;
+    out_status->title_selected = session->impl->preparedFullState.titleSelected;
+    out_status->message_selected = session->impl->preparedFullState.messageSelected;
 }
 
 const char* ps_session_message_text(const ps_session* session) {
     if (!session || !session->impl) {
         return "";
     }
-    const auto& prepared = session->impl->preparedSession;
+    const auto& prepared = session->impl->preparedFullState;
     if (!prepared.messageText.empty()) {
         return prepared.messageText.c_str();
     }

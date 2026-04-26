@@ -650,17 +650,17 @@ void markMaterializedFullStateDirty(FullState& session) {
 
 void materializeCompactStateIntoFullState(const CompactState& state, const FullState& base, FullState& session) {
     session.game = base.game;
-    session.preparedSession.currentLevelIndex = base.preparedSession.currentLevelIndex;
-    session.preparedSession.currentLevelTarget = base.preparedSession.currentLevelTarget;
-    session.preparedSession.titleScreen = base.preparedSession.titleScreen;
-    session.preparedSession.textMode = base.preparedSession.textMode;
-    session.preparedSession.titleMode = base.preparedSession.titleMode;
-    session.preparedSession.titleSelection = base.preparedSession.titleSelection;
-    session.preparedSession.titleSelected = base.preparedSession.titleSelected;
-    session.preparedSession.messageSelected = base.preparedSession.messageSelected;
-    session.preparedSession.winning = base.preparedSession.winning;
-    session.preparedSession.messageText = base.preparedSession.messageText;
-    session.preparedSession.loadedLevelSeed = base.preparedSession.loadedLevelSeed;
+    session.preparedFullState.currentLevelIndex = base.preparedFullState.currentLevelIndex;
+    session.preparedFullState.currentLevelTarget = base.preparedFullState.currentLevelTarget;
+    session.preparedFullState.titleScreen = base.preparedFullState.titleScreen;
+    session.preparedFullState.textMode = base.preparedFullState.textMode;
+    session.preparedFullState.titleMode = base.preparedFullState.titleMode;
+    session.preparedFullState.titleSelection = base.preparedFullState.titleSelection;
+    session.preparedFullState.titleSelected = base.preparedFullState.titleSelected;
+    session.preparedFullState.messageSelected = base.preparedFullState.messageSelected;
+    session.preparedFullState.winning = base.preparedFullState.winning;
+    session.preparedFullState.messageText = base.preparedFullState.messageText;
+    session.preparedFullState.loadedLevelSeed = base.preparedFullState.loadedLevelSeed;
     session.liveLevel.isMessage = base.liveLevel.isMessage;
     session.liveLevel.message = base.liveLevel.message;
     session.liveLevel.lineNumber = base.liveLevel.lineNumber;
@@ -710,7 +710,7 @@ void materializeCompactStateIntoSession(const CompactState& state, const FullSta
 
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
-    child.preparedSession = parent.preparedSession;
+    child.preparedFullState = parent.preparedFullState;
     child.liveLevel.isMessage = parent.liveLevel.isMessage;
     child.liveLevel.message = parent.liveLevel.message;
     child.liveLevel.lineNumber = parent.liveLevel.lineNumber;
@@ -869,7 +869,7 @@ SolverEdgeStep stepSolverEdge(
                         input,
                         width,
                         height,
-                        parentSession.preparedSession.currentLevelIndex,
+                        parentSession.preparedFullState.currentLevelIndex,
                         solverStepOptions
                     );
                 }
@@ -1184,7 +1184,7 @@ std::unique_ptr<FullState> createLoadedSession(
 }
 
 bool solvedByStep(const ps_step_result& stepResult, const FullState& session, int32_t levelIndex) {
-    return stepResult.won || session.preparedSession.currentLevelIndex != levelIndex;
+    return stepResult.won || session.preparedFullState.currentLevelIndex != levelIndex;
 }
 
 class FlatBestDepth {
@@ -1378,7 +1378,7 @@ Result runSearch(
     if (!initial) {
         return result;
     }
-    if (initial->preparedSession.textMode || initial->preparedSession.level.isMessage) {
+    if (initial->preparedFullState.textMode || initial->preparedFullState.level.isMessage) {
         result.status = "skipped_message";
         return result;
     }

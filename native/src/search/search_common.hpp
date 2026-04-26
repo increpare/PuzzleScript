@@ -52,10 +52,10 @@ inline void appendStateKeyValue(StateKey& key, uint64_t value) {
 template <typename ProjectWord>
 inline StateKey fullStateKey(const FullState& session, bool includeRandomState, ProjectWord projectWord) {
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
-    appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.preparedSession.currentLevelIndex)));
-    appendStateKeyValue(key, session.preparedSession.titleScreen ? 1 : 0);
-    appendStateKeyValue(key, session.preparedSession.textMode ? 1 : 0);
-    appendStateKeyValue(key, session.preparedSession.winning ? 1 : 0);
+    appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.preparedFullState.currentLevelIndex)));
+    appendStateKeyValue(key, session.preparedFullState.titleScreen ? 1 : 0);
+    appendStateKeyValue(key, session.preparedFullState.textMode ? 1 : 0);
+    appendStateKeyValue(key, session.preparedFullState.winning ? 1 : 0);
     appendStateKeyValue(key, session.pendingAgain ? 1 : 0);
 
     if (includeRandomState) {

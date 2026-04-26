@@ -228,6 +228,7 @@ If proceeding with `FullState`:
   - [x] Runtime core implementation uses `FullState`; `Session` remains only as a temporary compatibility surface.
   - [ ] Public C API still uses `ps_session_*` by design until Phase 8.
 - [x] Rename the primary prepared-state struct `PreparedSession` -> `PreparedFullState`, with a temporary `PreparedSession` alias.
+- [x] Rename the internal `preparedSession` field/identifier to `preparedFullState`; serialized `prepared_session` keys remain unchanged.
 - [x] Rename helper functions:
   - [x] `hashSession64` -> `hashFullState64`, with temporary wrapper.
   - [x] `hashSession128` -> `hashFullState128`, with temporary wrapper.

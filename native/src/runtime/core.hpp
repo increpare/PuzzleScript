@@ -335,7 +335,7 @@ struct Game {
     std::vector<SoundMaskEntry> sfxDestructionMasks;
     std::vector<std::vector<SoundMaskEntry>> sfxMovementMasks;
     std::vector<SoundMaskEntry> sfxMovementFailureMasks;
-    PreparedFullState preparedSession;
+    PreparedFullState preparedFullState;
     const SpecializedRulegroupsBackend* specializedRulegroups = nullptr;
     const CompiledTickBackend* compiledTick = nullptr;
     const SpecializedCompactTurnBackend* specializedCompactTurn = nullptr;
@@ -350,7 +350,7 @@ struct FullState {
     };
 
     struct UndoSnapshot {
-        PreparedFullState preparedSession;
+        PreparedFullState preparedFullState;
         LevelTemplate liveLevel;
         MaskVector liveMovements;
         MaskVector rigidGroupIndexMasks;
@@ -359,7 +359,7 @@ struct FullState {
     };
 
     std::shared_ptr<const Game> game;
-    PreparedFullState preparedSession;
+    PreparedFullState preparedFullState;
     LevelTemplate liveLevel;
     MaskVector liveMovements;
     MaskVector rowMasks;

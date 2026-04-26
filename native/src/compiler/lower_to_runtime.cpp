@@ -781,27 +781,27 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     }
 
     // --- Prepared session ---
-    game->preparedSession.currentLevelIndex = 0;
-    game->preparedSession.currentLevelTarget.reset();
-    game->preparedSession.titleScreen = false;
-    game->preparedSession.textMode = !game->levels.empty() && game->levels.front().isMessage;
-    game->preparedSession.titleMode = 0;
-    game->preparedSession.titleSelection = 0;
-    game->preparedSession.titleSelected = false;
-    game->preparedSession.messageSelected = false;
-    game->preparedSession.messageText.clear();
-    game->preparedSession.winning = false;
-    game->preparedSession.loadedLevelSeed = "native";
-    game->preparedSession.hasRandomState = false;
-    game->preparedSession.randomStateValid = false;
-    game->preparedSession.randomStateS.clear();
-    game->preparedSession.oldFlickscreenDat.clear();
+    game->preparedFullState.currentLevelIndex = 0;
+    game->preparedFullState.currentLevelTarget.reset();
+    game->preparedFullState.titleScreen = false;
+    game->preparedFullState.textMode = !game->levels.empty() && game->levels.front().isMessage;
+    game->preparedFullState.titleMode = 0;
+    game->preparedFullState.titleSelection = 0;
+    game->preparedFullState.titleSelected = false;
+    game->preparedFullState.messageSelected = false;
+    game->preparedFullState.messageText.clear();
+    game->preparedFullState.winning = false;
+    game->preparedFullState.loadedLevelSeed = "native";
+    game->preparedFullState.hasRandomState = false;
+    game->preparedFullState.randomStateValid = false;
+    game->preparedFullState.randomStateS.clear();
+    game->preparedFullState.oldFlickscreenDat.clear();
     if (!game->levels.empty()) {
-        game->preparedSession.level = game->levels.front();
-        game->preparedSession.restart.width = game->preparedSession.level.width;
-        game->preparedSession.restart.height = game->preparedSession.level.height;
-        game->preparedSession.restart.objects = game->preparedSession.level.objects;
-        game->preparedSession.restart.oldFlickscreenDat.clear();
+        game->preparedFullState.level = game->levels.front();
+        game->preparedFullState.restart.width = game->preparedFullState.level.width;
+        game->preparedFullState.restart.height = game->preparedFullState.level.height;
+        game->preparedFullState.restart.objects = game->preparedFullState.level.objects;
+        game->preparedFullState.restart.oldFlickscreenDat.clear();
     }
 
     // --- Rules / winconditions / sounds / loop points ---
