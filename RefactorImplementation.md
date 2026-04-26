@@ -84,7 +84,7 @@ Goal: add the new turn concepts while keeping old `step`/`tick` names as forward
 - [x] Implement `AgainPolicy::Drain` by applying the input once, then applying `PS_INPUT_TICK` until `pendingAgain` is false or the existing maximum again iteration limit is reached.
 - [x] Define how multiple drained turn results merge: preserve any `changed`, `won`, `restarted`, or `transitioned` signal from the chain.
 - [x] Keep `step`, `tick`, `interpreterStep`, and `interpreterTick` as wrappers during this phase.
-- [ ] Mark wrappers as transitional in comments if helpful.
+- [x] Mark wrappers as transitional in comments if helpful.
 
 Acceptance:
 

@@ -466,6 +466,8 @@ using SpecializedRulegroupsForInterpretedTurnFn = SpecializedRulegroupsForInterp
 
 std::unique_ptr<Error> loadLevelTemplate(FullState& state, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options);
 bool restart(FullState& state, RuntimeStepOptions options);
+
+// Transitional wrappers retained while callers migrate to interpretedTurn/turn.
 ps_step_result interpreterStep(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result interpreterTick(FullState& state, RuntimeStepOptions options);
 ps_step_result interpretedTurnWithSpecializedRulegroups(
@@ -488,6 +490,9 @@ ps_step_result interpretedTickWithSpecializedRulegroups(
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
+
+// Compatibility wrappers for generated code emitted before the rulegroup
+// terminology rename.
 ps_step_result interpretedTurnWithCompiledRuleGroups(
     FullState& state,
     ps_input input,
@@ -509,6 +514,8 @@ ps_step_result interpreterTickWithCompiledRuleGroups(
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
 ps_step_result interpretedTurn(FullState& state, ps_input input, RuntimeStepOptions options);
+
+// Public/runtime compatibility wrappers. New internal code should prefer turn().
 ps_step_result step(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result turn(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result tick(FullState& state, RuntimeStepOptions options);
