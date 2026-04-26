@@ -555,6 +555,22 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - A validation mode compares compact byte equality against materialized
     interpreter `Session` equality on smoke/focus states.
 
+- [x] Avoid transient full-node storage for duplicate exact states.
+
+  Intent: exact visited equality should not require moving every candidate
+  child `Session` into solver node storage before discovering that the state is
+  already dominated.
+
+  Current behavior:
+
+  - The solver computes compact state and key for a child candidate.
+  - The flat visited table compares that compact state against existing stored
+    nodes before the child is pushed into `nodes`.
+  - Duplicate/dominated candidates are discarded without a push/pop of a full
+    `Node`.
+  - Surviving candidates are then stored once with compact identity plus the
+    `Session` still needed for the current interpreter tick path.
+
 - [ ] Prototype compact solver state for one simple focus game.
 
   Suggested first candidates:

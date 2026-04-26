@@ -974,29 +974,24 @@ Result runSearch(
             uint32_t childIndex = static_cast<uint32_t>(nodes.size());
             int32_t childHeuristic = 0;
             if (exactStateKeys) {
-                {
-                    ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, 0});
-                }
                 bool shouldStore = false;
                 {
                     ScopedTimer timer(result.timing.visitedInsertNs);
-                    shouldStore = bestDepth.insertOrAssignIfBetter(key, nodes[childIndex].compact, childDepth, childIndex, nodes);
+                    shouldStore = bestDepth.insertOrAssignIfBetter(key, compact, childDepth, childIndex, nodes);
                     result.uniqueStates = bestDepth.size();
                 }
                 if (!shouldStore) {
-                    {
-                        ScopedTimer timer(result.timing.nodeStoreNs);
-                        nodes.pop_back();
-                    }
                     ++result.duplicates;
                     continue;
                 }
-                recordCompactStateStorage(result.timing, nodes[childIndex].compact);
                 if (mode != SearchMode::Bfs) {
                     ScopedTimer timer(result.timing.heuristicNs);
-                    childHeuristic = heuristicScore(*nodes[childIndex].session);
-                    nodes[childIndex].heuristic = childHeuristic;
+                    childHeuristic = heuristicScore(*child);
+                }
+                {
+                    ScopedTimer timer(result.timing.nodeStoreNs);
+                    nodes.push_back(Node{std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    recordCompactStateStorage(result.timing, nodes.back().compact);
                 }
             } else {
                 bool shouldStore = false;
