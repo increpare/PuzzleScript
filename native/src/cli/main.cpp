@@ -6423,12 +6423,12 @@ std::string generateCompiledRulesCpp(
         out << "SpecializedFullTurnOutcome tick_step_source_" << sourceIndex << "(FullState& session, ps_input input, RuntimeStepOptions options) {\n"
             << (compactTurnOnly
                 ? "    (void)session;\n    (void)input;\n    (void)options;\n    return {false, {}};\n"
-                : "    return {true, puzzlescript::interpreterStepWithCompiledRuleGroups(session, input, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
+                : "    return {true, puzzlescript::interpretedStepWithSpecializedRulegroups(session, input, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
             << "SpecializedFullTurnOutcome tick_source_" << sourceIndex << "(FullState& session, RuntimeStepOptions options) {\n"
             << (compactTurnOnly
                 ? "    (void)session;\n    (void)options;\n    return {false, {}};\n"
-                : "    return {true, puzzlescript::interpreterTickWithCompiledRuleGroups(session, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
+                : "    return {true, puzzlescript::interpretedTickWithSpecializedRulegroups(session, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
             << "const SpecializedFullTurnBackend tick_backend_" << sourceIndex << " = {\n"
             << "    " << source.hash << "ULL,\n"

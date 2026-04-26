@@ -472,6 +472,26 @@ std::unique_ptr<Error> loadLevelTemplate(FullState& state, const LevelTemplate& 
 bool restart(FullState& state, RuntimeStepOptions options);
 ps_step_result interpreterStep(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result interpreterTick(FullState& state, RuntimeStepOptions options);
+ps_step_result interpretedTurnWithSpecializedRulegroups(
+    FullState& state,
+    ps_input input,
+    RuntimeStepOptions options,
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
+);
+ps_step_result interpretedStepWithSpecializedRulegroups(
+    FullState& state,
+    ps_input input,
+    RuntimeStepOptions options,
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
+);
+ps_step_result interpretedTickWithSpecializedRulegroups(
+    FullState& state,
+    RuntimeStepOptions options,
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
+);
 ps_step_result interpretedTurnWithCompiledRuleGroups(
     FullState& state,
     ps_input input,
@@ -479,7 +499,6 @@ ps_step_result interpretedTurnWithCompiledRuleGroups(
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
-ps_step_result interpretedTurn(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result interpreterStepWithCompiledRuleGroups(
     FullState& state,
     ps_input input,
@@ -493,6 +512,7 @@ ps_step_result interpreterTickWithCompiledRuleGroups(
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
+ps_step_result interpretedTurn(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result step(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result turn(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result tick(FullState& state, RuntimeStepOptions options);

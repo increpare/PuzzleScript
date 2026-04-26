@@ -197,6 +197,14 @@ Goal: replace `CompiledRules` terminology where it means generated per-game rule
 - [x] Remove unused `CompiledRule*` / `CompiledRulesBackend` compatibility type aliases after source call sites migrate.
 - [x] Rename active full-state generated turn backend types from `CompiledTick*` to `SpecializedFullTurn*`.
 - [x] Generated registries export `ps_specialized_full_turn_find_backend`, with `ps_compiled_tick_find_backend` kept as a compatibility symbol.
+- [x] Rename interpreted/full-state helper entrypoints toward specialized rulegroups:
+  - [x] `interpretedTurnWithCompiledRuleGroups` -> `interpretedTurnWithSpecializedRulegroups`, with compatibility wrapper.
+  - [x] `interpreterStepWithCompiledRuleGroups` -> `interpretedStepWithSpecializedRulegroups`, with compatibility wrapper.
+  - [x] `interpreterTickWithCompiledRuleGroups` -> `interpretedTickWithSpecializedRulegroups`, with compatibility wrapper.
+- [x] Update generated full-turn C++ to call the specialized-rulegroup helper names.
+- [x] Expose primary `specialized_full_turn_*` counters while keeping `compiled_tick_*` aliases.
+- [x] Expose primary `specialized_full_turn` coverage JSON while keeping `compiled_tick` aliases.
+- [x] Add a coverage-shape smoke target that checks current and compatibility coverage keys.
 
 Acceptance:
 
@@ -205,7 +213,14 @@ Acceptance:
 - [x] `make compiled_rules_simulation_suite_coverage` or its renamed equivalent if already changed.
 - [x] `make solver_smoke_tests SPECIALIZE=true`
 - [x] `make generator_smoke_tests SPECIALIZE=true`
-- [ ] Commit: `Rename compiled rules to specialized rulegroups`
+- [x] Commit the rulegroup/full-turn rename track in smaller slices:
+  - `Rename preparedFullState field 469 simulations 7 smoke`
+  - `Remove stale compiled alias types 7 specialized smoke`
+  - `Rename full-turn backend 7 specialized smoke 18 oracle`
+  - `Expose specialized full-turn counters 7 smoke`
+  - `Report specialized full-turn coverage 5 sources 7 smoke`
+  - `Guard coverage JSON shape 5 sources`
+  - `Rename interpreted rulegroup turn helpers 7 smoke`
 
 ## Phase 7: Rename Full Runtime State Carefully
 
