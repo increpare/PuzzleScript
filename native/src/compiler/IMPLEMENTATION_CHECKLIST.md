@@ -721,9 +721,9 @@ attribute graph cost -> no-allocation hash -> flat visited table
     levels=7
     random_excluded=0
 
-  solver_compact_parity SOLVER_COMPACT_PARITY_MAX_GAMES=5:
-    games=5/153
-    levels=90
+  solver_compact_parity SOLVER_COMPACT_PARITY_MAX_GAMES=25:
+    games=25/153
+    levels=646
     random_excluded=31
   ```
 
