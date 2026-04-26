@@ -3968,6 +3968,22 @@ bool compactPatternHasUnsupportedConstraints(const puzzlescript::Pattern& patter
         || pattern.hasMovementsMissing;
 }
 
+bool compactMovementMaskTouchesLayer(
+    const puzzlescript::Game& game,
+    puzzlescript::MaskOffset offset,
+    int32_t layer
+) {
+    if (offset == puzzlescript::kNullMaskOffset || layer < 0) {
+        return false;
+    }
+    for (uint32_t movementBit = 0; movementBit < 5; ++movementBit) {
+        if (maskBitIsSet(game, offset, static_cast<uint32_t>(layer) * 5U + movementBit)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool compactHasLoopPoints(const puzzlescript::LoopPointTable& table) {
     for (const auto& entry : table.entries) {
         if (entry.has_value()) {
@@ -4302,7 +4318,8 @@ std::vector<int32_t> compactSimpleClearTargetObjectIds(
 
 bool compactLooksLikeDirectCellObjectGroups(
     const puzzlescript::Game& game,
-    const std::vector<std::vector<puzzlescript::Rule>>& groups
+    const std::vector<std::vector<puzzlescript::Rule>>& groups,
+    std::optional<int32_t> forbiddenMovementClearLayer = std::nullopt
 ) {
     if (groups.empty()) {
         return false;
@@ -4325,8 +4342,16 @@ bool compactLooksLikeDirectCellObjectGroups(
                 || !pattern.replacement.has_value()
                 || pattern.replacement->hasRandomEntityMask
                 || pattern.replacement->hasRandomDirMask
-                || maskHasAnyBit(game, pattern.replacement->movementsClear, game.movementWordCount)
                 || maskHasAnyBit(game, pattern.replacement->movementsSet, game.movementWordCount)) {
+                return false;
+            }
+            if (maskHasAnyBit(game, pattern.replacement->movementsClear, game.movementWordCount)
+                && (!forbiddenMovementClearLayer.has_value()
+                    || compactMovementMaskTouchesLayer(
+                        game,
+                        pattern.replacement->movementsClear,
+                        *forbiddenMovementClearLayer
+                    ))) {
                 return false;
             }
         }
@@ -4466,7 +4491,11 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
     std::vector<int32_t> simpleConsumeObjectIds;
     std::vector<int32_t> simpleClearTargetObjectIds;
     bool directCellObjectRules = false;
-    const bool directEarlyCellObjectRules = compactLooksLikeDirectCellObjectGroups(game, game.rules);
+    const bool directEarlyCellObjectRules = compactLooksLikeDirectCellObjectGroups(
+        game,
+        game.rules,
+        playerLayer
+    );
     if (!game.rules.empty()) {
         if (playerObjectIds.size() != 1 && !directEarlyCellObjectRules) {
             support.fallbackReason = "aggregate_player_rules_not_compact";
