@@ -6,7 +6,12 @@
 #include <memory>
 
 extern "C" __attribute__((weak))
-const puzzlescript::CompiledRulesBackend* ps_compiled_rules_find_backend(uint64_t) {
+const puzzlescript::SpecializedRulegroupsBackend* ps_specialized_rulegroups_find_backend(uint64_t) {
+    return nullptr;
+}
+
+extern "C" __attribute__((weak))
+const puzzlescript::SpecializedRulegroupsBackend* ps_compiled_rules_find_backend(uint64_t) {
     return nullptr;
 }
 
@@ -33,7 +38,10 @@ uint64_t compiledRulesHashSource(std::string_view source) {
 
 void attachLinkedCompiledRules(Game& game, std::string_view source) {
     const uint64_t sourceHash = compiledRulesHashSource(source);
-    game.compiledRules = ps_compiled_rules_find_backend(sourceHash);
+    game.specializedRulegroups = ps_specialized_rulegroups_find_backend(sourceHash);
+    if (game.specializedRulegroups == nullptr) {
+        game.specializedRulegroups = ps_compiled_rules_find_backend(sourceHash);
+    }
     game.compiledTick = ps_compiled_tick_find_backend(sourceHash);
     game.specializedCompactTurn = ps_specialized_compact_turn_find_backend(sourceHash);
     if (game.specializedCompactTurn == nullptr) {

@@ -1149,9 +1149,9 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Done means:
 
   - The detailed report separates:
-    - `compiled_tick_hits == 0 && compiled_rule_group_hits == 0`
-    - `compiled_tick_hits > 0 && compiled_rule_group_hits == 0`
-    - `compiled_rule_group_hits > 0`
+    - `compiled_tick_hits == 0 && specialized_rulegroup_hits == 0`
+    - `compiled_tick_hits > 0 && specialized_rulegroup_hits == 0`
+    - `specialized_rulegroup_hits > 0`
   - The summary prints counts for each bucket.
   - The slowest table includes the bucket label.
 
@@ -1159,7 +1159,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   - `no_tick_no_rules`
   - `tick_no_rules`
-  - `compiled_rules`
+  - `specialized_rulegroups`
   - `no_counters`
   - `unknown`
 
@@ -1180,15 +1180,17 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Current report fields:
 
-  - `compiled_rules_attached`
+  - `specialized_rulegroups_attached`
+  - `compiled_rules_attached` compatibility alias
   - `compiled_tick_attached`
   - `compiled_usage_reasons`
   - per-target `reason=...` in the detail table
 
-  Note: `compiled_rule_group_hits` counts the generic compiled-rule dispatch
-  path. Specialized rule loops bypass that generic counter, so
-  `compiled_tick_bypassed_generic_rule_counter` means the generated tick backend
-  ran but the old rule-group counter is not the right measurement point.
+  Note: `specialized_rulegroup_hits` counts generated rulegroup dispatch through
+  the interpreted turn. Specialized rule loops can still bypass that generic
+  per-group counter, so `compiled_tick_bypassed_generic_rule_counter` means the
+  generated tick backend ran but the per-group counter is not the right
+  measurement point.
 
 - [x] Fix source-hash mismatches caused by missing trailing newlines.
 
@@ -1201,7 +1203,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - Targets with `compiled_tick_hits > 0` and `compiled_rule_group_hits == 0`
+  - Targets with `compiled_tick_hits > 0` and `specialized_rulegroup_hits == 0`
     either gain rule hits or explain why no compiled groups are reachable.
   - Solver generated counts remain identical.
   - No target regresses from solved to timeout.
@@ -1693,7 +1695,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   - Generated tick source compiles as a one-game unit.
   - Direct calls do not break sharded/corpus generation.
-  - `CompiledRulesBackend` remains available for interpreter fallback.
+  - `SpecializedRulegroupsBackend` remains available for interpreter fallback.
 
 ## Turn Skeleton Specialization
 

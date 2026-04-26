@@ -182,7 +182,7 @@ struct Result {
     uint64_t maxFrontier = 0;
     int64_t timeoutMs = 0;
     uint32_t workerId = 0;
-    bool compiledRulesAttached = false;
+    bool specializedRulegroupsAttached = false;
     bool compiledTickAttached = false;
     bool specializedCompactTurnAttached = false;
     bool compactNodeStorage = false;
@@ -1355,7 +1355,7 @@ Result runSearch(
     result.heuristic = mode == SearchMode::Bfs ? "zero" : "winconditions";
     result.timeoutMs = timeoutMs;
     result.workerId = workerId;
-    result.compiledRulesAttached = game && game->compiledRules != nullptr;
+    result.specializedRulegroupsAttached = game && game->specializedRulegroups != nullptr;
     result.compiledTickAttached = game && game->compiledTick != nullptr;
     result.specializedCompactTurnAttached = game && game->specializedCompactTurn != nullptr;
     result.compactNodeStorage = compactNodeStorage;
@@ -1651,7 +1651,7 @@ Result solveLevel(
     combined.heuristic = "winconditions";
     combined.timeoutMs = timeoutMs;
     combined.workerId = workerId;
-    combined.compiledRulesAttached = game && game->compiledRules != nullptr;
+    combined.specializedRulegroupsAttached = game && game->specializedRulegroups != nullptr;
     combined.compiledTickAttached = game && game->compiledTick != nullptr;
     combined.specializedCompactTurnAttached = game && game->specializedCompactTurn != nullptr;
     combined.compactNodeStorage = compactNodeStorage;
@@ -1856,7 +1856,8 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"duplicates\":" << result.duplicates;
     out << ",\"max_frontier\":" << result.maxFrontier;
     out << ",\"timeout_ms\":" << result.timeoutMs;
-    out << ",\"compiled_rules_attached\":" << (result.compiledRulesAttached ? "true" : "false");
+    out << ",\"specialized_rulegroups_attached\":" << (result.specializedRulegroupsAttached ? "true" : "false");
+    out << ",\"compiled_rules_attached\":" << (result.specializedRulegroupsAttached ? "true" : "false");
     out << ",\"compiled_tick_attached\":" << (result.compiledTickAttached ? "true" : "false");
     out << ",\"specialized_compact_turn_attached\":" << (result.specializedCompactTurnAttached ? "true" : "false");
     out << ",\"compact_node_storage\":" << (result.compactNodeStorage ? "true" : "false");
@@ -2253,9 +2254,9 @@ int main(int argc, char** argv) {
                       << " mask_rebuild_dirty_calls=" << runtimeCounters.mask_rebuild_dirty_calls
                       << " mask_rebuild_rows=" << runtimeCounters.mask_rebuild_rows
                       << " mask_rebuild_columns=" << runtimeCounters.mask_rebuild_columns
-                      << " compiled_rule_group_attempts=" << runtimeCounters.compiled_rule_group_attempts
-                      << " compiled_rule_group_hits=" << runtimeCounters.compiled_rule_group_hits
-                      << " compiled_rule_group_fallbacks=" << runtimeCounters.compiled_rule_group_fallbacks
+                      << " specialized_rulegroup_attempts=" << runtimeCounters.specialized_rulegroup_attempts
+                      << " specialized_rulegroup_hits=" << runtimeCounters.specialized_rulegroup_hits
+                      << " specialized_rulegroup_fallbacks=" << runtimeCounters.specialized_rulegroup_fallbacks
                       << " compiled_tick_attempts=" << runtimeCounters.compiled_tick_attempts
                       << " compiled_tick_hits=" << runtimeCounters.compiled_tick_hits
                       << " compiled_tick_fallbacks=" << runtimeCounters.compiled_tick_fallbacks

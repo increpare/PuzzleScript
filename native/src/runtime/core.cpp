@@ -64,8 +64,8 @@ struct ExecuteTurnOptions {
     bool ignoreWin = false;
     bool dontModify = false;
     bool* observedModification = nullptr;
-    CompiledTickRuleGroupsFn applyEarlyRules = nullptr;
-    CompiledTickRuleGroupsFn applyLateRules = nullptr;
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules = nullptr;
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules = nullptr;
 };
 
 struct RuntimeCounterStorage {
@@ -82,9 +82,9 @@ struct RuntimeCounterStorage {
     std::atomic<uint64_t> maskRebuildDirtyCalls{0};
     std::atomic<uint64_t> maskRebuildRows{0};
     std::atomic<uint64_t> maskRebuildColumns{0};
-    std::atomic<uint64_t> compiledRuleGroupAttempts{0};
-    std::atomic<uint64_t> compiledRuleGroupHits{0};
-    std::atomic<uint64_t> compiledRuleGroupFallbacks{0};
+    std::atomic<uint64_t> specializedRulegroupAttempts{0};
+    std::atomic<uint64_t> specializedRulegroupHits{0};
+    std::atomic<uint64_t> specializedRulegroupFallbacks{0};
     std::atomic<uint64_t> compiledTickAttempts{0};
     std::atomic<uint64_t> compiledTickHits{0};
     std::atomic<uint64_t> compiledTickFallbacks{0};
@@ -3381,18 +3381,18 @@ bool applyRuleGroup(Session& session, const std::vector<Rule>& group, CommandSta
     if (group.empty()) {
         return false;
     }
-    if (session.game->compiledRules != nullptr
-        && session.game->compiledRules->applyGroup != nullptr
+    if (session.game->specializedRulegroups != nullptr
+        && session.game->specializedRulegroups->applyGroup != nullptr
         && !ruleDebugEnabled()
         && !randomDebugEnabled()
         && !rigidDebugEnabled()) {
-        addCounter(gRuntimeCounters.compiledRuleGroupAttempts);
-        const CompiledRuleApplyOutcome outcome = session.game->compiledRules->applyGroup(session, groupIndex, late, commands);
+        addCounter(gRuntimeCounters.specializedRulegroupAttempts);
+        const SpecializedRulegroupOutcome outcome = session.game->specializedRulegroups->applyGroup(session, groupIndex, late, commands);
         if (outcome.handled) {
-            addCounter(gRuntimeCounters.compiledRuleGroupHits);
+            addCounter(gRuntimeCounters.specializedRulegroupHits);
             return outcome.changed;
         }
-        addCounter(gRuntimeCounters.compiledRuleGroupFallbacks);
+        addCounter(gRuntimeCounters.specializedRulegroupFallbacks);
     }
     if (group[0].isRandom) {
         const bool changed = applyRandomRuleGroup(session, group, commands);
@@ -4822,7 +4822,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         rebuildMasks(session);
         bool ruleChangedThisPass = false;
         if (options.applyEarlyRules != nullptr) {
-            const CompiledTickRuleGroupsOutcome outcome = options.applyEarlyRules(session, commands, &bannedGroups);
+            const SpecializedRulegroupsForInterpretedTurnOutcome outcome = options.applyEarlyRules(session, commands, &bannedGroups);
             if (outcome.handled) {
                 ruleChangedThisPass = outcome.changed;
             } else {
@@ -4866,7 +4866,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         ruleChanged = ruleChangedThisPass;
         moved = movementOutcome.moved;
         if (options.applyLateRules != nullptr) {
-            const CompiledTickRuleGroupsOutcome outcome = options.applyLateRules(session, commands, nullptr);
+            const SpecializedRulegroupsForInterpretedTurnOutcome outcome = options.applyLateRules(session, commands, nullptr);
             if (outcome.handled) {
                 lateRuleChanged = outcome.changed;
             } else {
@@ -5069,8 +5069,8 @@ ps_step_result interpretedTurnOnceWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
-    CompiledTickRuleGroupsFn applyEarlyRules,
-    CompiledTickRuleGroupsFn applyLateRules
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 ) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
@@ -5122,8 +5122,8 @@ ps_step_result interpretedTurnWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
-    CompiledTickRuleGroupsFn applyEarlyRules,
-    CompiledTickRuleGroupsFn applyLateRules
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 ) {
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
@@ -5155,8 +5155,8 @@ ps_step_result interpretedTurnWithCompiledRuleGroups(
 ps_step_result interpreterTickWithCompiledRuleGroups(
     Session& session,
     RuntimeStepOptions options,
-    CompiledTickRuleGroupsFn applyEarlyRules,
-    CompiledTickRuleGroupsFn applyLateRules
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 ) {
     return executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
@@ -5175,8 +5175,8 @@ ps_step_result interpreterStepWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
-    CompiledTickRuleGroupsFn applyEarlyRules,
-    CompiledTickRuleGroupsFn applyLateRules
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 ) {
     if (options.againPolicy == AgainPolicy::Drain) {
         return interpretedTurnWithCompiledRuleGroups(session, input, options, applyEarlyRules, applyLateRules);
@@ -5333,9 +5333,9 @@ void resetRuntimeCounters() {
     gRuntimeCounters.maskRebuildDirtyCalls.store(0, std::memory_order_relaxed);
     gRuntimeCounters.maskRebuildRows.store(0, std::memory_order_relaxed);
     gRuntimeCounters.maskRebuildColumns.store(0, std::memory_order_relaxed);
-    gRuntimeCounters.compiledRuleGroupAttempts.store(0, std::memory_order_relaxed);
-    gRuntimeCounters.compiledRuleGroupHits.store(0, std::memory_order_relaxed);
-    gRuntimeCounters.compiledRuleGroupFallbacks.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.specializedRulegroupAttempts.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.specializedRulegroupHits.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.specializedRulegroupFallbacks.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compiledTickAttempts.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compiledTickHits.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compiledTickFallbacks.store(0, std::memory_order_relaxed);
@@ -5356,9 +5356,12 @@ ps_runtime_counters snapshotRuntimeCounters() {
     counters.mask_rebuild_dirty_calls = gRuntimeCounters.maskRebuildDirtyCalls.load(std::memory_order_relaxed);
     counters.mask_rebuild_rows = gRuntimeCounters.maskRebuildRows.load(std::memory_order_relaxed);
     counters.mask_rebuild_columns = gRuntimeCounters.maskRebuildColumns.load(std::memory_order_relaxed);
-    counters.compiled_rule_group_attempts = gRuntimeCounters.compiledRuleGroupAttempts.load(std::memory_order_relaxed);
-    counters.compiled_rule_group_hits = gRuntimeCounters.compiledRuleGroupHits.load(std::memory_order_relaxed);
-    counters.compiled_rule_group_fallbacks = gRuntimeCounters.compiledRuleGroupFallbacks.load(std::memory_order_relaxed);
+    counters.specialized_rulegroup_attempts = gRuntimeCounters.specializedRulegroupAttempts.load(std::memory_order_relaxed);
+    counters.specialized_rulegroup_hits = gRuntimeCounters.specializedRulegroupHits.load(std::memory_order_relaxed);
+    counters.specialized_rulegroup_fallbacks = gRuntimeCounters.specializedRulegroupFallbacks.load(std::memory_order_relaxed);
+    counters.compiled_rule_group_attempts = counters.specialized_rulegroup_attempts;
+    counters.compiled_rule_group_hits = counters.specialized_rulegroup_hits;
+    counters.compiled_rule_group_fallbacks = counters.specialized_rulegroup_fallbacks;
     counters.compiled_tick_attempts = gRuntimeCounters.compiledTickAttempts.load(std::memory_order_relaxed);
     counters.compiled_tick_hits = gRuntimeCounters.compiledTickHits.load(std::memory_order_relaxed);
     counters.compiled_tick_fallbacks = gRuntimeCounters.compiledTickFallbacks.load(std::memory_order_relaxed);

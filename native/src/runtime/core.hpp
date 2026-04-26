@@ -257,7 +257,8 @@ struct CommandState {
     bool hasWin = false;
 };
 
-struct CompiledRulesBackend;
+struct SpecializedRulegroupsBackend;
+using CompiledRulesBackend = SpecializedRulegroupsBackend;
 struct CompiledTickBackend;
 struct SpecializedCompactTurnBackend;
 
@@ -333,7 +334,7 @@ struct Game {
     std::vector<std::vector<SoundMaskEntry>> sfxMovementMasks;
     std::vector<SoundMaskEntry> sfxMovementFailureMasks;
     PreparedSession preparedSession;
-    const CompiledRulesBackend* compiledRules = nullptr;
+    const SpecializedRulegroupsBackend* specializedRulegroups = nullptr;
     const CompiledTickBackend* compiledTick = nullptr;
     const SpecializedCompactTurnBackend* specializedCompactTurn = nullptr;
 };
@@ -453,8 +454,13 @@ struct TurnOptions {
 
 using RuntimeStepOptions = TurnOptions;
 
-struct CompiledTickRuleGroupsOutcome;
-using CompiledTickRuleGroupsFn = CompiledTickRuleGroupsOutcome (*)(Session& session, CommandState& commands, std::vector<bool>* bannedGroups);
+struct SpecializedRulegroupsForInterpretedTurnOutcome;
+using SpecializedRulegroupsForInterpretedTurnFn = SpecializedRulegroupsForInterpretedTurnOutcome (*)(
+    Session& session,
+    CommandState& commands,
+    std::vector<bool>* bannedGroups
+);
+using CompiledTickRuleGroupsFn = SpecializedRulegroupsForInterpretedTurnFn;
 
 std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options);
 bool restart(Session& session, RuntimeStepOptions options);
@@ -464,22 +470,22 @@ ps_step_result interpretedTurnWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
-    CompiledTickRuleGroupsFn applyEarlyRules,
-    CompiledTickRuleGroupsFn applyLateRules
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
 ps_step_result interpretedTurn(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result interpreterStepWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
-    CompiledTickRuleGroupsFn applyEarlyRules,
-    CompiledTickRuleGroupsFn applyLateRules
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
 ps_step_result interpreterTickWithCompiledRuleGroups(
     Session& session,
     RuntimeStepOptions options,
-    CompiledTickRuleGroupsFn applyEarlyRules,
-    CompiledTickRuleGroupsFn applyLateRules
+    SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
+    SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
 ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result turn(Session& session, ps_input input, RuntimeStepOptions options);

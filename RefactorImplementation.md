@@ -183,24 +183,24 @@ Acceptance:
 
 Goal: replace `CompiledRules` terminology where it means generated per-game rulegroup kernels.
 
-- [ ] Rename `CompiledRulesBackend` -> `SpecializedRulegroupsBackend`.
-- [ ] Rename `CompiledRuleGroupFn` -> `SpecializedRulegroupFn`.
-- [ ] Rename `CompiledRuleApplyOutcome` -> `SpecializedRulegroupOutcome`.
-- [ ] Rename `CompiledTickRuleGroupsFn` -> `SpecializedRulegroupsForInterpretedTurnFn`.
-- [ ] Rename `CompiledTickRuleGroupsOutcome` -> `SpecializedRulegroupsForInterpretedTurnOutcome`.
-- [ ] Rename runtime counters from compiled rule hits to specialized rulegroup hits.
-- [ ] Update generated C++ emission to use the new names.
-- [ ] Keep behavior unchanged: these kernels still operate on the full runtime state.
-- [ ] Decide whether the command-line subcommand `compile-rules` stays temporarily or gains a new alias such as `specialize-rulegroups`.
-- [ ] If `compile-rules` remains, document that it is a compatibility command name.
+- [x] Rename `CompiledRulesBackend` -> `SpecializedRulegroupsBackend`.
+- [x] Rename `CompiledRuleGroupFn` -> `SpecializedRulegroupFn`.
+- [x] Rename `CompiledRuleApplyOutcome` -> `SpecializedRulegroupOutcome`.
+- [x] Rename `CompiledTickRuleGroupsFn` -> `SpecializedRulegroupsForInterpretedTurnFn`.
+- [x] Rename `CompiledTickRuleGroupsOutcome` -> `SpecializedRulegroupsForInterpretedTurnOutcome`.
+- [x] Rename runtime counters from compiled rule hits to specialized rulegroup hits.
+- [x] Update generated C++ emission to use the new names.
+- [x] Keep behavior unchanged: these kernels still operate on the full runtime state.
+- [x] Decide whether the command-line subcommand `compile-rules` stays temporarily or gains a new alias such as `specialize-rulegroups`.
+- [x] If `compile-rules` remains, document that it is a compatibility command name.
 
 Acceptance:
 
-- [ ] `make build`
-- [ ] `make simulation_tests_cpp`
-- [ ] `make compiled_rules_simulation_suite_coverage` or its renamed equivalent if already changed.
-- [ ] `make solver_smoke_tests SPECIALIZE=true`
-- [ ] `make generator_smoke_tests SPECIALIZE=true`
+- [x] `make build`
+- [x] `make simulation_tests_cpp`
+- [x] `make compiled_rules_simulation_suite_coverage` or its renamed equivalent if already changed.
+- [x] `make solver_smoke_tests SPECIALIZE=true`
+- [x] `make generator_smoke_tests SPECIALIZE=true`
 - [ ] Commit: `Rename compiled rules to specialized rulegroups`
 
 ## Phase 7: Rename Full Runtime State Carefully

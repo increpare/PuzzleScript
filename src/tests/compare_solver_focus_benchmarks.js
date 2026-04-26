@@ -133,9 +133,11 @@ function targetRows() {
         if (!compiledTarget) {
             return null;
         }
-        const compiledRuleHits = countersMedian(compiledTarget, 'compiled_rule_group_hits');
+        const compiledRuleHits = countersMedian(compiledTarget, 'specialized_rulegroup_hits')
+            ?? countersMedian(compiledTarget, 'compiled_rule_group_hits');
         const compiledTickHits = countersMedian(compiledTarget, 'compiled_tick_hits');
-        const compiledRulesAttached = sampleBoolean(compiledTarget, 'compiled_rules_attached');
+        const specializedRulegroupsAttached = sampleBoolean(compiledTarget, 'specialized_rulegroups_attached')
+            ?? sampleBoolean(compiledTarget, 'compiled_rules_attached');
         const compiledTickAttached = sampleBoolean(compiledTarget, 'compiled_tick_attached');
         const interpretedFrontier = metricSum(target, ['frontier_pop_ms', 'frontier_push_ms']);
         const compiledFrontier = metricSum(compiledTarget, ['frontier_pop_ms', 'frontier_push_ms']);
@@ -180,8 +182,8 @@ function targetRows() {
             compiledRuleHits,
             compiledTickHits,
             bucket: compiledUsageBucket(compiledTickHits, compiledRuleHits),
-            reason: compiledUsageReason(compiledTickHits, compiledRuleHits, compiledRulesAttached, compiledTickAttached),
-            compiledRulesAttached,
+            reason: compiledUsageReason(compiledTickHits, compiledRuleHits, specializedRulegroupsAttached, compiledTickAttached),
+            specializedRulegroupsAttached,
             compiledTickAttached,
             candidateCells: countersMedian(compiledTarget, 'candidate_cells_tested'),
             rowScans: countersMedian(compiledTarget, 'row_scans'),
@@ -205,20 +207,20 @@ function compiledUsageBucket(compiledTickHits, compiledRuleHits) {
         return 'tick_no_rules';
     }
     if (compiledRuleHits > 0) {
-        return 'compiled_rules';
+        return 'specialized_rulegroups';
     }
     return 'unknown';
 }
 
-function compiledUsageReason(compiledTickHits, compiledRuleHits, compiledRulesAttached, compiledTickAttached) {
+function compiledUsageReason(compiledTickHits, compiledRuleHits, specializedRulegroupsAttached, compiledTickAttached) {
     if (compiledTickHits === null || compiledRuleHits === null) {
         return 'runtime_counters_missing';
     }
     if (!compiledTickAttached) {
         return 'compiled_tick_backend_not_attached';
     }
-    if (!compiledRulesAttached) {
-        return 'compiled_rules_backend_not_attached';
+    if (!specializedRulegroupsAttached) {
+        return 'specialized_rulegroups_backend_not_attached';
     }
     if (compiledTickHits === 0) {
         return 'compiled_tick_not_called';
@@ -226,7 +228,7 @@ function compiledUsageReason(compiledTickHits, compiledRuleHits, compiledRulesAt
     if (compiledRuleHits === 0) {
         return 'compiled_tick_bypassed_generic_rule_counter';
     }
-    return 'compiled_rule_groups_hit';
+    return 'specialized_rulegroups_hit';
 }
 
 function printCompiledUsageSummary(rows) {
@@ -236,7 +238,7 @@ function printCompiledUsageSummary(rows) {
         counts.set(row.bucket, (counts.get(row.bucket) || 0) + 1);
         reasons.set(row.reason, (reasons.get(row.reason) || 0) + 1);
     }
-    const labels = ['compiled_rules', 'tick_no_rules', 'no_tick_no_rules', 'no_counters', 'unknown'];
+    const labels = ['specialized_rulegroups', 'tick_no_rules', 'no_tick_no_rules', 'no_counters', 'unknown'];
     const parts = labels
         .filter((label) => counts.has(label))
         .map((label) => `${label}=${counts.get(label)}`);

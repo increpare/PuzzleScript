@@ -9,19 +9,19 @@
 
 namespace puzzlescript {
 
-struct CompiledRuleApplyOutcome {
+struct SpecializedRulegroupOutcome {
     bool handled = false;
     bool changed = false;
 };
 
-using CompiledRuleGroupFn = CompiledRuleApplyOutcome (*)(Session& session, int32_t groupIndex, bool late, CommandState& commands);
+using SpecializedRulegroupFn = SpecializedRulegroupOutcome (*)(Session& session, int32_t groupIndex, bool late, CommandState& commands);
 
-struct CompiledRulesBackend {
+struct SpecializedRulegroupsBackend {
     uint64_t sourceHash = 0;
     const char* name = nullptr;
-    CompiledRuleGroupFn applyGroup = nullptr;
-    uint32_t compiledRuleCount = 0;
-    uint32_t compiledGroupCount = 0;
+    SpecializedRulegroupFn applyGroup = nullptr;
+    uint32_t specializedRuleCount = 0;
+    uint32_t specializedGroupCount = 0;
 };
 
 struct CompiledTickApplyOutcome {
@@ -34,7 +34,7 @@ struct CompiledTickSupportInfo {
     const char* wholeTurnFallbackReason = nullptr;
 };
 
-struct CompiledTickRuleGroupsOutcome {
+struct SpecializedRulegroupsForInterpretedTurnOutcome {
     bool handled = false;
     bool changed = false;
 };
@@ -83,6 +83,11 @@ struct SpecializedCompactTurnBackend {
     SpecializedCompactTurnFn step = nullptr;
     CompiledTickSupportInfo support{};
 };
+
+using CompiledRuleApplyOutcome = SpecializedRulegroupOutcome;
+using CompiledRuleGroupFn = SpecializedRulegroupFn;
+using CompiledRulesBackend = SpecializedRulegroupsBackend;
+using CompiledTickRuleGroupsOutcome = SpecializedRulegroupsForInterpretedTurnOutcome;
 
 using CompiledCompactTickStateView = CompactStateView;
 using CompiledCompactTickApplyOutcome = SpecializedCompactTurnOutcome;
