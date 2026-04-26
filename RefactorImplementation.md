@@ -242,7 +242,9 @@ Decision checkpoint:
 - [x] Re-read `Refactor.md` and the `FullState` caveat.
 - [x] Decide whether this phase uses `FullState` or defers to a larger `RuntimeState` split.
 - [x] If choosing `FullState`, document why it is still the immediate rename target.
-- [ ] If choosing `RuntimeState`, update `Refactor.md` first and stop this checklist to avoid implementing the wrong name.
+- [x] If choosing `RuntimeState`, update `Refactor.md` first and stop this checklist to avoid implementing the wrong name.
+  - Not chosen for this refactor track; `FullState` remains the completed
+    rename target.
 
 If proceeding with `FullState`:
 
@@ -257,7 +259,7 @@ If proceeding with `FullState`:
   - [x] Runtime lifecycle, hash/serialization, and turn wrapper definitions use `FullState`.
   - [x] Runtime core implementation uses `FullState`; `Session` remains only as a temporary compatibility surface.
   - [x] Runtime C API internals store and inspect `FullState`; public `ps_session_*` names are unchanged.
-  - [x] Public C API still uses `ps_session_*` by design until Phase 8.
+  - [x] Public C API kept `ps_session_*` by design through Phase 7.
 - [x] Rename the primary prepared-state struct `PreparedSession` -> `PreparedFullState`, with a temporary `PreparedSession` alias.
 - [x] Rename the internal `preparedSession` field/identifier to `preparedFullState`; serialized `prepared_session` keys remain unchanged.
 - [x] Rename helper functions:
@@ -351,8 +353,11 @@ Goal: remove leftover ambiguity after the mechanical work is done.
     compact-turn names. JSON fallback readers still accept old fields so older
     benchmark files remain comparable.
 - [x] Update help text.
-- [ ] Update commit-era docs that now mislead more than they help.
-- [ ] Keep historical notes only when they are clearly marked historical.
+- [x] Update commit-era docs that now mislead more than they help.
+- [x] Keep historical notes only when they are clearly marked historical.
+  - Remaining old-name mentions in `Refactor.md`, this checklist, coverage
+    shape tests, and compatibility output are explicitly compatibility or
+    historical rename notes.
 
 Search hygiene:
 
@@ -362,7 +367,7 @@ Search hygiene:
 - [x] `rg "compiled tick|compact_tick|CompiledCompactTick|CompiledTick" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
   - Remaining Make target hits are compatibility aliases for old muscle memory.
   - Remaining JS hits are old benchmark/JSON fallback readers.
-  - Remaining C API hits are public compatibility names deferred to Phase 8.
+  - Remaining C API hits are public compatibility names retained after Phase 8.
   - Remaining generated-symbol hits are linker compatibility shims.
   - Remaining `*WithCompiledRuleGroups` hits are compatibility wrappers for old
     generated C++.
@@ -373,7 +378,7 @@ Search hygiene:
       JS UI timing, and PuzzleScript source fixtures keep using `tick`.
   - [x] compatibility wrapper
     - Public `step`/`tick`, `ps_session_tick`, legacy `compact_tick` and
-      `compiled_tick` targets/symbols stay until Phase 8 compatibility cleanup.
+      `compiled_tick` targets/symbols are compatibility surfaces.
   - [x] historical note
     - Refactor-plan entries may mention old names when they document the rename
       itself or explicitly describe forwarding shims.
@@ -404,17 +409,17 @@ This refactor should mostly preserve performance, except where `AgainPolicy::Dra
 - [ ] Confirm target identities remain the same.
 - [ ] Confirm `median_generated` remains the same.
 - [ ] Investigate any large `median_elapsed_ms` regression.
-- [ ] Keep benchmark JSON field compatibility in comparison scripts until old benchmark files are no longer useful.
+- [x] Keep benchmark JSON field compatibility in comparison scripts until old benchmark files are no longer useful.
 
 ## Commit Discipline
 
-- [ ] Use commit titles that describe the completed slice.
-- [ ] Include metrics in commit titles when a slice changes coverage or performance.
-- [ ] Prefer examples:
-  - [ ] `Rename CompactSolverState to CompactState`
-  - [ ] `Introduce interpreted turn and again policy`
-  - [ ] `Use drained turns in solver and generator`
-  - [ ] `Rename compact turn tooling to compact turn`
-  - [ ] `Rename specialized compact turn backend types`
-  - [ ] `Rename compiled rules to specialized rulegroups`
-- [ ] Never include unrelated user-owned working tree changes in these commits.
+- [x] Use commit titles that describe the completed slice.
+- [x] Include metrics in commit titles when a slice changes coverage or performance.
+- [x] Prefer examples:
+  - [x] `Rename CompactSolverState to CompactState`
+  - [x] `Introduce interpreted turn and again policy`
+  - [x] `Use drained turns in solver and generator`
+  - [x] `Rename compact turn tooling to compact turn`
+  - [x] `Rename specialized compact turn backend types`
+  - [x] `Rename compiled rules to specialized rulegroups`
+- [x] Never include unrelated user-owned working tree changes in these commits.
