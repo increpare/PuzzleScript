@@ -326,7 +326,13 @@ Search hygiene:
 - [x] `rg "\bSession\b" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
 - [x] `rg "CompactSolverState" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
 - [x] `rg "GenericTurn|GenericRulegroups|Generic turn|generic turn" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
-- [ ] `rg "compiled tick|compact_tick|CompiledCompactTick|CompiledTick" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
+- [x] `rg "compiled tick|compact_tick|CompiledCompactTick|CompiledTick" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
+  - Remaining Make target hits are compatibility aliases for old muscle memory.
+  - Remaining JS hits are old benchmark/JSON fallback readers.
+  - Remaining C API hits are public compatibility names deferred to Phase 8.
+  - Remaining generated-symbol hits are linker compatibility shims.
+  - Remaining `*WithCompiledRuleGroups` hits are compatibility wrappers for old
+    generated C++.
 - [ ] `rg "\btick\b|Tick" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
 - [ ] Review each remaining hit and classify it as:
   - [ ] PuzzleScript input/event terminology

@@ -141,7 +141,7 @@ Rename turn concepts:
 
 - `step` / `tick` architecture names -> `turn`
 - `interpreterStep` / `interpreterTick` -> `interpretedTurn`
-- `interpreterStepWithCompiledRuleGroups` / `interpreterTickWithCompiledRuleGroups` -> a single full-state interpreted turn function with optional specialized rulegroup callbacks
+- `interpreterStepWithCompiledRuleGroups` / `interpreterTickWithCompiledRuleGroups` legacy wrappers -> `interpretedStepWithSpecializedRulegroups` / `interpretedTickWithSpecializedRulegroups`
 - `RuntimeStepOptions` -> `TurnOptions`
 - add `AgainPolicy::{Yield, Drain}`
 
@@ -149,14 +149,14 @@ Rename specialization concepts:
 
 - `CompiledRulesBackend` -> `SpecializedRulegroupsBackend`
 - `CompiledRuleGroupFn` -> `SpecializedRulegroupFn`
-- `CompiledTickBackend` -> `SpecializedFullTurnBackend`
-- `CompiledCompactTickBackend` -> `SpecializedCompactTurnBackend`
-- `CompiledCompactTickStateView` -> `CompactStateView`
+- legacy `CompiledTickBackend` references -> `SpecializedFullTurnBackend`
+- legacy `CompiledCompactTickBackend` references -> `SpecializedCompactTurnBackend`
+- legacy `CompiledCompactTickStateView` references -> `CompactStateView`
 - `compiledCompactTickInterpreterBridge` -> `compactStateInterpretedTurnBridge`
 
 Rename tool-facing compact terminology:
 
-- `compact_tick_*` Make targets and JSON fields -> `compact_turn_*`
+- legacy `compact_tick_*` Make targets and JSON fields -> `compact_turn_*`
 - `compiled_tick_*` architecture wording -> `specialized_turn_*`
 - keep `PS_INPUT_TICK` unchanged, because it is a PuzzleScript input value rather than an architecture term
 
