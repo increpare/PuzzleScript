@@ -712,6 +712,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
     `compile_probe`.
   - Compile probe result ordering stays deterministic in the manifest even
     though logging appears as probes complete.
+  - Each per-game line starts with a completion counter such as `[24/40]`.
 
   Validation:
 

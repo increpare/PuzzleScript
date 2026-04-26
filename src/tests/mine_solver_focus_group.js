@@ -497,14 +497,15 @@ async function prepareEligibleCorpus() {
     const compileExcludedGames = [];
     const randomExcludedGames = [];
     const compileCandidates = [];
+    const activeGameFiles = gameFiles.filter((gameFile) => !excludedGames.has(normalizeGamePath(gameFile)));
+    const progressTotal = activeGameFiles.length;
+    let completedGames = 0;
     let eligibleCount = 0;
+    const progressPrefix = () => `[${++completedGames}/${progressTotal}]`;
 
     if (compileTimeoutSeconds === 0) {
-        for (const gameFile of gameFiles) {
+        for (const gameFile of activeGameFiles) {
             const gameName = normalizeGamePath(gameFile);
-            if (excludedGames.has(gameName)) {
-                continue;
-            }
             const randomHits = randomRuleHits(gameFile);
             if (randomHits.length > 0) {
                 randomExcludedGames.push({
@@ -513,10 +514,12 @@ async function prepareEligibleCorpus() {
                     reason: 'focus mining excludes random/randomDir rules',
                     hits: randomHits,
                 });
+                process.stdout.write(`${progressPrefix()} exclude ${gameName} status=random_rules_excluded hits=${randomHits.length}\n`);
                 continue;
             }
             copyGameToEligibleCorpus(gameFile, eligibleCorpus);
             eligibleCount++;
+            process.stdout.write(`${progressPrefix()} ok ${gameName} compile_probe=disabled\n`);
         }
         return {
             enabled: false,
@@ -535,12 +538,9 @@ async function prepareEligibleCorpus() {
     }
 
     const compileProbeJobCount = parseJobCount(compileProbeJobs, '--compile-probe-jobs', { autoDivisor: 2 });
-    process.stdout.write(`solver_focus_mine compile probe games=${gameFiles.length} timeout_seconds=${compileTimeoutSeconds} max_rows=${compileMaxRows} probe_jobs=${compileProbeJobCount} build_jobs=${compileBuildJobs}\n`);
-    for (const gameFile of gameFiles) {
+    process.stdout.write(`solver_focus_mine compile probe games=${progressTotal}/${gameFiles.length} timeout_seconds=${compileTimeoutSeconds} max_rows=${compileMaxRows} probe_jobs=${compileProbeJobCount} build_jobs=${compileBuildJobs}\n`);
+    for (const gameFile of activeGameFiles) {
         const gameName = normalizeGamePath(gameFile);
-        if (excludedGames.has(gameName)) {
-            continue;
-        }
 
         const randomHits = randomRuleHits(gameFile);
         if (randomHits.length > 0) {
@@ -551,7 +551,7 @@ async function prepareEligibleCorpus() {
                 hits: randomHits,
             };
             randomExcludedGames.push(result);
-            process.stdout.write(`  exclude ${gameName} status=${result.status} hits=${randomHits.length}\n`);
+            process.stdout.write(`${progressPrefix()} exclude ${gameName} status=${result.status} hits=${randomHits.length}\n`);
             continue;
         }
 
@@ -561,9 +561,9 @@ async function prepareEligibleCorpus() {
     const candidateResults = await runLimited(compileCandidates, compileProbeJobCount, async (entry) => {
         const result = await probeGameCompilation(entry.gameFile, entry.gameName, probeRoot);
         if (result.status === 'compiled') {
-            process.stdout.write(`  ok ${entry.gameName} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
+            process.stdout.write(`${progressPrefix()} ok ${entry.gameName} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
         } else {
-            process.stdout.write(`  exclude ${entry.gameName} status=${result.status}${formatCompileExclusion(result)} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
+            process.stdout.write(`${progressPrefix()} exclude ${entry.gameName} status=${result.status}${formatCompileExclusion(result)} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
         }
         return { entry, result };
     });
