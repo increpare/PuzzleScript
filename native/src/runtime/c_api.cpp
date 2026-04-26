@@ -240,6 +240,110 @@ void ps_free_compile_result(ps_compile_result* result) {
     delete result;
 }
 
+bool ps_full_state_create(const ps_game* game, ps_full_state** out_state, ps_error** out_error) {
+    return ps_session_create(game, out_state, out_error);
+}
+
+bool ps_full_state_create_with_loaded_level_seed(
+    const ps_game* game,
+    const char* loaded_level_seed_utf8,
+    ps_full_state** out_state,
+    ps_error** out_error
+) {
+    return ps_session_create_with_loaded_level_seed(game, loaded_level_seed_utf8, out_state, out_error);
+}
+
+bool ps_full_state_clone(const ps_full_state* state, ps_full_state** out_state, ps_error** out_error) {
+    return ps_session_clone(state, out_state, out_error);
+}
+
+void ps_full_state_destroy(ps_full_state* state) {
+    ps_session_destroy(state);
+}
+
+void ps_full_state_set_unit_testing(ps_full_state* state, bool enabled) {
+    ps_session_set_unit_testing(state, enabled);
+}
+
+bool ps_full_state_load_level(ps_full_state* state, int32_t level_index, ps_error** out_error) {
+    return ps_session_load_level(state, level_index, out_error);
+}
+
+ps_step_result ps_full_state_turn(ps_full_state* state, ps_input input) {
+    if (!state) {
+        return ps_step_result{};
+    }
+    return puzzlescript::turn(*state->impl, input, RuntimeStepOptions{});
+}
+
+bool ps_full_state_compact_tick_oracle_check(
+    const ps_full_state* state,
+    ps_input input,
+    ps_compact_tick_oracle_info* out_info
+) {
+    return ps_session_compact_tick_oracle_check(state, input, out_info);
+}
+
+bool ps_full_state_compact_turn_oracle_check(
+    const ps_full_state* state,
+    ps_input input,
+    ps_compact_turn_oracle_info* out_info
+) {
+    return ps_session_compact_tick_oracle_check(state, input, out_info);
+}
+
+bool ps_full_state_pending_again(const ps_full_state* state) {
+    return ps_session_pending_again(state);
+}
+
+bool ps_full_state_undo(ps_full_state* state) {
+    return ps_session_undo(state);
+}
+
+bool ps_full_state_restart(ps_full_state* state) {
+    return ps_session_restart(state);
+}
+
+bool ps_full_state_advance_level(ps_full_state* state, ps_error** out_error) {
+    return ps_session_advance_level(state, out_error);
+}
+
+void ps_full_state_status(const ps_full_state* state, ps_full_state_status_info* out_status) {
+    ps_session_status(state, out_status);
+}
+
+const char* ps_full_state_message_text(const ps_full_state* state) {
+    return ps_session_message_text(state);
+}
+
+bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_t y, int32_t object_id) {
+    return ps_session_cell_has_object(state, x, y, object_id);
+}
+
+bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* out_x, int32_t* out_y) {
+    return ps_session_first_player_position(state, out_x, out_y);
+}
+
+uint64_t ps_full_state_hash64(const ps_full_state* state) {
+    return ps_session_hash64(state);
+}
+
+ps_hash128 ps_full_state_hash128(const ps_full_state* state) {
+    return ps_session_hash128(state);
+}
+
+char* ps_full_state_serialize_test_string(const ps_full_state* state) {
+    return ps_session_serialize_test_string(state);
+}
+
+char* ps_full_state_export_snapshot(const ps_full_state* state) {
+    return ps_session_export_snapshot(state);
+}
+
+size_t ps_full_state_list_inputs(const ps_full_state* state, ps_input* output, size_t capacity) {
+    return ps_session_list_inputs(state, output, capacity);
+}
+
 bool ps_session_create(const ps_game* game, ps_session** out_session, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;

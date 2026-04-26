@@ -293,15 +293,22 @@ Acceptance:
 
 Goal: align the external C API with the architecture terms once internals are stable.
 
+- [x] Add `ps_full_state` as the new public alias for the existing opaque state
+  type.
 - [ ] Rename opaque C type `ps_session` -> `ps_full_state`.
 - [ ] Rename constructor/destructor:
-  - [ ] `ps_session_create` -> `ps_full_state_create`
-  - [ ] `ps_session_create_with_loaded_level_seed` -> `ps_full_state_create_with_loaded_level_seed`
-  - [ ] `ps_session_clone` -> `ps_full_state_clone`
-  - [ ] `ps_session_destroy` -> `ps_full_state_destroy`
+  - [x] Add `ps_full_state_create`.
+  - [x] Add `ps_full_state_create_with_loaded_level_seed`.
+  - [x] Add `ps_full_state_clone`.
+  - [x] Add `ps_full_state_destroy`.
+  - [ ] Remove or formally deprecate the old `ps_session_*` constructor/destructor names.
 - [ ] Rename turn functions:
-  - [ ] `ps_session_step` -> `ps_full_state_turn`
+  - [x] Add `ps_full_state_turn`.
   - [ ] `ps_session_tick` -> remove or alias to `ps_full_state_turn(state, PS_INPUT_TICK)`
+  - [ ] Remove or formally deprecate `ps_session_step`.
+- [x] Add `ps_full_state_*` status/accessor wrappers.
+- [x] Add `ps_full_state_compact_turn_oracle_check` as the compact-turn name
+  for the legacy compact-tick oracle check.
 - [ ] Rename status/accessor functions consistently to `ps_full_state_*`.
 - [ ] Update CLI and SDL player call sites.
 - [ ] Update tests and helper scripts.
