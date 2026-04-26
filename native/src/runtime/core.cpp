@@ -4779,7 +4779,7 @@ bool wouldAgainChange(FullState& session, bool* outWouldModify, bool emitAudio) 
     return changed;
 }
 
-// Keep this phase order explicit: generated whole-tick code is expected to
+// Keep this phase order explicit: generated whole-turn code is expected to
 // mirror these stages and then replace them one by one with per-game code.
 //
 // 1. Clear last-turn audio and prepare optional create/destroy sound masks.

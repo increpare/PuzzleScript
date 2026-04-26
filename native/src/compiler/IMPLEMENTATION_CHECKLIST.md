@@ -158,9 +158,9 @@ lab bench, not the full corpus.
 - [x] Surface mask rebuild outliers in the focus detail report.
 
   Done means: `--detail` prints a `top_mask_rebuilds` table with target,
-  elapsed ratio, compiled routing bucket, usage reason, tick/rule hits, dirty
-  rebuild calls, rebuilt rows/columns, row scans, candidate cells, pattern
-  tests, and mask rebuild calls.
+  elapsed ratio, compiled routing bucket, usage reason, full-turn/rulegroup
+  hits, dirty rebuild calls, rebuilt rows/columns, row scans, candidate cells,
+  pattern tests, and mask rebuild calls.
 
 - [x] Make focus compiled benchmark use `SPECIALIZE=true`.
 
@@ -919,7 +919,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - The later `Specialized State Layout` and `Smaller Tick-Game ABI` sections
+  - The later `Specialized State Layout` and `Smaller Turn-Game ABI` sections
     either point back here or contain only non-duplicated architecture notes.
   - No compact-state task exists in two places with conflicting acceptance
     criteria.
@@ -1608,7 +1608,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   - Test fails if `ps_specialized_full_turn_find_backend` is not linked or not
     found.
-  - Test proves both `step` and `tick` dispatch can be attempted.
+  - Test proves public `step` and `tick` dispatch can be attempted.
   - Test does not depend on timing.
 
   Suggested shape:
@@ -1707,7 +1707,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - Generated tick source compiles as a one-game unit.
+  - Generated full-turn source compiles as a one-game unit.
   - Direct calls do not break sharded/corpus generation.
   - `SpecializedRulegroupsBackend` remains available for interpreter fallback.
 
@@ -1768,9 +1768,9 @@ attribute graph cost -> no-allocation hash -> flat visited table
     behavior agree.
   - Unsupported cases delegate to `interpreted turn`.
 
-- [ ] Implement generated directional/action `step` entry.
+- [ ] Implement generated directional/action turn entry.
 
-  Intent: move real input processing into generated code after no-input tick is
+  Intent: move real input processing into generated code after no-input turn is
   stable.
 
   Acceptance criteria:
@@ -2009,7 +2009,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Solver parity remains green.
   - Memory use and nodes/second improve on at least one benchmark.
 
-## Smaller Tick-Game ABI
+## Smaller Turn-Game ABI
 
 - [?] Decide whether the first compact ABI is C++-only or C-facing.
 
@@ -2026,7 +2026,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - Covers up, down, left, right, action, and no-input tick.
+  - Covers up, down, left, right, action, and `PS_INPUT_TICK`.
   - Maps exactly to existing `ps_input` values or has a lossless adapter.
 
 - [ ] Add generated ABI smoke test.
@@ -2098,7 +2098,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 ## Build And Codegen Ergonomics
 
-- [ ] Keep generated source reuse robust as tick code grows.
+- [ ] Keep generated source reuse robust as full-turn code grows.
 
   Acceptance criteria:
 
@@ -2121,7 +2121,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Acceptance criteria:
 
   - One-game generation remains simple.
-  - Corpus generation can shard large tick helpers if needed.
+  - Corpus generation can shard large full-turn helpers if needed.
   - Link time is measured before and after any split.
 
 - [ ] Consider moving codegen out of `native/src/cli/main.cpp`.

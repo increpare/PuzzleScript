@@ -61,7 +61,7 @@ This is an iteration landmark, not the official gate. The official 2x gate uses:
 make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
 ```
 
-## Compiled Tick Status
+## Specialized Full-Turn Status
 
 Coverage JSON now reports specialized full-turn eligibility separately from
 specialized rulegroup coverage. At this checkpoint, generated full-turn backend

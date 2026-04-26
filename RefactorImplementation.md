@@ -315,7 +315,7 @@ Goal: remove leftover ambiguity after the mechanical work is done.
 - [ ] Remove temporary CLI flag aliases unless intentionally kept.
 - [ ] Update `ProgressReport.md`.
 - [x] Update `native/src/compiler/PLAN.md`.
-- [ ] Update `native/src/compiler/IMPLEMENTATION_CHECKLIST.md`.
+- [x] Update `native/src/compiler/IMPLEMENTATION_CHECKLIST.md`.
 - [ ] Update benchmark scripts and output labels.
 - [ ] Update help text.
 - [ ] Update commit-era docs that now mislead more than they help.
@@ -333,12 +333,20 @@ Search hygiene:
   - Remaining generated-symbol hits are linker compatibility shims.
   - Remaining `*WithCompiledRuleGroups` hits are compatibility wrappers for old
     generated C++.
-- [ ] `rg "\btick\b|Tick" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
-- [ ] Review each remaining hit and classify it as:
-  - [ ] PuzzleScript input/event terminology
-  - [ ] compatibility wrapper
-  - [ ] historical note
-  - [ ] bug to rename
+- [x] `rg "\btick\b|Tick" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
+- [x] Review each remaining hit and classify it as:
+  - [x] PuzzleScript input/event terminology
+    - `PS_INPUT_TICK`, string input `"tick"`, realtime gameplay, SDL timing,
+      JS UI timing, and PuzzleScript source fixtures keep using `tick`.
+  - [x] compatibility wrapper
+    - Public `step`/`tick`, `ps_session_tick`, legacy `compact_tick` and
+      `compiled_tick` targets/symbols stay until Phase 8 compatibility cleanup.
+  - [x] historical note
+    - Refactor-plan entries may mention old names when they document the rename
+      itself or explicitly describe forwarding shims.
+  - [x] bug to rename
+    - Stale compiler-plan/checklist wording was updated to full-turn/turn
+      wording.
 
 Acceptance:
 
