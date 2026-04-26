@@ -24,12 +24,12 @@ struct SpecializedRulegroupsBackend {
     uint32_t specializedGroupCount = 0;
 };
 
-struct CompiledTickApplyOutcome {
+struct SpecializedFullTurnOutcome {
     bool handled = false;
     ps_step_result result{};
 };
 
-struct CompiledTickSupportInfo {
+struct SpecializedFullTurnSupportInfo {
     bool wholeTurnSupported = false;
     const char* wholeTurnFallbackReason = nullptr;
 };
@@ -39,15 +39,15 @@ struct SpecializedRulegroupsForInterpretedTurnOutcome {
     bool changed = false;
 };
 
-using CompiledTickStepFn = CompiledTickApplyOutcome (*)(FullState& state, ps_input input, RuntimeStepOptions options);
-using CompiledTickFn = CompiledTickApplyOutcome (*)(FullState& state, RuntimeStepOptions options);
+using SpecializedFullTurnStepFn = SpecializedFullTurnOutcome (*)(FullState& state, ps_input input, RuntimeStepOptions options);
+using SpecializedFullTurnTickFn = SpecializedFullTurnOutcome (*)(FullState& state, RuntimeStepOptions options);
 
-struct CompiledTickBackend {
+struct SpecializedFullTurnBackend {
     uint64_t sourceHash = 0;
     const char* name = nullptr;
-    CompiledTickStepFn step = nullptr;
-    CompiledTickFn tick = nullptr;
-    CompiledTickSupportInfo support{};
+    SpecializedFullTurnStepFn step = nullptr;
+    SpecializedFullTurnTickFn tick = nullptr;
+    SpecializedFullTurnSupportInfo support{};
 };
 
 struct CompactStateView {
@@ -81,7 +81,7 @@ struct SpecializedCompactTurnBackend {
     uint64_t sourceHash = 0;
     const char* name = nullptr;
     SpecializedCompactTurnFn step = nullptr;
-    CompiledTickSupportInfo support{};
+    SpecializedFullTurnSupportInfo support{};
 };
 
 enum class CompiledRuleCommandKind {

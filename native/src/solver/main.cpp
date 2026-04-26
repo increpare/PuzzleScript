@@ -84,7 +84,7 @@ struct Options {
     bool quiet = false;
     bool summaryOnly = false;
     bool profileRuntimeCounters = false;
-    bool requireCompiledTick = false;
+    bool requireSpecializedFullTurn = false;
     bool exactStateKeys = true;
     bool compactNodeStorage = false;
     bool compactTurnOracle = false;
@@ -183,7 +183,7 @@ struct Result {
     int64_t timeoutMs = 0;
     uint32_t workerId = 0;
     bool specializedRulegroupsAttached = false;
-    bool compiledTickAttached = false;
+    bool specializedFullTurnAttached = false;
     bool specializedCompactTurnAttached = false;
     bool compactNodeStorage = false;
     int32_t astarWeight = 2;
@@ -527,7 +527,7 @@ Options parseArgs(int argc, char** argv) {
             continue;
         }
         if (arg == "--require-compiled-tick") {
-            options.requireCompiledTick = true;
+            options.requireSpecializedFullTurn = true;
             options.profileRuntimeCounters = true;
             continue;
         }
@@ -1356,7 +1356,7 @@ Result runSearch(
     result.timeoutMs = timeoutMs;
     result.workerId = workerId;
     result.specializedRulegroupsAttached = game && game->specializedRulegroups != nullptr;
-    result.compiledTickAttached = game && game->compiledTick != nullptr;
+    result.specializedFullTurnAttached = game && game->specializedFullTurn != nullptr;
     result.specializedCompactTurnAttached = game && game->specializedCompactTurn != nullptr;
     result.compactNodeStorage = compactNodeStorage;
     result.astarWeight = astarWeight;
@@ -1652,7 +1652,7 @@ Result solveLevel(
     combined.timeoutMs = timeoutMs;
     combined.workerId = workerId;
     combined.specializedRulegroupsAttached = game && game->specializedRulegroups != nullptr;
-    combined.compiledTickAttached = game && game->compiledTick != nullptr;
+    combined.specializedFullTurnAttached = game && game->specializedFullTurn != nullptr;
     combined.specializedCompactTurnAttached = game && game->specializedCompactTurn != nullptr;
     combined.compactNodeStorage = compactNodeStorage;
     combined.astarWeight = astarWeight;
@@ -1858,7 +1858,8 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"timeout_ms\":" << result.timeoutMs;
     out << ",\"specialized_rulegroups_attached\":" << (result.specializedRulegroupsAttached ? "true" : "false");
     out << ",\"compiled_rules_attached\":" << (result.specializedRulegroupsAttached ? "true" : "false");
-    out << ",\"compiled_tick_attached\":" << (result.compiledTickAttached ? "true" : "false");
+    out << ",\"specialized_full_turn_attached\":" << (result.specializedFullTurnAttached ? "true" : "false");
+    out << ",\"compiled_tick_attached\":" << (result.specializedFullTurnAttached ? "true" : "false");
     out << ",\"specialized_compact_turn_attached\":" << (result.specializedCompactTurnAttached ? "true" : "false");
     out << ",\"compact_node_storage\":" << (result.compactNodeStorage ? "true" : "false");
     out << ",\"astar_weight\":" << result.astarWeight;
@@ -2268,8 +2269,8 @@ int main(int argc, char** argv) {
                       << " compact_turn_oracle_failures=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnOracleFailures; })
                       << "\n";
         }
-        if (options.requireCompiledTick && runtimeCounters.compiled_tick_hits == 0) {
-            std::cerr << "compiled tick dispatch was required but no generated tick backend handled a step\n";
+        if (options.requireSpecializedFullTurn && runtimeCounters.compiled_tick_hits == 0) {
+            std::cerr << "specialized full-turn dispatch was required but no generated turn backend handled a step\n";
             return 1;
         }
         if (options.json) {

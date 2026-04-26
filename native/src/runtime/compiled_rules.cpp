@@ -16,7 +16,12 @@ const puzzlescript::SpecializedRulegroupsBackend* ps_compiled_rules_find_backend
 }
 
 extern "C" __attribute__((weak))
-const puzzlescript::CompiledTickBackend* ps_compiled_tick_find_backend(uint64_t) {
+const puzzlescript::SpecializedFullTurnBackend* ps_specialized_full_turn_find_backend(uint64_t) {
+    return nullptr;
+}
+
+extern "C" __attribute__((weak))
+const puzzlescript::SpecializedFullTurnBackend* ps_compiled_tick_find_backend(uint64_t) {
     return nullptr;
 }
 
@@ -42,7 +47,10 @@ void attachLinkedCompiledRules(Game& game, std::string_view source) {
     if (game.specializedRulegroups == nullptr) {
         game.specializedRulegroups = ps_compiled_rules_find_backend(sourceHash);
     }
-    game.compiledTick = ps_compiled_tick_find_backend(sourceHash);
+    game.specializedFullTurn = ps_specialized_full_turn_find_backend(sourceHash);
+    if (game.specializedFullTurn == nullptr) {
+        game.specializedFullTurn = ps_compiled_tick_find_backend(sourceHash);
+    }
     game.specializedCompactTurn = ps_specialized_compact_turn_find_backend(sourceHash);
     if (game.specializedCompactTurn == nullptr) {
         game.specializedCompactTurn = ps_compiled_compact_tick_find_backend(sourceHash);

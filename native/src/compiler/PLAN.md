@@ -48,16 +48,16 @@ games, after excluding clang-heavy generated-source outliers. Focus
 specialization defaults to `SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS=99`, while the
 global compiled-rules default remains conservative.
 
-Generated sources also export a compiled tick backend today. That backend is
-only a dispatch/linkage proof: it delegates to `interpreterStep` and
-`interpreterTick`, so it does not yet optimize whole-turn execution.
+Generated sources also export a `SpecializedFullTurnBackend` today. That
+backend is only a dispatch/linkage proof: it delegates to the interpreted turn
+path, so it does not yet optimize whole-turn execution.
 
 ## Terms
 
 - **compiled rules**: generated C++ rule-group kernels used by the native
   runtime from `applyRuleGroup`.
-- **compiled tick backend**: generated per-game `step` and `tick` entrypoints
-  found by source hash and attached to the loaded game.
+- **specialized full-turn backend**: generated per-game full-state turn
+  entrypoints found by source hash and attached to the loaded game.
 - **interpreterStep / interpreterTick**: the reference engine path. This is the
   behavior oracle and fallback for generated code.
 - **whole-game compilation**: the broader project of moving the hot per-turn
@@ -69,9 +69,9 @@ what the label means.
 ## Architecture Direction
 
 The runtime should keep a stable public `step` / `tick` interface. Those
-entrypoints try the compiled tick backend when one is attached and when debug
-tracing allows it. If generated code declines to handle a case, or if no backend
-is present, execution falls through to `interpreterStep` / `interpreterTick`.
+entrypoints try the specialized full-turn backend when one is attached and when
+debug tracing allows it. If generated code declines to handle a case, or if no
+backend is present, execution falls through to the interpreted turn path.
 
 The generated C++ should eventually own the hot turn loop for one game at a
 time. One-game specialization matches the production use case and keeps

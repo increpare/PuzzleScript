@@ -3785,7 +3785,7 @@ bool areAllGroupsCompilable(const std::vector<std::vector<puzzlescript::Rule>>& 
     });
 }
 
-bool isKnownCompiledTickCommandName(std::string_view name) {
+bool isKnownSpecializedFullTurnCommandName(std::string_view name) {
     if (name == "again"
         || name == "cancel"
         || name == "checkpoint"
@@ -3802,13 +3802,13 @@ bool isKnownCompiledTickCommandName(std::string_view name) {
     });
 }
 
-std::string compiledTickCommandStatusForGroups(const std::vector<std::vector<puzzlescript::Rule>>& groups) {
+std::string specializedFullTurnCommandStatusForGroups(const std::vector<std::vector<puzzlescript::Rule>>& groups) {
     bool sawCommand = false;
     for (const auto& group : groups) {
         for (const auto& rule : group) {
             for (const auto& command : rule.commands) {
                 sawCommand = true;
-                if (!isKnownCompiledTickCommandName(command.name)) {
+                if (!isKnownSpecializedFullTurnCommandName(command.name)) {
                     return "unknown_interpreter";
                 }
             }
@@ -3817,9 +3817,9 @@ std::string compiledTickCommandStatusForGroups(const std::vector<std::vector<puz
     return sawCommand ? "generated_queue_interpreter_tail" : "none";
 }
 
-std::string compiledTickCommandStatus(const puzzlescript::Game& game) {
-    const std::string earlyStatus = compiledTickCommandStatusForGroups(game.rules);
-    const std::string lateStatus = compiledTickCommandStatusForGroups(game.lateRules);
+std::string specializedFullTurnCommandStatus(const puzzlescript::Game& game) {
+    const std::string earlyStatus = specializedFullTurnCommandStatusForGroups(game.rules);
+    const std::string lateStatus = specializedFullTurnCommandStatusForGroups(game.lateRules);
     if (earlyStatus == "unknown_interpreter" || lateStatus == "unknown_interpreter") {
         return "unknown_interpreter";
     }
@@ -3836,7 +3836,7 @@ std::optional<std::string_view> compiledRuleCommandKindExpression(std::string_vi
     if (commandName == "message") return "CompiledRuleCommandKind::Message";
     if (commandName == "restart") return "CompiledRuleCommandKind::Restart";
     if (commandName == "win") return "CompiledRuleCommandKind::Win";
-    if (isKnownCompiledTickCommandName(commandName)
+    if (isKnownSpecializedFullTurnCommandName(commandName)
         && commandName.size() > 3
         && commandName.substr(0, 3) == "sfx") {
         return "CompiledRuleCommandKind::Output";
@@ -3850,7 +3850,7 @@ bool canGenerateCompiledRuleCommandQueue(const puzzlescript::Rule& rule) {
     });
 }
 
-struct CompiledTickSupport {
+struct SpecializedFullTurnSupport {
     // These are the generated top-level early/late rule loops: they sequence
     // rulegroups and preserve BEGIN LOOP / END LOOP loop-point jumps.
     bool earlyRuleLoopsGenerated = false;
@@ -4678,14 +4678,14 @@ CompactTurnSupport compactTurnSupportForGame(const puzzlescript::Game& game) {
     return support;
 }
 
-CompiledTickSupport compiledTickSupportForGame(
+SpecializedFullTurnSupport specializedFullTurnSupportForGame(
     const puzzlescript::Game& game,
     const CompiledRulesOptions& options
 ) {
-    CompiledTickSupport support;
+    SpecializedFullTurnSupport support;
     support.earlyRuleLoopsGenerated = areAllGroupsCompilable(game.rules, options);
     support.lateRuleLoopsGenerated = areAllGroupsCompilable(game.lateRules, options);
-    support.commandStatus = compiledTickCommandStatus(game);
+    support.commandStatus = specializedFullTurnCommandStatus(game);
 
     if (!support.earlyRuleLoopsGenerated) {
         support.wholeTurnFallbackReason = "early_rule_loops_interpreter";
@@ -4699,8 +4699,8 @@ CompiledTickSupport compiledTickSupportForGame(
     return support;
 }
 
-CompiledTickSupport compiledTickSupportForMissingGame() {
-    return CompiledTickSupport{};
+SpecializedFullTurnSupport specializedFullTurnSupportForMissingGame() {
+    return SpecializedFullTurnSupport{};
 }
 
 bool ruleHasEllipsis(const puzzlescript::Rule& rule) {
@@ -5605,7 +5605,7 @@ void appendJsonCountObject(
     out << "}";
 }
 
-void appendCompiledTickAggregateJsonFields(
+void appendSpecializedFullTurnAggregateJsonFields(
     std::ostream& out,
     size_t sourceCount,
     size_t earlyRuleLoopsGenerated,
@@ -5641,9 +5641,9 @@ void appendCompiledTickAggregateJsonFields(
     out << "}}";
 }
 
-void appendCompiledTickSourceJsonFields(
+void appendSpecializedFullTurnSourceJsonFields(
     std::ostream& out,
-    const CompiledTickSupport& support
+    const SpecializedFullTurnSupport& support
 ) {
     out << "\"compiled_tick\":{"
         << "\"backend_codegen_available\":true"
@@ -5964,9 +5964,9 @@ std::string generateCompiledRulesCoverageJson(
     std::unordered_map<std::string, size_t> compactTurnFallbackReasons;
     std::unordered_map<std::string, size_t> compactTurnNativeFallbackReasons;
     for (const CodegenSource& source : sources) {
-        const CompiledTickSupport support = source.game
-            ? compiledTickSupportForGame(*source.game, options)
-            : compiledTickSupportForMissingGame();
+        const SpecializedFullTurnSupport support = source.game
+            ? specializedFullTurnSupportForGame(*source.game, options)
+            : specializedFullTurnSupportForMissingGame();
         if (support.earlyRuleLoopsGenerated) {
             ++earlyRuleLoopsGenerated;
         }
@@ -6004,7 +6004,7 @@ std::string generateCompiledRulesCoverageJson(
         << "  \"aggregate\":{";
     appendCompiledRulesCoverageJsonFields(out, aggregateCoverage);
     out << ",";
-    appendCompiledTickAggregateJsonFields(
+    appendSpecializedFullTurnAggregateJsonFields(
         out,
         sources.size(),
         earlyRuleLoopsGenerated,
@@ -6038,11 +6038,11 @@ std::string generateCompiledRulesCoverageJson(
             << ",";
         appendCompiledRulesCoverageJsonFields(out, sourceCoverage);
         out << ",";
-        appendCompiledTickSourceJsonFields(
+        appendSpecializedFullTurnSourceJsonFields(
             out,
             sources[index].game
-                ? compiledTickSupportForGame(*sources[index].game, options)
-                : compiledTickSupportForMissingGame()
+                ? specializedFullTurnSupportForGame(*sources[index].game, options)
+                : specializedFullTurnSupportForMissingGame()
         );
         out << ",";
         appendCompactTurnSourceJsonFields(
@@ -6173,7 +6173,7 @@ std::string generateCompiledRulesCpp(
     for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
         const auto& source = sources[sourceIndex];
         const auto& game = *source.game;
-        const CompiledTickSupport tickSupport = compiledTickSupportForGame(game, options);
+        const SpecializedFullTurnSupport tickSupport = specializedFullTurnSupportForGame(game, options);
         const CompactTurnSupport compactTurnSupport = compactTurnSupportForGame(game);
         uint32_t sourceCompiledRules = 0;
         uint32_t sourceCompiledGroups = 0;
@@ -6407,17 +6407,17 @@ std::string generateCompiledRulesCpp(
             << "    " << sourceCompiledGroups << "U,\n"
             << "};\n\n";
 
-        out << "CompiledTickApplyOutcome tick_step_source_" << sourceIndex << "(FullState& session, ps_input input, RuntimeStepOptions options) {\n"
+        out << "SpecializedFullTurnOutcome tick_step_source_" << sourceIndex << "(FullState& session, ps_input input, RuntimeStepOptions options) {\n"
             << (compactTurnOnly
                 ? "    (void)session;\n    (void)input;\n    (void)options;\n    return {false, {}};\n"
                 : "    return {true, puzzlescript::interpreterStepWithCompiledRuleGroups(session, input, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
-            << "CompiledTickApplyOutcome tick_source_" << sourceIndex << "(FullState& session, RuntimeStepOptions options) {\n"
+            << "SpecializedFullTurnOutcome tick_source_" << sourceIndex << "(FullState& session, RuntimeStepOptions options) {\n"
             << (compactTurnOnly
                 ? "    (void)session;\n    (void)options;\n    return {false, {}};\n"
                 : "    return {true, puzzlescript::interpreterTickWithCompiledRuleGroups(session, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
-            << "const CompiledTickBackend tick_backend_" << sourceIndex << " = {\n"
+            << "const SpecializedFullTurnBackend tick_backend_" << sourceIndex << " = {\n"
             << "    " << source.hash << "ULL,\n"
             << "    " << cppStringLiteral(source.path.string()) << ",\n"
             << "    tick_step_source_" << sourceIndex << ",\n"
@@ -6787,14 +6787,18 @@ std::string generateCompiledRulesCpp(
             << "ps_compiled_rules_find_backend(uint64_t sourceHash) {\n"
             << "    return ps_specialized_rulegroups_find_backend(sourceHash);\n"
             << "}\n\n";
-        out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
-            << "ps_compiled_tick_find_backend(uint64_t sourceHash) {\n"
+        out << "extern \"C\" const puzzlescript::SpecializedFullTurnBackend* "
+            << "ps_specialized_full_turn_find_backend(uint64_t sourceHash) {\n"
             << "    switch (sourceHash) {\n";
         for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
             out << "        case " << sources[sourceIndex].hash << "ULL: return &tick_backend_" << sourceIndex << ";\n";
         }
         out << "        default: return nullptr;\n"
             << "    }\n"
+            << "}\n\n"
+            << "extern \"C\" const puzzlescript::SpecializedFullTurnBackend* "
+            << "ps_compiled_tick_find_backend(uint64_t sourceHash) {\n"
+            << "    return ps_specialized_full_turn_find_backend(sourceHash);\n"
             << "}\n\n";
         out << "extern \"C\" const puzzlescript::SpecializedCompactTurnBackend* "
             << "ps_specialized_compact_turn_find_backend(uint64_t sourceHash) {\n"
@@ -6824,10 +6828,10 @@ std::string generateCompiledRulesCpp(
             << "}\n\n";
         const std::string safeTickBackendAccessor = safeCppIdentifier(
             tickBackendAccessorSymbol.empty()
-                ? std::string(safeSymbol + "_tick_backend")
+                ? std::string(safeSymbol + "_specialized_full_turn_backend")
                 : std::string(tickBackendAccessorSymbol)
         );
-        out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
+        out << "extern \"C\" const puzzlescript::SpecializedFullTurnBackend* "
             << safeTickBackendAccessor << "() {\n"
             << "    return &tick_backend_0;\n"
             << "}\n\n";
@@ -6864,7 +6868,7 @@ std::string generateCompiledRulesRegistryCpp(
             << safeCppIdentifier(backendSymbol) << "();\n";
     }
     for (const auto& backendSymbol : tickBackendAccessorSymbols) {
-        out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
+        out << "extern \"C\" const puzzlescript::SpecializedFullTurnBackend* "
             << safeCppIdentifier(backendSymbol) << "();\n";
     }
     for (const auto& backendSymbol : compactTurnBackendAccessorSymbols) {
@@ -6885,8 +6889,8 @@ std::string generateCompiledRulesRegistryCpp(
         << "ps_compiled_rules_find_backend(uint64_t sourceHash) {\n"
         << "    return ps_specialized_rulegroups_find_backend(sourceHash);\n"
         << "}\n\n";
-    out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
-        << "ps_compiled_tick_find_backend(uint64_t sourceHash) {\n"
+    out << "extern \"C\" const puzzlescript::SpecializedFullTurnBackend* "
+        << "ps_specialized_full_turn_find_backend(uint64_t sourceHash) {\n"
         << "    switch (sourceHash) {\n";
     for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
         out << "        case " << sources[sourceIndex].hash << "ULL: return "
@@ -6894,6 +6898,10 @@ std::string generateCompiledRulesRegistryCpp(
     }
     out << "        default: return nullptr;\n"
         << "    }\n"
+        << "}\n\n"
+        << "extern \"C\" const puzzlescript::SpecializedFullTurnBackend* "
+        << "ps_compiled_tick_find_backend(uint64_t sourceHash) {\n"
+        << "    return ps_specialized_full_turn_find_backend(sourceHash);\n"
         << "}\n\n";
     out << "extern \"C\" const puzzlescript::SpecializedCompactTurnBackend* "
         << "ps_specialized_compact_turn_find_backend(uint64_t sourceHash) {\n"

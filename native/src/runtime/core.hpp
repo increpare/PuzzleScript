@@ -260,7 +260,7 @@ struct CommandState {
 };
 
 struct SpecializedRulegroupsBackend;
-struct CompiledTickBackend;
+struct SpecializedFullTurnBackend;
 struct SpecializedCompactTurnBackend;
 
 struct SoundMaskEntry {
@@ -336,7 +336,7 @@ struct Game {
     std::vector<SoundMaskEntry> sfxMovementFailureMasks;
     PreparedFullState preparedFullState;
     const SpecializedRulegroupsBackend* specializedRulegroups = nullptr;
-    const CompiledTickBackend* compiledTick = nullptr;
+    const SpecializedFullTurnBackend* specializedFullTurn = nullptr;
     const SpecializedCompactTurnBackend* specializedCompactTurn = nullptr;
 };
 
@@ -467,7 +467,6 @@ using SpecializedRulegroupsForInterpretedTurnFn = SpecializedRulegroupsForInterp
     CommandState& commands,
     std::vector<bool>* bannedGroups
 );
-using CompiledTickRuleGroupsFn = SpecializedRulegroupsForInterpretedTurnFn;
 
 std::unique_ptr<Error> loadLevelTemplate(FullState& state, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options);
 bool restart(FullState& state, RuntimeStepOptions options);

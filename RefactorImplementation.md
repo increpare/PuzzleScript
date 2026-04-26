@@ -195,6 +195,8 @@ Goal: replace `CompiledRules` terminology where it means generated per-game rule
 - [x] Decide whether the command-line subcommand `compile-rules` stays temporarily or gains a new alias such as `specialize-rulegroups`.
 - [x] If `compile-rules` remains, document that it is a compatibility command name.
 - [x] Remove unused `CompiledRule*` / `CompiledRulesBackend` compatibility type aliases after source call sites migrate.
+- [x] Rename active full-state generated turn backend types from `CompiledTick*` to `SpecializedFullTurn*`.
+- [x] Generated registries export `ps_specialized_full_turn_find_backend`, with `ps_compiled_tick_find_backend` kept as a compatibility symbol.
 
 Acceptance:
 

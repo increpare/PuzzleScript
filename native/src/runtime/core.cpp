@@ -85,9 +85,9 @@ struct RuntimeCounterStorage {
     std::atomic<uint64_t> specializedRulegroupAttempts{0};
     std::atomic<uint64_t> specializedRulegroupHits{0};
     std::atomic<uint64_t> specializedRulegroupFallbacks{0};
-    std::atomic<uint64_t> compiledTickAttempts{0};
-    std::atomic<uint64_t> compiledTickHits{0};
-    std::atomic<uint64_t> compiledTickFallbacks{0};
+    std::atomic<uint64_t> specializedFullTurnAttempts{0};
+    std::atomic<uint64_t> specializedFullTurnHits{0};
+    std::atomic<uint64_t> specializedFullTurnFallbacks{0};
 };
 
 bool gRuntimeCountersEnabled = false;
@@ -5069,7 +5069,7 @@ size_t listInputs(ps_input* output, size_t capacity) {
     return total;
 }
 
-bool compiledTickDispatchEnabled() {
+bool specializedFullTurnDispatchEnabled() {
     return !ruleDebugEnabled()
         && !randomDebugEnabled()
         && !rigidDebugEnabled()
@@ -5224,16 +5224,16 @@ ps_step_result interpreterTick(FullState& session, RuntimeStepOptions options) {
 }
 
 ps_step_result turnOnce(FullState& session, ps_input input, RuntimeStepOptions options) {
-    if (session.game->compiledTick != nullptr
-        && session.game->compiledTick->step != nullptr
-        && compiledTickDispatchEnabled()) {
-        addCounter(gRuntimeCounters.compiledTickAttempts);
-        const CompiledTickApplyOutcome outcome = session.game->compiledTick->step(session, input, options);
+    if (session.game->specializedFullTurn != nullptr
+        && session.game->specializedFullTurn->step != nullptr
+        && specializedFullTurnDispatchEnabled()) {
+        addCounter(gRuntimeCounters.specializedFullTurnAttempts);
+        const SpecializedFullTurnOutcome outcome = session.game->specializedFullTurn->step(session, input, options);
         if (outcome.handled) {
-            addCounter(gRuntimeCounters.compiledTickHits);
+            addCounter(gRuntimeCounters.specializedFullTurnHits);
             return outcome.result;
         }
-        addCounter(gRuntimeCounters.compiledTickFallbacks);
+        addCounter(gRuntimeCounters.specializedFullTurnFallbacks);
     }
     if (input == PS_INPUT_TICK) {
         return tick(session, options);
@@ -5268,16 +5268,16 @@ ps_step_result step(FullState& session, ps_input input) {
 }
 
 ps_step_result tick(FullState& session, RuntimeStepOptions options) {
-    if (session.game->compiledTick != nullptr
-        && session.game->compiledTick->tick != nullptr
-        && compiledTickDispatchEnabled()) {
-        addCounter(gRuntimeCounters.compiledTickAttempts);
-        const CompiledTickApplyOutcome outcome = session.game->compiledTick->tick(session, options);
+    if (session.game->specializedFullTurn != nullptr
+        && session.game->specializedFullTurn->tick != nullptr
+        && specializedFullTurnDispatchEnabled()) {
+        addCounter(gRuntimeCounters.specializedFullTurnAttempts);
+        const SpecializedFullTurnOutcome outcome = session.game->specializedFullTurn->tick(session, options);
         if (outcome.handled) {
-            addCounter(gRuntimeCounters.compiledTickHits);
+            addCounter(gRuntimeCounters.specializedFullTurnHits);
             return outcome.result;
         }
-        addCounter(gRuntimeCounters.compiledTickFallbacks);
+        addCounter(gRuntimeCounters.specializedFullTurnFallbacks);
     }
     return interpreterTick(session, options);
 }
@@ -5360,9 +5360,9 @@ void resetRuntimeCounters() {
     gRuntimeCounters.specializedRulegroupAttempts.store(0, std::memory_order_relaxed);
     gRuntimeCounters.specializedRulegroupHits.store(0, std::memory_order_relaxed);
     gRuntimeCounters.specializedRulegroupFallbacks.store(0, std::memory_order_relaxed);
-    gRuntimeCounters.compiledTickAttempts.store(0, std::memory_order_relaxed);
-    gRuntimeCounters.compiledTickHits.store(0, std::memory_order_relaxed);
-    gRuntimeCounters.compiledTickFallbacks.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.specializedFullTurnAttempts.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.specializedFullTurnHits.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.specializedFullTurnFallbacks.store(0, std::memory_order_relaxed);
 }
 
 ps_runtime_counters snapshotRuntimeCounters() {
@@ -5386,9 +5386,9 @@ ps_runtime_counters snapshotRuntimeCounters() {
     counters.compiled_rule_group_attempts = counters.specialized_rulegroup_attempts;
     counters.compiled_rule_group_hits = counters.specialized_rulegroup_hits;
     counters.compiled_rule_group_fallbacks = counters.specialized_rulegroup_fallbacks;
-    counters.compiled_tick_attempts = gRuntimeCounters.compiledTickAttempts.load(std::memory_order_relaxed);
-    counters.compiled_tick_hits = gRuntimeCounters.compiledTickHits.load(std::memory_order_relaxed);
-    counters.compiled_tick_fallbacks = gRuntimeCounters.compiledTickFallbacks.load(std::memory_order_relaxed);
+    counters.compiled_tick_attempts = gRuntimeCounters.specializedFullTurnAttempts.load(std::memory_order_relaxed);
+    counters.compiled_tick_hits = gRuntimeCounters.specializedFullTurnHits.load(std::memory_order_relaxed);
+    counters.compiled_tick_fallbacks = gRuntimeCounters.specializedFullTurnFallbacks.load(std::memory_order_relaxed);
     return counters;
 }
 

@@ -149,7 +149,7 @@ Rename specialization concepts:
 
 - `CompiledRulesBackend` -> `SpecializedRulegroupsBackend`
 - `CompiledRuleGroupFn` -> `SpecializedRulegroupFn`
-- `CompiledTickBackend` -> avoid as a central architecture term; use explicit full-state specialized-turn naming only if that path becomes deliberate
+- `CompiledTickBackend` -> `SpecializedFullTurnBackend`
 - `CompiledCompactTickBackend` -> `SpecializedCompactTurnBackend`
 - `CompiledCompactTickStateView` -> `CompactStateView`
 - `compiledCompactTickInterpreterBridge` -> `compactStateInterpretedTurnBridge`
