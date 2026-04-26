@@ -9,9 +9,9 @@ The core split is not "compiled" versus "interpreted", because all native C++ pa
 The target vocabulary is:
 
 - `FullState` vs `CompactState`
-- `GenericTurn` vs `SpecializedTurn`
-- `GenericRulegroups` vs `SpecializedRulegroups`
-- `AgainPolicy::LeavePending` vs `AgainPolicy::ResolveImmediately`
+- `InterpretedTurn` vs `SpecializedTurn`
+- `InterpretedRulegroups` vs `SpecializedRulegroups`
+- `AgainPolicy::Yield` vs `AgainPolicy::Drain`
 
 The runtime should also move toward one `turn(state, input, options)` operation. `PS_INPUT_TICK` remains just another `ps_input`, not a reason to keep separate step/tick architecture names.
 
@@ -19,31 +19,63 @@ The runtime should also move toward one `turn(state, input, options)` operation.
 
 `FullState` is the full runtime state currently represented by the C++ `Session` type. It owns the board, movement words, caches, command/runtime scratch, dirty flags, undo/restart/checkpoint state, audio/UI state, RNG, and other runtime machinery.
 
+There is a real naming caveat: today's `Session` is not just "more state" than `CompactState`; it is also lifecycle scaffolding. The immediate rename target is `FullState` for consistency with `CompactState`, but a larger later split may be cleaner: immutable `Game` data plus mutable `RuntimeState`, with `CompactState` as the solver/generator sibling of `RuntimeState`.
+
 `CompactState` is the solver/generator state representation: object occupancy bitsets plus RNG. It represents settled graph-search states and should not contain transient movement words after a turn has fully resolved.
 
-`GenericTurn` is the game-agnostic C++ turn driver. It owns the normal turn sequencing: input handling, player movement seeding, early rulegroups, movement resolution, late rulegroups, commands, win checks, restart/checkpoint behavior, and `again` scheduling.
+`InterpretedTurn` is the game-agnostic C++ turn driver. It owns the normal turn sequencing: input handling, player movement seeding, early rulegroups, movement resolution, late rulegroups, commands, win checks, restart/checkpoint behavior, and `again` scheduling.
 
-`SpecializedTurn` is generated per-game turn sequencing. It replaces the generic turn driver for a game-specific path.
+`SpecializedTurn` is generated per-game turn sequencing. It replaces the interpreted turn driver for a game-specific path.
 
-`GenericRulegroups` are interpreted rulegroup matching and application through runtime data structures.
+`InterpretedRulegroups` are interpreted rulegroup matching and application through runtime data structures.
 
 `SpecializedRulegroups` are generated per-game rulegroup kernels.
 
-`AgainPolicy::LeavePending` is normal play behavior: apply one input and leave `again` pending so the player/runtime can advance it as subsequent `PS_INPUT_TICK` turns.
+`AgainPolicy::Yield` is normal play behavior: apply one input and leave `again` pending so the player/runtime can advance it as subsequent `PS_INPUT_TICK` turns.
 
-`AgainPolicy::ResolveImmediately` is solver/generator behavior: apply the requested input, then repeatedly apply `PS_INPUT_TICK` until `again` is exhausted, so graph nodes are settled states.
+`AgainPolicy::Drain` is solver/generator behavior: apply the requested input, then repeatedly apply `PS_INPUT_TICK` until `again` is exhausted, so graph nodes are settled states.
 
 ## Current Runtime Paths
 
-`FullState + GenericTurn + GenericRulegroups` is the native interpreter and correctness oracle.
+`FullState + InterpretedTurn + InterpretedRulegroups` is the native interpreter and correctness oracle.
 
-`FullState + GenericTurn + SpecializedRulegroups` is the current specialized-rulegroup runtime. The generic turn driver still owns sequencing, but rulegroup evaluation can dispatch to generated kernels.
+`FullState + InterpretedTurn + SpecializedRulegroups` is the current specialized-rulegroup runtime. The interpreted turn driver still owns sequencing, but rulegroup evaluation can dispatch to generated kernels.
 
-`CompactState boundary -> FullState + GenericTurn + GenericRulegroups` is the current compact generic bridge. It accepts compact state at the boundary, materializes full state, runs the generic interpreter path, and copies compact state back out.
+`CompactState boundary -> FullState + InterpretedTurn + InterpretedRulegroups` is the current compact interpreted bridge. It accepts compact state at the boundary, materializes full state, runs the interpreter path, and copies compact state back out.
 
 `CompactState + SpecializedTurn + SpecializedRulegroups` is the desired solver/generator runtime. It should execute a whole settled turn directly on compact state, without materializing full state.
 
 `FullState + SpecializedTurn + SpecializedRulegroups` is possible, but it is not the main target. It may be useful as a migration step or gameplay optimization, but the solver/generator goal is specialized compact execution.
+
+The useful turn/rulegroup matrix is:
+
+| Turn driver | InterpretedRulegroups | SpecializedRulegroups |
+| --- | --- | --- |
+| `InterpretedTurn` | pure interpreter / oracle | current hybrid optimization |
+| `SpecializedTurn` | not a coherent target | full per-game codegen |
+
+So `SpecializedTurn` normally implies `SpecializedRulegroups`. The rulegroup axis is most important for the interpreted turn driver, where the runtime can either walk rule data structures or call generated rulegroup kernels.
+
+## CompactState Identity
+
+`CompactState` should be precise enough to reconstruct the future of the level.
+
+It includes:
+
+- object occupancy bitsets
+- complete RNG state, not just an RNG seed or identity
+
+It excludes:
+
+- transient movement words after a turn has settled
+- visual viewport state such as flickscreen/zoomscreen
+- undo/audio/UI/debug scratch
+
+Solver and generator graph nodes should be settled states. In that mode, `again` is drained before insertion, so there should be no pending-again bit in normal compact identity. A compact turn that cannot drain `again` must report failure/fallback rather than returning a half-settled solver node.
+
+Current level index is not part of the first solver compact-state target because solver runs a particular level as its state space. Multi-level solving can add an explicit level identity field later if it becomes a real use case.
+
+Checkpoint/restart state is not part of the first solver compact-state target. For solver/generator purposes, `restart` is treated as a terminal failed edge rather than as a mechanic that rewinds to a checkpoint.
 
 ## Turn Unification
 
@@ -73,11 +105,28 @@ rather than as a separate tick function.
 The meaningful distinction is `again` policy:
 
 ```text
-turn(state, input, AgainPolicy::LeavePending)
-turn(state, input, AgainPolicy::ResolveImmediately)
+turn(state, input, AgainPolicy::Yield)
+turn(state, input, AgainPolicy::Drain)
 ```
 
-Normal play should use `LeavePending`. Solver and generator should use `ResolveImmediately`.
+Normal play should use `Yield`. Solver and generator should use `Drain`.
+
+For ergonomics, interpreted paths may carry the policy in `TurnOptions`. For specialized compact turns, the policy should be monomorphized where performance matters, either with template parameters or separate entrypoints. Solver/generator hot paths should not branch on again policy inside the inner loop.
+
+The return value also needs to be part of the architecture. A turn returns a structured result, not just a boolean:
+
+```text
+TurnResult {
+    changed
+    won
+    restarted
+    transitioned
+    commands / command effects
+    optional heuristic hint for solver/generator
+}
+```
+
+Normal play may need audio/UI command effects. Solver/generator can use a reduced result shape, but it must still preserve semantic flags such as `won`, `restarted`, and `changed`.
 
 ## Rename Plan
 
@@ -91,10 +140,10 @@ Rename runtime state terms:
 Rename turn concepts:
 
 - `step` / `tick` architecture names -> `turn`
-- `interpreterStep` / `interpreterTick` -> `genericTurn`
-- `interpreterStepWithCompiledRuleLoops` / `interpreterTickWithCompiledRuleLoops` -> a single full-state generic turn function with optional specialized rulegroup callbacks
+- `interpreterStep` / `interpreterTick` -> `interpretedTurn`
+- `interpreterStepWithCompiledRuleLoops` / `interpreterTickWithCompiledRuleLoops` -> a single full-state interpreted turn function with optional specialized rulegroup callbacks
 - `RuntimeStepOptions` -> `TurnOptions`
-- add `AgainPolicy::{LeavePending, ResolveImmediately}`
+- add `AgainPolicy::{Yield, Drain}`
 
 Rename specialization concepts:
 
@@ -103,7 +152,7 @@ Rename specialization concepts:
 - `CompiledTickBackend` -> avoid as a central architecture term; use explicit full-state specialized-turn naming only if that path becomes deliberate
 - `CompiledCompactTickBackend` -> `SpecializedCompactTurnBackend`
 - `CompiledCompactTickStateView` -> `CompactStateView`
-- `compiledCompactTickInterpreterBridge` -> `compactStateGenericTurnBridge`
+- `compiledCompactTickInterpreterBridge` -> `compactStateInterpretedTurnBridge`
 
 Rename tool-facing compact terminology:
 
@@ -111,7 +160,12 @@ Rename tool-facing compact terminology:
 - `compiled_tick_*` architecture wording -> `specialized_turn_*`
 - keep `PS_INPUT_TICK` unchanged, because it is a PuzzleScript input value rather than an architecture term
 
-The migration should be layered. Temporary aliases are acceptable while keeping the tree buildable, but the final cleanup should remove aliases unless there is an explicit compatibility requirement.
+The migration should be layered:
+
+1. Introduce new names with temporary aliases and keep tests green.
+2. Flip call sites and generated-code emission.
+3. Rename public tools/API names.
+4. Remove aliases unless there is an explicit compatibility requirement.
 
 ## Test Plan
 
@@ -134,7 +188,7 @@ For the later implementation rename, run:
 Search hygiene for the final rename:
 
 ```sh
-rg "\bSession\b|CompactSolverState|compiled tick|compact_tick|CompiledCompactTick|CompiledTick" native/src src Makefile ProgressReport.md Refactor.md
+rg "\bSession\b|CompactSolverState|compiled tick|compact_tick|CompiledCompactTick|CompiledTick|Tick" native/src src Makefile ProgressReport.md Refactor.md
 ```
 
 Remaining hits should be intentional legacy references, generated compatibility shims, or PuzzleScript's `PS_INPUT_TICK`.
@@ -149,6 +203,6 @@ The terminology cleanup is allowed to be breaking once implementation begins.
 
 "Tick" should refer to PuzzleScript input/event behavior, not the architecture.
 
-The main optimization goal remains `CompactState + SpecializedTurn + SpecializedRulegroups`.
+The main optimization goal remains `CompactState + SpecializedTurn + SpecializedRulegroups + AgainPolicy::Drain`.
 
 `FullState + SpecializedTurn + SpecializedRulegroups` is optional and should not be treated as a required milestone.
