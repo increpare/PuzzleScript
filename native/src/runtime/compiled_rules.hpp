@@ -53,6 +53,8 @@ struct CompiledTickBackend {
 struct CompiledCompactTickStateView {
     uint64_t* objectBits = nullptr;
     size_t objectBitWordCount = 0;
+    MaskWord* movementWords = nullptr;
+    size_t movementWordCount = 0;
     int32_t width = 0;
     int32_t height = 0;
     uint8_t* randomStateS = nullptr;

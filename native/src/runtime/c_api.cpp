@@ -1,14 +1,24 @@
 #include "runtime/core.hpp"
 #include "runtime/compiled_rules.hpp"
 
+#include <algorithm>
+#include <cstdlib>
 #include <cstring>
+#include <iostream>
+#include <vector>
 
  #include "compiler/lower_to_runtime.hpp"
  #include "compiler/parser.hpp"
 
 using puzzlescript::CompileResult;
+using puzzlescript::CompiledCompactTickApplyOutcome;
+using puzzlescript::CompiledCompactTickBackend;
+using puzzlescript::CompiledCompactTickStateView;
 using puzzlescript::Error;
 using puzzlescript::Game;
+using puzzlescript::kMaskWordBits;
+using puzzlescript::MaskWordUnsigned;
+using puzzlescript::RuntimeStepOptions;
 using puzzlescript::Session;
 
 struct ps_game {
@@ -42,6 +52,107 @@ char* duplicateString(const std::string& value) {
     char* buffer = new char[value.size() + 1];
     std::memcpy(buffer, value.c_str(), value.size() + 1);
     return buffer;
+}
+
+struct CompactOracleState {
+    std::vector<uint64_t> objectBits;
+    std::vector<puzzlescript::MaskWord> movementWords;
+    Session::RandomState randomState;
+};
+
+uint32_t compactOracleTrailingZeros(MaskWordUnsigned value) {
+    if constexpr (sizeof(MaskWordUnsigned) <= sizeof(unsigned int)) {
+        return static_cast<uint32_t>(__builtin_ctz(static_cast<unsigned int>(value)));
+    } else {
+        return static_cast<uint32_t>(__builtin_ctzll(static_cast<unsigned long long>(value)));
+    }
+}
+
+CompactOracleState compactOracleStateFromSession(const Session& session) {
+    CompactOracleState state;
+    state.randomState = session.randomState;
+    state.movementWords = session.liveMovements;
+    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const int32_t objectCount = session.game ? session.game->objectCount : 0;
+    state.objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
+    if (objectCount <= 0 || tileCount <= 0 || cellWordCount == 0) {
+        return state;
+    }
+    const int32_t stride = session.game->strideObject;
+    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
+        const size_t sourceBase = static_cast<size_t>(tileIndex * stride);
+        const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
+        const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+        for (int32_t word = 0; word < stride; ++word) {
+            MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(session.liveLevel.objects[sourceBase + static_cast<size_t>(word)]);
+            while (bits != 0) {
+                const uint32_t bit = compactOracleTrailingZeros(bits);
+                const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
+                if (objectId < objectCount) {
+                    state.objectBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
+                }
+                bits &= bits - 1;
+            }
+        }
+    }
+    return state;
+}
+
+bool compactOracleStatesEqual(const CompactOracleState& lhs, const CompactOracleState& rhs) {
+    return lhs.objectBits == rhs.objectBits
+        && lhs.movementWords == rhs.movementWords
+        && lhs.randomState.s == rhs.randomState.s
+        && lhs.randomState.i == rhs.randomState.i
+        && lhs.randomState.j == rhs.randomState.j
+        && lhs.randomState.valid == rhs.randomState.valid;
+}
+
+void debugCompactOracleStateMismatch(const CompactOracleState& compact, const CompactOracleState& interpreter) {
+    if (std::getenv("PS_COMPACT_ORACLE_DEBUG") == nullptr) {
+        return;
+    }
+    if (compact.objectBits != interpreter.objectBits) {
+        const size_t count = std::min(compact.objectBits.size(), interpreter.objectBits.size());
+        for (size_t index = 0; index < count; ++index) {
+            if (compact.objectBits[index] != interpreter.objectBits[index]) {
+                std::cerr << "compact oracle objectBits mismatch index=" << index
+                          << " compact=" << compact.objectBits[index]
+                          << " interpreter=" << interpreter.objectBits[index]
+                          << "\n";
+                return;
+            }
+        }
+        std::cerr << "compact oracle objectBits size mismatch compact=" << compact.objectBits.size()
+                  << " interpreter=" << interpreter.objectBits.size()
+                  << "\n";
+        return;
+    }
+    if (compact.movementWords != interpreter.movementWords) {
+        const size_t count = std::min(compact.movementWords.size(), interpreter.movementWords.size());
+        for (size_t index = 0; index < count; ++index) {
+            if (compact.movementWords[index] != interpreter.movementWords[index]) {
+                std::cerr << "compact oracle movementWords mismatch index=" << index
+                          << " compact=" << compact.movementWords[index]
+                          << " interpreter=" << interpreter.movementWords[index]
+                          << "\n";
+                return;
+            }
+        }
+        std::cerr << "compact oracle movementWords size mismatch compact=" << compact.movementWords.size()
+                  << " interpreter=" << interpreter.movementWords.size()
+                  << "\n";
+        return;
+    }
+    std::cerr << "compact oracle random state mismatch\n";
+}
+
+bool equivalentCompactOracleStepResult(const ps_step_result& lhs, const ps_step_result& rhs) {
+    const bool terminal = lhs.won || rhs.won || lhs.restarted || rhs.restarted || lhs.transitioned || rhs.transitioned;
+    return lhs.changed == rhs.changed
+        && lhs.won == rhs.won
+        && lhs.restarted == rhs.restarted
+        && (terminal || lhs.transitioned == rhs.transitioned);
 }
 
 } // namespace
@@ -227,6 +338,82 @@ ps_step_result ps_session_tick(ps_session* session) {
         return ps_step_result{};
     }
     return puzzlescript::tick(*session->impl);
+}
+
+bool ps_session_compact_tick_oracle_check(
+    const ps_session* session,
+    ps_input input,
+    ps_compact_tick_oracle_info* out_info
+) {
+    if (out_info) {
+        *out_info = ps_compact_tick_oracle_info{};
+        out_info->matched = true;
+    }
+    if (session == nullptr || !session->impl || !session->impl->game) {
+        return false;
+    }
+    const Session& original = *session->impl;
+    if (original.preparedSession.titleScreen || original.preparedSession.textMode) {
+        return true;
+    }
+    const CompiledCompactTickBackend* backend = original.game->compiledCompactTick;
+    if (backend == nullptr || backend->step == nullptr || !backend->support.wholeTurnSupported) {
+        return true;
+    }
+
+    CompactOracleState compact = compactOracleStateFromSession(original);
+    CompiledCompactTickStateView view{
+        compact.objectBits.empty() ? nullptr : compact.objectBits.data(),
+        compact.objectBits.size(),
+        compact.movementWords.empty() ? nullptr : compact.movementWords.data(),
+        compact.movementWords.size(),
+        original.liveLevel.width,
+        original.liveLevel.height,
+        compact.randomState.s.data(),
+        compact.randomState.s.size(),
+        &compact.randomState.i,
+        &compact.randomState.j,
+        &compact.randomState.valid,
+        original.preparedSession.currentLevelIndex,
+    };
+    RuntimeStepOptions options{};
+    options.emitAudio = false;
+    const CompiledCompactTickApplyOutcome compactOutcome = backend->step(*original.game, view, input, options);
+
+    Session interpreter = original;
+    ps_step_result interpreterResult = interpreterStep(interpreter, input, options);
+    settlePendingAgain(interpreter, options);
+
+    bool matched = compactOutcome.handled
+        && equivalentCompactOracleStepResult(compactOutcome.result, interpreterResult);
+    bool stateChecked = false;
+    const bool terminal = compactOutcome.result.won
+        || interpreterResult.won
+        || compactOutcome.result.restarted
+        || interpreterResult.restarted
+        || compactOutcome.result.transitioned
+        || interpreterResult.transitioned;
+    if (matched
+        && !terminal
+        && interpreter.liveLevel.width == original.liveLevel.width
+        && interpreter.liveLevel.height == original.liveLevel.height) {
+        stateChecked = true;
+        const CompactOracleState interpreterState = compactOracleStateFromSession(interpreter);
+        matched = compactOracleStatesEqual(compact, interpreterState);
+        if (!matched) {
+            debugCompactOracleStateMismatch(compact, interpreterState);
+        }
+    }
+
+    if (out_info) {
+        out_info->attempted = true;
+        out_info->handled = compactOutcome.handled;
+        out_info->matched = matched;
+        out_info->state_checked = stateChecked;
+        out_info->compact_result = compactOutcome.result;
+        out_info->interpreter_result = interpreterResult;
+    }
+    return true;
 }
 
 bool ps_session_pending_again(const ps_session* session) {

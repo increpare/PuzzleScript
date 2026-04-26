@@ -280,7 +280,36 @@ std::vector<std::string> loadInputTokensFromJsonFile(const std::filesystem::path
 
 std::optional<ps_input> parseInputToken(const std::string& token);
 
-bool replayInputTokens(ps_session* session, const std::vector<std::string>& tokens, std::vector<std::string>* outSounds) {
+struct ReplayOracleStats {
+    uint64_t compactTickChecks = 0;
+    uint64_t compactTickHandled = 0;
+    uint64_t compactTickStateChecks = 0;
+    uint64_t compactTickFailures = 0;
+    std::string firstFailure;
+};
+
+std::string compactTickOracleMismatchSummary(const ps_compact_tick_oracle_info& info) {
+    std::ostringstream out;
+    out << " handled=" << (info.handled ? 1 : 0)
+        << " state_checked=" << (info.state_checked ? 1 : 0)
+        << " compact(changed=" << (info.compact_result.changed ? 1 : 0)
+        << ",won=" << (info.compact_result.won ? 1 : 0)
+        << ",restarted=" << (info.compact_result.restarted ? 1 : 0)
+        << ",transitioned=" << (info.compact_result.transitioned ? 1 : 0)
+        << ") interpreter(changed=" << (info.interpreter_result.changed ? 1 : 0)
+        << ",won=" << (info.interpreter_result.won ? 1 : 0)
+        << ",restarted=" << (info.interpreter_result.restarted ? 1 : 0)
+        << ",transitioned=" << (info.interpreter_result.transitioned ? 1 : 0)
+        << ")";
+    return out.str();
+}
+
+bool replayInputTokens(
+    ps_session* session,
+    const std::vector<std::string>& tokens,
+    std::vector<std::string>* outSounds,
+    ReplayOracleStats* oracleStats = nullptr
+) {
     if (!session) {
         return false;
     }
@@ -311,6 +340,35 @@ bool replayInputTokens(ps_session* session, const std::vector<std::string>& toke
         if (!input.has_value()) {
             std::cerr << "Unsupported replay input token: " << token << "\n";
             return false;
+        }
+
+        if (oracleStats != nullptr) {
+            ps_compact_tick_oracle_info oracleInfo{};
+            if (!ps_session_compact_tick_oracle_check(session, *input, &oracleInfo)) {
+                ++oracleStats->compactTickFailures;
+                if (oracleStats->firstFailure.empty()) {
+                    oracleStats->firstFailure = "compact tick oracle API failure before input token: " + token;
+                }
+                return false;
+            }
+            if (oracleInfo.attempted) {
+                ++oracleStats->compactTickChecks;
+                if (oracleInfo.handled) {
+                    ++oracleStats->compactTickHandled;
+                }
+                if (oracleInfo.state_checked) {
+                    ++oracleStats->compactTickStateChecks;
+                }
+                if (!oracleInfo.matched) {
+                    ++oracleStats->compactTickFailures;
+                    if (oracleStats->firstFailure.empty()) {
+                        oracleStats->firstFailure = "compact tick oracle mismatch before input token: "
+                            + token
+                            + compactTickOracleMismatchSummary(oracleInfo);
+                    }
+                    return false;
+                }
+            }
         }
 
         ps_step_result stepResult{};
@@ -1969,6 +2027,8 @@ struct SimulationCorpusOptions {
     std::optional<std::string> caseNameFilter;
     bool profileTimers = false;
     bool quiet = false;
+    bool compactTickOracle = false;
+    bool requireCompactTickOracleChecks = false;
 };
 
 struct SimulationCorpusCase {
@@ -1993,6 +2053,10 @@ struct SimulationCaseResult {
     bool passed = false;
     std::string error;
     SimulationCaseTiming timing;
+    uint64_t compactTickOracleChecks = 0;
+    uint64_t compactTickOracleHandled = 0;
+    uint64_t compactTickOracleStateChecks = 0;
+    uint64_t compactTickOracleFailures = 0;
 };
 
 struct SimulationCompileCache {
@@ -2039,6 +2103,10 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
         } else if (arg == "--quiet") {
             options.quiet = true;
             options.progressEvery = 0;
+        } else if (arg == "--compact-tick-oracle") {
+            options.compactTickOracle = true;
+        } else if (arg == "--require-compact-tick-oracle-checks") {
+            options.requireCompactTickOracleChecks = true;
         } else {
             throw std::runtime_error("Unsupported simulation-testdata argument: " + arg);
         }
@@ -2187,7 +2255,11 @@ SimulationCompileCache compileSimulationCorpusGames(const std::vector<Simulation
     return cache;
 }
 
-SimulationCaseResult runSimulationCorpusCase(const SimulationCorpusCase& testCase, ps_game* game) {
+SimulationCaseResult runSimulationCorpusCase(
+    const SimulationCorpusCase& testCase,
+    ps_game* game,
+    bool compactTickOracle
+) {
     SimulationCaseResult result;
     if (game == nullptr) {
         result.error = testCase.name + ": failed to compile source";
@@ -2217,12 +2289,25 @@ SimulationCaseResult runSimulationCorpusCase(const SimulationCorpusCase& testCas
     result.timing.levelLoadUs = elapsedMicrosSince(phaseStart);
 
     phaseStart = std::chrono::steady_clock::now();
-    if (!replayInputTokens(session.get(), testCase.inputs, nullptr)) {
+    ReplayOracleStats oracleStats;
+    ReplayOracleStats* oracleStatsPtr = compactTickOracle ? &oracleStats : nullptr;
+    if (!replayInputTokens(session.get(), testCase.inputs, nullptr, oracleStatsPtr)) {
         result.timing.replayUs = elapsedMicrosSince(phaseStart);
+        result.compactTickOracleChecks = oracleStats.compactTickChecks;
+        result.compactTickOracleHandled = oracleStats.compactTickHandled;
+        result.compactTickOracleStateChecks = oracleStats.compactTickStateChecks;
+        result.compactTickOracleFailures = oracleStats.compactTickFailures;
         result.error = testCase.name + ": failed to replay inputs";
+        if (!oracleStats.firstFailure.empty()) {
+            result.error += "\n" + oracleStats.firstFailure;
+        }
         return result;
     }
     result.timing.replayUs = elapsedMicrosSince(phaseStart);
+    result.compactTickOracleChecks = oracleStats.compactTickChecks;
+    result.compactTickOracleHandled = oracleStats.compactTickHandled;
+    result.compactTickOracleStateChecks = oracleStats.compactTickStateChecks;
+    result.compactTickOracleFailures = oracleStats.compactTickFailures;
 
     phaseStart = std::chrono::steady_clock::now();
     char* serializedRaw = ps_session_serialize_test_string(session.get());
@@ -2454,7 +2539,11 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
             if (!compileCache.errors[caseIndex].empty()) {
                 results[checkIndex].error = compileCache.errors[caseIndex];
             } else {
-                results[checkIndex] = runSimulationCorpusCase(testCase, compileCache.games[caseIndex].get());
+                results[checkIndex] = runSimulationCorpusCase(
+                    testCase,
+                    compileCache.games[caseIndex].get(),
+                    options.compactTickOracle
+                );
             }
             if (results[checkIndex].passed) {
                 ++passed;
@@ -2488,7 +2577,11 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                     if (!compileCache.errors[caseIndex].empty()) {
                         results[checkIndex].error = compileCache.errors[caseIndex];
                     } else {
-                        results[checkIndex] = runSimulationCorpusCase(testCase, compileCache.games[caseIndex].get());
+                        results[checkIndex] = runSimulationCorpusCase(
+                            testCase,
+                            compileCache.games[caseIndex].get(),
+                            options.compactTickOracle
+                        );
                     }
                 }
             }));
@@ -2521,6 +2614,20 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
     const SimulationTimingTotals timings = sumSimulationTimings(results, testdataParseUs);
     SimulationTimingTotals reportedTimings = timings;
     reportedTimings.sourceCompileUs += compileCache.totalCompileUs;
+    uint64_t compactTickOracleChecks = 0;
+    uint64_t compactTickOracleHandled = 0;
+    uint64_t compactTickOracleStateChecks = 0;
+    uint64_t compactTickOracleFailures = 0;
+    for (const auto& result : results) {
+        compactTickOracleChecks += result.compactTickOracleChecks;
+        compactTickOracleHandled += result.compactTickOracleHandled;
+        compactTickOracleStateChecks += result.compactTickOracleStateChecks;
+        compactTickOracleFailures += result.compactTickOracleFailures;
+    }
+    if (options.requireCompactTickOracleChecks && compactTickOracleChecks == 0) {
+        ++failed;
+        std::cerr << "compact tick oracle checks were required but none ran\n";
+    }
     std::vector<int64_t> replayUsByRepeat;
     std::vector<int64_t> sourceCompileUsByRepeat;
     if (options.repeat > 0 && !cases.empty()) {
@@ -2540,7 +2647,14 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
     std::cout << "cpp_simulation_tests_direct passed=" << passed << " failed=" << failed
               << " total=" << totalChecks << " cases=" << cases.size()
               << " repeats=" << options.repeat << " jobs=" << options.jobs
-              << " elapsed_ms=" << usToMs(wallUs) << "\n";
+              << " elapsed_ms=" << usToMs(wallUs);
+    if (options.compactTickOracle || compactTickOracleChecks > 0 || compactTickOracleFailures > 0) {
+        std::cout << " compact_tick_oracle_checks=" << compactTickOracleChecks
+                  << " compact_tick_oracle_handled=" << compactTickOracleHandled
+                  << " compact_tick_oracle_state_checks=" << compactTickOracleStateChecks
+                  << " compact_tick_oracle_failures=" << compactTickOracleFailures;
+    }
+    std::cout << "\n";
     if (options.profileTimers) {
         std::cout << "cpp_simulation_profile"
                   << " cases=" << cases.size()
@@ -3902,10 +4016,23 @@ bool compactLooksLikeSimplePushRules(
             if (!patternHasPlayer && !patternHasPush) {
                 return false;
             }
+            const bool movementPresent = pattern.hasMovementsPresent
+                && maskHasAnyBit(game, pattern.movementsPresent, game.movementWordCount);
+            const bool replacementSetsMovement = maskHasAnyBit(
+                game,
+                pattern.replacement->movementsSet,
+                game.movementWordCount
+            );
+            if (patternHasPlayer && (!movementPresent || !replacementSetsMovement)) {
+                return false;
+            }
+            if (patternHasPush && (movementPresent || !replacementSetsMovement)) {
+                return false;
+            }
             sawPlayer = sawPlayer || patternHasPlayer;
             sawMovement = sawMovement
-                || (pattern.hasMovementsPresent && maskHasAnyBit(game, pattern.movementsPresent, game.movementWordCount))
-                || maskHasAnyBit(game, pattern.replacement->movementsSet, game.movementWordCount);
+                || movementPresent
+                || replacementSetsMovement;
             sawPush = sawPush || patternHasPush;
         }
         if (!sawPlayer || !sawPush || !sawMovement) {
@@ -5411,7 +5538,8 @@ std::string generateCompiledRulesCpp(
     bool emitGlobalFinder = true,
     std::string_view backendAccessorSymbol = {},
     std::string_view tickBackendAccessorSymbol = {},
-    std::string_view compactTickBackendAccessorSymbol = {}
+    std::string_view compactTickBackendAccessorSymbol = {},
+    bool compactTickOnly = false
 ) {
     std::ostringstream out;
     const std::string safeSymbol = safeCppIdentifier(symbol);
@@ -5438,29 +5566,31 @@ std::string generateCompiledRulesCpp(
         const CompactTickSupport compactTickSupport = compactTickSupportForGame(game);
         uint32_t sourceCompiledRules = 0;
         uint32_t sourceCompiledGroups = 0;
-        for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
-            const auto& group = game.rules[groupIndex];
-            if (!isCompilableGroup(group, options)) {
-                continue;
-            }
-            ++sourceCompiledGroups;
-            sourceCompiledRules += static_cast<uint32_t>(group.size());
-            if (!group[0].isRandom) {
-                for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                    emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, false, groupIndex, ruleIndex);
+        if (!compactTickOnly) {
+            for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
+                const auto& group = game.rules[groupIndex];
+                if (!isCompilableGroup(group, options)) {
+                    continue;
+                }
+                ++sourceCompiledGroups;
+                sourceCompiledRules += static_cast<uint32_t>(group.size());
+                if (!group[0].isRandom) {
+                    for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                        emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, false, groupIndex, ruleIndex);
+                    }
                 }
             }
-        }
-        for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
-            const auto& group = game.lateRules[groupIndex];
-            if (!isCompilableGroup(group, options)) {
-                continue;
-            }
-            ++sourceCompiledGroups;
-            sourceCompiledRules += static_cast<uint32_t>(group.size());
-            if (!group[0].isRandom) {
-                for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                    emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, true, groupIndex, ruleIndex);
+            for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
+                const auto& group = game.lateRules[groupIndex];
+                if (!isCompilableGroup(group, options)) {
+                    continue;
+                }
+                ++sourceCompiledGroups;
+                sourceCompiledRules += static_cast<uint32_t>(group.size());
+                if (!group[0].isRandom) {
+                    for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                        emitRuleFunctions(out, game, group[ruleIndex], sourceIndex, true, groupIndex, ruleIndex);
+                    }
                 }
             }
         }
@@ -5469,6 +5599,12 @@ std::string generateCompiledRulesCpp(
 
         out << "CompiledRuleApplyOutcome apply_source_" << sourceIndex << "(Session& session, int32_t groupIndex, bool late, CommandState& commands) {\n"
             << "    const Game& game = *session.game;\n"
+            << (compactTickOnly
+                ? "    (void)game;\n    (void)groupIndex;\n    (void)late;\n    (void)commands;\n    return {false, false};\n}\n\n"
+                : "")
+            ;
+        if (!compactTickOnly) {
+            out
             << "    if (late) {\n"
             << "    switch (groupIndex) {\n";
         for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
@@ -5548,9 +5684,10 @@ std::string generateCompiledRulesCpp(
         out << "        default: return {false, false};\n"
             << "    }\n"
             << "}\n\n";
+        }
 
         out << "CompiledTickRuleGroupsOutcome apply_early_groups_source_" << sourceIndex << "(Session& session, CommandState& commands, std::vector<bool>* bannedGroups) {\n";
-        if (!areAllGroupsCompilable(game.rules, options)) {
+        if (compactTickOnly || !areAllGroupsCompilable(game.rules, options)) {
             out << "    (void)session;\n"
                 << "    (void)commands;\n"
                 << "    (void)bannedGroups;\n"
@@ -5601,7 +5738,7 @@ std::string generateCompiledRulesCpp(
         }
 
         out << "CompiledTickRuleGroupsOutcome apply_late_groups_source_" << sourceIndex << "(Session& session, CommandState& commands, std::vector<bool>* bannedGroups) {\n";
-        if (!areAllGroupsCompilable(game.lateRules, options)) {
+        if (compactTickOnly || !areAllGroupsCompilable(game.lateRules, options)) {
             out << "    (void)session;\n"
                 << "    (void)commands;\n"
                 << "    (void)bannedGroups;\n"
@@ -5660,18 +5797,22 @@ std::string generateCompiledRulesCpp(
             << "};\n\n";
 
         out << "CompiledTickApplyOutcome tick_step_source_" << sourceIndex << "(Session& session, ps_input input, RuntimeStepOptions options) {\n"
-            << "    return {true, puzzlescript::interpreterStepWithCompiledRuleLoops(session, input, options, apply_early_groups_source_" << sourceIndex << ", apply_late_groups_source_" << sourceIndex << ")};\n"
+            << (compactTickOnly
+                ? "    (void)session;\n    (void)input;\n    (void)options;\n    return {false, {}};\n"
+                : "    return {true, puzzlescript::interpreterStepWithCompiledRuleLoops(session, input, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
             << "CompiledTickApplyOutcome tick_source_" << sourceIndex << "(Session& session, RuntimeStepOptions options) {\n"
-            << "    return {true, puzzlescript::interpreterTickWithCompiledRuleLoops(session, options, apply_early_groups_source_" << sourceIndex << ", apply_late_groups_source_" << sourceIndex << ")};\n"
+            << (compactTickOnly
+                ? "    (void)session;\n    (void)options;\n    return {false, {}};\n"
+                : "    return {true, puzzlescript::interpreterTickWithCompiledRuleLoops(session, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
             << "const CompiledTickBackend tick_backend_" << sourceIndex << " = {\n"
             << "    " << source.hash << "ULL,\n"
             << "    " << cppStringLiteral(source.path.string()) << ",\n"
             << "    tick_step_source_" << sourceIndex << ",\n"
             << "    tick_source_" << sourceIndex << ",\n"
-            << "    {" << (tickSupport.wholeTurnSupported ? "true" : "false")
-            << ", " << cppStringLiteral(tickSupport.wholeTurnFallbackReason) << "},\n"
+            << "    {" << (!compactTickOnly && tickSupport.wholeTurnSupported ? "true" : "false")
+            << ", " << cppStringLiteral(compactTickOnly ? "compact_tick_only" : tickSupport.wholeTurnFallbackReason) << "},\n"
             << "};\n\n"
             << "CompiledCompactTickApplyOutcome compact_tick_step_source_" << sourceIndex << "(\n"
             << "    const Game& game,\n"
@@ -6025,7 +6166,8 @@ uint32_t writeCompiledRulesCppDirectory(
     const std::filesystem::path& emitSourcesList,
     std::string_view symbol,
     const CompiledRulesOptions& options,
-    const CompiledRulesCoverage& coverage
+    const CompiledRulesCoverage& coverage,
+    bool compactTickOnly = false
 ) {
     const std::string safeSymbol = safeCppIdentifier(symbol);
     std::vector<std::filesystem::path> generatedPaths;
@@ -6057,7 +6199,8 @@ uint32_t writeCompiledRulesCppDirectory(
             false,
             backendSymbol,
             tickBackendSymbol,
-            compactTickBackendSymbol
+            compactTickBackendSymbol,
+            compactTickOnly
         );
         if (writeFileIfChanged(cppPath, generated)) {
             ++wroteCount;
@@ -6074,7 +6217,7 @@ uint32_t writeCompiledRulesCppDirectory(
             backendAccessorSymbols,
             tickBackendAccessorSymbols,
             compactTickBackendAccessorSymbols,
-            coverage
+            compactTickOnly ? CompiledRulesCoverage{} : coverage
         )
     )) {
         ++wroteCount;
@@ -6156,6 +6299,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
     std::string symbol = "puzzlescript_compiled_rules";
     CompiledRulesOptions options;
     bool statsOnly = false;
+    bool compactTickOnly = false;
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--emit-cpp") {
@@ -6185,6 +6329,8 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
             symbol = argv[index];
         } else if (arg == "--stats-only") {
             statsOnly = true;
+        } else if (arg == "--compact-tick-only") {
+            compactTickOnly = true;
         } else if (arg == "--max-rows") {
             if (++index >= argc) {
                 throw std::runtime_error("--max-rows requires a positive integer");
@@ -6276,7 +6422,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
     uint32_t wroteCount = 0;
     std::string outputPath;
     if (emitCpp.has_value()) {
-        const std::string generated = generateCompiledRulesCpp(sources, symbol, options);
+        const std::string generated = generateCompiledRulesCpp(sources, symbol, options, true, {}, {}, {}, compactTickOnly);
         wroteCount = writeFileIfChanged(*emitCpp, generated) ? 1U : 0U;
         outputPath = emitCpp->string();
     } else {
@@ -6286,7 +6432,8 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
             *emitSourcesList,
             symbol,
             options,
-            coverage
+            coverage,
+            compactTickOnly
         );
         outputPath = emitCppDir->string();
     }
@@ -6295,6 +6442,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
               << " max_rows=" << options.maxRows
               << " groups=" << coverage.compiledGroups
               << " rules=" << coverage.compiledRules
+              << (compactTickOnly ? " compact_tick_only=true" : "")
               << " output=" << outputPath
               << " wrote=" << wroteCount
               << "\n";
@@ -6751,12 +6899,13 @@ void printCompileRulesHelp() {
     std::cout
         << "Usage: puzzlescript_cpp compile-rules game.txt --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
-        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N] [--max-compiled-rules-per-source N] [--max-generated-lines-per-source N]\n"
+        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N] [--compact-tick-only] [--max-compiled-rules-per-source N] [--max-generated-lines-per-source N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus --stats-only [--max-rows N] [--coverage-json out.json]\n\n"
         << "Emits C++ compiled-rule kernels for conservative deterministic rule groups.\n"
         << "The generated file, or sharded source directory, is meant to be linked into\n"
         << "solver/generator builds through the Makefile SPECIALIZE=true workflow. Use\n"
         << "--stats-only to print coverage and miss buckets without writing generated code. --coverage-json writes per-source coverage. --max-rows defaults to 1;\n"
+        << "--compact-tick-only emits compact tick backends and registry stubs without generated rule kernels, useful for compact oracle coverage builds.\n"
         << "higher values enable experimental deterministic multi-row kernels. --max-compiled-rules-per-source and --max-generated-lines-per-source skip oversized sharded sources so the runtime can fall back for those games.\n\n"
         << "Examples:\n"
         << "  puzzlescript_cpp compile-rules src/demo/sokoban_basic.txt --emit-cpp build/compiled-rules/sokoban.cpp --symbol sokoban\n"
@@ -6768,7 +6917,7 @@ void printCompileRulesHelp() {
 void printTestHelp() {
     std::cout
         << "Usage: puzzlescript_cpp test js-parity generated-js-parity-data.json [options]\n"
-        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--quiet]\n"
+        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--compact-tick-oracle] [--require-compact-tick-oracle-checks] [--quiet]\n"
         << "       puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js [--progress-every N]\n"
         << "       puzzlescript_cpp test diagnostics parser-corpus.bundle.ndjson\n\n"
         << "simulation-corpus and diagnostics-corpus read the original testdata.js and\n"
@@ -6777,6 +6926,8 @@ void printTestHelp() {
         << "from the original JavaScript implementation for deeper runtime trace checks.\n\n"
         << "simulation-corpus profiling reports source compile/load/replay/serialize timings\n"
         << "plus runtime counters for rule scans, pattern tests, replacements, mask rebuilds, and compiled dispatch.\n\n"
+        << "With --compact-tick-oracle, simulation-corpus checks linked generated compact tick\n"
+        << "entrypoints against the interpreter before replaying each ordinary input.\n\n"
         << "For optimization work, --top-slow-cases lists the slowest games by phase, and\n"
         << "--case-index/--case-name reruns one slow case with counters and repeats.\n\n"
         << "Usually use the Makefile wrappers:\n"

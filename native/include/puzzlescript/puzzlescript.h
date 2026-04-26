@@ -77,6 +77,15 @@ typedef struct ps_step_result {
     const ps_audio_event* ui_audio_events;
 } ps_step_result;
 
+typedef struct ps_compact_tick_oracle_info {
+    bool attempted;
+    bool handled;
+    bool matched;
+    bool state_checked;
+    ps_step_result compact_result;
+    ps_step_result interpreter_result;
+} ps_compact_tick_oracle_info;
+
 typedef struct ps_benchmark_result {
     uint64_t iterations;
     uint32_t threads;
@@ -125,6 +134,10 @@ void ps_session_set_unit_testing(ps_session* session, bool enabled);
 bool ps_session_load_level(ps_session* session, int32_t level_index, ps_error** out_error);
 ps_step_result ps_session_step(ps_session* session, ps_input input);
 ps_step_result ps_session_tick(ps_session* session);
+bool ps_session_compact_tick_oracle_check(
+    const ps_session* session,
+    ps_input input,
+    ps_compact_tick_oracle_info* out_info);
 bool ps_session_pending_again(const ps_session* session);
 bool ps_session_undo(ps_session* session);
 bool ps_session_restart(ps_session* session);

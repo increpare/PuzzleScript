@@ -73,7 +73,11 @@ void materializeCompactBridgeState(const Game& game, CompiledCompactTickStateVie
             }
         }
     }
-    session.liveMovements.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(game.strideMovement, 0)), 0);
+    const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * std::max(game.strideMovement, 0));
+    session.liveMovements.assign(movementWordCount, 0);
+    if (state.movementWords != nullptr && state.movementWordCount == movementWordCount) {
+        std::copy(state.movementWords, state.movementWords + state.movementWordCount, session.liveMovements.begin());
+    }
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
     session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
     session.pendingCreateMask.clear();
@@ -135,6 +139,9 @@ void copyCompactBridgeStateBack(const Session& session, CompiledCompactTickState
         *state.randomStateValid = session.randomState.valid;
         std::copy(session.randomState.s.begin(), session.randomState.s.end(), state.randomStateS);
     }
+    if (state.movementWords != nullptr && state.movementWordCount == session.liveMovements.size()) {
+        std::copy(session.liveMovements.begin(), session.liveMovements.end(), state.movementWords);
+    }
 }
 
 } // namespace
@@ -157,7 +164,7 @@ CompiledCompactTickApplyOutcome compiledCompactTickInterpreterBridge(
         }
     }
     materializeCompactBridgeState(game, state, *session);
-    ps_step_result result = step(*session, input, options);
+    ps_step_result result = interpreterStep(*session, input, options);
     settlePendingAgain(*session, options);
     copyCompactBridgeStateBack(*session, state);
     return {true, result};
