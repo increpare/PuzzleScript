@@ -754,6 +754,11 @@ attribute graph cost -> no-allocation hash -> flat visited table
     First target: `src/tests/solver_smoke_tests/one_move.txt`.
   - [x] Generate direct object-bitset input seeding and fixed movement execution
     for that fixture.
+  - [x] Generalize simple push compact ticks to multiple pushed objects on one
+    collision layer, including property/aggregate push cells whose possible
+    object ids are all in the pushed-object set.
+  - [x] Generalize compact win checks from one object pair to multiple simple
+    `all subject on target` object pairs.
   - [ ] Compare the compact tick output against the interpreter fallback inside a
     debug/oracle mode before allowing solver use.
   - [ ] Only then fold compact heuristic/hash computation into the compact tick
@@ -768,6 +773,10 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Supports a conservative simple push shape in either common win orientation:
     `all Crate on Target` or `all Target on Crate`, including multiple crates
     and targets.
+  - Supports multiple independent simple win pairs, such as crate-swap games
+    with `all Target1 on Crate1` and `all Target2 on Crate2`.
+  - Supports property/aggregate push cells when the aggregate is known to contain
+    only the pushed objects and all pushed objects share one collision layer.
   - Generated compact tick falls back if audio emission is requested; solver
     calls use `emitAudio=false`, so sound declarations do not block compact
     state stepping.
@@ -801,12 +810,22 @@ attribute graph cost -> no-allocation hash -> flat visited table
   solver_tests compact tick source support:
     before simple-push win orientation expansion: 4/182
     after simple-push win orientation expansion: 5/182
+    after multi-win aggregate-push expansion: 6/182
 
   a cliche for bedtime.txt specialized compact solver:
     compact_tick_attempts=1498591
     compact_tick_hits=1498572
     compact_tick_fallbacks=19
     compact_tick_unsupported=0
+
+  crate swap.txt specialized compact solver:
+    compact_tick_attempts=73676
+    compact_tick_hits=73676
+    compact_tick_fallbacks=0
+    compact_tick_unsupported=0
+    interpreted_step_ms=90.6633
+    compact_step_ms=2.0415
+    step_speedup=44.4x
   ```
 
   Acceptance criteria:

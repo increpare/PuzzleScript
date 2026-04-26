@@ -3752,10 +3752,12 @@ struct CompactTickSupport {
     int32_t playerLayer = -1;
     std::vector<int32_t> playerLayerObjectIds;
     int32_t pushObjectId = -1;
+    std::vector<int32_t> pushObjectIds;
     int32_t pushLayer = -1;
     std::vector<int32_t> pushLayerObjectIds;
     int32_t winSubjectObjectId = -1;
     int32_t winTargetObjectId = -1;
+    std::vector<std::pair<int32_t, int32_t>> winObjectPairs;
 };
 
 std::optional<int32_t> singleObjectIdInMask(
@@ -3776,6 +3778,22 @@ std::optional<int32_t> singleObjectIdInMask(
         found = objectId;
     }
     return found;
+}
+
+std::vector<int32_t> objectIdsInMask(
+    const puzzlescript::Game& game,
+    puzzlescript::MaskOffset offset
+) {
+    std::vector<int32_t> ids;
+    if (offset == puzzlescript::kNullMaskOffset) {
+        return ids;
+    }
+    for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
+        if (maskBitIsSet(game, offset, static_cast<uint32_t>(objectId))) {
+            ids.push_back(objectId);
+        }
+    }
+    return ids;
 }
 
 int32_t countObjectInLevel(const puzzlescript::Game& game, const puzzlescript::LevelTemplate& level, int32_t objectId) {
@@ -3816,18 +3834,23 @@ bool compactRuleHasEllipsis(const puzzlescript::Rule& rule) {
 
 bool compactPatternHasUnsupportedConstraints(const puzzlescript::Pattern& pattern) {
     return pattern.hasObjectsMissing
-        || pattern.hasMovementsMissing
-        || pattern.anyObjectsCount != 0;
+        || pattern.hasMovementsMissing;
 }
 
 bool compactLooksLikeSimplePushRules(
     const puzzlescript::Game& game,
     int32_t playerObjectId,
-    int32_t pushObjectId
+    const std::vector<int32_t>& pushObjectIds
 ) {
     if (game.rules.size() != 1 || game.rules.front().empty() || !game.lateRules.empty()) {
         return false;
     }
+    if (pushObjectIds.empty()) {
+        return false;
+    }
+    const auto isPushObject = [&](int32_t objectId) {
+        return std::find(pushObjectIds.begin(), pushObjectIds.end(), objectId) != pushObjectIds.end();
+    };
     for (const auto& rule : game.rules.front()) {
         if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
             return false;
@@ -3846,17 +3869,34 @@ bool compactLooksLikeSimplePushRules(
                 || pattern.replacement->hasRandomDirMask) {
                 return false;
             }
-            const auto objectId = singleObjectIdInMask(game, pattern.objectsPresent);
-            if (!objectId.has_value()) {
+            const std::vector<int32_t> objectIds = objectIdsInMask(game, pattern.objectsPresent);
+            bool patternHasPlayer = false;
+            bool patternHasPush = false;
+            for (const int32_t objectId : objectIds) {
+                patternHasPlayer = patternHasPlayer || objectId == playerObjectId;
+                patternHasPush = patternHasPush || isPushObject(objectId);
+            }
+            for (const auto& anyObjectIds : pattern.anyObjectAnchorIds) {
+                if (anyObjectIds.empty()) {
+                    return false;
+                }
+                bool anyMaskIsPushOnly = true;
+                for (const int32_t objectId : anyObjectIds) {
+                    if (!isPushObject(objectId)) {
+                        anyMaskIsPushOnly = false;
+                        break;
+                    }
+                }
+                patternHasPush = patternHasPush || anyMaskIsPushOnly;
+            }
+            if (!patternHasPlayer && !patternHasPush) {
                 return false;
             }
-            sawPlayer = sawPlayer || *objectId == playerObjectId;
+            sawPlayer = sawPlayer || patternHasPlayer;
             sawMovement = sawMovement
                 || (pattern.hasMovementsPresent && maskHasAnyBit(game, pattern.movementsPresent, game.movementWordCount))
                 || maskHasAnyBit(game, pattern.replacement->movementsSet, game.movementWordCount);
-            if (*objectId == pushObjectId) {
-                sawPush = true;
-            }
+            sawPush = sawPush || patternHasPush;
         }
         if (!sawPlayer || !sawPush || !sawMovement) {
             return false;
@@ -3912,53 +3952,80 @@ CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
         support.fallbackReason = "player_layer_empty";
         return support;
     }
-    if (game.winConditions.size() != 1) {
+    if (game.winConditions.empty()) {
         support.fallbackReason = "win_condition_not_single";
         return support;
     }
-    const auto& condition = game.winConditions.front();
-    if (condition.quantifier != 1 || condition.aggr1 || condition.aggr2) {
-        support.fallbackReason = "win_condition_not_simple_all";
-        return support;
+    std::vector<int32_t> winSubjects;
+    std::vector<int32_t> winTargets;
+    for (const auto& condition : game.winConditions) {
+        if (condition.quantifier != 1 || condition.aggr1 || condition.aggr2) {
+            support.fallbackReason = "win_condition_not_simple_all";
+            return support;
+        }
+        const auto winSubject = singleObjectIdInMask(game, condition.filter1);
+        const auto winTarget = singleObjectIdInMask(game, condition.filter2);
+        if (!winSubject.has_value() || !winTarget.has_value()) {
+            support.fallbackReason = "win_condition_mask_not_single_object";
+            return support;
+        }
+        winSubjects.push_back(*winSubject);
+        winTargets.push_back(*winTarget);
+        support.winObjectPairs.emplace_back(*winSubject, *winTarget);
     }
-    const auto winSubject = singleObjectIdInMask(game, condition.filter1);
-    const auto winTarget = singleObjectIdInMask(game, condition.filter2);
-    if (!winSubject.has_value() || !winTarget.has_value()) {
-        support.fallbackReason = "win_condition_mask_not_single_object";
-        return support;
-    }
-    support.winSubjectObjectId = *winSubject;
-    support.winTargetObjectId = *winTarget;
-    const bool movementOnly = game.rules.empty() && *winSubject == *playerObjectId;
-    std::optional<int32_t> simplePushObjectId;
+    support.winSubjectObjectId = winSubjects.front();
+    support.winTargetObjectId = winTargets.front();
+    const bool movementOnly = game.rules.empty()
+        && std::all_of(winSubjects.begin(), winSubjects.end(), [&](int32_t objectId) { return objectId == *playerObjectId; });
+    std::vector<int32_t> simplePushObjectIds;
     if (!game.rules.empty()) {
-        if (*winSubject != *playerObjectId && compactLooksLikeSimplePushRules(game, *playerObjectId, *winSubject)) {
-            simplePushObjectId = *winSubject;
-        } else if (*winTarget != *playerObjectId && compactLooksLikeSimplePushRules(game, *playerObjectId, *winTarget)) {
-            simplePushObjectId = *winTarget;
+        std::vector<int32_t> subjectCandidates;
+        std::vector<int32_t> targetCandidates;
+        for (const int32_t objectId : winSubjects) {
+            if (objectId != *playerObjectId && std::find(subjectCandidates.begin(), subjectCandidates.end(), objectId) == subjectCandidates.end()) {
+                subjectCandidates.push_back(objectId);
+            }
+        }
+        for (const int32_t objectId : winTargets) {
+            if (objectId != *playerObjectId && std::find(targetCandidates.begin(), targetCandidates.end(), objectId) == targetCandidates.end()) {
+                targetCandidates.push_back(objectId);
+            }
+        }
+        if (compactLooksLikeSimplePushRules(game, *playerObjectId, targetCandidates)) {
+            simplePushObjectIds = std::move(targetCandidates);
+        } else if (compactLooksLikeSimplePushRules(game, *playerObjectId, subjectCandidates)) {
+            simplePushObjectIds = std::move(subjectCandidates);
         }
     }
-    const bool simplePush = simplePushObjectId.has_value();
+    const bool simplePush = !simplePushObjectIds.empty();
     if (!movementOnly && !simplePush) {
         support.fallbackReason = game.rules.empty() ? "win_subject_not_player" : "rules_not_compact";
         return support;
     }
     if (simplePush) {
-        if (*simplePushObjectId < 0 || static_cast<size_t>(*simplePushObjectId) >= game.objectsById.size()) {
-            support.fallbackReason = "push_object_missing";
-            return support;
-        }
-        const int32_t pushLayer = game.objectsById[static_cast<size_t>(*simplePushObjectId)].layer;
-        if (pushLayer < 0 || static_cast<size_t>(pushLayer) >= game.layerMaskOffsets.size()) {
-            support.fallbackReason = "push_layer_missing";
-            return support;
-        }
         support.simplePush = true;
-        support.pushObjectId = *simplePushObjectId;
-        support.pushLayer = pushLayer;
+        support.pushObjectIds = simplePushObjectIds;
+        support.pushObjectId = support.pushObjectIds.front();
+        for (const int32_t pushObjectId : support.pushObjectIds) {
+            if (pushObjectId < 0 || static_cast<size_t>(pushObjectId) >= game.objectsById.size()) {
+                support.fallbackReason = "push_object_missing";
+                return support;
+            }
+            const int32_t pushLayer = game.objectsById[static_cast<size_t>(pushObjectId)].layer;
+            if (pushLayer < 0 || static_cast<size_t>(pushLayer) >= game.layerMaskOffsets.size()) {
+                support.fallbackReason = "push_layer_missing";
+                return support;
+            }
+            if (support.pushLayer < 0) {
+                support.pushLayer = pushLayer;
+            } else if (support.pushLayer != pushLayer) {
+                support.fallbackReason = "push_layer_mixed_not_compact";
+                return support;
+            }
+        }
         for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
             if (static_cast<size_t>(objectId) < game.objectsById.size()
-                && game.objectsById[static_cast<size_t>(objectId)].layer == pushLayer) {
+                && game.objectsById[static_cast<size_t>(objectId)].layer == support.pushLayer) {
                 support.pushLayerObjectIds.push_back(objectId);
             }
         }
@@ -5422,8 +5489,6 @@ std::string generateCompiledRulesCpp(
                 << "    }\n"
                 << "    constexpr int32_t kObjectCount = " << game.objectCount << ";\n"
                 << "    constexpr int32_t kPlayerObject = " << compactTickSupport.playerObjectId << ";\n"
-                << "    constexpr int32_t kWinSubjectObject = " << compactTickSupport.winSubjectObjectId << ";\n"
-                << "    constexpr int32_t kWinTargetObject = " << compactTickSupport.winTargetObjectId << ";\n"
                 << "    const int32_t width = state.width;\n"
                 << "    const int32_t height = state.height;\n"
                 << "    if (state.objectBits == nullptr || width <= 0 || height <= 0) {\n"
@@ -5447,8 +5512,6 @@ std::string generateCompiledRulesCpp(
                 << "        default: return {false, {}};\n"
                 << "    }\n"
                 << "    const size_t playerBase = static_cast<size_t>(kPlayerObject) * cellWordCount;\n"
-                << "    const size_t subjectBase = static_cast<size_t>(kWinSubjectObject) * cellWordCount;\n"
-                << "    const size_t targetBase = static_cast<size_t>(kWinTargetObject) * cellWordCount;\n"
                 << "    bool hasPlayer = false;\n"
                 << "    bool moved = false;\n"
                 << "    if (directionMask != 0) {\n"
@@ -5474,9 +5537,15 @@ std::string generateCompiledRulesCpp(
                 << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
                 << "                bool blocked = false;\n";
             if (compactTickSupport.simplePush) {
-                out << "                constexpr int32_t kPushObject = " << compactTickSupport.pushObjectId << ";\n"
-                    << "                const size_t pushBase = static_cast<size_t>(kPushObject) * cellWordCount;\n"
-                    << "                const bool targetHasPush = directionMask != 16 && ((state.objectBits[pushBase + targetWordIndex] & targetBit) != 0);\n"
+                out << "                int32_t pushedObject = -1;\n"
+                    << "                size_t pushBase = 0;\n";
+                for (const int32_t pushObjectId : compactTickSupport.pushObjectIds) {
+                    out << "                if (directionMask != 16 && pushedObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0)) {\n"
+                        << "                    pushedObject = " << pushObjectId << ";\n"
+                        << "                    pushBase = static_cast<size_t>(" << pushObjectId << ") * cellWordCount;\n"
+                        << "                }\n";
+                }
+                out << "                const bool targetHasPush = pushedObject >= 0;\n"
                     << "                if (targetHasPush) {\n"
                     << "                    const int32_t pushX = targetX + dx;\n"
                     << "                    const int32_t pushY = targetY + dy;\n"
@@ -5514,12 +5583,14 @@ std::string generateCompiledRulesCpp(
                 << "        }\n"
                 << "    }\n"
                 << "    bool won = true;\n"
-                << "    for (size_t word = 0; word < cellWordCount; ++word) {\n"
-                << "        if ((state.objectBits[subjectBase + word] & ~state.objectBits[targetBase + word]) != 0) {\n"
-                << "            won = false;\n"
-                << "            break;\n"
-                << "        }\n"
-                << "    }\n"
+                << "    for (size_t word = 0; word < cellWordCount && won; ++word) {\n";
+            for (const auto& [subjectObjectId, targetObjectId] : compactTickSupport.winObjectPairs) {
+                out << "        if ((state.objectBits[static_cast<size_t>(" << subjectObjectId << ") * cellWordCount + word] & ~state.objectBits[static_cast<size_t>(" << targetObjectId << ") * cellWordCount + word]) != 0) {\n"
+                    << "            won = false;\n"
+                    << "            break;\n"
+                    << "        }\n";
+            }
+            out << "    }\n"
                 << "    ps_step_result result{};\n"
                 << "    result.changed = (directionMask != 0 && hasPlayer) || moved;\n"
                 << "    result.won = won;\n"
