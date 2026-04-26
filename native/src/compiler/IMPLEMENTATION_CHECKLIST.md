@@ -856,6 +856,12 @@ attribute graph cost -> no-allocation hash -> flat visited table
     solver_smoke_tests specialized:
       compact_tick_oracle_checks=18
       compact_tick_oracle_failures=0
+    compact parity harness:
+      command: node src/tests/run_solver_compact_parity.js <specialized-solver>
+        src/tests/solver_smoke_tests --compact-tick-oracle
+        --require-compact-oracle-checks
+      compact_tick_oracle_checks=18
+      compact_tick_oracle_failures=0
     crate swap.txt level=1 bfs:
       compact_tick_attempts=28589
       compact_tick_hits=28589

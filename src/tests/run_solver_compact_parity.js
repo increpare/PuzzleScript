@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_compact_parity.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--strategy NAME] [--max-games N]');
+    console.error('Usage: node src/tests/run_solver_compact_parity.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--strategy NAME] [--max-games N] [--compact-tick-oracle] [--require-compact-oracle-checks]');
     process.exit(1);
 }
 
@@ -20,6 +20,8 @@ const corpusPath = path.resolve(args[1]);
 let timeoutMs = 1000;
 let strategy = 'bfs';
 let maxGames = null;
+let compactTickOracle = false;
+let requireCompactOracleChecks = false;
 
 function parsePositiveInt(value, label) {
     const parsed = Number.parseInt(value, 10);
@@ -37,6 +39,10 @@ for (let index = 2; index < args.length; index++) {
         strategy = args[++index];
     } else if (arg === '--max-games' && index + 1 < args.length) {
         maxGames = parsePositiveInt(args[++index], '--max-games');
+    } else if (arg === '--compact-tick-oracle') {
+        compactTickOracle = true;
+    } else if (arg === '--require-compact-oracle-checks') {
+        requireCompactOracleChecks = true;
     } else {
         usage();
     }
@@ -107,6 +113,9 @@ function runSolver(gameName, compact) {
     ];
     if (compact) {
         solverArgs.push('--compact-node-storage');
+        if (compactTickOracle) {
+            solverArgs.push('--compact-tick-oracle');
+        }
     }
     const result = spawnSync(solverPath, solverArgs, {
         encoding: 'utf8',
@@ -197,12 +206,19 @@ if (selectedGames.length === 0) {
 
 let totalLevels = 0;
 let compactTimeoutRegressions = 0;
+let compactOracleChecks = 0;
+let compactOracleFailures = 0;
 for (let index = 0; index < selectedGames.length; index++) {
     const gameFile = selectedGames[index];
     const gameName = path.relative(corpusPath, gameFile);
     process.stderr.write(`solver_compact_parity ${index + 1}/${selectedGames.length} ${gameName}\n`);
     const normal = runSolver(gameName, false);
     const compact = runSolver(gameName, true);
+    compactOracleChecks += compact.totals.compact_tick_oracle_checks || 0;
+    compactOracleFailures += compact.totals.compact_tick_oracle_failures || 0;
+    if ((compact.totals.compact_tick_oracle_failures || 0) !== 0) {
+        throw new Error(`compact tick oracle failures=${compact.totals.compact_tick_oracle_failures} game=${gameName}`);
+    }
     const normalByKey = new Map(normal.results.map((result) => [resultKey(result), result]));
     const compactByKey = new Map(compact.results.map((result) => [resultKey(result), result]));
     const mismatches = [];
@@ -236,9 +252,13 @@ for (let index = 0; index < selectedGames.length; index++) {
     }
     totalLevels += normal.results.length;
 }
+if (requireCompactOracleChecks && compactOracleChecks === 0) {
+    throw new Error('compact tick oracle checks were required but no generated compact tick was checked');
+}
 process.stdout.write(
     `solver_compact_parity passed games=${selectedGames.length}/${eligibleGames.length}`
     + ` levels=${totalLevels} random_excluded=${randomExcluded.length}`
     + ` compact_timeout_regressions=${compactTimeoutRegressions}`
+    + (compactTickOracle ? ` compact_tick_oracle_checks=${compactOracleChecks} compact_tick_oracle_failures=${compactOracleFailures}` : '')
     + ` strategy=${strategy} timeout_ms=${timeoutMs}\n`
 );
