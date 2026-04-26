@@ -20,7 +20,7 @@
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
-	compiled_rules_simulation_suite_coverage specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
+	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
@@ -342,6 +342,8 @@ help:
 	@echo "                                     Benchmark solver with compiled rules for the corpus"
 	@echo "  make compiled_rules_simulation_suite_coverage"
 	@echo "                                     Write $(COMPILED_RULES_SIMULATION_SUITE_COVERAGE_JSON)"
+	@echo "  make compiled_rules_coverage_shape_smoke"
+	@echo "                                     Assert coverage JSON has current and compatibility keys"
 	@echo "  make specialized_full_turn_dispatch_smoke"
 	@echo "                                     Assert linked specialized full-turn dispatch is exercised"
 	@echo ""
@@ -735,6 +737,12 @@ compiled_rules_simulation_suite_coverage:
 	$(COMPILED_RULES_BOOTSTRAP_CPP); \
 	mkdir -p "$$(dirname "$(COMPILED_RULES_SIMULATION_SUITE_COVERAGE_JSON)")"; \
 	$(PUZZLESCRIPT_CPP) compile-rules src/tests/resources/testdata.js --stats-only --max-rows $(COMPILED_RULES_MAX_ROWS) --coverage-json "$(COMPILED_RULES_SIMULATION_SUITE_COVERAGE_JSON)"
+
+compiled_rules_coverage_shape_smoke: build
+	@set -e; \
+	out="$(BUILD_DIR)/native/compiled_rules_coverage_shape_smoke.json"; \
+	$(PUZZLESCRIPT_CPP) compile-rules src/tests/solver_smoke_tests --stats-only --max-rows 1 --coverage-json "$$out"; \
+	$(NODE) src/tests/assert_compiled_rules_coverage_shape.js "$$out"
 
 simulation_tests_cpp_js_parity: build_32 $(JS_PARITY_MANIFEST)
 	$(NODE) src/tests/run_native_trace_suite.js $(JS_PARITY_MANIFEST) --cli $(PUZZLESCRIPT_CPP_32) --progress-every 1 --timeout-ms 45000
