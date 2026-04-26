@@ -11,7 +11,6 @@ extern "C" {
 
 typedef struct ps_game ps_game;
 typedef struct ps_full_state ps_full_state;
-typedef ps_full_state ps_session;
 typedef struct ps_compile_result ps_compile_result;
 typedef struct ps_error ps_error;
 typedef struct ps_level_view ps_level_view;
@@ -44,15 +43,14 @@ typedef enum ps_input {
     PS_INPUT_TICK = 5
 } ps_input;
 
-typedef enum ps_session_mode {
-    PS_SESSION_MODE_LEVEL = 0,
-    PS_SESSION_MODE_TITLE = 1,
-    PS_SESSION_MODE_MESSAGE = 2
-} ps_session_mode;
-typedef ps_session_mode ps_full_state_mode;
+typedef enum ps_full_state_mode {
+    PS_FULL_STATE_MODE_LEVEL = 0,
+    PS_FULL_STATE_MODE_TITLE = 1,
+    PS_FULL_STATE_MODE_MESSAGE = 2
+} ps_full_state_mode;
 
-typedef struct ps_session_status_info {
-    ps_session_mode mode;
+typedef struct ps_full_state_status_info {
+    ps_full_state_mode mode;
     int32_t current_level_index;
     bool has_current_level_target;
     int32_t current_level_target;
@@ -66,8 +64,7 @@ typedef struct ps_session_status_info {
     bool text_mode;
     bool title_selected;
     bool message_selected;
-} ps_session_status_info;
-typedef ps_session_status_info ps_full_state_status_info;
+} ps_full_state_status_info;
 
 typedef struct ps_step_result {
     bool changed;
@@ -80,15 +77,14 @@ typedef struct ps_step_result {
     const ps_audio_event* ui_audio_events;
 } ps_step_result;
 
-typedef struct ps_compact_tick_oracle_info {
+typedef struct ps_compact_turn_oracle_info {
     bool attempted;
     bool handled;
     bool matched;
     bool state_checked;
     ps_step_result compact_result;
     ps_step_result interpreter_result;
-} ps_compact_tick_oracle_info;
-typedef ps_compact_tick_oracle_info ps_compact_turn_oracle_info;
+} ps_compact_turn_oracle_info;
 
 typedef struct ps_benchmark_result {
     uint64_t iterations;
@@ -143,10 +139,6 @@ void ps_full_state_destroy(ps_full_state* state);
 void ps_full_state_set_unit_testing(ps_full_state* state, bool enabled);
 bool ps_full_state_load_level(ps_full_state* state, int32_t level_index, ps_error** out_error);
 ps_step_result ps_full_state_turn(ps_full_state* state, ps_input input);
-bool ps_full_state_compact_tick_oracle_check(
-    const ps_full_state* state,
-    ps_input input,
-    ps_compact_tick_oracle_info* out_info);
 bool ps_full_state_compact_turn_oracle_check(
     const ps_full_state* state,
     ps_input input,
@@ -170,38 +162,6 @@ bool ps_benchmark_full_state_clone_hash(
     uint32_t thread_count,
     ps_benchmark_result* out_result,
     ps_error** out_error);
-
-/* Deprecated compatibility names retained for downstream callers. */
-bool ps_session_create(const ps_game* game, ps_session** out_session, ps_error** out_error);
-bool ps_session_create_with_loaded_level_seed(
-    const ps_game* game,
-    const char* loaded_level_seed_utf8,
-    ps_session** out_session,
-    ps_error** out_error);
-bool ps_session_clone(const ps_session* session, ps_session** out_session, ps_error** out_error);
-void ps_session_destroy(ps_session* session);
-void ps_session_set_unit_testing(ps_session* session, bool enabled);
-bool ps_session_load_level(ps_session* session, int32_t level_index, ps_error** out_error);
-ps_step_result ps_session_step(ps_session* session, ps_input input);
-ps_step_result ps_session_tick(ps_session* session);
-bool ps_session_compact_tick_oracle_check(
-    const ps_session* session,
-    ps_input input,
-    ps_compact_tick_oracle_info* out_info);
-bool ps_session_pending_again(const ps_session* session);
-bool ps_session_undo(ps_session* session);
-bool ps_session_restart(ps_session* session);
-bool ps_session_advance_level(ps_session* session, ps_error** out_error);
-void ps_session_status(const ps_session* session, ps_session_status_info* out_status);
-const char* ps_session_message_text(const ps_session* session);
-bool ps_session_cell_has_object(const ps_session* session, int32_t x, int32_t y, int32_t object_id);
-bool ps_session_first_player_position(const ps_session* session, int32_t* out_x, int32_t* out_y);
-uint64_t ps_session_hash64(const ps_session* session);
-ps_hash128 ps_session_hash128(const ps_session* session);
-char* ps_session_serialize_test_string(const ps_session* session);
-char* ps_session_export_snapshot(const ps_session* session);
-size_t ps_session_list_inputs(const ps_session* session, ps_input* output, size_t capacity);
-bool ps_benchmark_clone_hash(const ps_session* session, uint32_t iterations, uint32_t thread_count, ps_benchmark_result* out_result, ps_error** out_error);
 void ps_runtime_counters_set_enabled(bool enabled);
 void ps_runtime_counters_reset(void);
 void ps_runtime_counters_snapshot(ps_runtime_counters* out_counters);

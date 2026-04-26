@@ -116,13 +116,13 @@ int main() {
     assert(result.changed);
     ps_full_state_status_info status{};
     ps_full_state_status(session.state, &status);
-    assert(status.mode == PS_SESSION_MODE_MESSAGE);
+    assert(status.mode == PS_FULL_STATE_MODE_MESSAGE);
     assert(std::string(ps_full_state_message_text(session.state)) == "Hello native player");
 
     const ps_step_result closeResult = ps_full_state_turn(session.state, PS_INPUT_ACTION);
     assert(closeResult.changed);
     ps_full_state_status(session.state, &status);
-    assert(status.mode == PS_SESSION_MODE_LEVEL);
+    assert(status.mode == PS_FULL_STATE_MODE_LEVEL);
     assert(std::string(ps_full_state_message_text(session.state)).empty());
 
     const ps_step_result moveResult = ps_full_state_turn(session.state, PS_INPUT_RIGHT);

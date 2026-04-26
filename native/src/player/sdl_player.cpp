@@ -715,7 +715,7 @@ bool loadLevel(Player& player, int levelIndex) {
     }
     ps_full_state_status_info status{};
     ps_full_state_status(player.session, &status);
-    if (status.mode == PS_SESSION_MODE_MESSAGE) {
+    if (status.mode == PS_FULL_STATE_MODE_MESSAGE) {
         playNamed(player, "showmessage");
     } else {
         playNamed(player, "startlevel");
@@ -754,9 +754,9 @@ void afterStep(Player& player, const ps_step_result& result) {
         playNamed(player, "endgame");
     } else if (result.transitioned) {
         saveProgress(player);
-        if (status.mode == PS_SESSION_MODE_MESSAGE) {
+        if (status.mode == PS_FULL_STATE_MODE_MESSAGE) {
             playNamed(player, "showmessage");
-        } else if (status.mode == PS_SESSION_MODE_LEVEL) {
+        } else if (status.mode == PS_FULL_STATE_MODE_LEVEL) {
             playNamed(player, "startlevel");
         }
     }
@@ -813,7 +813,7 @@ void processAutomaticTicks(Player& player, Uint32 againIntervalMs, Uint32 realti
 
     ps_full_state_status_info status{};
     ps_full_state_status(player.session, &status);
-    if (status.mode != PS_SESSION_MODE_LEVEL) {
+    if (status.mode != PS_FULL_STATE_MODE_LEVEL) {
         return;
     }
 
@@ -928,7 +928,7 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
                 if (input.has_value()) {
                     ps_full_state_status_info status{};
                     ps_full_state_status(player.session, &status);
-                    if (*input == PS_INPUT_ACTION && status.mode == PS_SESSION_MODE_LEVEL && ps_game_has_metadata(player.game, "noaction")) {
+                    if (*input == PS_INPUT_ACTION && status.mode == PS_FULL_STATE_MODE_LEVEL && ps_game_has_metadata(player.game, "noaction")) {
                         continue;
                     }
                     const ps_step_result result = ps_full_state_turn(player.session, *input);
@@ -948,7 +948,7 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
         ps_full_state_status(player.session, &status);
         if (player.title) {
             drawTextRows(renderer, player, generateTitleRows(player, SDL_GetTicks()), fg, bg, winW, winH);
-        } else if (status.mode == PS_SESSION_MODE_MESSAGE) {
+        } else if (status.mode == PS_FULL_STATE_MODE_MESSAGE) {
             drawTextRows(renderer, player, generateMessageRows(player), fg, bg, winW, winH);
         } else {
             drawLevel(renderer, player, bg, winW, winH);

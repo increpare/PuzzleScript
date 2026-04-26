@@ -240,8 +240,27 @@ void ps_free_compile_result(ps_compile_result* result) {
     delete result;
 }
 
+ps_step_result ps_full_state_turn(ps_full_state* state, ps_input input) {
+    if (!state) {
+        return ps_step_result{};
+    }
+    return puzzlescript::turn(*state->impl, input, RuntimeStepOptions{});
+}
+
 bool ps_full_state_create(const ps_game* game, ps_full_state** out_state, ps_error** out_error) {
-    return ps_session_create(game, out_state, out_error);
+    if (out_error) {
+        *out_error = nullptr;
+    }
+    if (!game || !out_state) {
+        if (out_error) {
+            *out_error = makeError(std::make_unique<Error>("ps_full_state_create received null input"));
+        }
+        return false;
+    }
+    auto* wrapper = new ps_full_state();
+    wrapper->impl = puzzlescript::createFullState(game->impl);
+    *out_state = wrapper;
+    return true;
 }
 
 bool ps_full_state_create_with_loaded_level_seed(
@@ -250,188 +269,62 @@ bool ps_full_state_create_with_loaded_level_seed(
     ps_full_state** out_state,
     ps_error** out_error
 ) {
-    return ps_session_create_with_loaded_level_seed(game, loaded_level_seed_utf8, out_state, out_error);
-}
-
-bool ps_full_state_clone(const ps_full_state* state, ps_full_state** out_state, ps_error** out_error) {
-    return ps_session_clone(state, out_state, out_error);
-}
-
-void ps_full_state_destroy(ps_full_state* state) {
-    ps_session_destroy(state);
-}
-
-void ps_full_state_set_unit_testing(ps_full_state* state, bool enabled) {
-    ps_session_set_unit_testing(state, enabled);
-}
-
-bool ps_full_state_load_level(ps_full_state* state, int32_t level_index, ps_error** out_error) {
-    return ps_session_load_level(state, level_index, out_error);
-}
-
-ps_step_result ps_full_state_turn(ps_full_state* state, ps_input input) {
-    if (!state) {
-        return ps_step_result{};
-    }
-    return puzzlescript::turn(*state->impl, input, RuntimeStepOptions{});
-}
-
-bool ps_full_state_compact_tick_oracle_check(
-    const ps_full_state* state,
-    ps_input input,
-    ps_compact_tick_oracle_info* out_info
-) {
-    return ps_session_compact_tick_oracle_check(state, input, out_info);
-}
-
-bool ps_full_state_compact_turn_oracle_check(
-    const ps_full_state* state,
-    ps_input input,
-    ps_compact_turn_oracle_info* out_info
-) {
-    return ps_session_compact_tick_oracle_check(state, input, out_info);
-}
-
-bool ps_full_state_pending_again(const ps_full_state* state) {
-    return ps_session_pending_again(state);
-}
-
-bool ps_full_state_undo(ps_full_state* state) {
-    return ps_session_undo(state);
-}
-
-bool ps_full_state_restart(ps_full_state* state) {
-    return ps_session_restart(state);
-}
-
-bool ps_full_state_advance_level(ps_full_state* state, ps_error** out_error) {
-    return ps_session_advance_level(state, out_error);
-}
-
-void ps_full_state_status(const ps_full_state* state, ps_full_state_status_info* out_status) {
-    ps_session_status(state, out_status);
-}
-
-const char* ps_full_state_message_text(const ps_full_state* state) {
-    return ps_session_message_text(state);
-}
-
-bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_t y, int32_t object_id) {
-    return ps_session_cell_has_object(state, x, y, object_id);
-}
-
-bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* out_x, int32_t* out_y) {
-    return ps_session_first_player_position(state, out_x, out_y);
-}
-
-uint64_t ps_full_state_hash64(const ps_full_state* state) {
-    return ps_session_hash64(state);
-}
-
-ps_hash128 ps_full_state_hash128(const ps_full_state* state) {
-    return ps_session_hash128(state);
-}
-
-char* ps_full_state_serialize_test_string(const ps_full_state* state) {
-    return ps_session_serialize_test_string(state);
-}
-
-char* ps_full_state_export_snapshot(const ps_full_state* state) {
-    return ps_session_export_snapshot(state);
-}
-
-size_t ps_full_state_list_inputs(const ps_full_state* state, ps_input* output, size_t capacity) {
-    return ps_session_list_inputs(state, output, capacity);
-}
-
-bool ps_benchmark_full_state_clone_hash(
-    const ps_full_state* state,
-    uint32_t iterations,
-    uint32_t thread_count,
-    ps_benchmark_result* out_result,
-    ps_error** out_error
-) {
-    return ps_benchmark_clone_hash(state, iterations, thread_count, out_result, out_error);
-}
-
-bool ps_session_create(const ps_game* game, ps_session** out_session, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;
     }
-    if (!game || !out_session) {
+    if (!game || !out_state) {
         if (out_error) {
-            *out_error = makeError(std::make_unique<Error>("ps_session_create received null input"));
-        }
-        return false;
-    }
-    auto* wrapper = new ps_full_state();
-    wrapper->impl = puzzlescript::createFullState(game->impl);
-    *out_session = wrapper;
-    return true;
-}
-
-bool ps_session_create_with_loaded_level_seed(
-    const ps_game* game,
-    const char* loaded_level_seed_utf8,
-    ps_session** out_session,
-    ps_error** out_error
-) {
-    if (out_error) {
-        *out_error = nullptr;
-    }
-    if (!game || !out_session) {
-        if (out_error) {
-            *out_error = makeError(std::make_unique<Error>("ps_session_create_with_loaded_level_seed received null input"));
+            *out_error = makeError(std::make_unique<Error>("ps_full_state_create_with_loaded_level_seed received null input"));
         }
         return false;
     }
     if (!loaded_level_seed_utf8) {
-        return ps_session_create(game, out_session, out_error);
+        return ps_full_state_create(game, out_state, out_error);
     }
     auto* wrapper = new ps_full_state();
     wrapper->impl = puzzlescript::createFullStateWithLoadedLevelSeed(game->impl, loaded_level_seed_utf8);
-    *out_session = wrapper;
+    *out_state = wrapper;
     return true;
 }
 
-bool ps_session_clone(const ps_session* session, ps_session** out_session, ps_error** out_error) {
+bool ps_full_state_clone(const ps_full_state* state, ps_full_state** out_state, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;
     }
-    if (!session || !out_session) {
+    if (!state || !out_state) {
         if (out_error) {
-            *out_error = makeError(std::make_unique<Error>("ps_session_clone received null input"));
+            *out_error = makeError(std::make_unique<Error>("ps_full_state_clone received null input"));
         }
         return false;
     }
     auto* wrapper = new ps_full_state();
-    wrapper->impl = std::make_unique<FullState>(*session->impl);
-    *out_session = wrapper;
+    wrapper->impl = std::make_unique<FullState>(*state->impl);
+    *out_state = wrapper;
     return true;
 }
 
-void ps_session_destroy(ps_session* session) {
-    delete session;
+void ps_full_state_destroy(ps_full_state* state) {
+    delete state;
 }
 
-void ps_session_set_unit_testing(ps_session* session, bool enabled) {
-    if (session == nullptr || !session->impl) {
+void ps_full_state_set_unit_testing(ps_full_state* state, bool enabled) {
+    if (state == nullptr || !state->impl) {
         return;
     }
-    session->impl->suppressRuleMessages = enabled;
+    state->impl->suppressRuleMessages = enabled;
 }
 
-bool ps_session_load_level(ps_session* session, int32_t level_index, ps_error** out_error) {
+bool ps_full_state_load_level(ps_full_state* state, int32_t level_index, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;
     }
-    if (!session) {
+    if (!state) {
         if (out_error) {
-            *out_error = makeError(std::make_unique<Error>("ps_session_load_level received null session"));
+            *out_error = makeError(std::make_unique<Error>("ps_full_state_load_level received null state"));
         }
         return false;
     }
-    if (auto error = puzzlescript::loadLevel(*session->impl, level_index)) {
+    if (auto error = puzzlescript::loadLevel(*state->impl, level_index)) {
         if (out_error) {
             *out_error = makeError(std::move(error));
         }
@@ -440,27 +333,19 @@ bool ps_session_load_level(ps_session* session, int32_t level_index, ps_error** 
     return true;
 }
 
-ps_step_result ps_session_step(ps_session* session, ps_input input) {
-    return ps_full_state_turn(session, input);
-}
-
-ps_step_result ps_session_tick(ps_session* session) {
-    return ps_full_state_turn(session, PS_INPUT_TICK);
-}
-
-bool ps_session_compact_tick_oracle_check(
-    const ps_session* session,
+bool ps_full_state_compact_turn_oracle_check(
+    const ps_full_state* state,
     ps_input input,
-    ps_compact_tick_oracle_info* out_info
+    ps_compact_turn_oracle_info* out_info
 ) {
     if (out_info) {
-        *out_info = ps_compact_tick_oracle_info{};
+        *out_info = ps_compact_turn_oracle_info{};
         out_info->matched = true;
     }
-    if (session == nullptr || !session->impl || !session->impl->game) {
+    if (state == nullptr || !state->impl || !state->impl->game) {
         return false;
     }
-    const FullState& original = *session->impl;
+    const FullState& original = *state->impl;
     if (original.preparedFullState.titleScreen || original.preparedFullState.textMode) {
         return true;
     }
@@ -524,29 +409,29 @@ bool ps_session_compact_tick_oracle_check(
     return true;
 }
 
-bool ps_session_pending_again(const ps_session* session) {
-    return session && session->impl->pendingAgain;
+bool ps_full_state_pending_again(const ps_full_state* state) {
+    return state && state->impl->pendingAgain;
 }
 
-bool ps_session_undo(ps_session* session) {
-    return session ? puzzlescript::undo(*session->impl) : false;
+bool ps_full_state_undo(ps_full_state* state) {
+    return state ? puzzlescript::undo(*state->impl) : false;
 }
 
-bool ps_session_restart(ps_session* session) {
-    return session ? puzzlescript::restart(*session->impl) : false;
+bool ps_full_state_restart(ps_full_state* state) {
+    return state ? puzzlescript::restart(*state->impl) : false;
 }
 
-bool ps_session_advance_level(ps_session* session, ps_error** out_error) {
+bool ps_full_state_advance_level(ps_full_state* state, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;
     }
-    if (!session) {
+    if (!state) {
         if (out_error) {
-            *out_error = makeError(std::make_unique<Error>("ps_session_advance_level received null session"));
+            *out_error = makeError(std::make_unique<Error>("ps_full_state_advance_level received null state"));
         }
         return false;
     }
-    if (auto error = puzzlescript::advanceLevel(*session->impl)) {
+    if (auto error = puzzlescript::advanceLevel(*state->impl)) {
         if (out_error) {
             *out_error = makeError(std::move(error));
         }
@@ -555,33 +440,33 @@ bool ps_session_advance_level(ps_session* session, ps_error** out_error) {
     return true;
 }
 
-void ps_session_status(const ps_session* session, ps_session_status_info* out_status) {
-    if (!session || !out_status) {
+void ps_full_state_status(const ps_full_state* state, ps_full_state_status_info* out_status) {
+    if (!state || !out_status) {
         return;
     }
-    out_status->mode = session->impl->preparedFullState.titleScreen
-        ? PS_SESSION_MODE_TITLE
-        : (session->impl->preparedFullState.textMode ? PS_SESSION_MODE_MESSAGE : PS_SESSION_MODE_LEVEL);
-    out_status->current_level_index = session->impl->preparedFullState.currentLevelIndex;
-    out_status->has_current_level_target = session->impl->preparedFullState.currentLevelTarget.has_value();
-    out_status->current_level_target = session->impl->preparedFullState.currentLevelTarget.value_or(0);
-    out_status->width = session->impl->liveLevel.width;
-    out_status->height = session->impl->liveLevel.height;
-    out_status->title_mode = session->impl->preparedFullState.titleMode;
-    out_status->title_selection = session->impl->preparedFullState.titleSelection;
-    out_status->can_undo = session->impl->canUndo;
-    out_status->winning = session->impl->preparedFullState.winning;
-    out_status->title_screen = session->impl->preparedFullState.titleScreen;
-    out_status->text_mode = session->impl->preparedFullState.textMode;
-    out_status->title_selected = session->impl->preparedFullState.titleSelected;
-    out_status->message_selected = session->impl->preparedFullState.messageSelected;
+    out_status->mode = state->impl->preparedFullState.titleScreen
+        ? PS_FULL_STATE_MODE_TITLE
+        : (state->impl->preparedFullState.textMode ? PS_FULL_STATE_MODE_MESSAGE : PS_FULL_STATE_MODE_LEVEL);
+    out_status->current_level_index = state->impl->preparedFullState.currentLevelIndex;
+    out_status->has_current_level_target = state->impl->preparedFullState.currentLevelTarget.has_value();
+    out_status->current_level_target = state->impl->preparedFullState.currentLevelTarget.value_or(0);
+    out_status->width = state->impl->liveLevel.width;
+    out_status->height = state->impl->liveLevel.height;
+    out_status->title_mode = state->impl->preparedFullState.titleMode;
+    out_status->title_selection = state->impl->preparedFullState.titleSelection;
+    out_status->can_undo = state->impl->canUndo;
+    out_status->winning = state->impl->preparedFullState.winning;
+    out_status->title_screen = state->impl->preparedFullState.titleScreen;
+    out_status->text_mode = state->impl->preparedFullState.textMode;
+    out_status->title_selected = state->impl->preparedFullState.titleSelected;
+    out_status->message_selected = state->impl->preparedFullState.messageSelected;
 }
 
-const char* ps_session_message_text(const ps_session* session) {
-    if (!session || !session->impl) {
+const char* ps_full_state_message_text(const ps_full_state* state) {
+    if (!state || !state->impl) {
         return "";
     }
-    const auto& prepared = session->impl->preparedFullState;
+    const auto& prepared = state->impl->preparedFullState;
     if (!prepared.messageText.empty()) {
         return prepared.messageText.c_str();
     }
@@ -591,11 +476,11 @@ const char* ps_session_message_text(const ps_session* session) {
     return "";
 }
 
-bool ps_session_cell_has_object(const ps_session* session, int32_t x, int32_t y, int32_t object_id) {
-    if (!session || !session->impl || object_id < 0) {
+bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_t y, int32_t object_id) {
+    if (!state || !state->impl || object_id < 0) {
         return false;
     }
-    const FullState& impl = *session->impl;
+    const FullState& impl = *state->impl;
     if (x < 0 || y < 0 || x >= impl.liveLevel.width || y >= impl.liveLevel.height) {
         return false;
     }
@@ -614,17 +499,17 @@ bool ps_session_cell_has_object(const ps_session* session, int32_t x, int32_t y,
     return (impl.liveLevel.objects[offset] & puzzlescript::maskBit(static_cast<uint32_t>(object_id))) != 0;
 }
 
-bool ps_session_first_player_position(const ps_session* session, int32_t* out_x, int32_t* out_y) {
+bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* out_x, int32_t* out_y) {
     if (out_x) {
         *out_x = 0;
     }
     if (out_y) {
         *out_y = 0;
     }
-    if (!session || !session->impl) {
+    if (!state || !state->impl) {
         return false;
     }
-    const FullState& impl = *session->impl;
+    const FullState& impl = *state->impl;
     if (impl.game->playerMask == puzzlescript::kNullMaskOffset || impl.liveLevel.width <= 0 || impl.liveLevel.height <= 0) {
         return false;
     }
@@ -663,43 +548,43 @@ bool ps_session_first_player_position(const ps_session* session, int32_t* out_x,
     return false;
 }
 
-uint64_t ps_session_hash64(const ps_session* session) {
-    return session ? puzzlescript::hashFullState64(*session->impl) : 0;
+uint64_t ps_full_state_hash64(const ps_full_state* state) {
+    return state ? puzzlescript::hashFullState64(*state->impl) : 0;
 }
 
-ps_hash128 ps_session_hash128(const ps_session* session) {
-    return session ? puzzlescript::hashFullState128(*session->impl) : ps_hash128{};
+ps_hash128 ps_full_state_hash128(const ps_full_state* state) {
+    return state ? puzzlescript::hashFullState128(*state->impl) : ps_hash128{};
 }
 
-char* ps_session_serialize_test_string(const ps_session* session) {
-    if (!session) {
+char* ps_full_state_serialize_test_string(const ps_full_state* state) {
+    if (!state) {
         return nullptr;
     }
-    return duplicateString(puzzlescript::serializeTestString(*session->impl));
+    return duplicateString(puzzlescript::serializeTestString(*state->impl));
 }
 
-char* ps_session_export_snapshot(const ps_session* session) {
-    if (!session) {
+char* ps_full_state_export_snapshot(const ps_full_state* state) {
+    if (!state) {
         return nullptr;
     }
-    return duplicateString(puzzlescript::exportSnapshot(*session->impl));
+    return duplicateString(puzzlescript::exportSnapshot(*state->impl));
 }
 
-size_t ps_session_list_inputs(const ps_session*, ps_input* output, size_t capacity) {
+size_t ps_full_state_list_inputs(const ps_full_state*, ps_input* output, size_t capacity) {
     return puzzlescript::listInputs(output, capacity);
 }
 
-bool ps_benchmark_clone_hash(const ps_session* session, uint32_t iterations, uint32_t thread_count, ps_benchmark_result* out_result, ps_error** out_error) {
+bool ps_benchmark_full_state_clone_hash(const ps_full_state* state, uint32_t iterations, uint32_t thread_count, ps_benchmark_result* out_result, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;
     }
-    if (!session || !out_result) {
+    if (!state || !out_result) {
         if (out_error) {
-            *out_error = makeError(std::make_unique<Error>("ps_benchmark_clone_hash received null input"));
+            *out_error = makeError(std::make_unique<Error>("ps_benchmark_full_state_clone_hash received null input"));
         }
         return false;
     }
-    if (auto error = puzzlescript::benchmarkCloneHash(*session->impl, iterations, thread_count, *out_result)) {
+    if (auto error = puzzlescript::benchmarkCloneHash(*state->impl, iterations, thread_count, *out_result)) {
         if (out_error) {
             *out_error = makeError(std::move(error));
         }

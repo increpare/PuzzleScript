@@ -802,7 +802,7 @@ int benchCommandForGame(
     }
 
     ps_benchmark_result result{};
-    if (!ps_benchmark_clone_hash(session, iterations, threads, &result, &error)) {
+    if (!ps_benchmark_full_state_clone_hash(session, iterations, threads, &result, &error)) {
         std::cerr << ps_error_message(error) << "\n";
         ps_free_error(error);
         ps_full_state_destroy(session);
