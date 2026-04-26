@@ -115,6 +115,16 @@ function countersMedian(summary, key) {
     return values[Math.floor(values.length / 2)];
 }
 
+function countersMedianAny(summary, keys) {
+    for (const key of keys) {
+        const value = countersMedian(summary, key);
+        if (value !== null) {
+            return value;
+        }
+    }
+    return null;
+}
+
 function sampleBoolean(summary, key) {
     const values = (summary.samples || [])
         .map((sample) => sample[key])
@@ -123,6 +133,16 @@ function sampleBoolean(summary, key) {
         return null;
     }
     return values.some(Boolean);
+}
+
+function sampleBooleanAny(summary, keys) {
+    for (const key of keys) {
+        const value = sampleBoolean(summary, key);
+        if (value !== null) {
+            return value;
+        }
+    }
+    return null;
 }
 
 function targetRows() {
@@ -135,10 +155,10 @@ function targetRows() {
         }
         const compiledRuleHits = countersMedian(compiledTarget, 'specialized_rulegroup_hits')
             ?? countersMedian(compiledTarget, 'compiled_rule_group_hits');
-        const compiledTickHits = countersMedian(compiledTarget, 'compiled_tick_hits');
+        const fullTurnHits = countersMedianAny(compiledTarget, ['specialized_full_turn_hits', 'compiled_tick_hits']);
         const specializedRulegroupsAttached = sampleBoolean(compiledTarget, 'specialized_rulegroups_attached')
             ?? sampleBoolean(compiledTarget, 'compiled_rules_attached');
-        const compiledTickAttached = sampleBoolean(compiledTarget, 'compiled_tick_attached');
+        const fullTurnAttached = sampleBooleanAny(compiledTarget, ['specialized_full_turn_attached', 'compiled_tick_attached']);
         const interpretedFrontier = metricSum(target, ['frontier_pop_ms', 'frontier_push_ms']);
         const compiledFrontier = metricSum(compiledTarget, ['frontier_pop_ms', 'frontier_push_ms']);
         const interpretedVisited = metricSum(target, ['visited_lookup_ms', 'visited_insert_ms']);
@@ -180,11 +200,11 @@ function targetRows() {
             interpretedGraph,
             compiledGraph,
             compiledRuleHits,
-            compiledTickHits,
-            bucket: compiledUsageBucket(compiledTickHits, compiledRuleHits),
-            reason: compiledUsageReason(compiledTickHits, compiledRuleHits, specializedRulegroupsAttached, compiledTickAttached),
+            fullTurnHits,
+            bucket: compiledUsageBucket(fullTurnHits, compiledRuleHits),
+            reason: compiledUsageReason(fullTurnHits, compiledRuleHits, specializedRulegroupsAttached, fullTurnAttached),
             specializedRulegroupsAttached,
-            compiledTickAttached,
+            fullTurnAttached,
             candidateCells: countersMedian(compiledTarget, 'candidate_cells_tested'),
             rowScans: countersMedian(compiledTarget, 'row_scans'),
             patternTests: countersMedian(compiledTarget, 'pattern_tests'),
@@ -196,15 +216,15 @@ function targetRows() {
     }).filter(Boolean);
 }
 
-function compiledUsageBucket(compiledTickHits, compiledRuleHits) {
-    if (compiledTickHits === null || compiledRuleHits === null) {
+function compiledUsageBucket(fullTurnHits, compiledRuleHits) {
+    if (fullTurnHits === null || compiledRuleHits === null) {
         return 'no_counters';
     }
-    if (compiledTickHits === 0 && compiledRuleHits === 0) {
-        return 'no_tick_no_rules';
+    if (fullTurnHits === 0 && compiledRuleHits === 0) {
+        return 'no_full_turn_no_rulegroups';
     }
-    if (compiledTickHits > 0 && compiledRuleHits === 0) {
-        return 'tick_no_rules';
+    if (fullTurnHits > 0 && compiledRuleHits === 0) {
+        return 'full_turn_no_rulegroups';
     }
     if (compiledRuleHits > 0) {
         return 'specialized_rulegroups';
@@ -212,21 +232,21 @@ function compiledUsageBucket(compiledTickHits, compiledRuleHits) {
     return 'unknown';
 }
 
-function compiledUsageReason(compiledTickHits, compiledRuleHits, specializedRulegroupsAttached, compiledTickAttached) {
-    if (compiledTickHits === null || compiledRuleHits === null) {
+function compiledUsageReason(fullTurnHits, compiledRuleHits, specializedRulegroupsAttached, fullTurnAttached) {
+    if (fullTurnHits === null || compiledRuleHits === null) {
         return 'runtime_counters_missing';
     }
-    if (!compiledTickAttached) {
-        return 'compiled_tick_backend_not_attached';
+    if (!fullTurnAttached) {
+        return 'specialized_full_turn_backend_not_attached';
     }
     if (!specializedRulegroupsAttached) {
         return 'specialized_rulegroups_backend_not_attached';
     }
-    if (compiledTickHits === 0) {
-        return 'compiled_tick_not_called';
+    if (fullTurnHits === 0) {
+        return 'specialized_full_turn_not_called';
     }
     if (compiledRuleHits === 0) {
-        return 'compiled_tick_bypassed_generic_rule_counter';
+        return 'specialized_full_turn_bypassed_generic_rulegroup_counter';
     }
     return 'specialized_rulegroups_hit';
 }
@@ -238,7 +258,7 @@ function printCompiledUsageSummary(rows) {
         counts.set(row.bucket, (counts.get(row.bucket) || 0) + 1);
         reasons.set(row.reason, (reasons.get(row.reason) || 0) + 1);
     }
-    const labels = ['specialized_rulegroups', 'tick_no_rules', 'no_tick_no_rules', 'no_counters', 'unknown'];
+    const labels = ['specialized_rulegroups', 'full_turn_no_rulegroups', 'no_full_turn_no_rulegroups', 'no_counters', 'unknown'];
     const parts = labels
         .filter((label) => counts.has(label))
         .map((label) => `${label}=${counts.get(label)}`);
@@ -267,7 +287,7 @@ function printTargetTable(label, rows) {
             ` reason=${row.reason}` +
             ` ${row.key}` +
             ` hits=${row.compiledRuleHits === null ? 'n/a' : row.compiledRuleHits}` +
-            ` tick=${row.compiledTickHits === null ? 'n/a' : row.compiledTickHits}` +
+            ` full_turn=${row.fullTurnHits === null ? 'n/a' : row.fullTurnHits}` +
             ` rows=${row.rowScans === null ? 'n/a' : row.rowScans}` +
             ` cells=${row.candidateCells === null ? 'n/a' : row.candidateCells}` +
             ` pattern_tests=${row.patternTests === null ? 'n/a' : row.patternTests}` +
@@ -376,7 +396,7 @@ function printMaskRebuildTable(rows) {
             ` ratio=${formatNumber(row.elapsedRatio, 3)}x` +
             ` bucket=${row.bucket}` +
             ` reason=${row.reason}` +
-            ` tick=${row.compiledTickHits === null ? 'n/a' : row.compiledTickHits}` +
+            ` full_turn=${row.fullTurnHits === null ? 'n/a' : row.fullTurnHits}` +
             ` hits=${row.compiledRuleHits === null ? 'n/a' : row.compiledRuleHits}` +
             ` dirty=${row.maskRebuildDirtyCalls === null ? 'n/a' : row.maskRebuildDirtyCalls}` +
             ` rebuild_rows=${row.maskRebuildRows === null ? 'n/a' : row.maskRebuildRows}` +

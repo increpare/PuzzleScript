@@ -2690,6 +2690,9 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " specialized_rulegroup_attempts=" << counters.specialized_rulegroup_attempts
                   << " specialized_rulegroup_hits=" << counters.specialized_rulegroup_hits
                   << " specialized_rulegroup_fallbacks=" << counters.specialized_rulegroup_fallbacks
+                  << " specialized_full_turn_attempts=" << counters.specialized_full_turn_attempts
+                  << " specialized_full_turn_hits=" << counters.specialized_full_turn_hits
+                  << " specialized_full_turn_fallbacks=" << counters.specialized_full_turn_fallbacks
                   << " compiled_tick_attempts=" << counters.compiled_tick_attempts
                   << " compiled_tick_hits=" << counters.compiled_tick_hits
                   << " compiled_tick_fallbacks=" << counters.compiled_tick_fallbacks

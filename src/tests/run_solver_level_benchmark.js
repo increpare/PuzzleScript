@@ -210,6 +210,7 @@ function runTarget(target, runIndex, strategy, timeoutMs) {
         timeout_ms: solverResult.timeout_ms,
         specialized_rulegroups_attached: Boolean(readField(solverResult, 'specialized_rulegroups_attached', 'compiled_rules_attached')),
         compiled_rules_attached: Boolean(solverResult.compiled_rules_attached),
+        specialized_full_turn_attached: Boolean(readField(solverResult, 'specialized_full_turn_attached', 'compiled_tick_attached')),
         compiled_tick_attached: Boolean(solverResult.compiled_tick_attached),
         specialized_compact_turn_attached: Boolean(readField(solverResult, 'specialized_compact_turn_attached', 'compiled_compact_tick_attached')),
         compile_ms: solverResult.compile_ms,

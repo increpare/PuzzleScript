@@ -114,6 +114,9 @@ typedef struct ps_runtime_counters {
     uint64_t compiled_tick_attempts;
     uint64_t compiled_tick_hits;
     uint64_t compiled_tick_fallbacks;
+    uint64_t specialized_full_turn_attempts;
+    uint64_t specialized_full_turn_hits;
+    uint64_t specialized_full_turn_fallbacks;
     uint64_t specialized_rulegroup_attempts;
     uint64_t specialized_rulegroup_hits;
     uint64_t specialized_rulegroup_fallbacks;

@@ -2258,6 +2258,9 @@ int main(int argc, char** argv) {
                       << " specialized_rulegroup_attempts=" << runtimeCounters.specialized_rulegroup_attempts
                       << " specialized_rulegroup_hits=" << runtimeCounters.specialized_rulegroup_hits
                       << " specialized_rulegroup_fallbacks=" << runtimeCounters.specialized_rulegroup_fallbacks
+                      << " specialized_full_turn_attempts=" << runtimeCounters.specialized_full_turn_attempts
+                      << " specialized_full_turn_hits=" << runtimeCounters.specialized_full_turn_hits
+                      << " specialized_full_turn_fallbacks=" << runtimeCounters.specialized_full_turn_fallbacks
                       << " compiled_tick_attempts=" << runtimeCounters.compiled_tick_attempts
                       << " compiled_tick_hits=" << runtimeCounters.compiled_tick_hits
                       << " compiled_tick_fallbacks=" << runtimeCounters.compiled_tick_fallbacks
@@ -2269,7 +2272,7 @@ int main(int argc, char** argv) {
                       << " compact_turn_oracle_failures=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnOracleFailures; })
                       << "\n";
         }
-        if (options.requireSpecializedFullTurn && runtimeCounters.compiled_tick_hits == 0) {
+        if (options.requireSpecializedFullTurn && runtimeCounters.specialized_full_turn_hits == 0) {
             std::cerr << "specialized full-turn dispatch was required but no generated turn backend handled a step\n";
             return 1;
         }

@@ -5386,9 +5386,12 @@ ps_runtime_counters snapshotRuntimeCounters() {
     counters.compiled_rule_group_attempts = counters.specialized_rulegroup_attempts;
     counters.compiled_rule_group_hits = counters.specialized_rulegroup_hits;
     counters.compiled_rule_group_fallbacks = counters.specialized_rulegroup_fallbacks;
-    counters.compiled_tick_attempts = gRuntimeCounters.specializedFullTurnAttempts.load(std::memory_order_relaxed);
-    counters.compiled_tick_hits = gRuntimeCounters.specializedFullTurnHits.load(std::memory_order_relaxed);
-    counters.compiled_tick_fallbacks = gRuntimeCounters.specializedFullTurnFallbacks.load(std::memory_order_relaxed);
+    counters.specialized_full_turn_attempts = gRuntimeCounters.specializedFullTurnAttempts.load(std::memory_order_relaxed);
+    counters.specialized_full_turn_hits = gRuntimeCounters.specializedFullTurnHits.load(std::memory_order_relaxed);
+    counters.specialized_full_turn_fallbacks = gRuntimeCounters.specializedFullTurnFallbacks.load(std::memory_order_relaxed);
+    counters.compiled_tick_attempts = counters.specialized_full_turn_attempts;
+    counters.compiled_tick_hits = counters.specialized_full_turn_hits;
+    counters.compiled_tick_fallbacks = counters.specialized_full_turn_fallbacks;
     return counters;
 }
 

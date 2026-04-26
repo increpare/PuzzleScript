@@ -1163,8 +1163,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Current bucket labels:
 
-  - `no_tick_no_rules`
-  - `tick_no_rules`
+  - `no_full_turn_no_rulegroups`
+  - `full_turn_no_rulegroups`
   - `specialized_rulegroups`
   - `no_counters`
   - `unknown`
@@ -1195,7 +1195,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Note: `specialized_rulegroup_hits` counts generated rulegroup dispatch through
   the interpreted turn. Specialized rule loops can still bypass that generic
-  per-group counter, so `compiled_tick_bypassed_generic_rule_counter` means the
+  per-group counter, so
+  `specialized_full_turn_bypassed_generic_rulegroup_counter` means the
   specialized full-turn backend ran but the per-group counter is not the right
   measurement point.
 
