@@ -839,6 +839,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
     after direct one-cell object-rule expansion: 27/452
     after non-push multi-player direct-cell expansion: 70/452
     after simple consume movement expansion: 71/452
+    after direct late-cell expansion: 72/452
     callable compact backends through native-or-bridge: 452/452
 
   testdata.js#1 sokoban no win condition:

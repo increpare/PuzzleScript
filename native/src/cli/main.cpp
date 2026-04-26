@@ -3864,6 +3864,7 @@ struct CompactTickSupport {
     bool interpreterBridge = false;
     std::string nativeFallbackReason = "interpreter_delegation";
     bool directCellObjectRules = false;
+    bool directLateCellObjectRules = false;
     bool simplePush = false;
     bool simplePushChain = false;
     bool simpleConsume = false;
@@ -4221,11 +4222,14 @@ bool compactLooksLikeSimpleConsumeRules(
     return true;
 }
 
-bool compactLooksLikeDirectCellObjectRules(const puzzlescript::Game& game) {
-    if (game.rules.empty() || !game.lateRules.empty()) {
+bool compactLooksLikeDirectCellObjectGroups(
+    const puzzlescript::Game& game,
+    const std::vector<std::vector<puzzlescript::Rule>>& groups
+) {
+    if (groups.empty()) {
         return false;
     }
-    for (const auto& group : game.rules) {
+    for (const auto& group : groups) {
         if (group.empty()) {
             return false;
         }
@@ -4290,12 +4294,13 @@ std::vector<int32_t> compactPushCandidatesFromRules(
 
 CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& game) {
     CompactTickSupport support;
-    if (!game.lateRules.empty()) {
-        support.fallbackReason = "late_rules_not_compact";
-        return support;
-    }
     if (game.rigid) {
         support.fallbackReason = "rigid_not_compact";
+        return support;
+    }
+    const bool directLateCellObjectRules = compactLooksLikeDirectCellObjectGroups(game, game.lateRules);
+    if (!game.lateRules.empty() && !directLateCellObjectRules) {
+        support.fallbackReason = "late_rules_not_compact";
         return support;
     }
     if (compactHasLoopPoints(game.loopPoint) || compactHasLoopPoints(game.lateLoopPoint)) {
@@ -4382,11 +4387,15 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
     std::vector<int32_t> simplePushObjectIds;
     std::vector<int32_t> simpleConsumeObjectIds;
     bool directCellObjectRules = false;
+    const bool directEarlyCellObjectRules = compactLooksLikeDirectCellObjectGroups(game, game.rules);
     if (!game.rules.empty()) {
-        if (playerObjectIds.size() != 1) {
+        if (playerObjectIds.size() != 1 && !directEarlyCellObjectRules) {
             support.fallbackReason = "aggregate_player_rules_not_compact";
             return support;
         }
+        if (playerObjectIds.size() != 1 && directEarlyCellObjectRules) {
+            directCellObjectRules = true;
+        } else {
         std::vector<int32_t> subjectCandidates;
         std::vector<int32_t> targetCandidates;
         for (const int32_t objectId : winSubjects) {
@@ -4416,10 +4425,14 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
             std::vector<int32_t> consumeCandidates = compactPushCandidatesFromRules(game, support.playerObjectId);
             if (compactLooksLikeSimpleConsumeRules(game, support.playerObjectId, consumeCandidates)) {
                 simpleConsumeObjectIds = std::move(consumeCandidates);
-            } else if (compactLooksLikeDirectCellObjectRules(game)) {
+            } else if (directEarlyCellObjectRules) {
                 directCellObjectRules = true;
             }
         }
+        }
+    }
+    if (directLateCellObjectRules) {
+        support.directLateCellObjectRules = true;
     }
     const bool simplePush = !simplePushObjectIds.empty();
     const bool simpleConsume = !simpleConsumeObjectIds.empty();
@@ -5552,6 +5565,7 @@ void appendCompactTickSourceJsonFields(
             support.simplePush ? "simple_push" : (support.simpleConsume ? "simple_consume" : "simple_movement")
         )
         << ",\"rules\":" << jsonStringLiteral(support.directCellObjectRules ? "direct_cell_object" : "movement_shape")
+        << ",\"late_rules\":" << jsonStringLiteral(support.directLateCellObjectRules ? "direct_cell_object" : "none")
         << ",\"win_conditions\":" << jsonStringLiteral(support.winConditions.empty() ? "none" : "generic_masks")
         << "}"
         << ",\"misses\":{";
@@ -6399,6 +6413,49 @@ std::string generateCompiledRulesCpp(
                 << "            }\n"
                 << "        }\n"
                 << "    }\n";
+            }
+            if (compactTickSupport.directLateCellObjectRules) {
+                for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
+                    const auto& group = game.lateRules[groupIndex];
+                    out << "    {\n"
+                        << "        bool groupChanged = true;\n"
+                        << "        int loopCount = 0;\n"
+                        << "        while (groupChanged && loopCount++ < 200) {\n"
+                        << "            groupChanged = false;\n";
+                    for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                        const auto& rule = group[ruleIndex];
+                        const auto& pattern = rule.patterns.front().front();
+                        const auto& replacement = *pattern.replacement;
+                        const std::vector<int32_t> clearObjectIds = objectIdsInMask(game, replacement.objectsClear);
+                        const std::vector<int32_t> setObjectIds = objectIdsInMask(game, replacement.objectsSet);
+                        out << "            for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
+                            << "                const size_t tileWord = static_cast<size_t>(tile >> 6);\n"
+                            << "                const uint64_t tileBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);\n"
+                            << "                if (!" << compactCellPatternMatchExpression(game, pattern, "tileWord", "tileBit") << ") {\n"
+                            << "                    continue;\n"
+                            << "                }\n"
+                            << "                bool cellChanged = false;\n";
+                        for (const int32_t objectId : clearObjectIds) {
+                            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) != 0) {\n"
+                                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] &= ~tileBit;\n"
+                                << "                    cellChanged = true;\n"
+                                << "                }\n";
+                        }
+                        for (const int32_t objectId : setObjectIds) {
+                            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) == 0) {\n"
+                                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] |= tileBit;\n"
+                                << "                    cellChanged = true;\n"
+                                << "                }\n";
+                        }
+                        out << "                if (cellChanged) {\n"
+                            << "                    groupChanged = true;\n"
+                            << "                    ruleChanged = true;\n"
+                            << "                }\n"
+                            << "            }\n";
+                    }
+                    out << "        }\n"
+                        << "    }\n";
+                }
             }
             out
                 << "    bool won = " << (compactTickSupport.winConditions.empty() ? "false" : "true") << ";\n";
