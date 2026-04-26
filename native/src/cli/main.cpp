@@ -5088,6 +5088,64 @@ void appendCompiledTickSourceJsonFields(
         << "}";
 }
 
+void appendCompactTickAggregateJsonFields(
+    std::ostream& out,
+    size_t sourceCount,
+    size_t supported,
+    const std::unordered_map<std::string, size_t>& fallbackReasons
+) {
+    out << "\"compact_tick\":{"
+        << "\"sources\":" << sourceCount
+        << ",\"backend_codegen_available\":" << sourceCount
+        << ",\"whole_turn_supported\":" << supported
+        << ",\"whole_turn_fallback_reason_counts\":";
+    appendJsonCountObject(
+        out,
+        fallbackReasons,
+        {
+            "supported",
+            "late_rules_not_compact",
+            "rigid_not_compact",
+            "aggregate_player_not_compact",
+            "aggregate_player_rules_not_compact",
+            "player_mask_not_single_object",
+            "player_layer_mixed_not_compact",
+            "level_player_count_not_one",
+            "level_player_count_zero",
+            "win_condition_not_simple_all",
+            "win_condition_mask_not_single_object",
+            "win_subject_not_player",
+            "rules_not_compact",
+        }
+    );
+    out << ",\"misses\":{";
+    if (sourceCount > supported) {
+        out << "\"interpreter_delegation\":" << (sourceCount - supported);
+    }
+    out << "}}";
+}
+
+void appendCompactTickSourceJsonFields(
+    std::ostream& out,
+    const CompactTickSupport& support
+) {
+    out << "\"compact_tick\":{"
+        << "\"backend_codegen_available\":true"
+        << ",\"step_entry\":true"
+        << ",\"whole_turn_supported\":" << (support.supported ? "true" : "false")
+        << ",\"whole_turn_fallback_reason\":" << jsonStringLiteral(support.fallbackReason)
+        << ",\"features\":{"
+        << "\"state_layout\":\"compact_object_bits\""
+        << ",\"movement\":" << jsonStringLiteral(support.simplePush ? "simple_push" : "simple_movement")
+        << ",\"win_conditions\":" << jsonStringLiteral(support.winObjectPairs.empty() ? "none" : "simple_all_pairs")
+        << "}"
+        << ",\"misses\":{";
+    if (!support.supported) {
+        out << jsonStringLiteral(support.fallbackReason) << ":1";
+    }
+    out << "}}";
+}
+
 std::string generateCompiledRulesCoverageJson(
     const std::vector<CodegenSource>& sources,
     const CompiledRulesOptions& options,
@@ -5101,6 +5159,8 @@ std::string generateCompiledRulesCoverageJson(
     size_t commandUnknown = 0;
     size_t wholeTurnSupported = 0;
     std::unordered_map<std::string, size_t> wholeTurnFallbackReasons;
+    size_t compactTickSupported = 0;
+    std::unordered_map<std::string, size_t> compactTickFallbackReasons;
     for (const CodegenSource& source : sources) {
         const CompiledTickSupport support = source.game
             ? compiledTickSupportForGame(*source.game, options)
@@ -5123,6 +5183,13 @@ std::string generateCompiledRulesCoverageJson(
         } else {
             ++wholeTurnFallbackReasons[support.wholeTurnFallbackReason];
         }
+        const CompactTickSupport compactSupport = source.game
+            ? compactTickSupportForGame(*source.game)
+            : CompactTickSupport{};
+        if (compactSupport.supported) {
+            ++compactTickSupported;
+        }
+        ++compactTickFallbackReasons[compactSupport.fallbackReason];
     }
     out << "{\n"
         << "  \"max_rows\":" << options.maxRows << ",\n"
@@ -5139,6 +5206,13 @@ std::string generateCompiledRulesCoverageJson(
         commandUnknown,
         wholeTurnSupported,
         wholeTurnFallbackReasons
+    );
+    out << ",";
+    appendCompactTickAggregateJsonFields(
+        out,
+        sources.size(),
+        compactTickSupported,
+        compactTickFallbackReasons
     );
     out << "},\n"
         << "  \"sources\":[\n";
@@ -5158,6 +5232,13 @@ std::string generateCompiledRulesCoverageJson(
             sources[index].game
                 ? compiledTickSupportForGame(*sources[index].game, options)
                 : compiledTickSupportForMissingGame()
+        );
+        out << ",";
+        appendCompactTickSourceJsonFields(
+            out,
+            sources[index].game
+                ? compactTickSupportForGame(*sources[index].game)
+                : CompactTickSupport{}
         );
         out << "}";
         if (index + 1 < sources.size()) {
