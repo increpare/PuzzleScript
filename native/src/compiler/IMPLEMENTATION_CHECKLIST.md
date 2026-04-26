@@ -571,7 +571,14 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Surviving candidates are then stored once with compact identity plus the
     `Session` still needed for the current interpreter tick path.
 
-- [ ] Prototype compact solver state for one simple focus game.
+- [?] Prototype compact solver state for one simple focus game.
+
+  Status: `puzzlescript_solver --compact-node-storage` stores solver nodes
+  without retained `Session`s and materializes a scratch `Session` from compact
+  occupancy when a node is expanded. Smoke-level correctness passes, but the
+  prototype is not a default: on `pushit.txt#5` weighted A* it kept identical
+  expanded/generated counts while increasing elapsed time because every
+  materialized parent forces mask/cache rebuild work inside `step`.
 
   Suggested first candidates:
 
@@ -587,9 +594,13 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Compact hash avoids materializing a full `Session`.
   - The solver can still materialize a scratch `Session` for the existing
     interpreter or compiled-rule path when the tick implementation requires it.
-  - The prototype reports compact clone/hash timings separately from current
-    `clone_ms` and `hash_ms`.
+  - The prototype reports compact materialization under `clone_ms`; split it
+    into a separate `materialize_ms` counter before judging the next iteration.
   - Solver parity remains green for the supported game.
+
+  Next improvement: materialize row/column/board masks and object-cell bitsets
+  directly from compact occupancy, or move generated tick to consume compact
+  occupancy without rebuilding interpreter caches.
 
   Validation:
 

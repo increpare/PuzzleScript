@@ -85,6 +85,7 @@ struct Options {
     bool profileRuntimeCounters = false;
     bool requireCompiledTick = false;
     bool exactStateKeys = true;
+    bool compactNodeStorage = false;
 };
 
 struct CompactSolverState {
@@ -168,6 +169,7 @@ struct Result {
     uint32_t workerId = 0;
     bool compiledRulesAttached = false;
     bool compiledTickAttached = false;
+    bool compactNodeStorage = false;
     Timing timing;
 };
 
@@ -447,12 +449,12 @@ Options parseArgs(int argc, char** argv) {
     Options options;
     options.jobs = 1;
     if (argc < 2) {
-        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys]");
+        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage]");
     }
     for (int index = 1; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--help" || arg == "-h") {
-            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys]");
+            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage]");
         }
         if (arg == "--timeout-ms" && index + 1 < argc) {
             options.timeoutMs = std::max<int64_t>(1, std::stoll(argv[++index]));
@@ -507,6 +509,10 @@ Options parseArgs(int argc, char** argv) {
         }
         if (arg == "--hash-state-keys") {
             options.exactStateKeys = false;
+            continue;
+        }
+        if (arg == "--compact-node-storage") {
+            options.compactNodeStorage = true;
             continue;
         }
         if (arg == "--quiet") {
@@ -582,6 +588,68 @@ StateKey compactStateKey(const CompactSolverState& state, Timing& timing) {
 CompactSolverState compactStateWithTiming(const Session& session, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
     return compactStateFromSession(session);
+}
+
+void markMaterializedSessionDirty(Session& session) {
+    std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
+    std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
+    std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
+    std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
+    session.dirtyObjectBoard = true;
+    session.dirtyMovementBoard = true;
+    session.objectCellIndexDirty = true;
+    session.anyMasksDirty = true;
+}
+
+void materializeCompactStateIntoSession(const CompactSolverState& state, const Session& base, Session& session) {
+    session.game = base.game;
+    session.preparedSession.currentLevelIndex = base.preparedSession.currentLevelIndex;
+    session.preparedSession.currentLevelTarget = base.preparedSession.currentLevelTarget;
+    session.preparedSession.titleScreen = base.preparedSession.titleScreen;
+    session.preparedSession.textMode = base.preparedSession.textMode;
+    session.preparedSession.titleMode = base.preparedSession.titleMode;
+    session.preparedSession.titleSelection = base.preparedSession.titleSelection;
+    session.preparedSession.titleSelected = base.preparedSession.titleSelected;
+    session.preparedSession.messageSelected = base.preparedSession.messageSelected;
+    session.preparedSession.winning = base.preparedSession.winning;
+    session.preparedSession.messageText = base.preparedSession.messageText;
+    session.preparedSession.loadedLevelSeed = base.preparedSession.loadedLevelSeed;
+    session.liveLevel.isMessage = base.liveLevel.isMessage;
+    session.liveLevel.message = base.liveLevel.message;
+    session.liveLevel.lineNumber = base.liveLevel.lineNumber;
+    session.liveLevel.width = base.liveLevel.width;
+    session.liveLevel.height = base.liveLevel.height;
+    session.liveLevel.layerCount = base.liveLevel.layerCount;
+    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const int32_t objectCount = session.game ? session.game->objectCount : 0;
+    const int32_t stride = session.game ? session.game->strideObject : 0;
+    session.liveLevel.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
+    for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
+        const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
+        for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
+            uint64_t bits = objectBase + bitWord < state.objectBits.size() ? state.objectBits[objectBase + bitWord] : 0;
+            while (bits != 0) {
+                const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(bits));
+                const int32_t tileIndex = static_cast<int32_t>(bitWord * 64 + bit);
+                if (tileIndex < tileCount) {
+                    const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
+                    const uint32_t objectBit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
+                    session.liveLevel.objects[static_cast<size_t>(tileIndex * stride + word)] |= puzzlescript::maskBit(objectBit);
+                }
+                bits &= bits - 1;
+            }
+        }
+    }
+    session.liveMovements.assign(static_cast<size_t>(std::max(tileCount, 0) * (session.game ? session.game->strideMovement : 0)), 0);
+    session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
+    session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
+    session.pendingAgain = false;
+    session.canUndo = false;
+    session.undoStack.clear();
+    session.lastAudioEvents.clear();
+    session.lastUiAudioEvents.clear();
+    markMaterializedSessionDirty(session);
 }
 
 void recordCompactStateStorage(Timing& timing, const CompactSolverState& state) {
@@ -828,7 +896,8 @@ Result runSearch(
     SearchMode mode,
     TimePoint deadline,
     uint32_t workerId,
-    bool exactStateKeys
+    bool exactStateKeys,
+    bool compactNodeStorage
 ) {
     Result result;
     result.game = gameName;
@@ -840,6 +909,7 @@ Result runSearch(
     result.workerId = workerId;
     result.compiledRulesAttached = game && game->compiledRules != nullptr;
     result.compiledTickAttached = game && game->compiledTick != nullptr;
+    result.compactNodeStorage = compactNodeStorage;
     result.timing.compileNs = compileNs;
 
     std::unique_ptr<Session> initial;
@@ -853,6 +923,12 @@ Result runSearch(
     if (initial->preparedSession.textMode || initial->preparedSession.level.isMessage) {
         result.status = "skipped_message";
         return result;
+    }
+    std::unique_ptr<Session> compactSessionBase;
+    std::unique_ptr<Session> parentScratch;
+    if (compactNodeStorage) {
+        compactSessionBase = std::make_unique<Session>(*initial);
+        parentScratch = std::make_unique<Session>(*initial);
     }
 
     std::vector<Node> nodes;
@@ -871,7 +947,7 @@ Result runSearch(
     const StateKey initialKey = compactStateKey(initialCompact, result.timing);
     {
         ScopedTimer timer(result.timing.nodeStoreNs);
-        nodes.push_back(Node{std::move(initial), std::move(initialCompact), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
+        nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(initial), std::move(initialCompact), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
         recordCompactStateStorage(result.timing, nodes.back().compact);
     }
     {
@@ -917,7 +993,15 @@ Result runSearch(
             continue;
         }
 
-        const Session& parentSession = *parentNode.session;
+        const Session* parentSessionPtr = parentNode.session.get();
+        if (parentSessionPtr == nullptr) {
+            {
+                ScopedTimer timer(result.timing.cloneNs);
+                materializeCompactStateIntoSession(parentNode.compact, *compactSessionBase, *parentScratch);
+            }
+            parentSessionPtr = parentScratch.get();
+        }
+        const Session& parentSession = *parentSessionPtr;
         const uint32_t parentDepth = parentNode.depth;
         ++result.expanded;
 
@@ -990,7 +1074,7 @@ Result runSearch(
                 }
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
                     recordCompactStateStorage(result.timing, nodes.back().compact);
                 }
             } else {
@@ -1011,7 +1095,7 @@ Result runSearch(
                 childIndex = static_cast<uint32_t>(nodes.size());
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
                     recordCompactStateStorage(result.timing, nodes.back().compact);
                 }
             }
@@ -1064,7 +1148,8 @@ Result solveLevel(
     int64_t compileNs,
     Strategy strategy,
     uint32_t workerId,
-    bool exactStateKeys
+    bool exactStateKeys,
+    bool compactNodeStorage
 ) {
     const TimePoint searchStart = Clock::now();
     const TimePoint deadline = searchStart + std::chrono::milliseconds(timeoutMs);
@@ -1076,13 +1161,13 @@ Result solveLevel(
     };
 
     if (strategy == Strategy::Bfs) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys, compactNodeStorage));
     }
     if (strategy == Strategy::WeightedAStar) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage));
     }
     if (strategy == Strategy::Greedy) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys, compactNodeStorage));
     }
 
     Result combined;
@@ -1095,10 +1180,11 @@ Result solveLevel(
     combined.workerId = workerId;
     combined.compiledRulesAttached = game && game->compiledRules != nullptr;
     combined.compiledTickAttached = game && game->compiledTick != nullptr;
+    combined.compactNodeStorage = compactNodeStorage;
     combined.timing.compileNs = compileNs;
 
     const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
-    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys);
+    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys, compactNodeStorage);
     mergeStats(combined, bfs);
     if (bfs.status == "solved" || bfs.status == "skipped_message" || bfs.status == "level_error") {
         bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
@@ -1106,7 +1192,7 @@ Result solveLevel(
     }
 
     if (Clock::now() < deadline) {
-        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys);
+        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage);
         mergeStats(combined, weighted);
         if (weighted.status == "solved" || weighted.status == "level_error") {
             combined.status = weighted.status;
@@ -1297,6 +1383,7 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"timeout_ms\":" << result.timeoutMs;
     out << ",\"compiled_rules_attached\":" << (result.compiledRulesAttached ? "true" : "false");
     out << ",\"compiled_tick_attached\":" << (result.compiledTickAttached ? "true" : "false");
+    out << ",\"compact_node_storage\":" << (result.compactNodeStorage ? "true" : "false");
     out << ",\"compile_ms\":" << ms(result.timing.compileNs);
     out << ",\"load_ms\":" << ms(result.timing.loadNs);
     out << ",\"clone_ms\":" << ms(result.timing.cloneNs);
@@ -1597,7 +1684,8 @@ std::vector<Result> runCorpus(const Options& options) {
                     compiled.compileNs,
                     options.strategy,
                     workerId,
-                    options.exactStateKeys
+                    options.exactStateKeys,
+                    options.compactNodeStorage
                 );
                 results[item.resultIndex] = std::move(result);
                 const size_t done = completed.fetch_add(1) + 1;
