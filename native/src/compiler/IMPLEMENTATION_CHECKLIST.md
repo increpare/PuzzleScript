@@ -578,7 +578,10 @@ attribute graph cost -> no-allocation hash -> flat visited table
   occupancy when a node is expanded. Smoke-level correctness passes, but the
   prototype is not a default: on `pushit.txt#5` weighted A* it kept identical
   expanded/generated counts while increasing elapsed time because every
-  materialized parent forces mask/cache rebuild work inside `step`.
+  materialized parent forces mask/cache rebuild work inside `step`. The
+  compact-node path now also evaluates the win-condition heuristic directly
+  from compact occupancy, proving the solver can ask heuristic questions of the
+  compact state without a retained `Session`.
 
   Suggested first candidates:
 
@@ -600,7 +603,18 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Next improvement: materialize row/column/board masks and object-cell bitsets
   directly from compact occupancy, or move generated tick to consume compact
-  occupancy without rebuilding interpreter caches.
+  occupancy without rebuilding interpreter caches. The generic compact
+  heuristic is slower than the current `Session` heuristic on `pushit.txt#5`;
+  a generated/baked heuristic should specialize the masks and object ids rather
+  than use the generic compact matcher.
+
+  Current evidence:
+
+  ```text
+  pushit.txt#5 weighted-astar 1000ms:
+    session nodes: expanded=26226 generated=131129 elapsed_ms=385 heuristic_ms=27.4
+    compact nodes: expanded=26226 generated=131129 elapsed_ms=395 heuristic_ms=43.0
+  ```
 
   Validation:
 
