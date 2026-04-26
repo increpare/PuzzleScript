@@ -324,8 +324,8 @@ Goal: remove leftover ambiguity after the mechanical work is done.
 Search hygiene:
 
 - [x] `rg "\bSession\b" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
-- [ ] `rg "CompactSolverState" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
-- [ ] `rg "GenericTurn|GenericRulegroups|Generic turn|generic turn" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
+- [x] `rg "CompactSolverState" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
+- [x] `rg "GenericTurn|GenericRulegroups|Generic turn|generic turn" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
 - [ ] `rg "compiled tick|compact_tick|CompiledCompactTick|CompiledTick" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
 - [ ] `rg "\btick\b|Tick" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
 - [ ] Review each remaining hit and classify it as:
