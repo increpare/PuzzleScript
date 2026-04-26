@@ -852,6 +852,10 @@ attribute graph cost -> no-allocation hash -> flat visited table
     behavior: materializes each generated compact tick parent through the
       interpreter and compares solver-relevant step flags plus resulting compact
       object bits for non-terminal edges.
+    make target: make compact_tick_oracle_smoke
+    solver_smoke_tests specialized:
+      compact_tick_oracle_checks=18
+      compact_tick_oracle_failures=0
     crate swap.txt level=1 bfs:
       compact_tick_attempts=28589
       compact_tick_hits=28589

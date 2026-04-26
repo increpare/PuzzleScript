@@ -5,7 +5,7 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--require-compiled-tick]');
+    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--require-compiled-tick] [--compact-tick-oracle] [--require-compact-oracle-checks]');
     process.exit(1);
 }
 
@@ -18,11 +18,16 @@ const solverPath = path.resolve(args[0]);
 const fixtureDir = path.resolve(args[1]);
 let timeoutMs = 1000;
 const extraSolverArgs = [];
+let requireCompactOracleChecks = false;
 for (let index = 2; index < args.length; index++) {
     if (args[index] === '--timeout-ms' && index + 1 < args.length) {
         timeoutMs = Number.parseInt(args[++index], 10);
     } else if (args[index] === '--require-compiled-tick') {
         extraSolverArgs.push('--require-compiled-tick');
+    } else if (args[index] === '--compact-tick-oracle') {
+        extraSolverArgs.push('--compact-tick-oracle');
+    } else if (args[index] === '--require-compact-oracle-checks') {
+        requireCompactOracleChecks = true;
     } else {
         throw new Error(`Unsupported argument: ${args[index]}`);
     }
@@ -63,6 +68,12 @@ function assertSmoke(json) {
     if (json.totals.skipped_message !== 1) throw new Error(`skipped ${json.totals.skipped_message}, expected 1`);
     if (json.totals.timeout !== 0) throw new Error(`timeout ${json.totals.timeout}, expected 0`);
     if (json.totals.errors !== 0) throw new Error(`errors ${json.totals.errors}, expected 0`);
+    if (json.totals.compact_tick_oracle_failures !== undefined && json.totals.compact_tick_oracle_failures !== 0) {
+        throw new Error(`compact_tick_oracle_failures ${json.totals.compact_tick_oracle_failures}, expected 0`);
+    }
+    if (requireCompactOracleChecks && !(json.totals.compact_tick_oracle_checks > 0)) {
+        throw new Error(`compact_tick_oracle_checks ${json.totals.compact_tick_oracle_checks}, expected > 0`);
+    }
 
     const expected = new Map([
         ['impossible.txt#0', { status: 'exhausted', solution: [] }],
@@ -98,4 +109,9 @@ function assertSmoke(json) {
 
 const json = runSolver();
 assertSmoke(json);
-process.stdout.write('solver_smoke_assert passed cases=7\n');
+let suffix = '';
+if (json.totals.compact_tick_oracle_checks > 0 || json.totals.compact_tick_oracle_failures > 0 || requireCompactOracleChecks) {
+    suffix += ` compact_tick_oracle_checks=${json.totals.compact_tick_oracle_checks}`;
+    suffix += ` compact_tick_oracle_failures=${json.totals.compact_tick_oracle_failures}`;
+}
+process.stdout.write(`solver_smoke_assert passed cases=7${suffix}\n`);
