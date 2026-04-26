@@ -471,7 +471,7 @@ bool matchesGameFilter(const std::string& relativeName, const std::optional<std:
 Options parseArgs(int argc, char** argv) {
     Options options;
     options.jobs = 1;
-    constexpr const char* usage = "Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage] [--compact-turn-oracle] [--astar-weight N]";
+    constexpr const char* usage = "Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-specialized-full-turn] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage] [--compact-turn-oracle] [--astar-weight N]";
     if (argc < 2) {
         throw std::runtime_error(usage);
     }
@@ -526,7 +526,7 @@ Options parseArgs(int argc, char** argv) {
             options.profileRuntimeCounters = true;
             continue;
         }
-        if (arg == "--require-compiled-tick") {
+        if (arg == "--require-specialized-full-turn" || arg == "--require-compiled-tick") {
             options.requireSpecializedFullTurn = true;
             options.profileRuntimeCounters = true;
             continue;

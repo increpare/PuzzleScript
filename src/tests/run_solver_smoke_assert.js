@@ -5,7 +5,7 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--require-compiled-tick] [--compact-turn-oracle] [--require-compact-oracle-checks]');
+    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--require-specialized-full-turn] [--require-compiled-tick] [--compact-turn-oracle] [--require-compact-oracle-checks]');
     process.exit(1);
 }
 
@@ -22,8 +22,10 @@ let requireCompactOracleChecks = false;
 for (let index = 2; index < args.length; index++) {
     if (args[index] === '--timeout-ms' && index + 1 < args.length) {
         timeoutMs = Number.parseInt(args[++index], 10);
+    } else if (args[index] === '--require-specialized-full-turn') {
+        extraSolverArgs.push('--require-specialized-full-turn');
     } else if (args[index] === '--require-compiled-tick') {
-        extraSolverArgs.push('--require-compiled-tick');
+        extraSolverArgs.push('--require-specialized-full-turn');
     } else if (args[index] === '--compact-turn-oracle' || args[index] === '--compact-tick-oracle') {
         extraSolverArgs.push('--compact-turn-oracle');
     } else if (args[index] === '--require-compact-oracle-checks') {

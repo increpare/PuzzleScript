@@ -20,7 +20,7 @@
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
-	compiled_rules_simulation_suite_coverage compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
+	compiled_rules_simulation_suite_coverage specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
@@ -342,8 +342,8 @@ help:
 	@echo "                                     Benchmark solver with compiled rules for the corpus"
 	@echo "  make compiled_rules_simulation_suite_coverage"
 	@echo "                                     Write $(COMPILED_RULES_SIMULATION_SUITE_COVERAGE_JSON)"
-	@echo "  make compiled_tick_dispatch_smoke"
-	@echo "                                     Assert linked generated tick dispatch is exercised"
+	@echo "  make specialized_full_turn_dispatch_smoke"
+	@echo "                                     Assert linked specialized full-turn dispatch is exercised"
 	@echo ""
 	@echo "Direct executable after build:"
 	@echo "  build/native/puzzlescript_cpp --help"
@@ -511,7 +511,9 @@ solver_smoke_tests: $(SOLVER_TARGET_PREREQ)
 		$(NODE) src/tests/run_solver_smoke_assert.js $(PUZZLESCRIPT_SOLVER) src/tests/solver_smoke_tests --timeout-ms 1000; \
 	fi
 
-compiled_tick_dispatch_smoke: build
+compiled_tick_dispatch_smoke: specialized_full_turn_dispatch_smoke
+
+specialized_full_turn_dispatch_smoke: build
 	@set -e; \
 	$(COMPILED_RULES_BOOTSTRAP_CPP); \
 	hash=$$(find src/tests/solver_smoke_tests -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
@@ -523,7 +525,7 @@ compiled_tick_dispatch_smoke: build
 	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/solver_smoke_tests,solver_smoke_$$hash); \
 	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
-	$(NODE) src/tests/run_solver_smoke_assert.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests --timeout-ms 1000 --require-compiled-tick
+	$(NODE) src/tests/run_solver_smoke_assert.js "$$build_dir/native/puzzlescript_solver" src/tests/solver_smoke_tests --timeout-ms 1000 --require-specialized-full-turn
 
 compact_tick_oracle_smoke: compact_turn_oracle_smoke
 
