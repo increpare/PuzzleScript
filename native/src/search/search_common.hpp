@@ -50,7 +50,7 @@ inline void appendStateKeyValue(StateKey& key, uint64_t value) {
 }
 
 template <typename ProjectWord>
-inline StateKey sessionStateKey(const Session& session, bool includeRandomState, ProjectWord projectWord) {
+inline StateKey fullStateKey(const FullState& session, bool includeRandomState, ProjectWord projectWord) {
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
     appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.preparedSession.currentLevelIndex)));
     appendStateKeyValue(key, session.preparedSession.titleScreen ? 1 : 0);
@@ -85,8 +85,17 @@ inline StateKey sessionStateKey(const Session& session, bool includeRandomState,
     return key;
 }
 
+inline StateKey fullStateKey(const FullState& session, bool includeRandomState) {
+    return fullStateKey(session, includeRandomState, [](size_t, MaskWord word) { return word; });
+}
+
+template <typename ProjectWord>
+inline StateKey sessionStateKey(const Session& session, bool includeRandomState, ProjectWord projectWord) {
+    return fullStateKey(session, includeRandomState, projectWord);
+}
+
 inline StateKey sessionStateKey(const Session& session, bool includeRandomState) {
-    return sessionStateKey(session, includeRandomState, [](size_t, MaskWord word) { return word; });
+    return fullStateKey(session, includeRandomState);
 }
 
 inline int32_t priorityFor(SearchMode mode, uint32_t depth, int32_t heuristic, int32_t weightedAStarWeight) {

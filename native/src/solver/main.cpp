@@ -34,6 +34,7 @@ namespace {
 
 using Clock = std::chrono::steady_clock;
 using TimePoint = Clock::time_point;
+using puzzlescript::FullState;
 using puzzlescript::Game;
 using puzzlescript::MaskWordUnsigned;
 using puzzlescript::Session;
@@ -581,7 +582,7 @@ uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
     }
 }
 
-CompactState compactStateFromSession(const Session& session) {
+CompactState compactStateFromFullState(const FullState& session) {
     CompactState state;
     state.randomStateS = session.randomState.s;
     state.randomStateI = session.randomState.i;
@@ -630,7 +631,11 @@ StateKey compactStateKey(const CompactState& state, Timing& timing) {
 
 CompactState compactStateWithTiming(const Session& session, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
-    return compactStateFromSession(session);
+    return compactStateFromFullState(session);
+}
+
+CompactState compactStateFromSession(const Session& session) {
+    return compactStateFromFullState(session);
 }
 
 void markMaterializedSessionDirty(Session& session) {
@@ -644,7 +649,7 @@ void markMaterializedSessionDirty(Session& session) {
     session.anyMasksDirty = true;
 }
 
-void materializeCompactStateIntoSession(const CompactState& state, const Session& base, Session& session) {
+void materializeCompactStateIntoFullState(const CompactState& state, const FullState& base, FullState& session) {
     session.game = base.game;
     session.preparedSession.currentLevelIndex = base.preparedSession.currentLevelIndex;
     session.preparedSession.currentLevelTarget = base.preparedSession.currentLevelTarget;
@@ -698,6 +703,10 @@ void materializeCompactStateIntoSession(const CompactState& state, const Session
     session.randomState.j = state.randomStateJ;
     session.randomState.valid = state.randomStateValid;
     markMaterializedSessionDirty(session);
+}
+
+void materializeCompactStateIntoSession(const CompactState& state, const Session& base, Session& session) {
+    materializeCompactStateIntoFullState(state, base, session);
 }
 
 void prepareSolverChildSessionFromParent(Session& child, const Session& parent) {
@@ -1454,7 +1463,7 @@ Result runSearch(
         if (parentSessionPtr == nullptr) {
             {
                 ScopedTimer timer(result.timing.cloneNs);
-                materializeCompactStateIntoSession(parentNode.compact, *compactSessionBase, *parentScratch);
+                materializeCompactStateIntoFullState(parentNode.compact, *compactSessionBase, *parentScratch);
             }
             parentSessionPtr = parentScratch.get();
         }

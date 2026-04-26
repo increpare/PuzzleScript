@@ -4986,7 +4986,7 @@ void emitRuleRowFunctions(
         default: break;
     }
 
-    out << "bool match_" << prefix << "_row" << rowIndex << "(Session& session, int32_t startIndex) {\n"
+    out << "bool match_" << prefix << "_row" << rowIndex << "(FullState& session, int32_t startIndex) {\n"
         << "    const Game& game = *session.game;\n"
         << "    const int32_t delta = (" << dx << ") * session.liveLevel.height + (" << dy << ");\n";
     for (size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex) {
@@ -5001,7 +5001,7 @@ void emitRuleRowFunctions(
     out << "    return true;\n"
         << "}\n\n";
 
-    out << "bool apply_replacements_" << prefix << "_row" << rowIndex << "(Session& session, int32_t startIndex) {\n"
+    out << "bool apply_replacements_" << prefix << "_row" << rowIndex << "(FullState& session, int32_t startIndex) {\n"
         << "    const Game& game = *session.game;\n"
         << "    const int32_t delta = (" << dx << ") * session.liveLevel.height + (" << dy << ");\n"
         << "    bool changed = false;\n";
@@ -5289,7 +5289,7 @@ void emitRuleFunctions(
         + "_g" + std::to_string(groupIndex)
         + "_r" + std::to_string(ruleIndex);
     if (ruleUsesRuntimeRowHelpers(rule)) {
-        out << "bool apply_rule_" << prefix << "(Session& session, CommandState& commands) {\n"
+        out << "bool apply_rule_" << prefix << "(FullState& session, CommandState& commands) {\n"
             << "    const Game& game = *session.game;\n"
             << "    const Rule& rule = game." << (late ? "lateRules" : "rules")
             << "[" << groupIndex << "][" << ruleIndex << "];\n"
@@ -5349,7 +5349,7 @@ void emitRuleFunctions(
         emitRuleRowFunctions(out, game, rule, prefix, rowIndex);
     }
 
-    out << "bool apply_rule_" << prefix << "(Session& session, CommandState& commands) {\n"
+    out << "bool apply_rule_" << prefix << "(FullState& session, CommandState& commands) {\n"
         << "    const Game& game = *session.game;\n"
         << "    bool changed = false;\n";
     const bool oneRow = rule.patterns.size() == 1;
@@ -6208,7 +6208,7 @@ std::string generateCompiledRulesCpp(
         totalCompiledRules += sourceCompiledRules;
         totalCompiledGroups += sourceCompiledGroups;
 
-        out << "SpecializedRulegroupOutcome apply_source_" << sourceIndex << "(Session& session, int32_t groupIndex, bool late, CommandState& commands) {\n"
+        out << "SpecializedRulegroupOutcome apply_source_" << sourceIndex << "(FullState& session, int32_t groupIndex, bool late, CommandState& commands) {\n"
             << "    const Game& game = *session.game;\n"
             << (compactTurnOnly
                 ? "    (void)game;\n    (void)groupIndex;\n    (void)late;\n    (void)commands;\n    return {false, false};\n}\n\n"
@@ -6297,7 +6297,7 @@ std::string generateCompiledRulesCpp(
             << "}\n\n";
         }
 
-        out << "SpecializedRulegroupsForInterpretedTurnOutcome apply_early_groups_source_" << sourceIndex << "(Session& session, CommandState& commands, std::vector<bool>* bannedGroups) {\n";
+        out << "SpecializedRulegroupsForInterpretedTurnOutcome apply_early_groups_source_" << sourceIndex << "(FullState& session, CommandState& commands, std::vector<bool>* bannedGroups) {\n";
         if (compactTurnOnly || !areAllGroupsCompilable(game.rules, options)) {
             out << "    (void)session;\n"
                 << "    (void)commands;\n"
@@ -6348,7 +6348,7 @@ std::string generateCompiledRulesCpp(
                 << "}\n\n";
         }
 
-        out << "SpecializedRulegroupsForInterpretedTurnOutcome apply_late_groups_source_" << sourceIndex << "(Session& session, CommandState& commands, std::vector<bool>* bannedGroups) {\n";
+        out << "SpecializedRulegroupsForInterpretedTurnOutcome apply_late_groups_source_" << sourceIndex << "(FullState& session, CommandState& commands, std::vector<bool>* bannedGroups) {\n";
         if (compactTurnOnly || !areAllGroupsCompilable(game.lateRules, options)) {
             out << "    (void)session;\n"
                 << "    (void)commands;\n"
@@ -6407,12 +6407,12 @@ std::string generateCompiledRulesCpp(
             << "    " << sourceCompiledGroups << "U,\n"
             << "};\n\n";
 
-        out << "CompiledTickApplyOutcome tick_step_source_" << sourceIndex << "(Session& session, ps_input input, RuntimeStepOptions options) {\n"
+        out << "CompiledTickApplyOutcome tick_step_source_" << sourceIndex << "(FullState& session, ps_input input, RuntimeStepOptions options) {\n"
             << (compactTurnOnly
                 ? "    (void)session;\n    (void)input;\n    (void)options;\n    return {false, {}};\n"
                 : "    return {true, puzzlescript::interpreterStepWithCompiledRuleGroups(session, input, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
-            << "CompiledTickApplyOutcome tick_source_" << sourceIndex << "(Session& session, RuntimeStepOptions options) {\n"
+            << "CompiledTickApplyOutcome tick_source_" << sourceIndex << "(FullState& session, RuntimeStepOptions options) {\n"
             << (compactTurnOnly
                 ? "    (void)session;\n    (void)options;\n    return {false, {}};\n"
                 : "    return {true, puzzlescript::interpreterTickWithCompiledRuleGroups(session, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")

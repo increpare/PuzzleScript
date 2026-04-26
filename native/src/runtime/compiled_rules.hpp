@@ -14,7 +14,7 @@ struct SpecializedRulegroupOutcome {
     bool changed = false;
 };
 
-using SpecializedRulegroupFn = SpecializedRulegroupOutcome (*)(Session& session, int32_t groupIndex, bool late, CommandState& commands);
+using SpecializedRulegroupFn = SpecializedRulegroupOutcome (*)(FullState& state, int32_t groupIndex, bool late, CommandState& commands);
 
 struct SpecializedRulegroupsBackend {
     uint64_t sourceHash = 0;
@@ -39,8 +39,8 @@ struct SpecializedRulegroupsForInterpretedTurnOutcome {
     bool changed = false;
 };
 
-using CompiledTickStepFn = CompiledTickApplyOutcome (*)(Session& session, ps_input input, RuntimeStepOptions options);
-using CompiledTickFn = CompiledTickApplyOutcome (*)(Session& session, RuntimeStepOptions options);
+using CompiledTickStepFn = CompiledTickApplyOutcome (*)(FullState& state, ps_input input, RuntimeStepOptions options);
+using CompiledTickFn = CompiledTickApplyOutcome (*)(FullState& state, RuntimeStepOptions options);
 
 struct CompiledTickBackend {
     uint64_t sourceHash = 0;
@@ -122,27 +122,27 @@ inline SpecializedCompactTurnOutcome compiledCompactTickInterpreterBridge(
 ) {
     return compactStateInterpretedTurnBridge(game, state, input, options);
 }
-const MaskWord* compiledRuleCellObjects(const Session& session, int32_t tileIndex);
-const MaskWord* compiledRuleCellMovements(const Session& session, int32_t tileIndex);
+const MaskWord* compiledRuleCellObjects(const FullState& state, int32_t tileIndex);
+const MaskWord* compiledRuleCellMovements(const FullState& state, int32_t tileIndex);
 bool compiledRuleBitsSet(const MaskWord* required, size_t requiredCount, const MaskWord* actual, size_t actualCount);
 bool compiledRuleAnyBits(const MaskWord* lhs, size_t lhsCount, const MaskWord* rhs, size_t rhsCount);
 void compiledRuleSetCellObjectsFromWords(
-    Session& session,
+    FullState& state,
     int32_t tileIndex,
     const MaskWord* objects,
     const MaskWord* created,
     const MaskWord* destroyed
 );
-void compiledRuleSetCellMovementsFromWords(Session& session, int32_t tileIndex, const MaskWord* movements);
+void compiledRuleSetCellMovementsFromWords(FullState& state, int32_t tileIndex, const MaskWord* movements);
 void compiledRuleSetCellObjectsWord1(
-    Session& session,
+    FullState& state,
     int32_t tileIndex,
     MaskWord objects,
     MaskWord created,
     MaskWord destroyed
 );
-void compiledRuleSetCellMovementsWord1(Session& session, int32_t tileIndex, MaskWord movements);
-void compiledRuleRebuildMasks(Session& session);
+void compiledRuleSetCellMovementsWord1(FullState& state, int32_t tileIndex, MaskWord movements);
+void compiledRuleRebuildMasks(FullState& state);
 void compiledRuleQueueCommands(const Rule& rule, CommandState& commands);
 bool compiledRulePrepareCommandQueue(CommandState& commands, bool currentRuleCancel, bool currentRuleRestart);
 void compiledRuleQueueKnownCommand(
@@ -152,9 +152,9 @@ void compiledRuleQueueKnownCommand(
     std::string_view argument = {}
 );
 using CompiledRuleRowMatch = std::vector<int32_t>;
-void compiledRuleCollectRowMatches(Session& session, const Rule& rule, size_t rowIndex, std::vector<CompiledRuleRowMatch>& outMatches);
-bool compiledRuleRowMatchStillMatches(const Session& session, const Rule& rule, size_t rowIndex, const CompiledRuleRowMatch& match);
-bool compiledRuleApplyRowMatch(Session& session, const Rule& rule, size_t rowIndex, const CompiledRuleRowMatch& match);
-bool compiledRuleApplyRandomGroup(Session& session, const std::vector<Rule>& group, CommandState& commands);
+void compiledRuleCollectRowMatches(FullState& state, const Rule& rule, size_t rowIndex, std::vector<CompiledRuleRowMatch>& outMatches);
+bool compiledRuleRowMatchStillMatches(const FullState& state, const Rule& rule, size_t rowIndex, const CompiledRuleRowMatch& match);
+bool compiledRuleApplyRowMatch(FullState& state, const Rule& rule, size_t rowIndex, const CompiledRuleRowMatch& match);
+bool compiledRuleApplyRandomGroup(FullState& state, const std::vector<Rule>& group, CommandState& commands);
 
 } // namespace puzzlescript

@@ -124,7 +124,7 @@ struct RestartSnapshot {
     std::vector<int32_t> oldFlickscreenDat;
 };
 
-struct PreparedSession {
+struct PreparedFullState {
     int32_t currentLevelIndex = 0;
     std::optional<int32_t> currentLevelTarget;
     bool titleScreen = false;
@@ -146,6 +146,8 @@ struct PreparedSession {
     RestartSnapshot restart;
     std::string serializedLevel;
 };
+
+using PreparedSession = PreparedFullState;
 
 struct Replacement {
     // All masks live in Game::maskArena; these are offsets (in words).
@@ -333,13 +335,13 @@ struct Game {
     std::vector<SoundMaskEntry> sfxDestructionMasks;
     std::vector<std::vector<SoundMaskEntry>> sfxMovementMasks;
     std::vector<SoundMaskEntry> sfxMovementFailureMasks;
-    PreparedSession preparedSession;
+    PreparedFullState preparedSession;
     const SpecializedRulegroupsBackend* specializedRulegroups = nullptr;
     const CompiledTickBackend* compiledTick = nullptr;
     const SpecializedCompactTurnBackend* specializedCompactTurn = nullptr;
 };
 
-struct Session {
+struct FullState {
     struct RandomState {
         std::array<uint8_t, 256> s{};
         uint8_t i = 0;
@@ -348,7 +350,7 @@ struct Session {
     };
 
     struct UndoSnapshot {
-        PreparedSession preparedSession;
+        PreparedFullState preparedSession;
         LevelTemplate liveLevel;
         MaskVector liveMovements;
         MaskVector rigidGroupIndexMasks;
@@ -357,7 +359,7 @@ struct Session {
     };
 
     std::shared_ptr<const Game> game;
-    PreparedSession preparedSession;
+    PreparedFullState preparedSession;
     LevelTemplate liveLevel;
     MaskVector liveMovements;
     MaskVector rowMasks;
@@ -420,6 +422,8 @@ struct Session {
     SimdBackend backend = SimdBackend::Scalar;
 };
 
+using Session = FullState;
+
 struct CompileResult {
     std::shared_ptr<const Game> game;
     std::unique_ptr<Error> error;
@@ -434,6 +438,8 @@ bool restart(Session& session);
 bool undo(Session& session);
 uint64_t hashSession64(const Session& session);
 ps_hash128 hashSession128(const Session& session);
+uint64_t hashFullState64(const FullState& state);
+ps_hash128 hashFullState128(const FullState& state);
 std::string serializeTestString(const Session& session);
 std::string exportSnapshot(const Session& session);
 size_t listInputs(ps_input* output, size_t capacity);

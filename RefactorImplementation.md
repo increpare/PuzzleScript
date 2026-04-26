@@ -209,34 +209,40 @@ Goal: decide and execute the large `Session` rename only after smaller axes are 
 
 Decision checkpoint:
 
-- [ ] Re-read `Refactor.md` and the `FullState` caveat.
-- [ ] Decide whether this phase uses `FullState` or defers to a larger `RuntimeState` split.
-- [ ] If choosing `FullState`, document why it is still the immediate rename target.
+- [x] Re-read `Refactor.md` and the `FullState` caveat.
+- [x] Decide whether this phase uses `FullState` or defers to a larger `RuntimeState` split.
+- [x] If choosing `FullState`, document why it is still the immediate rename target.
 - [ ] If choosing `RuntimeState`, update `Refactor.md` first and stop this checklist to avoid implementing the wrong name.
 
 If proceeding with `FullState`:
 
-- [ ] Rename C++ `Session` -> `FullState`.
-- [ ] Rename `PreparedSession` -> `PreparedFullState`.
-- [ ] Rename helper functions:
-  - [ ] `hashSession64` -> `hashFullState64`
-  - [ ] `hashSession128` -> `hashFullState128`
-  - [ ] `hashSession*NoAlloc` -> `hashFullState*NoAlloc`
-  - [ ] `sessionStateKey` -> `fullStateKey`
-  - [ ] `compactStateFromSession` -> `compactStateFromFullState`
-  - [ ] `materializeCompactStateIntoSession` -> `materializeCompactStateIntoFullState`
-- [ ] Update generated C++ emission from `Session&` to `FullState&`.
+- [x] Rename the primary C++ state struct `Session` -> `FullState`, with a temporary `Session` alias.
+- [ ] Finish migrating internal call sites from the `Session` alias to `FullState`.
+- [x] Rename the primary prepared-state struct `PreparedSession` -> `PreparedFullState`, with a temporary `PreparedSession` alias.
+- [x] Rename helper functions:
+  - [x] `hashSession64` -> `hashFullState64`, with temporary wrapper.
+  - [x] `hashSession128` -> `hashFullState128`, with temporary wrapper.
+  - [x] `hashSession*NoAlloc` -> `hashFullState*NoAlloc`, with temporary wrapper.
+  - [x] `sessionStateKey` -> `fullStateKey`, with temporary wrapper.
+  - [x] `compactStateFromSession` -> `compactStateFromFullState`, with temporary wrapper.
+  - [x] `materializeCompactStateIntoSession` -> `materializeCompactStateIntoFullState`, with temporary wrapper.
+- [x] Update generated C++ emission from `Session&` to `FullState&`.
 - [ ] Update comments and docs that use `Session` as architecture vocabulary.
 - [ ] Leave `ps_session_*` C API names untouched until the public API phase.
 
+Decision note: proceed with `FullState` now because it names the contrast with
+`CompactState` clearly for solver/generator work. The larger `RuntimeState`
+split remains attractive, but it should be a semantic ownership refactor rather
+than a prerequisite for getting compact specialized turns into shape.
+
 Acceptance:
 
-- [ ] `make build`
-- [ ] `make simulation_tests_cpp`
-- [ ] `make solver_smoke_tests`
-- [ ] `make solver_parity_smoke`
-- [ ] `make solver_compact_parity`
-- [ ] `make compact_turn_simulation_tests`
+- [x] `make build`
+- [x] `make simulation_tests_cpp`
+- [x] `make solver_smoke_tests`
+- [x] `make solver_parity_smoke`
+- [x] `make solver_compact_parity`
+- [x] `make compact_turn_simulation_tests`
 - [ ] Commit: `Rename internal Session to FullState`
 
 ## Phase 8: Rename Public C API

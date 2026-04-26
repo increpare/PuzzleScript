@@ -3741,7 +3741,7 @@ void appendHashValue(uint64_t& hash, const T& value) {
     appendHashBytes(hash, &value, sizeof(value));
 }
 
-uint64_t hashSession64NoAlloc(const Session& session, uint64_t seed) {
+uint64_t hashFullState64NoAlloc(const FullState& session, uint64_t seed) {
     uint64_t hash = seed;
 
     appendHashValue(hash, session.preparedSession.currentLevelIndex);
@@ -3763,11 +3763,19 @@ uint64_t hashSession64NoAlloc(const Session& session, uint64_t seed) {
     return hash;
 }
 
-ps_hash128 hashSession128NoAlloc(const Session& session) {
+ps_hash128 hashFullState128NoAlloc(const FullState& session) {
     ps_hash128 result{};
-    result.lo = hashSession64NoAlloc(session, 1469598103934665603ull);
-    result.hi = hashSession64NoAlloc(session, 7809847782465536322ull);
+    result.lo = hashFullState64NoAlloc(session, 1469598103934665603ull);
+    result.hi = hashFullState64NoAlloc(session, 7809847782465536322ull);
     return result;
+}
+
+uint64_t hashSession64NoAlloc(const Session& session, uint64_t seed) {
+    return hashFullState64NoAlloc(session, seed);
+}
+
+ps_hash128 hashSession128NoAlloc(const Session& session) {
+    return hashFullState128NoAlloc(session);
 }
 
 std::string escapeJson(std::string_view input) {
@@ -4600,11 +4608,19 @@ bool undo(Session& session) {
 }
 
 uint64_t hashSession64(const Session& session) {
-    return hashSession64NoAlloc(session, 1469598103934665603ull);
+    return hashFullState64(session);
 }
 
 ps_hash128 hashSession128(const Session& session) {
-    return hashSession128NoAlloc(session);
+    return hashFullState128(session);
+}
+
+uint64_t hashFullState64(const FullState& state) {
+    return hashFullState64NoAlloc(state, 1469598103934665603ull);
+}
+
+ps_hash128 hashFullState128(const FullState& state) {
+    return hashFullState128NoAlloc(state);
 }
 
 std::string serializeTestString(const Session& session) {
