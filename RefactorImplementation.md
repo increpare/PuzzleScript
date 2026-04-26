@@ -240,6 +240,7 @@ If proceeding with `FullState`:
 - [x] Update generated C++ emission from `Session&` to `FullState&`.
 - [ ] Update comments and docs that use `Session` as architecture vocabulary.
   - [x] Solver heuristic notes refer to normal `FullState` scoring.
+  - [x] `ProgressReport.md` uses `CompactState`, `FullState`, and compact turn terminology.
 - [ ] Leave `ps_session_*` C API names untouched until the public API phase.
 
 Decision note: proceed with `FullState` now because it names the contrast with
