@@ -17,8 +17,8 @@
 #include "runtime/compiled_rules.hpp"
 
 namespace puzzlescript {
-void runRulesOnLevelStart(Session& session);
-void runRulesOnLevelStart(Session& session, RuntimeStepOptions options);
+void runRulesOnLevelStart(FullState& session);
+void runRulesOnLevelStart(FullState& session, RuntimeStepOptions options);
 namespace {
 
 void rebuildMasks(Session& session);
@@ -4296,10 +4296,10 @@ bool compiledRuleApplyRandomGroup(Session& session, const std::vector<Rule>& gro
     return changed;
 }
 
-void runRulesOnLevelStart(Session& session);
-void runRulesOnLevelStart(Session& session, RuntimeStepOptions options);
-bool wouldAgainChange(Session& session, bool* outWouldModify = nullptr, bool emitAudio = true);
-void settlePendingAgain(Session& session);
+void runRulesOnLevelStart(FullState& session);
+void runRulesOnLevelStart(FullState& session, RuntimeStepOptions options);
+bool wouldAgainChange(FullState& session, bool* outWouldModify = nullptr, bool emitAudio = true);
+void settlePendingAgain(FullState& session);
 
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame) {
     try {
@@ -4506,8 +4506,8 @@ std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const 
 
 namespace {
 
-void prepareLoadedLevel(Session& session, LevelTemplate level, int32_t levelIndex) {
-    PreparedSession& prepared = session.preparedSession;
+void prepareLoadedLevel(FullState& session, LevelTemplate level, int32_t levelIndex) {
+    PreparedFullState& prepared = session.preparedSession;
     const int32_t restartWidth = level.width;
     const int32_t restartHeight = level.height;
     MaskVector restartObjects = level.objects;
@@ -4534,7 +4534,7 @@ void prepareLoadedLevel(Session& session, LevelTemplate level, int32_t levelInde
 
 } // namespace
 
-std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex) {
+std::unique_ptr<Error> loadLevel(FullState& session, int32_t levelIndex) {
     if (levelIndex < 0 || static_cast<size_t>(levelIndex) >= session.game->levels.size()) {
         return std::make_unique<Error>("Level index out of range");
     }
@@ -4549,7 +4549,7 @@ std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex) {
     return nullptr;
 }
 
-std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options) {
+std::unique_ptr<Error> loadLevelTemplate(FullState& session, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options) {
     if (levelTemplate.isMessage) {
         return std::make_unique<Error>("Generated level cannot be a message level");
     }
@@ -4567,7 +4567,7 @@ std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& 
     return nullptr;
 }
 
-std::unique_ptr<Error> advanceLevel(Session& session) {
+std::unique_ptr<Error> advanceLevel(FullState& session) {
     if (session.game->levels.empty()) {
         return std::make_unique<Error>("No levels available");
     }
@@ -4575,7 +4575,7 @@ std::unique_ptr<Error> advanceLevel(Session& session) {
     return nullptr;
 }
 
-bool restart(Session& session, RuntimeStepOptions options) {
+bool restart(FullState& session, RuntimeStepOptions options) {
     if (session.game->metadataMap.find("norestart") != session.game->metadataMap.end()) {
         return true;
     }
@@ -4587,11 +4587,11 @@ bool restart(Session& session, RuntimeStepOptions options) {
     return true;
 }
 
-bool restart(Session& session) {
+bool restart(FullState& session) {
     return restart(session, RuntimeStepOptions{});
 }
 
-bool undo(Session& session) {
+bool undo(FullState& session) {
     if (session.game->metadataMap.find("noundo") != session.game->metadataMap.end()) {
         return true;
     }
@@ -4631,7 +4631,7 @@ ps_hash128 hashFullState128(const FullState& state) {
     return hashFullState128NoAlloc(state);
 }
 
-std::string serializeTestString(const Session& session) {
+std::string serializeTestString(const FullState& session) {
     std::string output;
     std::map<std::string, int32_t> seenCells;
     int32_t nextIndex = 0;
@@ -4673,7 +4673,7 @@ std::string serializeTestString(const Session& session) {
     return output;
 }
 
-std::string exportSnapshot(const Session& session) {
+std::string exportSnapshot(const FullState& session) {
     const uint64_t hash64 = hashSession64(session);
     const ps_hash128 hash128 = hashSession128(session);
     std::ostringstream stream;
@@ -4722,20 +4722,20 @@ std::string exportSnapshot(const Session& session) {
     return stream.str();
 }
 
-void discardTopUndoSnapshot(Session& session) {
+void discardTopUndoSnapshot(FullState& session) {
     if (!session.undoStack.empty()) {
         session.undoStack.pop_back();
     }
     session.canUndo = !session.undoStack.empty();
 }
 
-ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnOptions options);
+ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOptions options);
 
-void runRulesOnLevelStart(Session& session) {
+void runRulesOnLevelStart(FullState& session) {
     runRulesOnLevelStart(session, RuntimeStepOptions{});
 }
 
-void runRulesOnLevelStart(Session& session, RuntimeStepOptions options) {
+void runRulesOnLevelStart(FullState& session, RuntimeStepOptions options) {
     if (session.game->metadataMap.find("run_rules_on_level_start") == session.game->metadataMap.end()) {
         return;
     }
@@ -4750,7 +4750,7 @@ void runRulesOnLevelStart(Session& session, RuntimeStepOptions options) {
     });
 }
 
-bool wouldAgainChange(Session& session, bool* outWouldModify, bool emitAudio) {
+bool wouldAgainChange(FullState& session, bool* outWouldModify, bool emitAudio) {
     const uint64_t beforeHash = hashSession64(session);
     session.pendingAgain = false;
     bool wouldModify = false;
@@ -4793,7 +4793,7 @@ bool wouldAgainChange(Session& session, bool* outWouldModify, bool emitAudio) {
 // 9. Play create/destroy sounds and process output commands.
 // 10. Process restart, win/level transition, checkpoint, and again scheduling.
 // 11. Fill ps_step_result, sort audio, rebuild masks, and return.
-ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnOptions options) {
+ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOptions options) {
     ps_step_result result{};
     session.lastAudioEvents.clear();
     session.lastUiAudioEvents.clear();
@@ -4808,8 +4808,8 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         session.pendingDestroyMask.clear();
     }
 
-    std::optional<Session::UndoSnapshot> localTurnStart;
-    const Session::UndoSnapshot* turnStartPtr = nullptr;
+    std::optional<FullState::UndoSnapshot> localTurnStart;
+    const FullState::UndoSnapshot* turnStartPtr = nullptr;
     if (options.pushUndo) {
         pushUndoSnapshot(session);
         turnStartPtr = &session.undoStack.back();
@@ -4817,7 +4817,7 @@ ps_step_result executeTurn(Session& session, int32_t directionMask, ExecuteTurnO
         localTurnStart = makeUndoSnapshot(session);
         turnStartPtr = &*localTurnStart;
     }
-    const Session::UndoSnapshot& turnStart = *turnStartPtr;
+    const FullState::UndoSnapshot& turnStart = *turnStartPtr;
     const bool requiresPlayerMovement = session.game->metadataMap.find("require_player_movement") != session.game->metadataMap.end();
     const std::vector<int32_t> startPlayerPositions = directionMask != 0 && requiresPlayerMovement
         ? collectPlayerPositions(session)
@@ -5090,7 +5090,7 @@ void mergeDrainedTurnResult(ps_step_result& result, const ps_step_result& tickRe
 }
 
 ps_step_result interpretedTurnOnceWithCompiledRuleGroups(
-    Session& session,
+    FullState& session,
     ps_input input,
     RuntimeStepOptions options,
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
@@ -5143,7 +5143,7 @@ ps_step_result interpretedTurnOnceWithCompiledRuleGroups(
 }
 
 ps_step_result interpretedTurnWithCompiledRuleGroups(
-    Session& session,
+    FullState& session,
     ps_input input,
     RuntimeStepOptions options,
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
@@ -5177,7 +5177,7 @@ ps_step_result interpretedTurnWithCompiledRuleGroups(
 }
 
 ps_step_result interpreterTickWithCompiledRuleGroups(
-    Session& session,
+    FullState& session,
     RuntimeStepOptions options,
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
@@ -5191,12 +5191,12 @@ ps_step_result interpreterTickWithCompiledRuleGroups(
     });
 }
 
-ps_step_result interpretedTurn(Session& session, ps_input input, RuntimeStepOptions options) {
+ps_step_result interpretedTurn(FullState& session, ps_input input, RuntimeStepOptions options) {
     return interpretedTurnWithCompiledRuleGroups(session, input, options, nullptr, nullptr);
 }
 
 ps_step_result interpreterStepWithCompiledRuleGroups(
-    Session& session,
+    FullState& session,
     ps_input input,
     RuntimeStepOptions options,
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
@@ -5210,7 +5210,7 @@ ps_step_result interpreterStepWithCompiledRuleGroups(
     return interpretedTurnOnceWithCompiledRuleGroups(session, input, yieldOptions, applyEarlyRules, applyLateRules);
 }
 
-ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options) {
+ps_step_result interpreterStep(FullState& session, ps_input input, RuntimeStepOptions options) {
     if (options.againPolicy == AgainPolicy::Drain) {
         return interpretedTurn(session, input, options);
     }
@@ -5219,11 +5219,11 @@ ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOpti
     return interpretedTurnOnceWithCompiledRuleGroups(session, input, yieldOptions, nullptr, nullptr);
 }
 
-ps_step_result interpreterTick(Session& session, RuntimeStepOptions options) {
+ps_step_result interpreterTick(FullState& session, RuntimeStepOptions options) {
     return interpreterTickWithCompiledRuleGroups(session, options, nullptr, nullptr);
 }
 
-ps_step_result turnOnce(Session& session, ps_input input, RuntimeStepOptions options) {
+ps_step_result turnOnce(FullState& session, ps_input input, RuntimeStepOptions options) {
     if (session.game->compiledTick != nullptr
         && session.game->compiledTick->step != nullptr
         && compiledTickDispatchEnabled()) {
@@ -5241,7 +5241,7 @@ ps_step_result turnOnce(Session& session, ps_input input, RuntimeStepOptions opt
     return interpreterStep(session, input, options);
 }
 
-ps_step_result turn(Session& session, ps_input input, RuntimeStepOptions options) {
+ps_step_result turn(FullState& session, ps_input input, RuntimeStepOptions options) {
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
     ps_step_result result = turnOnce(session, input, yieldOptions);
@@ -5257,17 +5257,17 @@ ps_step_result turn(Session& session, ps_input input, RuntimeStepOptions options
     return result;
 }
 
-ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options) {
+ps_step_result step(FullState& session, ps_input input, RuntimeStepOptions options) {
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
     return turnOnce(session, input, yieldOptions);
 }
 
-ps_step_result step(Session& session, ps_input input) {
+ps_step_result step(FullState& session, ps_input input) {
     return step(session, input, RuntimeStepOptions{});
 }
 
-ps_step_result tick(Session& session, RuntimeStepOptions options) {
+ps_step_result tick(FullState& session, RuntimeStepOptions options) {
     if (session.game->compiledTick != nullptr
         && session.game->compiledTick->tick != nullptr
         && compiledTickDispatchEnabled()) {
@@ -5282,11 +5282,11 @@ ps_step_result tick(Session& session, RuntimeStepOptions options) {
     return interpreterTick(session, options);
 }
 
-ps_step_result tick(Session& session) {
+ps_step_result tick(FullState& session) {
     return tick(session, RuntimeStepOptions{});
 }
 
-void settlePendingAgain(Session& session, RuntimeStepOptions options) {
+void settlePendingAgain(FullState& session, RuntimeStepOptions options) {
     constexpr int kMaxAgainIterations = 500;
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
@@ -5295,11 +5295,11 @@ void settlePendingAgain(Session& session, RuntimeStepOptions options) {
     }
 }
 
-void settlePendingAgain(Session& session) {
+void settlePendingAgain(FullState& session) {
     settlePendingAgain(session, RuntimeStepOptions{});
 }
 
-std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult) {
+std::unique_ptr<Error> benchmarkCloneHash(const FullState& session, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult) {
     if (iterations == 0) {
         return std::make_unique<Error>("Iterations must be greater than zero");
     }
@@ -5315,7 +5315,7 @@ std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t itera
         workers.push_back(std::async(std::launch::async, [&session, iterations, threads, threadIndex]() {
             uint64_t hashAccumulator = 0;
             for (uint32_t iteration = threadIndex; iteration < iterations; iteration += threads) {
-                auto clone = std::make_unique<Session>(session);
+                auto clone = std::make_unique<FullState>(session);
                 const auto hash = hashSession64(*clone);
                 hashAccumulator ^= hash + static_cast<uint64_t>(iteration);
             }
