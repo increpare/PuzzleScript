@@ -3747,6 +3747,8 @@ struct CompiledTickSupport {
 struct CompactTickSupport {
     bool supported = false;
     std::string fallbackReason = "interpreter_delegation";
+    bool interpreterBridge = false;
+    std::string nativeFallbackReason = "interpreter_delegation";
     bool simplePush = false;
     int32_t playerObjectId = -1;
     std::vector<int32_t> playerObjectIds;
@@ -3935,7 +3937,7 @@ std::vector<int32_t> compactPushCandidatesFromRules(
     return candidates;
 }
 
-CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
+CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& game) {
     CompactTickSupport support;
     if (!game.lateRules.empty()) {
         support.fallbackReason = "late_rules_not_compact";
@@ -4095,6 +4097,18 @@ CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
 
     support.supported = true;
     support.fallbackReason = "supported";
+    support.nativeFallbackReason = "supported";
+    return support;
+}
+
+CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
+    CompactTickSupport support = compactNativeTickSupportForGame(game);
+    support.nativeFallbackReason = support.fallbackReason;
+    if (!support.supported) {
+        support.supported = true;
+        support.interpreterBridge = true;
+        support.fallbackReason = "interpreter_bridge";
+    }
     return support;
 }
 
@@ -5092,18 +5106,23 @@ void appendCompactTickAggregateJsonFields(
     std::ostream& out,
     size_t sourceCount,
     size_t supported,
+    size_t nativeKernelSupported,
+    size_t interpreterBridgeSupported,
     const std::unordered_map<std::string, size_t>& fallbackReasons
 ) {
     out << "\"compact_tick\":{"
         << "\"sources\":" << sourceCount
         << ",\"backend_codegen_available\":" << sourceCount
         << ",\"whole_turn_supported\":" << supported
+        << ",\"native_kernel_supported\":" << nativeKernelSupported
+        << ",\"interpreter_bridge_supported\":" << interpreterBridgeSupported
         << ",\"whole_turn_fallback_reason_counts\":";
     appendJsonCountObject(
         out,
         fallbackReasons,
         {
             "supported",
+            "interpreter_bridge",
             "late_rules_not_compact",
             "rigid_not_compact",
             "aggregate_player_not_compact",
@@ -5134,6 +5153,9 @@ void appendCompactTickSourceJsonFields(
         << ",\"step_entry\":true"
         << ",\"whole_turn_supported\":" << (support.supported ? "true" : "false")
         << ",\"whole_turn_fallback_reason\":" << jsonStringLiteral(support.fallbackReason)
+        << ",\"mode\":" << jsonStringLiteral(support.interpreterBridge ? "interpreter_bridge" : "native_kernel")
+        << ",\"native_kernel_supported\":" << ((!support.interpreterBridge && support.supported) ? "true" : "false")
+        << ",\"native_kernel_fallback_reason\":" << jsonStringLiteral(support.nativeFallbackReason)
         << ",\"features\":{"
         << "\"state_layout\":\"compact_object_bits\""
         << ",\"movement\":" << jsonStringLiteral(support.simplePush ? "simple_push" : "simple_movement")
@@ -5160,6 +5182,8 @@ std::string generateCompiledRulesCoverageJson(
     size_t wholeTurnSupported = 0;
     std::unordered_map<std::string, size_t> wholeTurnFallbackReasons;
     size_t compactTickSupported = 0;
+    size_t compactTickNativeSupported = 0;
+    size_t compactTickInterpreterBridgeSupported = 0;
     std::unordered_map<std::string, size_t> compactTickFallbackReasons;
     for (const CodegenSource& source : sources) {
         const CompiledTickSupport support = source.game
@@ -5189,6 +5213,11 @@ std::string generateCompiledRulesCoverageJson(
         if (compactSupport.supported) {
             ++compactTickSupported;
         }
+        if (compactSupport.interpreterBridge) {
+            ++compactTickInterpreterBridgeSupported;
+        } else if (compactSupport.supported) {
+            ++compactTickNativeSupported;
+        }
         ++compactTickFallbackReasons[compactSupport.fallbackReason];
     }
     out << "{\n"
@@ -5212,6 +5241,8 @@ std::string generateCompiledRulesCoverageJson(
         out,
         sources.size(),
         compactTickSupported,
+        compactTickNativeSupported,
+        compactTickInterpreterBridgeSupported,
         compactTickFallbackReasons
     );
     out << "},\n"
@@ -5606,12 +5637,15 @@ std::string generateCompiledRulesCpp(
             << "    ps_input input,\n"
             << "    RuntimeStepOptions options\n"
             << ") {\n"
-            << "    (void)game;\n";
+            << (compactTickSupport.interpreterBridge ? "" : "    (void)game;\n");
         if (!compactTickSupport.supported) {
             out << "    (void)state;\n"
                 << "    (void)options;\n"
                 << "    (void)input;\n"
                 << "    return {false, {}};\n"
+                << "}\n\n";
+        } else if (compactTickSupport.interpreterBridge) {
+            out << "    return compiledCompactTickInterpreterBridge(game, state, input, options);\n"
                 << "}\n\n";
         } else {
             out << "    if (options.emitAudio) {\n"

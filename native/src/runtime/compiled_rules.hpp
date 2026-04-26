@@ -55,6 +55,12 @@ struct CompiledCompactTickStateView {
     size_t objectBitWordCount = 0;
     int32_t width = 0;
     int32_t height = 0;
+    uint8_t* randomStateS = nullptr;
+    size_t randomStateSize = 0;
+    uint8_t* randomStateI = nullptr;
+    uint8_t* randomStateJ = nullptr;
+    bool* randomStateValid = nullptr;
+    int32_t currentLevelIndex = 0;
 };
 
 struct CompiledCompactTickApplyOutcome {
@@ -90,6 +96,12 @@ uint64_t compiledRulesHashSource(std::string_view source);
 void attachLinkedCompiledRules(Game& game, std::string_view source);
 
 const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset);
+CompiledCompactTickApplyOutcome compiledCompactTickInterpreterBridge(
+    const Game& game,
+    CompiledCompactTickStateView state,
+    ps_input input,
+    RuntimeStepOptions options
+);
 const MaskWord* compiledRuleCellObjects(const Session& session, int32_t tileIndex);
 const MaskWord* compiledRuleCellMovements(const Session& session, int32_t tileIndex);
 bool compiledRuleBitsSet(const MaskWord* required, size_t requiredCount, const MaskWord* actual, size_t actualCount);

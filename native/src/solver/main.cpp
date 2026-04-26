@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <chrono>
 #include <cctype>
@@ -92,13 +93,25 @@ struct Options {
 
 struct CompactSolverState {
     std::vector<uint64_t> objectBits;
+    std::array<uint8_t, 256> randomStateS{};
+    uint8_t randomStateI = 0;
+    uint8_t randomStateJ = 0;
+    bool randomStateValid = false;
 
     bool operator==(const CompactSolverState& other) const {
-        return objectBits == other.objectBits;
+        return objectBits == other.objectBits
+            && randomStateS == other.randomStateS
+            && randomStateI == other.randomStateI
+            && randomStateJ == other.randomStateJ
+            && randomStateValid == other.randomStateValid;
     }
 
     size_t byteSize() const {
-        return objectBits.size() * sizeof(uint64_t);
+        return objectBits.size() * sizeof(uint64_t)
+            + randomStateS.size() * sizeof(uint8_t)
+            + sizeof(randomStateI)
+            + sizeof(randomStateJ)
+            + sizeof(randomStateValid);
     }
 };
 
@@ -570,6 +583,10 @@ uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
 
 CompactSolverState compactStateFromSession(const Session& session) {
     CompactSolverState state;
+    state.randomStateS = session.randomState.s;
+    state.randomStateI = session.randomState.i;
+    state.randomStateJ = session.randomState.j;
+    state.randomStateValid = session.randomState.valid;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const int32_t objectCount = session.game ? session.game->objectCount : 0;
@@ -602,6 +619,12 @@ StateKey compactStateKey(const CompactSolverState& state, Timing& timing) {
     for (uint64_t word : state.objectBits) {
         puzzlescript::search::appendStateKeyValue(key, word);
     }
+    for (uint8_t byte : state.randomStateS) {
+        puzzlescript::search::appendStateKeyValue(key, byte);
+    }
+    puzzlescript::search::appendStateKeyValue(key, state.randomStateI);
+    puzzlescript::search::appendStateKeyValue(key, state.randomStateJ);
+    puzzlescript::search::appendStateKeyValue(key, state.randomStateValid);
     return key;
 }
 
@@ -669,6 +692,10 @@ void materializeCompactStateIntoSession(const CompactSolverState& state, const S
     session.undoStack.clear();
     session.lastAudioEvents.clear();
     session.lastUiAudioEvents.clear();
+    session.randomState.s = state.randomStateS;
+    session.randomState.i = state.randomStateI;
+    session.randomState.j = state.randomStateJ;
+    session.randomState.valid = state.randomStateValid;
     markMaterializedSessionDirty(session);
 }
 
@@ -750,6 +777,19 @@ std::string compactStateDiffSummary(const CompactSolverState& lhs, const Compact
             return out.str();
         }
     }
+    if (lhs.randomStateValid != rhs.randomStateValid
+        || lhs.randomStateI != rhs.randomStateI
+        || lhs.randomStateJ != rhs.randomStateJ
+        || lhs.randomStateS != rhs.randomStateS) {
+        std::ostringstream out;
+        out << " random compact_valid=" << lhs.randomStateValid
+            << " interpreter_valid=" << rhs.randomStateValid
+            << " compact_i=" << static_cast<int32_t>(lhs.randomStateI)
+            << " interpreter_i=" << static_cast<int32_t>(rhs.randomStateI)
+            << " compact_j=" << static_cast<int32_t>(lhs.randomStateJ)
+            << " interpreter_j=" << static_cast<int32_t>(rhs.randomStateJ);
+        return out.str();
+    }
     return " state_equal";
 }
 
@@ -759,6 +799,7 @@ CompactTickTryResult tryCompiledCompactTick(
     ps_input input,
     int32_t width,
     int32_t height,
+    int32_t currentLevelIndex,
     puzzlescript::RuntimeStepOptions options
 ) {
     CompactTickTryResult result;
@@ -772,6 +813,12 @@ CompactTickTryResult tryCompiledCompactTick(
         result.compact.objectBits.size(),
         width,
         height,
+        result.compact.randomStateS.data(),
+        result.compact.randomStateS.size(),
+        &result.compact.randomStateI,
+        &result.compact.randomStateJ,
+        &result.compact.randomStateValid,
+        currentLevelIndex,
     };
     const puzzlescript::CompiledCompactTickApplyOutcome outcome =
         game.compiledCompactTick->step(game, view, input, options);
@@ -804,7 +851,15 @@ SolverEdgeStep stepSolverEdge(
                 ++result.compactTickAttempts;
                 {
                     ScopedTimer timer(result.timing.stepNs);
-                    edge.compactTick = tryCompiledCompactTick(*game, parentNode.compact, input, width, height, solverStepOptions);
+                    edge.compactTick = tryCompiledCompactTick(
+                        *game,
+                        parentNode.compact,
+                        input,
+                        width,
+                        height,
+                        parentSession.preparedSession.currentLevelIndex,
+                        solverStepOptions
+                    );
                 }
                 if (edge.compactTick.handled) {
                     ++result.compactTickHits;
