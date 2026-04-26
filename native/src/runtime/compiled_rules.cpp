@@ -16,7 +16,12 @@ const puzzlescript::CompiledTickBackend* ps_compiled_tick_find_backend(uint64_t)
 }
 
 extern "C" __attribute__((weak))
-const puzzlescript::CompiledCompactTickBackend* ps_compiled_compact_tick_find_backend(uint64_t) {
+const puzzlescript::SpecializedCompactTurnBackend* ps_specialized_compact_turn_find_backend(uint64_t) {
+    return nullptr;
+}
+
+extern "C" __attribute__((weak))
+const puzzlescript::SpecializedCompactTurnBackend* ps_compiled_compact_tick_find_backend(uint64_t) {
     return nullptr;
 }
 
@@ -30,7 +35,10 @@ void attachLinkedCompiledRules(Game& game, std::string_view source) {
     const uint64_t sourceHash = compiledRulesHashSource(source);
     game.compiledRules = ps_compiled_rules_find_backend(sourceHash);
     game.compiledTick = ps_compiled_tick_find_backend(sourceHash);
-    game.compiledCompactTick = ps_compiled_compact_tick_find_backend(sourceHash);
+    game.specializedCompactTurn = ps_specialized_compact_turn_find_backend(sourceHash);
+    if (game.specializedCompactTurn == nullptr) {
+        game.specializedCompactTurn = ps_compiled_compact_tick_find_backend(sourceHash);
+    }
 }
 
 namespace {
@@ -46,7 +54,7 @@ void markCompactBridgeSessionDirty(Session& session) {
     session.anyMasksDirty = true;
 }
 
-void materializeCompactBridgeState(const Game& game, CompiledCompactTickStateView state, Session& session) {
+void materializeCompactBridgeState(const Game& game, CompactStateView state, Session& session) {
     session.liveLevel.isMessage = false;
     session.liveLevel.message.clear();
     session.liveLevel.width = state.width;
@@ -101,7 +109,7 @@ void materializeCompactBridgeState(const Game& game, CompiledCompactTickStateVie
     compiledRuleRebuildMasks(session);
 }
 
-void copyCompactBridgeStateBack(const Session& session, CompiledCompactTickStateView state) {
+void copyCompactBridgeStateBack(const Session& session, CompactStateView state) {
     const Game& game = *session.game;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
@@ -146,9 +154,9 @@ void copyCompactBridgeStateBack(const Session& session, CompiledCompactTickState
 
 } // namespace
 
-CompiledCompactTickApplyOutcome compiledCompactTickInterpreterBridge(
+SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
     const Game& game,
-    CompiledCompactTickStateView state,
+    CompactStateView state,
     ps_input input,
     RuntimeStepOptions options
 ) {

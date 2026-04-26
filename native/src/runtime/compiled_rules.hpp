@@ -50,7 +50,7 @@ struct CompiledTickBackend {
     CompiledTickSupportInfo support{};
 };
 
-struct CompiledCompactTickStateView {
+struct CompactStateView {
     uint64_t* objectBits = nullptr;
     size_t objectBitWordCount = 0;
     MaskWord* movementWords = nullptr;
@@ -65,24 +65,29 @@ struct CompiledCompactTickStateView {
     int32_t currentLevelIndex = 0;
 };
 
-struct CompiledCompactTickApplyOutcome {
+struct SpecializedCompactTurnOutcome {
     bool handled = false;
     ps_step_result result{};
 };
 
-using CompiledCompactTickStepFn = CompiledCompactTickApplyOutcome (*)(
+using SpecializedCompactTurnFn = SpecializedCompactTurnOutcome (*)(
     const Game& game,
-    CompiledCompactTickStateView state,
+    CompactStateView state,
     ps_input input,
     RuntimeStepOptions options
 );
 
-struct CompiledCompactTickBackend {
+struct SpecializedCompactTurnBackend {
     uint64_t sourceHash = 0;
     const char* name = nullptr;
-    CompiledCompactTickStepFn step = nullptr;
+    SpecializedCompactTurnFn step = nullptr;
     CompiledTickSupportInfo support{};
 };
+
+using CompiledCompactTickStateView = CompactStateView;
+using CompiledCompactTickApplyOutcome = SpecializedCompactTurnOutcome;
+using CompiledCompactTickStepFn = SpecializedCompactTurnFn;
+using CompiledCompactTickBackend = SpecializedCompactTurnBackend;
 
 enum class CompiledRuleCommandKind {
     Again,
@@ -98,12 +103,20 @@ uint64_t compiledRulesHashSource(std::string_view source);
 void attachLinkedCompiledRules(Game& game, std::string_view source);
 
 const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset);
-CompiledCompactTickApplyOutcome compiledCompactTickInterpreterBridge(
+SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
     const Game& game,
-    CompiledCompactTickStateView state,
+    CompactStateView state,
     ps_input input,
     RuntimeStepOptions options
 );
+inline SpecializedCompactTurnOutcome compiledCompactTickInterpreterBridge(
+    const Game& game,
+    CompactStateView state,
+    ps_input input,
+    RuntimeStepOptions options
+) {
+    return compactStateInterpretedTurnBridge(game, state, input, options);
+}
 const MaskWord* compiledRuleCellObjects(const Session& session, int32_t tileIndex);
 const MaskWord* compiledRuleCellMovements(const Session& session, int32_t tileIndex);
 bool compiledRuleBitsSet(const MaskWord* required, size_t requiredCount, const MaskWord* actual, size_t actualCount);

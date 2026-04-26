@@ -157,26 +157,27 @@ Acceptance:
 
 Goal: make type names match architecture names.
 
-- [ ] Rename `CompiledCompactTickStateView` -> `CompactStateView`.
-- [ ] Rename `CompiledCompactTickApplyOutcome` -> `SpecializedCompactTurnOutcome` or `CompactTurnOutcome`.
-- [ ] Rename `CompiledCompactTickStepFn` -> `SpecializedCompactTurnFn`.
-- [ ] Rename `CompiledCompactTickBackend` -> `SpecializedCompactTurnBackend`.
-- [ ] Rename `compiledCompactTickInterpreterBridge` -> `compactStateInterpretedTurnBridge`.
-- [ ] Rename generated compact backend symbols from `compact_tick_*` to `specialized_compact_turn_*`.
-- [ ] Keep bridge semantics unchanged: compact boundary, materialize full state, run interpreted turn, copy compact state back.
-- [ ] Ensure bridge copies complete RNG state both directions.
-- [ ] Ensure bridge does not require compact-state movement words.
-- [ ] Update backend lookup function names if they are not public ABI.
-- [ ] If lookup symbols are public or linker-sensitive, add temporary forwarding symbols.
+- [x] Rename `CompiledCompactTickStateView` -> `CompactStateView`.
+- [x] Rename `CompiledCompactTickApplyOutcome` -> `SpecializedCompactTurnOutcome`.
+- [x] Rename `CompiledCompactTickStepFn` -> `SpecializedCompactTurnFn`.
+- [x] Rename `CompiledCompactTickBackend` -> `SpecializedCompactTurnBackend`.
+- [x] Rename `compiledCompactTickInterpreterBridge` -> `compactStateInterpretedTurnBridge`.
+- [x] Rename generated compact backend symbols from `compact_tick_*` to `specialized_compact_turn_*`.
+- [x] Keep bridge semantics unchanged: compact boundary, materialize full state, run interpreted turn, copy compact state back.
+- [x] Ensure bridge copies complete RNG state both directions.
+- [x] Ensure bridge does not require compact-state movement words.
+- [x] Update backend lookup function names if they are not public ABI.
+- [x] If lookup symbols are public or linker-sensitive, add temporary forwarding symbols.
 
 Acceptance:
 
-- [ ] `make build`
-- [ ] `make compact_turn_oracle_smoke`
-- [ ] `make compact_turn_simulation_tests`
-- [ ] `make compact_turn_coverage`
-- [ ] `make solver_smoke_tests`
-- [ ] Commit: `Rename specialized compact turn backend types`
+- [x] `make build`
+- [x] `make compact_turn_oracle_smoke`
+- [x] `make compact_turn_simulation_tests`
+- [x] `make compact_turn_coverage`
+- [x] `make solver_smoke_tests`
+- [x] `make solver_compact_parity`
+- [x] Commit: `Rename specialized compact turn backend types`
 
 ## Phase 6: Rename Rulegroup Specialization Types
 

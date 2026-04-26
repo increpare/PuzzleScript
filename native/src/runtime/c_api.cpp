@@ -11,9 +11,9 @@
  #include "compiler/parser.hpp"
 
 using puzzlescript::CompileResult;
-using puzzlescript::CompiledCompactTickApplyOutcome;
-using puzzlescript::CompiledCompactTickBackend;
-using puzzlescript::CompiledCompactTickStateView;
+using puzzlescript::SpecializedCompactTurnOutcome;
+using puzzlescript::SpecializedCompactTurnBackend;
+using puzzlescript::CompactStateView;
 using puzzlescript::Error;
 using puzzlescript::Game;
 using puzzlescript::kMaskWordBits;
@@ -356,13 +356,13 @@ bool ps_session_compact_tick_oracle_check(
     if (original.preparedSession.titleScreen || original.preparedSession.textMode) {
         return true;
     }
-    const CompiledCompactTickBackend* backend = original.game->compiledCompactTick;
+    const SpecializedCompactTurnBackend* backend = original.game->specializedCompactTurn;
     if (backend == nullptr || backend->step == nullptr || !backend->support.wholeTurnSupported) {
         return true;
     }
 
     CompactOracleState compact = compactOracleStateFromSession(original);
-    CompiledCompactTickStateView view{
+    CompactStateView view{
         compact.objectBits.empty() ? nullptr : compact.objectBits.data(),
         compact.objectBits.size(),
         compact.movementWords.empty() ? nullptr : compact.movementWords.data(),
@@ -379,7 +379,7 @@ bool ps_session_compact_tick_oracle_check(
     RuntimeStepOptions options{};
     options.emitAudio = false;
     options.againPolicy = puzzlescript::AgainPolicy::Drain;
-    const CompiledCompactTickApplyOutcome compactOutcome = backend->step(*original.game, view, input, options);
+    const SpecializedCompactTurnOutcome compactOutcome = backend->step(*original.game, view, input, options);
 
     Session interpreter = original;
     ps_step_result interpreterResult = interpretedTurn(interpreter, input, options);

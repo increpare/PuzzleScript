@@ -259,7 +259,7 @@ struct CommandState {
 
 struct CompiledRulesBackend;
 struct CompiledTickBackend;
-struct CompiledCompactTickBackend;
+struct SpecializedCompactTurnBackend;
 
 struct SoundMaskEntry {
     // object-width mask of width Game::wordCount
@@ -335,7 +335,7 @@ struct Game {
     PreparedSession preparedSession;
     const CompiledRulesBackend* compiledRules = nullptr;
     const CompiledTickBackend* compiledTick = nullptr;
-    const CompiledCompactTickBackend* compiledCompactTick = nullptr;
+    const SpecializedCompactTurnBackend* specializedCompactTurn = nullptr;
 };
 
 struct Session {

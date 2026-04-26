@@ -281,14 +281,14 @@ std::vector<std::string> loadInputTokensFromJsonFile(const std::filesystem::path
 std::optional<ps_input> parseInputToken(const std::string& token);
 
 struct ReplayOracleStats {
-    uint64_t compactTickChecks = 0;
-    uint64_t compactTickHandled = 0;
-    uint64_t compactTickStateChecks = 0;
-    uint64_t compactTickFailures = 0;
+    uint64_t compactTurnChecks = 0;
+    uint64_t compactTurnHandled = 0;
+    uint64_t compactTurnStateChecks = 0;
+    uint64_t compactTurnFailures = 0;
     std::string firstFailure;
 };
 
-std::string compactTickOracleMismatchSummary(const ps_compact_tick_oracle_info& info) {
+std::string compactTurnOracleMismatchSummary(const ps_compact_tick_oracle_info& info) {
     std::ostringstream out;
     out << " handled=" << (info.handled ? 1 : 0)
         << " state_checked=" << (info.state_checked ? 1 : 0)
@@ -345,26 +345,26 @@ bool replayInputTokens(
         if (oracleStats != nullptr) {
             ps_compact_tick_oracle_info oracleInfo{};
             if (!ps_session_compact_tick_oracle_check(session, *input, &oracleInfo)) {
-                ++oracleStats->compactTickFailures;
+                ++oracleStats->compactTurnFailures;
                 if (oracleStats->firstFailure.empty()) {
                     oracleStats->firstFailure = "compact turn oracle API failure before input token: " + token;
                 }
                 return false;
             }
             if (oracleInfo.attempted) {
-                ++oracleStats->compactTickChecks;
+                ++oracleStats->compactTurnChecks;
                 if (oracleInfo.handled) {
-                    ++oracleStats->compactTickHandled;
+                    ++oracleStats->compactTurnHandled;
                 }
                 if (oracleInfo.state_checked) {
-                    ++oracleStats->compactTickStateChecks;
+                    ++oracleStats->compactTurnStateChecks;
                 }
                 if (!oracleInfo.matched) {
-                    ++oracleStats->compactTickFailures;
+                    ++oracleStats->compactTurnFailures;
                     if (oracleStats->firstFailure.empty()) {
                         oracleStats->firstFailure = "compact turn oracle mismatch before input token: "
                             + token
-                            + compactTickOracleMismatchSummary(oracleInfo);
+                            + compactTurnOracleMismatchSummary(oracleInfo);
                     }
                     return false;
                 }
@@ -2027,8 +2027,8 @@ struct SimulationCorpusOptions {
     std::optional<std::string> caseNameFilter;
     bool profileTimers = false;
     bool quiet = false;
-    bool compactTickOracle = false;
-    bool requireCompactTickOracleChecks = false;
+    bool compactTurnOracle = false;
+    bool requireCompactTurnOracleChecks = false;
 };
 
 struct SimulationCorpusCase {
@@ -2053,10 +2053,10 @@ struct SimulationCaseResult {
     bool passed = false;
     std::string error;
     SimulationCaseTiming timing;
-    uint64_t compactTickOracleChecks = 0;
-    uint64_t compactTickOracleHandled = 0;
-    uint64_t compactTickOracleStateChecks = 0;
-    uint64_t compactTickOracleFailures = 0;
+    uint64_t compactTurnOracleChecks = 0;
+    uint64_t compactTurnOracleHandled = 0;
+    uint64_t compactTurnOracleStateChecks = 0;
+    uint64_t compactTurnOracleFailures = 0;
 };
 
 struct SimulationCompileCache {
@@ -2104,9 +2104,9 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
             options.quiet = true;
             options.progressEvery = 0;
         } else if (arg == "--compact-turn-oracle" || arg == "--compact-tick-oracle") {
-            options.compactTickOracle = true;
+            options.compactTurnOracle = true;
         } else if (arg == "--require-compact-turn-oracle-checks" || arg == "--require-compact-tick-oracle-checks") {
-            options.requireCompactTickOracleChecks = true;
+            options.requireCompactTurnOracleChecks = true;
         } else {
             throw std::runtime_error("Unsupported simulation-testdata argument: " + arg);
         }
@@ -2258,7 +2258,7 @@ SimulationCompileCache compileSimulationCorpusGames(const std::vector<Simulation
 SimulationCaseResult runSimulationCorpusCase(
     const SimulationCorpusCase& testCase,
     ps_game* game,
-    bool compactTickOracle
+    bool compactTurnOracle
 ) {
     SimulationCaseResult result;
     if (game == nullptr) {
@@ -2290,13 +2290,13 @@ SimulationCaseResult runSimulationCorpusCase(
 
     phaseStart = std::chrono::steady_clock::now();
     ReplayOracleStats oracleStats;
-    ReplayOracleStats* oracleStatsPtr = compactTickOracle ? &oracleStats : nullptr;
+    ReplayOracleStats* oracleStatsPtr = compactTurnOracle ? &oracleStats : nullptr;
     if (!replayInputTokens(session.get(), testCase.inputs, nullptr, oracleStatsPtr)) {
         result.timing.replayUs = elapsedMicrosSince(phaseStart);
-        result.compactTickOracleChecks = oracleStats.compactTickChecks;
-        result.compactTickOracleHandled = oracleStats.compactTickHandled;
-        result.compactTickOracleStateChecks = oracleStats.compactTickStateChecks;
-        result.compactTickOracleFailures = oracleStats.compactTickFailures;
+        result.compactTurnOracleChecks = oracleStats.compactTurnChecks;
+        result.compactTurnOracleHandled = oracleStats.compactTurnHandled;
+        result.compactTurnOracleStateChecks = oracleStats.compactTurnStateChecks;
+        result.compactTurnOracleFailures = oracleStats.compactTurnFailures;
         result.error = testCase.name + ": failed to replay inputs";
         if (!oracleStats.firstFailure.empty()) {
             result.error += "\n" + oracleStats.firstFailure;
@@ -2304,10 +2304,10 @@ SimulationCaseResult runSimulationCorpusCase(
         return result;
     }
     result.timing.replayUs = elapsedMicrosSince(phaseStart);
-    result.compactTickOracleChecks = oracleStats.compactTickChecks;
-    result.compactTickOracleHandled = oracleStats.compactTickHandled;
-    result.compactTickOracleStateChecks = oracleStats.compactTickStateChecks;
-    result.compactTickOracleFailures = oracleStats.compactTickFailures;
+    result.compactTurnOracleChecks = oracleStats.compactTurnChecks;
+    result.compactTurnOracleHandled = oracleStats.compactTurnHandled;
+    result.compactTurnOracleStateChecks = oracleStats.compactTurnStateChecks;
+    result.compactTurnOracleFailures = oracleStats.compactTurnFailures;
 
     phaseStart = std::chrono::steady_clock::now();
     char* serializedRaw = ps_session_serialize_test_string(session.get());
@@ -2542,7 +2542,7 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                 results[checkIndex] = runSimulationCorpusCase(
                     testCase,
                     compileCache.games[caseIndex].get(),
-                    options.compactTickOracle
+                    options.compactTurnOracle
                 );
             }
             if (results[checkIndex].passed) {
@@ -2580,7 +2580,7 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                         results[checkIndex] = runSimulationCorpusCase(
                             testCase,
                             compileCache.games[caseIndex].get(),
-                            options.compactTickOracle
+                            options.compactTurnOracle
                         );
                     }
                 }
@@ -2614,17 +2614,17 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
     const SimulationTimingTotals timings = sumSimulationTimings(results, testdataParseUs);
     SimulationTimingTotals reportedTimings = timings;
     reportedTimings.sourceCompileUs += compileCache.totalCompileUs;
-    uint64_t compactTickOracleChecks = 0;
-    uint64_t compactTickOracleHandled = 0;
-    uint64_t compactTickOracleStateChecks = 0;
-    uint64_t compactTickOracleFailures = 0;
+    uint64_t compactTurnOracleChecks = 0;
+    uint64_t compactTurnOracleHandled = 0;
+    uint64_t compactTurnOracleStateChecks = 0;
+    uint64_t compactTurnOracleFailures = 0;
     for (const auto& result : results) {
-        compactTickOracleChecks += result.compactTickOracleChecks;
-        compactTickOracleHandled += result.compactTickOracleHandled;
-        compactTickOracleStateChecks += result.compactTickOracleStateChecks;
-        compactTickOracleFailures += result.compactTickOracleFailures;
+        compactTurnOracleChecks += result.compactTurnOracleChecks;
+        compactTurnOracleHandled += result.compactTurnOracleHandled;
+        compactTurnOracleStateChecks += result.compactTurnOracleStateChecks;
+        compactTurnOracleFailures += result.compactTurnOracleFailures;
     }
-    if (options.requireCompactTickOracleChecks && compactTickOracleChecks == 0) {
+    if (options.requireCompactTurnOracleChecks && compactTurnOracleChecks == 0) {
         ++failed;
         std::cerr << "compact turn oracle checks were required but none ran\n";
     }
@@ -2648,11 +2648,11 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
               << " total=" << totalChecks << " cases=" << cases.size()
               << " repeats=" << options.repeat << " jobs=" << options.jobs
               << " elapsed_ms=" << usToMs(wallUs);
-    if (options.compactTickOracle || compactTickOracleChecks > 0 || compactTickOracleFailures > 0) {
-        std::cout << " compact_turn_oracle_checks=" << compactTickOracleChecks
-                  << " compact_turn_oracle_handled=" << compactTickOracleHandled
-                  << " compact_turn_oracle_state_checks=" << compactTickOracleStateChecks
-                  << " compact_turn_oracle_failures=" << compactTickOracleFailures;
+    if (options.compactTurnOracle || compactTurnOracleChecks > 0 || compactTurnOracleFailures > 0) {
+        std::cout << " compact_turn_oracle_checks=" << compactTurnOracleChecks
+                  << " compact_turn_oracle_handled=" << compactTurnOracleHandled
+                  << " compact_turn_oracle_state_checks=" << compactTurnOracleStateChecks
+                  << " compact_turn_oracle_failures=" << compactTurnOracleFailures;
     }
     std::cout << "\n";
     if (options.profileTimers) {
@@ -3860,7 +3860,7 @@ struct CompiledTickSupport {
     std::string wholeTurnFallbackReason = "interpreter_delegation";
 };
 
-struct CompactTickSupport {
+struct CompactTurnSupport {
     bool supported = false;
     std::string fallbackReason = "interpreter_delegation";
     bool interpreterBridge = false;
@@ -4441,8 +4441,8 @@ bool compactObjectIdsShareOneLayer(
     return layer >= 0;
 }
 
-CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& game) {
-    CompactTickSupport support;
+CompactTurnSupport compactNativeTurnSupportForGame(const puzzlescript::Game& game) {
+    CompactTurnSupport support;
     if (game.rigid) {
         support.fallbackReason = "rigid_not_compact";
         return support;
@@ -4520,7 +4520,7 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
                 winTargets.push_back(objectId);
             }
         }
-        support.winConditions.push_back(CompactTickSupport::WinCondition{
+        support.winConditions.push_back(CompactTurnSupport::WinCondition{
             condition.quantifier,
             condition.aggr1,
             condition.aggr2,
@@ -4667,8 +4667,8 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
     return support;
 }
 
-CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
-    CompactTickSupport support = compactNativeTickSupportForGame(game);
+CompactTurnSupport compactTurnSupportForGame(const puzzlescript::Game& game) {
+    CompactTurnSupport support = compactNativeTurnSupportForGame(game);
     support.nativeFallbackReason = support.fallbackReason;
     if (!support.supported) {
         support.supported = true;
@@ -5668,7 +5668,7 @@ void appendCompiledTickSourceJsonFields(
         << "}";
 }
 
-void appendCompactTickAggregateJsonFields(
+void appendCompactTurnAggregateJsonFields(
     std::ostream& out,
     size_t sourceCount,
     size_t supported,
@@ -5714,9 +5714,9 @@ void appendCompactTickAggregateJsonFields(
     out << "}}";
 }
 
-void appendCompactTickSourceJsonFields(
+void appendCompactTurnSourceJsonFields(
     std::ostream& out,
-    const CompactTickSupport& support
+    const CompactTurnSupport& support
 ) {
     out << "\"compact_turn\":{"
         << "\"backend_codegen_available\":true"
@@ -5958,11 +5958,11 @@ std::string generateCompiledRulesCoverageJson(
     size_t commandUnknown = 0;
     size_t wholeTurnSupported = 0;
     std::unordered_map<std::string, size_t> wholeTurnFallbackReasons;
-    size_t compactTickSupported = 0;
-    size_t compactTickNativeSupported = 0;
-    size_t compactTickInterpreterBridgeSupported = 0;
-    std::unordered_map<std::string, size_t> compactTickFallbackReasons;
-    std::unordered_map<std::string, size_t> compactTickNativeFallbackReasons;
+    size_t compactTurnSupported = 0;
+    size_t compactTurnNativeSupported = 0;
+    size_t compactTurnInterpreterBridgeSupported = 0;
+    std::unordered_map<std::string, size_t> compactTurnFallbackReasons;
+    std::unordered_map<std::string, size_t> compactTurnNativeFallbackReasons;
     for (const CodegenSource& source : sources) {
         const CompiledTickSupport support = source.game
             ? compiledTickSupportForGame(*source.game, options)
@@ -5985,19 +5985,19 @@ std::string generateCompiledRulesCoverageJson(
         } else {
             ++wholeTurnFallbackReasons[support.wholeTurnFallbackReason];
         }
-        const CompactTickSupport compactSupport = source.game
-            ? compactTickSupportForGame(*source.game)
-            : CompactTickSupport{};
+        const CompactTurnSupport compactSupport = source.game
+            ? compactTurnSupportForGame(*source.game)
+            : CompactTurnSupport{};
         if (compactSupport.supported) {
-            ++compactTickSupported;
+            ++compactTurnSupported;
         }
         if (compactSupport.interpreterBridge) {
-            ++compactTickInterpreterBridgeSupported;
+            ++compactTurnInterpreterBridgeSupported;
         } else if (compactSupport.supported) {
-            ++compactTickNativeSupported;
+            ++compactTurnNativeSupported;
         }
-        ++compactTickFallbackReasons[compactSupport.fallbackReason];
-        ++compactTickNativeFallbackReasons[compactSupport.nativeFallbackReason];
+        ++compactTurnFallbackReasons[compactSupport.fallbackReason];
+        ++compactTurnNativeFallbackReasons[compactSupport.nativeFallbackReason];
     }
     out << "{\n"
         << "  \"max_rows\":" << options.maxRows << ",\n"
@@ -6016,14 +6016,14 @@ std::string generateCompiledRulesCoverageJson(
         wholeTurnFallbackReasons
     );
     out << ",";
-    appendCompactTickAggregateJsonFields(
+    appendCompactTurnAggregateJsonFields(
         out,
         sources.size(),
-        compactTickSupported,
-        compactTickNativeSupported,
-        compactTickInterpreterBridgeSupported,
-        compactTickFallbackReasons,
-        compactTickNativeFallbackReasons
+        compactTurnSupported,
+        compactTurnNativeSupported,
+        compactTurnInterpreterBridgeSupported,
+        compactTurnFallbackReasons,
+        compactTurnNativeFallbackReasons
     );
     out << "},\n"
         << "  \"sources\":[\n";
@@ -6045,11 +6045,11 @@ std::string generateCompiledRulesCoverageJson(
                 : compiledTickSupportForMissingGame()
         );
         out << ",";
-        appendCompactTickSourceJsonFields(
+        appendCompactTurnSourceJsonFields(
             out,
             sources[index].game
-                ? compactTickSupportForGame(*sources[index].game)
-                : CompactTickSupport{}
+                ? compactTurnSupportForGame(*sources[index].game)
+                : CompactTurnSupport{}
         );
         out << "}";
         if (index + 1 < sources.size()) {
@@ -6149,8 +6149,8 @@ std::string generateCompiledRulesCpp(
     bool emitGlobalFinder = true,
     std::string_view backendAccessorSymbol = {},
     std::string_view tickBackendAccessorSymbol = {},
-    std::string_view compactTickBackendAccessorSymbol = {},
-    bool compactTickOnly = false
+    std::string_view compactTurnBackendAccessorSymbol = {},
+    bool compactTurnOnly = false
 ) {
     std::ostringstream out;
     const std::string safeSymbol = safeCppIdentifier(symbol);
@@ -6174,10 +6174,10 @@ std::string generateCompiledRulesCpp(
         const auto& source = sources[sourceIndex];
         const auto& game = *source.game;
         const CompiledTickSupport tickSupport = compiledTickSupportForGame(game, options);
-        const CompactTickSupport compactTickSupport = compactTickSupportForGame(game);
+        const CompactTurnSupport compactTurnSupport = compactTurnSupportForGame(game);
         uint32_t sourceCompiledRules = 0;
         uint32_t sourceCompiledGroups = 0;
-        if (!compactTickOnly) {
+        if (!compactTurnOnly) {
             for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
                 const auto& group = game.rules[groupIndex];
                 if (!isCompilableGroup(group, options)) {
@@ -6210,11 +6210,11 @@ std::string generateCompiledRulesCpp(
 
         out << "CompiledRuleApplyOutcome apply_source_" << sourceIndex << "(Session& session, int32_t groupIndex, bool late, CommandState& commands) {\n"
             << "    const Game& game = *session.game;\n"
-            << (compactTickOnly
+            << (compactTurnOnly
                 ? "    (void)game;\n    (void)groupIndex;\n    (void)late;\n    (void)commands;\n    return {false, false};\n}\n\n"
                 : "")
             ;
-        if (!compactTickOnly) {
+        if (!compactTurnOnly) {
             out
             << "    if (late) {\n"
             << "    switch (groupIndex) {\n";
@@ -6298,7 +6298,7 @@ std::string generateCompiledRulesCpp(
         }
 
         out << "CompiledTickRuleGroupsOutcome apply_early_groups_source_" << sourceIndex << "(Session& session, CommandState& commands, std::vector<bool>* bannedGroups) {\n";
-        if (compactTickOnly || !areAllGroupsCompilable(game.rules, options)) {
+        if (compactTurnOnly || !areAllGroupsCompilable(game.rules, options)) {
             out << "    (void)session;\n"
                 << "    (void)commands;\n"
                 << "    (void)bannedGroups;\n"
@@ -6349,7 +6349,7 @@ std::string generateCompiledRulesCpp(
         }
 
         out << "CompiledTickRuleGroupsOutcome apply_late_groups_source_" << sourceIndex << "(Session& session, CommandState& commands, std::vector<bool>* bannedGroups) {\n";
-        if (compactTickOnly || !areAllGroupsCompilable(game.lateRules, options)) {
+        if (compactTurnOnly || !areAllGroupsCompilable(game.lateRules, options)) {
             out << "    (void)session;\n"
                 << "    (void)commands;\n"
                 << "    (void)bannedGroups;\n"
@@ -6408,12 +6408,12 @@ std::string generateCompiledRulesCpp(
             << "};\n\n";
 
         out << "CompiledTickApplyOutcome tick_step_source_" << sourceIndex << "(Session& session, ps_input input, RuntimeStepOptions options) {\n"
-            << (compactTickOnly
+            << (compactTurnOnly
                 ? "    (void)session;\n    (void)input;\n    (void)options;\n    return {false, {}};\n"
                 : "    return {true, puzzlescript::interpreterStepWithCompiledRuleGroups(session, input, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
             << "CompiledTickApplyOutcome tick_source_" << sourceIndex << "(Session& session, RuntimeStepOptions options) {\n"
-            << (compactTickOnly
+            << (compactTurnOnly
                 ? "    (void)session;\n    (void)options;\n    return {false, {}};\n"
                 : "    return {true, puzzlescript::interpreterTickWithCompiledRuleGroups(session, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
@@ -6422,31 +6422,31 @@ std::string generateCompiledRulesCpp(
             << "    " << cppStringLiteral(source.path.string()) << ",\n"
             << "    tick_step_source_" << sourceIndex << ",\n"
             << "    tick_source_" << sourceIndex << ",\n"
-            << "    {" << (!compactTickOnly && tickSupport.wholeTurnSupported ? "true" : "false")
-            << ", " << cppStringLiteral(compactTickOnly ? "compact_turn_only" : tickSupport.wholeTurnFallbackReason) << "},\n"
+            << "    {" << (!compactTurnOnly && tickSupport.wholeTurnSupported ? "true" : "false")
+            << ", " << cppStringLiteral(compactTurnOnly ? "compact_turn_only" : tickSupport.wholeTurnFallbackReason) << "},\n"
             << "};\n\n"
-            << "CompiledCompactTickApplyOutcome compact_tick_step_source_" << sourceIndex << "(\n"
+            << "SpecializedCompactTurnOutcome specialized_compact_turn_source_" << sourceIndex << "(\n"
             << "    const Game& game,\n"
-            << "    CompiledCompactTickStateView state,\n"
+            << "    CompactStateView state,\n"
             << "    ps_input input,\n"
             << "    RuntimeStepOptions options\n"
             << ") {\n"
-            << (compactTickSupport.interpreterBridge ? "" : "    (void)game;\n");
-        if (!compactTickSupport.supported) {
+            << (compactTurnSupport.interpreterBridge ? "" : "    (void)game;\n");
+        if (!compactTurnSupport.supported) {
             out << "    (void)state;\n"
                 << "    (void)options;\n"
                 << "    (void)input;\n"
                 << "    return {false, {}};\n"
                 << "}\n\n";
-        } else if (compactTickSupport.interpreterBridge) {
-            out << "    return compiledCompactTickInterpreterBridge(game, state, input, options);\n"
+        } else if (compactTurnSupport.interpreterBridge) {
+            out << "    return compactStateInterpretedTurnBridge(game, state, input, options);\n"
                 << "}\n\n";
         } else {
             out << "    if (options.emitAudio) {\n"
                 << "        return {false, {}};\n"
                 << "    }\n"
                 << "    constexpr int32_t kObjectCount = " << game.objectCount << ";\n"
-                << "    constexpr int32_t kPlayerObject = " << compactTickSupport.playerObjectId << ";\n"
+                << "    constexpr int32_t kPlayerObject = " << compactTurnSupport.playerObjectId << ";\n"
                 << "    const int32_t width = state.width;\n"
                 << "    const int32_t height = state.height;\n"
                 << "    if (state.objectBits == nullptr || width <= 0 || height <= 0) {\n"
@@ -6482,7 +6482,7 @@ std::string generateCompiledRulesCpp(
                 << "        }\n"
                 << "    }\n"
                 << "    bool ruleChanged = false;\n";
-            if (compactTickSupport.directCellObjectRules) {
+            if (compactTurnSupport.directCellObjectRules) {
                 for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
                     const auto& group = game.rules[groupIndex];
                     out << "    {\n"
@@ -6497,13 +6497,13 @@ std::string generateCompiledRulesCpp(
                         << "    }\n";
                 }
             }
-            const bool multiPlayerMovementOnly = !compactTickSupport.simplePush
-                && !compactTickSupport.simpleConsume
-                && compactTickSupport.playerObjectIds.size() > 1;
+            const bool multiPlayerMovementOnly = !compactTurnSupport.simplePush
+                && !compactTurnSupport.simpleConsume
+                && compactTurnSupport.playerObjectIds.size() > 1;
             if (multiPlayerMovementOnly) {
                 out << "    if (directionMask != 0) {\n"
                     << "        std::vector<uint64_t> pending(cellWordCount, 0);\n";
-                for (const int32_t objectId : compactTickSupport.playerObjectIds) {
+                for (const int32_t objectId : compactTurnSupport.playerObjectIds) {
                     out << "        for (size_t word = 0; word < cellWordCount; ++word) {\n"
                         << "            pending[word] |= state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + word];\n"
                         << "        }\n";
@@ -6534,13 +6534,13 @@ std::string generateCompiledRulesCpp(
                     << "                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);\n"
                     << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
                     << "                bool blocked = false;\n";
-                for (const int32_t objectId : compactTickSupport.playerLayerObjectIds) {
+                for (const int32_t objectId : compactTurnSupport.playerLayerObjectIds) {
                     out << "                blocked = blocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0);\n";
                 }
                 out << "                if (blocked) {\n"
                     << "                    continue;\n"
                     << "                }\n";
-                for (const int32_t objectId : compactTickSupport.playerLayerObjectIds) {
+                for (const int32_t objectId : compactTurnSupport.playerLayerObjectIds) {
                     out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + sourceWordIndex] & sourceBit) != 0) {\n"
                         << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + sourceWordIndex] &= ~sourceBit;\n"
                         << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] |= targetBit;\n"
@@ -6575,17 +6575,17 @@ std::string generateCompiledRulesCpp(
                     << "                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);\n"
                     << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
                     << "                bool blocked = false;\n";
-            if (compactTickSupport.simplePush || compactTickSupport.simpleConsume) {
+            if (compactTurnSupport.simplePush || compactTurnSupport.simpleConsume) {
                 out << "                int32_t pushedObject = -1;\n"
                     << "                size_t pushBase = 0;\n"
                     << "                int32_t consumedObject = -1;\n";
-                for (const int32_t pushObjectId : compactTickSupport.pushObjectIds) {
+                for (const int32_t pushObjectId : compactTurnSupport.pushObjectIds) {
                     out << "                if (directionMask != 16 && pushedObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0)) {\n"
                         << "                    pushedObject = " << pushObjectId << ";\n"
                         << "                    pushBase = static_cast<size_t>(" << pushObjectId << ") * cellWordCount;\n"
                         << "                }\n";
                 }
-                for (const int32_t consumeObjectId : compactTickSupport.consumeObjectIds) {
+                for (const int32_t consumeObjectId : compactTurnSupport.consumeObjectIds) {
                     out << "                if (directionMask != 16 && consumedObject < 0 && ((state.objectBits[static_cast<size_t>(" << consumeObjectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0)) {\n"
                         << "                    consumedObject = " << consumeObjectId << ";\n"
                         << "                }\n";
@@ -6593,7 +6593,7 @@ std::string generateCompiledRulesCpp(
                 out << "                const bool targetHasPush = pushedObject >= 0;\n"
                     << "                const bool targetHasConsume = consumedObject >= 0;\n"
                     << "                if (targetHasPush) {\n";
-                if (compactTickSupport.simplePushChain) {
+                if (compactTurnSupport.simplePushChain) {
                     out << "                    bool pushBlocked = false;\n"
                         << "                    int32_t pushX = targetX;\n"
                         << "                    int32_t pushY = targetY;\n"
@@ -6609,13 +6609,13 @@ std::string generateCompiledRulesCpp(
                         << "                        const size_t pushWordIndex = static_cast<size_t>(pushTile >> 6);\n"
                         << "                        const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);\n"
                         << "                        int32_t chainObject = -1;\n";
-                    for (const int32_t pushObjectId : compactTickSupport.pushObjectIds) {
+                    for (const int32_t pushObjectId : compactTurnSupport.pushObjectIds) {
                         out << "                        if (chainObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0)) {\n"
                             << "                            chainObject = " << pushObjectId << ";\n"
                             << "                        }\n";
                     }
                     out << "                        bool layerBlocked = false;\n";
-                    for (const int32_t objectId : compactTickSupport.pushLayerObjectIds) {
+                    for (const int32_t objectId : compactTurnSupport.pushLayerObjectIds) {
                         out << "                        layerBlocked = layerBlocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0);\n";
                     }
                     out << "                        if (chainObject < 0) {\n"
@@ -6638,7 +6638,7 @@ std::string generateCompiledRulesCpp(
                         << "                        const size_t readWordIndex = static_cast<size_t>(readTile >> 6);\n"
                         << "                        const uint64_t readBit = uint64_t{1} << static_cast<uint32_t>(readTile & 63);\n"
                         << "                        int32_t movedObject = -1;\n";
-                    for (const int32_t pushObjectId : compactTickSupport.pushObjectIds) {
+                    for (const int32_t pushObjectId : compactTurnSupport.pushObjectIds) {
                         out << "                        if (movedObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + readWordIndex] & readBit) != 0)) {\n"
                             << "                            movedObject = " << pushObjectId << ";\n"
                             << "                        }\n";
@@ -6665,7 +6665,7 @@ std::string generateCompiledRulesCpp(
                         << "                    const size_t pushWordIndex = static_cast<size_t>(pushTile >> 6);\n"
                         << "                    const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);\n"
                         << "                    bool pushBlocked = false;\n";
-                    for (const int32_t objectId : compactTickSupport.pushLayerObjectIds) {
+                    for (const int32_t objectId : compactTurnSupport.pushLayerObjectIds) {
                         out << "                    pushBlocked = pushBlocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0);\n";
                     }
                     out << "                    if (pushBlocked) {\n"
@@ -6675,16 +6675,16 @@ std::string generateCompiledRulesCpp(
                         << "                    state.objectBits[pushBase + pushWordIndex] |= pushBit;\n";
                 }
                 out << "                } else if (targetHasConsume) {\n";
-                for (const int32_t objectId : compactTickSupport.playerLayerObjectIds) {
+                for (const int32_t objectId : compactTurnSupport.playerLayerObjectIds) {
                     out << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] &= ~targetBit;\n";
                 }
                 out << "                } else if (directionMask != 16) {\n";
             } else {
                 out << "                if (directionMask != 16) {\n";
             }
-            if (compactTickSupport.simpleClearTarget) {
+            if (compactTurnSupport.simpleClearTarget) {
                 out << "                    bool targetClearChanged = false;\n";
-                for (const int32_t objectId : compactTickSupport.clearTargetObjectIds) {
+                for (const int32_t objectId : compactTurnSupport.clearTargetObjectIds) {
                     out << "                    if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0) {\n"
                         << "                        state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] &= ~targetBit;\n"
                         << "                        targetClearChanged = true;\n"
@@ -6692,7 +6692,7 @@ std::string generateCompiledRulesCpp(
                 }
                 out << "                    ruleChanged = ruleChanged || targetClearChanged;\n";
             }
-            for (const int32_t objectId : compactTickSupport.playerLayerObjectIds) {
+            for (const int32_t objectId : compactTurnSupport.playerLayerObjectIds) {
                 out << "                    blocked = blocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0);\n";
             }
             out << "                }\n"
@@ -6707,7 +6707,7 @@ std::string generateCompiledRulesCpp(
                 << "        }\n"
                 << "    }\n";
             }
-            if (compactTickSupport.directLateCellObjectRules) {
+            if (compactTurnSupport.directLateCellObjectRules) {
                 for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
                     const auto& group = game.lateRules[groupIndex];
                     out << "    {\n"
@@ -6723,9 +6723,9 @@ std::string generateCompiledRulesCpp(
                 }
             }
             out
-                << "    bool won = " << (compactTickSupport.winConditions.empty() ? "false" : "true") << ";\n";
-            for (size_t conditionIndex = 0; conditionIndex < compactTickSupport.winConditions.size(); ++conditionIndex) {
-                const auto& condition = compactTickSupport.winConditions[conditionIndex];
+                << "    bool won = " << (compactTurnSupport.winConditions.empty() ? "false" : "true") << ";\n";
+            for (size_t conditionIndex = 0; conditionIndex < compactTurnSupport.winConditions.size(); ++conditionIndex) {
+                const auto& condition = compactTurnSupport.winConditions[conditionIndex];
                 out << "    if (won) {\n"
                     << "        bool conditionPassed = " << (condition.quantifier == 0 ? "false" : "true") << ";\n"
                     << "        for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
@@ -6763,12 +6763,12 @@ std::string generateCompiledRulesCpp(
                 << "}\n\n";
         }
         out
-            << "const CompiledCompactTickBackend compact_tick_backend_" << sourceIndex << " = {\n"
+            << "const SpecializedCompactTurnBackend specialized_compact_turn_backend_" << sourceIndex << " = {\n"
             << "    " << source.hash << "ULL,\n"
             << "    " << cppStringLiteral(source.path.string()) << ",\n"
-            << "    compact_tick_step_source_" << sourceIndex << ",\n"
-            << "    {" << (compactTickSupport.supported ? "true" : "false")
-            << ", " << cppStringLiteral(compactTickSupport.fallbackReason) << "},\n"
+            << "    specialized_compact_turn_source_" << sourceIndex << ",\n"
+            << "    {" << (compactTurnSupport.supported ? "true" : "false")
+            << ", " << cppStringLiteral(compactTurnSupport.fallbackReason) << "},\n"
             << "};\n\n";
     }
 
@@ -6792,14 +6792,18 @@ std::string generateCompiledRulesCpp(
         out << "        default: return nullptr;\n"
             << "    }\n"
             << "}\n\n";
-        out << "extern \"C\" const puzzlescript::CompiledCompactTickBackend* "
-            << "ps_compiled_compact_tick_find_backend(uint64_t sourceHash) {\n"
+        out << "extern \"C\" const puzzlescript::SpecializedCompactTurnBackend* "
+            << "ps_specialized_compact_turn_find_backend(uint64_t sourceHash) {\n"
             << "    switch (sourceHash) {\n";
         for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
-            out << "        case " << sources[sourceIndex].hash << "ULL: return &compact_tick_backend_" << sourceIndex << ";\n";
+            out << "        case " << sources[sourceIndex].hash << "ULL: return &specialized_compact_turn_backend_" << sourceIndex << ";\n";
         }
         out << "        default: return nullptr;\n"
             << "    }\n"
+            << "}\n\n"
+            << "extern \"C\" const puzzlescript::SpecializedCompactTurnBackend* "
+            << "ps_compiled_compact_tick_find_backend(uint64_t sourceHash) {\n"
+            << "    return ps_specialized_compact_turn_find_backend(sourceHash);\n"
             << "}\n\n";
     } else {
         if (sources.size() != 1) {
@@ -6823,14 +6827,14 @@ std::string generateCompiledRulesCpp(
             << safeTickBackendAccessor << "() {\n"
             << "    return &tick_backend_0;\n"
             << "}\n\n";
-        const std::string safeCompactTickBackendAccessor = safeCppIdentifier(
-            compactTickBackendAccessorSymbol.empty()
-                ? std::string(safeSymbol + "_compact_tick_backend")
-                : std::string(compactTickBackendAccessorSymbol)
+        const std::string safeCompactTurnBackendAccessor = safeCppIdentifier(
+            compactTurnBackendAccessorSymbol.empty()
+                ? std::string(safeSymbol + "_specialized_compact_turn_backend")
+                : std::string(compactTurnBackendAccessorSymbol)
         );
-        out << "extern \"C\" const puzzlescript::CompiledCompactTickBackend* "
-            << safeCompactTickBackendAccessor << "() {\n"
-            << "    return &compact_tick_backend_0;\n"
+        out << "extern \"C\" const puzzlescript::SpecializedCompactTurnBackend* "
+            << safeCompactTurnBackendAccessor << "() {\n"
+            << "    return &specialized_compact_turn_backend_0;\n"
             << "}\n\n";
     }
     out << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_rule_count = " << totalCompiledRules << "U;\n"
@@ -6843,7 +6847,7 @@ std::string generateCompiledRulesRegistryCpp(
     std::string_view symbol,
     const std::vector<std::string>& backendAccessorSymbols,
     const std::vector<std::string>& tickBackendAccessorSymbols,
-    const std::vector<std::string>& compactTickBackendAccessorSymbols,
+    const std::vector<std::string>& compactTurnBackendAccessorSymbols,
     const CompiledRulesCoverage& coverage
 ) {
     std::ostringstream out;
@@ -6859,8 +6863,8 @@ std::string generateCompiledRulesRegistryCpp(
         out << "extern \"C\" const puzzlescript::CompiledTickBackend* "
             << safeCppIdentifier(backendSymbol) << "();\n";
     }
-    for (const auto& backendSymbol : compactTickBackendAccessorSymbols) {
-        out << "extern \"C\" const puzzlescript::CompiledCompactTickBackend* "
+    for (const auto& backendSymbol : compactTurnBackendAccessorSymbols) {
+        out << "extern \"C\" const puzzlescript::SpecializedCompactTurnBackend* "
             << safeCppIdentifier(backendSymbol) << "();\n";
     }
     out << "\nextern \"C\" const puzzlescript::CompiledRulesBackend* "
@@ -6883,15 +6887,19 @@ std::string generateCompiledRulesRegistryCpp(
     out << "        default: return nullptr;\n"
         << "    }\n"
         << "}\n\n";
-    out << "extern \"C\" const puzzlescript::CompiledCompactTickBackend* "
-        << "ps_compiled_compact_tick_find_backend(uint64_t sourceHash) {\n"
+    out << "extern \"C\" const puzzlescript::SpecializedCompactTurnBackend* "
+        << "ps_specialized_compact_turn_find_backend(uint64_t sourceHash) {\n"
         << "    switch (sourceHash) {\n";
     for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
         out << "        case " << sources[sourceIndex].hash << "ULL: return "
-            << safeCppIdentifier(compactTickBackendAccessorSymbols[sourceIndex]) << "();\n";
+            << safeCppIdentifier(compactTurnBackendAccessorSymbols[sourceIndex]) << "();\n";
     }
     out << "        default: return nullptr;\n"
         << "    }\n"
+        << "}\n\n"
+        << "extern \"C\" const puzzlescript::SpecializedCompactTurnBackend* "
+        << "ps_compiled_compact_tick_find_backend(uint64_t sourceHash) {\n"
+        << "    return ps_specialized_compact_turn_find_backend(sourceHash);\n"
         << "}\n\n"
         << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_rule_count = " << coverage.compiledRules << "U;\n"
         << "extern \"C\" const uint32_t " << safeSymbol << "_compiled_group_count = " << coverage.compiledGroups << "U;\n";
@@ -6905,18 +6913,18 @@ uint32_t writeCompiledRulesCppDirectory(
     std::string_view symbol,
     const CompiledRulesOptions& options,
     const CompiledRulesCoverage& coverage,
-    bool compactTickOnly = false
+    bool compactTurnOnly = false
 ) {
     const std::string safeSymbol = safeCppIdentifier(symbol);
     std::vector<std::filesystem::path> generatedPaths;
     std::vector<std::string> backendAccessorSymbols;
     std::vector<std::string> tickBackendAccessorSymbols;
-    std::vector<std::string> compactTickBackendAccessorSymbols;
+    std::vector<std::string> compactTurnBackendAccessorSymbols;
     uint32_t wroteCount = 0;
     generatedPaths.reserve(sources.size() + 1);
     backendAccessorSymbols.reserve(sources.size());
     tickBackendAccessorSymbols.reserve(sources.size());
-    compactTickBackendAccessorSymbols.reserve(sources.size());
+    compactTurnBackendAccessorSymbols.reserve(sources.size());
 
     for (size_t sourceIndex = 0; sourceIndex < sources.size(); ++sourceIndex) {
         std::ostringstream hashHex;
@@ -6926,10 +6934,10 @@ uint32_t writeCompiledRulesCppDirectory(
         const std::string sourceSymbol = safeSymbol + "_source_" + hashSuffix;
         const std::string backendSymbol = safeSymbol + "_backend_" + hashSuffix;
         const std::string tickBackendSymbol = safeSymbol + "_tick_backend_" + hashSuffix;
-        const std::string compactTickBackendSymbol = safeSymbol + "_compact_tick_backend_" + hashSuffix;
+        const std::string compactTurnBackendSymbol = safeSymbol + "_specialized_compact_turn_backend_" + hashSuffix;
         backendAccessorSymbols.push_back(backendSymbol);
         tickBackendAccessorSymbols.push_back(tickBackendSymbol);
-        compactTickBackendAccessorSymbols.push_back(compactTickBackendSymbol);
+        compactTurnBackendAccessorSymbols.push_back(compactTurnBackendSymbol);
         const std::string generated = generateCompiledRulesCpp(
             std::vector<CodegenSource>{sources[sourceIndex]},
             sourceSymbol,
@@ -6937,8 +6945,8 @@ uint32_t writeCompiledRulesCppDirectory(
             false,
             backendSymbol,
             tickBackendSymbol,
-            compactTickBackendSymbol,
-            compactTickOnly
+            compactTurnBackendSymbol,
+            compactTurnOnly
         );
         if (writeFileIfChanged(cppPath, generated)) {
             ++wroteCount;
@@ -6954,8 +6962,8 @@ uint32_t writeCompiledRulesCppDirectory(
             symbol,
             backendAccessorSymbols,
             tickBackendAccessorSymbols,
-            compactTickBackendAccessorSymbols,
-            compactTickOnly ? CompiledRulesCoverage{} : coverage
+            compactTurnBackendAccessorSymbols,
+            compactTurnOnly ? CompiledRulesCoverage{} : coverage
         )
     )) {
         ++wroteCount;
@@ -7010,7 +7018,7 @@ std::vector<CodegenSource> selectCompiledRuleSourcesForEmission(
                 false,
                 "compiled_rules_line_budget_probe_backend",
                 "compiled_rules_line_budget_probe_tick_backend",
-                "compiled_rules_line_budget_probe_compact_tick_backend"
+                "compiled_rules_line_budget_probe_specialized_compact_turn_backend"
             );
             const uint64_t generatedLines = static_cast<uint64_t>(
                 std::count(generated.begin(), generated.end(), '\n') + 1
@@ -7037,7 +7045,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
     std::string symbol = "puzzlescript_compiled_rules";
     CompiledRulesOptions options;
     bool statsOnly = false;
-    bool compactTickOnly = false;
+    bool compactTurnOnly = false;
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--emit-cpp") {
@@ -7068,7 +7076,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
         } else if (arg == "--stats-only") {
             statsOnly = true;
         } else if (arg == "--compact-turn-only" || arg == "--compact-tick-only") {
-            compactTickOnly = true;
+            compactTurnOnly = true;
         } else if (arg == "--max-rows") {
             if (++index >= argc) {
                 throw std::runtime_error("--max-rows requires a positive integer");
@@ -7160,7 +7168,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
     uint32_t wroteCount = 0;
     std::string outputPath;
     if (emitCpp.has_value()) {
-        const std::string generated = generateCompiledRulesCpp(sources, symbol, options, true, {}, {}, {}, compactTickOnly);
+        const std::string generated = generateCompiledRulesCpp(sources, symbol, options, true, {}, {}, {}, compactTurnOnly);
         wroteCount = writeFileIfChanged(*emitCpp, generated) ? 1U : 0U;
         outputPath = emitCpp->string();
     } else {
@@ -7171,7 +7179,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
             symbol,
             options,
             coverage,
-            compactTickOnly
+            compactTurnOnly
         );
         outputPath = emitCppDir->string();
     }
@@ -7180,7 +7188,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
               << " max_rows=" << options.maxRows
               << " groups=" << coverage.compiledGroups
               << " rules=" << coverage.compiledRules
-              << (compactTickOnly ? " compact_turn_only=true" : "")
+              << (compactTurnOnly ? " compact_turn_only=true" : "")
               << " output=" << outputPath
               << " wrote=" << wroteCount
               << "\n";

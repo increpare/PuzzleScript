@@ -804,12 +804,12 @@ CompactTurnTryResult trySpecializedCompactTurn(
     puzzlescript::RuntimeStepOptions options
 ) {
     CompactTurnTryResult result;
-    if (game.compiledCompactTick == nullptr || game.compiledCompactTick->step == nullptr) {
+    if (game.specializedCompactTurn == nullptr || game.specializedCompactTurn->step == nullptr) {
         return result;
     }
     result.attempted = true;
     result.compact = parent;
-    puzzlescript::CompiledCompactTickStateView view{
+    puzzlescript::CompactStateView view{
         result.compact.objectBits.empty() ? nullptr : result.compact.objectBits.data(),
         result.compact.objectBits.size(),
         nullptr,
@@ -823,8 +823,8 @@ CompactTurnTryResult trySpecializedCompactTurn(
         &result.compact.randomStateValid,
         currentLevelIndex,
     };
-    const puzzlescript::CompiledCompactTickApplyOutcome outcome =
-        game.compiledCompactTick->step(game, view, input, options);
+    const puzzlescript::SpecializedCompactTurnOutcome outcome =
+        game.specializedCompactTurn->step(game, view, input, options);
     result.handled = outcome.handled;
     result.stepResult = outcome.result;
     return result;
@@ -849,7 +849,7 @@ SolverEdgeStep stepSolverEdge(
     };
     SolverEdgeStep edge;
     if (compactNodeStorage) {
-        const puzzlescript::CompiledCompactTickBackend* compactTurn = game ? game->compiledCompactTick : nullptr;
+        const puzzlescript::SpecializedCompactTurnBackend* compactTurn = game ? game->specializedCompactTurn : nullptr;
         if (compactTurn != nullptr && compactTurn->step != nullptr) {
             if (compactTurn->support.wholeTurnSupported) {
                 ++result.compactTurnAttempts;
@@ -1357,7 +1357,7 @@ Result runSearch(
     result.workerId = workerId;
     result.compiledRulesAttached = game && game->compiledRules != nullptr;
     result.compiledTickAttached = game && game->compiledTick != nullptr;
-    result.specializedCompactTurnAttached = game && game->compiledCompactTick != nullptr;
+    result.specializedCompactTurnAttached = game && game->specializedCompactTurn != nullptr;
     result.compactNodeStorage = compactNodeStorage;
     result.astarWeight = astarWeight;
     result.timing.compileNs = compileNs;
@@ -1653,7 +1653,7 @@ Result solveLevel(
     combined.workerId = workerId;
     combined.compiledRulesAttached = game && game->compiledRules != nullptr;
     combined.compiledTickAttached = game && game->compiledTick != nullptr;
-    combined.specializedCompactTurnAttached = game && game->compiledCompactTick != nullptr;
+    combined.specializedCompactTurnAttached = game && game->specializedCompactTurn != nullptr;
     combined.compactNodeStorage = compactNodeStorage;
     combined.astarWeight = astarWeight;
     combined.timing.compileNs = compileNs;
