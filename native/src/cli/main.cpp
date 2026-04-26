@@ -3866,6 +3866,7 @@ struct CompactTickSupport {
     bool directCellObjectRules = false;
     bool simplePush = false;
     bool simplePushChain = false;
+    bool simpleConsume = false;
     int32_t playerObjectId = -1;
     std::vector<int32_t> playerObjectIds;
     int32_t playerLayer = -1;
@@ -3874,6 +3875,7 @@ struct CompactTickSupport {
     std::vector<int32_t> pushObjectIds;
     int32_t pushLayer = -1;
     std::vector<int32_t> pushLayerObjectIds;
+    std::vector<int32_t> consumeObjectIds;
     int32_t winSubjectObjectId = -1;
     int32_t winTargetObjectId = -1;
     struct WinCondition {
@@ -4156,6 +4158,69 @@ bool compactLooksLikePushChainRules(
     return sawPlayerPush && sawPushPush;
 }
 
+bool compactLooksLikeSimpleConsumeRules(
+    const puzzlescript::Game& game,
+    int32_t playerObjectId,
+    const std::vector<int32_t>& consumeObjectIds
+) {
+    if (game.rules.size() != 1 || game.rules.front().empty() || !game.lateRules.empty() || consumeObjectIds.empty()) {
+        return false;
+    }
+    const auto isConsumeObject = [&](int32_t objectId) {
+        return std::find(consumeObjectIds.begin(), consumeObjectIds.end(), objectId) != consumeObjectIds.end();
+    };
+    for (const auto& rule : game.rules.front()) {
+        if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+            return false;
+        }
+        if (rule.patterns.size() != 1 || rule.patterns.front().size() != 2) {
+            return false;
+        }
+        bool sawPlayer = false;
+        bool sawConsume = false;
+        for (const auto& pattern : rule.patterns.front()) {
+            if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern
+                || compactPatternHasUnsupportedConstraints(pattern)
+                || !pattern.replacement.has_value()
+                || pattern.replacement->hasRandomEntityMask
+                || pattern.replacement->hasRandomDirMask) {
+                return false;
+            }
+            const bool movementPresent = pattern.hasMovementsPresent
+                && maskHasAnyBit(game, pattern.movementsPresent, game.movementWordCount);
+            const bool replacementSetsMovement = maskHasAnyBit(
+                game,
+                pattern.replacement->movementsSet,
+                game.movementWordCount
+            );
+            const bool replacementSetsObject = maskHasAnyBit(game, pattern.replacement->objectsSet, game.wordCount);
+            bool patternHasPlayer = false;
+            bool patternHasConsume = false;
+            for (const int32_t objectId : objectIdsInMask(game, pattern.objectsPresent)) {
+                patternHasPlayer = patternHasPlayer || objectId == playerObjectId;
+                patternHasConsume = patternHasConsume || isConsumeObject(objectId);
+            }
+            if (patternHasPlayer) {
+                if (!movementPresent || !replacementSetsMovement) {
+                    return false;
+                }
+                sawPlayer = true;
+            } else if (patternHasConsume) {
+                if (movementPresent || replacementSetsMovement || replacementSetsObject) {
+                    return false;
+                }
+                sawConsume = true;
+            } else {
+                return false;
+            }
+        }
+        if (!sawPlayer || !sawConsume) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool compactLooksLikeDirectCellObjectRules(const puzzlescript::Game& game) {
     if (game.rules.empty() || !game.lateRules.empty()) {
         return false;
@@ -4315,6 +4380,7 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
     }
     const bool movementOnly = game.rules.empty();
     std::vector<int32_t> simplePushObjectIds;
+    std::vector<int32_t> simpleConsumeObjectIds;
     bool directCellObjectRules = false;
     if (!game.rules.empty()) {
         if (playerObjectIds.size() != 1) {
@@ -4346,16 +4412,24 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
         } else if (compactLooksLikePushChainRules(game, support.playerObjectId, subjectCandidates)) {
             simplePushObjectIds = std::move(subjectCandidates);
             support.simplePushChain = true;
-        } else if (compactLooksLikeDirectCellObjectRules(game)) {
-            directCellObjectRules = true;
+        } else {
+            std::vector<int32_t> consumeCandidates = compactPushCandidatesFromRules(game, support.playerObjectId);
+            if (compactLooksLikeSimpleConsumeRules(game, support.playerObjectId, consumeCandidates)) {
+                simpleConsumeObjectIds = std::move(consumeCandidates);
+            } else if (compactLooksLikeDirectCellObjectRules(game)) {
+                directCellObjectRules = true;
+            }
         }
     }
     const bool simplePush = !simplePushObjectIds.empty();
-    if (!movementOnly && !simplePush && !directCellObjectRules) {
+    const bool simpleConsume = !simpleConsumeObjectIds.empty();
+    if (!movementOnly && !simplePush && !simpleConsume && !directCellObjectRules) {
         support.fallbackReason = game.rules.empty() ? "win_subject_not_player" : "rules_not_compact";
         return support;
     }
     support.directCellObjectRules = directCellObjectRules;
+    support.simpleConsume = simpleConsume;
+    support.consumeObjectIds = std::move(simpleConsumeObjectIds);
     if (simplePush) {
         support.simplePush = true;
         support.pushObjectIds = simplePushObjectIds;
@@ -5474,7 +5548,9 @@ void appendCompactTickSourceJsonFields(
         << ",\"native_kernel_fallback_reason\":" << jsonStringLiteral(support.nativeFallbackReason)
         << ",\"features\":{"
         << "\"state_layout\":\"compact_object_bits\""
-        << ",\"movement\":" << jsonStringLiteral(support.simplePush ? "simple_push" : "simple_movement")
+        << ",\"movement\":" << jsonStringLiteral(
+            support.simplePush ? "simple_push" : (support.simpleConsume ? "simple_consume" : "simple_movement")
+        )
         << ",\"rules\":" << jsonStringLiteral(support.directCellObjectRules ? "direct_cell_object" : "movement_shape")
         << ",\"win_conditions\":" << jsonStringLiteral(support.winConditions.empty() ? "none" : "generic_masks")
         << "}"
@@ -6124,7 +6200,9 @@ std::string generateCompiledRulesCpp(
                         << "    }\n";
                 }
             }
-            const bool multiPlayerMovementOnly = !compactTickSupport.simplePush && compactTickSupport.playerObjectIds.size() > 1;
+            const bool multiPlayerMovementOnly = !compactTickSupport.simplePush
+                && !compactTickSupport.simpleConsume
+                && compactTickSupport.playerObjectIds.size() > 1;
             if (multiPlayerMovementOnly) {
                 out << "    if (directionMask != 0) {\n"
                     << "        std::vector<uint64_t> pending(cellWordCount, 0);\n";
@@ -6200,16 +6278,23 @@ std::string generateCompiledRulesCpp(
                     << "                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);\n"
                     << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
                     << "                bool blocked = false;\n";
-            if (compactTickSupport.simplePush) {
+            if (compactTickSupport.simplePush || compactTickSupport.simpleConsume) {
                 out << "                int32_t pushedObject = -1;\n"
-                    << "                size_t pushBase = 0;\n";
+                    << "                size_t pushBase = 0;\n"
+                    << "                int32_t consumedObject = -1;\n";
                 for (const int32_t pushObjectId : compactTickSupport.pushObjectIds) {
                     out << "                if (directionMask != 16 && pushedObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0)) {\n"
                         << "                    pushedObject = " << pushObjectId << ";\n"
                         << "                    pushBase = static_cast<size_t>(" << pushObjectId << ") * cellWordCount;\n"
                         << "                }\n";
                 }
+                for (const int32_t consumeObjectId : compactTickSupport.consumeObjectIds) {
+                    out << "                if (directionMask != 16 && consumedObject < 0 && ((state.objectBits[static_cast<size_t>(" << consumeObjectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0)) {\n"
+                        << "                    consumedObject = " << consumeObjectId << ";\n"
+                        << "                }\n";
+                }
                 out << "                const bool targetHasPush = pushedObject >= 0;\n"
+                    << "                const bool targetHasConsume = consumedObject >= 0;\n"
                     << "                if (targetHasPush) {\n";
                 if (compactTickSupport.simplePushChain) {
                     out << "                    bool pushBlocked = false;\n"
@@ -6291,6 +6376,10 @@ std::string generateCompiledRulesCpp(
                         << "                    }\n"
                         << "                    state.objectBits[pushBase + targetWordIndex] &= ~targetBit;\n"
                         << "                    state.objectBits[pushBase + pushWordIndex] |= pushBit;\n";
+                }
+                out << "                } else if (targetHasConsume) {\n";
+                for (const int32_t objectId : compactTickSupport.playerLayerObjectIds) {
+                    out << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] &= ~targetBit;\n";
                 }
                 out << "                } else if (directionMask != 16) {\n";
             } else {
