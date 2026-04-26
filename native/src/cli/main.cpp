@@ -3864,6 +3864,7 @@ struct CompactTickSupport {
     bool interpreterBridge = false;
     std::string nativeFallbackReason = "interpreter_delegation";
     bool simplePush = false;
+    bool simplePushChain = false;
     int32_t playerObjectId = -1;
     std::vector<int32_t> playerObjectIds;
     int32_t playerLayer = -1;
@@ -3961,6 +3962,15 @@ bool compactPatternHasUnsupportedConstraints(const puzzlescript::Pattern& patter
         || pattern.hasMovementsMissing;
 }
 
+bool compactHasLoopPoints(const puzzlescript::LoopPointTable& table) {
+    for (const auto& entry : table.entries) {
+        if (entry.has_value()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool compactLooksLikeSimplePushRules(
     const puzzlescript::Game& game,
     int32_t playerObjectId,
@@ -4042,27 +4052,137 @@ bool compactLooksLikeSimplePushRules(
     return true;
 }
 
+bool compactPatternMatchesAnyObject(
+    const puzzlescript::Game& game,
+    const puzzlescript::Pattern& pattern,
+    const std::vector<int32_t>& objectIds
+) {
+    const auto isCandidate = [&](int32_t objectId) {
+        return std::find(objectIds.begin(), objectIds.end(), objectId) != objectIds.end();
+    };
+    for (const int32_t objectId : objectIdsInMask(game, pattern.objectsPresent)) {
+        if (isCandidate(objectId)) {
+            return true;
+        }
+    }
+    for (const auto& anyObjectIds : pattern.anyObjectAnchorIds) {
+        if (anyObjectIds.empty()) {
+            return false;
+        }
+        bool anyMaskIsCandidateOnly = true;
+        for (const int32_t objectId : anyObjectIds) {
+            if (!isCandidate(objectId)) {
+                anyMaskIsCandidateOnly = false;
+                break;
+            }
+        }
+        if (anyMaskIsCandidateOnly) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool compactLooksLikePushChainRules(
+    const puzzlescript::Game& game,
+    int32_t playerObjectId,
+    const std::vector<int32_t>& pushObjectIds
+) {
+    if (game.rules.empty() || !game.lateRules.empty() || pushObjectIds.empty()) {
+        return false;
+    }
+    std::vector<int32_t> moverObjectIds = pushObjectIds;
+    if (std::find(moverObjectIds.begin(), moverObjectIds.end(), playerObjectId) == moverObjectIds.end()) {
+        moverObjectIds.push_back(playerObjectId);
+    }
+    bool sawPlayerPush = false;
+    bool sawPushPush = false;
+    for (const auto& group : game.rules) {
+        if (group.empty()) {
+            return false;
+        }
+        for (const auto& rule : group) {
+            if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+                return false;
+            }
+            if (rule.patterns.size() != 1 || rule.patterns.front().size() != 2) {
+                return false;
+            }
+            const auto& firstPattern = rule.patterns.front()[0];
+            const auto& secondPattern = rule.patterns.front()[1];
+            if (firstPattern.kind != puzzlescript::Pattern::Kind::CellPattern
+                || secondPattern.kind != puzzlescript::Pattern::Kind::CellPattern
+                || compactPatternHasUnsupportedConstraints(firstPattern)
+                || compactPatternHasUnsupportedConstraints(secondPattern)
+                || !firstPattern.replacement.has_value()
+                || !secondPattern.replacement.has_value()
+                || firstPattern.replacement->hasRandomEntityMask
+                || firstPattern.replacement->hasRandomDirMask
+                || secondPattern.replacement->hasRandomEntityMask
+                || secondPattern.replacement->hasRandomDirMask) {
+                return false;
+            }
+            const bool firstHasMovement = firstPattern.hasMovementsPresent
+                && maskHasAnyBit(game, firstPattern.movementsPresent, game.movementWordCount);
+            const bool firstSetsMovement = maskHasAnyBit(
+                game,
+                firstPattern.replacement->movementsSet,
+                game.movementWordCount
+            );
+            const bool secondHasMovement = secondPattern.hasMovementsPresent
+                && maskHasAnyBit(game, secondPattern.movementsPresent, game.movementWordCount);
+            const bool secondSetsMovement = maskHasAnyBit(
+                game,
+                secondPattern.replacement->movementsSet,
+                game.movementWordCount
+            );
+            if (firstHasMovement == secondHasMovement || !firstSetsMovement || !secondSetsMovement) {
+                return false;
+            }
+            const auto& moverPattern = firstHasMovement ? firstPattern : secondPattern;
+            const auto& pushedPattern = firstHasMovement ? secondPattern : firstPattern;
+            const bool moverIsPlayer = compactPatternMatchesAnyObject(game, moverPattern, {playerObjectId});
+            const bool moverIsPush = compactPatternMatchesAnyObject(game, moverPattern, pushObjectIds);
+            const bool moverIsMovable = compactPatternMatchesAnyObject(game, moverPattern, moverObjectIds);
+            const bool pushedIsPush = compactPatternMatchesAnyObject(game, pushedPattern, pushObjectIds);
+            if (!moverIsMovable || !pushedIsPush) {
+                return false;
+            }
+            sawPlayerPush = sawPlayerPush || moverIsPlayer;
+            sawPushPush = sawPushPush || moverIsPush;
+        }
+    }
+    return sawPlayerPush && sawPushPush;
+}
+
 std::vector<int32_t> compactPushCandidatesFromRules(
     const puzzlescript::Game& game,
     int32_t playerObjectId
 ) {
     std::vector<int32_t> candidates;
-    if (game.rules.size() != 1) {
-        return candidates;
-    }
-    for (const auto& rule : game.rules.front()) {
-        if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
-            return {};
-        }
-        for (const auto& row : rule.patterns) {
-            for (const auto& pattern : row) {
-                if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern) {
-                    return {};
-                }
-                for (const int32_t objectId : objectIdsInMask(game, pattern.objectsPresent)) {
-                    if (objectId != playerObjectId
-                        && std::find(candidates.begin(), candidates.end(), objectId) == candidates.end()) {
-                        candidates.push_back(objectId);
+    for (const auto& group : game.rules) {
+        for (const auto& rule : group) {
+            if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+                return {};
+            }
+            for (const auto& row : rule.patterns) {
+                for (const auto& pattern : row) {
+                    if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern) {
+                        return {};
+                    }
+                    for (const int32_t objectId : objectIdsInMask(game, pattern.objectsPresent)) {
+                        if (objectId != playerObjectId
+                            && std::find(candidates.begin(), candidates.end(), objectId) == candidates.end()) {
+                            candidates.push_back(objectId);
+                        }
+                    }
+                    for (const auto& anyObjectIds : pattern.anyObjectAnchorIds) {
+                        for (const int32_t objectId : anyObjectIds) {
+                            if (objectId != playerObjectId
+                                && std::find(candidates.begin(), candidates.end(), objectId) == candidates.end()) {
+                                candidates.push_back(objectId);
+                            }
+                        }
                     }
                 }
             }
@@ -4079,6 +4199,10 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
     }
     if (game.rigid) {
         support.fallbackReason = "rigid_not_compact";
+        return support;
+    }
+    if (compactHasLoopPoints(game.loopPoint) || compactHasLoopPoints(game.lateLoopPoint)) {
+        support.fallbackReason = "loop_not_compact";
         return support;
     }
     if (game.playerMaskAggregate) {
@@ -4183,6 +4307,12 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
             simplePushObjectIds = std::move(targetCandidates);
         } else if (compactLooksLikeSimplePushRules(game, support.playerObjectId, subjectCandidates)) {
             simplePushObjectIds = std::move(subjectCandidates);
+        } else if (compactLooksLikePushChainRules(game, support.playerObjectId, targetCandidates)) {
+            simplePushObjectIds = std::move(targetCandidates);
+            support.simplePushChain = true;
+        } else if (compactLooksLikePushChainRules(game, support.playerObjectId, subjectCandidates)) {
+            simplePushObjectIds = std::move(subjectCandidates);
+            support.simplePushChain = true;
         }
     }
     const bool simplePush = !simplePushObjectIds.empty();
@@ -5947,25 +6077,89 @@ std::string generateCompiledRulesCpp(
                         << "                }\n";
                 }
                 out << "                const bool targetHasPush = pushedObject >= 0;\n"
-                    << "                if (targetHasPush) {\n"
-                    << "                    const int32_t pushX = targetX + dx;\n"
-                    << "                    const int32_t pushY = targetY + dy;\n"
-                    << "                    if (pushX < 0 || pushX >= width || pushY < 0 || pushY >= height) {\n"
-                    << "                        continue;\n"
-                    << "                    }\n"
-                    << "                    const int32_t pushTile = pushX * height + pushY;\n"
-                    << "                    const size_t pushWordIndex = static_cast<size_t>(pushTile >> 6);\n"
-                    << "                    const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);\n"
-                    << "                    bool pushBlocked = false;\n";
-                for (const int32_t objectId : compactTickSupport.pushLayerObjectIds) {
-                    out << "                    pushBlocked = pushBlocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0);\n";
+                    << "                if (targetHasPush) {\n";
+                if (compactTickSupport.simplePushChain) {
+                    out << "                    bool pushBlocked = false;\n"
+                        << "                    int32_t pushX = targetX;\n"
+                        << "                    int32_t pushY = targetY;\n"
+                        << "                    int32_t pushTile = targetTile;\n"
+                        << "                    while (true) {\n"
+                        << "                        pushX += dx;\n"
+                        << "                        pushY += dy;\n"
+                        << "                        if (pushX < 0 || pushX >= width || pushY < 0 || pushY >= height) {\n"
+                        << "                            pushBlocked = true;\n"
+                        << "                            break;\n"
+                        << "                        }\n"
+                        << "                        pushTile = pushX * height + pushY;\n"
+                        << "                        const size_t pushWordIndex = static_cast<size_t>(pushTile >> 6);\n"
+                        << "                        const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);\n"
+                        << "                        int32_t chainObject = -1;\n";
+                    for (const int32_t pushObjectId : compactTickSupport.pushObjectIds) {
+                        out << "                        if (chainObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0)) {\n"
+                            << "                            chainObject = " << pushObjectId << ";\n"
+                            << "                        }\n";
+                    }
+                    out << "                        bool layerBlocked = false;\n";
+                    for (const int32_t objectId : compactTickSupport.pushLayerObjectIds) {
+                        out << "                        layerBlocked = layerBlocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0);\n";
+                    }
+                    out << "                        if (chainObject < 0) {\n"
+                        << "                            pushBlocked = layerBlocked;\n"
+                        << "                            break;\n"
+                        << "                        }\n"
+                        << "                    }\n"
+                        << "                    if (pushBlocked) {\n"
+                        << "                        continue;\n"
+                        << "                    }\n"
+                        << "                    int32_t writeTile = pushTile;\n"
+                        << "                    while (writeTile != targetTile) {\n"
+                        << "                        const int32_t writeX = writeTile / height;\n"
+                        << "                        const int32_t writeY = writeTile % height;\n"
+                        << "                        const int32_t readX = writeX - dx;\n"
+                        << "                        const int32_t readY = writeY - dy;\n"
+                        << "                        const int32_t readTile = readX * height + readY;\n"
+                        << "                        const size_t writeWordIndex = static_cast<size_t>(writeTile >> 6);\n"
+                        << "                        const uint64_t writeBit = uint64_t{1} << static_cast<uint32_t>(writeTile & 63);\n"
+                        << "                        const size_t readWordIndex = static_cast<size_t>(readTile >> 6);\n"
+                        << "                        const uint64_t readBit = uint64_t{1} << static_cast<uint32_t>(readTile & 63);\n"
+                        << "                        int32_t movedObject = -1;\n";
+                    for (const int32_t pushObjectId : compactTickSupport.pushObjectIds) {
+                        out << "                        if (movedObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + readWordIndex] & readBit) != 0)) {\n"
+                            << "                            movedObject = " << pushObjectId << ";\n"
+                            << "                        }\n";
+                    }
+                    out << "                        if (movedObject < 0) {\n"
+                        << "                            pushBlocked = true;\n"
+                        << "                            break;\n"
+                        << "                        }\n"
+                        << "                        const size_t movedBase = static_cast<size_t>(movedObject) * cellWordCount;\n"
+                        << "                        state.objectBits[movedBase + readWordIndex] &= ~readBit;\n"
+                        << "                        state.objectBits[movedBase + writeWordIndex] |= writeBit;\n"
+                        << "                        writeTile = readTile;\n"
+                        << "                    }\n"
+                        << "                    if (pushBlocked) {\n"
+                        << "                        continue;\n"
+                        << "                    }\n";
+                } else {
+                    out << "                    const int32_t pushX = targetX + dx;\n"
+                        << "                    const int32_t pushY = targetY + dy;\n"
+                        << "                    if (pushX < 0 || pushX >= width || pushY < 0 || pushY >= height) {\n"
+                        << "                        continue;\n"
+                        << "                    }\n"
+                        << "                    const int32_t pushTile = pushX * height + pushY;\n"
+                        << "                    const size_t pushWordIndex = static_cast<size_t>(pushTile >> 6);\n"
+                        << "                    const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);\n"
+                        << "                    bool pushBlocked = false;\n";
+                    for (const int32_t objectId : compactTickSupport.pushLayerObjectIds) {
+                        out << "                    pushBlocked = pushBlocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0);\n";
+                    }
+                    out << "                    if (pushBlocked) {\n"
+                        << "                        continue;\n"
+                        << "                    }\n"
+                        << "                    state.objectBits[pushBase + targetWordIndex] &= ~targetBit;\n"
+                        << "                    state.objectBits[pushBase + pushWordIndex] |= pushBit;\n";
                 }
-                out << "                    if (pushBlocked) {\n"
-                    << "                        continue;\n"
-                    << "                    }\n"
-                    << "                    state.objectBits[pushBase + targetWordIndex] &= ~targetBit;\n"
-                    << "                    state.objectBits[pushBase + pushWordIndex] |= pushBit;\n"
-                    << "                } else if (directionMask != 16) {\n";
+                out << "                } else if (directionMask != 16) {\n";
             } else {
                 out << "                if (directionMask != 16) {\n";
             }

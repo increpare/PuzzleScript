@@ -834,6 +834,9 @@ attribute graph cost -> no-allocation hash -> flat visited table
   testdata.js compact tick source support:
     before no-win simple-push support: 22/452
     after no-win simple-push support: 23/452
+    after win-mask expansion: 25/452
+    after conservative push-chain expansion: 25/452
+    callable compact backends through native-or-bridge: 452/452
 
   testdata.js#1 sokoban no win condition:
     status parity: exhausted/exhausted/exhausted
@@ -851,7 +854,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
     option: --compact-tick-oracle
     behavior: materializes each generated compact tick parent through the
       interpreter and compares solver-relevant step flags plus resulting compact
-      object bits for non-terminal edges.
+      object bits, movement words, and RNG state for non-terminal edges.
     make target: make compact_tick_oracle_smoke
     solver_smoke_tests specialized:
       compact_tick_oracle_checks=18
@@ -866,6 +869,12 @@ attribute graph cost -> no-allocation hash -> flat visited table
       compact_tick_attempts=28589
       compact_tick_hits=28589
       compact_tick_oracle_checks=28589
+      compact_tick_oracle_failures=0
+    full testdata.js compact tick oracle:
+      make target: make compact_tick_simulation_tests
+      cases=469
+      compact_tick_oracle_checks=16554
+      compact_tick_oracle_handled=16554
       compact_tick_oracle_failures=0
   ```
 
