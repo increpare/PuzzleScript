@@ -222,6 +222,8 @@ If proceeding with `FullState`:
   - [x] Solver compact-node and compact-materialization helpers use `FullState`.
   - [x] Generator solver helpers use `FullState`.
   - [x] Compact interpreted bridge helpers use `FullState`.
+  - [x] Internal runtime declarations use `FullState`.
+  - [x] `createFullState*` constructors exist; `createSession*` remains as a temporary compatibility wrapper.
   - [ ] Runtime core implementation still uses the temporary `Session` alias.
   - [ ] Public C API still uses `ps_session_*` by design until Phase 8.
 - [x] Rename the primary prepared-state struct `PreparedSession` -> `PreparedFullState`, with a temporary `PreparedSession` alias.

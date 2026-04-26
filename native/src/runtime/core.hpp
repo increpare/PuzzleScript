@@ -430,22 +430,24 @@ struct CompileResult {
 };
 
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame);
+std::unique_ptr<FullState> createFullState(std::shared_ptr<const Game> game);
+std::unique_ptr<FullState> createFullStateWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed);
 std::unique_ptr<Session> createSession(std::shared_ptr<const Game> game);
 std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed);
-std::unique_ptr<Error> loadLevel(Session& session, int32_t levelIndex);
-std::unique_ptr<Error> advanceLevel(Session& session);
-bool restart(Session& session);
-bool undo(Session& session);
+std::unique_ptr<Error> loadLevel(FullState& state, int32_t levelIndex);
+std::unique_ptr<Error> advanceLevel(FullState& state);
+bool restart(FullState& state);
+bool undo(FullState& state);
 uint64_t hashSession64(const Session& session);
 ps_hash128 hashSession128(const Session& session);
 uint64_t hashFullState64(const FullState& state);
 ps_hash128 hashFullState128(const FullState& state);
-std::string serializeTestString(const Session& session);
-std::string exportSnapshot(const Session& session);
+std::string serializeTestString(const FullState& state);
+std::string exportSnapshot(const FullState& state);
 size_t listInputs(ps_input* output, size_t capacity);
-ps_step_result step(Session& session, ps_input input);
-ps_step_result tick(Session& session);
-void settlePendingAgain(Session& session);
+ps_step_result step(FullState& state, ps_input input);
+ps_step_result tick(FullState& state);
+void settlePendingAgain(FullState& state);
 
 enum class AgainPolicy {
     Yield,
@@ -462,42 +464,42 @@ using RuntimeStepOptions = TurnOptions;
 
 struct SpecializedRulegroupsForInterpretedTurnOutcome;
 using SpecializedRulegroupsForInterpretedTurnFn = SpecializedRulegroupsForInterpretedTurnOutcome (*)(
-    Session& session,
+    FullState& state,
     CommandState& commands,
     std::vector<bool>* bannedGroups
 );
 using CompiledTickRuleGroupsFn = SpecializedRulegroupsForInterpretedTurnFn;
 
-std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options);
-bool restart(Session& session, RuntimeStepOptions options);
-ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options);
-ps_step_result interpreterTick(Session& session, RuntimeStepOptions options);
+std::unique_ptr<Error> loadLevelTemplate(FullState& state, const LevelTemplate& levelTemplate, int32_t levelIndex, RuntimeStepOptions options);
+bool restart(FullState& state, RuntimeStepOptions options);
+ps_step_result interpreterStep(FullState& state, ps_input input, RuntimeStepOptions options);
+ps_step_result interpreterTick(FullState& state, RuntimeStepOptions options);
 ps_step_result interpretedTurnWithCompiledRuleGroups(
-    Session& session,
+    FullState& state,
     ps_input input,
     RuntimeStepOptions options,
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
-ps_step_result interpretedTurn(Session& session, ps_input input, RuntimeStepOptions options);
+ps_step_result interpretedTurn(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result interpreterStepWithCompiledRuleGroups(
-    Session& session,
+    FullState& state,
     ps_input input,
     RuntimeStepOptions options,
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
 ps_step_result interpreterTickWithCompiledRuleGroups(
-    Session& session,
+    FullState& state,
     RuntimeStepOptions options,
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
-ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options);
-ps_step_result turn(Session& session, ps_input input, RuntimeStepOptions options);
-ps_step_result tick(Session& session, RuntimeStepOptions options);
-void settlePendingAgain(Session& session, RuntimeStepOptions options);
-std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult);
+ps_step_result step(FullState& state, ps_input input, RuntimeStepOptions options);
+ps_step_result turn(FullState& state, ps_input input, RuntimeStepOptions options);
+ps_step_result tick(FullState& state, RuntimeStepOptions options);
+void settlePendingAgain(FullState& state, RuntimeStepOptions options);
+std::unique_ptr<Error> benchmarkCloneHash(const FullState& state, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult);
 void setRuntimeCountersEnabled(bool enabled);
 void resetRuntimeCounters();
 ps_runtime_counters snapshotRuntimeCounters();

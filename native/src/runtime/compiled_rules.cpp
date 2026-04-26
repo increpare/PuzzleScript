@@ -172,7 +172,7 @@ SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
         return {false, {}};
     }
     std::shared_ptr<const Game> gameRef(&game, [](const Game*) {});
-    std::unique_ptr<FullState> session = createSession(std::move(gameRef));
+    std::unique_ptr<FullState> session = createFullState(std::move(gameRef));
     if (state.currentLevelIndex >= 0 && static_cast<size_t>(state.currentLevelIndex) < game.levels.size()) {
         if (auto error = loadLevel(*session, state.currentLevelIndex)) {
             (void)error;

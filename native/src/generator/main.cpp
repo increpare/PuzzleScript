@@ -1122,7 +1122,7 @@ SolveResult runSearch(
     TimePoint deadline
 ) {
     SolveResult result;
-    auto initial = puzzlescript::createSessionWithLoadedLevelSeed(game, "generator:" + std::to_string(sampleId));
+    auto initial = puzzlescript::createFullStateWithLoadedLevelSeed(game, "generator:" + std::to_string(sampleId));
     initial->suppressRuleMessages = true;
     constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
         .playableUndo = false,

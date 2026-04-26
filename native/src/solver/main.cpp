@@ -1173,7 +1173,7 @@ std::unique_ptr<FullState> createLoadedSession(
     Result& result
 ) {
     const std::string seed = "solver:" + gameName + ":" + std::to_string(levelIndex);
-    auto session = puzzlescript::createSessionWithLoadedLevelSeed(game, seed);
+    auto session = puzzlescript::createFullStateWithLoadedLevelSeed(game, seed);
     session->suppressRuleMessages = true;
     if (auto error = puzzlescript::loadLevel(*session, levelIndex)) {
         result.status = "level_error";

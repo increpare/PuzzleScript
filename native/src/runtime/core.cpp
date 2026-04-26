@@ -4472,8 +4472,8 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
     }
 }
 
-std::unique_ptr<Session> createSession(std::shared_ptr<const Game> game) {
-    auto session = std::make_unique<Session>();
+std::unique_ptr<FullState> createFullState(std::shared_ptr<const Game> game) {
+    auto session = std::make_unique<FullState>();
     session->game = std::move(game);
     session->preparedSession = session->game->preparedSession;
     session->backend = detectBestBackend();
@@ -4481,8 +4481,8 @@ std::unique_ptr<Session> createSession(std::shared_ptr<const Game> game) {
     return session;
 }
 
-std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed) {
-    auto session = std::make_unique<Session>();
+std::unique_ptr<FullState> createFullStateWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed) {
+    auto session = std::make_unique<FullState>();
     session->game = std::move(game);
     session->preparedSession = session->game->preparedSession;
     session->preparedSession.loadedLevelSeed = std::move(loadedLevelSeed);
@@ -4494,6 +4494,14 @@ std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const 
     session->backend = detectBestBackend();
     resetToPrepared(*session);
     return session;
+}
+
+std::unique_ptr<Session> createSession(std::shared_ptr<const Game> game) {
+    return createFullState(std::move(game));
+}
+
+std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed) {
+    return createFullStateWithLoadedLevelSeed(std::move(game), std::move(loadedLevelSeed));
 }
 
 namespace {
