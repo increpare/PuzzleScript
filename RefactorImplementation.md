@@ -297,14 +297,14 @@ Goal: align the external C API with the architecture terms once internals are st
   type.
 - [x] Rename opaque C type `ps_session` -> `ps_full_state`, with `ps_session`
   retained as a compatibility typedef.
-- [ ] Rename constructor/destructor:
+- [x] Rename constructor/destructor:
   - [x] Add `ps_full_state_create`.
   - [x] Add `ps_full_state_create_with_loaded_level_seed`.
   - [x] Add `ps_full_state_clone`.
   - [x] Add `ps_full_state_destroy`.
   - [x] Formally deprecate the old `ps_session_*` constructor/destructor names
     in the public header compatibility block.
-- [ ] Rename turn functions:
+- [x] Rename turn functions:
   - [x] Add `ps_full_state_turn`.
   - [x] `ps_session_tick` aliases to `ps_full_state_turn(state, PS_INPUT_TICK)`.
   - [x] `ps_session_step` aliases to `ps_full_state_turn(state, input)`.
@@ -324,9 +324,11 @@ Acceptance:
 
 - [x] `make build`
 - [ ] `make simulation_tests_cpp`
-- [ ] `make solver_smoke_tests`
+- [x] `make solver_smoke_tests`
 - [x] Run/player compile target if separate from `make build`.
-- [ ] `rg "ps_session" native/src src Makefile` only finds intentional compatibility wrappers or historical notes.
+- [x] `rg "ps_session" native/src src Makefile` only finds intentional compatibility wrappers or historical notes.
+  - Remaining `ps_session` hits are public compatibility typedefs/prototypes and
+    compatibility wrapper implementations in `native/src/runtime/c_api.cpp`.
 - [ ] Commit: `Rename public session API to full state API`
 
 ## Phase 9: Final Hygiene Pass
