@@ -313,7 +313,7 @@ Goal: remove leftover ambiguity after the mechanical work is done.
 - [ ] Remove temporary Make aliases unless intentionally kept.
 - [ ] Remove temporary CLI flag aliases unless intentionally kept.
 - [ ] Update `ProgressReport.md`.
-- [ ] Update `native/src/compiler/PLAN.md`.
+- [x] Update `native/src/compiler/PLAN.md`.
 - [ ] Update `native/src/compiler/IMPLEMENTATION_CHECKLIST.md`.
 - [ ] Update benchmark scripts and output labels.
 - [ ] Update help text.

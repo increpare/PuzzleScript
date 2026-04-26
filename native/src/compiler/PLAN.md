@@ -3,30 +3,30 @@
 ## Goal
 
 The long-term goal is to compile a PuzzleScript game into a small, per-game
-execution path: conceptually, a `tick(state, input) -> state` function that can
+execution path: conceptually, a `turn(state, input) -> state` function that can
 drive solvers, generators, embedded builds, and other tight loops without
 repeatedly interpreting the full runtime data model.
 
 The first target is C++ generation. C, LLVM, and assembly are interesting later
-targets, but only after the C++ whole-tick path has proved parity and speed.
+targets, but only after the C++ whole-turn path has proved parity and speed.
 
 ## Current State
 
-Compiled rules already generate C++ kernels for rule-group application. The
-generic runtime remains the fallback and correctness oracle.
+Specialized rulegroups already generate C++ kernels for rulegroup application.
+The interpreted runtime remains the fallback and correctness oracle.
 
 The simulation corpus has 469 cases, deduplicated to 452 unique source texts for
-compiled-rule coverage. With:
+specialized-rulegroup coverage. With:
 
 ```sh
 make compiled_rules_simulation_suite_coverage COMPILED_RULES_MAX_ROWS=99
 ```
 
-the current compiled-rule backend covers 452/452 unique simulation sources. The
+the current specialized-rulegroup backend covers 452/452 unique simulation sources. The
 default `COMPILED_RULES_MAX_ROWS=1` is still intentionally conservative: it is
 an iteration-time and generated-code-size knob, not a semantic boundary.
 
-Solver and generator builds can already opt into generated rule code:
+Solver and generator builds can already opt into specialized rulegroup code:
 
 ```sh
 make solver_smoke_tests SPECIALIZE=true
@@ -46,7 +46,7 @@ make solver_focus_perf_report
 At the current checkpoint, the local focus manifest has 44 targets from 35
 games, after excluding clang-heavy generated-source outliers. Focus
 specialization defaults to `SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS=99`, while the
-global compiled-rules default remains conservative.
+global specialized-rulegroup default remains conservative.
 
 Generated sources also export a `SpecializedFullTurnBackend` today. That
 backend is only a dispatch/linkage proof: it delegates to the interpreted turn
@@ -54,12 +54,12 @@ path, so it does not yet optimize whole-turn execution.
 
 ## Terms
 
-- **compiled rules**: generated C++ rule-group kernels used by the native
+- **specialized rulegroups**: generated C++ rulegroup kernels used by the native
   runtime from `applyRuleGroup`.
 - **specialized full-turn backend**: generated per-game full-state turn
   entrypoints found by source hash and attached to the loaded game.
-- **interpreterStep / interpreterTick**: the reference engine path. This is the
-  behavior oracle and fallback for generated code.
+- **interpreted turn path**: the reference engine path. This is the behavior
+  oracle and fallback for generated code.
 - **whole-game compilation**: the broader project of moving the hot per-turn
   work from general runtime interpretation into generated per-game code.
 
@@ -86,12 +86,13 @@ work through generic runtime tables.
 
 ## Milestones
 
-1. Move rule-group dispatch inside the generated tick backend.
-   The generated tick function should call the existing compiled rule kernels
-   directly from the per-game turn loop, while preserving interpreter fallback.
+1. Move rulegroup dispatch inside the specialized full-turn backend.
+   The generated full-turn code should call the existing specialized rulegroup
+   kernels directly from the per-game turn loop, while preserving interpreter
+   fallback.
 
 2. Specialize turn bookkeeping around rules.
-   Generate the fixed early/late rule-group loops, loop-point jumps, rigid retry
+   Generate the fixed early/late rulegroup loops, loop-point jumps, rigid retry
    structure, and command collection shape for the game.
 
 3. Specialize command and transition handling.
@@ -107,7 +108,7 @@ work through generic runtime tables.
    Move masks, levels, rule metadata, sound tables, and frequently accessed
    state into generated or compact per-game structures.
 
-6. Expose a smaller tick-game ABI.
+6. Expose a smaller turn-game ABI.
    Once the generated path is faithful and fast, add a compact ABI suitable for
    solver/generator hot loops and eventually embedded targets.
 
@@ -155,7 +156,7 @@ one-game path that real users and tools will run.
   interpreter fallback cheap?
 - Which part of movement resolution pays off first: fixed layer loops, fixed
   masks, or a fuller generated mover?
-- Should the compact tick-game ABI be C-facing from the start, or remain a C++
+- Should the compact turn-game ABI be C-facing from the start, or remain a C++
   solver/generator interface until the shape stabilizes?
-- How much debug trace parity should generated whole-tick code provide before it
+- How much debug trace parity should generated whole-turn code provide before it
   is allowed to run when `PS_DEBUG_*` flags are enabled?
