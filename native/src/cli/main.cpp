@@ -2693,9 +2693,6 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " specialized_full_turn_attempts=" << counters.specialized_full_turn_attempts
                   << " specialized_full_turn_hits=" << counters.specialized_full_turn_hits
                   << " specialized_full_turn_fallbacks=" << counters.specialized_full_turn_fallbacks
-                  << " compiled_tick_attempts=" << counters.compiled_tick_attempts
-                  << " compiled_tick_hits=" << counters.compiled_tick_hits
-                  << " compiled_tick_fallbacks=" << counters.compiled_tick_fallbacks
                   << "\n";
     }
     if (options.topSlowCases > 0 && !cases.empty()) {
@@ -7610,7 +7607,7 @@ void printMainHelp() {
         << "  puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js\n"
         << "      Run the C++ compiler directly against the diagnostics corpus.\n"
         << "  puzzlescript_cpp bench game.txt --iterations 10000 --threads 4\n"
-        << "      Benchmark clone/hash/session operations for a source game.\n\n"
+        << "      Benchmark clone/hash/full-state operations for a source game.\n\n"
         << "  puzzlescript_cpp profile-simulations generated-js-parity-data.json --repeat 3\n"
         << "      Run a C++-only replay workload for profiler/hot-function analysis.\n\n"
         << "Project map:\n"
@@ -7702,7 +7699,7 @@ void printTestHelp() {
         << "the JavaScript PuzzleScript engine. js-parity uses saved replay data generated\n"
         << "from the original JavaScript implementation for deeper runtime trace checks.\n\n"
         << "simulation-corpus profiling reports source compile/load/replay/serialize timings\n"
-        << "plus runtime counters for rule scans, pattern tests, replacements, mask rebuilds, and compiled dispatch.\n\n"
+        << "plus runtime counters for rule scans, pattern tests, replacements, mask rebuilds, and specialized dispatch.\n\n"
         << "With --compact-turn-oracle, simulation-corpus checks linked generated compact turn\n"
         << "entrypoints against the interpreter before replaying each ordinary input. --compact-tick-oracle remains as a compatibility alias.\n\n"
         << "For optimization work, --top-slow-cases lists the slowest games by phase, and\n"
@@ -7722,8 +7719,8 @@ void printProfileHelp() {
         << "       puzzlescript_cpp profile-simulations generated-js-parity-data.json [--repeat N] [--profile-timers] [--quiet]\n\n"
         << "The direct simulation-corpus profiler is the current performance north star: it\n"
         << "parses testdata.js directly, compiles games natively, replays inputs, and splits\n"
-        << "time into source compile, session creation, replay, serialization, and runtime\n"
-        << "rule/compiled-dispatch counters. profile-simulations remains available for generated JS parity\n"
+        << "time into source compile, full-state creation, replay, serialization, and runtime\n"
+        << "rule/specialized-dispatch counters. profile-simulations remains available for generated JS parity\n"
         << "replay data when debugging trace-level behavior.\n\n"
         << "Examples:\n"
         << "  puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --jobs 1 --top-slow-cases 10\n"
@@ -7736,7 +7733,7 @@ void printBenchHelp() {
     std::cout
         << "Usage: puzzlescript_cpp bench game.txt [--level N] [--seed seed] [--settle-again] [--native-compile] [--iterations N] [--threads N]\n\n"
         << "Benchmarks native runtime operations for a source game. Use --threads to measure\n"
-        << "multi-session throughput for future solver workloads.\n\n"
+        << "multi-full-state throughput for future solver workloads.\n\n"
         << "Example:\n"
         << "  puzzlescript_cpp bench src/demo/sokoban_basic.txt --iterations 10000 --threads 4\n";
 }

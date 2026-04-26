@@ -2261,9 +2261,6 @@ int main(int argc, char** argv) {
                       << " specialized_full_turn_attempts=" << runtimeCounters.specialized_full_turn_attempts
                       << " specialized_full_turn_hits=" << runtimeCounters.specialized_full_turn_hits
                       << " specialized_full_turn_fallbacks=" << runtimeCounters.specialized_full_turn_fallbacks
-                      << " compiled_tick_attempts=" << runtimeCounters.compiled_tick_attempts
-                      << " compiled_tick_hits=" << runtimeCounters.compiled_tick_hits
-                      << " compiled_tick_fallbacks=" << runtimeCounters.compiled_tick_fallbacks
                       << " compact_turn_attempts=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnAttempts; })
                       << " compact_turn_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnHits; })
                       << " compact_turn_fallbacks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnFallbacks; })

@@ -343,10 +343,13 @@ Goal: remove leftover ambiguity after the mechanical work is done.
 - [x] Remove temporary CLI flag aliases unless intentionally kept.
   - Kept old `--compact-tick-*` / `--require-compiled-tick` parser aliases
     intentionally, but removed them from primary usage/help text.
-- [ ] Update `ProgressReport.md`.
+- [x] Update `ProgressReport.md`.
 - [x] Update `native/src/compiler/PLAN.md`.
 - [x] Update `native/src/compiler/IMPLEMENTATION_CHECKLIST.md`.
-- [ ] Update benchmark scripts and output labels.
+- [x] Update benchmark scripts and output labels.
+  - Human-readable counter/help output now prefers specialized full-turn and
+    compact-turn names. JSON fallback readers still accept old fields so older
+    benchmark files remain comparable.
 - [x] Update help text.
 - [ ] Update commit-era docs that now mislead more than they help.
 - [ ] Keep historical notes only when they are clearly marked historical.

@@ -20,6 +20,13 @@ The compact turn infrastructure is wired through the native build and the testda
 
 So the current achievement is full callable compact-turn coverage, not full native compact codegen coverage. The interpreter bridge is deliberately part of the coverage story: it lets every game exercise the compact ABI while native kernels are added incrementally.
 
+The current public/runtime naming is:
+
+- `FullState` for the full mutable runtime state.
+- `CompactState` for solver/generator graph nodes.
+- `ps_full_state_*` for the public C API.
+- `ps_session_*`, `compiled_tick_*`, and `compact_tick_*` remain only as compatibility aliases for older callers, generated-symbol compatibility, old benchmark JSON, or Makefile muscle memory.
+
 ## Key Locations
 
 Solver-side compact state and graph search live mostly in:
