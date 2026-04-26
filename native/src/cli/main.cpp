@@ -5383,8 +5383,29 @@ void appendCompactTickAggregateJsonFields(
     size_t supported,
     size_t nativeKernelSupported,
     size_t interpreterBridgeSupported,
-    const std::unordered_map<std::string, size_t>& fallbackReasons
+    const std::unordered_map<std::string, size_t>& fallbackReasons,
+    const std::unordered_map<std::string, size_t>& nativeFallbackReasons
 ) {
+    const std::vector<std::string_view> compactFallbackReasonOrder{
+        "supported",
+        "interpreter_bridge",
+        "late_rules_not_compact",
+        "rigid_not_compact",
+        "loop_not_compact",
+        "aggregate_player_not_compact",
+        "aggregate_player_rules_not_compact",
+        "player_mask_not_single_object",
+        "player_layer_mixed_not_compact",
+        "level_player_count_not_one",
+        "level_player_count_zero",
+        "win_condition_not_simple_all",
+        "win_condition_mask_not_single_object",
+        "win_condition_quantifier_not_compact",
+        "win_condition_empty_mask",
+        "win_subject_not_player",
+        "rules_not_compact",
+        "push_layer_mixed_not_compact",
+    };
     out << "\"compact_tick\":{"
         << "\"sources\":" << sourceCount
         << ",\"backend_codegen_available\":" << sourceCount
@@ -5392,28 +5413,9 @@ void appendCompactTickAggregateJsonFields(
         << ",\"native_kernel_supported\":" << nativeKernelSupported
         << ",\"interpreter_bridge_supported\":" << interpreterBridgeSupported
         << ",\"whole_turn_fallback_reason_counts\":";
-    appendJsonCountObject(
-        out,
-        fallbackReasons,
-        {
-            "supported",
-            "interpreter_bridge",
-            "late_rules_not_compact",
-            "rigid_not_compact",
-            "aggregate_player_not_compact",
-            "aggregate_player_rules_not_compact",
-            "player_mask_not_single_object",
-            "player_layer_mixed_not_compact",
-            "level_player_count_not_one",
-            "level_player_count_zero",
-            "win_condition_not_simple_all",
-            "win_condition_mask_not_single_object",
-            "win_condition_quantifier_not_compact",
-            "win_condition_empty_mask",
-            "win_subject_not_player",
-            "rules_not_compact",
-        }
-    );
+    appendJsonCountObject(out, fallbackReasons, compactFallbackReasonOrder);
+    out << ",\"native_kernel_fallback_reason_counts\":";
+    appendJsonCountObject(out, nativeFallbackReasons, compactFallbackReasonOrder);
     out << ",\"misses\":{";
     if (sourceCount > supported) {
         out << "\"interpreter_delegation\":" << (sourceCount - supported);
@@ -5484,6 +5486,7 @@ std::string generateCompiledRulesCoverageJson(
     size_t compactTickNativeSupported = 0;
     size_t compactTickInterpreterBridgeSupported = 0;
     std::unordered_map<std::string, size_t> compactTickFallbackReasons;
+    std::unordered_map<std::string, size_t> compactTickNativeFallbackReasons;
     for (const CodegenSource& source : sources) {
         const CompiledTickSupport support = source.game
             ? compiledTickSupportForGame(*source.game, options)
@@ -5518,6 +5521,7 @@ std::string generateCompiledRulesCoverageJson(
             ++compactTickNativeSupported;
         }
         ++compactTickFallbackReasons[compactSupport.fallbackReason];
+        ++compactTickNativeFallbackReasons[compactSupport.nativeFallbackReason];
     }
     out << "{\n"
         << "  \"max_rows\":" << options.maxRows << ",\n"
@@ -5542,7 +5546,8 @@ std::string generateCompiledRulesCoverageJson(
         compactTickSupported,
         compactTickNativeSupported,
         compactTickInterpreterBridgeSupported,
-        compactTickFallbackReasons
+        compactTickFallbackReasons,
+        compactTickNativeFallbackReasons
     );
     out << "},\n"
         << "  \"sources\":[\n";
