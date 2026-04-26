@@ -84,16 +84,6 @@ struct SpecializedCompactTurnBackend {
     CompiledTickSupportInfo support{};
 };
 
-using CompiledRuleApplyOutcome = SpecializedRulegroupOutcome;
-using CompiledRuleGroupFn = SpecializedRulegroupFn;
-using CompiledRulesBackend = SpecializedRulegroupsBackend;
-using CompiledTickRuleGroupsOutcome = SpecializedRulegroupsForInterpretedTurnOutcome;
-
-using CompiledCompactTickStateView = CompactStateView;
-using CompiledCompactTickApplyOutcome = SpecializedCompactTurnOutcome;
-using CompiledCompactTickStepFn = SpecializedCompactTurnFn;
-using CompiledCompactTickBackend = SpecializedCompactTurnBackend;
-
 enum class CompiledRuleCommandKind {
     Again,
     Cancel,
@@ -114,14 +104,6 @@ SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
     ps_input input,
     RuntimeStepOptions options
 );
-inline SpecializedCompactTurnOutcome compiledCompactTickInterpreterBridge(
-    const Game& game,
-    CompactStateView state,
-    ps_input input,
-    RuntimeStepOptions options
-) {
-    return compactStateInterpretedTurnBridge(game, state, input, options);
-}
 const MaskWord* compiledRuleCellObjects(const FullState& state, int32_t tileIndex);
 const MaskWord* compiledRuleCellMovements(const FullState& state, int32_t tileIndex);
 bool compiledRuleBitsSet(const MaskWord* required, size_t requiredCount, const MaskWord* actual, size_t actualCount);

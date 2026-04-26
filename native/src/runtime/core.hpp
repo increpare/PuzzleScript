@@ -260,7 +260,6 @@ struct CommandState {
 };
 
 struct SpecializedRulegroupsBackend;
-using CompiledRulesBackend = SpecializedRulegroupsBackend;
 struct CompiledTickBackend;
 struct SpecializedCompactTurnBackend;
 

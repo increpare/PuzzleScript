@@ -168,6 +168,7 @@ Goal: make type names match architecture names.
 - [x] Ensure bridge does not require compact-state movement words.
 - [x] Update backend lookup function names if they are not public ABI.
 - [x] If lookup symbols are public or linker-sensitive, add temporary forwarding symbols.
+- [x] Remove unused `CompiledCompactTick*` type aliases and the old inline bridge helper after source call sites migrate.
 
 Acceptance:
 
@@ -193,6 +194,7 @@ Goal: replace `CompiledRules` terminology where it means generated per-game rule
 - [x] Keep behavior unchanged: these kernels still operate on the full runtime state.
 - [x] Decide whether the command-line subcommand `compile-rules` stays temporarily or gains a new alias such as `specialize-rulegroups`.
 - [x] If `compile-rules` remains, document that it is a compatibility command name.
+- [x] Remove unused `CompiledRule*` / `CompiledRulesBackend` compatibility type aliases after source call sites migrate.
 
 Acceptance:
 
