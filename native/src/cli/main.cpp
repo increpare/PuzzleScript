@@ -36,11 +36,11 @@ int puzzlescript_cpp_run_player_for_game(ps_game* game, const std::string& saveK
 
 namespace {
 
-bool sessionCreateForGame(ps_game* game, const std::optional<std::string>& loadedLevelSeed, ps_session** outSession, ps_error** outError) {
+bool sessionCreateForGame(ps_game* game, const std::optional<std::string>& loadedLevelSeed, ps_full_state** outSession, ps_error** outError) {
     if (loadedLevelSeed.has_value()) {
-        return ps_session_create_with_loaded_level_seed(game, loadedLevelSeed->c_str(), outSession, outError);
+        return ps_full_state_create_with_loaded_level_seed(game, loadedLevelSeed->c_str(), outSession, outError);
     }
-    return ps_session_create(game, outSession, outError);
+    return ps_full_state_create(game, outSession, outError);
 }
 
 std::optional<std::string> findArgValue(const std::vector<std::string>& args, const char* flag) {
@@ -305,7 +305,7 @@ std::string compactTurnOracleMismatchSummary(const ps_compact_tick_oracle_info& 
 }
 
 bool replayInputTokens(
-    ps_session* session,
+    ps_full_state* session,
     const std::vector<std::string>& tokens,
     std::vector<std::string>* outSounds,
     ReplayOracleStats* oracleStats = nullptr
@@ -318,13 +318,13 @@ bool replayInputTokens(
     }
     for (const auto& token : tokens) {
         if (token == "undo") {
-            (void)ps_session_undo(session);
+            (void)ps_full_state_undo(session);
             continue;
         }
         if (token == "restart") {
-            (void)ps_session_restart(session);
-            for (int againPass = 0; againPass < 500 && ps_session_pending_again(session); ++againPass) {
-                const ps_step_result stepResult = ps_session_tick(session);
+            (void)ps_full_state_restart(session);
+            for (int againPass = 0; againPass < 500 && ps_full_state_pending_again(session); ++againPass) {
+                const ps_step_result stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
                 if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
                     for (size_t i = 0; i < stepResult.audio_event_count; ++i) {
                         const ps_audio_event& event = stepResult.audio_events[i];
@@ -344,7 +344,7 @@ bool replayInputTokens(
 
         if (oracleStats != nullptr) {
             ps_compact_tick_oracle_info oracleInfo{};
-            if (!ps_session_compact_tick_oracle_check(session, *input, &oracleInfo)) {
+            if (!ps_full_state_compact_turn_oracle_check(session, *input, &oracleInfo)) {
                 ++oracleStats->compactTurnFailures;
                 if (oracleStats->firstFailure.empty()) {
                     oracleStats->firstFailure = "compact turn oracle API failure before input token: " + token;
@@ -373,9 +373,9 @@ bool replayInputTokens(
 
         ps_step_result stepResult{};
         if (*input == PS_INPUT_TICK) {
-            stepResult = ps_session_tick(session);
+            stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
         } else {
-            stepResult = ps_session_step(session, *input);
+            stepResult = ps_full_state_turn(session, *input);
         }
 
         if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
@@ -387,8 +387,8 @@ bool replayInputTokens(
             }
         }
 
-        for (int againPass = 0; againPass < 500 && ps_session_pending_again(session); ++againPass) {
-            stepResult = ps_session_tick(session);
+        for (int againPass = 0; againPass < 500 && ps_full_state_pending_again(session); ++againPass) {
+            stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
             if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
                 for (size_t i = 0; i < stepResult.audio_event_count; ++i) {
                     const ps_audio_event& event = stepResult.audio_events[i];
@@ -757,11 +757,11 @@ std::string runTraceExporterAndCaptureJson(const std::filesystem::path& sourcePa
     return runNodeScriptAndCaptureStdout(PS_EXPORT_TRACE_SCRIPT, sourcePath, args);
 }
 
-int printSession(ps_session* session) {
-    char* serialized = ps_session_serialize_test_string(session);
-    char* snapshot = ps_session_export_snapshot(session);
-    const uint64_t hash64 = ps_session_hash64(session);
-    const ps_hash128 hash128 = ps_session_hash128(session);
+int printSession(ps_full_state* session) {
+    char* serialized = ps_full_state_serialize_test_string(session);
+    char* snapshot = ps_full_state_export_snapshot(session);
+    const uint64_t hash64 = ps_full_state_hash64(session);
+    const ps_hash128 hash128 = ps_full_state_hash128(session);
 
     std::cout << serialized;
     std::cout << "hash64=" << hash64 << "\n";
@@ -774,16 +774,16 @@ int printSession(ps_session* session) {
 }
 
 int runCommandForGame(ps_game* game) {
-    ps_session* session = nullptr;
+    ps_full_state* session = nullptr;
     ps_error* error = nullptr;
-    if (!ps_session_create(game, &session, &error)) {
+    if (!ps_full_state_create(game, &session, &error)) {
         std::cerr << ps_error_message(error) << "\n";
         ps_free_error(error);
         return 1;
     }
 
     const int result = printSession(session);
-    ps_session_destroy(session);
+    ps_full_state_destroy(session);
     return result;
 }
 
@@ -793,7 +793,7 @@ int benchCommandForGame(
     uint32_t threads,
     const std::optional<std::string>& loadedLevelSeed = std::nullopt
 ) {
-    ps_session* session = nullptr;
+    ps_full_state* session = nullptr;
     ps_error* error = nullptr;
     if (!sessionCreateForGame(game, loadedLevelSeed, &session, &error)) {
         std::cerr << ps_error_message(error) << "\n";
@@ -805,7 +805,7 @@ int benchCommandForGame(
     if (!ps_benchmark_clone_hash(session, iterations, threads, &result, &error)) {
         std::cerr << ps_error_message(error) << "\n";
         ps_free_error(error);
-        ps_session_destroy(session);
+        ps_full_state_destroy(session);
         return 1;
     }
 
@@ -816,7 +816,7 @@ int benchCommandForGame(
               << " hash_accumulator=" << result.hash_accumulator
               << "\n";
 
-    ps_session_destroy(session);
+    ps_full_state_destroy(session);
     return 0;
 }
 
@@ -863,7 +863,7 @@ int stepCommandForGame(
     const std::vector<std::string>& inputTokens,
     const std::optional<std::string>& loadedLevelSeed = std::nullopt
 ) {
-    ps_session* session = nullptr;
+    ps_full_state* session = nullptr;
     ps_error* error = nullptr;
     if (!sessionCreateForGame(game, loadedLevelSeed, &session, &error)) {
         std::cerr << ps_error_message(error) << "\n";
@@ -875,25 +875,25 @@ int stepCommandForGame(
         const auto& token = inputTokens[index];
         ps_step_result result{};
         if (token == "undo") {
-            if (!ps_session_undo(session)) {
+            if (!ps_full_state_undo(session)) {
                 std::cerr << "step[" << index << "] undo failed\n";
-                ps_session_destroy(session);
+                ps_full_state_destroy(session);
                 return 1;
             }
         } else if (token == "restart") {
-            if (!ps_session_restart(session)) {
+            if (!ps_full_state_restart(session)) {
                 std::cerr << "step[" << index << "] restart failed\n";
-                ps_session_destroy(session);
+                ps_full_state_destroy(session);
                 return 1;
             }
         } else {
             const auto input = parseInputToken(token);
             if (!input.has_value()) {
                 std::cerr << "Unsupported step token: " << token << "\n";
-                ps_session_destroy(session);
+                ps_full_state_destroy(session);
                 return 1;
             }
-            result = (*input == PS_INPUT_TICK) ? ps_session_tick(session) : ps_session_step(session, *input);
+            result = (*input == PS_INPUT_TICK) ? ps_full_state_turn(session, PS_INPUT_TICK) : ps_full_state_turn(session, *input);
         }
         std::cout << "step[" << index << "] token=" << token
                   << " changed=" << (result.changed ? 1 : 0)
@@ -904,17 +904,17 @@ int stepCommandForGame(
     }
 
     const int result = printSession(session);
-    ps_session_destroy(session);
+    ps_full_state_destroy(session);
     return result;
 }
 
-bool compareSnapshot(const TraceSnapshot& expected, ps_session* session, const ps_step_result* stepResult, size_t snapshotIndex, std::ostream& stream) {
-    ps_session_status_info status{};
-    ps_session_status(session, &status);
-    char* serialized = ps_session_serialize_test_string(session);
+bool compareSnapshot(const TraceSnapshot& expected, ps_full_state* session, const ps_step_result* stepResult, size_t snapshotIndex, std::ostream& stream) {
+    ps_full_state_status_info status{};
+    ps_full_state_status(session, &status);
+    char* serialized = ps_full_state_serialize_test_string(session);
     const std::string actualSerialized = serialized ? serialized : "";
     ps_string_free(serialized);
-    char* snapshotJson = ps_session_export_snapshot(session);
+    char* snapshotJson = ps_full_state_export_snapshot(session);
     const std::string actualSnapshotJson = snapshotJson ? snapshotJson : "";
     ps_string_free(snapshotJson);
     const SessionSnapshot actualSnapshot = parseSessionSnapshot(actualSnapshotJson, actualSerialized);
@@ -1047,18 +1047,18 @@ int diffTraceAgainstSnapshots(
     const std::optional<std::string>& loadedLevelSeed = std::nullopt,
     const std::optional<int32_t>& levelToLoad = std::nullopt
 ) {
-    ps_session* session = nullptr;
+    ps_full_state* session = nullptr;
     ps_error* error = nullptr;
     if (!sessionCreateForGame(game, loadedLevelSeed, &session, &error)) {
         errorStream << ps_error_message(error) << "\n";
         ps_free_error(error);
         return 1;
     }
-    std::unique_ptr<ps_session, decltype(&ps_session_destroy)> sessionHolder(session, ps_session_destroy);
-    ps_session_set_unit_testing(session, true);
+    std::unique_ptr<ps_full_state, decltype(&ps_full_state_destroy)> sessionHolder(session, ps_full_state_destroy);
+    ps_full_state_set_unit_testing(session, true);
 
     if (levelToLoad.has_value()) {
-        if (!ps_session_load_level(session, *levelToLoad, &error)) {
+        if (!ps_full_state_load_level(session, *levelToLoad, &error)) {
             errorStream << ps_error_message(error) << "\n";
             ps_free_error(error);
             return 1;
@@ -1085,19 +1085,19 @@ int diffTraceAgainstSnapshots(
         const auto& snapshot = snapshots[index];
         ps_step_result stepResult{};
         if (snapshot.phase == "again") {
-            stepResult = ps_session_tick(session);
+            stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
         } else if (snapshot.numericInput.has_value()) {
-            stepResult = ps_session_step(session, static_cast<ps_input>(*snapshot.numericInput));
+            stepResult = ps_full_state_turn(session, static_cast<ps_input>(*snapshot.numericInput));
         } else if (snapshot.stringInput.has_value()) {
             if (*snapshot.stringInput == "tick") {
-                stepResult = ps_session_tick(session);
+                stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
             } else if (*snapshot.stringInput == "restart") {
-                if (!ps_session_restart(session)) {
+                if (!ps_full_state_restart(session)) {
                     errorStream << "Restart failed at snapshot[" << index << "]\n";
                     return 1;
                 }
             } else if (*snapshot.stringInput == "undo") {
-                if (!ps_session_undo(session)) {
+                if (!ps_full_state_undo(session)) {
                     errorStream << "Undo failed at snapshot[" << index << "]\n";
                     return 1;
                 }
@@ -1132,15 +1132,15 @@ int diffTraceCommand(const std::string& irPath, const std::string& tracePath) {
 }
 
 int checkTraceAgainstSnapshots(ps_game* game, const TraceFile& traceFile, std::ostream& errorStream, bool printSuccessSummary) {
-    ps_session* session = nullptr;
+    ps_full_state* session = nullptr;
     ps_error* error = nullptr;
-    if (!ps_session_create(game, &session, &error)) {
+    if (!ps_full_state_create(game, &session, &error)) {
         errorStream << ps_error_message(error) << "\n";
         ps_free_error(error);
         return 1;
     }
-    std::unique_ptr<ps_session, decltype(&ps_session_destroy)> sessionHolder(session, ps_session_destroy);
-    ps_session_set_unit_testing(session, true);
+    std::unique_ptr<ps_full_state, decltype(&ps_full_state_destroy)> sessionHolder(session, ps_full_state_destroy);
+    ps_full_state_set_unit_testing(session, true);
 
     const auto& snapshots = traceFile.snapshots;
     if (snapshots.empty()) {
@@ -1158,19 +1158,19 @@ int checkTraceAgainstSnapshots(ps_game* game, const TraceFile& traceFile, std::o
         const auto& snapshot = snapshots[index];
         ps_step_result stepResult{};
         if (snapshot.phase == "again") {
-            stepResult = ps_session_tick(session);
+            stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
         } else if (snapshot.numericInput.has_value()) {
-            stepResult = ps_session_step(session, static_cast<ps_input>(*snapshot.numericInput));
+            stepResult = ps_full_state_turn(session, static_cast<ps_input>(*snapshot.numericInput));
         } else if (snapshot.stringInput.has_value()) {
             if (*snapshot.stringInput == "tick") {
-                stepResult = ps_session_tick(session);
+                stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
             } else if (*snapshot.stringInput == "restart") {
-                if (!ps_session_restart(session)) {
+                if (!ps_full_state_restart(session)) {
                     errorStream << "Restart failed at snapshot[" << index << "]\n";
                     return 1;
                 }
             } else if (*snapshot.stringInput == "undo") {
-                if (!ps_session_undo(session)) {
+                if (!ps_full_state_undo(session)) {
                     errorStream << "Undo failed at snapshot[" << index << "]\n";
                     return 1;
                 }
@@ -1191,7 +1191,7 @@ int checkTraceAgainstSnapshots(ps_game* game, const TraceFile& traceFile, std::o
     }
 
     const auto& expectedFinal = snapshots.back().serializedLevel;
-    char* serialized = ps_session_serialize_test_string(session);
+    char* serialized = ps_full_state_serialize_test_string(session);
     const std::string actualFinal = serialized ? serialized : "";
     ps_string_free(serialized);
     if (actualFinal != expectedFinal) {
@@ -1210,7 +1210,7 @@ int checkTraceAgainstSnapshots(ps_game* game, const TraceFile& traceFile, std::o
     return 0;
 }
 
-bool replayTraceInputsOnly(ps_session* session, const TraceFile& traceFile, std::ostream& errorStream, size_t& replayedSteps) {
+bool replayTraceInputsOnly(ps_full_state* session, const TraceFile& traceFile, std::ostream& errorStream, size_t& replayedSteps) {
     const auto& snapshots = traceFile.snapshots;
     if (snapshots.empty()) {
         errorStream << "Trace has no snapshots\n";
@@ -1220,23 +1220,23 @@ bool replayTraceInputsOnly(ps_session* session, const TraceFile& traceFile, std:
     for (size_t index = 1; index < snapshots.size(); ++index) {
         const auto& snapshot = snapshots[index];
         if (snapshot.phase == "again") {
-            (void)ps_session_tick(session);
+            (void)ps_full_state_turn(session, PS_INPUT_TICK);
             ++replayedSteps;
         } else if (snapshot.numericInput.has_value()) {
-            (void)ps_session_step(session, static_cast<ps_input>(*snapshot.numericInput));
+            (void)ps_full_state_turn(session, static_cast<ps_input>(*snapshot.numericInput));
             ++replayedSteps;
         } else if (snapshot.stringInput.has_value()) {
             if (*snapshot.stringInput == "tick") {
-                (void)ps_session_tick(session);
+                (void)ps_full_state_turn(session, PS_INPUT_TICK);
                 ++replayedSteps;
             } else if (*snapshot.stringInput == "restart") {
-                if (!ps_session_restart(session)) {
+                if (!ps_full_state_restart(session)) {
                     errorStream << "Restart failed at snapshot[" << index << "]\n";
                     return false;
                 }
                 ++replayedSteps;
             } else if (*snapshot.stringInput == "undo") {
-                if (!ps_session_undo(session)) {
+                if (!ps_full_state_undo(session)) {
                     errorStream << "Undo failed at snapshot[" << index << "]\n";
                     return false;
                 }
@@ -1272,10 +1272,10 @@ bool runPreparedSerializedLevelCheck(
     int64_t& profileSessionCreateUs,
     int64_t& profileSerializePreparedUs
 ) {
-    ps_session* session = nullptr;
+    ps_full_state* session = nullptr;
     ps_error* error = nullptr;
     const auto sessionStart = std::chrono::steady_clock::now();
-    if (!ps_session_create(game, &session, &error)) {
+    if (!ps_full_state_create(game, &session, &error)) {
         if (!quiet) {
             std::cerr << name << ": " << ps_error_message(error) << "\n";
         }
@@ -1294,7 +1294,7 @@ bool runPreparedSerializedLevelCheck(
     }
 
     const auto serializeStart = std::chrono::steady_clock::now();
-    char* serialized = ps_session_serialize_test_string(session);
+    char* serialized = ps_full_state_serialize_test_string(session);
     const std::string actual = serialized ? serialized : "";
     if (profileTimers) {
         profileSerializePreparedUs += std::chrono::duration_cast<std::chrono::microseconds>(
@@ -1302,7 +1302,7 @@ bool runPreparedSerializedLevelCheck(
                                            .count();
     }
     ps_string_free(serialized);
-    ps_session_destroy(session);
+    ps_full_state_destroy(session);
 
     if (actual == expectedSerialized) {
         return true;
@@ -1621,10 +1621,10 @@ int profileSimulationsCommand(const std::string& manifestPath, int argc, char** 
             }
 
             for (size_t run = 0; run < repeat; ++run) {
-                ps_session* session = nullptr;
+                ps_full_state* session = nullptr;
                 ps_error* error = nullptr;
                 const auto sessionStart = std::chrono::steady_clock::now();
-                if (!ps_session_create(game, &session, &error)) {
+                if (!ps_full_state_create(game, &session, &error)) {
                     ++casesFailed;
                     if (!quiet) {
                         std::cerr << fixture.name << ": " << ps_error_message(error) << "\n";
@@ -1637,8 +1637,8 @@ int profileSimulationsCommand(const std::string& manifestPath, int argc, char** 
                     }
                     break;
                 }
-                std::unique_ptr<ps_session, decltype(&ps_session_destroy)> sessionHolder(session, ps_session_destroy);
-                ps_session_set_unit_testing(session, true);
+                std::unique_ptr<ps_full_state, decltype(&ps_full_state_destroy)> sessionHolder(session, ps_full_state_destroy);
+                ps_full_state_set_unit_testing(session, true);
                 if (profileTimers) {
                     profileSessionCreateUs += std::chrono::duration_cast<std::chrono::microseconds>(
                                                   std::chrono::steady_clock::now() - sessionStart)
@@ -1703,9 +1703,9 @@ int traceAtCommand(const std::string& irPath, const std::string& tracePath, size
         return 1;
     }
 
-    ps_session* session = nullptr;
+    ps_full_state* session = nullptr;
     ps_error* error = nullptr;
-    if (!ps_session_create(game, &session, &error)) {
+    if (!ps_full_state_create(game, &session, &error)) {
         std::cerr << ps_error_message(error) << "\n";
         ps_free_error(error);
         ps_free_game(game);
@@ -1715,42 +1715,42 @@ int traceAtCommand(const std::string& irPath, const std::string& tracePath, size
     for (size_t index = 1; index <= snapshotIndex; ++index) {
         const auto& snapshot = snapshots[index];
         if (snapshot.phase == "again") {
-            (void)ps_session_tick(session);
+            (void)ps_full_state_turn(session, PS_INPUT_TICK);
         } else if (snapshot.numericInput.has_value()) {
-            (void)ps_session_step(session, static_cast<ps_input>(*snapshot.numericInput));
+            (void)ps_full_state_turn(session, static_cast<ps_input>(*snapshot.numericInput));
         } else if (snapshot.stringInput.has_value()) {
             if (*snapshot.stringInput == "tick") {
-                (void)ps_session_tick(session);
+                (void)ps_full_state_turn(session, PS_INPUT_TICK);
             } else if (*snapshot.stringInput == "restart") {
-                if (!ps_session_restart(session)) {
+                if (!ps_full_state_restart(session)) {
                     std::cerr << "Restart failed at snapshot[" << index << "]\n";
-                    ps_session_destroy(session);
+                    ps_full_state_destroy(session);
                     ps_free_game(game);
                     return 1;
                 }
             } else if (*snapshot.stringInput == "undo") {
-                if (!ps_session_undo(session)) {
+                if (!ps_full_state_undo(session)) {
                     std::cerr << "Undo failed at snapshot[" << index << "]\n";
-                    ps_session_destroy(session);
+                    ps_full_state_destroy(session);
                     ps_free_game(game);
                     return 1;
                 }
             } else {
                 std::cerr << "Unsupported trace input token: " << *snapshot.stringInput << "\n";
-                ps_session_destroy(session);
+                ps_full_state_destroy(session);
                 ps_free_game(game);
                 return 1;
             }
         } else {
             std::cerr << "Snapshot[" << index << "] has no replayable input token\n";
-            ps_session_destroy(session);
+            ps_full_state_destroy(session);
             ps_free_game(game);
             return 1;
         }
     }
 
     const int result = printSession(session);
-    ps_session_destroy(session);
+    ps_full_state_destroy(session);
     ps_free_game(game);
     return result;
 }
@@ -1779,9 +1779,9 @@ int traceStepAtCommand(const std::string& irPath, const std::string& tracePath, 
         return 1;
     }
 
-    ps_session* session = nullptr;
+    ps_full_state* session = nullptr;
     ps_error* error = nullptr;
-    if (!ps_session_create(game, &session, &error)) {
+    if (!ps_full_state_create(game, &session, &error)) {
         std::cerr << ps_error_message(error) << "\n";
         ps_free_error(error);
         ps_free_game(game);
@@ -1802,35 +1802,35 @@ int traceStepAtCommand(const std::string& irPath, const std::string& tracePath, 
         for (size_t index = 1; index <= snapshotIndex; ++index) {
             const auto& snapshot = snapshots[index];
             if (snapshot.phase == "again") {
-                (void)ps_session_tick(session);
+                (void)ps_full_state_turn(session, PS_INPUT_TICK);
             } else if (snapshot.numericInput.has_value()) {
-                (void)ps_session_step(session, static_cast<ps_input>(*snapshot.numericInput));
+                (void)ps_full_state_turn(session, static_cast<ps_input>(*snapshot.numericInput));
             } else if (snapshot.stringInput.has_value()) {
                 if (*snapshot.stringInput == "tick") {
-                    (void)ps_session_tick(session);
+                    (void)ps_full_state_turn(session, PS_INPUT_TICK);
                 } else if (*snapshot.stringInput == "restart") {
-                    if (!ps_session_restart(session)) {
+                    if (!ps_full_state_restart(session)) {
                         std::cerr << "Restart failed at snapshot[" << index << "]\n";
-                        ps_session_destroy(session);
+                        ps_full_state_destroy(session);
                         ps_free_game(game);
                         return 1;
                     }
                 } else if (*snapshot.stringInput == "undo") {
-                    if (!ps_session_undo(session)) {
+                    if (!ps_full_state_undo(session)) {
                         std::cerr << "Undo failed at snapshot[" << index << "]\n";
-                        ps_session_destroy(session);
+                        ps_full_state_destroy(session);
                         ps_free_game(game);
                         return 1;
                     }
                 } else {
                     std::cerr << "Unsupported trace input token: " << *snapshot.stringInput << "\n";
-                    ps_session_destroy(session);
+                    ps_full_state_destroy(session);
                     ps_free_game(game);
                     return 1;
                 }
             } else {
                 std::cerr << "Snapshot[" << index << "] has no replayable input token\n";
-                ps_session_destroy(session);
+                ps_full_state_destroy(session);
                 ps_free_game(game);
                 return 1;
             }
@@ -1840,35 +1840,35 @@ int traceStepAtCommand(const std::string& irPath, const std::string& tracePath, 
     const auto& nextSnapshot = snapshots[snapshotIndex + 1];
     ps_step_result stepResult{};
     if (nextSnapshot.phase == "again") {
-        stepResult = ps_session_tick(session);
+        stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
     } else if (nextSnapshot.numericInput.has_value()) {
-        stepResult = ps_session_step(session, static_cast<ps_input>(*nextSnapshot.numericInput));
+        stepResult = ps_full_state_turn(session, static_cast<ps_input>(*nextSnapshot.numericInput));
     } else if (nextSnapshot.stringInput.has_value()) {
         if (*nextSnapshot.stringInput == "tick") {
-            stepResult = ps_session_tick(session);
+            stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
         } else if (*nextSnapshot.stringInput == "restart") {
-            if (!ps_session_restart(session)) {
+            if (!ps_full_state_restart(session)) {
                 std::cerr << "Restart failed at snapshot[" << (snapshotIndex + 1) << "]\n";
-                ps_session_destroy(session);
+                ps_full_state_destroy(session);
                 ps_free_game(game);
                 return 1;
             }
         } else if (*nextSnapshot.stringInput == "undo") {
-            if (!ps_session_undo(session)) {
+            if (!ps_full_state_undo(session)) {
                 std::cerr << "Undo failed at snapshot[" << (snapshotIndex + 1) << "]\n";
-                ps_session_destroy(session);
+                ps_full_state_destroy(session);
                 ps_free_game(game);
                 return 1;
             }
         } else {
             std::cerr << "Unsupported trace input token: " << *nextSnapshot.stringInput << "\n";
-            ps_session_destroy(session);
+            ps_full_state_destroy(session);
             ps_free_game(game);
             return 1;
         }
     } else {
         std::cerr << "Snapshot[" << (snapshotIndex + 1) << "] has no replayable input token\n";
-        ps_session_destroy(session);
+        ps_full_state_destroy(session);
         ps_free_game(game);
         return 1;
     }
@@ -1904,7 +1904,7 @@ int traceStepAtCommand(const std::string& irPath, const std::string& tracePath, 
 
     bool ok = compareSnapshot(nextSnapshot, session, &stepResult, snapshotIndex + 1, std::cerr);
     const int result = printSession(session);
-    ps_session_destroy(session);
+    ps_full_state_destroy(session);
     ps_free_game(game);
     return ok ? result : 1;
 }
@@ -2266,7 +2266,7 @@ SimulationCaseResult runSimulationCorpusCase(
         return result;
     }
 
-    ps_session* rawSession = nullptr;
+    ps_full_state* rawSession = nullptr;
     ps_error* error = nullptr;
     auto phaseStart = std::chrono::steady_clock::now();
     if (!sessionCreateForGame(game, testCase.seed, &rawSession, &error)) {
@@ -2276,11 +2276,11 @@ SimulationCaseResult runSimulationCorpusCase(
         return result;
     }
     result.timing.sessionCreateUs = elapsedMicrosSince(phaseStart);
-    std::unique_ptr<ps_session, decltype(&ps_session_destroy)> session(rawSession, ps_session_destroy);
-    ps_session_set_unit_testing(session.get(), true);
+    std::unique_ptr<ps_full_state, decltype(&ps_full_state_destroy)> session(rawSession, ps_full_state_destroy);
+    ps_full_state_set_unit_testing(session.get(), true);
 
     phaseStart = std::chrono::steady_clock::now();
-    if (!ps_session_load_level(session.get(), testCase.targetLevel, &error)) {
+    if (!ps_full_state_load_level(session.get(), testCase.targetLevel, &error)) {
         result.timing.levelLoadUs = elapsedMicrosSince(phaseStart);
         result.error = testCase.name + ": " + ps_error_message(error);
         ps_free_error(error);
@@ -2310,7 +2310,7 @@ SimulationCaseResult runSimulationCorpusCase(
     result.compactTurnOracleFailures = oracleStats.compactTurnFailures;
 
     phaseStart = std::chrono::steady_clock::now();
-    char* serializedRaw = ps_session_serialize_test_string(session.get());
+    char* serializedRaw = ps_full_state_serialize_test_string(session.get());
     const std::string actualSerialized = serializedRaw ? serializedRaw : "";
     ps_string_free(serializedRaw);
     result.timing.serializeUs = elapsedMicrosSince(phaseStart);
@@ -2447,7 +2447,7 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             traceLevel
         );
     } else {
-        ps_session* session = nullptr;
+        ps_full_state* session = nullptr;
         ps_error* error = nullptr;
         const std::optional<std::string> sessionSeed = nativeCompile ? cliLoadedLevelSeed : std::nullopt;
         if (!sessionCreateForGame(game, sessionSeed, &session, &error)) {
@@ -2457,10 +2457,10 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
             return 1;
         }
         if (nativeCompile && requestedLevel.has_value()) {
-            if (!ps_session_load_level(session, *requestedLevel, &error)) {
+            if (!ps_full_state_load_level(session, *requestedLevel, &error)) {
                 std::cerr << ps_error_message(error) << "\n";
                 ps_free_error(error);
-                ps_session_destroy(session);
+                ps_full_state_destroy(session);
                 ps_free_game(game);
                 return 1;
             }
@@ -2478,12 +2478,12 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
         std::vector<std::string> sounds;
         sounds.reserve(16);
         if (!replayInputTokens(session, tokens, emitJson ? &sounds : nullptr)) {
-            ps_session_destroy(session);
+            ps_full_state_destroy(session);
             ps_free_game(game);
             return 1;
         }
 
-        char* serialized = ps_session_serialize_test_string(session);
+        char* serialized = ps_full_state_serialize_test_string(session);
         const std::string actualFinal = serialized ? serialized : "";
         ps_string_free(serialized);
 
@@ -2506,7 +2506,7 @@ int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
                       << "}\n";
         }
 
-        ps_session_destroy(session);
+        ps_full_state_destroy(session);
         result = 0;
     }
     ps_free_game(game);
@@ -7477,10 +7477,10 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                     ++preparedFailed;
                     continue;
                 }
-                ps_session* session = nullptr;
+                ps_full_state* session = nullptr;
                 ps_error* error = nullptr;
                 const auto sessionStart = std::chrono::steady_clock::now();
-                if (!ps_session_create(game, &session, &error)) {
+                if (!ps_full_state_create(game, &session, &error)) {
                     std::cerr << name << ": " << ps_error_message(error) << "\n";
                     ps_free_error(error);
                     ++preparedFailed;
@@ -7498,7 +7498,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                 }
 
                 const auto serializeStart = std::chrono::steady_clock::now();
-                char* serialized = ps_session_serialize_test_string(session);
+                char* serialized = ps_full_state_serialize_test_string(session);
                 const std::string actual = serialized ? serialized : "";
                 if (profileTimers) {
                     profileSerializeUs += std::chrono::duration_cast<std::chrono::microseconds>(
@@ -7515,7 +7515,7 @@ int testFixturesCommand(const std::string& manifestPath, int argc, char** argv) 
                 }
 
                 ps_string_free(serialized);
-                ps_session_destroy(session);
+                ps_full_state_destroy(session);
 
                 const bool shouldCheckTrace = fixture.traceFile.has_value()
                     && (traceAll || (traceLimit > 0 && traceChecked < traceLimit));

@@ -310,7 +310,7 @@ Goal: align the external C API with the architecture terms once internals are st
 - [x] Add `ps_full_state_compact_turn_oracle_check` as the compact-turn name
   for the legacy compact-tick oracle check.
 - [ ] Rename status/accessor functions consistently to `ps_full_state_*`.
-- [ ] Update CLI and SDL player call sites.
+- [x] Update CLI and SDL player call sites.
 - [ ] Update tests and helper scripts.
 - [ ] Add compatibility wrappers only if downstream consumers require them.
 - [ ] If wrappers remain, mark them deprecated in comments and docs.

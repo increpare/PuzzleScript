@@ -286,7 +286,7 @@ struct Audio {
 
 struct Player {
     ps_game* game = nullptr;
-    ps_session* session = nullptr;
+    ps_full_state* session = nullptr;
     std::string saveKey;
     std::string savePath;
     bool title = true;
@@ -385,8 +385,8 @@ void refreshSave(Player& player) {
 }
 
 void saveProgress(Player& player) {
-    ps_session_status_info status{};
-    ps_session_status(player.session, &status);
+    ps_full_state_status_info status{};
+    ps_full_state_status(player.session, &status);
     if (status.current_level_index <= 0 || status.current_level_index >= ps_game_level_count(player.game)) {
         std::remove(player.savePath.c_str());
         refreshSave(player);
@@ -556,7 +556,7 @@ std::vector<std::string> generateMessageRows(Player& player) {
     const std::string xToContinue = rows[10];
     rows[10] = emptyLine;
 
-    const std::vector<std::string> messageLines = wordWrap(ps_session_message_text(player.session), kTerminalWidth);
+    const std::vector<std::string> messageLines = wordWrap(ps_full_state_message_text(player.session), kTerminalWidth);
     int offset = 5 - (static_cast<int>(messageLines.size()) / 2);
     if (offset < 0) {
         offset = 0;
@@ -610,7 +610,7 @@ void drawTextRows(SDL_Renderer* renderer, const Player& player, const std::vecto
     }
 }
 
-Viewport computeViewport(Player& player, const ps_session_status_info& status) {
+Viewport computeViewport(Player& player, const ps_full_state_status_info& status) {
     Viewport viewport{0, 0, status.width, status.height};
     const auto flickscreen = parseScreenSize(ps_game_metadata_value(player.game, "flickscreen"));
     const auto zoomscreen = parseScreenSize(ps_game_metadata_value(player.game, "zoomscreen"));
@@ -624,7 +624,7 @@ Viewport computeViewport(Player& player, const ps_session_status_info& status) {
     const int screenH = std::min(screen->second, status.height);
     int playerX = 0;
     int playerY = 0;
-    if (ps_session_first_player_position(player.session, &playerX, &playerY)) {
+    if (ps_full_state_first_player_position(player.session, &playerX, &playerY)) {
         if (flickscreen.has_value()) {
             const int screenX = playerX / screenW;
             const int screenY = playerY / screenH;
@@ -658,8 +658,8 @@ Viewport computeViewport(Player& player, const ps_session_status_info& status) {
 }
 
 void drawLevel(SDL_Renderer* renderer, Player& player, Color bg, int winW, int winH) {
-    ps_session_status_info status{};
-    ps_session_status(player.session, &status);
+    ps_full_state_status_info status{};
+    ps_full_state_status(player.session, &status);
     setDrawColor(renderer, bg);
     SDL_RenderClear(renderer);
     if (status.width <= 0 || status.height <= 0) {
@@ -675,7 +675,7 @@ void drawLevel(SDL_Renderer* renderer, Player& player, Color bg, int winW, int w
     for (int x = viewport.minX; x < viewport.maxX; ++x) {
         for (int y = viewport.minY; y < viewport.maxY; ++y) {
             for (int objectId = 0; objectId < objectCount; ++objectId) {
-                if (!ps_session_cell_has_object(player.session, x, y, objectId)) {
+                if (!ps_full_state_cell_has_object(player.session, x, y, objectId)) {
                     continue;
                 }
                 ps_object_info info{};
@@ -708,13 +708,13 @@ void drawLevel(SDL_Renderer* renderer, Player& player, Color bg, int winW, int w
 
 bool loadLevel(Player& player, int levelIndex) {
     ps_error* error = nullptr;
-    if (!ps_session_load_level(player.session, levelIndex, &error)) {
+    if (!ps_full_state_load_level(player.session, levelIndex, &error)) {
         SDL_Log("%s", ps_error_message(error));
         ps_free_error(error);
         return false;
     }
-    ps_session_status_info status{};
-    ps_session_status(player.session, &status);
+    ps_full_state_status_info status{};
+    ps_full_state_status(player.session, &status);
     if (status.mode == PS_SESSION_MODE_MESSAGE) {
         playNamed(player, "showmessage");
     } else {
@@ -743,8 +743,8 @@ void finishStartGame(Player& player, bool continued) {
 
 void afterStep(Player& player, const ps_step_result& result) {
     playEvents(player, result);
-    ps_session_status_info status{};
-    ps_session_status(player.session, &status);
+    ps_full_state_status_info status{};
+    ps_full_state_status(player.session, &status);
     if (result.won) {
         playNamed(player, "endlevel");
     }
@@ -811,31 +811,31 @@ void processAutomaticTicks(Player& player, Uint32 againIntervalMs, Uint32 realti
         return;
     }
 
-    ps_session_status_info status{};
-    ps_session_status(player.session, &status);
+    ps_full_state_status_info status{};
+    ps_full_state_status(player.session, &status);
     if (status.mode != PS_SESSION_MODE_LEVEL) {
         return;
     }
 
     const Uint32 now = SDL_GetTicks();
-    if (ps_session_pending_again(player.session)) {
+    if (ps_full_state_pending_again(player.session)) {
         if (now - player.lastAgainTick >= againIntervalMs) {
-            const ps_step_result result = ps_session_tick(player.session);
+            const ps_step_result result = ps_full_state_turn(player.session, PS_INPUT_TICK);
             afterStep(player, result);
         }
         return;
     }
 
     if (realtimeIntervalMs > 0 && now - player.lastRealtimeTick >= realtimeIntervalMs) {
-        const ps_step_result result = ps_session_tick(player.session);
+        const ps_step_result result = ps_full_state_turn(player.session, PS_INPUT_TICK);
         afterStep(player, result);
     }
 }
 
 int runPlayer(ps_game* game, const std::string& saveKey) {
     ps_error* error = nullptr;
-    ps_session* session = nullptr;
-    if (!ps_session_create(game, &session, &error)) {
+    ps_full_state* session = nullptr;
+    if (!ps_full_state_create(game, &session, &error)) {
         SDL_Log("%s", ps_error_message(error));
         ps_free_error(error);
         return 1;
@@ -843,7 +843,7 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError());
-        ps_session_destroy(session);
+        ps_full_state_destroy(session);
         return 1;
     }
 
@@ -868,7 +868,7 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
         if (renderer) SDL_DestroyRenderer(renderer);
         if (window) SDL_DestroyWindow(window);
         SDL_Quit();
-        ps_session_destroy(session);
+        ps_full_state_destroy(session);
         return 1;
     }
 
@@ -913,25 +913,25 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
                     continue;
                 }
                 if ((key == SDLK_z || key == SDLK_u) && !ps_game_has_metadata(player.game, "noundo")) {
-                    if (ps_session_undo(player.session)) {
+                    if (ps_full_state_undo(player.session)) {
                         playNamed(player, "undo");
                     }
                     continue;
                 }
                 if (key == SDLK_r && !ps_game_has_metadata(player.game, "norestart")) {
-                    if (ps_session_restart(player.session)) {
+                    if (ps_full_state_restart(player.session)) {
                         playNamed(player, "restart");
                     }
                     continue;
                 }
                 const auto input = keyToInput(key);
                 if (input.has_value()) {
-                    ps_session_status_info status{};
-                    ps_session_status(player.session, &status);
+                    ps_full_state_status_info status{};
+                    ps_full_state_status(player.session, &status);
                     if (*input == PS_INPUT_ACTION && status.mode == PS_SESSION_MODE_LEVEL && ps_game_has_metadata(player.game, "noaction")) {
                         continue;
                     }
-                    const ps_step_result result = ps_session_step(player.session, *input);
+                    const ps_step_result result = ps_full_state_turn(player.session, *input);
                     afterStep(player, result);
                 }
             }
@@ -944,8 +944,8 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
         SDL_GetWindowSize(window, &winW, &winH);
         const Color fg = parseColor(ps_game_foreground_color(player.game));
         const Color bg = parseColor(ps_game_background_color(player.game));
-        ps_session_status_info status{};
-        ps_session_status(player.session, &status);
+        ps_full_state_status_info status{};
+        ps_full_state_status(player.session, &status);
         if (player.title) {
             drawTextRows(renderer, player, generateTitleRows(player, SDL_GetTicks()), fg, bg, winW, winH);
         } else if (status.mode == PS_SESSION_MODE_MESSAGE) {
@@ -963,7 +963,7 @@ int runPlayer(ps_game* game, const std::string& saveKey) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    ps_session_destroy(session);
+    ps_full_state_destroy(session);
     return 0;
 }
 
