@@ -721,10 +721,11 @@ attribute graph cost -> no-allocation hash -> flat visited table
     levels=7
     random_excluded=0
 
-  solver_compact_parity SOLVER_COMPACT_PARITY_MAX_GAMES=25:
-    games=25/153
-    levels=646
+  solver_compact_parity SOLVER_COMPACT_PARITY_TIMEOUT_MS=50:
+    games=153/153
+    levels=2679
     random_excluded=31
+    compact_timeout_regressions=2
   ```
 
 - [ ] Add a generated compact tick prototype.

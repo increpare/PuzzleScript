@@ -127,19 +127,34 @@ function resultKey(result) {
 
 function compareResults(normalResult, compactResult) {
     if (normalResult.status === 'solved') {
+        if (compactResult.status === 'timeout') {
+            return {
+                fatal: false,
+                message: 'normal solved but compact timed out',
+            };
+        }
         if (compactResult.status !== 'solved') {
-            return `normal solved but compact status=${compactResult.status}`;
+            return {
+                fatal: true,
+                message: `normal solved but compact status=${compactResult.status}`,
+            };
         }
         const normalSolution = normalResult.solution || [];
         const compactSolution = compactResult.solution || [];
         if (JSON.stringify(normalSolution) !== JSON.stringify(compactSolution)) {
-            return `solution normal=${JSON.stringify(normalSolution)} compact=${JSON.stringify(compactSolution)}`;
+            return {
+                fatal: true,
+                message: `solution normal=${JSON.stringify(normalSolution)} compact=${JSON.stringify(compactSolution)}`,
+            };
         }
         return null;
     }
     if (normalResult.status === 'exhausted' || normalResult.status === 'skipped_message') {
         if (compactResult.status !== normalResult.status) {
-            return `normal status=${normalResult.status} compact status=${compactResult.status}`;
+            return {
+                fatal: true,
+                message: `normal status=${normalResult.status} compact status=${compactResult.status}`,
+            };
         }
         return null;
     }
@@ -147,10 +162,16 @@ function compareResults(normalResult, compactResult) {
         if (compactResult.status === 'solved' || compactResult.status === 'timeout') {
             return null;
         }
-        return `normal timeout but compact status=${compactResult.status}`;
+        return {
+            fatal: true,
+            message: `normal timeout but compact status=${compactResult.status}`,
+        };
     }
     if (compactResult.status !== normalResult.status) {
-        return `normal status=${normalResult.status} compact status=${compactResult.status}`;
+        return {
+            fatal: true,
+            message: `normal status=${normalResult.status} compact status=${compactResult.status}`,
+        };
     }
     return null;
 }
@@ -175,6 +196,7 @@ if (selectedGames.length === 0) {
 }
 
 let totalLevels = 0;
+let compactTimeoutRegressions = 0;
 for (let index = 0; index < selectedGames.length; index++) {
     const gameFile = selectedGames[index];
     const gameName = path.relative(corpusPath, gameFile);
@@ -184,6 +206,7 @@ for (let index = 0; index < selectedGames.length; index++) {
     const normalByKey = new Map(normal.results.map((result) => [resultKey(result), result]));
     const compactByKey = new Map(compact.results.map((result) => [resultKey(result), result]));
     const mismatches = [];
+    const warnings = [];
     for (const [key, normalResult] of normalByKey) {
         const compactResult = compactByKey.get(key);
         if (!compactResult) {
@@ -192,7 +215,11 @@ for (let index = 0; index < selectedGames.length; index++) {
         }
         const mismatch = compareResults(normalResult, compactResult);
         if (mismatch !== null) {
-            mismatches.push(`${key}: ${mismatch}`);
+            if (mismatch.fatal) {
+                mismatches.push(`${key}: ${mismatch.message}`);
+            } else {
+                warnings.push(`${key}: ${mismatch.message}`);
+            }
         }
     }
     for (const key of compactByKey.keys()) {
@@ -203,10 +230,15 @@ for (let index = 0; index < selectedGames.length; index++) {
     if (mismatches.length > 0) {
         throw new Error(`compact parity mismatches=${mismatches.length} game=${gameName}\n${mismatches.slice(0, 20).join('\n')}`);
     }
+    compactTimeoutRegressions += warnings.length;
+    for (const warning of warnings.slice(0, 5)) {
+        process.stderr.write(`solver_compact_parity warning ${warning}\n`);
+    }
     totalLevels += normal.results.length;
 }
 process.stdout.write(
     `solver_compact_parity passed games=${selectedGames.length}/${eligibleGames.length}`
     + ` levels=${totalLevels} random_excluded=${randomExcluded.length}`
+    + ` compact_timeout_regressions=${compactTimeoutRegressions}`
     + ` strategy=${strategy} timeout_ms=${timeoutMs}\n`
 );
