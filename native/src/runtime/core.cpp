@@ -573,7 +573,7 @@ void dumpActiveMovements(const FullState& session, std::string_view label) {
         return;
     }
     std::ostringstream header;
-    header << std::string(label) << " hash=" << hashSession64(session);
+    header << std::string(label) << " hash=" << hashFullState64(session);
     movementDebugLog(header.str());
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
@@ -3286,7 +3286,7 @@ bool applyRandomRuleGroup(FullState& session, const std::vector<Rule>& group, Co
     const auto sessionHashFilter = randomDebugSessionHashFilter();
     const auto boardHashFilter = randomDebugBoardHashFilter();
     const uint64_t sessionHashBeforeRandom = (randomDebugEnabled() && sessionHashFilter.has_value())
-        ? hashSession64(session)
+        ? hashFullState64(session)
         : 0;
     std::optional<std::string> serializedBeforeRandom;
     if (randomDebugEnabled() && (boardHashFilter.has_value() || !randomDebugSubstringFilter().empty())) {
@@ -4674,8 +4674,8 @@ std::string serializeTestString(const FullState& session) {
 }
 
 std::string exportSnapshot(const FullState& session) {
-    const uint64_t hash64 = hashSession64(session);
-    const ps_hash128 hash128 = hashSession128(session);
+    const uint64_t hash64 = hashFullState64(session);
+    const ps_hash128 hash128 = hashFullState128(session);
     std::ostringstream stream;
     stream << "{"
            << "\"current_level_index\":" << session.preparedFullState.currentLevelIndex << ","
@@ -4751,7 +4751,7 @@ void runRulesOnLevelStart(FullState& session, RuntimeStepOptions options) {
 }
 
 bool wouldAgainChange(FullState& session, bool* outWouldModify, bool emitAudio) {
-    const uint64_t beforeHash = hashSession64(session);
+    const uint64_t beforeHash = hashFullState64(session);
     session.pendingAgain = false;
     bool wouldModify = false;
     const ps_step_result result = executeTurn(session, 0, ExecuteTurnOptions{
@@ -4773,7 +4773,7 @@ bool wouldAgainChange(FullState& session, bool* outWouldModify, bool emitAudio) 
                << " modified=" << (wouldModify ? 1 : 0)
                << " iterations=" << iterations
                << " before_hash=" << beforeHash
-               << " after_hash=" << hashSession64(session);
+               << " after_hash=" << hashFullState64(session);
         againDebugLog(stream.str());
     }
     return changed;
@@ -5316,7 +5316,7 @@ std::unique_ptr<Error> benchmarkCloneHash(const FullState& session, uint32_t ite
             uint64_t hashAccumulator = 0;
             for (uint32_t iteration = threadIndex; iteration < iterations; iteration += threads) {
                 auto clone = std::make_unique<FullState>(session);
-                const auto hash = hashSession64(*clone);
+                const auto hash = hashFullState64(*clone);
                 hashAccumulator ^= hash + static_cast<uint64_t>(iteration);
             }
             return hashAccumulator;

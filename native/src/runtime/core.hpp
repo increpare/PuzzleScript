@@ -432,14 +432,14 @@ struct CompileResult {
 std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame);
 std::unique_ptr<FullState> createFullState(std::shared_ptr<const Game> game);
 std::unique_ptr<FullState> createFullStateWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed);
-std::unique_ptr<Session> createSession(std::shared_ptr<const Game> game);
-std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed);
+std::unique_ptr<FullState> createSession(std::shared_ptr<const Game> game);
+std::unique_ptr<FullState> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed);
 std::unique_ptr<Error> loadLevel(FullState& state, int32_t levelIndex);
 std::unique_ptr<Error> advanceLevel(FullState& state);
 bool restart(FullState& state);
 bool undo(FullState& state);
-uint64_t hashSession64(const Session& session);
-ps_hash128 hashSession128(const Session& session);
+uint64_t hashSession64(const FullState& state);
+ps_hash128 hashSession128(const FullState& state);
 uint64_t hashFullState64(const FullState& state);
 ps_hash128 hashFullState128(const FullState& state);
 std::string serializeTestString(const FullState& state);

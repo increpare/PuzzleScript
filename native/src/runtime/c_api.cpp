@@ -15,18 +15,18 @@ using puzzlescript::SpecializedCompactTurnOutcome;
 using puzzlescript::SpecializedCompactTurnBackend;
 using puzzlescript::CompactStateView;
 using puzzlescript::Error;
+using puzzlescript::FullState;
 using puzzlescript::Game;
 using puzzlescript::kMaskWordBits;
 using puzzlescript::MaskWordUnsigned;
 using puzzlescript::RuntimeStepOptions;
-using puzzlescript::Session;
 
 struct ps_game {
     std::shared_ptr<const Game> impl;
 };
 
 struct ps_session {
-    std::unique_ptr<Session> impl;
+    std::unique_ptr<FullState> impl;
 };
 
 struct ps_compile_result {
@@ -57,7 +57,7 @@ char* duplicateString(const std::string& value) {
 struct CompactOracleState {
     std::vector<uint64_t> objectBits;
     std::vector<puzzlescript::MaskWord> movementWords;
-    Session::RandomState randomState;
+    FullState::RandomState randomState;
 };
 
 uint32_t compactOracleTrailingZeros(MaskWordUnsigned value) {
@@ -68,7 +68,7 @@ uint32_t compactOracleTrailingZeros(MaskWordUnsigned value) {
     }
 }
 
-CompactOracleState compactOracleStateFromSession(const Session& session) {
+CompactOracleState compactOracleStateFromFullState(const FullState& session) {
     CompactOracleState state;
     state.randomState = session.randomState;
     state.movementWords = session.liveMovements;
@@ -251,7 +251,7 @@ bool ps_session_create(const ps_game* game, ps_session** out_session, ps_error**
         return false;
     }
     auto* wrapper = new ps_session();
-    wrapper->impl = puzzlescript::createSession(game->impl);
+    wrapper->impl = puzzlescript::createFullState(game->impl);
     *out_session = wrapper;
     return true;
 }
@@ -275,7 +275,7 @@ bool ps_session_create_with_loaded_level_seed(
         return ps_session_create(game, out_session, out_error);
     }
     auto* wrapper = new ps_session();
-    wrapper->impl = puzzlescript::createSessionWithLoadedLevelSeed(game->impl, loaded_level_seed_utf8);
+    wrapper->impl = puzzlescript::createFullStateWithLoadedLevelSeed(game->impl, loaded_level_seed_utf8);
     *out_session = wrapper;
     return true;
 }
@@ -291,7 +291,7 @@ bool ps_session_clone(const ps_session* session, ps_session** out_session, ps_er
         return false;
     }
     auto* wrapper = new ps_session();
-    wrapper->impl = std::make_unique<Session>(*session->impl);
+    wrapper->impl = std::make_unique<FullState>(*session->impl);
     *out_session = wrapper;
     return true;
 }
@@ -352,7 +352,7 @@ bool ps_session_compact_tick_oracle_check(
     if (session == nullptr || !session->impl || !session->impl->game) {
         return false;
     }
-    const Session& original = *session->impl;
+    const FullState& original = *session->impl;
     if (original.preparedFullState.titleScreen || original.preparedFullState.textMode) {
         return true;
     }
@@ -361,7 +361,7 @@ bool ps_session_compact_tick_oracle_check(
         return true;
     }
 
-    CompactOracleState compact = compactOracleStateFromSession(original);
+    CompactOracleState compact = compactOracleStateFromFullState(original);
     CompactStateView view{
         compact.objectBits.empty() ? nullptr : compact.objectBits.data(),
         compact.objectBits.size(),
@@ -381,7 +381,7 @@ bool ps_session_compact_tick_oracle_check(
     options.againPolicy = puzzlescript::AgainPolicy::Drain;
     const SpecializedCompactTurnOutcome compactOutcome = backend->step(*original.game, view, input, options);
 
-    Session interpreter = original;
+    FullState interpreter = original;
     ps_step_result interpreterResult = interpretedTurn(interpreter, input, options);
 
     bool matched = compactOutcome.handled
@@ -398,7 +398,7 @@ bool ps_session_compact_tick_oracle_check(
         && interpreter.liveLevel.width == original.liveLevel.width
         && interpreter.liveLevel.height == original.liveLevel.height) {
         stateChecked = true;
-        const CompactOracleState interpreterState = compactOracleStateFromSession(interpreter);
+        const CompactOracleState interpreterState = compactOracleStateFromFullState(interpreter);
         matched = compactOracleStatesEqual(compact, interpreterState);
         if (!matched) {
             debugCompactOracleStateMismatch(compact, interpreterState);
@@ -487,7 +487,7 @@ bool ps_session_cell_has_object(const ps_session* session, int32_t x, int32_t y,
     if (!session || !session->impl || object_id < 0) {
         return false;
     }
-    const Session& impl = *session->impl;
+    const FullState& impl = *session->impl;
     if (x < 0 || y < 0 || x >= impl.liveLevel.width || y >= impl.liveLevel.height) {
         return false;
     }
@@ -516,7 +516,7 @@ bool ps_session_first_player_position(const ps_session* session, int32_t* out_x,
     if (!session || !session->impl) {
         return false;
     }
-    const Session& impl = *session->impl;
+    const FullState& impl = *session->impl;
     if (impl.game->playerMask == puzzlescript::kNullMaskOffset || impl.liveLevel.width <= 0 || impl.liveLevel.height <= 0) {
         return false;
     }
@@ -556,11 +556,11 @@ bool ps_session_first_player_position(const ps_session* session, int32_t* out_x,
 }
 
 uint64_t ps_session_hash64(const ps_session* session) {
-    return session ? puzzlescript::hashSession64(*session->impl) : 0;
+    return session ? puzzlescript::hashFullState64(*session->impl) : 0;
 }
 
 ps_hash128 ps_session_hash128(const ps_session* session) {
-    return session ? puzzlescript::hashSession128(*session->impl) : ps_hash128{};
+    return session ? puzzlescript::hashFullState128(*session->impl) : ps_hash128{};
 }
 
 char* ps_session_serialize_test_string(const ps_session* session) {

@@ -90,12 +90,12 @@ inline StateKey fullStateKey(const FullState& session, bool includeRandomState) 
 }
 
 template <typename ProjectWord>
-inline StateKey sessionStateKey(const Session& session, bool includeRandomState, ProjectWord projectWord) {
-    return fullStateKey(session, includeRandomState, projectWord);
+inline StateKey sessionStateKey(const FullState& state, bool includeRandomState, ProjectWord projectWord) {
+    return fullStateKey(state, includeRandomState, projectWord);
 }
 
-inline StateKey sessionStateKey(const Session& session, bool includeRandomState) {
-    return fullStateKey(session, includeRandomState);
+inline StateKey sessionStateKey(const FullState& state, bool includeRandomState) {
+    return fullStateKey(state, includeRandomState);
 }
 
 inline int32_t priorityFor(SearchMode mode, uint32_t depth, int32_t heuristic, int32_t weightedAStarWeight) {

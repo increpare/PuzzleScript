@@ -226,6 +226,7 @@ If proceeding with `FullState`:
   - [x] `createFullState*` constructors exist; `createSession*` remains as a temporary compatibility wrapper.
   - [x] Runtime lifecycle, hash/serialization, and turn wrapper definitions use `FullState`.
   - [x] Runtime core implementation uses `FullState`; `Session` remains only as a temporary compatibility surface.
+  - [x] Runtime C API internals store and inspect `FullState`; public `ps_session_*` names are unchanged.
   - [ ] Public C API still uses `ps_session_*` by design until Phase 8.
 - [x] Rename the primary prepared-state struct `PreparedSession` -> `PreparedFullState`, with a temporary `PreparedSession` alias.
 - [x] Rename the internal `preparedSession` field/identifier to `preparedFullState`; serialized `prepared_session` keys remain unchanged.
