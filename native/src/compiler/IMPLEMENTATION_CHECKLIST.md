@@ -730,14 +730,40 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - [ ] Refactor the current solver edge into a named helper with two
     implementations: compact tick first, interpreter-backed scratch fallback
     second.
-  - [ ] Pick one deterministic, no-random, no-again, no-restart focus fixture for
+  - [x] Pick one deterministic, no-random, no-again, no-restart focus fixture for
     the first `handled=true` compact tick.
-  - [ ] Generate direct object-bitset input seeding and fixed rule-group execution
+    First target: `src/tests/solver_smoke_tests/one_move.txt`.
+  - [x] Generate direct object-bitset input seeding and fixed movement execution
     for that fixture.
   - [ ] Compare the compact tick output against the interpreter fallback inside a
     debug/oracle mode before allowing solver use.
   - [ ] Only then fold compact heuristic/hash computation into the compact tick
     result when it can reuse touched state.
+
+  Current first-slice behavior:
+
+  - Supports movement-only games with no early/late rules, no rigid behavior,
+    no turn-affecting metadata, no movement/audio side effects, one non-aggregate
+    player object, one player in every non-message level, and one simple
+    `all player on target` win condition.
+  - Generated compact tick mutates object-major `objectBits` directly, handles
+    directional/action inputs, reports `changed`, and evaluates the simple win
+    condition.
+  - Unsupported games still attach a compact backend with
+    `wholeTurnSupported=false` and remain on the interpreter-backed scratch
+    fallback.
+
+  Current evidence:
+
+  ```text
+  one_move.txt specialized compact solver:
+    solution=right
+    compact_tick_attempts=1
+    compact_tick_hits=1
+    compact_tick_fallbacks=0
+    compact_tick_unsupported=0
+    step_ms=0.000084
+  ```
 
   Acceptance criteria:
 

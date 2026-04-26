@@ -3744,6 +3744,151 @@ struct CompiledTickSupport {
     std::string wholeTurnFallbackReason = "interpreter_delegation";
 };
 
+struct CompactTickSupport {
+    bool supported = false;
+    std::string fallbackReason = "interpreter_delegation";
+    int32_t playerObjectId = -1;
+    int32_t playerLayer = -1;
+    std::vector<int32_t> playerLayerObjectIds;
+    int32_t winSubjectObjectId = -1;
+    int32_t winTargetObjectId = -1;
+};
+
+std::optional<int32_t> singleObjectIdInMask(
+    const puzzlescript::Game& game,
+    puzzlescript::MaskOffset offset
+) {
+    if (offset == puzzlescript::kNullMaskOffset) {
+        return std::nullopt;
+    }
+    std::optional<int32_t> found;
+    for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
+        if (!maskBitIsSet(game, offset, static_cast<uint32_t>(objectId))) {
+            continue;
+        }
+        if (found.has_value()) {
+            return std::nullopt;
+        }
+        found = objectId;
+    }
+    return found;
+}
+
+int32_t countObjectInLevel(const puzzlescript::Game& game, const puzzlescript::LevelTemplate& level, int32_t objectId) {
+    if (objectId < 0 || level.width <= 0 || level.height <= 0) {
+        return 0;
+    }
+    const uint32_t word = puzzlescript::maskWordIndex(static_cast<uint32_t>(objectId));
+    const puzzlescript::MaskWord bit = puzzlescript::maskBit(static_cast<uint32_t>(objectId));
+    if (word >= game.wordCount) {
+        return 0;
+    }
+    const int32_t tileCount = level.width * level.height;
+    int32_t count = 0;
+    for (int32_t tile = 0; tile < tileCount; ++tile) {
+        const size_t index = static_cast<size_t>(tile * game.strideObject + static_cast<int32_t>(word));
+        if (index < level.objects.size() && (level.objects[index] & bit) != 0) {
+            ++count;
+        }
+    }
+    return count;
+}
+
+CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
+    CompactTickSupport support;
+    if (!game.rules.empty() || !game.lateRules.empty()) {
+        support.fallbackReason = "rules_not_compact";
+        return support;
+    }
+    if (game.rigid) {
+        support.fallbackReason = "rigid_not_compact";
+        return support;
+    }
+    for (const auto& [key, value] : game.metadataMap) {
+        (void)value;
+        if (key == "require_player_movement" || key == "run_rules_on_level_start") {
+            support.fallbackReason = "metadata_not_compact";
+            return support;
+        }
+    }
+    const bool hasMovementSounds = std::any_of(
+        game.sfxMovementMasks.begin(),
+        game.sfxMovementMasks.end(),
+        [](const auto& entries) { return !entries.empty(); }
+    );
+    if (!game.sfxCreationMasks.empty()
+        || !game.sfxDestructionMasks.empty()
+        || hasMovementSounds
+        || !game.sfxMovementFailureMasks.empty()) {
+        support.fallbackReason = "sounds_not_compact";
+        return support;
+    }
+    if (game.playerMaskAggregate) {
+        support.fallbackReason = "aggregate_player_not_compact";
+        return support;
+    }
+    const auto playerObjectId = singleObjectIdInMask(game, game.playerMask);
+    if (!playerObjectId.has_value()) {
+        support.fallbackReason = "player_mask_not_single_object";
+        return support;
+    }
+    if (*playerObjectId < 0 || static_cast<size_t>(*playerObjectId) >= game.objectsById.size()) {
+        support.fallbackReason = "player_object_missing";
+        return support;
+    }
+    const int32_t playerLayer = game.objectsById[static_cast<size_t>(*playerObjectId)].layer;
+    if (playerLayer < 0 || static_cast<size_t>(playerLayer) >= game.layerMaskOffsets.size()) {
+        support.fallbackReason = "player_layer_missing";
+        return support;
+    }
+    for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
+        if (static_cast<size_t>(objectId) < game.objectsById.size()
+            && game.objectsById[static_cast<size_t>(objectId)].layer == playerLayer) {
+            support.playerLayerObjectIds.push_back(objectId);
+        }
+    }
+    if (support.playerLayerObjectIds.empty()) {
+        support.fallbackReason = "player_layer_empty";
+        return support;
+    }
+    if (game.winConditions.size() != 1) {
+        support.fallbackReason = "win_condition_not_single";
+        return support;
+    }
+    const auto& condition = game.winConditions.front();
+    if (condition.quantifier != 1 || condition.aggr1 || condition.aggr2) {
+        support.fallbackReason = "win_condition_not_simple_all";
+        return support;
+    }
+    const auto winSubject = singleObjectIdInMask(game, condition.filter1);
+    const auto winTarget = singleObjectIdInMask(game, condition.filter2);
+    if (!winSubject.has_value() || !winTarget.has_value()) {
+        support.fallbackReason = "win_condition_mask_not_single_object";
+        return support;
+    }
+    if (*winSubject != *playerObjectId) {
+        support.fallbackReason = "win_subject_not_player";
+        return support;
+    }
+    for (const auto& level : game.levels) {
+        if (level.isMessage) {
+            continue;
+        }
+        if (countObjectInLevel(game, level, *playerObjectId) != 1) {
+            support.fallbackReason = "level_player_count_not_one";
+            return support;
+        }
+    }
+
+    support.supported = true;
+    support.fallbackReason = "supported";
+    support.playerObjectId = *playerObjectId;
+    support.playerLayer = playerLayer;
+    support.winSubjectObjectId = *winSubject;
+    support.winTargetObjectId = *winTarget;
+    return support;
+}
+
 CompiledTickSupport compiledTickSupportForGame(
     const puzzlescript::Game& game,
     const CompiledRulesOptions& options
@@ -4927,6 +5072,7 @@ std::string generateCompiledRulesCpp(
         const auto& source = sources[sourceIndex];
         const auto& game = *source.game;
         const CompiledTickSupport tickSupport = compiledTickSupportForGame(game, options);
+        const CompactTickSupport compactTickSupport = compactTickSupportForGame(game);
         uint32_t sourceCompiledRules = 0;
         uint32_t sourceCompiledGroups = 0;
         for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
@@ -5170,17 +5316,100 @@ std::string generateCompiledRulesCpp(
             << "    ps_input input,\n"
             << "    RuntimeStepOptions options\n"
             << ") {\n"
-            << "    (void)game;\n"
-            << "    (void)state;\n"
-            << "    (void)input;\n"
             << "    (void)options;\n"
-            << "    return {false, {}};\n"
-            << "}\n\n"
+            << "    (void)game;\n";
+        if (!compactTickSupport.supported) {
+            out << "    (void)state;\n"
+                << "    (void)input;\n"
+                << "    return {false, {}};\n"
+                << "}\n\n";
+        } else {
+            out << "    constexpr int32_t kObjectCount = " << game.objectCount << ";\n"
+                << "    constexpr int32_t kPlayerObject = " << compactTickSupport.playerObjectId << ";\n"
+                << "    constexpr int32_t kWinTargetObject = " << compactTickSupport.winTargetObjectId << ";\n"
+                << "    const int32_t width = state.width;\n"
+                << "    const int32_t height = state.height;\n"
+                << "    if (state.objectBits == nullptr || width <= 0 || height <= 0) {\n"
+                << "        return {false, {}};\n"
+                << "    }\n"
+                << "    const int32_t tileCount = width * height;\n"
+                << "    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);\n"
+                << "    if (state.objectBitWordCount < cellWordCount * static_cast<size_t>(kObjectCount)) {\n"
+                << "        return {false, {}};\n"
+                << "    }\n"
+                << "    int32_t directionMask = 0;\n"
+                << "    int32_t dx = 0;\n"
+                << "    int32_t dy = 0;\n"
+                << "    switch (input) {\n"
+                << "        case PS_INPUT_UP: directionMask = 1; dy = -1; break;\n"
+                << "        case PS_INPUT_DOWN: directionMask = 2; dy = 1; break;\n"
+                << "        case PS_INPUT_LEFT: directionMask = 4; dx = -1; break;\n"
+                << "        case PS_INPUT_RIGHT: directionMask = 8; dx = 1; break;\n"
+                << "        case PS_INPUT_ACTION: directionMask = 16; break;\n"
+                << "        case PS_INPUT_TICK: break;\n"
+                << "        default: return {false, {}};\n"
+                << "    }\n"
+                << "    const size_t playerBase = static_cast<size_t>(kPlayerObject) * cellWordCount;\n"
+                << "    const size_t targetBase = static_cast<size_t>(kWinTargetObject) * cellWordCount;\n"
+                << "    bool hasPlayer = false;\n"
+                << "    bool moved = false;\n"
+                << "    if (directionMask != 0) {\n"
+                << "        for (size_t sourceWordIndex = 0; sourceWordIndex < cellWordCount; ++sourceWordIndex) {\n"
+                << "            uint64_t players = state.objectBits[playerBase + sourceWordIndex];\n"
+                << "            while (players != 0) {\n"
+                << "                const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(players));\n"
+                << "                const int32_t tile = static_cast<int32_t>(sourceWordIndex * 64 + bit);\n"
+                << "                players &= players - 1;\n"
+                << "                if (tile >= tileCount) {\n"
+                << "                    continue;\n"
+                << "                }\n"
+                << "                hasPlayer = true;\n"
+                << "                const int32_t x = tile / height;\n"
+                << "                const int32_t y = tile % height;\n"
+                << "                const int32_t targetX = x + dx;\n"
+                << "                const int32_t targetY = y + dy;\n"
+                << "                if (targetX < 0 || targetX >= width || targetY < 0 || targetY >= height) {\n"
+                << "                    continue;\n"
+                << "                }\n"
+                << "                const int32_t targetTile = targetX * height + targetY;\n"
+                << "                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);\n"
+                << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
+                << "                bool blocked = false;\n"
+                << "                if (directionMask != 16) {\n";
+            for (const int32_t objectId : compactTickSupport.playerLayerObjectIds) {
+                out << "                    blocked = blocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0);\n";
+            }
+            out << "                }\n"
+                << "                if (blocked) {\n"
+                << "                    continue;\n"
+                << "                }\n"
+                << "                const uint64_t sourceBit = uint64_t{1} << bit;\n"
+                << "                state.objectBits[playerBase + sourceWordIndex] &= ~sourceBit;\n"
+                << "                state.objectBits[playerBase + targetWordIndex] |= targetBit;\n"
+                << "                moved = true;\n"
+                << "            }\n"
+                << "        }\n"
+                << "    }\n"
+                << "    bool won = true;\n"
+                << "    for (size_t word = 0; word < cellWordCount; ++word) {\n"
+                << "        if ((state.objectBits[playerBase + word] & ~state.objectBits[targetBase + word]) != 0) {\n"
+                << "            won = false;\n"
+                << "            break;\n"
+                << "        }\n"
+                << "    }\n"
+                << "    ps_step_result result{};\n"
+                << "    result.changed = (directionMask != 0 && hasPlayer) || moved;\n"
+                << "    result.won = won;\n"
+                << "    return {true, result};\n"
+                << "}\n\n";
+        }
+        out
             << "const CompiledCompactTickBackend compact_tick_backend_" << sourceIndex << " = {\n"
             << "    " << source.hash << "ULL,\n"
             << "    " << cppStringLiteral(source.path.string()) << ",\n"
             << "    compact_tick_step_source_" << sourceIndex << ",\n"
-            << "    {false, \"interpreter_delegation\"},\n"
+            << "    {" << (compactTickSupport.supported ? "true" : "false")
+            << ", " << cppStringLiteral(compactTickSupport.fallbackReason) << "},\n"
             << "};\n\n";
     }
 
