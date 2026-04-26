@@ -3760,7 +3760,14 @@ struct CompactTickSupport {
     std::vector<int32_t> pushLayerObjectIds;
     int32_t winSubjectObjectId = -1;
     int32_t winTargetObjectId = -1;
-    std::vector<std::pair<int32_t, int32_t>> winObjectPairs;
+    struct WinCondition {
+        int32_t quantifier = 0;
+        bool aggregate1 = false;
+        bool aggregate2 = false;
+        std::vector<int32_t> filter1ObjectIds;
+        std::vector<int32_t> filter2ObjectIds;
+    };
+    std::vector<WinCondition> winConditions;
 };
 
 std::optional<int32_t> singleObjectIdInMask(
@@ -3991,28 +3998,39 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
     std::vector<int32_t> winSubjects;
     std::vector<int32_t> winTargets;
     for (const auto& condition : game.winConditions) {
-        if (condition.quantifier != 1 || condition.aggr1 || condition.aggr2) {
-            support.fallbackReason = "win_condition_not_simple_all";
+        if (condition.quantifier != -1 && condition.quantifier != 0 && condition.quantifier != 1) {
+            support.fallbackReason = "win_condition_quantifier_not_compact";
             return support;
         }
-        const auto winSubject = singleObjectIdInMask(game, condition.filter1);
-        const auto winTarget = singleObjectIdInMask(game, condition.filter2);
-        if (!winSubject.has_value() || !winTarget.has_value()) {
-            support.fallbackReason = "win_condition_mask_not_single_object";
+        std::vector<int32_t> filter1ObjectIds = objectIdsInMask(game, condition.filter1);
+        std::vector<int32_t> filter2ObjectIds = objectIdsInMask(game, condition.filter2);
+        if (filter1ObjectIds.empty() || filter2ObjectIds.empty()) {
+            support.fallbackReason = "win_condition_empty_mask";
             return support;
         }
-        winSubjects.push_back(*winSubject);
-        winTargets.push_back(*winTarget);
-        support.winObjectPairs.emplace_back(*winSubject, *winTarget);
+        for (const int32_t objectId : filter1ObjectIds) {
+            if (std::find(winSubjects.begin(), winSubjects.end(), objectId) == winSubjects.end()) {
+                winSubjects.push_back(objectId);
+            }
+        }
+        for (const int32_t objectId : filter2ObjectIds) {
+            if (std::find(winTargets.begin(), winTargets.end(), objectId) == winTargets.end()) {
+                winTargets.push_back(objectId);
+            }
+        }
+        support.winConditions.push_back(CompactTickSupport::WinCondition{
+            condition.quantifier,
+            condition.aggr1,
+            condition.aggr2,
+            std::move(filter1ObjectIds),
+            std::move(filter2ObjectIds),
+        });
     }
     if (hasWinConditions) {
         support.winSubjectObjectId = winSubjects.front();
         support.winTargetObjectId = winTargets.front();
     }
-    const bool movementOnly = game.rules.empty()
-        && (!hasWinConditions || std::all_of(winSubjects.begin(), winSubjects.end(), [&](int32_t objectId) {
-            return std::find(playerObjectIds.begin(), playerObjectIds.end(), objectId) != playerObjectIds.end();
-        }));
+    const bool movementOnly = game.rules.empty();
     std::vector<int32_t> simplePushObjectIds;
     if (!game.rules.empty()) {
         if (playerObjectIds.size() != 1) {
@@ -5133,6 +5151,8 @@ void appendCompactTickAggregateJsonFields(
             "level_player_count_zero",
             "win_condition_not_simple_all",
             "win_condition_mask_not_single_object",
+            "win_condition_quantifier_not_compact",
+            "win_condition_empty_mask",
             "win_subject_not_player",
             "rules_not_compact",
         }
@@ -5159,13 +5179,35 @@ void appendCompactTickSourceJsonFields(
         << ",\"features\":{"
         << "\"state_layout\":\"compact_object_bits\""
         << ",\"movement\":" << jsonStringLiteral(support.simplePush ? "simple_push" : "simple_movement")
-        << ",\"win_conditions\":" << jsonStringLiteral(support.winObjectPairs.empty() ? "none" : "simple_all_pairs")
+        << ",\"win_conditions\":" << jsonStringLiteral(support.winConditions.empty() ? "none" : "generic_masks")
         << "}"
         << ",\"misses\":{";
     if (!support.supported) {
         out << jsonStringLiteral(support.fallbackReason) << ":1";
     }
     out << "}}";
+}
+
+std::string compactObjectMaskMatchExpression(
+    const std::vector<int32_t>& objectIds,
+    bool aggregate,
+    std::string_view wordExpr,
+    std::string_view bitExpr
+) {
+    if (objectIds.empty()) {
+        return "false";
+    }
+    std::ostringstream out;
+    out << "(";
+    for (size_t index = 0; index < objectIds.size(); ++index) {
+        if (index > 0) {
+            out << (aggregate ? " && " : " || ");
+        }
+        out << "((state.objectBits[static_cast<size_t>(" << objectIds[index]
+            << ") * cellWordCount + " << wordExpr << "] & " << bitExpr << ") != 0)";
+    }
+    out << ")";
+    return out.str();
 }
 
 std::string generateCompiledRulesCoverageJson(
@@ -5802,15 +5844,39 @@ std::string generateCompiledRulesCpp(
                 << "    }\n";
             }
             out
-                << "    bool won = " << (compactTickSupport.winObjectPairs.empty() ? "false" : "true") << ";\n"
-                << "    for (size_t word = 0; word < cellWordCount && won; ++word) {\n";
-            for (const auto& [subjectObjectId, targetObjectId] : compactTickSupport.winObjectPairs) {
-                out << "        if ((state.objectBits[static_cast<size_t>(" << subjectObjectId << ") * cellWordCount + word] & ~state.objectBits[static_cast<size_t>(" << targetObjectId << ") * cellWordCount + word]) != 0) {\n"
-                    << "            won = false;\n"
-                    << "            break;\n"
-                    << "        }\n";
+                << "    bool won = " << (compactTickSupport.winConditions.empty() ? "false" : "true") << ";\n";
+            for (size_t conditionIndex = 0; conditionIndex < compactTickSupport.winConditions.size(); ++conditionIndex) {
+                const auto& condition = compactTickSupport.winConditions[conditionIndex];
+                out << "    if (won) {\n"
+                    << "        bool conditionPassed = " << (condition.quantifier == 0 ? "false" : "true") << ";\n"
+                    << "        for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
+                    << "            const size_t tileWord = static_cast<size_t>(tile >> 6);\n"
+                    << "            const uint64_t tileBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);\n"
+                    << "            const bool match1 = "
+                    << compactObjectMaskMatchExpression(condition.filter1ObjectIds, condition.aggregate1, "tileWord", "tileBit") << ";\n"
+                    << "            const bool match2 = "
+                    << compactObjectMaskMatchExpression(condition.filter2ObjectIds, condition.aggregate2, "tileWord", "tileBit") << ";\n";
+                if (condition.quantifier == -1) {
+                    out << "            if (match1 && match2) {\n"
+                        << "                conditionPassed = false;\n"
+                        << "                break;\n"
+                        << "            }\n";
+                } else if (condition.quantifier == 0) {
+                    out << "            if (match1 && match2) {\n"
+                        << "                conditionPassed = true;\n"
+                        << "                break;\n"
+                        << "            }\n";
+                } else {
+                    out << "            if (match1 && !match2) {\n"
+                        << "                conditionPassed = false;\n"
+                        << "                break;\n"
+                        << "            }\n";
+                }
+                out << "        }\n"
+                    << "        won = conditionPassed;\n"
+                    << "    }\n";
             }
-            out << "    }\n"
+            out
                 << "    ps_step_result result{};\n"
                 << "    result.changed = (directionMask != 0 && hasPlayer) || moved;\n"
                 << "    result.won = won;\n"
