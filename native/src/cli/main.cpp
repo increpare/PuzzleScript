@@ -5619,56 +5619,66 @@ void appendSpecializedFullTurnAggregateJsonFields(
     size_t wholeTurnSupported,
     const std::unordered_map<std::string, size_t>& wholeTurnFallbackReasons
 ) {
-    out << "\"compiled_tick\":{"
-        << "\"sources\":" << sourceCount
-        << ",\"backend_codegen_available\":" << sourceCount
-        << ",\"early_rule_loops_generated\":" << earlyRuleLoopsGenerated
-        << ",\"late_rule_loops_generated\":" << lateRuleLoopsGenerated
-        << ",\"fully_generated\":" << wholeTurnSupported
-        << ",\"whole_turn_supported\":" << wholeTurnSupported
-        << ",\"command_status_counts\":{"
-        << "\"none\":" << commandNone
-        << ",\"generated_queue_interpreter_tail\":" << commandGeneratedQueue
-        << ",\"unknown_interpreter\":" << commandUnknown
-        << "}"
-        << ",\"whole_turn_fallback_reason_counts\":";
-    appendJsonCountObject(
-        out,
-        wholeTurnFallbackReasons,
-        {"early_rule_loops_interpreter", "late_rule_loops_interpreter", "unsupported_command", "movement_interpreter", "interpreter_delegation"}
-    );
-    out << ",\"misses\":{";
-    if (sourceCount > wholeTurnSupported) {
-        out << "\"interpreter_delegation\":" << (sourceCount - wholeTurnSupported);
-    }
-    out << "}}";
+    auto appendObject = [&](std::string_view key) {
+        out << jsonStringLiteral(key) << ":{"
+            << "\"sources\":" << sourceCount
+            << ",\"backend_codegen_available\":" << sourceCount
+            << ",\"early_rule_loops_generated\":" << earlyRuleLoopsGenerated
+            << ",\"late_rule_loops_generated\":" << lateRuleLoopsGenerated
+            << ",\"fully_generated\":" << wholeTurnSupported
+            << ",\"whole_turn_supported\":" << wholeTurnSupported
+            << ",\"command_status_counts\":{"
+            << "\"none\":" << commandNone
+            << ",\"generated_queue_interpreter_tail\":" << commandGeneratedQueue
+            << ",\"unknown_interpreter\":" << commandUnknown
+            << "}"
+            << ",\"whole_turn_fallback_reason_counts\":";
+        appendJsonCountObject(
+            out,
+            wholeTurnFallbackReasons,
+            {"early_rule_loops_interpreter", "late_rule_loops_interpreter", "unsupported_command", "movement_interpreter", "interpreter_delegation"}
+        );
+        out << ",\"misses\":{";
+        if (sourceCount > wholeTurnSupported) {
+            out << "\"interpreter_delegation\":" << (sourceCount - wholeTurnSupported);
+        }
+        out << "}}";
+    };
+    appendObject("specialized_full_turn");
+    out << ",";
+    appendObject("compiled_tick");
 }
 
 void appendSpecializedFullTurnSourceJsonFields(
     std::ostream& out,
     const SpecializedFullTurnSupport& support
 ) {
-    out << "\"compiled_tick\":{"
-        << "\"backend_codegen_available\":true"
-        << ",\"step_entry\":true"
-        << ",\"tick_entry\":true"
-        << ",\"fully_generated\":" << (support.wholeTurnSupported ? "true" : "false")
-        << ",\"whole_turn_supported\":" << (support.wholeTurnSupported ? "true" : "false")
-        << ",\"whole_turn_fallback_reason\":" << jsonStringLiteral(support.wholeTurnFallbackReason)
-        << ",\"features\":{"
-        << "\"rule_loops\":" << jsonStringLiteral(
-            support.earlyRuleLoopsGenerated && support.lateRuleLoopsGenerated
-                ? "early_late_generated"
-                : (support.earlyRuleLoopsGenerated ? "early_generated_late_interpreter" : "interpreter")
-        )
-        << ",\"commands\":" << jsonStringLiteral(support.commandStatus)
-        << ",\"movement\":\"interpreter\""
-        << ",\"win_conditions\":\"interpreter\""
-        << ",\"level_transitions\":\"interpreter\""
-        << ",\"state_layout\":\"session\""
-        << "}"
-        << ",\"misses\":{\"interpreter_delegation\":1}"
-        << "}";
+    auto appendObject = [&](std::string_view key) {
+        out << jsonStringLiteral(key) << ":{"
+            << "\"backend_codegen_available\":true"
+            << ",\"step_entry\":true"
+            << ",\"tick_entry\":true"
+            << ",\"fully_generated\":" << (support.wholeTurnSupported ? "true" : "false")
+            << ",\"whole_turn_supported\":" << (support.wholeTurnSupported ? "true" : "false")
+            << ",\"whole_turn_fallback_reason\":" << jsonStringLiteral(support.wholeTurnFallbackReason)
+            << ",\"features\":{"
+            << "\"rule_loops\":" << jsonStringLiteral(
+                support.earlyRuleLoopsGenerated && support.lateRuleLoopsGenerated
+                    ? "early_late_generated"
+                    : (support.earlyRuleLoopsGenerated ? "early_generated_late_interpreter" : "interpreter")
+            )
+            << ",\"commands\":" << jsonStringLiteral(support.commandStatus)
+            << ",\"movement\":\"interpreter\""
+            << ",\"win_conditions\":\"interpreter\""
+            << ",\"level_transitions\":\"interpreter\""
+            << ",\"state_layout\":\"session\""
+            << "}"
+            << ",\"misses\":{\"interpreter_delegation\":1}"
+            << "}";
+    };
+    appendObject("specialized_full_turn");
+    out << ",";
+    appendObject("compiled_tick");
 }
 
 void appendCompactTurnAggregateJsonFields(

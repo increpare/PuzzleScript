@@ -2,7 +2,8 @@
 
 These notes capture rough local baselines for the whole-game compilation work.
 They are not release benchmarks; they are iteration landmarks. Re-run them when
-generated tick begins doing real work, or when build settings change.
+specialized full-turn execution changes substantially, or when build settings
+change.
 
 Date: 2026-04-25
 Branch: `cpp`
@@ -62,9 +63,9 @@ make solver_focus_perf_report SOLVER_FOCUS_RUNS=3
 
 ## Compiled Tick Status
 
-Coverage JSON now reports compiled tick separately from compiled rules. At this
-checkpoint, generated tick backend codegen is available, but whole-tick behavior
-is not yet generated:
+Coverage JSON now reports specialized full-turn eligibility separately from
+specialized rulegroup coverage. At this checkpoint, generated full-turn backend
+codegen is available, but complete whole-turn behavior is not yet generated:
 
 - `backend_codegen_available`: 452/452 simulation-suite sources.
 - `fully_generated`: 0/452 simulation-suite sources.
@@ -73,9 +74,9 @@ is not yet generated:
 The dedicated smoke target verifies dispatch/linkage:
 
 ```sh
-make compiled_tick_dispatch_smoke
+make specialized_full_turn_dispatch_smoke
 ```
 
-That target requires at least one generated tick backend to handle a solver
-step, while the generated backend still delegates to `interpreterStep` /
-`interpreterTick`.
+That target requires at least one specialized full-turn backend to handle a
+solver step, while unsupported behavior still falls back to the interpreted turn
+path.
