@@ -3868,6 +3868,7 @@ struct CompactTickSupport {
     bool simplePush = false;
     bool simplePushChain = false;
     bool simpleConsume = false;
+    bool simpleClearTarget = false;
     int32_t playerObjectId = -1;
     std::vector<int32_t> playerObjectIds;
     int32_t playerLayer = -1;
@@ -3877,6 +3878,7 @@ struct CompactTickSupport {
     int32_t pushLayer = -1;
     std::vector<int32_t> pushLayerObjectIds;
     std::vector<int32_t> consumeObjectIds;
+    std::vector<int32_t> clearTargetObjectIds;
     int32_t winSubjectObjectId = -1;
     int32_t winTargetObjectId = -1;
     struct WinCondition {
@@ -4222,6 +4224,82 @@ bool compactLooksLikeSimpleConsumeRules(
     return true;
 }
 
+std::vector<int32_t> compactSimpleClearTargetObjectIds(
+    const puzzlescript::Game& game,
+    int32_t playerObjectId
+) {
+    if (game.rules.size() != 1 || game.rules.front().empty() || !game.lateRules.empty()) {
+        return {};
+    }
+    std::vector<int32_t> clearObjectIds;
+    auto addClearObject = [&](int32_t objectId) {
+        if (std::find(clearObjectIds.begin(), clearObjectIds.end(), objectId) == clearObjectIds.end()) {
+            clearObjectIds.push_back(objectId);
+        }
+    };
+    for (const auto& rule : game.rules.front()) {
+        if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+            return {};
+        }
+        if (rule.patterns.size() != 1 || rule.patterns.front().size() != 2) {
+            return {};
+        }
+        bool sawMovingPlayer = false;
+        bool sawClearTarget = false;
+        for (const auto& pattern : rule.patterns.front()) {
+            if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern
+                || compactPatternHasUnsupportedConstraints(pattern)
+                || !pattern.replacement.has_value()
+                || pattern.replacement->hasRandomEntityMask
+                || pattern.replacement->hasRandomDirMask) {
+                return {};
+            }
+            const bool movementPresent = pattern.hasMovementsPresent
+                && maskHasAnyBit(game, pattern.movementsPresent, game.movementWordCount);
+            const bool movementSet = maskHasAnyBit(game, pattern.replacement->movementsSet, game.movementWordCount);
+            const bool movementClear = maskHasAnyBit(game, pattern.replacement->movementsClear, game.movementWordCount);
+            const bool objectSet = maskHasAnyBit(game, pattern.replacement->objectsSet, game.wordCount);
+            const std::vector<int32_t> presentObjectIds = objectIdsInMask(game, pattern.objectsPresent);
+            const bool hasAnyObjectAnchor = !pattern.anyObjectAnchorIds.empty();
+            const bool hasPlayer = std::find(
+                presentObjectIds.begin(),
+                presentObjectIds.end(),
+                playerObjectId
+            ) != presentObjectIds.end();
+            if (hasPlayer) {
+                if (!movementPresent || !movementSet || movementClear || !objectSet) {
+                    return {};
+                }
+                sawMovingPlayer = true;
+                continue;
+            }
+            if (!presentObjectIds.empty()
+                || hasAnyObjectAnchor
+                || movementPresent
+                || movementSet
+                || movementClear
+                || objectSet) {
+                return {};
+            }
+            const std::vector<int32_t> patternClearObjectIds = objectIdsInMask(
+                game,
+                pattern.replacement->objectsClear
+            );
+            if (patternClearObjectIds.empty()) {
+                return {};
+            }
+            for (const int32_t objectId : patternClearObjectIds) {
+                addClearObject(objectId);
+            }
+            sawClearTarget = true;
+        }
+        if (!sawMovingPlayer || !sawClearTarget) {
+            return {};
+        }
+    }
+    return clearObjectIds;
+}
+
 bool compactLooksLikeDirectCellObjectGroups(
     const puzzlescript::Game& game,
     const std::vector<std::vector<puzzlescript::Rule>>& groups
@@ -4386,6 +4464,7 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
     const bool movementOnly = game.rules.empty();
     std::vector<int32_t> simplePushObjectIds;
     std::vector<int32_t> simpleConsumeObjectIds;
+    std::vector<int32_t> simpleClearTargetObjectIds;
     bool directCellObjectRules = false;
     const bool directEarlyCellObjectRules = compactLooksLikeDirectCellObjectGroups(game, game.rules);
     if (!game.rules.empty()) {
@@ -4425,6 +4504,9 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
             std::vector<int32_t> consumeCandidates = compactPushCandidatesFromRules(game, support.playerObjectId);
             if (compactLooksLikeSimpleConsumeRules(game, support.playerObjectId, consumeCandidates)) {
                 simpleConsumeObjectIds = std::move(consumeCandidates);
+            } else if (auto clearTargetObjectIds = compactSimpleClearTargetObjectIds(game, support.playerObjectId);
+                       !clearTargetObjectIds.empty()) {
+                simpleClearTargetObjectIds = std::move(clearTargetObjectIds);
             } else if (directEarlyCellObjectRules) {
                 directCellObjectRules = true;
             }
@@ -4436,13 +4518,16 @@ CompactTickSupport compactNativeTickSupportForGame(const puzzlescript::Game& gam
     }
     const bool simplePush = !simplePushObjectIds.empty();
     const bool simpleConsume = !simpleConsumeObjectIds.empty();
-    if (!movementOnly && !simplePush && !simpleConsume && !directCellObjectRules) {
+    const bool simpleClearTarget = !simpleClearTargetObjectIds.empty();
+    if (!movementOnly && !simplePush && !simpleConsume && !simpleClearTarget && !directCellObjectRules) {
         support.fallbackReason = game.rules.empty() ? "win_subject_not_player" : "rules_not_compact";
         return support;
     }
     support.directCellObjectRules = directCellObjectRules;
     support.simpleConsume = simpleConsume;
     support.consumeObjectIds = std::move(simpleConsumeObjectIds);
+    support.simpleClearTarget = simpleClearTarget;
+    support.clearTargetObjectIds = std::move(simpleClearTargetObjectIds);
     if (simplePush) {
         support.simplePush = true;
         support.pushObjectIds = simplePushObjectIds;
@@ -5562,7 +5647,11 @@ void appendCompactTickSourceJsonFields(
         << ",\"features\":{"
         << "\"state_layout\":\"compact_object_bits\""
         << ",\"movement\":" << jsonStringLiteral(
-            support.simplePush ? "simple_push" : (support.simpleConsume ? "simple_consume" : "simple_movement")
+            support.simplePush
+                ? "simple_push"
+                : (support.simpleConsume
+                    ? "simple_consume"
+                    : (support.simpleClearTarget ? "simple_clear_target" : "simple_movement"))
         )
         << ",\"rules\":" << jsonStringLiteral(support.directCellObjectRules ? "direct_cell_object" : "movement_shape")
         << ",\"late_rules\":" << jsonStringLiteral(support.directLateCellObjectRules ? "direct_cell_object" : "none")
@@ -6398,6 +6487,16 @@ std::string generateCompiledRulesCpp(
                 out << "                } else if (directionMask != 16) {\n";
             } else {
                 out << "                if (directionMask != 16) {\n";
+            }
+            if (compactTickSupport.simpleClearTarget) {
+                out << "                    bool targetClearChanged = false;\n";
+                for (const int32_t objectId : compactTickSupport.clearTargetObjectIds) {
+                    out << "                    if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0) {\n"
+                        << "                        state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] &= ~targetBit;\n"
+                        << "                        targetClearChanged = true;\n"
+                        << "                    }\n";
+                }
+                out << "                    ruleChanged = ruleChanged || targetClearChanged;\n";
             }
             for (const int32_t objectId : compactTickSupport.playerLayerObjectIds) {
                 out << "                    blocked = blocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0);\n";
