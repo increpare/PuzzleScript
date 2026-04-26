@@ -388,16 +388,26 @@ Search hygiene:
 
 Acceptance:
 
-- [ ] `make build`
-- [ ] `make simulation_tests_cpp`
-- [ ] `make solver_smoke_tests`
-- [ ] `make solver_parity_smoke`
-- [ ] `make solver_compact_parity`
-- [ ] `make generator_smoke_tests`
-- [ ] `make compact_turn_oracle_smoke`
-- [ ] `make compact_turn_simulation_tests`
-- [ ] `make compact_turn_coverage`
-- [ ] Commit: `Finish turn terminology refactor cleanup`
+- [x] `make build`
+- [x] `make simulation_tests_cpp`
+  - Passed `469/469` simulation cases.
+- [x] `make solver_smoke_tests`
+  - Passed `7` solver smoke cases.
+- [x] `make solver_parity_smoke`
+  - Passed `7` parity smoke cases.
+- [x] `make solver_compact_parity`
+  - Passed `153/153` games and `2679` levels; `random_excluded=31`;
+    `compact_timeout_regressions=0`.
+- [x] `make generator_smoke_tests`
+- [x] `make compact_turn_oracle_smoke`
+  - Passed `7` cases; `18` oracle checks; `0` failures.
+- [x] `make compact_turn_simulation_tests`
+  - Passed `469/469` simulation cases; `16554` compact-turn oracle
+    checks; `0` failures.
+- [x] `make compact_turn_coverage`
+  - `452/452` callable compact backends; `80/452` native compact kernels;
+    `372/452` interpreter bridge backends.
+- [x] Commit: `Close refactor gates 469 sims 2679 parity`
 
 ## Performance Sanity
 
