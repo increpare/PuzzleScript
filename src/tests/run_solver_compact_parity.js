@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_compact_parity.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--strategy NAME] [--max-games N] [--compact-turn-oracle] [--require-compact-oracle-checks]');
+    console.error('Usage: node src/tests/run_solver_compact_parity.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--strategy NAME] [--game NAME] [--level N] [--max-games N] [--compact-turn-oracle] [--require-compact-oracle-checks]');
     process.exit(1);
 }
 
@@ -19,6 +19,8 @@ const solverPath = path.resolve(args[0]);
 const corpusPath = path.resolve(args[1]);
 let timeoutMs = 1000;
 let strategy = 'bfs';
+let targetGame = null;
+let targetLevel = null;
 let maxGames = null;
 let compactTurnOracle = false;
 let requireCompactOracleChecks = false;
@@ -31,12 +33,24 @@ function parsePositiveInt(value, label) {
     return parsed;
 }
 
+function parseNonNegativeInt(value, label) {
+    const parsed = Number.parseInt(value, 10);
+    if (!Number.isFinite(parsed) || parsed < 0) {
+        throw new Error(`${label} must be a non-negative integer: ${value}`);
+    }
+    return parsed;
+}
+
 for (let index = 2; index < args.length; index++) {
     const arg = args[index];
     if (arg === '--timeout-ms' && index + 1 < args.length) {
         timeoutMs = parsePositiveInt(args[++index], '--timeout-ms');
     } else if (arg === '--strategy' && index + 1 < args.length) {
         strategy = args[++index];
+    } else if (arg === '--game' && index + 1 < args.length) {
+        targetGame = args[++index];
+    } else if (arg === '--level' && index + 1 < args.length) {
+        targetLevel = parseNonNegativeInt(args[++index], '--level');
     } else if (arg === '--max-games' && index + 1 < args.length) {
         maxGames = parsePositiveInt(args[++index], '--max-games');
     } else if (arg === '--compact-turn-oracle' || arg === '--compact-tick-oracle') {
@@ -111,6 +125,9 @@ function runSolver(gameName, compact) {
         '--quiet',
         '--json',
     ];
+    if (targetLevel !== null) {
+        solverArgs.push('--level', String(targetLevel));
+    }
     if (compact) {
         solverArgs.push('--compact-node-storage');
         if (compactTurnOracle) {
@@ -205,7 +222,17 @@ for (const gameFile of allGames) {
     }
     eligibleGames.push(gameFile);
 }
-const selectedGames = maxGames === null ? eligibleGames : eligibleGames.slice(0, maxGames);
+let candidateGames = eligibleGames;
+if (targetGame !== null) {
+    candidateGames = eligibleGames.filter((gameFile) => {
+        const relative = path.relative(corpusPath, gameFile);
+        return relative === targetGame || path.basename(relative) === targetGame;
+    });
+    if (candidateGames.length === 0) {
+        throw new Error(`target game not found among non-random compact parity games: ${targetGame}`);
+    }
+}
+const selectedGames = maxGames === null ? candidateGames : candidateGames.slice(0, maxGames);
 if (selectedGames.length === 0) {
     throw new Error('no non-random games available for compact parity');
 }

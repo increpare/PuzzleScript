@@ -21,11 +21,11 @@ void runRulesOnLevelStart(FullState& session);
 void runRulesOnLevelStart(FullState& session, RuntimeStepOptions options);
 namespace {
 
-void rebuildMasks(Session& session);
-void rebuildObjectCellIndex(Session& session);
-void markAllMasksDirty(Session& session);
-void markAllMovementMasksDirty(Session& session);
-void clearMovementState(Session& session);
+void rebuildMasks(FullState& session);
+void rebuildObjectCellIndex(FullState& session);
+void markAllMasksDirty(FullState& session);
+void markAllMovementMasksDirty(FullState& session);
+void clearMovementState(FullState& session);
 std::string toString(const json::Value& value);
 std::vector<int32_t> parseIntVector(const json::Value& value);
 std::vector<RuleCommand> parseRuleCommands(const json::Value& value);
@@ -37,8 +37,8 @@ std::vector<std::vector<SoundMaskEntry>> parseLayeredSoundMaskEntries(Game& game
 bool anyBitsInCommon(const MaskVector& lhs, const MaskVector& rhs);
 bool anyBitsInCommon(const MaskWord* lhs, size_t lhsCount, const MaskWord* rhs, size_t rhsCount);
 bool bitsSetInArray(const MaskWord* required, size_t requiredCount, const MaskWord* actual, size_t actualCount);
-MaskVector getCellObjects(const Session& session, int32_t tileIndex);
-MaskVector getCellMovements(const Session& session, int32_t tileIndex);
+MaskVector getCellObjects(const FullState& session, int32_t tileIndex);
+MaskVector getCellMovements(const FullState& session, int32_t tileIndex);
 int32_t getShiftedMask5(const MaskVector& value, int32_t shift);
 
 inline const MaskWord* maskPtr(const Game& game, MaskOffset offset);
@@ -49,7 +49,7 @@ struct RuleApplyOutcome {
     bool changed = false;
 };
 
-bool rowStillMatchesAt(const Session& session, const std::vector<Pattern>& row, int32_t startIndex, int32_t delta);
+bool rowStillMatchesAt(const FullState& session, const std::vector<Pattern>& row, int32_t startIndex, int32_t delta);
 
 struct MovementResolveOutcome {
     bool moved = false;
@@ -368,7 +368,7 @@ std::string_view randomDebugSubstringFilter() {
     return debugConfig().randomSubstring;
 }
 
-void appendAudioEvent(Session& session, int32_t seed, const char* kind) {
+void appendAudioEvent(FullState& session, int32_t seed, const char* kind) {
     const std::string_view kindView = kind == nullptr ? std::string_view{} : std::string_view(kind);
     // JS dedupes movement audio seeds within each canmove/cantmove list.
     if (kindView == "canmove" || kindView == "cantmove") {
@@ -386,7 +386,7 @@ void appendAudioEvent(Session& session, int32_t seed, const char* kind) {
     session.lastAudioEvents.push_back(ps_audio_event{seed, kind});
 }
 
-void appendUiAudioEvent(Session& session, int32_t seed, const char* kind) {
+void appendUiAudioEvent(FullState& session, int32_t seed, const char* kind) {
     session.lastUiAudioEvents.push_back(ps_audio_event{seed, kind});
 }
 
@@ -407,13 +407,13 @@ int audioEventPriority(const ps_audio_event& event) {
     return 4;
 }
 
-void sortAudioEvents(Session& session) {
+void sortAudioEvents(FullState& session) {
     std::stable_sort(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [](const ps_audio_event& lhs, const ps_audio_event& rhs) {
         return audioEventPriority(lhs) < audioEventPriority(rhs);
     });
 }
 
-void clearAudioEventsByKind(Session& session, std::string_view kind) {
+void clearAudioEventsByKind(FullState& session, std::string_view kind) {
     session.lastAudioEvents.erase(
         std::remove_if(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [kind](const ps_audio_event& event) {
             return kind == event.kind;
@@ -421,7 +421,7 @@ void clearAudioEventsByKind(Session& session, std::string_view kind) {
         session.lastAudioEvents.end());
 }
 
-void tryPlaySimpleSound(Session& session, std::string_view soundName) {
+void tryPlaySimpleSound(FullState& session, std::string_view soundName) {
     const auto it = session.game->sfxEvents.find(std::string(soundName));
     if (it == session.game->sfxEvents.end()) {
         return;
@@ -432,7 +432,7 @@ void tryPlaySimpleSound(Session& session, std::string_view soundName) {
     appendUiAudioEvent(session, it->second, "ui");
 }
 
-void tryPlayCommandSound(Session& session, std::string_view soundName) {
+void tryPlayCommandSound(FullState& session, std::string_view soundName) {
     const auto it = session.game->sfxEvents.find(std::string(soundName));
     if (it == session.game->sfxEvents.end()) {
         return;
@@ -440,7 +440,7 @@ void tryPlayCommandSound(Session& session, std::string_view soundName) {
     appendAudioEvent(session, it->second, "sfx");
 }
 
-void processOutputCommands(Session& session, const CommandState& commands, bool suppressMessages = false, bool emitAudio = true) {
+void processOutputCommands(FullState& session, const CommandState& commands, bool suppressMessages = false, bool emitAudio = true) {
     for (const auto& command : commands.queue) {
         if (command == "message") {
             if (suppressMessages || session.suppressRuleMessages) {
@@ -490,7 +490,7 @@ void accumulateMaskWords(MaskVector& target, const MaskWord* source, size_t sour
     }
 }
 
-std::string describeObjects(const Session& session, const MaskVector& mask) {
+std::string describeObjects(const FullState& session, const MaskVector& mask) {
     std::ostringstream stream;
     bool emitted = false;
     for (int32_t objectId = 0; objectId < session.game->objectCount; ++objectId) {
@@ -518,7 +518,7 @@ std::string describeObjects(const Session& session, const MaskVector& mask) {
     return stream.str();
 }
 
-std::string describeMovements(const Session& session, const MaskVector& mask) {
+std::string describeMovements(const FullState& session, const MaskVector& mask) {
     std::ostringstream stream;
     bool emitted = false;
     auto dirName = [](int32_t directionMask) -> const char* {
@@ -568,7 +568,7 @@ std::string formatMatchList(const std::vector<int32_t>& matches, int32_t height,
     return stream.str();
 }
 
-void dumpActiveMovements(const Session& session, std::string_view label) {
+void dumpActiveMovements(const FullState& session, std::string_view label) {
     if (!movementDebugEnabled()) {
         return;
     }
@@ -629,7 +629,7 @@ void queueRuleCommands(const Rule& rule, CommandState& state) {
     }
 }
 
-void tryPlayMaskSounds(Session& session, const std::vector<SoundMaskEntry>& entries, const MaskVector& changedMask, const char* kind) {
+void tryPlayMaskSounds(FullState& session, const std::vector<SoundMaskEntry>& entries, const MaskVector& changedMask, const char* kind) {
     if (entries.empty() || !anyBitsSet(changedMask)) {
         return;
     }
@@ -657,7 +657,7 @@ void tryPlayMaskSounds(Session& session, const std::vector<SoundMaskEntry>& entr
     }
 }
 
-void seedRandomState(Session::RandomState& state, std::string_view seed) {
+void seedRandomState(FullState::RandomState& state, std::string_view seed) {
     for (int idx = 0; idx < 256; ++idx) {
         state.s[static_cast<size_t>(idx)] = static_cast<uint8_t>(idx);
     }
@@ -685,7 +685,7 @@ void seedRandomState(Session::RandomState& state, std::string_view seed) {
     }
 }
 
-uint8_t nextRandomByte(Session::RandomState& state) {
+uint8_t nextRandomByte(FullState::RandomState& state) {
     state.i = static_cast<uint8_t>((state.i + 1) % 256);
     state.j = static_cast<uint8_t>((state.j + state.s[static_cast<size_t>(state.i)]) % 256);
     std::swap(state.s[static_cast<size_t>(state.i)], state.s[static_cast<size_t>(state.j)]);
@@ -693,7 +693,7 @@ uint8_t nextRandomByte(Session::RandomState& state) {
     return state.s[static_cast<size_t>(index)];
 }
 
-double randomUniform(Session::RandomState& state) {
+double randomUniform(FullState::RandomState& state) {
     double output = 0.0;
     for (int idx = 0; idx < 7; ++idx) {
         output *= 256.0;
@@ -702,8 +702,8 @@ double randomUniform(Session::RandomState& state) {
     return output / (std::pow(2.0, 56.0) - 1.0);
 }
 
-std::vector<int32_t> previewRandomBytes(const Session::RandomState& state, int count) {
-    Session::RandomState probe = state;
+std::vector<int32_t> previewRandomBytes(const FullState::RandomState& state, int count) {
+    FullState::RandomState probe = state;
     std::vector<int32_t> bytes;
     bytes.reserve(static_cast<size_t>(std::max(count, 0)));
     for (int idx = 0; idx < count; ++idx) {
@@ -1348,9 +1348,9 @@ LevelTemplate parseLevelTemplate(const json::Value& value) {
     return level;
 }
 
-PreparedSession parsePreparedSession(const json::Value& value) {
+PreparedFullState parsePreparedSession(const json::Value& value) {
     const auto& object = value.asObject();
-    PreparedSession prepared;
+    PreparedFullState prepared;
     prepared.currentLevelIndex = toInt(requireField(object, "current_level_index"));
     if (const auto* target = value.find("current_level_target"); target && !target->isNull()) {
         prepared.currentLevelTarget = toInt(*target);
@@ -1406,7 +1406,7 @@ PreparedSession parsePreparedSession(const json::Value& value) {
     return prepared;
 }
 
-MaskVector getCellObjects(const Session& session, int32_t tileIndex) {
+MaskVector getCellObjects(const FullState& session, int32_t tileIndex) {
     MaskVector result(static_cast<size_t>(session.game->strideObject), 0);
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideObject);
     for (int32_t word = 0; word < session.game->strideObject; ++word) {
@@ -1415,17 +1415,17 @@ MaskVector getCellObjects(const Session& session, int32_t tileIndex) {
     return result;
 }
 
-const MaskWord* getCellObjectsPtr(const Session& session, int32_t tileIndex) {
+const MaskWord* getCellObjectsPtr(const FullState& session, int32_t tileIndex) {
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideObject);
     return session.liveLevel.objects.data() + base;
 }
 
-size_t objectCellWordCount(const Session& session) {
+size_t objectCellWordCount(const FullState& session) {
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     return static_cast<size_t>((tileCount + 63) / 64);
 }
 
-void setObjectCellIndexBit(Session& session, int32_t objectId, int32_t tileIndex, bool present) {
+void setObjectCellIndexBit(FullState& session, int32_t objectId, int32_t tileIndex, bool present) {
     const size_t cellWordCount = objectCellWordCount(session);
     if (objectId < 0 || objectId >= session.game->objectCount || tileIndex < 0 || cellWordCount == 0) {
         return;
@@ -1452,7 +1452,7 @@ void setObjectCellIndexBit(Session& session, int32_t objectId, int32_t tileIndex
     }
 }
 
-void setCellObjectsFromWords(Session& session, int32_t tileIndex, const MaskWord* objects) {
+void setCellObjectsFromWords(FullState& session, int32_t tileIndex, const MaskWord* objects) {
     const int32_t stride = session.game->strideObject;
     const size_t base = static_cast<size_t>(tileIndex * stride);
     const int32_t columnIndex = tileIndex / session.liveLevel.height;
@@ -1486,11 +1486,11 @@ void setCellObjectsFromWords(Session& session, int32_t tileIndex, const MaskWord
     }
 }
 
-void setCellObjects(Session& session, int32_t tileIndex, const MaskVector& objects) {
+void setCellObjects(FullState& session, int32_t tileIndex, const MaskVector& objects) {
     setCellObjectsFromWords(session, tileIndex, objects.data());
 }
 
-MaskVector getCellMovements(const Session& session, int32_t tileIndex) {
+MaskVector getCellMovements(const FullState& session, int32_t tileIndex) {
     MaskVector result(static_cast<size_t>(session.game->strideMovement), 0);
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
@@ -1499,12 +1499,12 @@ MaskVector getCellMovements(const Session& session, int32_t tileIndex) {
     return result;
 }
 
-const MaskWord* getCellMovementsPtr(const Session& session, int32_t tileIndex) {
+const MaskWord* getCellMovementsPtr(const FullState& session, int32_t tileIndex) {
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     return session.liveMovements.data() + base;
 }
 
-MaskVector getCellRigidGroupIndexMask(const Session& session, int32_t tileIndex) {
+MaskVector getCellRigidGroupIndexMask(const FullState& session, int32_t tileIndex) {
     MaskVector result(static_cast<size_t>(session.game->strideMovement), 0);
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
@@ -1513,7 +1513,7 @@ MaskVector getCellRigidGroupIndexMask(const Session& session, int32_t tileIndex)
     return result;
 }
 
-MaskVector getCellRigidMovementAppliedMask(const Session& session, int32_t tileIndex) {
+MaskVector getCellRigidMovementAppliedMask(const FullState& session, int32_t tileIndex) {
     MaskVector result(static_cast<size_t>(session.game->strideMovement), 0);
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
@@ -1549,7 +1549,7 @@ void clearShiftedMask5(MaskVector& value, int32_t shift) {
     }
 }
 
-void setCellMovementsFromWords(Session& session, int32_t tileIndex, const MaskWord* movements) {
+void setCellMovementsFromWords(FullState& session, int32_t tileIndex, const MaskWord* movements) {
     const int32_t stride = session.game->strideMovement;
     const size_t base = static_cast<size_t>(tileIndex * stride);
     const int32_t columnIndex = tileIndex / session.liveLevel.height;
@@ -1576,30 +1576,30 @@ void setCellMovementsFromWords(Session& session, int32_t tileIndex, const MaskWo
     }
 }
 
-void setCellMovements(Session& session, int32_t tileIndex, const MaskVector& movements) {
+void setCellMovements(FullState& session, int32_t tileIndex, const MaskVector& movements) {
     setCellMovementsFromWords(session, tileIndex, movements.data());
 }
 
-void setCellRigidGroupIndexMask(Session& session, int32_t tileIndex, const MaskVector& masks) {
+void setCellRigidGroupIndexMask(FullState& session, int32_t tileIndex, const MaskVector& masks) {
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
         session.rigidGroupIndexMasks[base + static_cast<size_t>(word)] = masks[static_cast<size_t>(word)];
     }
 }
 
-void setCellRigidMovementAppliedMask(Session& session, int32_t tileIndex, const MaskVector& masks) {
+void setCellRigidMovementAppliedMask(FullState& session, int32_t tileIndex, const MaskVector& masks) {
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
         session.rigidMovementAppliedMasks[base + static_cast<size_t>(word)] = masks[static_cast<size_t>(word)];
     }
 }
 
-void clearRigidState(Session& session) {
+void clearRigidState(FullState& session) {
     std::fill(session.rigidGroupIndexMasks.begin(), session.rigidGroupIndexMasks.end(), 0);
     std::fill(session.rigidMovementAppliedMasks.begin(), session.rigidMovementAppliedMasks.end(), 0);
 }
 
-void clearMovementState(Session& session) {
+void clearMovementState(FullState& session) {
     std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
     std::fill(session.rowMovementMasks.begin(), session.rowMovementMasks.end(), 0);
     std::fill(session.columnMovementMasks.begin(), session.columnMovementMasks.end(), 0);
@@ -1630,7 +1630,7 @@ void setShiftedMask5(MaskVector& value, int32_t shift, int32_t bits) {
     }
 }
 
-std::vector<int32_t> findLayersInMask(const Session& session, const MaskVector& cellMask) {
+std::vector<int32_t> findLayersInMask(const FullState& session, const MaskVector& cellMask) {
     std::vector<int32_t> layers;
     for (int32_t objectId = 0; objectId < session.game->objectCount; ++objectId) {
         const uint32_t word = maskWordIndex(static_cast<uint32_t>(objectId));
@@ -1670,7 +1670,7 @@ std::pair<int32_t, int32_t> directionMaskToDelta(int32_t directionMask) {
     }
 }
 
-bool seedPlayerMovements(Session& session, int32_t directionMask) {
+bool seedPlayerMovements(FullState& session, int32_t directionMask) {
     const Game& game = *session.game;
     if (directionMask == 0 || game.playerMask == kNullMaskOffset) {
         return false;
@@ -1732,7 +1732,7 @@ bool seedPlayerMovements(Session& session, int32_t directionMask) {
     return changed;
 }
 
-bool cellContainsPlayer(const Session& session, int32_t tileIndex) {
+bool cellContainsPlayer(const FullState& session, int32_t tileIndex) {
     const Game& game = *session.game;
     if (game.playerMask == kNullMaskOffset) {
         return false;
@@ -1746,7 +1746,7 @@ bool cellContainsPlayer(const Session& session, int32_t tileIndex) {
     return bitsSetInArray(playerMask, wordCount, cellMask, wordCount);
 }
 
-std::vector<int32_t> collectPlayerPositions(const Session& session) {
+std::vector<int32_t> collectPlayerPositions(const FullState& session) {
     std::vector<int32_t> positions;
     if (session.game->playerMask == kNullMaskOffset) {
         return positions;
@@ -1760,7 +1760,7 @@ std::vector<int32_t> collectPlayerPositions(const Session& session) {
     return positions;
 }
 
-bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer, int32_t directionMask, bool emitAudio) {
+bool resolveOneLayerMovement(FullState& session, int32_t tileIndex, int32_t layer, int32_t directionMask, bool emitAudio) {
     const auto [dx, dy] = directionMaskToDelta(directionMask);
     const int32_t x = tileIndex / session.liveLevel.height;
     const int32_t y = tileIndex % session.liveLevel.height;
@@ -1824,7 +1824,7 @@ bool resolveOneLayerMovement(Session& session, int32_t tileIndex, int32_t layer,
     return true;
 }
 
-MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* bannedGroups, bool emitAudio) {
+MovementResolveOutcome resolveMovements(FullState& session, std::vector<bool>* bannedGroups, bool emitAudio) {
     MovementResolveOutcome outcome;
     bool moved = true;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
@@ -2031,7 +2031,7 @@ MovementResolveOutcome resolveMovements(Session& session, std::vector<bool>* ban
     return outcome;
 }
 
-bool matchesPatternAt(const Session& session, const Pattern& pattern, int32_t tileIndex) {
+bool matchesPatternAt(const FullState& session, const Pattern& pattern, int32_t tileIndex) {
     addCounter(gRuntimeCounters.patternTests);
     if (pattern.kind != Pattern::Kind::CellPattern) {
         return false;
@@ -2093,7 +2093,7 @@ bool matchesPatternAt(const Session& session, const Pattern& pattern, int32_t ti
     return true;
 }
 
-bool applyReplacementAt(Session& session, const Rule& rule, const Pattern& pattern, int32_t tileIndex) {
+bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pattern, int32_t tileIndex) {
     addCounter(gRuntimeCounters.replacementsAttempted);
     if (!pattern.replacement.has_value()) {
         return false;
@@ -2397,7 +2397,7 @@ struct RowAnchor {
     uint64_t cellCount = 0;
 };
 
-uint64_t objectPresenceCount(const Session& session, int32_t objectId) {
+uint64_t objectPresenceCount(const FullState& session, int32_t objectId) {
     if (objectId < 0
         || objectId >= session.game->objectCount
         || static_cast<size_t>(objectId) >= session.objectCellCounts.size()) {
@@ -2406,7 +2406,7 @@ uint64_t objectPresenceCount(const Session& session, int32_t objectId) {
     return session.objectCellCounts[static_cast<size_t>(objectId)];
 }
 
-std::optional<RowAnchor> chooseRowAnchor(const Session& session, const std::vector<Pattern>& row) {
+std::optional<RowAnchor> chooseRowAnchor(const FullState& session, const std::vector<Pattern>& row) {
     if (session.objectCellIndexDirty || session.objectCellBits.empty()) {
         return std::nullopt;
     }
@@ -2440,7 +2440,7 @@ std::optional<RowAnchor> chooseRowAnchor(const Session& session, const std::vect
 }
 
 bool collectAnchoredRowMatchesInto(
-    const Session& session,
+    const FullState& session,
     const std::vector<Pattern>& row,
     int32_t direction,
     const MaskWord* rowObjectMask,
@@ -2540,7 +2540,7 @@ bool collectAnchoredRowMatchesInto(
 }
 
 void collectRowMatchesInto(
-    const Session& session,
+    const FullState& session,
     const std::vector<Pattern>& row,
     int32_t direction,
     const MaskWord* rowObjectMask,
@@ -2648,7 +2648,7 @@ void collectRowMatchesInto(
 }
 
 std::vector<int32_t> collectRowMatches(
-    const Session& session,
+    const FullState& session,
     const std::vector<Pattern>& row,
     int32_t direction,
     const MaskWord* rowObjectMask,
@@ -2670,7 +2670,7 @@ std::vector<int32_t> collectRowMatches(
     return matches;
 }
 
-bool rowStillMatchesAt(const Session& session, const std::vector<Pattern>& row, int32_t startIndex, int32_t delta) {
+bool rowStillMatchesAt(const FullState& session, const std::vector<Pattern>& row, int32_t startIndex, int32_t delta) {
     for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
         if (!matchesPatternAt(session, row[static_cast<size_t>(cellIndex)], startIndex + cellIndex * delta)) {
             return false;
@@ -2679,7 +2679,7 @@ bool rowStillMatchesAt(const Session& session, const std::vector<Pattern>& row, 
     return true;
 }
 
-bool applyRowAt(Session& session, const Rule& rule, const std::vector<Pattern>& row, int32_t startIndex, int32_t delta) {
+bool applyRowAt(FullState& session, const Rule& rule, const std::vector<Pattern>& row, int32_t startIndex, int32_t delta) {
     bool changed = false;
     for (int32_t cellIndex = 0; cellIndex < static_cast<int32_t>(row.size()); ++cellIndex) {
         changed = applyReplacementAt(session, rule, row[static_cast<size_t>(cellIndex)], startIndex + cellIndex * delta) || changed;
@@ -2691,7 +2691,7 @@ using RowMatch = std::vector<int32_t>;
 using RuleMatch = std::vector<RowMatch>;
 
 std::vector<RowMatch> collectEllipsisRowMatches(
-    Session& session,
+    FullState& session,
     const std::vector<Pattern>& row,
     int32_t direction,
     const MaskWord* rowObjectMask,
@@ -2802,7 +2802,7 @@ std::vector<RowMatch> collectEllipsisRowMatches(
     return matches;
 }
 
-bool applyEllipsisRowAt(Session& session, const Rule& rule, const std::vector<Pattern>& row, const RowMatch& positions) {
+bool applyEllipsisRowAt(FullState& session, const Rule& rule, const std::vector<Pattern>& row, const RowMatch& positions) {
     if (positions.empty()) {
         return false;
     }
@@ -2819,7 +2819,7 @@ bool applyEllipsisRowAt(Session& session, const Rule& rule, const std::vector<Pa
 }
 
 bool applyRowMatchAt(
-    Session& session,
+    FullState& session,
     const Rule& rule,
     const std::vector<Pattern>& row,
     int32_t ellipsisCount,
@@ -2839,7 +2839,7 @@ bool applyRowMatchAt(
 }
 
 bool rowMatchStillMatches(
-    const Session& session,
+    const FullState& session,
     const std::vector<Pattern>& row,
     int32_t ellipsisCount,
     const RowMatch& match,
@@ -2862,7 +2862,7 @@ bool rowMatchStillMatches(
     return positionIndex == static_cast<int32_t>(match.size());
 }
 
-bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
+bool ruleCanPossiblyMatch(const FullState& session, const Rule& rule) {
     const Game& game = *session.game;
     const MaskWord* required = game.maskArena.data() + rule.ruleMask;
     if (!bitsSetInArray(required, game.wordCount, session.boardMask.data(), session.boardMask.size())) {
@@ -2878,7 +2878,7 @@ bool ruleCanPossiblyMatch(const Session& session, const Rule& rule) {
     return true;
 }
 
-RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandState& commands, bool maskPrechecked) {
+RuleApplyOutcome tryApplySimpleRule(FullState& session, const Rule& rule, CommandState& commands, bool maskPrechecked) {
     const bool logRule = ruleDebugLineFilterMatches(rule.lineNumber);
     if (logRule) {
         std::ostringstream stream;
@@ -3176,7 +3176,7 @@ RuleApplyOutcome tryApplySimpleRule(Session& session, const Rule& rule, CommandS
     return RuleApplyOutcome{changed, changed};
 }
 
-bool collectRandomRuleMatches(Session& session, const Rule& rule, std::vector<RuleMatch>& outMatches) {
+bool collectRandomRuleMatches(FullState& session, const Rule& rule, std::vector<RuleMatch>& outMatches) {
     // In JS, a "random rule group" runs random selection across *all* rules in the group,
     // regardless of whether individual rules are marked random.
     if (rule.patterns.empty()) {
@@ -3262,7 +3262,7 @@ bool collectRandomRuleMatches(Session& session, const Rule& rule, std::vector<Ru
     return true;
 }
 
-bool applyRandomRuleGroup(Session& session, const std::vector<Rule>& group, CommandState& commands) {
+bool applyRandomRuleGroup(FullState& session, const std::vector<Rule>& group, CommandState& commands) {
     struct Candidate {
         const Rule* rule = nullptr;
         RuleMatch tuple;
@@ -3377,7 +3377,7 @@ bool applyRandomRuleGroup(Session& session, const std::vector<Rule>& group, Comm
     return changed;
 }
 
-bool applyRuleGroup(Session& session, const std::vector<Rule>& group, CommandState& commands, int32_t groupIndex, bool late) {
+bool applyRuleGroup(FullState& session, const std::vector<Rule>& group, CommandState& commands, int32_t groupIndex, bool late) {
     if (group.empty()) {
         return false;
     }
@@ -3440,7 +3440,7 @@ std::optional<int32_t> lookupLoopPoint(const LoopPointTable& loopPoint, int32_t 
 }
 
 bool applyRuleGroups(
-    Session& session,
+    FullState& session,
     const std::vector<std::vector<Rule>>& groups,
     const LoopPointTable& loopPoint,
     CommandState& commands,
@@ -3503,7 +3503,7 @@ size_t countNonZeroWords(const MaskVector& values) {
 }
 #endif
 
-void rebuildObjectCellIndex(Session& session) {
+void rebuildObjectCellIndex(FullState& session) {
     const int32_t objectCount = session.game->objectCount;
     const int32_t stride = session.game->strideObject;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
@@ -3542,7 +3542,7 @@ void rebuildObjectCellIndex(Session& session) {
 // rows/columns dirty. This function rebuilds exactly the dirty slices from
 // scratch and leaves the rest untouched. On a clean session (anyMasksDirty
 // == false) this is a branch and return.
-void rebuildMasks(Session& session) {
+void rebuildMasks(FullState& session) {
     addCounter(gRuntimeCounters.maskRebuildCalls);
     const int32_t objectStride = session.game->strideObject;
     const int32_t movementStride = session.game->strideMovement;
@@ -3700,7 +3700,7 @@ void rebuildMasks(Session& session) {
     session.anyMasksDirty = false;
 }
 
-std::vector<uint8_t> buildSessionHashBytes(const Session& session) {
+std::vector<uint8_t> buildSessionHashBytes(const FullState& session) {
     std::vector<uint8_t> bytes;
     auto append = [&bytes](const auto& value) {
         const auto* data = reinterpret_cast<const uint8_t*>(&value);
@@ -3770,11 +3770,11 @@ ps_hash128 hashFullState128NoAlloc(const FullState& session) {
     return result;
 }
 
-uint64_t hashSession64NoAlloc(const Session& session, uint64_t seed) {
+uint64_t hashSession64NoAlloc(const FullState& session, uint64_t seed) {
     return hashFullState64NoAlloc(session, seed);
 }
 
-ps_hash128 hashSession128NoAlloc(const Session& session) {
+ps_hash128 hashSession128NoAlloc(const FullState& session) {
     return hashFullState128NoAlloc(session);
 }
 
@@ -3794,11 +3794,11 @@ std::string escapeJson(std::string_view input) {
     return out;
 }
 
-bool showContinueOptionOnTitleScreen(const PreparedSession& prepared) {
+bool showContinueOptionOnTitleScreen(const PreparedFullState& prepared) {
     return prepared.currentLevelIndex > 0 || prepared.currentLevelTarget.has_value();
 }
 
-void markAllMasksDirty(Session& session) {
+void markAllMasksDirty(FullState& session) {
     std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
     std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
     std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
@@ -3813,14 +3813,14 @@ void markAllMasksDirty(Session& session) {
 // setCellMovements. Row/col/board movement masks retain stale OR'd bits
 // until the next rebuild; mark them all dirty so the next rebuildMasks()
 // recomputes from the current (zeroed or just-seeded) movement state.
-void markAllMovementMasksDirty(Session& session) {
+void markAllMovementMasksDirty(FullState& session) {
     std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
     std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
     session.dirtyMovementBoard = true;
     session.anyMasksDirty = true;
 }
 
-void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot, bool restoreRandomState) {
+void restoreSnapshot(FullState& session, const FullState::UndoSnapshot& snapshot, bool restoreRandomState) {
     session.preparedSession = snapshot.preparedSession;
     session.liveLevel = snapshot.liveLevel;
     if (snapshot.liveMovements.empty()) {
@@ -3846,8 +3846,8 @@ void restoreSnapshot(Session& session, const Session::UndoSnapshot& snapshot, bo
     rebuildMasks(session);
 }
 
-Session::UndoSnapshot makeUndoSnapshot(const Session& session) {
-    return Session::UndoSnapshot{
+FullState::UndoSnapshot makeUndoSnapshot(const FullState& session) {
+    return FullState::UndoSnapshot{
         session.preparedSession,
         session.liveLevel,
         {},
@@ -3857,12 +3857,12 @@ Session::UndoSnapshot makeUndoSnapshot(const Session& session) {
     };
 }
 
-void pushUndoSnapshot(Session& session) {
+void pushUndoSnapshot(FullState& session) {
     session.undoStack.push_back(makeUndoSnapshot(session));
     session.canUndo = true;
 }
 
-void restoreRestartTarget(Session& session) {
+void restoreRestartTarget(FullState& session) {
     session.liveLevel = session.preparedSession.level;
     if (!session.preparedSession.restart.objects.empty()) {
         session.liveLevel.width = session.preparedSession.restart.width;
@@ -3888,7 +3888,7 @@ bool matchesFilter(const MaskWord* filter, uint32_t filterCount,
         : anyBitsInCommon(filter, filterCount, cell, cellCount);
 }
 
-bool evaluateWinConditions(const Session& session) {
+bool evaluateWinConditions(const FullState& session) {
     if (session.game->winConditions.empty()) {
         return false;
     }
@@ -3948,7 +3948,7 @@ bool evaluateWinConditions(const Session& session) {
     return true;
 }
 
-bool advanceToNextLevel(Session& session) {
+bool advanceToNextLevel(FullState& session) {
     if (session.game->levels.empty()) {
         return false;
     }
@@ -4010,7 +4010,7 @@ bool advanceToNextLevel(Session& session) {
     return true;
 }
 
-void resetToPrepared(Session& session) {
+void resetToPrepared(FullState& session) {
     session.liveLevel = session.preparedSession.level;
     session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
@@ -4041,11 +4041,11 @@ const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset) {
     return maskPtr(game, offset);
 }
 
-const MaskWord* compiledRuleCellObjects(const Session& session, int32_t tileIndex) {
+const MaskWord* compiledRuleCellObjects(const FullState& session, int32_t tileIndex) {
     return getCellObjectsPtr(session, tileIndex);
 }
 
-const MaskWord* compiledRuleCellMovements(const Session& session, int32_t tileIndex) {
+const MaskWord* compiledRuleCellMovements(const FullState& session, int32_t tileIndex) {
     return getCellMovementsPtr(session, tileIndex);
 }
 
@@ -4058,7 +4058,7 @@ bool compiledRuleAnyBits(const MaskWord* lhs, size_t lhsCount, const MaskWord* r
 }
 
 void compiledRuleSetCellObjectsFromWords(
-    Session& session,
+    FullState& session,
     int32_t tileIndex,
     const MaskWord* objects,
     const MaskWord* created,
@@ -4073,12 +4073,12 @@ void compiledRuleSetCellObjectsFromWords(
     }
 }
 
-void compiledRuleSetCellMovementsFromWords(Session& session, int32_t tileIndex, const MaskWord* movements) {
+void compiledRuleSetCellMovementsFromWords(FullState& session, int32_t tileIndex, const MaskWord* movements) {
     setCellMovementsFromWords(session, tileIndex, movements);
 }
 
 void compiledRuleSetCellObjectsWord1(
-    Session& session,
+    FullState& session,
     int32_t tileIndex,
     MaskWord objects,
     MaskWord created,
@@ -4123,7 +4123,7 @@ void compiledRuleSetCellObjectsWord1(
     }
 }
 
-void compiledRuleSetCellMovementsWord1(Session& session, int32_t tileIndex, MaskWord movements) {
+void compiledRuleSetCellMovementsWord1(FullState& session, int32_t tileIndex, MaskWord movements) {
     const int32_t stride = session.game->strideMovement;
     const size_t base = static_cast<size_t>(tileIndex * stride);
     const int32_t columnIndex = tileIndex / session.liveLevel.height;
@@ -4145,7 +4145,7 @@ void compiledRuleSetCellMovementsWord1(Session& session, int32_t tileIndex, Mask
     }
 }
 
-void compiledRuleRebuildMasks(Session& session) {
+void compiledRuleRebuildMasks(FullState& session) {
     rebuildMasks(session);
 }
 
@@ -4201,7 +4201,7 @@ void compiledRuleQueueKnownCommand(
 }
 
 void compiledRuleCollectRowMatches(
-    Session& session,
+    FullState& session,
     const Rule& rule,
     size_t rowIndex,
     std::vector<CompiledRuleRowMatch>& outMatches
@@ -4255,7 +4255,7 @@ void compiledRuleCollectRowMatches(
 }
 
 bool compiledRuleRowMatchStillMatches(
-    const Session& session,
+    const FullState& session,
     const Rule& rule,
     size_t rowIndex,
     const CompiledRuleRowMatch& match
@@ -4272,7 +4272,7 @@ bool compiledRuleRowMatchStillMatches(
 }
 
 bool compiledRuleApplyRowMatch(
-    Session& session,
+    FullState& session,
     const Rule& rule,
     size_t rowIndex,
     const CompiledRuleRowMatch& match
@@ -4288,7 +4288,7 @@ bool compiledRuleApplyRowMatch(
     return delta != 0 && applyRowMatchAt(session, rule, rule.patterns[rowIndex], ellipsisCount, match, delta);
 }
 
-bool compiledRuleApplyRandomGroup(Session& session, const std::vector<Rule>& group, CommandState& commands) {
+bool compiledRuleApplyRandomGroup(FullState& session, const std::vector<Rule>& group, CommandState& commands) {
     const bool changed = applyRandomRuleGroup(session, group, commands);
     if (changed) {
         rebuildMasks(session);
@@ -4496,11 +4496,11 @@ std::unique_ptr<FullState> createFullStateWithLoadedLevelSeed(std::shared_ptr<co
     return session;
 }
 
-std::unique_ptr<Session> createSession(std::shared_ptr<const Game> game) {
+std::unique_ptr<FullState> createSession(std::shared_ptr<const Game> game) {
     return createFullState(std::move(game));
 }
 
-std::unique_ptr<Session> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed) {
+std::unique_ptr<FullState> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed) {
     return createFullStateWithLoadedLevelSeed(std::move(game), std::move(loadedLevelSeed));
 }
 
@@ -4615,11 +4615,11 @@ bool undo(FullState& session) {
     return true;
 }
 
-uint64_t hashSession64(const Session& session) {
+uint64_t hashSession64(const FullState& session) {
     return hashFullState64(session);
 }
 
-ps_hash128 hashSession128(const Session& session) {
+ps_hash128 hashSession128(const FullState& session) {
     return hashFullState128(session);
 }
 
