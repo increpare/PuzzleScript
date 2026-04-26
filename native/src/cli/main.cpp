@@ -4346,27 +4346,35 @@ bool compactLooksLikeDirectCellObjectGroups(
             if (rule.rigid || rule.isRandom || compactRuleHasUnsupportedCommands(rule) || compactRuleHasEllipsis(rule)) {
                 return false;
             }
-            if (rule.patterns.size() != 1 || rule.patterns.front().size() != 1) {
+            if (rule.patterns.size() != 1 || rule.patterns.front().empty()) {
                 return false;
             }
-            const auto& pattern = rule.patterns.front().front();
-            if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern
-                || pattern.hasMovementsPresent
-                || pattern.hasMovementsMissing
-                || !pattern.replacement.has_value()
-                || pattern.replacement->hasRandomEntityMask
-                || pattern.replacement->hasRandomDirMask
-                || maskHasAnyBit(game, pattern.replacement->movementsSet, game.movementWordCount)) {
-                return false;
+            const auto& row = rule.patterns.front();
+            if (row.size() > 1) {
+                // Multi-cell rules need a concrete walk direction (UP/DOWN/LEFT/RIGHT).
+                if (rule.direction != 1 && rule.direction != 2 && rule.direction != 4 && rule.direction != 8) {
+                    return false;
+                }
             }
-            if (maskHasAnyBit(game, pattern.replacement->movementsClear, game.movementWordCount)
-                && (!forbiddenMovementClearLayer.has_value()
-                    || compactMovementMaskTouchesLayer(
-                        game,
-                        pattern.replacement->movementsClear,
-                        *forbiddenMovementClearLayer
-                    ))) {
-                return false;
+            for (const auto& pattern : row) {
+                if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern
+                    || pattern.hasMovementsPresent
+                    || pattern.hasMovementsMissing
+                    || !pattern.replacement.has_value()
+                    || pattern.replacement->hasRandomEntityMask
+                    || pattern.replacement->hasRandomDirMask
+                    || maskHasAnyBit(game, pattern.replacement->movementsSet, game.movementWordCount)) {
+                    return false;
+                }
+                if (maskHasAnyBit(game, pattern.replacement->movementsClear, game.movementWordCount)
+                    && (!forbiddenMovementClearLayer.has_value()
+                        || compactMovementMaskTouchesLayer(
+                            game,
+                            pattern.replacement->movementsClear,
+                            *forbiddenMovementClearLayer
+                        ))) {
+                    return false;
+                }
             }
         }
     }
@@ -5795,6 +5803,146 @@ std::string compactCellPatternMatchExpression(
     return out.str();
 }
 
+void emitCompactDirectCellObjectRuleBody(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    const puzzlescript::Rule& rule
+) {
+    const auto& row = rule.patterns.front();
+    const size_t cellCount = row.size();
+
+    if (cellCount == 1) {
+        const auto& pattern = row.front();
+        const auto& replacement = *pattern.replacement;
+        const std::vector<int32_t> clearObjectIds = objectIdsInMask(game, replacement.objectsClear);
+        const std::vector<int32_t> setObjectIds = objectIdsInMask(game, replacement.objectsSet);
+        out << "            for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
+            << "                const size_t tileWord = static_cast<size_t>(tile >> 6);\n"
+            << "                const uint64_t tileBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);\n"
+            << "                if (!" << compactCellPatternMatchExpression(game, pattern, "tileWord", "tileBit") << ") {\n"
+            << "                    continue;\n"
+            << "                }\n"
+            << "                bool cellChanged = false;\n";
+        for (const int32_t objectId : clearObjectIds) {
+            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) != 0) {\n"
+                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] &= ~tileBit;\n"
+                << "                    cellChanged = true;\n"
+                << "                }\n";
+        }
+        for (const int32_t objectId : setObjectIds) {
+            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) == 0) {\n"
+                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] |= tileBit;\n"
+                << "                    cellChanged = true;\n"
+                << "                }\n";
+        }
+        out << "                if (cellChanged) {\n"
+            << "                    groupChanged = true;\n"
+            << "                    ruleChanged = true;\n"
+            << "                }\n"
+            << "            }\n";
+        return;
+    }
+
+    int32_t dx = 0;
+    int32_t dy = 0;
+    switch (rule.direction) {
+        case 1: dy = -1; break;
+        case 2: dy = 1; break;
+        case 4: dx = -1; break;
+        case 8: dx = 1; break;
+        default: break;
+    }
+    const int32_t span = static_cast<int32_t>(cellCount) - 1;
+
+    std::string xLow;
+    std::string xHigh;
+    if (dx > 0) {
+        xLow = "0";
+        xHigh = "width - " + std::to_string(span);
+    } else if (dx < 0) {
+        xLow = std::to_string(span);
+        xHigh = "width";
+    } else {
+        xLow = "0";
+        xHigh = "width";
+    }
+    std::string yLow;
+    std::string yHigh;
+    if (dy > 0) {
+        yLow = "0";
+        yHigh = "height - " + std::to_string(span);
+    } else if (dy < 0) {
+        yLow = std::to_string(span);
+        yHigh = "height";
+    } else {
+        yLow = "0";
+        yHigh = "height";
+    }
+
+    out << "            for (int32_t startX = " << xLow << "; startX < " << xHigh << "; ++startX) {\n"
+        << "                for (int32_t startY = " << yLow << "; startY < " << yHigh << "; ++startY) {\n";
+
+    for (size_t i = 0; i < cellCount; ++i) {
+        std::string xExpr;
+        if (dx == 0 || i == 0) {
+            xExpr = "startX";
+        } else {
+            xExpr = "(startX + " + std::to_string(static_cast<int32_t>(i) * dx) + ")";
+        }
+        std::string yExpr;
+        if (dy == 0 || i == 0) {
+            yExpr = "startY";
+        } else {
+            yExpr = "(startY + " + std::to_string(static_cast<int32_t>(i) * dy) + ")";
+        }
+        out << "                    const int32_t tile" << i << " = " << xExpr << " * height + " << yExpr << ";\n"
+            << "                    const size_t tileWord" << i << " = static_cast<size_t>(tile" << i << " >> 6);\n"
+            << "                    const uint64_t tileBit" << i << " = uint64_t{1} << static_cast<uint32_t>(tile" << i << " & 63);\n";
+    }
+
+    out << "                    if (";
+    for (size_t i = 0; i < cellCount; ++i) {
+        if (i > 0) {
+            out << " || ";
+        }
+        const std::string wordVar = "tileWord" + std::to_string(i);
+        const std::string bitVar = "tileBit" + std::to_string(i);
+        out << "!" << compactCellPatternMatchExpression(game, row[i], wordVar, bitVar);
+    }
+    out << ") {\n"
+        << "                        continue;\n"
+        << "                    }\n"
+        << "                    bool cellChanged = false;\n";
+
+    for (size_t i = 0; i < cellCount; ++i) {
+        const auto& pattern = row[i];
+        const auto& replacement = *pattern.replacement;
+        const std::vector<int32_t> clearObjectIds = objectIdsInMask(game, replacement.objectsClear);
+        const std::vector<int32_t> setObjectIds = objectIdsInMask(game, replacement.objectsSet);
+        const std::string wordVar = "tileWord" + std::to_string(i);
+        const std::string bitVar = "tileBit" + std::to_string(i);
+        for (const int32_t objectId : clearObjectIds) {
+            out << "                    if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + " << wordVar << "] & " << bitVar << ") != 0) {\n"
+                << "                        state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + " << wordVar << "] &= ~" << bitVar << ";\n"
+                << "                        cellChanged = true;\n"
+                << "                    }\n";
+        }
+        for (const int32_t objectId : setObjectIds) {
+            out << "                    if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + " << wordVar << "] & " << bitVar << ") == 0) {\n"
+                << "                        state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + " << wordVar << "] |= " << bitVar << ";\n"
+                << "                        cellChanged = true;\n"
+                << "                    }\n";
+        }
+    }
+
+    out << "                    if (cellChanged) {\n"
+        << "                        groupChanged = true;\n"
+        << "                        ruleChanged = true;\n"
+        << "                    }\n"
+        << "                }\n"
+        << "            }\n";
+}
+
 std::string generateCompiledRulesCoverageJson(
     const std::vector<CodegenSource>& sources,
     const CompiledRulesOptions& options,
@@ -6341,35 +6489,7 @@ std::string generateCompiledRulesCpp(
                         << "        while (groupChanged && loopCount++ < 200) {\n"
                         << "            groupChanged = false;\n";
                     for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                        const auto& rule = group[ruleIndex];
-                        const auto& pattern = rule.patterns.front().front();
-                        const auto& replacement = *pattern.replacement;
-                        const std::vector<int32_t> clearObjectIds = objectIdsInMask(game, replacement.objectsClear);
-                        const std::vector<int32_t> setObjectIds = objectIdsInMask(game, replacement.objectsSet);
-                        out << "            for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
-                            << "                const size_t tileWord = static_cast<size_t>(tile >> 6);\n"
-                            << "                const uint64_t tileBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);\n"
-                            << "                if (!" << compactCellPatternMatchExpression(game, pattern, "tileWord", "tileBit") << ") {\n"
-                            << "                    continue;\n"
-                            << "                }\n"
-                            << "                bool cellChanged = false;\n";
-                        for (const int32_t objectId : clearObjectIds) {
-                            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) != 0) {\n"
-                                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] &= ~tileBit;\n"
-                                << "                    cellChanged = true;\n"
-                                << "                }\n";
-                        }
-                        for (const int32_t objectId : setObjectIds) {
-                            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) == 0) {\n"
-                                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] |= tileBit;\n"
-                                << "                    cellChanged = true;\n"
-                                << "                }\n";
-                        }
-                        out << "                if (cellChanged) {\n"
-                            << "                    groupChanged = true;\n"
-                            << "                    ruleChanged = true;\n"
-                            << "                }\n"
-                            << "            }\n";
+                        emitCompactDirectCellObjectRuleBody(out, game, group[ruleIndex]);
                     }
                     out << "        }\n"
                         << "    }\n";
@@ -6594,35 +6714,7 @@ std::string generateCompiledRulesCpp(
                         << "        while (groupChanged && loopCount++ < 200) {\n"
                         << "            groupChanged = false;\n";
                     for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                        const auto& rule = group[ruleIndex];
-                        const auto& pattern = rule.patterns.front().front();
-                        const auto& replacement = *pattern.replacement;
-                        const std::vector<int32_t> clearObjectIds = objectIdsInMask(game, replacement.objectsClear);
-                        const std::vector<int32_t> setObjectIds = objectIdsInMask(game, replacement.objectsSet);
-                        out << "            for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
-                            << "                const size_t tileWord = static_cast<size_t>(tile >> 6);\n"
-                            << "                const uint64_t tileBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);\n"
-                            << "                if (!" << compactCellPatternMatchExpression(game, pattern, "tileWord", "tileBit") << ") {\n"
-                            << "                    continue;\n"
-                            << "                }\n"
-                            << "                bool cellChanged = false;\n";
-                        for (const int32_t objectId : clearObjectIds) {
-                            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) != 0) {\n"
-                                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] &= ~tileBit;\n"
-                                << "                    cellChanged = true;\n"
-                                << "                }\n";
-                        }
-                        for (const int32_t objectId : setObjectIds) {
-                            out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] & tileBit) == 0) {\n"
-                                << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + tileWord] |= tileBit;\n"
-                                << "                    cellChanged = true;\n"
-                                << "                }\n";
-                        }
-                        out << "                if (cellChanged) {\n"
-                            << "                    groupChanged = true;\n"
-                            << "                    ruleChanged = true;\n"
-                            << "                }\n"
-                            << "            }\n";
+                        emitCompactDirectCellObjectRuleBody(out, game, group[ruleIndex]);
                     }
                     out << "        }\n"
                         << "    }\n";

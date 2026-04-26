@@ -93,7 +93,6 @@ struct Options {
 
 struct CompactSolverState {
     std::vector<uint64_t> objectBits;
-    std::vector<puzzlescript::MaskWord> movementWords;
     std::array<uint8_t, 256> randomStateS{};
     uint8_t randomStateI = 0;
     uint8_t randomStateJ = 0;
@@ -101,7 +100,6 @@ struct CompactSolverState {
 
     bool operator==(const CompactSolverState& other) const {
         return objectBits == other.objectBits
-            && movementWords == other.movementWords
             && randomStateS == other.randomStateS
             && randomStateI == other.randomStateI
             && randomStateJ == other.randomStateJ
@@ -110,7 +108,6 @@ struct CompactSolverState {
 
     size_t byteSize() const {
         return objectBits.size() * sizeof(uint64_t)
-            + movementWords.size() * sizeof(puzzlescript::MaskWord)
             + randomStateS.size() * sizeof(uint8_t)
             + sizeof(randomStateI)
             + sizeof(randomStateJ)
@@ -586,7 +583,6 @@ uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
 
 CompactSolverState compactStateFromSession(const Session& session) {
     CompactSolverState state;
-    state.movementWords = session.liveMovements;
     state.randomStateS = session.randomState.s;
     state.randomStateI = session.randomState.i;
     state.randomStateJ = session.randomState.j;
@@ -622,9 +618,6 @@ StateKey compactStateKey(const CompactSolverState& state, Timing& timing) {
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
     for (uint64_t word : state.objectBits) {
         puzzlescript::search::appendStateKeyValue(key, word);
-    }
-    for (puzzlescript::MaskWord word : state.movementWords) {
-        puzzlescript::search::appendStateKeyValue(key, static_cast<MaskWordUnsigned>(word));
     }
     for (uint8_t byte : state.randomStateS) {
         puzzlescript::search::appendStateKeyValue(key, byte);
@@ -693,9 +686,6 @@ void materializeCompactStateIntoSession(const CompactSolverState& state, const S
     }
     const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * (session.game ? session.game->strideMovement : 0));
     session.liveMovements.assign(movementWordCount, 0);
-    if (state.movementWords.size() == movementWordCount) {
-        session.liveMovements = state.movementWords;
-    }
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
     session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
     session.pendingAgain = false;
@@ -822,8 +812,8 @@ CompactTickTryResult tryCompiledCompactTick(
     puzzlescript::CompiledCompactTickStateView view{
         result.compact.objectBits.empty() ? nullptr : result.compact.objectBits.data(),
         result.compact.objectBits.size(),
-        result.compact.movementWords.empty() ? nullptr : result.compact.movementWords.data(),
-        result.compact.movementWords.size(),
+        nullptr,
+        0,
         width,
         height,
         result.compact.randomStateS.data(),
