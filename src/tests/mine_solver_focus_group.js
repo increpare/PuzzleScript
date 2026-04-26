@@ -178,6 +178,40 @@ function safeSnippet(text) {
     return text.trim().split('\n').slice(-8).join('\n').slice(0, 4000);
 }
 
+function parseCompiledRuleBudgetSkip(stderr) {
+    const lineSkip = stderr.match(/compiled-rules-line-skips:\s+max_generated_lines_per_source=(\d+)\s+skipped_sources=(\d+)\s+skipped_generated_lines=(\d+)/);
+    if (lineSkip) {
+        return {
+            budget_kind: 'generated_lines',
+            budget_limit: Number.parseInt(lineSkip[1], 10),
+            budget_observed: Number.parseInt(lineSkip[3], 10),
+            budget_skipped_sources: Number.parseInt(lineSkip[2], 10),
+            reason: `generated C++ lines ${lineSkip[3]} exceeded focus cap ${lineSkip[1]}`,
+        };
+    }
+    const ruleSkip = stderr.match(/compiled-rules-skips:\s+max_compiled_rules_per_source=(\d+)\s+skipped_sources=(\d+)\s+skipped_compiled_rules=(\d+)/);
+    if (ruleSkip) {
+        return {
+            budget_kind: 'compiled_rules',
+            budget_limit: Number.parseInt(ruleSkip[1], 10),
+            budget_observed: Number.parseInt(ruleSkip[3], 10),
+            budget_skipped_sources: Number.parseInt(ruleSkip[2], 10),
+            reason: `compiled rule count ${ruleSkip[3]} exceeded focus cap ${ruleSkip[1]}`,
+        };
+    }
+    return {
+        budget_kind: 'unknown',
+        reason: 'compiled-rules generation exceeded focus source budget',
+    };
+}
+
+function formatCompileExclusion(result) {
+    if (result.status !== 'compile_budget_excluded' || !result.budget_kind || result.budget_kind === 'unknown') {
+        return '';
+    }
+    return ` ${result.budget_kind}=${result.budget_observed}/${result.budget_limit}`;
+}
+
 function runCommand(command, commandArgs, options = {}) {
     const started = process.hrtime.bigint();
     const timeoutMs = options.timeoutMs;
@@ -325,6 +359,7 @@ async function probeGameCompilation(gameFile, gameName, probeRoot) {
         };
     }
     if (/compiled-rules(?:-line)?-skips:/.test(emitResult.stderr)) {
+        const budgetSkip = parseCompiledRuleBudgetSkip(emitResult.stderr);
         return {
             game: gameName,
             status: 'compile_budget_excluded',
@@ -333,7 +368,7 @@ async function probeGameCompilation(gameFile, gameName, probeRoot) {
             max_rows: compileMaxRows,
             max_compiled_rules_per_source: compileMaxCompiledRulesPerSource,
             max_generated_lines_per_source: compileMaxGeneratedLinesPerSource,
-            reason: 'compiled-rules generation exceeded focus source budget',
+            ...budgetSkip,
             detail: safeSnippet(emitResult.stderr),
         };
     }
@@ -528,7 +563,7 @@ async function prepareEligibleCorpus() {
         if (result.status === 'compiled') {
             process.stdout.write(`  ok ${entry.gameName} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
         } else {
-            process.stdout.write(`  exclude ${entry.gameName} status=${result.status} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
+            process.stdout.write(`  exclude ${entry.gameName} status=${result.status}${formatCompileExclusion(result)} compile_seconds=${result.compile_seconds.toFixed(2)}\n`);
         }
         return { entry, result };
     });
