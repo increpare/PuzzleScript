@@ -415,10 +415,19 @@ This refactor should mostly preserve performance, except where `AgainPolicy::Dra
 
 - [ ] Run `make solver_focus_compare` before starting behavior-sensitive phases.
 - [ ] Run `make solver_focus_compare` after Phase 3.
-- [ ] Run `make solver_focus_compare` after compact-turn backend renames.
-- [ ] Confirm target identities remain the same.
+- [x] Run `make solver_focus_compare` after compact-turn backend renames.
+  - Missing focus manifest now auto-remakes via `solver_focus_mine`.
+  - Result: `50/50` same targets; interpreted solved `50/50`; compiled solved
+    `50/50`.
+  - `median_elapsed_ms`: interpreted `308.0`, compiled `292.0`,
+    compiled/interpreted `0.948x`.
+- [x] Confirm target identities remain the same.
 - [ ] Confirm `median_generated` remains the same.
-- [ ] Investigate any large `median_elapsed_ms` regression.
+  - Follow-up: current run was close but not identical: interpreted `41032`,
+    compiled `41608`, compiled/interpreted `1.014x`.
+- [x] Investigate any large `median_elapsed_ms` regression.
+  - No large regression in the current focus run; compiled elapsed was `5.2%`
+    faster.
 - [x] Keep benchmark JSON field compatibility in comparison scripts until old benchmark files are no longer useful.
 
 ## Commit Discipline
