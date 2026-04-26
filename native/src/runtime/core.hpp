@@ -460,7 +460,7 @@ std::unique_ptr<Error> loadLevelTemplate(Session& session, const LevelTemplate& 
 bool restart(Session& session, RuntimeStepOptions options);
 ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result interpreterTick(Session& session, RuntimeStepOptions options);
-ps_step_result interpretedTurnWithCompiledRuleLoops(
+ps_step_result interpretedTurnWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
@@ -468,20 +468,21 @@ ps_step_result interpretedTurnWithCompiledRuleLoops(
     CompiledTickRuleGroupsFn applyLateRules
 );
 ps_step_result interpretedTurn(Session& session, ps_input input, RuntimeStepOptions options);
-ps_step_result interpreterStepWithCompiledRuleLoops(
+ps_step_result interpreterStepWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
     CompiledTickRuleGroupsFn applyEarlyRules,
     CompiledTickRuleGroupsFn applyLateRules
 );
-ps_step_result interpreterTickWithCompiledRuleLoops(
+ps_step_result interpreterTickWithCompiledRuleGroups(
     Session& session,
     RuntimeStepOptions options,
     CompiledTickRuleGroupsFn applyEarlyRules,
     CompiledTickRuleGroupsFn applyLateRules
 );
 ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options);
+ps_step_result turn(Session& session, ps_input input, RuntimeStepOptions options);
 ps_step_result tick(Session& session, RuntimeStepOptions options);
 void settlePendingAgain(Session& session, RuntimeStepOptions options);
 std::unique_ptr<Error> benchmarkCloneHash(const Session& session, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult);

@@ -378,11 +378,11 @@ bool ps_session_compact_tick_oracle_check(
     };
     RuntimeStepOptions options{};
     options.emitAudio = false;
+    options.againPolicy = puzzlescript::AgainPolicy::Drain;
     const CompiledCompactTickApplyOutcome compactOutcome = backend->step(*original.game, view, input, options);
 
     Session interpreter = original;
-    ps_step_result interpreterResult = interpreterStep(interpreter, input, options);
-    settlePendingAgain(interpreter, options);
+    ps_step_result interpreterResult = interpretedTurn(interpreter, input, options);
 
     bool matched = compactOutcome.handled
         && equivalentCompactOracleStepResult(compactOutcome.result, interpreterResult);

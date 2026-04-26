@@ -62,7 +62,7 @@ Acceptance:
 - [x] `make build`
 - [x] `make solver_smoke_tests`
 - [x] `make solver_compact_parity`
-- [ ] Commit: `Rename CompactSolverState to CompactState`
+- [x] Commit: `Rename CompactSolverState to CompactState`
 
 ## Phase 2: Introduce Turn Vocabulary Without Removing Old APIs
 
@@ -93,28 +93,28 @@ Acceptance:
 - [x] `make solver_smoke_tests`
 - [x] `make solver_parity_smoke`
 - [x] `make solver_compact_parity`
-- [ ] Commit: `Introduce interpreted turn and again policy`
+- [x] Commit: `Introduce interpreted turn and again policy`
 
 ## Phase 3: Move Solver And Generator To Drain Policy
 
 Goal: make solver/generator call the unified turn path with `AgainPolicy::Drain` instead of calling one turn and then manually settling `again`.
 
-- [ ] Replace solver `step(...)` plus `settlePendingAgain(...)` call sites with the unified interpreted turn using `AgainPolicy::Drain`.
-- [ ] Replace generator solver-loop `step(...)` plus `settlePendingAgain(...)` call sites with the unified interpreted turn using `AgainPolicy::Drain`.
-- [ ] Preserve solver semantics for terminal edges.
-- [ ] Preserve solver treatment of `restart` as a failed/terminal edge.
-- [ ] Preserve compact tick oracle behavior: compact result compared to interpreted drained result where solver expects drained states.
-- [ ] Check that normal player/runtime call sites still use `AgainPolicy::Yield`.
-- [ ] Keep public C API behavior unchanged in this phase.
+- [x] Replace solver `step(...)` plus `settlePendingAgain(...)` call sites with the unified interpreted turn using `AgainPolicy::Drain`.
+- [x] Replace generator solver-loop `step(...)` plus `settlePendingAgain(...)` call sites with the unified interpreted turn using `AgainPolicy::Drain`.
+- [x] Preserve solver semantics for terminal edges.
+- [x] Preserve solver treatment of `restart` as a failed/terminal edge.
+- [x] Preserve compact tick oracle behavior: compact result compared to interpreted drained result where solver expects drained states.
+- [x] Check that normal player/runtime call sites still use `AgainPolicy::Yield`.
+- [x] Keep public C API behavior unchanged in this phase.
 
 Acceptance:
 
-- [ ] `make build`
-- [ ] `make solver_smoke_tests`
-- [ ] `make solver_parity_smoke`
-- [ ] `make solver_compact_parity`
-- [ ] `make generator_smoke_tests`
-- [ ] Commit: `Use drained turns in solver and generator`
+- [x] `make build`
+- [x] `make solver_smoke_tests`
+- [x] `make solver_parity_smoke`
+- [x] `make solver_compact_parity`
+- [x] `make generator_smoke_tests`
+- [x] Commit: `Use drained turns in solver and generator`
 
 ## Phase 4: Rename Compact Tick Architecture To Compact Turn
 

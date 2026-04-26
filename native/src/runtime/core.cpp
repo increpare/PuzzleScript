@@ -5065,7 +5065,7 @@ void mergeDrainedTurnResult(ps_step_result& result, const ps_step_result& tickRe
     result.ui_audio_events = tickResult.ui_audio_events;
 }
 
-ps_step_result interpretedTurnOnceWithCompiledRuleLoops(
+ps_step_result interpretedTurnOnceWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
@@ -5106,7 +5106,7 @@ ps_step_result interpretedTurnOnceWithCompiledRuleLoops(
     }
 
     if (input == PS_INPUT_TICK) {
-        return interpreterTickWithCompiledRuleLoops(session, options, applyEarlyRules, applyLateRules);
+        return interpreterTickWithCompiledRuleGroups(session, options, applyEarlyRules, applyLateRules);
     }
 
     return executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{
@@ -5118,7 +5118,7 @@ ps_step_result interpretedTurnOnceWithCompiledRuleLoops(
     });
 }
 
-ps_step_result interpretedTurnWithCompiledRuleLoops(
+ps_step_result interpretedTurnWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
@@ -5127,7 +5127,7 @@ ps_step_result interpretedTurnWithCompiledRuleLoops(
 ) {
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
-    ps_step_result result = interpretedTurnOnceWithCompiledRuleLoops(
+    ps_step_result result = interpretedTurnOnceWithCompiledRuleGroups(
         session,
         input,
         yieldOptions,
@@ -5140,7 +5140,7 @@ ps_step_result interpretedTurnWithCompiledRuleLoops(
 
     constexpr int kMaxAgainIterations = 500;
     for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
-        const ps_step_result tickResult = interpretedTurnOnceWithCompiledRuleLoops(
+        const ps_step_result tickResult = interpretedTurnOnceWithCompiledRuleGroups(
             session,
             PS_INPUT_TICK,
             yieldOptions,
@@ -5152,7 +5152,7 @@ ps_step_result interpretedTurnWithCompiledRuleLoops(
     return result;
 }
 
-ps_step_result interpreterTickWithCompiledRuleLoops(
+ps_step_result interpreterTickWithCompiledRuleGroups(
     Session& session,
     RuntimeStepOptions options,
     CompiledTickRuleGroupsFn applyEarlyRules,
@@ -5168,10 +5168,10 @@ ps_step_result interpreterTickWithCompiledRuleLoops(
 }
 
 ps_step_result interpretedTurn(Session& session, ps_input input, RuntimeStepOptions options) {
-    return interpretedTurnWithCompiledRuleLoops(session, input, options, nullptr, nullptr);
+    return interpretedTurnWithCompiledRuleGroups(session, input, options, nullptr, nullptr);
 }
 
-ps_step_result interpreterStepWithCompiledRuleLoops(
+ps_step_result interpreterStepWithCompiledRuleGroups(
     Session& session,
     ps_input input,
     RuntimeStepOptions options,
@@ -5179,11 +5179,11 @@ ps_step_result interpreterStepWithCompiledRuleLoops(
     CompiledTickRuleGroupsFn applyLateRules
 ) {
     if (options.againPolicy == AgainPolicy::Drain) {
-        return interpretedTurnWithCompiledRuleLoops(session, input, options, applyEarlyRules, applyLateRules);
+        return interpretedTurnWithCompiledRuleGroups(session, input, options, applyEarlyRules, applyLateRules);
     }
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
-    return interpretedTurnOnceWithCompiledRuleLoops(session, input, yieldOptions, applyEarlyRules, applyLateRules);
+    return interpretedTurnOnceWithCompiledRuleGroups(session, input, yieldOptions, applyEarlyRules, applyLateRules);
 }
 
 ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOptions options) {
@@ -5192,14 +5192,14 @@ ps_step_result interpreterStep(Session& session, ps_input input, RuntimeStepOpti
     }
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
-    return interpretedTurnOnceWithCompiledRuleLoops(session, input, yieldOptions, nullptr, nullptr);
+    return interpretedTurnOnceWithCompiledRuleGroups(session, input, yieldOptions, nullptr, nullptr);
 }
 
 ps_step_result interpreterTick(Session& session, RuntimeStepOptions options) {
-    return interpreterTickWithCompiledRuleLoops(session, options, nullptr, nullptr);
+    return interpreterTickWithCompiledRuleGroups(session, options, nullptr, nullptr);
 }
 
-ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options) {
+ps_step_result turnOnce(Session& session, ps_input input, RuntimeStepOptions options) {
     if (session.game->compiledTick != nullptr
         && session.game->compiledTick->step != nullptr
         && compiledTickDispatchEnabled()) {
@@ -5215,6 +5215,28 @@ ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options
         return tick(session, options);
     }
     return interpreterStep(session, input, options);
+}
+
+ps_step_result turn(Session& session, ps_input input, RuntimeStepOptions options) {
+    RuntimeStepOptions yieldOptions = options;
+    yieldOptions.againPolicy = AgainPolicy::Yield;
+    ps_step_result result = turnOnce(session, input, yieldOptions);
+    if (options.againPolicy != AgainPolicy::Drain) {
+        return result;
+    }
+
+    constexpr int kMaxAgainIterations = 500;
+    for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
+        const ps_step_result tickResult = turnOnce(session, PS_INPUT_TICK, yieldOptions);
+        mergeDrainedTurnResult(result, tickResult);
+    }
+    return result;
+}
+
+ps_step_result step(Session& session, ps_input input, RuntimeStepOptions options) {
+    RuntimeStepOptions yieldOptions = options;
+    yieldOptions.againPolicy = AgainPolicy::Yield;
+    return turnOnce(session, input, yieldOptions);
 }
 
 ps_step_result step(Session& session, ps_input input) {

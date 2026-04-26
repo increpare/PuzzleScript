@@ -164,8 +164,9 @@ CompiledCompactTickApplyOutcome compiledCompactTickInterpreterBridge(
         }
     }
     materializeCompactBridgeState(game, state, *session);
-    ps_step_result result = interpreterStep(*session, input, options);
-    settlePendingAgain(*session, options);
+    RuntimeStepOptions drainOptions = options;
+    drainOptions.againPolicy = AgainPolicy::Drain;
+    ps_step_result result = interpretedTurn(*session, input, drainOptions);
     copyCompactBridgeStateBack(*session, state);
     return {true, result};
 }

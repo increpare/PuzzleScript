@@ -1186,7 +1186,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - per-target `reason=...` in the detail table
 
   Note: `compiled_rule_group_hits` counts the generic compiled-rule dispatch
-  path. Generated tick rule loops bypass that generic counter, so
+  path. Specialized rule loops bypass that generic counter, so
   `compiled_tick_bypassed_generic_rule_counter` means the generated tick backend
   ran but the old rule-group counter is not the right measurement point.
 
@@ -2114,8 +2114,9 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
   Acceptance criteria:
 
-  - Per source, report whether rule loops, commands, movement, win conditions,
-    level transitions, and state layout are generated or fallback-only.
+  - Per source, report whether rule loops, commands,
+    movement, win conditions, level transitions, and state layout are generated
+    or fallback-only.
   - Aggregate counts are easy to read from a one-line Node or jq command.
 
 - [x] Add human-readable miss reasons for compiled tick.

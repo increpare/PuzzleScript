@@ -3851,6 +3851,8 @@ bool canGenerateCompiledRuleCommandQueue(const puzzlescript::Rule& rule) {
 }
 
 struct CompiledTickSupport {
+    // These are the generated top-level early/late rule loops: they sequence
+    // rulegroups and preserve BEGIN LOOP / END LOOP loop-point jumps.
     bool earlyRuleLoopsGenerated = false;
     bool lateRuleLoopsGenerated = false;
     std::string commandStatus = "unknown_interpreter";
@@ -6408,12 +6410,12 @@ std::string generateCompiledRulesCpp(
         out << "CompiledTickApplyOutcome tick_step_source_" << sourceIndex << "(Session& session, ps_input input, RuntimeStepOptions options) {\n"
             << (compactTickOnly
                 ? "    (void)session;\n    (void)input;\n    (void)options;\n    return {false, {}};\n"
-                : "    return {true, puzzlescript::interpreterStepWithCompiledRuleLoops(session, input, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
+                : "    return {true, puzzlescript::interpreterStepWithCompiledRuleGroups(session, input, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
             << "CompiledTickApplyOutcome tick_source_" << sourceIndex << "(Session& session, RuntimeStepOptions options) {\n"
             << (compactTickOnly
                 ? "    (void)session;\n    (void)options;\n    return {false, {}};\n"
-                : "    return {true, puzzlescript::interpreterTickWithCompiledRuleLoops(session, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
+                : "    return {true, puzzlescript::interpreterTickWithCompiledRuleGroups(session, options, apply_early_groups_source_" + std::to_string(sourceIndex) + ", apply_late_groups_source_" + std::to_string(sourceIndex) + ")};\n")
             << "}\n\n"
             << "const CompiledTickBackend tick_backend_" << sourceIndex << " = {\n"
             << "    " << source.hash << "ULL,\n"

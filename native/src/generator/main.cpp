@@ -1124,7 +1124,11 @@ SolveResult runSearch(
     SolveResult result;
     auto initial = puzzlescript::createSessionWithLoadedLevelSeed(game, "generator:" + std::to_string(sampleId));
     initial->suppressRuleMessages = true;
-    constexpr puzzlescript::RuntimeStepOptions solverStepOptions{false, false};
+    constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
+        .playableUndo = false,
+        .emitAudio = false,
+        .againPolicy = puzzlescript::AgainPolicy::Drain,
+    };
     if (auto error = puzzlescript::loadLevelTemplate(*initial, generatedLevel, 0, solverStepOptions)) {
         result.status = SolveStatus::LevelError;
         return result;
@@ -1170,8 +1174,7 @@ SolveResult runSearch(
                 break;
             }
             auto child = std::make_unique<Session>(*parentSession);
-            ps_step_result stepResult = puzzlescript::step(*child, input, solverStepOptions);
-            puzzlescript::settlePendingAgain(*child, solverStepOptions);
+            ps_step_result stepResult = puzzlescript::turn(*child, input, solverStepOptions);
             ++result.generated;
             if (solvedByStep(stepResult, *child, 0)) {
                 result.status = SolveStatus::Solved;

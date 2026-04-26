@@ -845,6 +845,7 @@ SolverEdgeStep stepSolverEdge(
     constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
         .playableUndo = false,
         .emitAudio = false,
+        .againPolicy = puzzlescript::AgainPolicy::Drain,
     };
     SolverEdgeStep edge;
     if (compactNodeStorage) {
@@ -875,8 +876,7 @@ SolverEdgeStep stepSolverEdge(
                         ps_step_result oracleStepResult{};
                         {
                             ScopedTimer timer(result.timing.stepNs);
-                            oracleStepResult = puzzlescript::step(childScratch, input, solverStepOptions);
-                            puzzlescript::settlePendingAgain(childScratch, solverStepOptions);
+                            oracleStepResult = puzzlescript::turn(childScratch, input, solverStepOptions);
                         }
                         const bool terminalEdge = edge.compactTick.stepResult.won
                             || oracleStepResult.won
@@ -923,8 +923,7 @@ SolverEdgeStep stepSolverEdge(
         edge.stepResult = edge.compactTick.stepResult;
     } else {
         ScopedTimer timer(result.timing.stepNs);
-        edge.stepResult = puzzlescript::step(*edge.child, input, solverStepOptions);
-        puzzlescript::settlePendingAgain(*edge.child, solverStepOptions);
+        edge.stepResult = puzzlescript::turn(*edge.child, input, solverStepOptions);
     }
     return edge;
 }

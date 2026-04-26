@@ -141,7 +141,7 @@ Rename turn concepts:
 
 - `step` / `tick` architecture names -> `turn`
 - `interpreterStep` / `interpreterTick` -> `interpretedTurn`
-- `interpreterStepWithCompiledRuleLoops` / `interpreterTickWithCompiledRuleLoops` -> a single full-state interpreted turn function with optional specialized rulegroup callbacks
+- `interpreterStepWithCompiledRuleGroups` / `interpreterTickWithCompiledRuleGroups` -> a single full-state interpreted turn function with optional specialized rulegroup callbacks
 - `RuntimeStepOptions` -> `TurnOptions`
 - add `AgainPolicy::{Yield, Drain}`
 
