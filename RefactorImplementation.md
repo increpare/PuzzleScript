@@ -235,8 +235,8 @@ If proceeding with `FullState`:
   - [x] `hashSession128` -> `hashFullState128`, with temporary wrapper.
   - [x] `hashSession*NoAlloc` -> `hashFullState*NoAlloc`, with temporary wrapper.
   - [x] `sessionStateKey` -> `fullStateKey`, with temporary wrapper.
-  - [x] `compactStateFromSession` -> `compactStateFromFullState`, with temporary wrapper.
-  - [x] `materializeCompactStateIntoSession` -> `materializeCompactStateIntoFullState`, with temporary wrapper.
+  - [x] `compactStateFromSession` -> `compactStateFromFullState`; temporary wrapper removed.
+  - [x] `materializeCompactStateIntoSession` -> `materializeCompactStateIntoFullState`; temporary wrapper removed.
 - [x] Update generated C++ emission from `Session&` to `FullState&`.
 - [ ] Update comments and docs that use `Session` as architecture vocabulary.
   - [x] Solver heuristic notes refer to normal `FullState` scoring.

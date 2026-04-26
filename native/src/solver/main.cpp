@@ -633,10 +633,6 @@ CompactState compactStateWithTiming(const FullState& session, Timing& timing) {
     return compactStateFromFullState(session);
 }
 
-CompactState compactStateFromSession(const FullState& session) {
-    return compactStateFromFullState(session);
-}
-
 void markMaterializedFullStateDirty(FullState& session) {
     std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
     std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
@@ -702,10 +698,6 @@ void materializeCompactStateIntoFullState(const CompactState& state, const FullS
     session.randomState.j = state.randomStateJ;
     session.randomState.valid = state.randomStateValid;
     markMaterializedFullStateDirty(session);
-}
-
-void materializeCompactStateIntoSession(const CompactState& state, const FullState& base, FullState& session) {
-    materializeCompactStateIntoFullState(state, base, session);
 }
 
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
