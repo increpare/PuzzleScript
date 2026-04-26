@@ -3963,6 +3963,20 @@ bool compactRuleHasEllipsis(const puzzlescript::Rule& rule) {
     return false;
 }
 
+bool compactRuleHasUnsupportedCommands(const puzzlescript::Rule& rule) {
+    for (const auto& command : rule.commands) {
+        if (command.name.size() <= 3 || command.name.rfind("sfx", 0) != 0) {
+            return true;
+        }
+        for (size_t index = 3; index < command.name.size(); ++index) {
+            if (!std::isdigit(static_cast<unsigned char>(command.name[index]))) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool compactPatternHasUnsupportedConstraints(const puzzlescript::Pattern& pattern) {
     return pattern.hasObjectsMissing
         || pattern.hasMovementsMissing;
@@ -4008,7 +4022,7 @@ bool compactLooksLikeSimplePushRules(
         return std::find(pushObjectIds.begin(), pushObjectIds.end(), objectId) != pushObjectIds.end();
     };
     for (const auto& rule : game.rules.front()) {
-        if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+        if (rule.rigid || rule.isRandom || compactRuleHasUnsupportedCommands(rule) || compactRuleHasEllipsis(rule)) {
             return false;
         }
         if (rule.patterns.size() != 1 || rule.patterns.front().size() != 2) {
@@ -4124,7 +4138,7 @@ bool compactLooksLikePushChainRules(
             return false;
         }
         for (const auto& rule : group) {
-            if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+            if (rule.rigid || rule.isRandom || compactRuleHasUnsupportedCommands(rule) || compactRuleHasEllipsis(rule)) {
                 return false;
             }
             if (rule.patterns.size() != 1 || rule.patterns.front().size() != 2) {
@@ -4189,7 +4203,7 @@ bool compactLooksLikeSimpleConsumeRules(
         return std::find(consumeObjectIds.begin(), consumeObjectIds.end(), objectId) != consumeObjectIds.end();
     };
     for (const auto& rule : game.rules.front()) {
-        if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+        if (rule.rigid || rule.isRandom || compactRuleHasUnsupportedCommands(rule) || compactRuleHasEllipsis(rule)) {
             return false;
         }
         if (rule.patterns.size() != 1 || rule.patterns.front().size() != 2) {
@@ -4254,7 +4268,7 @@ std::vector<int32_t> compactSimpleClearTargetObjectIds(
         }
     };
     for (const auto& rule : game.rules.front()) {
-        if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+        if (rule.rigid || rule.isRandom || compactRuleHasUnsupportedCommands(rule) || compactRuleHasEllipsis(rule)) {
             return {};
         }
         if (rule.patterns.size() != 1 || rule.patterns.front().size() != 2) {
@@ -4329,7 +4343,7 @@ bool compactLooksLikeDirectCellObjectGroups(
             return false;
         }
         for (const auto& rule : group) {
-            if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+            if (rule.rigid || rule.isRandom || compactRuleHasUnsupportedCommands(rule) || compactRuleHasEllipsis(rule)) {
                 return false;
             }
             if (rule.patterns.size() != 1 || rule.patterns.front().size() != 1) {
@@ -4366,7 +4380,7 @@ std::vector<int32_t> compactPushCandidatesFromRules(
     std::vector<int32_t> candidates;
     for (const auto& group : game.rules) {
         for (const auto& rule : group) {
-            if (rule.rigid || rule.isRandom || !rule.commands.empty() || compactRuleHasEllipsis(rule)) {
+            if (rule.rigid || rule.isRandom || compactRuleHasUnsupportedCommands(rule) || compactRuleHasEllipsis(rule)) {
                 return {};
             }
             for (const auto& row : rule.patterns) {
