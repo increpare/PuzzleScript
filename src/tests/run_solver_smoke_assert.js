@@ -5,7 +5,7 @@ const { spawnSync } = require('child_process');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--require-specialized-full-turn] [--require-compiled-tick] [--compact-turn-oracle] [--require-compact-oracle-checks]');
+    console.error('Usage: node src/tests/run_solver_smoke_assert.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--require-specialized-full-turn] [--compact-turn-oracle] [--require-compact-oracle-checks]');
     process.exit(1);
 }
 

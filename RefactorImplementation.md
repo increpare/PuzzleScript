@@ -337,13 +337,17 @@ Acceptance:
 Goal: remove leftover ambiguity after the mechanical work is done.
 
 - [x] Remove temporary C++ aliases.
-- [ ] Remove temporary Make aliases unless intentionally kept.
-- [ ] Remove temporary CLI flag aliases unless intentionally kept.
+- [x] Remove temporary Make aliases unless intentionally kept.
+  - Kept old `compact_tick_*` / `compiled_tick_*` Make targets intentionally as
+    compatibility aliases for existing scripts and muscle memory.
+- [x] Remove temporary CLI flag aliases unless intentionally kept.
+  - Kept old `--compact-tick-*` / `--require-compiled-tick` parser aliases
+    intentionally, but removed them from primary usage/help text.
 - [ ] Update `ProgressReport.md`.
 - [x] Update `native/src/compiler/PLAN.md`.
 - [x] Update `native/src/compiler/IMPLEMENTATION_CHECKLIST.md`.
 - [ ] Update benchmark scripts and output labels.
-- [ ] Update help text.
+- [x] Update help text.
 - [ ] Update commit-era docs that now mislead more than they help.
 - [ ] Keep historical notes only when they are clearly marked historical.
 
