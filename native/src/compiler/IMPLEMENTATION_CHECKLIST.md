@@ -601,6 +601,36 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Conclusion: keep weighted A* weight `2` as the focus default; it is the best
   solve-rate/elapsed tradeoff in this sample.
 
+- [x] Reuse compact solver child scratch during interpreter-backed edges.
+
+  Intent: make the current compact-node path cheaper and shape the solver loop
+  around a single edge boundary that a future compact tick can replace.
+
+  Current behavior:
+
+  - Compact-node mode keeps a reusable parent scratch `Session` for
+    `CompactSolverState -> Session` materialization.
+  - Compact-node mode now also keeps a reusable child scratch `Session` for
+    each candidate input instead of heap-allocating a transient child session
+    per generated edge.
+  - Child preparation copies only semantic turn-start state, level objects,
+    solver-relevant flags, and random state; it preserves scratch-vector
+    capacity and marks masks dirty for the runtime step.
+
+  Current evidence on the 50-target focus group, one run, weighted A*, 500 ms
+  timeout:
+
+  ```text
+  mode                  solved   median_elapsed   median_generated   median_clone
+  stored Session nodes  50/50    290.5 ms         41595.5            33.75 ms
+  compact child scratch 50/50    276.5 ms         41595.5            8.12 ms
+  ```
+
+  Conclusion: compact storage is now a small end-to-end win while doing exactly
+  the same search work. The remaining dominant costs are still interpreter
+  stepping and compact heuristic evaluation, so the next priority is a real
+  compact tick edge.
+
 - [?] Prototype compact solver state for one simple focus game.
 
   Status: `puzzlescript_solver --compact-node-storage` stores solver nodes
@@ -684,6 +714,27 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Intent: once compact state exists, whole-game compilation should target it
   directly: `tick(compact_state, input) -> compact_state`, with `Session`
   retained as oracle and fallback rather than as the hot state container.
+
+  Near-term task list:
+
+  - [x] Add a separate compact tick backend type and weak finder instead of changing
+    the existing `CompiledTickBackend` layout.
+  - [x] Attach the compact backend by source hash next to compiled rules/tick.
+  - [ ] Add solver-side capability checks and counters that distinguish:
+    `compact_tick_attempt`, `compact_tick_hit`, `compact_tick_fallback`, and
+    `compact_tick_unsupported`.
+  - [ ] Refactor the current solver edge into one helper with two implementations:
+    compact tick first, interpreter-backed scratch fallback second.
+  - [ ] Generate a `handled=false` compact backend stub so linkage, dispatch, and
+    counters are proven before behavior moves.
+  - [ ] Pick one deterministic, no-random, no-again, no-restart focus fixture for
+    the first `handled=true` compact tick.
+  - [ ] Generate direct object-bitset input seeding and fixed rule-group execution
+    for that fixture.
+  - [ ] Compare the compact tick output against the interpreter fallback inside a
+    debug/oracle mode before allowing solver use.
+  - [ ] Only then fold compact heuristic/hash computation into the compact tick
+    result when it can reuse touched state.
 
   Acceptance criteria:
 

@@ -12,6 +12,11 @@ const puzzlescript::CompiledTickBackend* ps_compiled_tick_find_backend(uint64_t)
     return nullptr;
 }
 
+extern "C" __attribute__((weak))
+const puzzlescript::CompiledCompactTickBackend* ps_compiled_compact_tick_find_backend(uint64_t) {
+    return nullptr;
+}
+
 namespace puzzlescript {
 
 uint64_t compiledRulesHashSource(std::string_view source) {
@@ -22,6 +27,7 @@ void attachLinkedCompiledRules(Game& game, std::string_view source) {
     const uint64_t sourceHash = compiledRulesHashSource(source);
     game.compiledRules = ps_compiled_rules_find_backend(sourceHash);
     game.compiledTick = ps_compiled_tick_find_backend(sourceHash);
+    game.compiledCompactTick = ps_compiled_compact_tick_find_backend(sourceHash);
 }
 
 } // namespace puzzlescript

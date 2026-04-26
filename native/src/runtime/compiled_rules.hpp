@@ -50,6 +50,32 @@ struct CompiledTickBackend {
     CompiledTickSupportInfo support{};
 };
 
+struct CompiledCompactTickStateView {
+    uint64_t* objectBits = nullptr;
+    size_t objectBitWordCount = 0;
+    int32_t width = 0;
+    int32_t height = 0;
+};
+
+struct CompiledCompactTickApplyOutcome {
+    bool handled = false;
+    ps_step_result result{};
+};
+
+using CompiledCompactTickStepFn = CompiledCompactTickApplyOutcome (*)(
+    const Game& game,
+    CompiledCompactTickStateView state,
+    ps_input input,
+    RuntimeStepOptions options
+);
+
+struct CompiledCompactTickBackend {
+    uint64_t sourceHash = 0;
+    const char* name = nullptr;
+    CompiledCompactTickStepFn step = nullptr;
+    CompiledTickSupportInfo support{};
+};
+
 enum class CompiledRuleCommandKind {
     Again,
     Cancel,

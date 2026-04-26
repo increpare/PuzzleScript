@@ -658,6 +658,33 @@ void materializeCompactStateIntoSession(const CompactSolverState& state, const S
     markMaterializedSessionDirty(session);
 }
 
+void prepareSolverChildSessionFromParent(Session& child, const Session& parent) {
+    child.game = parent.game;
+    child.preparedSession = parent.preparedSession;
+    child.liveLevel.isMessage = parent.liveLevel.isMessage;
+    child.liveLevel.message = parent.liveLevel.message;
+    child.liveLevel.lineNumber = parent.liveLevel.lineNumber;
+    child.liveLevel.width = parent.liveLevel.width;
+    child.liveLevel.height = parent.liveLevel.height;
+    child.liveLevel.layerCount = parent.liveLevel.layerCount;
+    child.liveLevel.objects = parent.liveLevel.objects;
+
+    child.liveMovements.assign(parent.liveMovements.size(), 0);
+    child.rigidGroupIndexMasks.assign(parent.rigidGroupIndexMasks.size(), 0);
+    child.rigidMovementAppliedMasks.assign(parent.rigidMovementAppliedMasks.size(), 0);
+    child.pendingCreateMask.clear();
+    child.pendingDestroyMask.clear();
+    child.pendingAgain = false;
+    child.canUndo = false;
+    child.undoStack.clear();
+    child.lastAudioEvents.clear();
+    child.lastUiAudioEvents.clear();
+    child.suppressRuleMessages = parent.suppressRuleMessages;
+    child.randomState = parent.randomState;
+    child.backend = parent.backend;
+    markMaterializedSessionDirty(child);
+}
+
 void recordCompactStateStorage(Timing& timing, const CompactSolverState& state) {
     const uint64_t bytes = static_cast<uint64_t>(state.byteSize());
     timing.compactStateBytes += bytes;
@@ -1112,9 +1139,11 @@ Result runSearch(
     const int32_t searchHeight = initial->liveLevel.height;
     std::unique_ptr<Session> compactSessionBase;
     std::unique_ptr<Session> parentScratch;
+    std::unique_ptr<Session> childScratch;
     if (compactNodeStorage) {
         compactSessionBase = std::make_unique<Session>(*initial);
         parentScratch = std::make_unique<Session>(*initial);
+        childScratch = std::make_unique<Session>(*initial);
     }
 
     std::vector<Node> nodes;
@@ -1205,10 +1234,17 @@ Result runSearch(
                 break;
             }
 
-            std::unique_ptr<Session> child;
+            std::unique_ptr<Session> ownedChild;
+            Session* child = nullptr;
             {
                 ScopedTimer timer(result.timing.cloneNs);
-                child = std::make_unique<Session>(parentSession);
+                if (compactNodeStorage) {
+                    prepareSolverChildSessionFromParent(*childScratch, parentSession);
+                    child = childScratch.get();
+                } else {
+                    ownedChild = std::make_unique<Session>(parentSession);
+                    child = ownedChild.get();
+                }
             }
 
             ps_step_result stepResult{};
@@ -1265,7 +1301,7 @@ Result runSearch(
                 }
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(ownedChild), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
                     recordCompactStateStorage(result.timing, nodes.back().compact);
                 }
             } else {
@@ -1288,7 +1324,7 @@ Result runSearch(
                 childIndex = static_cast<uint32_t>(nodes.size());
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(child), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(ownedChild), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
                     recordCompactStateStorage(result.timing, nodes.back().compact);
                 }
             }
