@@ -17,8 +17,8 @@ CompactState + SpecializedTurn + SpecializedRulegroups + AgainPolicy::Drain
 
 ## Ground Rules
 
-- [ ] Do not mix large renames with semantic changes unless the semantic change is necessary to keep behavior identical.
-- [ ] Stage only files touched by the current checklist item.
+- [x] Do not mix large renames with semantic changes unless the semantic change is necessary to keep behavior identical.
+- [x] Stage only files touched by the current checklist item.
 - [ ] Commit after each coherent green slice.
 - [ ] Keep compatibility aliases only while they are actively helping a staged migration.
 - [ ] Remove aliases before declaring a rename track complete, unless a compatibility decision explicitly keeps them.
@@ -30,11 +30,11 @@ CompactState + SpecializedTurn + SpecializedRulegroups + AgainPolicy::Drain
 
 ## Baseline Snapshot
 
-- [ ] Record current branch and dirty-state context with `git status --short`.
-- [ ] Confirm whether local `ProgressReport.md` changes are user-owned before touching it.
-- [ ] Run `make build` if the build is not known-good.
-- [ ] Run `make solver_smoke_tests`.
-- [ ] Run `make solver_compact_parity`.
+- [x] Record current branch and dirty-state context with `git status --short`.
+- [x] Confirm whether local `ProgressReport.md` changes are user-owned before touching it.
+- [x] Run `make build` if the build is not known-good.
+- [x] Run `make solver_smoke_tests`.
+- [x] Run `make solver_compact_parity`.
 - [ ] Run `make compact_tick_coverage` and record callable/native/bridge counts.
 - [ ] Run `make compact_tick_simulation_tests` if iteration time is acceptable.
 - [ ] Save baseline notes in the first implementation commit message or a short doc update.
@@ -43,25 +43,25 @@ CompactState + SpecializedTurn + SpecializedRulegroups + AgainPolicy::Drain
 
 Goal: replace the misleading solver-local name `CompactSolverState` with `CompactState` without changing behavior.
 
-- [ ] Rename `struct CompactSolverState` to `CompactState`.
-- [ ] Update solver node storage from `CompactSolverState compact` to `CompactState compact`.
-- [ ] Update function signatures that accept or return the solver compact state.
-- [ ] Keep `compactStateKey` name unchanged.
-- [ ] Rename `compactStateFromSession` only if the `FullState` rename has already landed; otherwise leave it for the state rename phase.
-- [ ] Rename local variables only where it improves clarity and does not obscure the diff.
-- [ ] Confirm `CompactState` still contains object occupancy bitsets and complete RNG state.
-- [ ] Confirm `CompactState` still does not contain movement words.
-- [ ] Confirm equality includes object bitsets and full RNG state.
-- [ ] Confirm `byteSize()` includes object bitsets and full RNG state.
-- [ ] Confirm materialization still zero-initializes movement words.
-- [ ] Confirm compact tick view still passes null/zero movement words from solver compact state.
+- [x] Rename `struct CompactSolverState` to `CompactState`.
+- [x] Update solver node storage from `CompactSolverState compact` to `CompactState compact`.
+- [x] Update function signatures that accept or return the solver compact state.
+- [x] Keep `compactStateKey` name unchanged.
+- [x] Rename `compactStateFromSession` only if the `FullState` rename has already landed; otherwise leave it for the state rename phase.
+- [x] Rename local variables only where it improves clarity and does not obscure the diff.
+- [x] Confirm `CompactState` still contains object occupancy bitsets and complete RNG state.
+- [x] Confirm `CompactState` still does not contain movement words.
+- [x] Confirm equality includes object bitsets and full RNG state.
+- [x] Confirm `byteSize()` includes object bitsets and full RNG state.
+- [x] Confirm materialization still zero-initializes movement words.
+- [x] Confirm compact tick view still passes null/zero movement words from solver compact state.
 
 Acceptance:
 
-- [ ] `rg "CompactSolverState" native/src/solver native/src/compiler ProgressReport.md Refactor.md RefactorImplementation.md` only finds historical notes or checklist items.
-- [ ] `make build`
-- [ ] `make solver_smoke_tests`
-- [ ] `make solver_compact_parity`
+- [x] `rg "CompactSolverState" native/src/solver native/src/compiler ProgressReport.md Refactor.md RefactorImplementation.md` only finds historical notes or checklist items.
+- [x] `make build`
+- [x] `make solver_smoke_tests`
+- [x] `make solver_compact_parity`
 - [ ] Commit: `Rename CompactSolverState to CompactState`
 
 ## Phase 2: Introduce Turn Vocabulary Without Removing Old APIs
