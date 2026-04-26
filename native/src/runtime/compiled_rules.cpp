@@ -51,7 +51,7 @@ void attachLinkedCompiledRules(Game& game, std::string_view source) {
 
 namespace {
 
-void markCompactBridgeSessionDirty(Session& session) {
+void markCompactBridgeFullStateDirty(FullState& session) {
     std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
     std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
     std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
@@ -62,7 +62,7 @@ void markCompactBridgeSessionDirty(Session& session) {
     session.anyMasksDirty = true;
 }
 
-void materializeCompactBridgeState(const Game& game, CompactStateView state, Session& session) {
+void materializeCompactBridgeState(const Game& game, CompactStateView state, FullState& session) {
     session.liveLevel.isMessage = false;
     session.liveLevel.message.clear();
     session.liveLevel.width = state.width;
@@ -113,11 +113,11 @@ void materializeCompactBridgeState(const Game& game, CompactStateView state, Ses
         session.randomState.valid = *state.randomStateValid;
         std::copy(state.randomStateS, state.randomStateS + state.randomStateSize, session.randomState.s.begin());
     }
-    markCompactBridgeSessionDirty(session);
+    markCompactBridgeFullStateDirty(session);
     compiledRuleRebuildMasks(session);
 }
 
-void copyCompactBridgeStateBack(const Session& session, CompactStateView state) {
+void copyCompactBridgeStateBack(const FullState& session, CompactStateView state) {
     const Game& game = *session.game;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
@@ -172,7 +172,7 @@ SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
         return {false, {}};
     }
     std::shared_ptr<const Game> gameRef(&game, [](const Game*) {});
-    std::unique_ptr<Session> session = createSession(std::move(gameRef));
+    std::unique_ptr<FullState> session = createSession(std::move(gameRef));
     if (state.currentLevelIndex >= 0 && static_cast<size_t>(state.currentLevelIndex) < game.levels.size()) {
         if (auto error = loadLevel(*session, state.currentLevelIndex)) {
             (void)error;

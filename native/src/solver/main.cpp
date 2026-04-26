@@ -37,7 +37,6 @@ using TimePoint = Clock::time_point;
 using puzzlescript::FullState;
 using puzzlescript::Game;
 using puzzlescript::MaskWordUnsigned;
-using puzzlescript::Session;
 using puzzlescript::kMaskWordBits;
 using StateKey = puzzlescript::search::StateKey;
 using StateKeyHash = puzzlescript::search::StateKeyHash;
@@ -117,7 +116,7 @@ struct CompactState {
 };
 
 struct Node {
-    std::unique_ptr<Session> session;
+    std::unique_ptr<FullState> session;
     CompactState compact;
     StateKey key;
     int32_t parent = -1;
@@ -629,16 +628,16 @@ StateKey compactStateKey(const CompactState& state, Timing& timing) {
     return key;
 }
 
-CompactState compactStateWithTiming(const Session& session, Timing& timing) {
+CompactState compactStateWithTiming(const FullState& session, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
     return compactStateFromFullState(session);
 }
 
-CompactState compactStateFromSession(const Session& session) {
+CompactState compactStateFromSession(const FullState& session) {
     return compactStateFromFullState(session);
 }
 
-void markMaterializedSessionDirty(Session& session) {
+void markMaterializedFullStateDirty(FullState& session) {
     std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
     std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
     std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
@@ -702,14 +701,14 @@ void materializeCompactStateIntoFullState(const CompactState& state, const FullS
     session.randomState.i = state.randomStateI;
     session.randomState.j = state.randomStateJ;
     session.randomState.valid = state.randomStateValid;
-    markMaterializedSessionDirty(session);
+    markMaterializedFullStateDirty(session);
 }
 
-void materializeCompactStateIntoSession(const CompactState& state, const Session& base, Session& session) {
+void materializeCompactStateIntoSession(const CompactState& state, const FullState& base, FullState& session) {
     materializeCompactStateIntoFullState(state, base, session);
 }
 
-void prepareSolverChildSessionFromParent(Session& child, const Session& parent) {
+void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
     child.preparedSession = parent.preparedSession;
     child.liveLevel.isMessage = parent.liveLevel.isMessage;
@@ -733,7 +732,7 @@ void prepareSolverChildSessionFromParent(Session& child, const Session& parent) 
     child.suppressRuleMessages = parent.suppressRuleMessages;
     child.randomState = parent.randomState;
     child.backend = parent.backend;
-    markMaterializedSessionDirty(child);
+    markMaterializedFullStateDirty(child);
 }
 
 void recordCompactStateStorage(Timing& timing, const CompactState& state) {
@@ -750,8 +749,8 @@ struct CompactTurnTryResult {
 };
 
 struct SolverEdgeStep {
-    std::unique_ptr<Session> ownedChild;
-    Session* child = nullptr;
+    std::unique_ptr<FullState> ownedChild;
+    FullState* child = nullptr;
     CompactTurnTryResult compactTurn;
     ps_step_result stepResult{};
     bool oracleMismatch = false;
@@ -842,12 +841,12 @@ CompactTurnTryResult trySpecializedCompactTurn(
 SolverEdgeStep stepSolverEdge(
     const std::shared_ptr<const Game>& game,
     const Node& parentNode,
-    const Session& parentSession,
+    const FullState& parentSession,
     ps_input input,
     bool compactNodeStorage,
     int32_t width,
     int32_t height,
-    Session& childScratch,
+    FullState& childScratch,
     Result& result,
     bool compactTurnOracle
 ) {
@@ -880,7 +879,7 @@ SolverEdgeStep stepSolverEdge(
                         ++result.compactTurnOracleChecks;
                         {
                             ScopedTimer timer(result.timing.cloneNs);
-                            prepareSolverChildSessionFromParent(childScratch, parentSession);
+                            prepareSolverChildFullStateFromParent(childScratch, parentSession);
                         }
                         ps_step_result oracleStepResult{};
                         {
@@ -920,10 +919,10 @@ SolverEdgeStep stepSolverEdge(
     if (!edge.compactTurn.handled) {
         ScopedTimer timer(result.timing.cloneNs);
         if (!compactNodeStorage) {
-            edge.ownedChild = std::make_unique<Session>(parentSession);
+            edge.ownedChild = std::make_unique<FullState>(parentSession);
             edge.child = edge.ownedChild.get();
         } else {
-            prepareSolverChildSessionFromParent(childScratch, parentSession);
+            prepareSolverChildFullStateFromParent(childScratch, parentSession);
             edge.child = &childScratch;
         }
     }
@@ -984,7 +983,7 @@ bool solvedByStep(const ps_step_result& stepResult, ps_session* session, int32_t
     return status.current_level_index != levelIndex;
 }
 
-int32_t heuristicScore(Session& session, puzzlescript::search::HeuristicScratch& scratch) {
+int32_t heuristicScore(FullState& session, puzzlescript::search::HeuristicScratch& scratch) {
     puzzlescript::search::HeuristicOptions options;
     options.includeNoQuantifierPenalty = true;
     options.includePlayerDistance = true;
@@ -1167,7 +1166,7 @@ int32_t compactHeuristicScore(
     return score;
 }
 
-std::unique_ptr<Session> createLoadedSession(
+std::unique_ptr<FullState> createLoadedSession(
     const std::shared_ptr<const Game>& game,
     const std::string& gameName,
     int32_t levelIndex,
@@ -1184,7 +1183,7 @@ std::unique_ptr<Session> createLoadedSession(
     return session;
 }
 
-bool solvedByStep(const ps_step_result& stepResult, const Session& session, int32_t levelIndex) {
+bool solvedByStep(const ps_step_result& stepResult, const FullState& session, int32_t levelIndex) {
     return stepResult.won || session.preparedSession.currentLevelIndex != levelIndex;
 }
 
@@ -1371,7 +1370,7 @@ Result runSearch(
     result.astarWeight = astarWeight;
     result.timing.compileNs = compileNs;
 
-    std::unique_ptr<Session> initial;
+    std::unique_ptr<FullState> initial;
     {
         ScopedTimer timer(result.timing.loadNs);
         initial = createLoadedSession(game, gameName, levelIndex, result);
@@ -1385,13 +1384,13 @@ Result runSearch(
     }
     const int32_t searchWidth = initial->liveLevel.width;
     const int32_t searchHeight = initial->liveLevel.height;
-    std::unique_ptr<Session> compactSessionBase;
-    std::unique_ptr<Session> parentScratch;
-    std::unique_ptr<Session> childScratch;
+    std::unique_ptr<FullState> compactSessionBase;
+    std::unique_ptr<FullState> parentScratch;
+    std::unique_ptr<FullState> childScratch;
     if (compactNodeStorage) {
-        compactSessionBase = std::make_unique<Session>(*initial);
-        parentScratch = std::make_unique<Session>(*initial);
-        childScratch = std::make_unique<Session>(*initial);
+        compactSessionBase = std::make_unique<FullState>(*initial);
+        parentScratch = std::make_unique<FullState>(*initial);
+        childScratch = std::make_unique<FullState>(*initial);
     }
 
     std::vector<Node> nodes;
@@ -1459,7 +1458,7 @@ Result runSearch(
             continue;
         }
 
-        const Session* parentSessionPtr = parentNode.session.get();
+        const FullState* parentSessionPtr = parentNode.session.get();
         if (parentSessionPtr == nullptr) {
             {
                 ScopedTimer timer(result.timing.cloneNs);
@@ -1467,7 +1466,7 @@ Result runSearch(
             }
             parentSessionPtr = parentScratch.get();
         }
-        const Session& parentSession = *parentSessionPtr;
+        const FullState& parentSession = *parentSessionPtr;
         const uint32_t parentDepth = parentNode.depth;
         ++result.expanded;
 

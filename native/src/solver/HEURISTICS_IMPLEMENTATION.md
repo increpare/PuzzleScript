@@ -36,7 +36,7 @@ The current implementation lives in two places:
   - `compactMatchingDistanceField`
 
 Any heuristic that changes solver behavior should normally be implemented for
-both normal `Session` scoring and compact solver-state scoring, or it should be
+both normal `FullState` scoring and compact solver-state scoring, or it should be
 explicitly disabled when compact node storage is active.
 
 ## Experiment Rules

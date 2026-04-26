@@ -218,6 +218,12 @@ If proceeding with `FullState`:
 
 - [x] Rename the primary C++ state struct `Session` -> `FullState`, with a temporary `Session` alias.
 - [ ] Finish migrating internal call sites from the `Session` alias to `FullState`.
+  - [x] Search heuristic helpers use `FullState`.
+  - [x] Solver compact-node and compact-materialization helpers use `FullState`.
+  - [x] Generator solver helpers use `FullState`.
+  - [x] Compact interpreted bridge helpers use `FullState`.
+  - [ ] Runtime core implementation still uses the temporary `Session` alias.
+  - [ ] Public C API still uses `ps_session_*` by design until Phase 8.
 - [x] Rename the primary prepared-state struct `PreparedSession` -> `PreparedFullState`, with a temporary `PreparedSession` alias.
 - [x] Rename helper functions:
   - [x] `hashSession64` -> `hashFullState64`, with temporary wrapper.
@@ -228,6 +234,7 @@ If proceeding with `FullState`:
   - [x] `materializeCompactStateIntoSession` -> `materializeCompactStateIntoFullState`, with temporary wrapper.
 - [x] Update generated C++ emission from `Session&` to `FullState&`.
 - [ ] Update comments and docs that use `Session` as architecture vocabulary.
+  - [x] Solver heuristic notes refer to normal `FullState` scoring.
 - [ ] Leave `ps_session_*` C API names untouched until the public API phase.
 
 Decision note: proceed with `FullState` now because it names the contrast with

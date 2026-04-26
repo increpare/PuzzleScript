@@ -118,7 +118,7 @@ inline const MaskWord* maskPtr(const Game& game, MaskOffset offset) {
     return game.maskArena.data() + offset;
 }
 
-inline const MaskWord* cellObjects(const Session& session, int32_t tileIndex) {
+inline const MaskWord* cellObjects(const FullState& session, int32_t tileIndex) {
     return session.liveLevel.objects.data() + static_cast<size_t>(tileIndex * session.game->strideObject);
 }
 
@@ -161,7 +161,7 @@ struct HeuristicScratch {
 };
 
 inline void matchingDistanceField(
-    const Session& session,
+    const FullState& session,
     const MaskWord* filter,
     bool aggregate,
     std::vector<int32_t>& distances
@@ -204,7 +204,7 @@ inline void matchingDistanceField(
     }
 }
 
-inline std::vector<int32_t> matchingDistanceField(const Session& session, const MaskWord* filter, bool aggregate) {
+inline std::vector<int32_t> matchingDistanceField(const FullState& session, const MaskWord* filter, bool aggregate) {
     std::vector<int32_t> distances;
     matchingDistanceField(session, filter, aggregate, distances);
     return distances;
@@ -215,7 +215,7 @@ struct HeuristicOptions {
     bool includePlayerDistance = false;
 };
 
-inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptions options, HeuristicScratch& scratch) {
+inline int32_t winConditionHeuristicScore(const FullState& session, HeuristicOptions options, HeuristicScratch& scratch) {
     const Game& game = *session.game;
     if (game.winConditions.empty()) {
         return 0;
@@ -293,7 +293,7 @@ inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptio
     return score;
 }
 
-inline int32_t winConditionHeuristicScore(const Session& session, HeuristicOptions options = {}) {
+inline int32_t winConditionHeuristicScore(const FullState& session, HeuristicOptions options = {}) {
     HeuristicScratch scratch;
     return winConditionHeuristicScore(session, options, scratch);
 }

@@ -42,12 +42,12 @@ namespace {
 
 using Clock = std::chrono::steady_clock;
 using TimePoint = Clock::time_point;
+using puzzlescript::FullState;
 using puzzlescript::Game;
 using puzzlescript::LevelTemplate;
 using puzzlescript::MaskVector;
 using puzzlescript::MaskWord;
 using puzzlescript::MaskWordUnsigned;
-using puzzlescript::Session;
 using StateKey = puzzlescript::search::StateKey;
 using StateKeyHash = puzzlescript::search::StateKeyHash;
 using SearchMode = puzzlescript::search::SearchMode;
@@ -187,7 +187,7 @@ struct SolverMetadata {
 };
 
 struct Node {
-    std::unique_ptr<Session> session;
+    std::unique_ptr<FullState> session;
     StateKey key;
     int32_t parent = -1;
     ps_input input = PS_INPUT_UP;
@@ -1082,9 +1082,9 @@ StateHashProjection buildStateHashProjection(const Game& game) {
     return projection;
 }
 
-StateKey solverStateKey(const Session& session, bool includeRandomState, const StateHashProjection& projection) {
+StateKey solverStateKey(const FullState& session, bool includeRandomState, const StateHashProjection& projection) {
     const uint32_t stride = session.game->strideObject;
-    return puzzlescript::search::sessionStateKey(session, includeRandomState, [&](size_t index, MaskWord word) {
+    return puzzlescript::search::fullStateKey(session, includeRandomState, [&](size_t index, MaskWord word) {
         if (projection.enabled && stride > 0) {
             word &= projection.objectMask[index % stride];
         }
@@ -1092,7 +1092,7 @@ StateKey solverStateKey(const Session& session, bool includeRandomState, const S
     });
 }
 
-int32_t heuristicScore(const Session& session) {
+int32_t heuristicScore(const FullState& session) {
     return puzzlescript::search::winConditionHeuristicScore(session);
 }
 
@@ -1109,7 +1109,7 @@ std::vector<std::string> reconstructSolution(const std::vector<Node>& nodes, uin
     return reversed;
 }
 
-bool solvedByStep(const ps_step_result& stepResult, const Session& session, int32_t levelIndex) {
+bool solvedByStep(const ps_step_result& stepResult, const FullState& session, int32_t levelIndex) {
     return stepResult.won || session.preparedSession.currentLevelIndex != levelIndex;
 }
 
@@ -1162,7 +1162,7 @@ SolveResult runSearch(
             ++result.duplicates;
             continue;
         }
-        Session* parentSession = nodes[entry.nodeIndex].session.get();
+        FullState* parentSession = nodes[entry.nodeIndex].session.get();
         if (parentSession == nullptr) {
             ++result.duplicates;
             continue;
@@ -1173,7 +1173,7 @@ SolveResult runSearch(
                 result.status = SolveStatus::Timeout;
                 break;
             }
-            auto child = std::make_unique<Session>(*parentSession);
+            auto child = std::make_unique<FullState>(*parentSession);
             ps_step_result stepResult = puzzlescript::turn(*child, input, solverStepOptions);
             ++result.generated;
             if (solvedByStep(stepResult, *child, 0)) {
