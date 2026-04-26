@@ -762,9 +762,15 @@ attribute graph cost -> no-allocation hash -> flat visited table
   Current first-slice behavior:
 
   - Supports movement-only games with no early/late rules, no rigid behavior,
-    no turn-affecting metadata, no movement/audio side effects, one non-aggregate
-    player object, one player in every non-message level, and one simple
-    `all player on target` win condition.
+    no turn-affecting metadata except `require_player_movement`, one
+    non-aggregate player object, one player in every non-message level, and one
+    simple `all player on target` win condition.
+  - Supports a conservative simple push shape in either common win orientation:
+    `all Crate on Target` or `all Target on Crate`, including multiple crates
+    and targets.
+  - Generated compact tick falls back if audio emission is requested; solver
+    calls use `emitAudio=false`, so sound declarations do not block compact
+    state stepping.
   - Generated compact tick mutates object-major `objectBits` directly, handles
     directional/action inputs, reports `changed`, and evaluates the simple win
     condition.
@@ -791,6 +797,16 @@ attribute graph cost -> no-allocation hash -> flat visited table
     compact_tick_unsupported=0
     interpreted_step_ms=0.021585
     compact_step_ms=0.000375
+
+  solver_tests compact tick source support:
+    before simple-push win orientation expansion: 4/182
+    after simple-push win orientation expansion: 5/182
+
+  a cliche for bedtime.txt specialized compact solver:
+    compact_tick_attempts=1498591
+    compact_tick_hits=1498572
+    compact_tick_fallbacks=19
+    compact_tick_unsupported=0
   ```
 
   Acceptance criteria:

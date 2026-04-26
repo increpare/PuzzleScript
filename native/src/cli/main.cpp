@@ -3877,22 +3877,10 @@ CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
     }
     for (const auto& [key, value] : game.metadataMap) {
         (void)value;
-        if (key == "require_player_movement" || key == "run_rules_on_level_start") {
+        if (key == "run_rules_on_level_start") {
             support.fallbackReason = "metadata_not_compact";
             return support;
         }
-    }
-    const bool hasMovementSounds = std::any_of(
-        game.sfxMovementMasks.begin(),
-        game.sfxMovementMasks.end(),
-        [](const auto& entries) { return !entries.empty(); }
-    );
-    if (!game.sfxCreationMasks.empty()
-        || !game.sfxDestructionMasks.empty()
-        || hasMovementSounds
-        || !game.sfxMovementFailureMasks.empty()) {
-        support.fallbackReason = "sounds_not_compact";
-        return support;
     }
     if (game.playerMaskAggregate) {
         support.fallbackReason = "aggregate_player_not_compact";
@@ -3942,25 +3930,31 @@ CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
     support.winSubjectObjectId = *winSubject;
     support.winTargetObjectId = *winTarget;
     const bool movementOnly = game.rules.empty() && *winSubject == *playerObjectId;
-    const bool simplePush = !game.rules.empty()
-        && *winSubject != *playerObjectId
-        && compactLooksLikeSimplePushRules(game, *playerObjectId, *winSubject);
+    std::optional<int32_t> simplePushObjectId;
+    if (!game.rules.empty()) {
+        if (*winSubject != *playerObjectId && compactLooksLikeSimplePushRules(game, *playerObjectId, *winSubject)) {
+            simplePushObjectId = *winSubject;
+        } else if (*winTarget != *playerObjectId && compactLooksLikeSimplePushRules(game, *playerObjectId, *winTarget)) {
+            simplePushObjectId = *winTarget;
+        }
+    }
+    const bool simplePush = simplePushObjectId.has_value();
     if (!movementOnly && !simplePush) {
         support.fallbackReason = game.rules.empty() ? "win_subject_not_player" : "rules_not_compact";
         return support;
     }
     if (simplePush) {
-        if (*winSubject < 0 || static_cast<size_t>(*winSubject) >= game.objectsById.size()) {
+        if (*simplePushObjectId < 0 || static_cast<size_t>(*simplePushObjectId) >= game.objectsById.size()) {
             support.fallbackReason = "push_object_missing";
             return support;
         }
-        const int32_t pushLayer = game.objectsById[static_cast<size_t>(*winSubject)].layer;
+        const int32_t pushLayer = game.objectsById[static_cast<size_t>(*simplePushObjectId)].layer;
         if (pushLayer < 0 || static_cast<size_t>(pushLayer) >= game.layerMaskOffsets.size()) {
             support.fallbackReason = "push_layer_missing";
             return support;
         }
         support.simplePush = true;
-        support.pushObjectId = *winSubject;
+        support.pushObjectId = *simplePushObjectId;
         support.pushLayer = pushLayer;
         for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
             if (static_cast<size_t>(objectId) < game.objectsById.size()
@@ -3979,10 +3973,6 @@ CompactTickSupport compactTickSupportForGame(const puzzlescript::Game& game) {
         }
         if (countObjectInLevel(game, level, *playerObjectId) != 1) {
             support.fallbackReason = "level_player_count_not_one";
-            return support;
-        }
-        if (simplePush && countObjectInLevel(game, level, *winSubject) != 1) {
-            support.fallbackReason = "level_push_object_count_not_one";
             return support;
         }
     }
@@ -5419,15 +5409,18 @@ std::string generateCompiledRulesCpp(
             << "    ps_input input,\n"
             << "    RuntimeStepOptions options\n"
             << ") {\n"
-            << "    (void)options;\n"
             << "    (void)game;\n";
         if (!compactTickSupport.supported) {
             out << "    (void)state;\n"
+                << "    (void)options;\n"
                 << "    (void)input;\n"
                 << "    return {false, {}};\n"
                 << "}\n\n";
         } else {
-            out << "    constexpr int32_t kObjectCount = " << game.objectCount << ";\n"
+            out << "    if (options.emitAudio) {\n"
+                << "        return {false, {}};\n"
+                << "    }\n"
+                << "    constexpr int32_t kObjectCount = " << game.objectCount << ";\n"
                 << "    constexpr int32_t kPlayerObject = " << compactTickSupport.playerObjectId << ";\n"
                 << "    constexpr int32_t kWinSubjectObject = " << compactTickSupport.winSubjectObjectId << ";\n"
                 << "    constexpr int32_t kWinTargetObject = " << compactTickSupport.winTargetObjectId << ";\n"
