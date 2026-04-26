@@ -86,6 +86,7 @@ struct Options {
     bool requireCompiledTick = false;
     bool exactStateKeys = true;
     bool compactNodeStorage = false;
+    bool compactTickOracle = false;
     int32_t astarWeight = 2;
 };
 
@@ -177,6 +178,8 @@ struct Result {
     uint64_t compactTickHits = 0;
     uint64_t compactTickFallbacks = 0;
     uint64_t compactTickUnsupported = 0;
+    uint64_t compactTickOracleChecks = 0;
+    uint64_t compactTickOracleFailures = 0;
     Timing timing;
 };
 
@@ -455,13 +458,14 @@ bool matchesGameFilter(const std::string& relativeName, const std::optional<std:
 Options parseArgs(int argc, char** argv) {
     Options options;
     options.jobs = 1;
+    constexpr const char* usage = "Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage] [--compact-tick-oracle] [--astar-weight N]";
     if (argc < 2) {
-        throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage] [--astar-weight N]");
+        throw std::runtime_error(usage);
     }
     for (int index = 1; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--help" || arg == "-h") {
-            throw std::runtime_error("Usage: puzzlescript_solver <solver_tests_dir> [--timeout-ms N] [--jobs auto|N|1] [--strategy portfolio|bfs|weighted-astar|greedy] [--timing none|summary|detailed] [--game NAME] [--level N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json] [--profile-runtime-counters] [--require-compiled-tick] [--hash-state-keys] [--compact-node-storage] [--astar-weight N]");
+            throw std::runtime_error(usage);
         }
         if (arg == "--timeout-ms" && index + 1 < argc) {
             options.timeoutMs = std::max<int64_t>(1, std::stoll(argv[++index]));
@@ -520,6 +524,11 @@ Options parseArgs(int argc, char** argv) {
         }
         if (arg == "--compact-node-storage") {
             options.compactNodeStorage = true;
+            continue;
+        }
+        if (arg == "--compact-tick-oracle") {
+            options.compactNodeStorage = true;
+            options.compactTickOracle = true;
             continue;
         }
         if (arg == "--astar-weight" && index + 1 < argc) {
@@ -708,7 +717,41 @@ struct SolverEdgeStep {
     Session* child = nullptr;
     CompactTickTryResult compactTick;
     ps_step_result stepResult{};
+    bool oracleMismatch = false;
+    std::string oracleError;
 };
+
+bool equivalentSolverStepResult(const ps_step_result& lhs, const ps_step_result& rhs) {
+    const bool terminal = lhs.won || rhs.won || lhs.restarted || rhs.restarted || lhs.transitioned || rhs.transitioned;
+    return lhs.changed == rhs.changed
+        && lhs.won == rhs.won
+        && lhs.restarted == rhs.restarted
+        && (terminal || lhs.transitioned == rhs.transitioned);
+}
+
+std::string stepResultSummary(const ps_step_result& result) {
+    std::ostringstream out;
+    out << "{changed=" << (result.changed ? "true" : "false")
+        << ",won=" << (result.won ? "true" : "false")
+        << ",transitioned=" << (result.transitioned ? "true" : "false")
+        << ",restarted=" << (result.restarted ? "true" : "false")
+        << "}";
+    return out.str();
+}
+
+std::string compactStateDiffSummary(const CompactSolverState& lhs, const CompactSolverState& rhs) {
+    const size_t wordCount = std::max(lhs.objectBits.size(), rhs.objectBits.size());
+    for (size_t index = 0; index < wordCount; ++index) {
+        const uint64_t left = index < lhs.objectBits.size() ? lhs.objectBits[index] : 0;
+        const uint64_t right = index < rhs.objectBits.size() ? rhs.objectBits[index] : 0;
+        if (left != right) {
+            std::ostringstream out;
+            out << " word=" << index << " compact=" << left << " interpreter=" << right;
+            return out.str();
+        }
+    }
+    return " state_equal";
+}
 
 CompactTickTryResult tryCompiledCompactTick(
     const Game& game,
@@ -746,7 +789,8 @@ SolverEdgeStep stepSolverEdge(
     int32_t width,
     int32_t height,
     Session& childScratch,
-    Result& result
+    Result& result,
+    bool compactTickOracle
 ) {
     constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
         .playableUndo = false,
@@ -764,6 +808,39 @@ SolverEdgeStep stepSolverEdge(
                 }
                 if (edge.compactTick.handled) {
                     ++result.compactTickHits;
+                    if (compactTickOracle) {
+                        ++result.compactTickOracleChecks;
+                        {
+                            ScopedTimer timer(result.timing.cloneNs);
+                            prepareSolverChildSessionFromParent(childScratch, parentSession);
+                        }
+                        ps_step_result oracleStepResult{};
+                        {
+                            ScopedTimer timer(result.timing.stepNs);
+                            oracleStepResult = puzzlescript::step(childScratch, input, solverStepOptions);
+                            puzzlescript::settlePendingAgain(childScratch, solverStepOptions);
+                        }
+                        const bool terminalEdge = edge.compactTick.stepResult.won
+                            || oracleStepResult.won
+                            || edge.compactTick.stepResult.transitioned
+                            || oracleStepResult.transitioned
+                            || edge.compactTick.stepResult.restarted
+                            || oracleStepResult.restarted;
+                        CompactSolverState oracleCompact;
+                        if (!terminalEdge) {
+                            oracleCompact = compactStateWithTiming(childScratch, result.timing);
+                        }
+                        if (!equivalentSolverStepResult(edge.compactTick.stepResult, oracleStepResult)
+                            || (!terminalEdge && !(edge.compactTick.compact == oracleCompact))) {
+                            ++result.compactTickOracleFailures;
+                            edge.oracleMismatch = true;
+                            edge.oracleError = "compact tick oracle mismatch input=" + inputName(input)
+                                + " depth=" + std::to_string(parentNode.depth)
+                                + " compact_step=" + stepResultSummary(edge.compactTick.stepResult)
+                                + " interpreter_step=" + stepResultSummary(oracleStepResult)
+                                + compactStateDiffSummary(edge.compactTick.compact, oracleCompact);
+                        }
+                    }
                 } else {
                     ++result.compactTickFallbacks;
                 }
@@ -1210,6 +1287,7 @@ Result runSearch(
     uint32_t workerId,
     bool exactStateKeys,
     bool compactNodeStorage,
+    bool compactTickOracle,
     int32_t astarWeight
 ) {
     Result result;
@@ -1347,8 +1425,14 @@ Result runSearch(
                 searchWidth,
                 searchHeight,
                 *childScratch,
-                result
+                result,
+                compactTickOracle
             );
+            if (edge.oracleMismatch) {
+                result.status = "level_error";
+                result.error = edge.oracleError;
+                return result;
+            }
             const ps_step_result& stepResult = edge.stepResult;
             ++result.generated;
 
@@ -1444,6 +1528,8 @@ void mergeStats(Result& target, const Result& source) {
     target.compactTickHits += source.compactTickHits;
     target.compactTickFallbacks += source.compactTickFallbacks;
     target.compactTickUnsupported += source.compactTickUnsupported;
+    target.compactTickOracleChecks += source.compactTickOracleChecks;
+    target.compactTickOracleFailures += source.compactTickOracleFailures;
     target.timing.loadNs += source.timing.loadNs;
     target.timing.cloneNs += source.timing.cloneNs;
     target.timing.stepNs += source.timing.stepNs;
@@ -1478,6 +1564,7 @@ Result solveLevel(
     uint32_t workerId,
     bool exactStateKeys,
     bool compactNodeStorage,
+    bool compactTickOracle,
     int32_t astarWeight
 ) {
     const TimePoint searchStart = Clock::now();
@@ -1490,13 +1577,13 @@ Result solveLevel(
     };
 
     if (strategy == Strategy::Bfs) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys, compactNodeStorage, astarWeight));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight));
     }
     if (strategy == Strategy::WeightedAStar) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, astarWeight));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight));
     }
     if (strategy == Strategy::Greedy) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys, compactNodeStorage, astarWeight));
+        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight));
     }
 
     Result combined;
@@ -1515,7 +1602,7 @@ Result solveLevel(
     combined.timing.compileNs = compileNs;
 
     const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
-    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys, compactNodeStorage, astarWeight);
+    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight);
     mergeStats(combined, bfs);
     if (bfs.status == "solved" || bfs.status == "skipped_message" || bfs.status == "level_error") {
         bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
@@ -1523,7 +1610,7 @@ Result solveLevel(
     }
 
     if (Clock::now() < deadline) {
-        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, astarWeight);
+        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTickOracle, astarWeight);
         mergeStats(combined, weighted);
         if (weighted.status == "solved" || weighted.status == "level_error") {
             combined.status = weighted.status;
@@ -1721,6 +1808,8 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"compact_tick_hits\":" << result.compactTickHits;
     out << ",\"compact_tick_fallbacks\":" << result.compactTickFallbacks;
     out << ",\"compact_tick_unsupported\":" << result.compactTickUnsupported;
+    out << ",\"compact_tick_oracle_checks\":" << result.compactTickOracleChecks;
+    out << ",\"compact_tick_oracle_failures\":" << result.compactTickOracleFailures;
     out << ",\"compile_ms\":" << ms(result.timing.compileNs);
     out << ",\"load_ms\":" << ms(result.timing.loadNs);
     out << ",\"clone_ms\":" << ms(result.timing.cloneNs);
@@ -1757,6 +1846,12 @@ void printJson(const std::vector<Result>& results) {
     Timing timing{};
     uint64_t expanded = 0;
     uint64_t generated = 0;
+    uint64_t compactTickAttempts = 0;
+    uint64_t compactTickHits = 0;
+    uint64_t compactTickFallbacks = 0;
+    uint64_t compactTickUnsupported = 0;
+    uint64_t compactTickOracleChecks = 0;
+    uint64_t compactTickOracleFailures = 0;
     for (const auto& result : results) {
         solved += result.status == "solved";
         timeout += result.status == "timeout";
@@ -1765,6 +1860,12 @@ void printJson(const std::vector<Result>& results) {
         errors += result.status == "compile_error" || result.status == "level_error";
         expanded += result.expanded;
         generated += result.generated;
+        compactTickAttempts += result.compactTickAttempts;
+        compactTickHits += result.compactTickHits;
+        compactTickFallbacks += result.compactTickFallbacks;
+        compactTickUnsupported += result.compactTickUnsupported;
+        compactTickOracleChecks += result.compactTickOracleChecks;
+        compactTickOracleFailures += result.compactTickOracleFailures;
         timing.compileNs += result.timing.compileNs;
         timing.loadNs += result.timing.loadNs;
         timing.cloneNs += result.timing.cloneNs;
@@ -1805,6 +1906,12 @@ void printJson(const std::vector<Result>& results) {
     std::cout << ",\"errors\":" << errors;
     std::cout << ",\"expanded\":" << expanded;
     std::cout << ",\"generated\":" << generated;
+    std::cout << ",\"compact_tick_attempts\":" << compactTickAttempts;
+    std::cout << ",\"compact_tick_hits\":" << compactTickHits;
+    std::cout << ",\"compact_tick_fallbacks\":" << compactTickFallbacks;
+    std::cout << ",\"compact_tick_unsupported\":" << compactTickUnsupported;
+    std::cout << ",\"compact_tick_oracle_checks\":" << compactTickOracleChecks;
+    std::cout << ",\"compact_tick_oracle_failures\":" << compactTickOracleFailures;
     std::cout << ",\"compile_ms\":" << ms(timing.compileNs);
     std::cout << ",\"load_ms\":" << ms(timing.loadNs);
     std::cout << ",\"clone_ms\":" << ms(timing.cloneNs);
@@ -2023,6 +2130,7 @@ std::vector<Result> runCorpus(const Options& options) {
                     workerId,
                     options.exactStateKeys,
                     options.compactNodeStorage,
+                    options.compactTickOracle,
                     options.astarWeight
                 );
                 results[item.resultIndex] = std::move(result);
@@ -2098,6 +2206,8 @@ int main(int argc, char** argv) {
                       << " compact_tick_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickHits; })
                       << " compact_tick_fallbacks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickFallbacks; })
                       << " compact_tick_unsupported=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickUnsupported; })
+                      << " compact_tick_oracle_checks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickOracleChecks; })
+                      << " compact_tick_oracle_failures=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTickOracleFailures; })
                       << "\n";
         }
         if (options.requireCompiledTick && runtimeCounters.compiled_tick_hits == 0) {

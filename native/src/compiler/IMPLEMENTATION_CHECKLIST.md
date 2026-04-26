@@ -761,7 +761,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
     `all subject on target` object pairs.
   - [x] Support no-win-condition compact ticks for command-free movement-only
     and simple-push games by reporting `won=false`.
-  - [ ] Compare the compact tick output against the interpreter fallback inside a
+  - [x] Compare the compact tick output against the interpreter fallback inside a
     debug/oracle mode before allowing solver use.
   - [ ] Only then fold compact heuristic/hash computation into the compact tick
     result when it can reuse touched state.
@@ -846,6 +846,17 @@ attribute graph cost -> no-allocation hash -> flat visited table
     interpreted_step_ms=149.630
     compact_step_ms=3.441
     step_speedup=43.5x
+
+  compact tick oracle mode:
+    option: --compact-tick-oracle
+    behavior: materializes each generated compact tick parent through the
+      interpreter and compares solver-relevant step flags plus resulting compact
+      object bits for non-terminal edges.
+    crate swap.txt level=1 bfs:
+      compact_tick_attempts=28589
+      compact_tick_hits=28589
+      compact_tick_oracle_checks=28589
+      compact_tick_oracle_failures=0
   ```
 
   Acceptance criteria:
