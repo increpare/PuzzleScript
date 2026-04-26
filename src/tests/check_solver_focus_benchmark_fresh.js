@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/check_solver_focus_benchmark_fresh.js <benchmark.json> <manifest.json> --runs N --corpus PATH --strategy NAME [--profile-runtime-counters true|false] [--newer-than PATH ...]');
+    console.error('Usage: node src/tests/check_solver_focus_benchmark_fresh.js <benchmark.json> <manifest.json> --runs N --corpus PATH --strategy NAME [--profile-runtime-counters true|false] [--solver-arg ARG ...] [--newer-than PATH ...]');
     process.exit(2);
 }
 
@@ -20,6 +20,7 @@ let expectedRuns = null;
 let expectedCorpus = null;
 let expectedStrategy = null;
 let expectedProfileRuntimeCounters = null;
+const expectedSolverExtraArgs = [];
 const newerThanPaths = [];
 
 function parsePositiveInt(value, label) {
@@ -44,6 +45,8 @@ for (let index = 2; index < args.length; index++) {
             throw new Error(`--profile-runtime-counters must be true or false: ${value}`);
         }
         expectedProfileRuntimeCounters = value === 'true';
+    } else if (arg === '--solver-arg' && index + 1 < args.length) {
+        expectedSolverExtraArgs.push(args[++index]);
     } else if (arg === '--newer-than' && index + 1 < args.length) {
         newerThanPaths.push(path.resolve(args[++index]));
     } else {
@@ -106,6 +109,10 @@ if (benchmark.strategy !== expectedStrategy) {
 }
 if (expectedProfileRuntimeCounters !== null && Boolean(benchmark.profile_runtime_counters) !== expectedProfileRuntimeCounters) {
     stale(`profile_runtime_counters=${Boolean(benchmark.profile_runtime_counters)}, expected ${expectedProfileRuntimeCounters}`);
+}
+const benchmarkSolverExtraArgs = Array.isArray(benchmark.solver_extra_args) ? benchmark.solver_extra_args : [];
+if (JSON.stringify(benchmarkSolverExtraArgs) !== JSON.stringify(expectedSolverExtraArgs)) {
+    stale(`solver_extra_args=${JSON.stringify(benchmarkSolverExtraArgs)}, expected ${JSON.stringify(expectedSolverExtraArgs)}`);
 }
 if (benchmark.target_count !== manifestTargets.length || benchmarkTargets.length !== manifestTargets.length) {
     stale(`target_count=${benchmark.target_count}, expected ${manifestTargets.length}`);
