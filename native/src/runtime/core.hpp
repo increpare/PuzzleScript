@@ -147,8 +147,6 @@ struct PreparedFullState {
     std::string serializedLevel;
 };
 
-using PreparedSession = PreparedFullState;
-
 struct Replacement {
     // All masks live in Game::maskArena; these are offsets (in words).
     // The "objects" / "movements" / "movementsLayerMask" fields have width
@@ -420,8 +418,6 @@ struct FullState {
     RandomState randomState;
     SimdBackend backend = SimdBackend::Scalar;
 };
-
-using Session = FullState;
 
 struct CompileResult {
     std::shared_ptr<const Game> game;

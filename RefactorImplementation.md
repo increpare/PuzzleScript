@@ -20,8 +20,8 @@ CompactState + SpecializedTurn + SpecializedRulegroups + AgainPolicy::Drain
 - [x] Do not mix large renames with semantic changes unless the semantic change is necessary to keep behavior identical.
 - [x] Stage only files touched by the current checklist item.
 - [x] Commit after each coherent green slice.
-- [ ] Keep compatibility aliases only while they are actively helping a staged migration.
-- [ ] Remove aliases before declaring a rename track complete, unless a compatibility decision explicitly keeps them.
+- [x] Keep compatibility aliases only while they are actively helping a staged migration.
+- [x] Remove aliases before declaring a rename track complete, unless a compatibility decision explicitly keeps them.
 - [ ] Keep `PS_INPUT_TICK` unchanged as a PuzzleScript input value.
 - [ ] Keep complete RNG state in `CompactState` identity.
 - [ ] Keep transient movement words out of solver/generator `CompactState`.
@@ -236,7 +236,7 @@ Decision checkpoint:
 If proceeding with `FullState`:
 
 - [x] Rename the primary C++ state struct `Session` -> `FullState`, with a temporary `Session` alias.
-- [ ] Finish migrating internal call sites from the `Session` alias to `FullState`.
+- [x] Finish migrating internal call sites from the `Session` alias to `FullState`.
   - [x] Search heuristic helpers use `FullState`.
   - [x] Solver compact-node and compact-materialization helpers use `FullState`.
   - [x] Generator solver helpers use `FullState`.
@@ -246,7 +246,7 @@ If proceeding with `FullState`:
   - [x] Runtime lifecycle, hash/serialization, and turn wrapper definitions use `FullState`.
   - [x] Runtime core implementation uses `FullState`; `Session` remains only as a temporary compatibility surface.
   - [x] Runtime C API internals store and inspect `FullState`; public `ps_session_*` names are unchanged.
-  - [ ] Public C API still uses `ps_session_*` by design until Phase 8.
+  - [x] Public C API still uses `ps_session_*` by design until Phase 8.
 - [x] Rename the primary prepared-state struct `PreparedSession` -> `PreparedFullState`, with a temporary `PreparedSession` alias.
 - [x] Rename the internal `preparedSession` field/identifier to `preparedFullState`; serialized `prepared_session` keys remain unchanged.
 - [x] Rename helper functions:
@@ -257,10 +257,10 @@ If proceeding with `FullState`:
   - [x] `compactStateFromSession` -> `compactStateFromFullState`; temporary wrapper removed.
   - [x] `materializeCompactStateIntoSession` -> `materializeCompactStateIntoFullState`; temporary wrapper removed.
 - [x] Update generated C++ emission from `Session&` to `FullState&`.
-- [ ] Update comments and docs that use `Session` as architecture vocabulary.
+- [x] Update comments and docs that use `Session` as architecture vocabulary.
   - [x] Solver heuristic notes refer to normal `FullState` scoring.
   - [x] `ProgressReport.md` uses `CompactState`, `FullState`, and compact turn terminology.
-- [ ] Leave `ps_session_*` C API names untouched until the public API phase.
+- [x] Leave `ps_session_*` C API names untouched until the public API phase.
 
 Decision note: proceed with `FullState` now because it names the contrast with
 `CompactState` clearly for solver/generator work. The larger `RuntimeState`
@@ -275,7 +275,8 @@ Acceptance:
 - [x] `make solver_parity_smoke`
 - [x] `make solver_compact_parity`
 - [x] `make compact_turn_simulation_tests`
-- [ ] Commit: `Rename internal Session to FullState`
+- [x] Commit the internal state rename track in smaller slices, ending with
+  `Remove internal FullState compatibility aliases`.
 
 ## Phase 8: Rename Public C API
 
@@ -309,7 +310,7 @@ Acceptance:
 
 Goal: remove leftover ambiguity after the mechanical work is done.
 
-- [ ] Remove temporary C++ aliases.
+- [x] Remove temporary C++ aliases.
 - [ ] Remove temporary Make aliases unless intentionally kept.
 - [ ] Remove temporary CLI flag aliases unless intentionally kept.
 - [ ] Update `ProgressReport.md`.
@@ -322,7 +323,7 @@ Goal: remove leftover ambiguity after the mechanical work is done.
 
 Search hygiene:
 
-- [ ] `rg "\bSession\b" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
+- [x] `rg "\bSession\b" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
 - [ ] `rg "CompactSolverState" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
 - [ ] `rg "GenericTurn|GenericRulegroups|Generic turn|generic turn" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
 - [ ] `rg "compiled tick|compact_tick|CompiledCompactTick|CompiledTick" native/src src Makefile ProgressReport.md Refactor.md RefactorImplementation.md`
