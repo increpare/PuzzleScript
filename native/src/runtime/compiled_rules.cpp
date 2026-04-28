@@ -71,8 +71,6 @@ void markCompactBridgeFullStateDirty(FullState& session) {
 }
 
 void materializeCompactBridgeState(const Game& game, CompactStateView state, FullState& session) {
-    session.liveLevel.isMessage = false;
-    session.liveLevel.message.clear();
     session.liveLevel.width = state.width;
     session.liveLevel.height = state.height;
     session.liveLevel.layerCount = game.layerCount;

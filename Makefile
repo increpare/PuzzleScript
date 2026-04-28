@@ -89,6 +89,11 @@ SOLVER_FOCUS_PROFILE_COUNTERS ?= false
 SOLVER_FOCUS_PROFILE_COUNTERS_ARG = $(if $(filter true,$(SOLVER_FOCUS_PROFILE_COUNTERS)),--profile-runtime-counters,)
 SOLVER_FOCUS_SOLVER_ARGS ?=
 SOLVER_FOCUS_SOLVER_ARG_ARGS = $(foreach arg,$(SOLVER_FOCUS_SOLVER_ARGS),--solver-arg "$(arg)")
+# Compile-probe timeout only affects mining (solver_focus_mine). Default is
+# disabled so `make solver_focus_mine` always yields a usable focus set.
+# Set this to a non-zero value (e.g. 60) if you want mining to exclude targets
+# that cannot be specialized within the time/budget constraints.
+SOLVER_FOCUS_PROBE_TIMEOUT_SECONDS ?= 0
 SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS ?= 60
 SOLVER_FOCUS_COMPILE_TIMEOUT_PREFIX = $(if $(filter-out 0,$(SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS)),$(NODE) src/tests/run_with_timeout.js $(SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS) --,)
 SOLVER_FOCUS_COMPILE_PROBE_ROOT ?= $(BUILD_DIR)/native/solver_focus_compile_probes
@@ -471,7 +476,7 @@ configure-native: $(CMAKE_CACHE)
 
 build-native: build
 
-ctest: build build_solver
+ctest: build build_solver build_generator
 	ctest --test-dir $(BUILD_DIR) --output-on-failure
 
 tests_js:
@@ -668,10 +673,13 @@ solver_benchmark: $(SOLVER_TARGET_PREREQ)
 solver_mine_pippable: $(PUZZLESCRIPT_SOLVER)
 	$(NODE) src/tests/mine_solver_near_threshold.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_MINE_CORPUS) --timeouts-ms $(SOLVER_MINE_TIMEOUTS_MS) --strategy $(SOLVER_MINE_STRATEGY) --near-ratio $(SOLVER_MINE_NEAR_RATIO) --out $(SOLVER_PIPPABLE_MANIFEST) $(SOLVER_MINE_MAX_TARGETS_ARG)
 
+$(SOLVER_PIPPABLE_MANIFEST): $(PUZZLESCRIPT_SOLVER)
+	$(MAKE) solver_mine_pippable
+
 solver_focus_mine: $(PUZZLESCRIPT_SOLVER)
 	@set -e; \
 	$(COMPILED_RULES_BOOTSTRAP_CPP); \
-	$(NODE) src/tests/mine_solver_focus_group.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --min-elapsed-ms $(SOLVER_FOCUS_MIN_ELAPSED_MS) --max-targets $(SOLVER_FOCUS_MAX_TARGETS) --strategy $(SOLVER_FOCUS_STRATEGY) --jobs $(SOLVER_FOCUS_JOBS) $(SOLVER_FOCUS_EXCLUDE_GAMES_ARG) --out $(SOLVER_FOCUS_MANIFEST) --repo-root "$$PWD" --puzzlescript-cpp $(PUZZLESCRIPT_CPP) --compile-probe-root $(SOLVER_FOCUS_COMPILE_PROBE_ROOT) --compile-timeout-seconds $(SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS) --compile-max-rows $(SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS) $(SOLVER_FOCUS_MINE_MAX_COMPILED_RULES_PER_SOURCE_ARG) $(SOLVER_FOCUS_MINE_MAX_GENERATED_LINES_PER_SOURCE_ARG) --cmake $(CMAKE) $(SOLVER_FOCUS_MINE_CMAKE_GENERATOR_ARG) --compile-opt-level $(COMPILED_RULES_OPT_LEVEL) --compile-probe-jobs $(SOLVER_FOCUS_COMPILE_PROBE_JOBS) --compile-build-jobs $(SOLVER_FOCUS_COMPILE_BUILD_JOBS)
+	$(NODE) src/tests/mine_solver_focus_group.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --min-elapsed-ms $(SOLVER_FOCUS_MIN_ELAPSED_MS) --max-targets $(SOLVER_FOCUS_MAX_TARGETS) --strategy $(SOLVER_FOCUS_STRATEGY) --jobs $(SOLVER_FOCUS_JOBS) $(SOLVER_FOCUS_EXCLUDE_GAMES_ARG) --out $(SOLVER_FOCUS_MANIFEST) --repo-root "$$PWD" --puzzlescript-cpp $(PUZZLESCRIPT_CPP) --compile-probe-root $(SOLVER_FOCUS_COMPILE_PROBE_ROOT) --compile-timeout-seconds $(SOLVER_FOCUS_PROBE_TIMEOUT_SECONDS) --compile-max-rows $(SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS) $(SOLVER_FOCUS_MINE_MAX_COMPILED_RULES_PER_SOURCE_ARG) $(SOLVER_FOCUS_MINE_MAX_GENERATED_LINES_PER_SOURCE_ARG) --cmake $(CMAKE) $(SOLVER_FOCUS_MINE_CMAKE_GENERATOR_ARG) --compile-opt-level $(COMPILED_RULES_OPT_LEVEL) --compile-probe-jobs $(SOLVER_FOCUS_COMPILE_PROBE_JOBS) --compile-build-jobs $(SOLVER_FOCUS_COMPILE_BUILD_JOBS)
 
 $(SOLVER_FOCUS_MANIFEST): $(PUZZLESCRIPT_SOLVER)
 	$(MAKE) solver_focus_mine
@@ -721,7 +729,7 @@ solver_focus_perf_report: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
 	$(MAKE) solver_focus_benchmark SPECIALIZE=true COMPILED_RULES_PERF=true SOLVER_FOCUS_RUNS=$(SOLVER_FOCUS_RUNS) SOLVER_FOCUS_PROFILE_COUNTERS=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_PERF_COMPILED_OUT)"; \
 	$(NODE) src/tests/compare_solver_focus_benchmarks.js "$(SOLVER_FOCUS_PERF_INTERPRETED_OUT)" "$(SOLVER_FOCUS_PERF_COMPILED_OUT)" --detail --goal-ratio 0.5
 
-solver_benchmark_targets: $(PUZZLESCRIPT_SOLVER)
+solver_benchmark_targets: $(PUZZLESCRIPT_SOLVER) $(SOLVER_TARGET_BENCH_MANIFEST)
 	$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_TARGET_BENCH_CORPUS) $(SOLVER_TARGET_BENCH_MANIFEST) --runs $(SOLVER_TARGET_BENCH_RUNS) --strategy $(SOLVER_TARGET_BENCH_STRATEGY) --out $(SOLVER_TARGET_BENCH_OUT) $(SOLVER_TARGET_BENCH_TIMEOUT_ARG)
 
 $(JS_PARITY_MANIFEST): $(JS_PARITY_INPUTS)

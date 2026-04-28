@@ -27,26 +27,28 @@ Status markers:
 
 ## Always-On Guardrails
 
-- [ ] Preserve the interpreted turn path as the behavior oracle. Generated code
-  may call it directly, or decline handling so dispatch falls through to it.
+These are permanent constraints, not “finishable” tasks.
 
-- [ ] Preserve debug behavior. If a `PS_DEBUG_*` mode would lose information on
-  the generated path, dispatch must choose the interpreter until trace parity is
+- Preserve the interpreted turn path as the behavior oracle. Generated code may
+  call it directly, or decline handling so dispatch falls through to it.
+
+- Preserve debug behavior. If a `PS_DEBUG_*` mode would lose information on the
+  generated path, dispatch must choose the interpreter until trace parity is
   deliberately implemented.
 
-- [ ] Preserve solver/generator semantics for `RuntimeStepOptions`:
+- Preserve solver/generator semantics for `RuntimeStepOptions`:
   `playableUndo=false`, `emitAudio=false`, no accidental auto-settling of
   `pendingAgain`, and no hidden undo snapshot growth.
 
-- [ ] Keep one-game specialization ergonomic. Production iteration should use a
+- Keep one-game specialization ergonomic. Production iteration should use a
   single generated game source where practical; corpus-wide generation remains a
   proving rig.
 
-- [ ] Keep fallback cheap enough to be useful. A generated turn function should
-  be allowed to bail out without rebuilding a whole second world around the
+- Keep fallback cheap enough to be useful. A generated turn function should be
+  allowed to bail out without rebuilding a whole second world around the
   interpreter.
 
-- [ ] Prefer explicit coverage and counters to confidence by inspection. If a
+- Prefer explicit coverage and counters to confidence by inspection. If a
   milestone changes behavior or dispatch shape, add a way to observe whether it
   is being used.
 

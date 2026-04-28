@@ -1,14 +1,14 @@
 ===== PuzzleScript C++ simulation profiling =====
-Fri, 24 Apr 2026 15:14:15 +0200
-Darwin Stephens-MacBook-Pro.fritz.box 25.3.0 Darwin Kernel Version 25.3.0: Wed Jan 28 20:53:15 PST 2026; root:xnu-12377.81.4~5/RELEASE_ARM64_T6000 arm64
+Tue, 28 Apr 2026 13:34:39 +0200
+Darwin MacBookPro.fritz.box 25.3.0 Darwin Kernel Version 25.3.0: Wed Jan 28 20:53:15 PST 2026; root:xnu-12377.81.4~5/RELEASE_ARM64_T6000 arm64
 ProductName:		macOS
 ProductVersion:		26.3
 BuildVersion:		25D125
-91d25d9fdf1bdeb0ede82d4ef5ef2ff4c9a39d01
+b0449b2fe214d96bc0fe186a4ed3bd3dc225cc67
 
 ===== Binary =====
 /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/puzzlescript_cpp: Mach-O 64-bit executable arm64
--rwxr-xr-x@ 1 stephenlavelle  staff  1354416 Apr 24 15:14 /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/puzzlescript_cpp
+-rwxr-xr-x@ 1 stephenlavelle  staff  1622880 Apr 28 13:26 /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/puzzlescript_cpp
 
 ===== Workload =====
 simulation_corpus=/Users/stephenlavelle/Documents/GitHub/PuzzleScript/src/tests/resources/testdata.js
@@ -21,44 +21,44 @@ command: /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/puzzle
 
 ===== Pass 1 stdout =====
 
-cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=6266
-cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=6266 games_loaded=452 games_reused=17 testdata_parse_ms=31 source_compile_ms=982 session_create_ms=3 level_load_ms=74 replay_ms=5085 replay_avg_ms=1695 replay_median_ms=1692 serialize_ms=68 source_compile_avg_ms=327 source_compile_median_ms=327 rules_visited=31649067 rules_skipped_by_mask=27032319 candidate_cells_tested=182574540 pattern_tests=256250274 pattern_matches=84210207 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7989846 ellipsis_scans=50314593 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=456951 mask_rebuild_rows=3774093 mask_rebuild_columns=4979238
+cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=4512
+cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=4512 games_loaded=452 games_reused=17 testdata_parse_ms=30 source_compile_ms=1026 session_create_ms=2 level_load_ms=56 replay_ms=3319 replay_avg_ms=1106 replay_median_ms=1102 serialize_ms=66 source_compile_avg_ms=342 source_compile_median_ms=342 rules_visited=31629177 rules_skipped_by_mask=27012825 candidate_cells_tested=78193701 pattern_tests=139530438 pattern_matches=72600480 replacements_attempted=28242090 replacements_applied=10750293 row_scans=1642458 ellipsis_scans=5814105 mask_rebuild_calls=4695927 mask_rebuild_dirty_calls=390048 mask_rebuild_rows=1741065 mask_rebuild_columns=2012346 specialized_rulegroup_attempts=0 specialized_rulegroup_hits=0 specialized_rulegroup_fallbacks=0 specialized_full_turn_attempts=0 specialized_full_turn_hits=0 specialized_full_turn_fallbacks=0
 
 ===== Pass 1 stderr (resource usage) =====
 
 --- stderr tail ---
-real 6.53
-user 6.11
-sys 0.10
-           393003008  maximum resident set size
+real 4.54
+user 4.46
+sys 0.05
+           309116928  maximum resident set size
                    0  average shared memory size
                    0  average unshared data size
                    0  average unshared stack size
-               25375  page reclaims
-                   9  page faults
+               19071  page reclaims
+                   5  page faults
                    0  swaps
                    0  block input operations
                    0  block output operations
                    0  messages sent
                    0  messages received
                    0  signals received
-                   0  voluntary context switches
-                3465  involuntary context switches
-         92788770361  instructions retired
-         19405402904  cycles elapsed
-           290260928  peak memory footprint
+                  15  voluntary context switches
+                1720  involuntary context switches
+         71046347514  instructions retired
+         14437056161  cycles elapsed
+           302843584  peak memory footprint
 
 ===== Pass 1 profile summary =====
 
-cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=6266
-cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=6266 games_loaded=452 games_reused=17 testdata_parse_ms=31 source_compile_ms=982 session_create_ms=3 level_load_ms=74 replay_ms=5085 replay_avg_ms=1695 replay_median_ms=1692 serialize_ms=68 source_compile_avg_ms=327 source_compile_median_ms=327 rules_visited=31649067 rules_skipped_by_mask=27032319 candidate_cells_tested=182574540 pattern_tests=256250274 pattern_matches=84210207 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7989846 ellipsis_scans=50314593 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=456951 mask_rebuild_rows=3774093 mask_rebuild_columns=4979238
+cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=4512
+cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=4512 games_loaded=452 games_reused=17 testdata_parse_ms=30 source_compile_ms=1026 session_create_ms=2 level_load_ms=56 replay_ms=3319 replay_avg_ms=1106 replay_median_ms=1102 serialize_ms=66 source_compile_avg_ms=342 source_compile_median_ms=342 rules_visited=31629177 rules_skipped_by_mask=27012825 candidate_cells_tested=78193701 pattern_tests=139530438 pattern_matches=72600480 replacements_attempted=28242090 replacements_applied=10750293 row_scans=1642458 ellipsis_scans=5814105 mask_rebuild_calls=4695927 mask_rebuild_dirty_calls=390048 mask_rebuild_rows=1741065 mask_rebuild_columns=2012346 specialized_rulegroup_attempts=0 specialized_rulegroup_hits=0 specialized_rulegroup_fallbacks=0 specialized_full_turn_attempts=0 specialized_full_turn_hits=0 specialized_full_turn_fallbacks=0
 pass1_exit_status=0
 ----- Pass 2: macOS sample(1) CPU stacks -----
 
 ===== Pass 2 stdout =====
 
-cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=7033
-cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=7033 games_loaded=452 games_reused=17 testdata_parse_ms=30 source_compile_ms=1122 session_create_ms=3 level_load_ms=82 replay_ms=5693 replay_avg_ms=1897 replay_median_ms=1897 serialize_ms=78 source_compile_avg_ms=374 source_compile_median_ms=374 rules_visited=31649067 rules_skipped_by_mask=27032319 candidate_cells_tested=182574540 pattern_tests=256250274 pattern_matches=84210207 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7989846 ellipsis_scans=50314593 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=456951 mask_rebuild_rows=3774093 mask_rebuild_columns=4979238
+cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=4895
+cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=4895 games_loaded=452 games_reused=17 testdata_parse_ms=29 source_compile_ms=1108 session_create_ms=3 level_load_ms=62 replay_ms=3606 replay_avg_ms=1202 replay_median_ms=1209 serialize_ms=74 source_compile_avg_ms=369 source_compile_median_ms=369 rules_visited=31629177 rules_skipped_by_mask=27012825 candidate_cells_tested=78193701 pattern_tests=139530438 pattern_matches=72600480 replacements_attempted=28242090 replacements_applied=10750293 row_scans=1642458 ellipsis_scans=5814105 mask_rebuild_calls=4695927 mask_rebuild_dirty_calls=390048 mask_rebuild_rows=1741065 mask_rebuild_columns=2012346 specialized_rulegroup_attempts=0 specialized_rulegroup_hits=0 specialized_rulegroup_fallbacks=0 specialized_full_turn_attempts=0 specialized_full_turn_hits=0 specialized_full_turn_fallbacks=0
 
 ===== Pass 2 stderr tail =====
 
@@ -66,75 +66,69 @@ cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=7033 games
 
 ===== Pass 2 profile summary =====
 
-cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=7033
-cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=7033 games_loaded=452 games_reused=17 testdata_parse_ms=30 source_compile_ms=1122 session_create_ms=3 level_load_ms=82 replay_ms=5693 replay_avg_ms=1897 replay_median_ms=1897 serialize_ms=78 source_compile_avg_ms=374 source_compile_median_ms=374 rules_visited=31649067 rules_skipped_by_mask=27032319 candidate_cells_tested=182574540 pattern_tests=256250274 pattern_matches=84210207 replacements_attempted=28242144 replacements_applied=10750293 row_scans=7989846 ellipsis_scans=50314593 mask_rebuild_calls=4762830 mask_rebuild_dirty_calls=456951 mask_rebuild_rows=3774093 mask_rebuild_columns=4979238
+cpp_simulation_tests_direct passed=1407 failed=0 total=1407 cases=469 repeats=3 jobs=1 elapsed_ms=4895
+cpp_simulation_profile cases=469 repeats=3 checks=1407 jobs=1 wall_ms=4895 games_loaded=452 games_reused=17 testdata_parse_ms=29 source_compile_ms=1108 session_create_ms=3 level_load_ms=62 replay_ms=3606 replay_avg_ms=1202 replay_median_ms=1209 serialize_ms=74 source_compile_avg_ms=369 source_compile_median_ms=369 rules_visited=31629177 rules_skipped_by_mask=27012825 candidate_cells_tested=78193701 pattern_tests=139530438 pattern_matches=72600480 replacements_attempted=28242090 replacements_applied=10750293 row_scans=1642458 ellipsis_scans=5814105 mask_rebuild_calls=4695927 mask_rebuild_dirty_calls=390048 mask_rebuild_rows=1741065 mask_rebuild_columns=2012346 specialized_rulegroup_attempts=0 specialized_rulegroup_hits=0 specialized_rulegroup_fallbacks=0 specialized_full_turn_attempts=0 specialized_full_turn_hits=0 specialized_full_turn_fallbacks=0
 pass2_exit_status=0
 sample_exit_status=0
 
 ===== Hot stacks: sample(1), sorted by top of stack =====
 
 Sort by top of stack, same collapsed (when >= 5):
-        puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp)        773
-        puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp)        662
-        _platform_memmove  (in libsystem_platform.dylib)        525
-        puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp)        501
-        __psynch_cvwait  (in libsystem_kernel.dylib)        476
-        puzzlescript::(anonymous namespace)::rebuildMasks(puzzlescript::Session&)  (in puzzlescript_cpp)        307
-        puzzlescript::executeTurn(puzzlescript::Session&, int, puzzlescript::(anonymous namespace)::ExecuteTurnOptions)  (in puzzlescript_cpp)        283
-        _xzm_free  (in libsystem_malloc.dylib)        266
-        _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib)        223
-        puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp)        141
-        puzzlescript::(anonymous namespace)::applyRuleGroup(puzzlescript::Session&, std::vector<puzzlescript::Rule> const&, puzzlescript::(anonymous namespace)::CommandState&)  (in puzzlescript_cpp)        140
-        puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp)        119
-        _platform_memset  (in libsystem_platform.dylib)        118
-        _platform_memcmp  (in libsystem_platform.dylib)        102
-        _free  (in libsystem_malloc.dylib)        97
-        DYLD-STUB$$memcpy  (in puzzlescript_cpp)        93
-        puzzlescript::(anonymous namespace)::setCellObjects(puzzlescript::Session&, int, std::vector<long long> const&)  (in puzzlescript_cpp)        81
-        <deduplicated_symbol>  (in libsystem_malloc.dylib)        74
-        _xzm_xzone_malloc  (in libsystem_malloc.dylib)        65
-        malloc_type_malloc  (in libsystem_malloc.dylib)        62
-        puzzlescript::(anonymous namespace)::seedPlayerMovements(puzzlescript::Session&, int)  (in puzzlescript_cpp)        56
-        puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)  (in puzzlescript_cpp)        47
-        __bzero  (in libsystem_platform.dylib)        46
-        puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::$_28::operator()(std::vector<puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell> const&, std::vector<puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell> const*) const  (in puzzlescript_cpp)        41
-        puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in puzzlescript_cpp)        39
-        puzzlescript::serializeTestString(puzzlescript::Session const&)  (in puzzlescript_cpp)        36
-        std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp)        34
-        operator new(unsigned long)  (in libc++abi.dylib)        33
-        DYLD-STUB$$memcmp  (in puzzlescript_cpp)        25
-        DYLD-STUB$$free  (in libc++abi.dylib)        24
-        puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp)        23
+        puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp)        700
+        __psynch_cvwait  (in libsystem_kernel.dylib)        537
+        puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp)        405
+        _xzm_free  (in libsystem_malloc.dylib)        241
+        _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib)        232
+        puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::FullState const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp)        191
+        puzzlescript::executeTurn(puzzlescript::FullState&, int, puzzlescript::(anonymous namespace)::ExecuteTurnOptions)  (in puzzlescript_cpp)        160
+        puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp)        123
+        puzzlescript::(anonymous namespace)::applyRuleGroups(puzzlescript::FullState&, std::vector<std::vector<puzzlescript::Rule>> const&, puzzlescript::LoopPointTable const&, puzzlescript::CommandState&, std::vector<bool> const*, bool)  (in puzzlescript_cpp)        108
+        _platform_memmove  (in libsystem_platform.dylib)        101
+        puzzlescript::fillCompactOccupancyBitsFromLiveLevel(puzzlescript::FullState const&, std::vector<unsigned long long>&)  (in puzzlescript_cpp)        97
+        puzzlescript::(anonymous namespace)::hashFullState64NoAlloc(puzzlescript::FullState const&, unsigned long long)  (in puzzlescript_cpp)        96
+        puzzlescript::(anonymous namespace)::rebuildMasks(puzzlescript::FullState&)  (in puzzlescript_cpp)        96
+        _free  (in libsystem_malloc.dylib)        89
+        _platform_memcmp  (in libsystem_platform.dylib)        87
+        _platform_memset  (in libsystem_platform.dylib)        82
+        puzzlescript::(anonymous namespace)::setCellObjectsFromWords(puzzlescript::FullState&, int, long long const*)  (in puzzlescript_cpp)        74
+        <deduplicated_symbol>  (in libsystem_malloc.dylib)        67
+        malloc_type_malloc  (in libsystem_malloc.dylib)        67
+        puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)  (in puzzlescript_cpp)        48
+        _xzm_xzone_malloc  (in libsystem_malloc.dylib)        47
+        puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::$_29::operator()(std::vector<puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell> const&, std::vector<puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell> const*) const  (in puzzlescript_cpp)        47
+        std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp)        44
+        puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::FullState&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp)        42
+        operator new(unsigned long)  (in libc++abi.dylib)        27
+        puzzlescript::serializeTestString(puzzlescript::FullState const&)  (in puzzlescript_cpp)        27
+        DYLD-STUB$$free  (in libc++abi.dylib)        26
+        DYLD-STUB$$operator delete(void*)  (in puzzlescript_cpp)        22
+        DYLD-STUB$$malloc_type_malloc  (in libc++abi.dylib)        21
+        _ZZN12puzzlescript8compiler18lowerToRuntimeGameERKNS0_11ParserStateERNSt3__110shared_ptrIKNS_4GameEEEENK3$_2clIRSA_EENS4_6vectorIxNS4_9allocatorIxEEEEOT_RKNS4_12basic_stringIcNS4_11char_traitsIcEENSE_IcEEEERNS4_3setISN_NS4_4lessISN_EENSE_ISN_EEEE  (in puzzlescript_cpp)        20
         puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::$_19::operator()(puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell const&) const  (in puzzlescript_cpp)        20
-        mach_absolute_time  (in libsystem_kernel.dylib)        19
-        DYLD-STUB$$operator delete(void*)  (in puzzlescript_cpp)        18
-        DYLD-STUB$$operator new(unsigned long)  (in puzzlescript_cpp)        15
-        mach_vm_reclaim_update_kernel_accounting_trap  (in libsystem_kernel.dylib)        15
-        puzzlescript::compiler::(anonymous namespace)::toLowerCopy(std::basic_string_view<char>)  (in puzzlescript_cpp)        13
-        _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp)        12
-        DYLD-STUB$$malloc_type_malloc  (in libc++abi.dylib)        10
-        _xzm_xzone_malloc_freelist_outlined  (in libsystem_malloc.dylib)        10
-        _ZZN12puzzlescript8compiler18lowerToRuntimeGameERKNS0_11ParserStateERNSt3__110shared_ptrIKNS_4GameEEEENK3$_2clIRSA_EENS4_6vectorIxNS4_9allocatorIxEEEEOT_RKNS4_12basic_stringIcNS4_11char_traitsIcEENSE_IcEEEERNS4_3setISN_NS4_4lessISN_EENSE_ISN_EEEE  (in puzzlescript_cpp)        8
-        _xzm_xzone_malloc_small_freelist  (in libsystem_malloc.dylib)        8
-        puzzlescript::(anonymous namespace)::rowMatchStillMatches(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp)        8
+        puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::FullState&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp)        19
+        puzzlescript::compiler::parseSource(std::basic_string_view<char>, puzzlescript::compiler::DiagnosticSink&)  (in puzzlescript_cpp)        17
+        DYLD-STUB$$memcpy  (in puzzlescript_cpp)        16
+        DYLD-STUB$$operator new(unsigned long)  (in puzzlescript_cpp)        16
+        DYLD-STUB$$memcmp  (in puzzlescript_cpp)        14
+        __bzero  (in libsystem_platform.dylib)        13
+        puzzlescript::(anonymous namespace)::rowMatchStillMatches(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp)        11
+        <deduplicated_symbol>  (in puzzlescript_cpp)        9
+        _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp)        9
+        puzzlescript::compiler::(anonymous namespace)::parseLegendLine(puzzlescript::compiler::ParserState&, puzzlescript::compiler::DiagnosticSink&, std::basic_string_view<char>)  (in puzzlescript_cpp)        9
         std::basic_string<char>::push_back(char)  (in libc++.1.dylib)        8
-        puzzlescript::compiler::parseSource(std::basic_string_view<char>, puzzlescript::compiler::DiagnosticSink&)  (in puzzlescript_cpp)        7
+        DYLD-STUB$$bzero  (in puzzlescript_cpp)        7
+        mach_absolute_time  (in libsystem_kernel.dylib)        7
+        puzzlescript::(anonymous namespace)::applyRandomRuleGroup(puzzlescript::FullState&, std::vector<puzzlescript::Rule> const&, puzzlescript::CommandState&)  (in puzzlescript_cpp)        7
+        puzzlescript::(anonymous namespace)::findLayersInMask(puzzlescript::FullState const&, std::vector<long long> const&)  (in puzzlescript_cpp)        7
+        std::basic_string<char>::append(char const*, unsigned long)  (in libc++.1.dylib)        7
         DYLD-STUB$$_platform_bzero  (in libsystem_malloc.dylib)        6
-        __tolower  (in libsystem_c.dylib)        6
-        puzzlescript::(anonymous namespace)::clearMovementState(puzzlescript::Session&)  (in puzzlescript_cpp)        6
-        puzzlescript::(anonymous namespace)::findLayersInMask(puzzlescript::Session const&, std::vector<long long> const&)  (in puzzlescript_cpp)        6
-        std::basic_string<char>::append(char const*, unsigned long)  (in libc++.1.dylib)        6
-        DYLD-STUB$$bzero  (in puzzlescript_cpp)        5
-        _platform_memchr  (in libsystem_platform.dylib)        5
-        mach_msg2_trap  (in libsystem_kernel.dylib)        5
-        puzzlescript::(anonymous namespace)::randomUniform(puzzlescript::Session::RandomState&)  (in puzzlescript_cpp)        5
-        std::basic_regex<char, std::regex_traits<char>>::__match_at_start_ecma<std::allocator<std::sub_match<char const*>>>(char const*, char const*, std::match_results<char const*>&, std::regex_constants::match_flag_type, bool) const  (in puzzlescript_cpp)        5
-        std::vector<long long>::__insert_with_size[abi:nqe210106]<std::__wrap_iter<long long const*>, std::__wrap_iter<long long const*>>(std::__wrap_iter<long long const*>, std::__wrap_iter<long long const*>, std::__wrap_iter<long long const*>, long)  (in puzzlescript_cpp)        5
-        utf8proc_iterate  (in puzzlescript_cpp)        5
+        puzzlescript::compiler::(anonymous namespace)::toLowerCopy(std::basic_string_view<char>)  (in puzzlescript_cpp)        6
+        puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in puzzlescript_cpp)        5
+        puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::$_1::operator()(std::vector<std::vector<puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell>>, std::vector<std::vector<puzzlescript::compiler::lowerToRuntimeGame(puzzlescript::compiler::ParserState const&, std::shared_ptr<puzzlescript::Game const>&)::ParsedCell>>) const  (in puzzlescript_cpp)        5
 
 Binary Images:
-       0x104ff4000 -        0x10510eacf +puzzlescript_cpp (0) <615DA1A8-B687-3477-8891-B08A58FEA6F5> /Users/*/Documents/*/puzzlescript_cpp
-       0x105404000 -        0x105513fe7 +libSDL2-2.0.0.dylib (0) <028E981B-F9E9-394B-BAA1-136A3669A7AF> /opt/homebrew/*/libSDL2-2.0.0.dylib
+       0x1025a0000 -        0x1026f2307 +puzzlescript_cpp (0) <77D18271-A0F8-31A1-AED6-B911452C5873> /Users/*/Documents/*/puzzlescript_cpp
+       0x1028a8000 -        0x1029b7fe7 +libSDL2-2.0.0.dylib (0) <028E981B-F9E9-394B-BAA1-136A3669A7AF> /opt/homebrew/*/libSDL2-2.0.0.dylib
        0x1936bc000 -        0x19370f4bb  libobjc.A.dylib (951.1) <9E66CFF2-3EBD-3242-8166-D5D0C204755B> /usr/lib/libobjc.A.dylib
        0x193710000 -        0x193740bcb  libdyld.dylib (1340) <D0CBB392-9301-3174-8904-D869F1D973CF> /usr/lib/system/libdyld.dylib
        0x193741000 -        0x1937e0713  dyld (1.0.0 - 1340) <BC4DB5F4-1C64-3706-8006-73B78C3E1F1A> /usr/lib/dyld
@@ -183,149 +177,155 @@ Binary Images:
        0x19a235000 -        0x19a2b54bf  libMobileGestalt.dylib (1462.80.9) <1DAD89C7-19E3-379C-A054-023CB6D7CD3F> /usr/lib/libMobileGestalt.dylib
        0x19a2b6000 -        0x19a2cdff3  libsystem_asl.dylib (406) <2A30FE38-5014-334B-941B-579054EA8C1E> /usr/lib/system/libsystem_asl.dylib
        0x19a2ce000 -        0x19a2f2c77  com.apple.TCC (1.0 - 1) <2BE6A2E2-A205-35D1-A802-FFAA38E1A91A> /System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC
+       0x19a2f3000 -        0x19a89945f  com.apple.SkyLight (1.600.0 - 920.9.17) <99DE3135-19A2-3A4C-A936-8737E1D4EFA3> /System/Library/PrivateFrameworks/SkyLight.framework/Versions/A/SkyLight
+       0x19a89a000 -        0x19aff3f5f  com.apple.CoreGraphics (2.0 - 1965.3.5) <0BC56D54-FA35-36A7-AA29-916AB68F46E7> /System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics
+       0x19aff4000 -        0x19b19f24b  com.apple.ColorSync (4.13.0 - 3813.3.3) <46D2669A-6F71-3861-B4F9-08C5BF79F880> /System/Library/Frameworks/ColorSync.framework/Versions/A/ColorSync
+       0x19b1a0000 -        0x19b20c17f  com.apple.HIServices (1.22 - 817) <46279785-C8D4-3031-9D72-289A23C46617> /System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices
+       0x19b5fe000 -        0x19b9e8ddf  com.apple.CoreData (120 - 1525) <5C890D91-A347-3E0C-8F5D-A93967487553> /System/Library/Frameworks/CoreData.framework/Versions/A/CoreData
+       0x19b9e9000 -        0x19ba04c1f  com.apple.ProtocolBuffer (1 - 310.23.11.13.1) <38368C0D-5397-3B13-9119-77A0A7E94E61> /System/Library/PrivateFrameworks/ProtocolBuffer.framework/Versions/A/ProtocolBuffer
 
 ===== sample(1) call graph preview =====
 
-Analysis of sampling puzzlescript_cpp (pid 59150) every 1 millisecond
-Process:         puzzlescript_cpp [59150]
+Analysis of sampling puzzlescript_cpp (pid 8950) every 1 millisecond
+Process:         puzzlescript_cpp [8950]
 Path:            /Users/USER/Documents/*/puzzlescript_cpp
-Load Address:    0x104ff4000
+Load Address:    0x1025a0000
 Identifier:      puzzlescript_cpp
 Version:         0
 Code Type:       ARM64
 Platform:        macOS
-Parent Process:  bash [59028]
+Parent Process:  bash [8766]
 Target Type:     live task
 
-Date/Time:       2026-04-24 15:14:22.213 +0200
-Launch Time:     2026-04-24 15:14:22.134 +0200
+Date/Time:       2026-04-28 13:34:44.137 +0200
+Launch Time:     2026-04-28 13:34:44.076 +0200
 OS Version:      macOS 26.3 (25D125)
 Report Version:  7
 Analysis Tool:   /usr/bin/sample
 ----
 
 Call graph:
-    5373 Thread_26354049   DispatchQueue_1: com.apple.main-thread  (serial)
-    + 5372 start  (in dyld) + 7184  [0x193749d54]
-    + ! 5372 main  (in puzzlescript_cpp) + 11136  [0x104ff7e20]
-    + !   4885 (anonymous namespace)::simulationTestdataCommand(std::__fs::filesystem::path const&, int, char**)  (in puzzlescript_cpp) + 9664  [0x105008afc]
-    + !   : 4726 (anonymous namespace)::runSimulationCorpusCase((anonymous namespace)::SimulationCorpusCase const&, ps_game*)  (in puzzlescript_cpp) + 432  [0x10500ceac]
-    + !   : | 3280 (anonymous namespace)::replayInputTokens(ps_session*, std::vector<std::basic_string<char>> const&, std::vector<std::basic_string<char>>*)  (in puzzlescript_cpp) + 828  [0x104ffbb80]
-    + !   : | + 1421 puzzlescript::executeTurn(puzzlescript::Session&, int, puzzlescript::(anonymous namespace)::ExecuteTurnOptions)  (in puzzlescript_cpp) + 1428  [0x105040f20]
-    + !   : | + ! 1215 puzzlescript::(anonymous namespace)::applyRuleGroup(puzzlescript::Session&, std::vector<puzzlescript::Rule> const&, puzzlescript::(anonymous namespace)::CommandState&)  (in puzzlescript_cpp) + 5580  [0x10504a4cc]
-    + !   : | + ! : 351 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 6744  [0x105051884]
-    + !   : | + ! : | 152 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2012,1948,...  [0x10504e018,0x10504dfd8,...]
-    + !   : | + ! : | 126 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2032  [0x10504e02c]
-    + !   : | + ! : | + 126 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32,4,...  [0x105052828,0x10505280c,...]
-    + !   : | + ! : | 40 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 1404  [0x10504ddb8]
-    + !   : | + ! : | + 40 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32,4,...  [0x105052828,0x10505280c,...]
-    + !   : | + ! : | 33 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2888  [0x10504e384]
-    + !   : | + ! : |   33 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4,32,...  [0x10505280c,0x105052828,...]
-    + !   : | + ! : 256 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 7236  [0x105051a70]
-    + !   : | + ! : | 125 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 5372,52,...  [0x105053eac,0x1050529e4,...]
-    + !   : | + ! : | 33 puzzlescript::(anonymous namespace)::setCellObjects(puzzlescript::Session&, int, std::vector<long long> const&)  (in puzzlescript_cpp) + 260,272,...  [0x105048824,0x105048830,...]
-    + !   : | + ! : | 20 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 920  [0x105052d48]
-    + !   : | + ! : | + 10 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4,0  [0x1050aabb0,0x1050aabac]
-    + !   : | + ! : | + 10 _platform_memmove  (in libsystem_platform.dylib) + 428,0,...  [0x193b1d52c,0x193b1d380,...]
-    + !   : | + ! : | 15 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 432  [0x105052b60]
-    + !   : | + ! : | + 14 _platform_memmove  (in libsystem_platform.dylib) + 428,0,...  [0x193b1d52c,0x193b1d380,...]
-    + !   : | + ! : | + 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
-    + !   : | + ! : | 11 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 448  [0x105052b70]
-    + !   : | + ! : | + 9 _platform_memmove  (in libsystem_platform.dylib) + 428,204,...  [0x193b1d52c,0x193b1d44c,...]
-    + !   : | + ! : | + 2 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
-    + !   : | + ! : | 9 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 796  [0x105052ccc]
-    + !   : | + ! : | + 5 _platform_memmove  (in libsystem_platform.dylib) + 0,12,...  [0x193b1d380,0x193b1d38c,...]
-    + !   : | + ! : | + 4 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
-    + !   : | + ! : | 8 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 544  [0x105052bd0]
-    + !   : | + ! : | + 6 _platform_memmove  (in libsystem_platform.dylib) + 436,0,...  [0x193b1d534,0x193b1d380,...]
-    + !   : | + ! : | + 2 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
-    + !   : | + ! : | 6 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4492  [0x105053b3c]
-    + !   : | + ! : | + 4 _platform_memcmp  (in libsystem_platform.dylib) + 8,56,...  [0x193b1aef8,0x193b1af28,...]
-    + !   : | + ! : | + 2 DYLD-STUB$$memcmp  (in puzzlescript_cpp) + 4  [0x1050aaba4]
-    + !   : | + ! : | 5 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 272  [0x105052ac0]
-    + !   : | + ! : | + 5 _platform_memmove  (in libsystem_platform.dylib) + 460,0,...  [0x193b1d54c,0x193b1d380,...]
-    + !   : | + ! : | 5 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 668  [0x105052c4c]
-    + !   : | + ! : | + 5 _platform_memmove  (in libsystem_platform.dylib) + 428,460  [0x193b1d52c,0x193b1d54c]
-    + !   : | + ! : | 5 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 1192  [0x105052e58]
-    + !   : | + ! : | + 5 puzzlescript::(anonymous namespace)::randomUniform(puzzlescript::Session::RandomState&)  (in puzzlescript_cpp) + 148,176,...  [0x10504f558,0x10504f574,...]
-    + !   : | + ! : | 4 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 256  [0x105052ab0]
-    + !   : | + ! : | + 3 _platform_memmove  (in libsystem_platform.dylib) + 428,16  [0x193b1d52c,0x193b1d390]
-    + !   : | + ! : | + 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
-    + !   : | + ! : | 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4532  [0x105053b64]
-    + !   : | + ! : | + 2 _platform_memcmp  (in libsystem_platform.dylib) + 104,164  [0x193b1af58,0x193b1af94]
-    + !   : | + ! : | + 1 DYLD-STUB$$memcmp  (in puzzlescript_cpp) + 4  [0x1050aaba4]
-    + !   : | + ! : | 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4556  [0x105053b7c]
-    + !   : | + ! : | + 3 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in puzzlescript_cpp) + 40,32  [0x10504fd20,0x10504fd18]
-    + !   : | + ! : | 2 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in puzzlescript_cpp) + 144  [0x10504fd88]
-    + !   : | + ! : | 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 7044  [0x105054534]
-    + !   : | + ! : | + 1 _free  (in libsystem_malloc.dylib) + 96  [0x193940a8c]
-    + !   : | + ! : | 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 7056  [0x105054540]
-    + !   : | + ! : |   1 _xzm_free  (in libsystem_malloc.dylib) + 600  [0x19393399c]
-    + !   : | + ! : 136 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 5536  [0x1050513cc]
-    + !   : | + ! : | 125 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp) + 252  [0x10504fbfc]
-    + !   : | + ! : | + 82 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 732,1080,...  [0x105052c8c,0x105052de8,...]
-    + !   : | + ! : | + 7 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 432  [0x105052b60]
-    + !   : | + ! : | + ! 6 _platform_memmove  (in libsystem_platform.dylib) + 0,428,...  [0x193b1d380,0x193b1d52c,...]
-    + !   : | + ! : | + ! 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
-    + !   : | + ! : | + 6 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 920  [0x105052d48]
-    + !   : | + ! : | + ! 4 _platform_memmove  (in libsystem_platform.dylib) + 428,460  [0x193b1d52c,0x193b1d54c]
-    + !   : | + ! : | + ! 2 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
-    + !   : | + ! : | + 6 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4492  [0x105053b3c]
-    + !   : | + ! : | + ! 4 DYLD-STUB$$memcmp  (in puzzlescript_cpp) + 4  [0x1050aaba4]
-    + !   : | + ! : | + ! 2 _platform_memcmp  (in libsystem_platform.dylib) + 96  [0x193b1af50]
-    + !   : | + ! : | + 4 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 272  [0x105052ac0]
-    + !   : | + ! : | + ! 3 _platform_memmove  (in libsystem_platform.dylib) + 0,428,...  [0x193b1d380,0x193b1d52c,...]
-    + !   : | + ! : | + ! 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 8  [0x1050aabb4]
-    + !   : | + ! : | + 4 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 796  [0x105052ccc]
-    + !   : | + ! : | + ! 4 _platform_memmove  (in libsystem_platform.dylib) + 180,428  [0x193b1d434,0x193b1d52c]
-    + !   : | + ! : | + 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 256  [0x105052ab0]
-    + !   : | + ! : | + ! 3 _platform_memmove  (in libsystem_platform.dylib) + 16,428,...  [0x193b1d390,0x193b1d52c,...]
-    + !   : | + ! : | + 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 448  [0x105052b70]
-    + !   : | + ! : | + ! 2 _platform_memmove  (in libsystem_platform.dylib) + 0,12  [0x193b1d380,0x193b1d38c]
-    + !   : | + ! : | + ! 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
-    + !   : | + ! : | + 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 668  [0x105052c4c]
-    + !   : | + ! : | + ! 2 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x1050aabb0]
-    + !   : | + ! : | + ! 1 _platform_memmove  (in libsystem_platform.dylib) + 460  [0x193b1d54c]
-    + !   : | + ! : | + 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 544  [0x105052bd0]
-    + !   : | + ! : | + ! 2 _platform_memmove  (in libsystem_platform.dylib) + 428,460  [0x193b1d52c,0x193b1d54c]
-    + !   : | + ! : | + 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4532  [0x105053b64]
-    + !   : | + ! : | + ! 2 _platform_memcmp  (in libsystem_platform.dylib) + 0,56  [0x193b1aef0,0x193b1af28]
-    + !   : | + ! : | + 2 puzzlescript::(anonymous namespace)::setCellObjects(puzzlescript::Session&, int, std::vector<long long> const&)  (in puzzlescript_cpp) + 188,384  [0x1050487dc,0x1050488a0]
-    + !   : | + ! : | + 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4556  [0x105053b7c]
-    + !   : | + ! : | +   1 puzzlescript::(anonymous namespace)::ruleDebugLineFilterMatches(int)  (in puzzlescript_cpp) + 32  [0x10504fd18]
-    + !   : | + ! : | 10 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::Session&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp) + 16,228,...  [0x10504fb10,0x10504fbe4,...]
-    + !   : | + ! : | 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 7088  [0x105054560]
-    + !   : | + ! : 93 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 2284  [0x105050718]
-    + !   : | + ! : | 34 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2032  [0x10504e02c]
-    + !   : | + ! : | + 34 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 236,32,...  [0x1050528f4,0x105052828,...]
-    + !   : | + ! : | 31 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 1360,1988,...  [0x10504dd8c,0x10504e000,...]
-    + !   : | + ! : | 17 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 1404  [0x10504ddb8]
-    + !   : | + ! : | + 17 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32,408,...  [0x105052828,0x1050529a0,...]
-    + !   : | + ! : | 7 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2888  [0x10504e384]
-    + !   : | + ! : | + 7 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 112,4,...  [0x105052878,0x10505280c,...]
-    + !   : | + ! : | 3 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 3072  [0x10504e43c]
-    + !   : | + ! : | + 2 _xzm_free  (in libsystem_malloc.dylib) + 128,952  [0x1939337c4,0x193933afc]
-    + !   : | + ! : | + 1 _xzm_free  (in libsystem_malloc.dylib) + 348  [0x1939338a0]
-    + !   : | + ! : | +   1 __bzero  (in libsystem_platform.dylib) + 24  [0x193b1d068]
-    + !   : | + ! : | 1 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::Session const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 3052  [0x10504e428]
-    + !   : | + ! : |   1 _platform_memmove  (in libsystem_platform.dylib) + 436  [0x193b1d534]
-    + !   : | + ! : 62 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 5572,7172,...  [0x1050513f0,0x105051a30,...]
-    + !   : | + ! : 59 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 5904  [0x10505153c]
-    + !   : | + ! : | 43 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp) + 1156,1124,...  [0x10504e8d0,0x10504e8b0,...]
-    + !   : | + ! : | 16 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::Session&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp) + 1344  [0x10504e98c]
-    + !   : | + ! : |   10 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 136  [0x105056b48]
-    + !   : | + ! : |   ! 10 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32,4,...  [0x105052828,0x10505280c,...]
-    + !   : | + ! : |   4 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 116,32,...  [0x105056b34,0x105056ae0,...]
-    + !   : | + ! : |   2 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 756  [0x105056db4]
-    + !   : | + ! : |     1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 440  [0x105056c78]
-    + !   : | + ! : |     : 1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 136  [0x105056b48]
-    + !   : | + ! : |     :   1 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::Session const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 76  [0x105052854]
-    + !   : | + ! : |     1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 756  [0x105056db4]
-    + !   : | + ! : |       1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 440  [0x105056c78]
-    + !   : | + ! : |         1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_7SessionERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 36  [0x105056ae4]
-    + !   : | + ! : 27 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::Session&, puzzlescript::Rule const&, puzzlescript::(anonymous namespace)::CommandState&, bool)  (in puzzlescript_cpp) + 7472  [0x105051b5c]
-    + !   : | + ! : | 19 _xzm_free  (in libsystem_malloc.dylib) + 952,48,...  [0x193933afc,0x193933774,...]
-    + !   : | + ! : | 6 _free  (in libsystem_malloc.dylib) + 24,0,...  [0x193940a44,0x193940a2c,...]
+    3717 Thread_35432659   DispatchQueue_1: com.apple.main-thread  (serial)
+    + 3717 start  (in dyld) + 7184  [0x193749d54]
+    +   3717 main  (in puzzlescript_cpp) + 11772  [0x1025a413c]
+    +     3167 (anonymous namespace)::simulationTestdataCommand(std::__fs::filesystem::path const&, int, char**)  (in puzzlescript_cpp) + 8244  [0x1025bc31c]
+    +     ! 3048 (anonymous namespace)::runSimulationCorpusCase((anonymous namespace)::SimulationCorpusCase const&, ps_game*, bool)  (in puzzlescript_cpp) + 472  [0x1025c2058]
+    +     ! : 2130 (anonymous namespace)::replayInputTokens(ps_full_state*, std::vector<std::basic_string<char>> const&, std::vector<std::basic_string<char>>*, (anonymous namespace)::ReplayOracleStats*)  (in puzzlescript_cpp) + 1820  [0x1025a8358]
+    +     ! : | 2130 ps_full_state_turn  (in puzzlescript_cpp) + 600  [0x102601e94]
+    +     ! : |   2130 puzzlescript::interpretedTurnOnceWithSpecializedRulegroups(puzzlescript::FullState&, ps_input, puzzlescript::TurnOptions, puzzlescript::SpecializedRulegroupsForInterpretedTurnOutcome (*)(puzzlescript::FullState&, puzzlescript::CommandState&, std::vector<bool>*), puzzlescript::SpecializedRulegroupsForInterpretedTurnOutcome (*)(puzzlescript::FullState&, puzzlescript::CommandState&, std::vector<bool>*))  (in puzzlescript_cpp) + 704  [0x10263038c]
+    +     ! : |     1002 puzzlescript::executeTurn(puzzlescript::FullState&, int, puzzlescript::(anonymous namespace)::ExecuteTurnOptions)  (in puzzlescript_cpp) + 4500  [0x102624888]
+    +     ! : |     + 854 puzzlescript::(anonymous namespace)::applyRuleGroups(puzzlescript::FullState&, std::vector<std::vector<puzzlescript::Rule>> const&, puzzlescript::LoopPointTable const&, puzzlescript::CommandState&, std::vector<bool> const*, bool)  (in puzzlescript_cpp) + 528  [0x10262a628]
+    +     ! : |     + ! 301 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp) + 6772  [0x10262ed30]
+    +     ! : |     + ! : 247 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2664,2732,...  [0x1026095a0,0x1026095e4,...]
+    +     ! : |     + ! : 29 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2128  [0x102609388]
+    +     ! : |     + ! : | 29 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::FullState const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32,236,...  [0x10260a7a4,0x10260a870,...]
+    +     ! : |     + ! : 17 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 3744  [0x1026099d8]
+    +     ! : |     + ! : | 10 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 944  [0x10260acdc]
+    +     ! : |     + ! : | + 6 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 756,3016,...  [0x10260ac20,0x10260b4f4,...]
+    +     ! : |     + ! : | + 4 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 944  [0x10260acdc]
+    +     ! : |     + ! : | +   4 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 944  [0x10260acdc]
+    +     ! : |     + ! : | +     3 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 944  [0x10260acdc]
+    +     ! : |     + ! : | +     : 3 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 944  [0x10260acdc]
+    +     ! : |     + ! : | +     :   2 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 944  [0x10260acdc]
+    +     ! : |     + ! : | +     :   | 1 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 944  [0x10260acdc]
+    +     ! : |     + ! : | +     :   | + 1 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 944  [0x10260acdc]
+    +     ! : |     + ! : | +     :   | +   1 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 944  [0x10260acdc]
+    +     ! : |     + ! : | +     :   | +     1 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 3032  [0x10260b504]
+    +     ! : |     + ! : | +     :   | 1 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 3032  [0x10260b504]
+    +     ! : |     + ! : | +     :   1 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 744  [0x10260ac14]
+    +     ! : |     + ! : | +     1 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 3132  [0x10260b568]
+    +     ! : |     + ! : | 5 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 60,400,...  [0x10260a968,0x10260aabc,...]
+    +     ! : |     + ! : | 2 std::__introsort<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*, false>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, std::iterator_traits<int*>::difference_type, bool)  (in puzzlescript_cpp) + 912  [0x10260acbc]
+    +     ! : |     + ! : |   2 std::__insertion_sort_incomplete[abi:nqe210106]<std::_ClassicAlgPolicy, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&, int*>(int*, int*, puzzlescript::(anonymous namespace)::collectAnchoredRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, int, int, int, int, int, std::vector<int>&)::$_0&)  (in puzzlescript_cpp) + 640,664  [0x10260bce4,0x10260bcfc]
+    +     ! : |     + ! : 8 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 1492  [0x10260910c]
+    +     ! : |     + ! :   8 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::FullState const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 76,196,...  [0x10260a7d0,0x10260a848,...]
+    +     ! : |     + ! 136 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp) + 7304  [0x10262ef44]
+    +     ! : |     + ! : 91 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 3084,3092,...  [0x10260cc90,0x10260cc98,...]
+    +     ! : |     + ! : 28 puzzlescript::(anonymous namespace)::setCellObjectsFromWords(puzzlescript::FullState&, int, long long const*)  (in puzzlescript_cpp) + 124,636,...  [0x102606460,0x102606660,...]
+    +     ! : |     + ! : 4 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 732  [0x10260c360]
+    +     ! : |     + ! : | 2 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x102683468]
+    +     ! : |     + ! : | 2 _platform_memmove  (in libsystem_platform.dylib) + 0,460  [0x193b1d380,0x193b1d54c]
+    +     ! : |     + ! : 3 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 980  [0x10260c458]
+    +     ! : |     + ! : | 3 _platform_memmove  (in libsystem_platform.dylib) + 0,428,...  [0x193b1d380,0x193b1d52c,...]
+    +     ! : |     + ! : 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 500  [0x10260c278]
+    +     ! : |     + ! : | 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x102683468]
+    +     ! : |     + ! : | 1 _platform_memmove  (in libsystem_platform.dylib) + 428  [0x193b1d52c]
+    +     ! : |     + ! : 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 520  [0x10260c28c]
+    +     ! : |     + ! : | 2 _platform_memmove  (in libsystem_platform.dylib) + 428,460  [0x193b1d52c,0x193b1d54c]
+    +     ! : |     + ! : 2 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 1248  [0x10260c564]
+    +     ! : |     + ! : | 2 puzzlescript::(anonymous namespace)::randomUniform(puzzlescript::RandomState&)  (in puzzlescript_cpp) + 176,440  [0x10260f0cc,0x10260f1d4]
+    +     ! : |     + ! : 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 324  [0x10260c1c8]
+    +     ! : |     + ! : | 1 _platform_memmove  (in libsystem_platform.dylib) + 428  [0x193b1d52c]
+    +     ! : |     + ! : 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 344  [0x10260c1dc]
+    +     ! : |     + ! : | 1 _platform_memmove  (in libsystem_platform.dylib) + 12  [0x193b1d38c]
+    +     ! : |     + ! : 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 856  [0x10260c3dc]
+    +     ! : |     + ! : | 1 DYLD-STUB$$memcpy  (in puzzlescript_cpp) + 4  [0x102683468]
+    +     ! : |     + ! : 1 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 4192  [0x10260d0e4]
+    +     ! : |     + ! :   1 puzzlescript::(anonymous namespace)::clearShiftedMask5(std::vector<long long>&, int)  (in puzzlescript_cpp) + 0  [0x10260f2c4]
+    +     ! : |     + ! 56 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp) + 5536  [0x10262e85c]
+    +     ! : |     + ! : 40 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::FullState&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp) + 284  [0x10260c034]
+    +     ! : |     + ! : | 38 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 2456,3092,...  [0x10260ca1c,0x10260cc98,...]
+    +     ! : |     + ! : | 2 puzzlescript::(anonymous namespace)::setCellObjectsFromWords(puzzlescript::FullState&, int, long long const*)  (in puzzlescript_cpp) + 188,224  [0x1026064a0,0x1026064c4]
+    +     ! : |     + ! : 8 puzzlescript::(anonymous namespace)::applyReplacementAt(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 8712,8720,...  [0x10260e28c,0x10260e294,...]
+    +     ! : |     + ! : 8 puzzlescript::(anonymous namespace)::applyRowMatchAt(puzzlescript::FullState&, puzzlescript::Rule const&, std::vector<puzzlescript::Pattern> const&, int, std::vector<int> const&, int)  (in puzzlescript_cpp) + 20,260,...  [0x10260bf2c,0x10260c01c,...]
+    +     ! : |     + ! 46 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp) + 6704,4688,...  [0x10262ecec,0x10262e50c,...]
+    +     ! : |     + ! 35 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp) + 2284  [0x10262dba8]
+    +     ! : |     + ! : 29 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2536,2760,...  [0x102609520,0x102609600,...]
+    +     ! : |     + ! : 3 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 2128  [0x102609388]
+    +     ! : |     + ! : | 3 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::FullState const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 132,236,...  [0x10260a808,0x10260a870,...]
+    +     ! : |     + ! : 1 _xzm_free  (in libsystem_malloc.dylib) + 1344  [0x193933c84]
+    +     ! : |     + ! : 1 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 3572  [0x10260992c]
+    +     ! : |     + ! : | 1 operator new(unsigned long)  (in libc++abi.dylib) + 52  [0x193acba78]
+    +     ! : |     + ! : |   1 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 24  [0x193937198]
+    +     ! : |     + ! : 1 puzzlescript::(anonymous namespace)::collectRowMatchesInto(puzzlescript::FullState const&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int, std::vector<int>&)  (in puzzlescript_cpp) + 3616  [0x102609958]
+    +     ! : |     + ! :   1 _platform_memmove  (in libsystem_platform.dylib) + 460  [0x193b1d54c]
+    +     ! : |     + ! 34 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp) + 5904  [0x10262e9cc]
+    +     ! : |     + ! : 18 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::FullState&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp) + 1244,1236,...  [0x102609f78,0x102609f70,...]
+    +     ! : |     + ! : 14 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::FullState&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp) + 1396  [0x10260a010]
+    +     ! : |     + ! : | 10 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 148  [0x10260a484]
+    +     ! : |     + ! : | + 10 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::FullState const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 236,196,...  [0x10260a870,0x10260a848,...]
+    +     ! : |     + ! : | 3 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 772  [0x10260a6f4]
+    +     ! : |     + ! : | + 2 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 772  [0x10260a6f4]
+    +     ! : |     + ! : | + ! 2 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 456  [0x10260a5b8]
+    +     ! : |     + ! : | + !   1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 148  [0x10260a484]
+    +     ! : |     + ! : | + !   : 1 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::FullState const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 408  [0x10260a91c]
+    +     ! : |     + ! : | + !   1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 772  [0x10260a6f4]
+    +     ! : |     + ! : | + !     1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 524  [0x10260a5fc]
+    +     ! : |     + ! : | + !       1 operator new(unsigned long)  (in libc++abi.dylib) + 52  [0x193acba78]
+    +     ! : |     + ! : | + !         1 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 456  [0x193937348]
+    +     ! : |     + ! : | + 1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 456  [0x10260a5b8]
+    +     ! : |     + ! : | +   1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 772  [0x10260a6f4]
+    +     ! : |     + ! : | +     1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 772  [0x10260a6f4]
+    +     ! : |     + ! : | +       1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 596  [0x10260a644]
+    +     ! : |     + ! : | +         1 _xzm_free  (in libsystem_malloc.dylib) + 348  [0x1939338a0]
+    +     ! : |     + ! : | +           1 DYLD-STUB$$_platform_bzero  (in libsystem_malloc.dylib) + 8  [0x19394845c]
+    +     ! : |     + ! : | 1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 128  [0x10260a470]
+    +     ! : |     + ! : 1 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::FullState&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp) + 968  [0x102609e64]
+    +     ! : |     + ! : | 1 std::vector<int>::assign(unsigned long, int const&)  (in puzzlescript_cpp) + 196  [0x10260a210]
+    +     ! : |     + ! : 1 puzzlescript::(anonymous namespace)::collectEllipsisRowMatches(puzzlescript::FullState&, std::vector<puzzlescript::Pattern> const&, int, long long const*, unsigned int, long long const*, unsigned int)  (in puzzlescript_cpp) + 1640  [0x10260a104]
+    +     ! : |     + ! :   1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 772  [0x10260a6f4]
+    +     ! : |     + ! :     1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 772  [0x10260a6f4]
+    +     ! : |     + ! :       1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 772  [0x10260a6f4]
+    +     ! : |     + ! :         1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 456  [0x10260a5b8]
+    +     ! : |     + ! :           1 _ZZN12puzzlescript12_GLOBAL__N_125collectEllipsisRowMatchesERNS_9FullStateERKNSt3__16vectorINS_7PatternENS3_9allocatorIS5_EEEEiPKxjSC_jENK3$_0clIRSD_EEvOT_ii  (in puzzlescript_cpp) + 148  [0x10260a484]
+    +     ! : |     + ! :             1 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::FullState const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 32  [0x10260a7a4]
+    +     ! : |     + ! 34 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp) + 7568  [0x10262f04c]
+    +     ! : |     + ! : 23 _xzm_free  (in libsystem_malloc.dylib) + 952,204,...  [0x193933afc,0x193933810,...]
+    +     ! : |     + ! : 8 _free  (in libsystem_malloc.dylib) + 24,96,...  [0x193940a44,0x193940a8c,...]
+    +     ! : |     + ! : 2 DYLD-STUB$$operator delete(void*)  (in puzzlescript_cpp) + 4,8  [0x1026832f4,0x1026832f8]
+    +     ! : |     + ! : 1 DYLD-STUB$$free  (in libc++abi.dylib) + 8  [0x193acbe48]
+    +     ! : |     + ! 23 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp) + 7204  [0x10262eee0]
+    +     ! : |     + ! : 23 puzzlescript::(anonymous namespace)::matchesPatternAt(puzzlescript::FullState const&, puzzlescript::Pattern const&, int)  (in puzzlescript_cpp) + 132,404,...  [0x10260a808,0x10260a918,...]
+    +     ! : |     + ! 21 puzzlescript::(anonymous namespace)::tryApplySimpleRule(puzzlescript::FullState&, puzzlescript::Rule const&, puzzlescript::CommandState&, bool)  (in puzzlescript_cpp) + 4724  [0x10262e530]
+    +     ! : |     + ! : 19 operator new(unsigned long)  (in libc++abi.dylib) + 52  [0x193acba78]
+    +     ! : |     + ! : | 10 _xzm_xzone_malloc_tiny  (in libsystem_malloc.dylib) + 40,408,...  [0x1939371a8,0x193937318,...]
+    +     ! : |     + ! : | 4 <deduplicated_symbol>  (in libsystem_malloc.dylib) + 208,116,...  [0x193932cf0,0x193932c94,...]
+    +     ! : |     + ! : | 2 malloc_type_malloc  (in libsystem_malloc.dylib) + 84  [0x193927188]
+    +     ! : |     + ! : | 1 _xzm_xzone_malloc  (in libsystem_malloc.dylib) + 180  [0x193933140]
+    +     ! : |     + ! : | 1 _xzm_xzone_malloc_freelist_outlined  (in libsystem_malloc.dylib) + 324  [0x193938940]
+    +     ! : |     + ! : | + 1 _xzm_xzone_find_and_malloc_from_freelist_chunk  (in libsystem_malloc.dylib) + 952  [0x1939394ac]
+    +     ! : |     + ! : | +   1 xzm_chunk_mark_used  (in libsystem_malloc.dylib) + 176  [0x19391cd08]
+    +     ! : |     + ! : | +     1 _xzm_reclaim_mark_used  (in libsystem_malloc.dylib) + 176  [0x19391cdf0]
 
 ===== Artifacts =====
   /Users/stephenlavelle/Documents/GitHub/PuzzleScript/build/native/profile_last/pass1.stdout

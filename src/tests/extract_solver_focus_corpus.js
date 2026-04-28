@@ -60,6 +60,7 @@ for (const target of targets) {
 }
 
 fs.rmSync(outPath, { recursive: true, force: true });
+fs.mkdirSync(outPath, { recursive: true });
 for (const [relative, sourcePath] of selected) {
     const destination = path.join(outPath, relative);
     fs.mkdirSync(path.dirname(destination), { recursive: true });

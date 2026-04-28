@@ -635,9 +635,6 @@ void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const
     session.meta.winning = base.meta.winning;
     session.meta.messageText = base.meta.messageText;
     session.meta.loadedLevelSeed = base.meta.loadedLevelSeed;
-    session.liveLevel.isMessage = base.liveLevel.isMessage;
-    session.liveLevel.message = base.liveLevel.message;
-    session.liveLevel.lineNumber = base.liveLevel.lineNumber;
     session.liveLevel.width = base.liveLevel.width;
     session.liveLevel.height = base.liveLevel.height;
     session.liveLevel.layerCount = base.liveLevel.layerCount;
@@ -681,9 +678,6 @@ void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
     child.meta = parent.meta;
-    child.liveLevel.isMessage = parent.liveLevel.isMessage;
-    child.liveLevel.message = parent.liveLevel.message;
-    child.liveLevel.lineNumber = parent.liveLevel.lineNumber;
     child.liveLevel.width = parent.liveLevel.width;
     child.liveLevel.height = parent.liveLevel.height;
     child.liveLevel.layerCount = parent.liveLevel.layerCount;
