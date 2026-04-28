@@ -190,7 +190,7 @@ Pass: `469/469`, `compact_turn_oracle_failures=0` (2026-04-28).
 
 - [x] **Gate:** `make compact_turn_simulation_tests` — **469/469**, `compact_turn_oracle_failures=0`.
 
-- [ ] **Optional:** `node src/tests/run_tests_node.js --sim-only` (JS corpus).
+- [x] **JS corpus:** `node src/tests/run_tests_node.js --sim-only` — 469/469 (2026-04-28).
 
 - [x] **Commit** — Task B2 tranche 1.
 
