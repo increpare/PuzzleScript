@@ -657,7 +657,7 @@ void tryPlayMaskSounds(FullState& session, const std::vector<SoundMaskEntry>& en
     }
 }
 
-void seedRandomState(FullState::RandomState& state, std::string_view seed) {
+void seedRandomState(RandomState& state, std::string_view seed) {
     for (int idx = 0; idx < 256; ++idx) {
         state.s[static_cast<size_t>(idx)] = static_cast<uint8_t>(idx);
     }
@@ -685,7 +685,7 @@ void seedRandomState(FullState::RandomState& state, std::string_view seed) {
     }
 }
 
-uint8_t nextRandomByte(FullState::RandomState& state) {
+uint8_t nextRandomByte(RandomState& state) {
     state.i = static_cast<uint8_t>((state.i + 1) % 256);
     state.j = static_cast<uint8_t>((state.j + state.s[static_cast<size_t>(state.i)]) % 256);
     std::swap(state.s[static_cast<size_t>(state.i)], state.s[static_cast<size_t>(state.j)]);
@@ -693,7 +693,7 @@ uint8_t nextRandomByte(FullState::RandomState& state) {
     return state.s[static_cast<size_t>(index)];
 }
 
-double randomUniform(FullState::RandomState& state) {
+double randomUniform(RandomState& state) {
     double output = 0.0;
     for (int idx = 0; idx < 7; ++idx) {
         output *= 256.0;
@@ -702,8 +702,8 @@ double randomUniform(FullState::RandomState& state) {
     return output / (std::pow(2.0, 56.0) - 1.0);
 }
 
-std::vector<int32_t> previewRandomBytes(const FullState::RandomState& state, int count) {
-    FullState::RandomState probe = state;
+std::vector<int32_t> previewRandomBytes(const RandomState& state, int count) {
+    RandomState probe = state;
     std::vector<int32_t> bytes;
     bytes.reserve(static_cast<size_t>(std::max(count, 0)));
     for (int idx = 0; idx < count; ++idx) {
@@ -3842,6 +3842,8 @@ void restoreSnapshot(FullState& session, const FullState::UndoSnapshot& snapshot
         session.randomState = snapshot.randomState;
     }
     session.pendingAgain = false;
+    resizeBoardOccupancyObjectBits(session);
+    syncOccupancyRngFromAuthoritativeRandomState(session);
     markAllMasksDirty(session);
     rebuildMasks(session);
 }
@@ -3874,6 +3876,8 @@ void restoreRestartTarget(FullState& session) {
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
     session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
     session.pendingAgain = false;
+    resizeBoardOccupancyObjectBits(session);
+    syncOccupancyRngFromAuthoritativeRandomState(session);
     markAllMasksDirty(session);
     rebuildMasks(session);
 }
@@ -4032,10 +4036,23 @@ void resetToPrepared(FullState& session) {
     } else {
         seedRandomState(session.randomState, session.meta.loadedLevelSeed);
     }
+    resizeBoardOccupancyObjectBits(session);
+    syncOccupancyRngFromAuthoritativeRandomState(session);
     rebuildMasks(session);
 }
 
 } // namespace
+
+void resizeBoardOccupancyObjectBits(FullState& session) {
+    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const int32_t objectCount = session.game ? session.game->objectCount : 0;
+    session.occupancy.objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
+}
+
+void syncOccupancyRngFromAuthoritativeRandomState(FullState& session) {
+    session.occupancy.rng = session.randomState;
+}
 
 const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset) {
     return maskPtr(game, offset);

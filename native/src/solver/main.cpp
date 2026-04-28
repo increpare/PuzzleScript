@@ -697,6 +697,8 @@ void materializeCompactStateIntoFullState(const CompactState& state, const FullS
     session.randomState.i = state.randomStateI;
     session.randomState.j = state.randomStateJ;
     session.randomState.valid = state.randomStateValid;
+    puzzlescript::resizeBoardOccupancyObjectBits(session);
+    puzzlescript::syncOccupancyRngFromAuthoritativeRandomState(session);
     markMaterializedFullStateDirty(session);
 }
 
@@ -724,6 +726,8 @@ void prepareSolverChildFullStateFromParent(FullState& child, const FullState& pa
     child.suppressRuleMessages = parent.suppressRuleMessages;
     child.randomState = parent.randomState;
     child.backend = parent.backend;
+    puzzlescript::resizeBoardOccupancyObjectBits(child);
+    puzzlescript::syncOccupancyRngFromAuthoritativeRandomState(child);
     markMaterializedFullStateDirty(child);
 }
 

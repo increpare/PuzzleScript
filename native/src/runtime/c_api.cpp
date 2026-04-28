@@ -57,7 +57,7 @@ char* duplicateString(const std::string& value) {
 struct CompactOracleState {
     std::vector<uint64_t> objectBits;
     std::vector<puzzlescript::MaskWord> movementWords;
-    FullState::RandomState randomState;
+    puzzlescript::RandomState randomState;
 };
 
 uint32_t compactOracleTrailingZeros(MaskWordUnsigned value) {

@@ -121,6 +121,8 @@ void materializeCompactBridgeState(const Game& game, CompactStateView state, Ful
         session.randomState.valid = *state.randomStateValid;
         std::copy(state.randomStateS, state.randomStateS + state.randomStateSize, session.randomState.s.begin());
     }
+    resizeBoardOccupancyObjectBits(session);
+    syncOccupancyRngFromAuthoritativeRandomState(session);
     markCompactBridgeFullStateDirty(session);
     compiledRuleRebuildMasks(session);
 }

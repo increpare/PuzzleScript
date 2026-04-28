@@ -273,6 +273,18 @@ struct SoundMaskEntry {
     int32_t seed = 0;
 };
 
+struct RandomState {
+    std::array<uint8_t, 256> s{};
+    uint8_t i = 0;
+    uint8_t j = 0;
+    bool valid = false;
+};
+
+struct BoardOccupancy {
+    std::vector<uint64_t> objectBits;
+    RandomState rng;
+};
+
 struct Game {
     int32_t schemaVersion = 1;
     int32_t strideObject = 1;
@@ -341,13 +353,6 @@ struct Game {
 };
 
 struct FullState {
-    struct RandomState {
-        std::array<uint8_t, 256> s{};
-        uint8_t i = 0;
-        uint8_t j = 0;
-        bool valid = false;
-    };
-
     struct UndoSnapshot {
         MetaGameState meta;
         LevelTemplate liveLevel;
@@ -360,6 +365,7 @@ struct FullState {
     std::shared_ptr<const Game> game;
     MetaGameState meta;
     LevelTemplate liveLevel;
+    BoardOccupancy occupancy;
     MaskVector liveMovements;
     MaskVector rowMasks;
     MaskVector columnMasks;
@@ -420,6 +426,12 @@ struct FullState {
     RandomState randomState;
     SimdBackend backend = SimdBackend::Scalar;
 };
+
+/// Cell-major-compact occupancy shell sizing (zeros); mirrors solver compact layout formula.
+void resizeBoardOccupancyObjectBits(FullState& session);
+
+/// RNG mirror for Task B migration — authoritative source is still FullState::randomState.
+void syncOccupancyRngFromAuthoritativeRandomState(FullState& session);
 
 struct CompileResult {
     std::shared_ptr<const Game> game;
