@@ -669,8 +669,6 @@ void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const
     session.pendingAgain = false;
     session.canUndo = false;
     session.undoStack.clear();
-    session.lastAudioEvents.clear();
-    session.lastUiAudioEvents.clear();
     session.randomState.s = state.randomStateS;
     session.randomState.i = state.randomStateI;
     session.randomState.j = state.randomStateJ;
@@ -699,8 +697,6 @@ void prepareSolverChildFullStateFromParent(FullState& child, const FullState& pa
     child.pendingAgain = false;
     child.canUndo = false;
     child.undoStack.clear();
-    child.lastAudioEvents.clear();
-    child.lastUiAudioEvents.clear();
     child.suppressRuleMessages = parent.suppressRuleMessages;
     child.randomState = parent.randomState;
     child.backend = parent.backend;

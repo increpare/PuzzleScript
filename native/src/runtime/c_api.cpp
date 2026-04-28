@@ -27,6 +27,7 @@ struct ps_game {
 
 struct ps_full_state {
     std::unique_ptr<FullState> impl;
+    puzzlescript::TurnResult lastTurnResult;
 };
 
 struct ps_compile_result {
@@ -221,7 +222,8 @@ ps_step_result ps_full_state_turn(ps_full_state* state, ps_input input) {
     if (!state) {
         return ps_step_result{};
     }
-    return puzzlescript::turn(*state->impl, input, RuntimeStepOptions{});
+    state->lastTurnResult = puzzlescript::turnResult(*state->impl, input, RuntimeStepOptions{});
+    return state->lastTurnResult.core;
 }
 
 ps_step_result ps_full_state_turn_with_options(ps_full_state* state, ps_input input, bool solver_mode) {
@@ -233,7 +235,8 @@ ps_step_result ps_full_state_turn_with_options(ps_full_state* state, ps_input in
     if (solver_mode) {
         options.emitAudio = false;
     }
-    return puzzlescript::turn(*state->impl, input, options);
+    state->lastTurnResult = puzzlescript::turnResult(*state->impl, input, options);
+    return state->lastTurnResult.core;
 }
 
 bool ps_full_state_create(const ps_game* game, ps_full_state** out_state, ps_error** out_error) {

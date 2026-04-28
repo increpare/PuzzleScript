@@ -109,8 +109,6 @@ void materializeCompactBridgeState(const Game& game, CompactStateView state, Ful
     session.pendingAgain = false;
     session.canUndo = false;
     session.undoStack.clear();
-    session.lastAudioEvents.clear();
-    session.lastUiAudioEvents.clear();
     if (state.randomStateS != nullptr
         && state.randomStateSize == session.randomState.s.size()
         && state.randomStateI != nullptr

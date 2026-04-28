@@ -21,6 +21,8 @@ void runRulesOnLevelStart(FullState& session);
 void runRulesOnLevelStart(FullState& session, RuntimeStepOptions options);
 namespace {
 
+thread_local TurnResult gThreadTurnResult;
+
 void rebuildMasks(FullState& session);
 void rebuildObjectCellIndex(FullState& session);
 void markAllMasksDirty(FullState& session);
@@ -369,26 +371,26 @@ std::string_view randomDebugSubstringFilter() {
     return debugConfig().randomSubstring;
 }
 
-void appendAudioEvent(FullState& session, int32_t seed, const char* kind) {
+void appendAudioEvent(TurnResult& out, int32_t seed, const char* kind) {
     const std::string_view kindView = kind == nullptr ? std::string_view{} : std::string_view(kind);
     // JS dedupes movement audio seeds within each canmove/cantmove list.
     if (kindView == "canmove" || kindView == "cantmove") {
-        const auto duplicate = std::find_if(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [seed, kindView](const ps_audio_event& event) {
+        const auto duplicate = std::find_if(out.audio.begin(), out.audio.end(), [seed, kindView](const ps_audio_event& event) {
             const std::string_view eventKind = event.kind == nullptr ? std::string_view{} : std::string_view(event.kind);
             return event.seed == seed && eventKind == kindView;
         });
-        if (duplicate != session.lastAudioEvents.end()) {
+        if (duplicate != out.audio.end()) {
             return;
         }
     }
     if (audioDebugEnabled()) {
         std::cerr << "[audio] emit seed=" << seed << " kind=" << kindView << '\n';
     }
-    session.lastAudioEvents.push_back(ps_audio_event{seed, kind});
+    out.audio.push_back(ps_audio_event{seed, kind});
 }
 
-void appendUiAudioEvent(FullState& session, int32_t seed, const char* kind) {
-    session.lastUiAudioEvents.push_back(ps_audio_event{seed, kind});
+void appendUiAudioEvent(TurnResult& out, int32_t seed, const char* kind) {
+    out.uiAudio.push_back(ps_audio_event{seed, kind});
 }
 
 int audioEventPriority(const ps_audio_event& event) {
@@ -408,21 +410,21 @@ int audioEventPriority(const ps_audio_event& event) {
     return 4;
 }
 
-void sortAudioEvents(FullState& session) {
-    std::stable_sort(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [](const ps_audio_event& lhs, const ps_audio_event& rhs) {
+void sortAudioEvents(TurnResult& out) {
+    std::stable_sort(out.audio.begin(), out.audio.end(), [](const ps_audio_event& lhs, const ps_audio_event& rhs) {
         return audioEventPriority(lhs) < audioEventPriority(rhs);
     });
 }
 
-void clearAudioEventsByKind(FullState& session, std::string_view kind) {
-    session.lastAudioEvents.erase(
-        std::remove_if(session.lastAudioEvents.begin(), session.lastAudioEvents.end(), [kind](const ps_audio_event& event) {
+void clearAudioEventsByKind(TurnResult& out, std::string_view kind) {
+    out.audio.erase(
+        std::remove_if(out.audio.begin(), out.audio.end(), [kind](const ps_audio_event& event) {
             return kind == event.kind;
         }),
-        session.lastAudioEvents.end());
+        out.audio.end());
 }
 
-void tryPlaySimpleSound(FullState& session, std::string_view soundName) {
+void tryPlaySimpleSound(FullState& session, TurnResult& out, std::string_view soundName) {
     const auto it = session.game->sfxEvents.find(std::string(soundName));
     if (it == session.game->sfxEvents.end()) {
         return;
@@ -430,18 +432,18 @@ void tryPlaySimpleSound(FullState& session, std::string_view soundName) {
     // In the JS engine, these UI-ish "simple sounds" call playSound(seed, true),
     // which explicitly does NOT record the seed in the sound history (used by tests).
     // The native trace suite expects the same behavior: do not emit these as test audio events.
-    appendUiAudioEvent(session, it->second, "ui");
+    appendUiAudioEvent(out, it->second, "ui");
 }
 
-void tryPlayCommandSound(FullState& session, std::string_view soundName) {
+void tryPlayCommandSound(FullState& session, TurnResult& out, std::string_view soundName) {
     const auto it = session.game->sfxEvents.find(std::string(soundName));
     if (it == session.game->sfxEvents.end()) {
         return;
     }
-    appendAudioEvent(session, it->second, "sfx");
+    appendAudioEvent(out, it->second, "sfx");
 }
 
-void processOutputCommands(FullState& session, const CommandState& commands, bool suppressMessages = false, bool emitAudio = true) {
+void processOutputCommands(FullState& session, TurnResult& out, const CommandState& commands, bool suppressMessages = false, bool emitAudio = true) {
     for (const auto& command : commands.queue) {
         if (command == "message") {
             if (suppressMessages || session.suppressRuleMessages) {
@@ -452,11 +454,11 @@ void processOutputCommands(FullState& session, const CommandState& commands, boo
             session.meta.titleScreen = false;
             session.meta.messageSelected = false;
             if (emitAudio) {
-                tryPlaySimpleSound(session, "showmessage");
+                tryPlaySimpleSound(session, out, "showmessage");
             }
         } else if (command.size() >= 3 && command[0] == 's' && command[1] == 'f' && command[2] == 'x') {
             if (emitAudio) {
-                tryPlayCommandSound(session, command);
+                tryPlayCommandSound(session, out, command);
             }
         }
     }
@@ -630,7 +632,7 @@ void queueRuleCommands(const Rule& rule, CommandState& state) {
     }
 }
 
-void tryPlayMaskSounds(FullState& session, const std::vector<SoundMaskEntry>& entries, const MaskVector& changedMask, const char* kind) {
+void tryPlayMaskSounds(FullState& session, TurnResult& out, const std::vector<SoundMaskEntry>& entries, const MaskVector& changedMask, const char* kind) {
     if (entries.empty() || !anyBitsSet(changedMask)) {
         return;
     }
@@ -653,7 +655,7 @@ void tryPlayMaskSounds(FullState& session, const std::vector<SoundMaskEntry>& en
                        << " mask=" << describeObjects(session, entryMaskCopy);
                 audioDebugLog(stream.str());
             }
-            appendAudioEvent(session, entry.seed, kind);
+            appendAudioEvent(out, entry.seed, kind);
         }
     }
 }
@@ -1768,7 +1770,7 @@ std::vector<int32_t> collectPlayerPositions(const FullState& session) {
     return positions;
 }
 
-bool resolveOneLayerMovement(FullState& session, int32_t tileIndex, int32_t layer, int32_t directionMask, bool emitAudio) {
+bool resolveOneLayerMovement(FullState& session, TurnResult& out, int32_t tileIndex, int32_t layer, int32_t directionMask, bool emitAudio) {
     const auto [dx, dy] = directionMaskToDelta(directionMask);
     const int32_t x = tileIndex / session.liveLevel.height;
     const int32_t y = tileIndex % session.liveLevel.height;
@@ -1813,7 +1815,7 @@ bool resolveOneLayerMovement(FullState& session, int32_t tileIndex, int32_t laye
             if ((dirBits & directionMask) == 0) {
                 continue;
             }
-            appendAudioEvent(session, entry.seed, "canmove");
+            appendAudioEvent(out, entry.seed, "canmove");
         }
     }
 
@@ -1832,7 +1834,7 @@ bool resolveOneLayerMovement(FullState& session, int32_t tileIndex, int32_t laye
     return true;
 }
 
-MovementResolveOutcome resolveMovements(FullState& session, std::vector<bool>* bannedGroups, bool emitAudio) {
+MovementResolveOutcome resolveMovements(FullState& session, TurnResult& out, std::vector<bool>* bannedGroups, bool emitAudio) {
     MovementResolveOutcome outcome;
     bool moved = true;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
@@ -1956,7 +1958,7 @@ MovementResolveOutcome resolveMovements(FullState& session, std::vector<bool>* b
                         continue;
                     }
                 }
-                if (resolveOneLayerMovement(session, tileIndex, layer, layerMovement, emitAudio)) {
+                if (resolveOneLayerMovement(session, out, tileIndex, layer, layerMovement, emitAudio)) {
                     clearShiftedMask5(movementMask, 5 * layer);
                     moved = true;
                     outcome.moved = true;
@@ -2030,7 +2032,7 @@ MovementResolveOutcome resolveMovements(FullState& session, std::vector<bool>* b
                                      movementMask.data(), movementMask.size())) {
                     continue;
                 }
-                appendAudioEvent(session, entry.seed, "cantmove");
+                appendAudioEvent(out, entry.seed, "cantmove");
             }
         }
     }
@@ -4837,7 +4839,7 @@ void discardTopUndoSnapshot(FullState& session) {
     session.canUndo = !session.undoStack.empty();
 }
 
-ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOptions options);
+TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOptions options);
 
 void runRulesOnLevelStart(FullState& session) {
     runRulesOnLevelStart(session, RuntimeStepOptions{});
@@ -4868,7 +4870,7 @@ bool wouldAgainChange(FullState& session, bool* outWouldModify, bool emitAudio) 
         .ignoreWin = true,
         .dontModify = true,
         .observedModification = &wouldModify,
-    });
+    }).core;
     const bool changed = result.changed || result.transitioned || result.won;
     const int iterations = 1;
     if (outWouldModify != nullptr) {
@@ -4901,10 +4903,9 @@ bool wouldAgainChange(FullState& session, bool* outWouldModify, bool emitAudio) 
 // 9. Play create/destroy sounds and process output commands.
 // 10. Process restart, win/level transition, checkpoint, and again scheduling.
 // 11. Fill ps_step_result, sort audio, rebuild masks, and return.
-ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOptions options) {
-    ps_step_result result{};
-    session.lastAudioEvents.clear();
-    session.lastUiAudioEvents.clear();
+TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOptions options) {
+    TurnResult out;
+    ps_step_result& result = out.core;
     if (options.emitAudio && !session.game->sfxCreationMasks.empty()) {
         session.pendingCreateMask.assign(static_cast<size_t>(session.game->strideObject), 0);
     } else {
@@ -4964,7 +4965,7 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
             ruleChangedThisPass = applyRuleGroups(session, session.game->rules, session.game->loopPoint, commands, &bannedGroups, false);
         }
         dumpActiveMovements(session, "pre-resolve");
-        const MovementResolveOutcome movementOutcome = resolveMovements(session, &bannedGroups, options.emitAudio);
+        const MovementResolveOutcome movementOutcome = resolveMovements(session, out, &bannedGroups, options.emitAudio);
         rebuildMasks(session);
         if (rigidDebugEnabled()) {
             std::ostringstream stream;
@@ -4991,7 +4992,7 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
             rigidDebugLog(stream.str());
         }
         if (movementOutcome.shouldUndo && rigidLoopCount < 49) {
-            clearAudioEventsByKind(session, "canmove");
+            clearAudioEventsByKind(out, "canmove");
             ++rigidLoopCount;
             continue;
         }
@@ -5028,7 +5029,7 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
                 discardTopUndoSnapshot(session);
             }
             rebuildMasks(session);
-            return result;
+            return out;
         }
     }
 
@@ -5037,22 +5038,22 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
         if (options.pushUndo) {
             discardTopUndoSnapshot(session);
         }
-        session.lastAudioEvents.clear();
+        out.audio.clear();
         if (!options.dontModify && options.emitAudio) {
-            tryPlaySimpleSound(session, "cancel");
+            tryPlaySimpleSound(session, out, "cancel");
         }
         result.changed = options.dontModify
             ? commands.queue.size() > 1
             : (modified || !commands.queue.empty());
         if (options.emitAudio) {
-            sortAudioEvents(session);
+            sortAudioEvents(out);
         }
-        result.audio_event_count = session.lastAudioEvents.size();
-        result.audio_events = session.lastAudioEvents.empty() ? nullptr : session.lastAudioEvents.data();
-        result.ui_audio_event_count = session.lastUiAudioEvents.size();
-        result.ui_audio_events = session.lastUiAudioEvents.empty() ? nullptr : session.lastUiAudioEvents.data();
+        result.audio_event_count = out.audio.size();
+        result.audio_events = out.audio.empty() ? nullptr : out.audio.data();
+        result.ui_audio_event_count = out.uiAudio.size();
+        result.ui_audio_events = out.uiAudio.empty() ? nullptr : out.uiAudio.data();
         rebuildMasks(session);
-        return result;
+        return out;
     }
 
     if (options.dontModify) {
@@ -5060,20 +5061,20 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
             restoreSnapshot(session, turnStart, false);
             rebuildMasks(session);
             result.changed = true;
-            return result;
+            return out;
         }
         restoreSnapshot(session, turnStart, false);
         rebuildMasks(session);
-        return result;
+        return out;
     }
 
     if (options.emitAudio) {
-        tryPlayMaskSounds(session, session.game->sfxCreationMasks, session.pendingCreateMask, "create");
-        tryPlayMaskSounds(session, session.game->sfxDestructionMasks, session.pendingDestroyMask, "destroy");
+        tryPlayMaskSounds(session, out, session.game->sfxCreationMasks, session.pendingCreateMask, "create");
+        tryPlayMaskSounds(session, out, session.game->sfxDestructionMasks, session.pendingDestroyMask, "destroy");
     }
     const bool hasRestart = commandQueueContains(commands, "restart");
     if (!options.solverMode) {
-        processOutputCommands(session, commands, hasRestart, options.emitAudio);
+        processOutputCommands(session, out, commands, hasRestart, options.emitAudio);
     }
 
     if (hasRestart && !options.ignoreRestartCommand) {
@@ -5086,7 +5087,7 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
             .emitAudio = options.emitAudio,
         });
         if (options.emitAudio) {
-            tryPlaySimpleSound(session, "restart");
+            tryPlaySimpleSound(session, out, "restart");
         }
     }
 
@@ -5112,10 +5113,10 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
     bool againWouldChange = false;
     bool againWouldModify = false;
     if (!won && hasAgain && modified) {
-        const auto audioBeforeAgainProbe = session.lastAudioEvents;
+        const auto audioBeforeAgainProbe = out.audio;
         againWouldChange = wouldAgainChange(session, &againWouldModify, options.emitAudio);
         if (options.emitAudio) {
-            session.lastAudioEvents = audioBeforeAgainProbe;
+            out.audio = audioBeforeAgainProbe;
         }
     }
     if (ruleDebugEnabled()) {
@@ -5158,15 +5159,15 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
     result.won = won;
     result.restarted = hasRestart && !options.ignoreRestartCommand;
     if (options.emitAudio) {
-        sortAudioEvents(session);
+        sortAudioEvents(out);
     }
-    result.audio_event_count = session.lastAudioEvents.size();
-    result.audio_events = session.lastAudioEvents.empty() ? nullptr : session.lastAudioEvents.data();
-    result.ui_audio_event_count = session.lastUiAudioEvents.size();
-    result.ui_audio_events = session.lastUiAudioEvents.empty() ? nullptr : session.lastUiAudioEvents.data();
+    result.audio_event_count = out.audio.size();
+    result.audio_events = out.audio.empty() ? nullptr : out.audio.data();
+    result.ui_audio_event_count = out.uiAudio.size();
+    result.ui_audio_events = out.uiAudio.empty() ? nullptr : out.uiAudio.data();
     rebuildMasks(session);
     syncBoardOccupancyMirrorFromAuthoritativeState(session);
-    return result;
+    return out;
 }
 
 size_t listInputs(ps_input* output, size_t capacity) {
@@ -5213,9 +5214,8 @@ ps_step_result interpretedTurnOnceWithSpecializedRulegroups(
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 ) {
-    ps_step_result result{};
-    session.lastAudioEvents.clear();
-    session.lastUiAudioEvents.clear();
+    gThreadTurnResult = TurnResult{};
+    ps_step_result& result = gThreadTurnResult.core;
     if (session.meta.textMode && !session.meta.titleScreen && input == PS_INPUT_ACTION) {
         if (session.meta.level.isMessage) {
             result.transitioned = advanceToNextLevel(session);
@@ -5227,11 +5227,11 @@ ps_step_result interpretedTurnOnceWithSpecializedRulegroups(
             rebuildMasks(session);
         }
         if (options.emitAudio) {
-            tryPlaySimpleSound(session, "closemessage");
+            tryPlaySimpleSound(session, gThreadTurnResult, "closemessage");
         }
         result.changed = true;
-        result.ui_audio_event_count = session.lastUiAudioEvents.size();
-        result.ui_audio_events = session.lastUiAudioEvents.empty() ? nullptr : session.lastUiAudioEvents.data();
+        result.ui_audio_event_count = gThreadTurnResult.uiAudio.size();
+        result.ui_audio_events = gThreadTurnResult.uiAudio.empty() ? nullptr : gThreadTurnResult.uiAudio.data();
         return result;
     }
     if (session.meta.titleScreen && input == PS_INPUT_ACTION) {
@@ -5250,7 +5250,7 @@ ps_step_result interpretedTurnOnceWithSpecializedRulegroups(
         return interpretedTickWithSpecializedRulegroups(session, options, applyEarlyRules, applyLateRules);
     }
 
-    return executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{
+    gThreadTurnResult = executeTurn(session, inputToDirectionMask(input), ExecuteTurnOptions{
         .pushUndo = options.playableUndo,
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
@@ -5258,6 +5258,7 @@ ps_step_result interpretedTurnOnceWithSpecializedRulegroups(
         .applyEarlyRules = applyEarlyRules,
         .applyLateRules = applyLateRules,
     });
+    return gThreadTurnResult.core;
 }
 
 ps_step_result interpretedTurnWithSpecializedRulegroups(
@@ -5300,7 +5301,7 @@ ps_step_result interpretedTickWithSpecializedRulegroups(
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 ) {
-    return executeTurn(session, 0, ExecuteTurnOptions{
+    gThreadTurnResult = executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
@@ -5308,6 +5309,7 @@ ps_step_result interpretedTickWithSpecializedRulegroups(
         .applyEarlyRules = applyEarlyRules,
         .applyLateRules = applyLateRules,
     });
+    return gThreadTurnResult.core;
 }
 
 ps_step_result interpretedTurnWithCompiledRuleGroups(
@@ -5383,6 +5385,8 @@ ps_step_result turnOnce(FullState& session, ps_input input, RuntimeStepOptions o
         if (outcome.handled) {
             addCounter(gRuntimeCounters.specializedFullTurnHits);
             syncBoardOccupancyMirrorFromAuthoritativeState(session);
+            gThreadTurnResult = TurnResult{};
+            gThreadTurnResult.core = outcome.result;
             return outcome.result;
         }
         addCounter(gRuntimeCounters.specializedFullTurnFallbacks);
@@ -5393,26 +5397,42 @@ ps_step_result turnOnce(FullState& session, ps_input input, RuntimeStepOptions o
     return interpreterStep(session, input, options);
 }
 
-ps_step_result turn(FullState& session, ps_input input, RuntimeStepOptions options) {
+TurnResult turnResult(FullState& session, ps_input input, RuntimeStepOptions options) {
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
-    ps_step_result result = turnOnce(session, input, yieldOptions);
+    (void)turnOnce(session, input, yieldOptions);
+    TurnResult acc = gThreadTurnResult;
     if (options.againPolicy != AgainPolicy::Drain) {
-        return result;
+        return acc;
     }
-
     constexpr int kMaxAgainIterations = 500;
     for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
-        const ps_step_result tickResult = turnOnce(session, PS_INPUT_TICK, yieldOptions);
-        mergeDrainedTurnResult(result, tickResult);
+        (void)turnOnce(session, PS_INPUT_TICK, yieldOptions);
+        // Merge drained tick core; keep the last tick's audio vectors.
+        acc.core.changed = acc.core.changed || gThreadTurnResult.core.changed;
+        acc.core.won = acc.core.won || gThreadTurnResult.core.won;
+        acc.core.transitioned = acc.core.transitioned || gThreadTurnResult.core.transitioned;
+        acc.core.restarted = acc.core.restarted || gThreadTurnResult.core.restarted;
+        acc.audio = gThreadTurnResult.audio;
+        acc.uiAudio = gThreadTurnResult.uiAudio;
+        acc.core.audio_event_count = acc.audio.size();
+        acc.core.audio_events = acc.audio.empty() ? nullptr : acc.audio.data();
+        acc.core.ui_audio_event_count = acc.uiAudio.size();
+        acc.core.ui_audio_events = acc.uiAudio.empty() ? nullptr : acc.uiAudio.data();
     }
-    return result;
+    return acc;
+}
+
+ps_step_result turn(FullState& session, ps_input input, RuntimeStepOptions options) {
+    gThreadTurnResult = turnResult(session, input, options);
+    return gThreadTurnResult.core;
 }
 
 ps_step_result step(FullState& session, ps_input input, RuntimeStepOptions options) {
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
-    return turnOnce(session, input, yieldOptions);
+    (void)turnOnce(session, input, yieldOptions);
+    return gThreadTurnResult.core;
 }
 
 ps_step_result step(FullState& session, ps_input input) {

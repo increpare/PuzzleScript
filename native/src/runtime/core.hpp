@@ -431,13 +431,17 @@ struct FullState {
     std::vector<int32_t> ellipsisMinConcreteSuffixScratch;
     std::vector<int32_t> ellipsisPositionsScratch;
     std::vector<UndoSnapshot> undoStack;
-    std::vector<ps_audio_event> lastAudioEvents;
-    std::vector<ps_audio_event> lastUiAudioEvents;
     bool canUndo = false;
     bool pendingAgain = false;
     bool suppressRuleMessages = false;
     RandomState randomState;
     SimdBackend backend = SimdBackend::Scalar;
+};
+
+struct TurnResult {
+    ps_step_result core{};
+    std::vector<ps_audio_event> audio;
+    std::vector<ps_audio_event> uiAudio;
 };
 
 /// Cell-major → object-major compact bits (same layout as solver `CompactState::objectBits`).
@@ -572,6 +576,8 @@ ps_step_result step(FullState& state, ps_input input, RuntimeStepOptions options
 ps_step_result turn(FullState& state, ps_input input, RuntimeStepOptions options);
 ps_step_result tick(FullState& state, RuntimeStepOptions options);
 void settlePendingAgain(FullState& state, RuntimeStepOptions options);
+
+TurnResult turnResult(FullState& state, ps_input input, RuntimeStepOptions options);
 std::unique_ptr<Error> benchmarkCloneHash(const FullState& state, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult);
 void setRuntimeCountersEnabled(bool enabled);
 void resetRuntimeCounters();
