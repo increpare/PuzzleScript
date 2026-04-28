@@ -705,6 +705,20 @@ void prepareSolverChildFullStateFromParent(FullState& child, const FullState& pa
     markMaterializedFullStateDirty(child);
 }
 
+// Allocate a Node-owned FullState that captures `source`'s post-step state
+// without copying its scratch/mask/undo buffers. Implemented in terms of
+// prepareSolverChildFullStateFromParent: that helper copies only liveLevel
+// + meta + RNG and re-sizes (zero-fill) the small movement/rigid masks. The
+// resulting FullState has empty replacement/ellipsis scratch and undo stack;
+// when a future expansion uses it as `parentSession`, only those few fields
+// are read, so this thin layout is sufficient — and is what F1 buys us over
+// the previous `std::make_unique<FullState>(parentSession)` deep clone.
+std::unique_ptr<FullState> snapshotSolverNodeFullState(const FullState& source) {
+    auto owned = std::make_unique<FullState>();
+    prepareSolverChildFullStateFromParent(*owned, source);
+    return owned;
+}
+
 void recordSearchNodeStateStorage(Timing& timing, const SearchNodeState& state) {
     const uint64_t bytes = static_cast<uint64_t>(state.byteSize());
     timing.compactStateBytes += bytes;
@@ -719,7 +733,10 @@ struct CompactTurnTryResult {
 };
 
 struct SolverEdgeStep {
-    std::unique_ptr<FullState> ownedChild;
+    // Non-owning. In non-compact-storage mode points at the shared childScratch
+    // (post-step state); on accept the caller snapshots into a Node-owned
+    // FullState. In compact-storage mode left null when the compact fast path
+    // produced the result.
     FullState* child = nullptr;
     CompactTurnTryResult compactTurn;
     ps_step_result stepResult{};
@@ -888,14 +905,14 @@ SolverEdgeStep stepSolverEdge(
     }
 
     if (!edge.compactTurn.handled) {
+        // Both compact and non-compact storage step through the shared
+        // `childScratch` buffer; on accept the caller snapshots a thin
+        // Node-owned FullState (non-compact) or a SearchNodeState (compact).
+        // This avoids the per-edge full FullState copy that previously
+        // cloned every scratch/mask vector from the parent.
         ScopedTimer timer(result.timing.cloneNs);
-        if (!compactNodeStorage) {
-            edge.ownedChild = std::make_unique<FullState>(parentSession);
-            edge.child = edge.ownedChild.get();
-        } else {
-            prepareSolverChildFullStateFromParent(childScratch, parentSession);
-            edge.child = &childScratch;
-        }
+        prepareSolverChildFullStateFromParent(childScratch, parentSession);
+        edge.child = &childScratch;
     }
 
     if (edge.compactTurn.handled) {
@@ -1357,11 +1374,14 @@ Result runSearch(
     const int32_t searchHeight = initial->liveLevel.height;
     std::unique_ptr<FullState> compactSessionBase;
     std::unique_ptr<FullState> parentScratch;
-    std::unique_ptr<FullState> childScratch;
+    // Shared per-edge step buffer used by both storage modes (F1). One full
+    // copy of `*initial` here gives the buffer correctly-sized scratch/mask
+    // vectors that `prepareSolverChildFullStateFromParent` then reuses on
+    // every edge (resetting contents but keeping capacity).
+    std::unique_ptr<FullState> childScratch = std::make_unique<FullState>(*initial);
     if (compactNodeStorage) {
         compactSessionBase = std::make_unique<FullState>(*initial);
         parentScratch = std::make_unique<FullState>(*initial);
-        childScratch = std::make_unique<FullState>(*initial);
     }
 
     std::vector<Node> nodes;
@@ -1514,9 +1534,14 @@ Result runSearch(
                         ? compactHeuristicScore(childState, *game, searchWidth, searchHeight)
                         : heuristicScore(*edge.child, heuristicScratch);
                 }
+                std::unique_ptr<FullState> ownedChild;
+                if (!compactNodeStorage) {
+                    ScopedTimer timer(result.timing.cloneNs);
+                    ownedChild = snapshotSolverNodeFullState(*edge.child);
+                }
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(edge.ownedChild), std::move(childState), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    nodes.push_back(Node{std::move(ownedChild), std::move(childState), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
                     recordSearchNodeStateStorage(result.timing, nodes.back().state);
                 }
             } else {
@@ -1537,9 +1562,14 @@ Result runSearch(
                         : heuristicScore(*edge.child, heuristicScratch);
                 }
                 childIndex = static_cast<uint32_t>(nodes.size());
+                std::unique_ptr<FullState> ownedChild;
+                if (!compactNodeStorage) {
+                    ScopedTimer timer(result.timing.cloneNs);
+                    ownedChild = snapshotSolverNodeFullState(*edge.child);
+                }
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(edge.ownedChild), std::move(childState), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    nodes.push_back(Node{std::move(ownedChild), std::move(childState), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
                     recordSearchNodeStateStorage(result.timing, nodes.back().state);
                 }
             }
