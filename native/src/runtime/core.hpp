@@ -501,6 +501,9 @@ enum class AgainPolicy {
 struct TurnOptions {
     bool playableUndo = true;
     bool emitAudio = true;
+    // Solver / analysis mode: suppress cosmetic outputs (message/sfx/etc.) and
+    // ignore non-solver-relevant commands like checkpoint.
+    bool solverMode = false;
     AgainPolicy againPolicy = AgainPolicy::Yield;
 };
 

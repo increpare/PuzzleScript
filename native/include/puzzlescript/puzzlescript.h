@@ -139,6 +139,7 @@ void ps_full_state_destroy(ps_full_state* state);
 void ps_full_state_set_unit_testing(ps_full_state* state, bool enabled);
 bool ps_full_state_load_level(ps_full_state* state, int32_t level_index, ps_error** out_error);
 ps_step_result ps_full_state_turn(ps_full_state* state, ps_input input);
+ps_step_result ps_full_state_turn_with_options(ps_full_state* state, ps_input input, bool solver_mode);
 bool ps_full_state_compact_turn_oracle_check(
     const ps_full_state* state,
     ps_input input,

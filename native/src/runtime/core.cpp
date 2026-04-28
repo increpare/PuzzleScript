@@ -60,6 +60,7 @@ struct ExecuteTurnOptions {
     bool pushUndo = true;
     bool recordRestartUndo = true;
     bool emitAudio = true;
+    bool solverMode = false;
     bool ignoreRestartCommand = false;
     bool ignoreWin = false;
     bool dontModify = false;
@@ -5071,7 +5072,9 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
         tryPlayMaskSounds(session, session.game->sfxDestructionMasks, session.pendingDestroyMask, "destroy");
     }
     const bool hasRestart = commandQueueContains(commands, "restart");
-    processOutputCommands(session, commands, hasRestart, options.emitAudio);
+    if (!options.solverMode) {
+        processOutputCommands(session, commands, hasRestart, options.emitAudio);
+    }
 
     if (hasRestart && !options.ignoreRestartCommand) {
         if (!options.pushUndo && options.recordRestartUndo) {
@@ -5092,7 +5095,7 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
     if (won) {
         (void)transitioned;
     }
-    if (!won && commandQueueContains(commands, "checkpoint")) {
+    if (!options.solverMode && !won && commandQueueContains(commands, "checkpoint")) {
         session.meta.restart.width = session.liveLevel.width;
         session.meta.restart.height = session.liveLevel.height;
         fillCompactOccupancyBitsFromLiveLevelData(
@@ -5251,6 +5254,7 @@ ps_step_result interpretedTurnOnceWithSpecializedRulegroups(
         .pushUndo = options.playableUndo,
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
+        .solverMode = options.solverMode,
         .applyEarlyRules = applyEarlyRules,
         .applyLateRules = applyLateRules,
     });
@@ -5300,6 +5304,7 @@ ps_step_result interpretedTickWithSpecializedRulegroups(
         .pushUndo = false,
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
+        .solverMode = options.solverMode,
         .applyEarlyRules = applyEarlyRules,
         .applyLateRules = applyLateRules,
     });
@@ -5367,6 +5372,9 @@ ps_step_result interpreterTick(FullState& session, RuntimeStepOptions options) {
 }
 
 ps_step_result turnOnce(FullState& session, ps_input input, RuntimeStepOptions options) {
+    if (options.solverMode) {
+        options.emitAudio = false;
+    }
     if (session.game->specializedFullTurn != nullptr
         && session.game->specializedFullTurn->step != nullptr
         && specializedFullTurnDispatchEnabled()) {

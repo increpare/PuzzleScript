@@ -224,6 +224,18 @@ ps_step_result ps_full_state_turn(ps_full_state* state, ps_input input) {
     return puzzlescript::turn(*state->impl, input, RuntimeStepOptions{});
 }
 
+ps_step_result ps_full_state_turn_with_options(ps_full_state* state, ps_input input, bool solver_mode) {
+    if (!state) {
+        return ps_step_result{};
+    }
+    RuntimeStepOptions options{};
+    options.solverMode = solver_mode;
+    if (solver_mode) {
+        options.emitAudio = false;
+    }
+    return puzzlescript::turn(*state->impl, input, options);
+}
+
 bool ps_full_state_create(const ps_game* game, ps_full_state** out_state, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;

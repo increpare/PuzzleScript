@@ -827,6 +827,7 @@ SolverEdgeStep stepSolverEdge(
     constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
         .playableUndo = false,
         .emitAudio = false,
+        .solverMode = true,
         .againPolicy = puzzlescript::AgainPolicy::Drain,
     };
     SolverEdgeStep edge;

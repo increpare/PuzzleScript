@@ -58,7 +58,7 @@ RULES
 ======
 
 [ > Player | Background ] -> [ Background | Player ] sfx0
-[ Action Player ] -> [ Player ] message Hello native player
+[ Action Player ] -> [ Player ] checkpoint message Hello native player
 
 =======
 LEVELS
@@ -129,6 +129,21 @@ int main() {
     assert(moveResult.changed);
     assert(moveResult.audio_event_count == 1);
     assert(moveResult.audio_events[0].seed == 222222);
+
+    // Solver mode: suppress message/sfx outputs and ignore checkpoint.
+    // Move once (x=1), then ACTION would checkpoint+message; solver mode should do neither.
+    assert(ps_full_state_cell_has_object(session.state, 1, 0, 1));
+    const ps_step_result solverAction = ps_full_state_turn_with_options(session.state, PS_INPUT_ACTION, true);
+    assert(solverAction.changed);
+    ps_full_state_status(session.state, &status);
+    assert(status.mode == PS_FULL_STATE_MODE_LEVEL);
+    assert(std::string(ps_full_state_message_text(session.state)).empty());
+    // Move again (x=2), then restart should go back to initial (x=0), not checkpointed (x=1).
+    const ps_step_result move2 = ps_full_state_turn(session.state, PS_INPUT_RIGHT);
+    assert(move2.changed);
+    assert(ps_full_state_cell_has_object(session.state, 2, 0, 1));
+    assert(ps_full_state_restart(session.state));
+    assert(ps_full_state_cell_has_object(session.state, 0, 0, 1));
 
     ps_free_game(const_cast<ps_game*>(game));
     return 0;
