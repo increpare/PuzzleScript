@@ -4135,36 +4135,13 @@ void compiledRuleSetCellObjectsWord1(
     MaskWord destroyed
 ) {
     const int32_t stride = session.game->strideObject;
-    const size_t base = static_cast<size_t>(tileIndex * stride);
-    const int32_t columnIndex = tileIndex / session.liveLevel.height;
-    const int32_t rowIndex = tileIndex % session.liveLevel.height;
-    const MaskWord oldValue = session.liveLevel.objects[base];
-
-    MaskWordUnsigned changedBits = static_cast<MaskWordUnsigned>(oldValue ^ objects);
-    while (changedBits != 0) {
-        const int32_t bit = maskWordCountTrailingZeros(changedBits);
-        setObjectCellIndexBit(
-            session,
-            bit,
-            tileIndex,
-            (static_cast<MaskWordUnsigned>(objects) & (MaskWordUnsigned{1} << bit)) != 0
-        );
-        changedBits &= changedBits - 1;
+    std::vector<MaskWord> cell(static_cast<size_t>(stride));
+    const MaskWord* src = getCellObjectsPtr(session, tileIndex);
+    for (int32_t word = 0; word < stride; ++word) {
+        cell[static_cast<size_t>(word)] = src[word];
     }
-
-    session.liveLevel.objects[base] = objects;
-    session.columnMasks[static_cast<size_t>(columnIndex * stride)] |= objects;
-    session.rowMasks[static_cast<size_t>(rowIndex * stride)] |= objects;
-    session.boardMask[0] |= objects;
-
-    if ((oldValue & ~objects) != 0) {
-        if (static_cast<size_t>(rowIndex) < session.dirtyObjectRows.size())
-            session.dirtyObjectRows[static_cast<size_t>(rowIndex)] = 1;
-        if (static_cast<size_t>(columnIndex) < session.dirtyObjectColumns.size())
-            session.dirtyObjectColumns[static_cast<size_t>(columnIndex)] = 1;
-        session.dirtyObjectBoard = true;
-        session.anyMasksDirty = true;
-    }
+    cell[0] = objects;
+    setCellObjectsFromWords(session, tileIndex, cell.data());
     if (!session.pendingCreateMask.empty()) {
         session.pendingCreateMask[0] |= created;
     }

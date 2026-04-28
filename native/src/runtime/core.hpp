@@ -107,6 +107,12 @@ struct ObjectDef {
     std::vector<std::vector<int32_t>> sprite;
 };
 
+// Cell-major object bitmask grid: length = width * height * strideObject (see engine tests).
+// **Engine rule:** change per-cell occupancy only through `setCellObjects` /
+// `setCellObjectsFromWords` (and compiled-rule wrappers), not by mutating
+// `objects` directly. Bulk load paths (level load, compact materialize, bridge) may
+// `assign` the whole buffer, then call `syncBoardOccupancyMirrorFromAuthoritativeState` or
+// `resizeBoardOccupancyObjectBits` as appropriate.
 struct LevelTemplate {
     bool isMessage = false;
     std::string message;
@@ -378,7 +384,9 @@ struct FullState {
 
     std::shared_ptr<const Game> game;
     MetaGameState meta;
+    // Authoritative board (cell-major). Per-tile writes: setCellObjectsFromWords / setCellObjects.
     LevelTemplate liveLevel;
+    // Object-major mirror of `liveLevel` + RNG; updated at turn end via sync helpers.
     BoardOccupancy occupancy;
     MaskVector liveMovements;
     MaskVector rowMasks;

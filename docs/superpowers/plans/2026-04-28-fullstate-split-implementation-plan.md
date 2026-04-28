@@ -180,29 +180,19 @@ Pass: `469/469`, `compact_turn_oracle_failures=0` (2026-04-28).
 
 ### Task B2: Dual authoritative phase ends — pick compact writes first on critical paths
 
-**Purpose:** Flip writes rule/replacement paths to update **`occupancy.objectBits` first**, then derive `liveLevel.objects`, OR vice versa — **pick one ordering** documented in `occupancy_access.hpp` header comment. Complete migration for:
+**Purpose:** Establish **one write path** for per-cell object updates; **authoritative data remains `liveLevel.objects`** until a later phase flips to compact-primary. **`BoardOccupancy`** stays in sync via **`syncBoardOccupancyMirrorFromAuthoritativeState`** at turn boundaries.
 
-- Player movement / object mutations in `core.cpp`
-- Rule application entry points (`applyReplacementAt`, etc.)
+**Progress (2026-04-28):**
 
-Track progress with checklist in PR description until **grep** shows no direct `liveLevel.objects[tile * stride + w] |=` outside accessors.
+- [x] **Policy documented** in `core.hpp` on **`LevelTemplate`** and **`FullState::liveLevel`** / **`occupancy`** (engine mutates cells only through **`setCellObjects*`**, bulk paths excepted).
+- [x] **`compiledRuleSetCellObjectsWord1`** refactored to build a per-cell buffer and call **`setCellObjectsFromWords`** (removes duplicated mask/objectCellIndex logic and direct `liveLevel.objects[base] = …`).
+- [ ] **Later:** optional flip to “compact writes first” + derived `liveLevel`; codegen (`cli/main.cpp`) still uses **`liveLevel.objects.data()`** for generated bulk reads — **Phase C**.
 
-- [ ] **Step 1:** Identify mutation sites:
+- [x] **Gate:** `make compact_turn_simulation_tests` — **469/469**, `compact_turn_oracle_failures=0`.
 
-```bash
-rg 'liveLevel\.objects' native/src/runtime/core.cpp native/src/runtime/compiled_rules.cpp
-```
+- [ ] **Optional:** `node src/tests/run_tests_node.js --sim-only` (JS corpus).
 
-- [ ] **Step 2:** Migrate highest-frequency paths first (measure with counters already in engine if present).
-
-- [ ] **Step 3:** Gate
-
-```bash
-make compact_turn_simulation_tests
-node src/tests/run_tests_node.js --sim-only
-```
-
-- [ ] **Step 4: Commit** per cohesive subdirectory (core vs compiled_rules).
+- [x] **Commit** — Task B2 tranche 1.
 
 ---
 
