@@ -352,6 +352,20 @@ struct Game {
     const SpecializedCompactTurnBackend* specializedCompactTurn = nullptr;
 };
 
+struct Scratch {
+    MaskVector replacementObjectsClearScratch;
+    MaskVector replacementObjectsSetScratch;
+    MaskVector replacementMovementsClearScratch;
+    MaskVector replacementMovementsSetScratch;
+    MaskVector replacementObjectsScratch;
+    MaskVector replacementMovementsScratch;
+    MaskVector replacementOldObjectsScratch;
+    MaskVector replacementOldMovementsScratch;
+    MaskVector replacementCreatedScratch;
+    MaskVector replacementDestroyedScratch;
+    MaskVector replacementRigidMaskScratch;
+};
+
 struct FullState {
     struct UndoSnapshot {
         MetaGameState meta;
@@ -402,17 +416,7 @@ struct FullState {
     MaskVector pendingDestroyMask;
     // Scratch buffers reused across applyReplacementAt invocations to avoid
     // per-call heap allocation. Contents are overwritten on every call.
-    MaskVector replacementObjectsClearScratch;
-    MaskVector replacementObjectsSetScratch;
-    MaskVector replacementMovementsClearScratch;
-    MaskVector replacementMovementsSetScratch;
-    MaskVector replacementObjectsScratch;
-    MaskVector replacementMovementsScratch;
-    MaskVector replacementOldObjectsScratch;
-    MaskVector replacementOldMovementsScratch;
-    MaskVector replacementCreatedScratch;
-    MaskVector replacementDestroyedScratch;
-    MaskVector replacementRigidMaskScratch;
+    Scratch scratch;
     std::vector<int32_t> singleRowMatchScratch;
     std::vector<uint8_t> ellipsisLinePossibleScratch;
     std::vector<int32_t> ellipsisMinConcreteSuffixScratch;

@@ -2117,10 +2117,10 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
             ? maskPtr(game, replacement.movementsLayerMask)
             : nullptr;
 
-        MaskVector& newObjects = session.replacementObjectsScratch;
-        MaskVector& newMovements = session.replacementMovementsScratch;
-        MaskVector& created = session.replacementCreatedScratch;
-        MaskVector& destroyed = session.replacementDestroyedScratch;
+        MaskVector& newObjects = session.scratch.replacementObjectsScratch;
+        MaskVector& newMovements = session.scratch.replacementMovementsScratch;
+        MaskVector& created = session.scratch.replacementCreatedScratch;
+        MaskVector& destroyed = session.scratch.replacementDestroyedScratch;
         newObjects.resize(objectWordCount);
         created.resize(objectWordCount);
         destroyed.resize(objectWordCount);
@@ -2180,18 +2180,18 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
             std::memcpy(old.data(), src, n * sizeof(MaskWord));
         }
     };
-    copyIntoScratchPair(session.replacementObjectsScratch,
-                        session.replacementOldObjectsScratch,
+    copyIntoScratchPair(session.scratch.replacementObjectsScratch,
+                        session.scratch.replacementOldObjectsScratch,
                         getCellObjectsPtr(session, tileIndex),
                         static_cast<size_t>(game.strideObject));
-    copyIntoScratchPair(session.replacementMovementsScratch,
-                        session.replacementOldMovementsScratch,
+    copyIntoScratchPair(session.scratch.replacementMovementsScratch,
+                        session.scratch.replacementOldMovementsScratch,
                         getCellMovementsPtr(session, tileIndex),
                         static_cast<size_t>(game.strideMovement));
-    MaskVector& objects      = session.replacementObjectsScratch;
-    MaskVector& movements    = session.replacementMovementsScratch;
-    const MaskVector& oldObjects   = session.replacementOldObjectsScratch;
-    const MaskVector& oldMovements = session.replacementOldMovementsScratch;
+    MaskVector& objects      = session.scratch.replacementObjectsScratch;
+    MaskVector& movements    = session.scratch.replacementMovementsScratch;
+    const MaskVector& oldObjects   = session.scratch.replacementOldObjectsScratch;
+    const MaskVector& oldMovements = session.scratch.replacementOldMovementsScratch;
     MaskVector rigidGroupIndexMask;
     MaskVector rigidMovementAppliedMask;
     bool rigidChange = false;
@@ -2209,14 +2209,14 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
             std::fill(scratch.begin(), scratch.end(), 0);
         }
     };
-    initScratch(session.replacementObjectsClearScratch,  maskPtr(game, replacement.objectsClear),   objectWordCount);
-    initScratch(session.replacementObjectsSetScratch,    maskPtr(game, replacement.objectsSet),     objectWordCount);
-    initScratch(session.replacementMovementsClearScratch,maskPtr(game, replacement.movementsClear), movementWordCount);
-    initScratch(session.replacementMovementsSetScratch,  maskPtr(game, replacement.movementsSet),   movementWordCount);
-    MaskVector& objectsClear   = session.replacementObjectsClearScratch;
-    MaskVector& objectsSet     = session.replacementObjectsSetScratch;
-    MaskVector& movementsClear = session.replacementMovementsClearScratch;
-    MaskVector& movementsSet   = session.replacementMovementsSetScratch;
+    initScratch(session.scratch.replacementObjectsClearScratch,  maskPtr(game, replacement.objectsClear),   objectWordCount);
+    initScratch(session.scratch.replacementObjectsSetScratch,    maskPtr(game, replacement.objectsSet),     objectWordCount);
+    initScratch(session.scratch.replacementMovementsClearScratch,maskPtr(game, replacement.movementsClear), movementWordCount);
+    initScratch(session.scratch.replacementMovementsSetScratch,  maskPtr(game, replacement.movementsSet),   movementWordCount);
+    MaskVector& objectsClear   = session.scratch.replacementObjectsClearScratch;
+    MaskVector& objectsSet     = session.scratch.replacementObjectsSetScratch;
+    MaskVector& movementsClear = session.scratch.replacementMovementsClearScratch;
+    MaskVector& movementsSet   = session.scratch.replacementMovementsSetScratch;
 
     const MaskWord* movementsLayerMask = replacement.hasMovementsLayerMask ? maskPtr(game, replacement.movementsLayerMask) : nullptr;
     const MaskWord* randomEntityMask   = replacement.hasRandomEntityMask ? maskPtr(game, replacement.randomEntityMask) : nullptr;
@@ -2319,10 +2319,10 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
         movements[word] = (movements[word] & ~movementsClear[word]) | movementsSet[word];
     }
 
-    session.replacementCreatedScratch.resize(objects.size());
-    session.replacementDestroyedScratch.resize(objects.size());
-    MaskVector& created   = session.replacementCreatedScratch;
-    MaskVector& destroyed = session.replacementDestroyedScratch;
+    session.scratch.replacementCreatedScratch.resize(objects.size());
+    session.scratch.replacementDestroyedScratch.resize(objects.size());
+    MaskVector& created   = session.scratch.replacementCreatedScratch;
+    MaskVector& destroyed = session.scratch.replacementDestroyedScratch;
     for (size_t word = 0; word < objects.size(); ++word) {
         created[word] = objects[word] & ~oldObjects[word];
         destroyed[word] = oldObjects[word] & ~objects[word];
@@ -2334,8 +2334,8 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
             ? session.game->groupNumberToRigidGroupIndex[static_cast<size_t>(rule.groupNumber)] + 1
             : 0;
         if (rigidGroupIndex > 0) {
-            session.replacementRigidMaskScratch.assign(static_cast<size_t>(session.game->strideMovement), 0);
-            MaskVector& rigidMask = session.replacementRigidMaskScratch;
+            session.scratch.replacementRigidMaskScratch.assign(static_cast<size_t>(session.game->strideMovement), 0);
+            MaskVector& rigidMask = session.scratch.replacementRigidMaskScratch;
             for (int32_t layer = 0; layer < session.game->layerCount; ++layer) {
                 const uint32_t wIdx = movementWordIndexForLayer(static_cast<uint32_t>(layer));
                 const uint32_t bIdx = movementBitShiftForLayer(static_cast<uint32_t>(layer));
