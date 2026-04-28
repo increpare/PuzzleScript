@@ -37,6 +37,7 @@ using TimePoint = Clock::time_point;
 using puzzlescript::FullState;
 using puzzlescript::Game;
 using puzzlescript::MaskWordUnsigned;
+using puzzlescript::PersistentLevelState;
 using puzzlescript::kMaskWordBits;
 using StateKey = puzzlescript::search::StateKey;
 using StateKeyHash = puzzlescript::search::StateKeyHash;
@@ -92,26 +93,22 @@ struct Options {
 };
 
 struct SearchNodeState {
-    std::vector<uint64_t> objectBits;
-    std::array<uint8_t, 256> randomStateS{};
-    uint8_t randomStateI = 0;
-    uint8_t randomStateJ = 0;
-    bool randomStateValid = false;
+    PersistentLevelState levelState;
 
     bool operator==(const SearchNodeState& other) const {
-        return objectBits == other.objectBits
-            && randomStateS == other.randomStateS
-            && randomStateI == other.randomStateI
-            && randomStateJ == other.randomStateJ
-            && randomStateValid == other.randomStateValid;
+        return levelState.boardOccupancy.objectBits == other.levelState.boardOccupancy.objectBits
+            && levelState.rng.s == other.levelState.rng.s
+            && levelState.rng.i == other.levelState.rng.i
+            && levelState.rng.j == other.levelState.rng.j
+            && levelState.rng.valid == other.levelState.rng.valid;
     }
 
     size_t byteSize() const {
-        return objectBits.size() * sizeof(uint64_t)
-            + randomStateS.size() * sizeof(uint8_t)
-            + sizeof(randomStateI)
-            + sizeof(randomStateJ)
-            + sizeof(randomStateValid);
+        return levelState.boardOccupancy.objectBits.size() * sizeof(uint64_t)
+            + levelState.rng.s.size() * sizeof(uint8_t)
+            + sizeof(levelState.rng.i)
+            + sizeof(levelState.rng.j)
+            + sizeof(levelState.rng.valid);
     }
 };
 
@@ -220,6 +217,7 @@ struct CompiledGame {
     std::filesystem::path path;
     std::string name;
     std::string source;
+    puzzlescript::LoadedGame loadedGame;
     std::shared_ptr<const Game> game;
     int64_t compileNs = 0;
     std::optional<Result> compileError;
@@ -364,7 +362,7 @@ std::vector<ps_input> solverInputsForGame(const Game& game) {
         PS_INPUT_DOWN,
         PS_INPUT_LEFT,
     };
-    if (game.metadataMap.find("noaction") == game.metadataMap.end()) {
+    if (game.metadata.values.find("noaction") == game.metadata.values.end()) {
         inputs.push_back(PS_INPUT_ACTION);
     }
     return inputs;
@@ -583,26 +581,26 @@ uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
 
 SearchNodeState searchNodeStateFromFullState(const FullState& session) {
     SearchNodeState state;
-    state.randomStateS = session.randomState.s;
-    state.randomStateI = session.randomState.i;
-    state.randomStateJ = session.randomState.j;
-    state.randomStateValid = session.randomState.valid;
-    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.objectBits);
+    state.levelState.rng.s = session.levelState.rng.s;
+    state.levelState.rng.i = session.levelState.rng.i;
+    state.levelState.rng.j = session.levelState.rng.j;
+    state.levelState.rng.valid = session.levelState.rng.valid;
+    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.levelState.boardOccupancy.objectBits);
     return state;
 }
 
 StateKey searchNodeStateKey(const SearchNodeState& state, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
-    for (uint64_t word : state.objectBits) {
+    for (uint64_t word : state.levelState.boardOccupancy.objectBits) {
         puzzlescript::search::appendStateKeyValue(key, word);
     }
-    for (uint8_t byte : state.randomStateS) {
+    for (uint8_t byte : state.levelState.rng.s) {
         puzzlescript::search::appendStateKeyValue(key, byte);
     }
-    puzzlescript::search::appendStateKeyValue(key, state.randomStateI);
-    puzzlescript::search::appendStateKeyValue(key, state.randomStateJ);
-    puzzlescript::search::appendStateKeyValue(key, state.randomStateValid);
+    puzzlescript::search::appendStateKeyValue(key, state.levelState.rng.i);
+    puzzlescript::search::appendStateKeyValue(key, state.levelState.rng.j);
+    puzzlescript::search::appendStateKeyValue(key, state.levelState.rng.valid);
     return key;
 }
 
@@ -612,14 +610,14 @@ SearchNodeState searchNodeStateWithTiming(const FullState& session, Timing& timi
 }
 
 void markMaterializedFullStateDirty(FullState& session) {
-    std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
-    std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
-    std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
-    std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
-    session.dirtyObjectBoard = true;
-    session.dirtyMovementBoard = true;
-    session.objectCellIndexDirty = true;
-    session.anyMasksDirty = true;
+    std::fill(session.scratch.dirtyObjectRows.begin(), session.scratch.dirtyObjectRows.end(), 1);
+    std::fill(session.scratch.dirtyObjectColumns.begin(), session.scratch.dirtyObjectColumns.end(), 1);
+    std::fill(session.scratch.dirtyMovementRows.begin(), session.scratch.dirtyMovementRows.end(), 1);
+    std::fill(session.scratch.dirtyMovementColumns.begin(), session.scratch.dirtyMovementColumns.end(), 1);
+    session.scratch.dirtyObjectBoard = true;
+    session.scratch.dirtyMovementBoard = true;
+    session.scratch.objectCellIndexDirty = true;
+    session.scratch.anyMasksDirty = true;
 }
 
 void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const FullState& base, FullState& session) {
@@ -635,41 +633,40 @@ void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const
     session.meta.winning = base.meta.winning;
     session.meta.messageText = base.meta.messageText;
     session.meta.loadedLevelSeed = base.meta.loadedLevelSeed;
-    session.liveLevel.width = base.liveLevel.width;
-    session.liveLevel.height = base.liveLevel.height;
-    session.liveLevel.layerCount = base.liveLevel.layerCount;
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    session.levelState.liveLevel.width = base.levelState.liveLevel.width;
+    session.levelState.liveLevel.height = base.levelState.liveLevel.height;
+    session.levelState.liveLevel.layerCount = base.levelState.liveLevel.layerCount;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const int32_t objectCount = session.game ? session.game->objectCount : 0;
     const int32_t stride = session.game ? session.game->strideObject : 0;
-    session.liveLevel.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
+    session.levelState.liveLevel.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
     for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
         const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
         for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-            uint64_t bits = objectBase + bitWord < state.objectBits.size() ? state.objectBits[objectBase + bitWord] : 0;
+            uint64_t bits = objectBase + bitWord < state.levelState.boardOccupancy.objectBits.size() ? state.levelState.boardOccupancy.objectBits[objectBase + bitWord] : 0;
             while (bits != 0) {
                 const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(bits));
                 const int32_t tileIndex = static_cast<int32_t>(bitWord * 64 + bit);
                 if (tileIndex < tileCount) {
                     const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
                     const uint32_t objectBit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
-                    session.liveLevel.objects[static_cast<size_t>(tileIndex * stride + word)] |= puzzlescript::maskBit(objectBit);
+                    session.levelState.liveLevel.objects[static_cast<size_t>(tileIndex * stride + word)] |= puzzlescript::maskBit(objectBit);
                 }
                 bits &= bits - 1;
             }
         }
     }
     const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * (session.game ? session.game->strideMovement : 0));
-    session.liveMovements.assign(movementWordCount, 0);
-    session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
-    session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
-    session.pendingAgain = false;
-    session.canUndo = false;
-    session.undoStack.clear();
-    session.randomState.s = state.randomStateS;
-    session.randomState.i = state.randomStateI;
-    session.randomState.j = state.randomStateJ;
-    session.randomState.valid = state.randomStateValid;
+    session.scratch.liveMovements.assign(movementWordCount, 0);
+    session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
+    session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
+    session.meta.pendingAgain = false;
+    session.meta.undoStack.clear();
+    session.levelState.rng.s = state.levelState.rng.s;
+    session.levelState.rng.i = state.levelState.rng.i;
+    session.levelState.rng.j = state.levelState.rng.j;
+    session.levelState.rng.valid = state.levelState.rng.valid;
     puzzlescript::resizeBoardOccupancyObjectBits(session);
     puzzlescript::syncOccupancyRngFromAuthoritativeRandomState(session);
     markMaterializedFullStateDirty(session);
@@ -678,22 +675,21 @@ void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
     child.meta = parent.meta;
-    child.liveLevel.width = parent.liveLevel.width;
-    child.liveLevel.height = parent.liveLevel.height;
-    child.liveLevel.layerCount = parent.liveLevel.layerCount;
-    child.liveLevel.objects = parent.liveLevel.objects;
+    child.levelState.liveLevel.width = parent.levelState.liveLevel.width;
+    child.levelState.liveLevel.height = parent.levelState.liveLevel.height;
+    child.levelState.liveLevel.layerCount = parent.levelState.liveLevel.layerCount;
+    child.levelState.liveLevel.objects = parent.levelState.liveLevel.objects;
 
-    child.liveMovements.assign(parent.liveMovements.size(), 0);
-    child.rigidGroupIndexMasks.assign(parent.rigidGroupIndexMasks.size(), 0);
-    child.rigidMovementAppliedMasks.assign(parent.rigidMovementAppliedMasks.size(), 0);
-    child.pendingCreateMask.clear();
-    child.pendingDestroyMask.clear();
-    child.pendingAgain = false;
-    child.canUndo = false;
-    child.undoStack.clear();
-    child.suppressRuleMessages = parent.suppressRuleMessages;
-    child.randomState = parent.randomState;
-    child.backend = parent.backend;
+    child.scratch.liveMovements.assign(parent.scratch.liveMovements.size(), 0);
+    child.scratch.rigidGroupIndexMasks.assign(parent.scratch.rigidGroupIndexMasks.size(), 0);
+    child.scratch.rigidMovementAppliedMasks.assign(parent.scratch.rigidMovementAppliedMasks.size(), 0);
+    child.scratch.pendingCreateMask.clear();
+    child.scratch.pendingDestroyMask.clear();
+    child.meta.pendingAgain = false;
+    child.meta.undoStack.clear();
+    child.meta.suppressRuleMessages = parent.meta.suppressRuleMessages;
+    child.levelState.rng = parent.levelState.rng;
+    child.scratch.backend = parent.scratch.backend;
     puzzlescript::resizeBoardOccupancyObjectBits(child);
     puzzlescript::syncOccupancyRngFromAuthoritativeRandomState(child);
     markMaterializedFullStateDirty(child);
@@ -757,27 +753,27 @@ std::string stepResultSummary(const ps_step_result& result) {
 }
 
 std::string searchNodeStateDiffSummary(const SearchNodeState& lhs, const SearchNodeState& rhs) {
-    const size_t wordCount = std::max(lhs.objectBits.size(), rhs.objectBits.size());
+    const size_t wordCount = std::max(lhs.levelState.boardOccupancy.objectBits.size(), rhs.levelState.boardOccupancy.objectBits.size());
     for (size_t index = 0; index < wordCount; ++index) {
-        const uint64_t left = index < lhs.objectBits.size() ? lhs.objectBits[index] : 0;
-        const uint64_t right = index < rhs.objectBits.size() ? rhs.objectBits[index] : 0;
+        const uint64_t left = index < lhs.levelState.boardOccupancy.objectBits.size() ? lhs.levelState.boardOccupancy.objectBits[index] : 0;
+        const uint64_t right = index < rhs.levelState.boardOccupancy.objectBits.size() ? rhs.levelState.boardOccupancy.objectBits[index] : 0;
         if (left != right) {
             std::ostringstream out;
             out << " word=" << index << " compact=" << left << " interpreter=" << right;
             return out.str();
         }
     }
-    if (lhs.randomStateValid != rhs.randomStateValid
-        || lhs.randomStateI != rhs.randomStateI
-        || lhs.randomStateJ != rhs.randomStateJ
-        || lhs.randomStateS != rhs.randomStateS) {
+    if (lhs.levelState.rng.valid != rhs.levelState.rng.valid
+        || lhs.levelState.rng.i != rhs.levelState.rng.i
+        || lhs.levelState.rng.j != rhs.levelState.rng.j
+        || lhs.levelState.rng.s != rhs.levelState.rng.s) {
         std::ostringstream out;
-        out << " random compact_valid=" << lhs.randomStateValid
-            << " interpreter_valid=" << rhs.randomStateValid
-            << " compact_i=" << static_cast<int32_t>(lhs.randomStateI)
-            << " interpreter_i=" << static_cast<int32_t>(rhs.randomStateI)
-            << " compact_j=" << static_cast<int32_t>(lhs.randomStateJ)
-            << " interpreter_j=" << static_cast<int32_t>(rhs.randomStateJ);
+        out << " random compact_valid=" << lhs.levelState.rng.valid
+            << " interpreter_valid=" << rhs.levelState.rng.valid
+            << " compact_i=" << static_cast<int32_t>(lhs.levelState.rng.i)
+            << " interpreter_i=" << static_cast<int32_t>(rhs.levelState.rng.i)
+            << " compact_j=" << static_cast<int32_t>(lhs.levelState.rng.j)
+            << " interpreter_j=" << static_cast<int32_t>(rhs.levelState.rng.j);
         return out.str();
     }
     return " state_equal";
@@ -799,21 +795,30 @@ CompactTurnTryResult trySpecializedCompactTurn(
     result.attempted = true;
     result.state = parent;
     puzzlescript::CompactStateView view{
-        result.state.objectBits.empty() ? nullptr : result.state.objectBits.data(),
-        result.state.objectBits.size(),
+        result.state.levelState.boardOccupancy.objectBits.empty() ? nullptr : result.state.levelState.boardOccupancy.objectBits.data(),
+        result.state.levelState.boardOccupancy.objectBits.size(),
         nullptr,
         0,
         width,
         height,
-        result.state.randomStateS.data(),
-        result.state.randomStateS.size(),
-        &result.state.randomStateI,
-        &result.state.randomStateJ,
-        &result.state.randomStateValid,
+        result.state.levelState.rng.s.data(),
+        result.state.levelState.rng.s.size(),
+        &result.state.levelState.rng.i,
+        &result.state.levelState.rng.j,
+        &result.state.levelState.rng.valid,
         currentLevelIndex,
     };
     const puzzlescript::SpecializedCompactTurnOutcome outcome =
         game.specializedCompactTurn->step(game, view, input, options);
+    if (outcome.handled) {
+        puzzlescript::canonicalizeCompactObjectBits(
+            game,
+            view.width,
+            view.height,
+            view.objectBits,
+            view.objectBitWordCount
+        );
+    }
     result.handled = outcome.handled;
     result.stepResult = outcome.result;
     return result;
@@ -918,25 +923,25 @@ SolverEdgeStep stepSolverEdge(
     return edge;
 }
 
-std::shared_ptr<const Game> compileGame(
+puzzlescript::LoadedGame compileGame(
     const std::string& source,
     std::string& errorMessage
 ) {
     try {
         puzzlescript::compiler::DiagnosticSink diagnostics;
         const auto state = puzzlescript::compiler::parseSource(source, diagnostics);
-        std::shared_ptr<const Game> game;
-        if (auto error = puzzlescript::compiler::lowerToRuntimeGame(state, game)) {
+        puzzlescript::LoadedGame loadedGame;
+        if (auto error = puzzlescript::compiler::lowerToRuntimeGame(state, loadedGame)) {
             errorMessage = error->message;
-            return nullptr;
+            return {};
         }
-        if (game) {
-            puzzlescript::attachLinkedCompiledRules(*std::const_pointer_cast<Game>(game), source);
+        if (loadedGame.information) {
+            puzzlescript::attachLinkedCompiledRules(*std::const_pointer_cast<Game>(loadedGame.information), source);
         }
-        return game;
+        return loadedGame;
     } catch (const std::exception& error) {
         errorMessage = error.what();
-        return nullptr;
+        return {};
     }
 }
 
@@ -981,7 +986,7 @@ bool compactObjectPresent(
     const size_t word = static_cast<size_t>(tileIndex >> 6);
     const uint64_t mask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
     const size_t offset = static_cast<size_t>(objectId) * cellWordCount + word;
-    return offset < state.objectBits.size() && (state.objectBits[offset] & mask) != 0;
+    return offset < state.levelState.boardOccupancy.objectBits.size() && (state.levelState.boardOccupancy.objectBits[offset] & mask) != 0;
 }
 
 bool compactMatchesFilter(
@@ -1149,14 +1154,14 @@ int32_t compactHeuristicScore(
 }
 
 std::unique_ptr<FullState> createLoadedSession(
-    const std::shared_ptr<const Game>& game,
+    const puzzlescript::LoadedGame& loadedGame,
     const std::string& gameName,
     int32_t levelIndex,
     Result& result
 ) {
     const std::string seed = "solver:" + gameName + ":" + std::to_string(levelIndex);
-    auto session = puzzlescript::createFullStateWithLoadedLevelSeed(game, seed);
-    session->suppressRuleMessages = true;
+    auto session = puzzlescript::createFullStateWithLoadedLevelSeed(loadedGame, seed);
+    session->meta.suppressRuleMessages = true;
     if (auto error = puzzlescript::loadLevel(*session, levelIndex)) {
         result.status = "level_error";
         result.error = error->message;
@@ -1324,7 +1329,7 @@ private:
 };
 
 Result runSearch(
-    const std::shared_ptr<const Game>& game,
+    const puzzlescript::LoadedGame& loadedGame,
     const std::string& gameName,
     int32_t levelIndex,
     int64_t timeoutMs,
@@ -1337,6 +1342,7 @@ Result runSearch(
     bool compactTurnOracle,
     int32_t astarWeight
 ) {
+    const std::shared_ptr<const Game>& game = loadedGame.information;
     Result result;
     result.game = gameName;
     result.level = levelIndex;
@@ -1355,7 +1361,7 @@ Result runSearch(
     std::unique_ptr<FullState> initial;
     {
         ScopedTimer timer(result.timing.loadNs);
-        initial = createLoadedSession(game, gameName, levelIndex, result);
+        initial = createLoadedSession(loadedGame, gameName, levelIndex, result);
     }
     if (!initial) {
         return result;
@@ -1364,8 +1370,8 @@ Result runSearch(
         result.status = "skipped_message";
         return result;
     }
-    const int32_t searchWidth = initial->liveLevel.width;
-    const int32_t searchHeight = initial->liveLevel.height;
+    const int32_t searchWidth = initial->levelState.liveLevel.width;
+    const int32_t searchHeight = initial->levelState.liveLevel.height;
     std::unique_ptr<FullState> compactSessionBase;
     std::unique_ptr<FullState> parentScratch;
     // Shared per-edge step buffer used by both storage modes (F1). One full
@@ -1615,7 +1621,7 @@ void mergeStats(Result& target, const Result& source) {
 }
 
 Result solveLevel(
-    const std::shared_ptr<const Game>& game,
+    const puzzlescript::LoadedGame& loadedGame,
     const std::string& gameName,
     int32_t levelIndex,
     int64_t timeoutMs,
@@ -1627,6 +1633,7 @@ Result solveLevel(
     bool compactTurnOracle,
     int32_t astarWeight
 ) {
+    const std::shared_ptr<const Game>& game = loadedGame.information;
     const TimePoint searchStart = Clock::now();
     const TimePoint deadline = searchStart + std::chrono::milliseconds(timeoutMs);
 
@@ -1637,13 +1644,13 @@ Result solveLevel(
     };
 
     if (strategy == Strategy::Bfs) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight));
+        return finish(runSearch(loadedGame, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight));
     }
     if (strategy == Strategy::WeightedAStar) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight));
+        return finish(runSearch(loadedGame, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight));
     }
     if (strategy == Strategy::Greedy) {
-        return finish(runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight));
+        return finish(runSearch(loadedGame, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Greedy, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight));
     }
 
     Result combined;
@@ -1662,7 +1669,7 @@ Result solveLevel(
     combined.timing.compileNs = compileNs;
 
     const TimePoint bfsDeadline = searchStart + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
-    Result bfs = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight);
+    Result bfs = runSearch(loadedGame, gameName, levelIndex, timeoutMs, compileNs, SearchMode::Bfs, std::min(bfsDeadline, deadline), workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight);
     mergeStats(combined, bfs);
     if (bfs.status == "solved" || bfs.status == "skipped_message" || bfs.status == "level_error") {
         bfs.strategy = bfs.status == "solved" ? "bfs" : "portfolio";
@@ -1670,7 +1677,7 @@ Result solveLevel(
     }
 
     if (Clock::now() < deadline) {
-        Result weighted = runSearch(game, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight);
+        Result weighted = runSearch(loadedGame, gameName, levelIndex, timeoutMs, compileNs, SearchMode::WeightedAStar, deadline, workerId, exactStateKeys, compactNodeStorage, compactTurnOracle, astarWeight);
         mergeStats(combined, weighted);
         if (weighted.status == "solved" || weighted.status == "level_error") {
             combined.status = weighted.status;
@@ -2123,7 +2130,8 @@ std::vector<Result> runCorpus(const Options& options) {
         std::string compileError;
         {
             ScopedTimer timer(compiled.compileNs);
-            compiled.game = compileGame(compiled.source, compileError);
+            compiled.loadedGame = compileGame(compiled.source, compileError);
+            compiled.game = compiled.loadedGame.information;
         }
         if (!compiled.game) {
             Result result;
@@ -2183,7 +2191,7 @@ std::vector<Result> runCorpus(const Options& options) {
                 const WorkItem& item = workItems[workIndex];
                 const CompiledGame& compiled = compiledGames[item.gameIndex];
                 Result result = solveLevel(
-                    compiled.game,
+                    compiled.loadedGame,
                     compiled.name,
                     item.levelIndex,
                     options.timeoutMs,

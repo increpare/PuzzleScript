@@ -446,7 +446,7 @@ void tryPlayCommandSound(FullState& session, TurnResult& out, std::string_view s
 void processOutputCommands(FullState& session, TurnResult& out, const CommandState& commands, bool suppressMessages = false, bool emitAudio = true) {
     for (const auto& command : commands.queue) {
         if (command == "message") {
-            if (suppressMessages || session.suppressRuleMessages) {
+            if (suppressMessages || session.meta.suppressRuleMessages) {
                 continue;
             }
             session.meta.messageText = commands.messageText;
@@ -578,14 +578,14 @@ void dumpActiveMovements(const FullState& session, std::string_view label) {
     std::ostringstream header;
     header << std::string(label) << " hash=" << hashFullState64(session);
     movementDebugLog(header.str());
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
         const MaskVector movementMask = getCellMovements(session, tileIndex);
         if (!anyBitsSet(movementMask)) {
             continue;
         }
-        const int32_t x = tileIndex / session.liveLevel.height;
-        const int32_t y = tileIndex % session.liveLevel.height;
+        const int32_t x = tileIndex / session.levelState.liveLevel.height;
+        const int32_t y = tileIndex % session.levelState.liveLevel.height;
         std::ostringstream line;
         line << "tile=(" << x << "," << y << ")"
              << " objects=" << describeObjects(session, getCellObjects(session, tileIndex))
@@ -1420,18 +1420,18 @@ MaskVector getCellObjects(const FullState& session, int32_t tileIndex) {
     MaskVector result(static_cast<size_t>(session.game->strideObject), 0);
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideObject);
     for (int32_t word = 0; word < session.game->strideObject; ++word) {
-        result[static_cast<size_t>(word)] = session.liveLevel.objects[base + static_cast<size_t>(word)];
+        result[static_cast<size_t>(word)] = session.levelState.liveLevel.objects[base + static_cast<size_t>(word)];
     }
     return result;
 }
 
 const MaskWord* getCellObjectsPtr(const FullState& session, int32_t tileIndex) {
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideObject);
-    return session.liveLevel.objects.data() + base;
+    return session.levelState.liveLevel.objects.data() + base;
 }
 
 size_t objectCellWordCount(const FullState& session) {
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     return static_cast<size_t>((tileCount + 63) / 64);
 }
 
@@ -1442,22 +1442,22 @@ void setObjectCellIndexBit(FullState& session, int32_t objectId, int32_t tileInd
     }
     const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
     const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
-    if (objectBase + bitWord >= session.objectCellBits.size()
-        || static_cast<size_t>(objectId) >= session.objectCellCounts.size()) {
-        session.objectCellIndexDirty = true;
+    if (objectBase + bitWord >= session.scratch.objectCellBits.size()
+        || static_cast<size_t>(objectId) >= session.scratch.objectCellCounts.size()) {
+        session.scratch.objectCellIndexDirty = true;
         return;
     }
     const uint64_t bit = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
-    const bool wasPresent = (session.objectCellBits[objectBase + bitWord] & bit) != 0;
+    const bool wasPresent = (session.scratch.objectCellBits[objectBase + bitWord] & bit) != 0;
     if (present) {
-        session.objectCellBits[objectBase + bitWord] |= bit;
+        session.scratch.objectCellBits[objectBase + bitWord] |= bit;
         if (!wasPresent) {
-            ++session.objectCellCounts[static_cast<size_t>(objectId)];
+            ++session.scratch.objectCellCounts[static_cast<size_t>(objectId)];
         }
     } else {
-        session.objectCellBits[objectBase + bitWord] &= ~bit;
-        if (wasPresent && session.objectCellCounts[static_cast<size_t>(objectId)] > 0) {
-            --session.objectCellCounts[static_cast<size_t>(objectId)];
+        session.scratch.objectCellBits[objectBase + bitWord] &= ~bit;
+        if (wasPresent && session.scratch.objectCellCounts[static_cast<size_t>(objectId)] > 0) {
+            --session.scratch.objectCellCounts[static_cast<size_t>(objectId)];
         }
     }
 }
@@ -1465,13 +1465,13 @@ void setObjectCellIndexBit(FullState& session, int32_t objectId, int32_t tileInd
 void setCellObjectsFromWords(FullState& session, int32_t tileIndex, const MaskWord* objects) {
     const int32_t stride = session.game->strideObject;
     const size_t base = static_cast<size_t>(tileIndex * stride);
-    const int32_t columnIndex = tileIndex / session.liveLevel.height;
-    const int32_t rowIndex = tileIndex % session.liveLevel.height;
+    const int32_t columnIndex = tileIndex / session.levelState.liveLevel.height;
+    const int32_t rowIndex = tileIndex % session.levelState.liveLevel.height;
     const size_t columnBase = static_cast<size_t>(columnIndex * stride);
     const size_t rowBase = static_cast<size_t>(rowIndex * stride);
     MaskWord clearedAny = 0;
     for (int32_t word = 0; word < stride; ++word) {
-        const MaskWord oldValue = session.liveLevel.objects[base + static_cast<size_t>(word)];
+        const MaskWord oldValue = session.levelState.liveLevel.objects[base + static_cast<size_t>(word)];
         const MaskWord value = objects[static_cast<size_t>(word)];
         MaskWordUnsigned changedBits = static_cast<MaskWordUnsigned>(oldValue ^ value);
         while (changedBits != 0) {
@@ -1481,18 +1481,18 @@ void setCellObjectsFromWords(FullState& session, int32_t tileIndex, const MaskWo
             changedBits &= changedBits - 1;
         }
         clearedAny |= (oldValue & ~value);
-        session.liveLevel.objects[base + static_cast<size_t>(word)] = value;
-        session.columnMasks[columnBase + static_cast<size_t>(word)] |= value;
-        session.rowMasks[rowBase + static_cast<size_t>(word)] |= value;
-        session.boardMask[static_cast<size_t>(word)] |= value;
+        session.levelState.liveLevel.objects[base + static_cast<size_t>(word)] = value;
+        session.scratch.columnMasks[columnBase + static_cast<size_t>(word)] |= value;
+        session.scratch.rowMasks[rowBase + static_cast<size_t>(word)] |= value;
+        session.scratch.boardMask[static_cast<size_t>(word)] |= value;
     }
     if (clearedAny != 0) {
-        if (static_cast<size_t>(rowIndex) < session.dirtyObjectRows.size())
-            session.dirtyObjectRows[static_cast<size_t>(rowIndex)] = 1;
-        if (static_cast<size_t>(columnIndex) < session.dirtyObjectColumns.size())
-            session.dirtyObjectColumns[static_cast<size_t>(columnIndex)] = 1;
-        session.dirtyObjectBoard = true;
-        session.anyMasksDirty = true;
+        if (static_cast<size_t>(rowIndex) < session.scratch.dirtyObjectRows.size())
+            session.scratch.dirtyObjectRows[static_cast<size_t>(rowIndex)] = 1;
+        if (static_cast<size_t>(columnIndex) < session.scratch.dirtyObjectColumns.size())
+            session.scratch.dirtyObjectColumns[static_cast<size_t>(columnIndex)] = 1;
+        session.scratch.dirtyObjectBoard = true;
+        session.scratch.anyMasksDirty = true;
     }
 }
 
@@ -1504,21 +1504,21 @@ MaskVector getCellMovements(const FullState& session, int32_t tileIndex) {
     MaskVector result(static_cast<size_t>(session.game->strideMovement), 0);
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
-        result[static_cast<size_t>(word)] = session.liveMovements[base + static_cast<size_t>(word)];
+        result[static_cast<size_t>(word)] = session.scratch.liveMovements[base + static_cast<size_t>(word)];
     }
     return result;
 }
 
 const MaskWord* getCellMovementsPtr(const FullState& session, int32_t tileIndex) {
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
-    return session.liveMovements.data() + base;
+    return session.scratch.liveMovements.data() + base;
 }
 
 MaskVector getCellRigidGroupIndexMask(const FullState& session, int32_t tileIndex) {
     MaskVector result(static_cast<size_t>(session.game->strideMovement), 0);
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
-        result[static_cast<size_t>(word)] = session.rigidGroupIndexMasks[base + static_cast<size_t>(word)];
+        result[static_cast<size_t>(word)] = session.scratch.rigidGroupIndexMasks[base + static_cast<size_t>(word)];
     }
     return result;
 }
@@ -1527,7 +1527,7 @@ MaskVector getCellRigidMovementAppliedMask(const FullState& session, int32_t til
     MaskVector result(static_cast<size_t>(session.game->strideMovement), 0);
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
-        result[static_cast<size_t>(word)] = session.rigidMovementAppliedMasks[base + static_cast<size_t>(word)];
+        result[static_cast<size_t>(word)] = session.scratch.rigidMovementAppliedMasks[base + static_cast<size_t>(word)];
     }
     return result;
 }
@@ -1562,27 +1562,27 @@ void clearShiftedMask5(MaskVector& value, int32_t shift) {
 void setCellMovementsFromWords(FullState& session, int32_t tileIndex, const MaskWord* movements) {
     const int32_t stride = session.game->strideMovement;
     const size_t base = static_cast<size_t>(tileIndex * stride);
-    const int32_t columnIndex = tileIndex / session.liveLevel.height;
-    const int32_t rowIndex = tileIndex % session.liveLevel.height;
+    const int32_t columnIndex = tileIndex / session.levelState.liveLevel.height;
+    const int32_t rowIndex = tileIndex % session.levelState.liveLevel.height;
     const size_t columnBase = static_cast<size_t>(columnIndex * stride);
     const size_t rowBase = static_cast<size_t>(rowIndex * stride);
     MaskWord clearedAny = 0;
     for (int32_t word = 0; word < stride; ++word) {
-        const MaskWord oldValue = session.liveMovements[base + static_cast<size_t>(word)];
+        const MaskWord oldValue = session.scratch.liveMovements[base + static_cast<size_t>(word)];
         const MaskWord value = movements[static_cast<size_t>(word)];
         clearedAny |= (oldValue & ~value);
-        session.liveMovements[base + static_cast<size_t>(word)] = value;
-        session.columnMovementMasks[columnBase + static_cast<size_t>(word)] |= value;
-        session.rowMovementMasks[rowBase + static_cast<size_t>(word)] |= value;
-        session.boardMovementMask[static_cast<size_t>(word)] |= value;
+        session.scratch.liveMovements[base + static_cast<size_t>(word)] = value;
+        session.scratch.columnMovementMasks[columnBase + static_cast<size_t>(word)] |= value;
+        session.scratch.rowMovementMasks[rowBase + static_cast<size_t>(word)] |= value;
+        session.scratch.boardMovementMask[static_cast<size_t>(word)] |= value;
     }
     if (clearedAny != 0) {
-        if (static_cast<size_t>(rowIndex) < session.dirtyMovementRows.size())
-            session.dirtyMovementRows[static_cast<size_t>(rowIndex)] = 1;
-        if (static_cast<size_t>(columnIndex) < session.dirtyMovementColumns.size())
-            session.dirtyMovementColumns[static_cast<size_t>(columnIndex)] = 1;
-        session.dirtyMovementBoard = true;
-        session.anyMasksDirty = true;
+        if (static_cast<size_t>(rowIndex) < session.scratch.dirtyMovementRows.size())
+            session.scratch.dirtyMovementRows[static_cast<size_t>(rowIndex)] = 1;
+        if (static_cast<size_t>(columnIndex) < session.scratch.dirtyMovementColumns.size())
+            session.scratch.dirtyMovementColumns[static_cast<size_t>(columnIndex)] = 1;
+        session.scratch.dirtyMovementBoard = true;
+        session.scratch.anyMasksDirty = true;
     }
 }
 
@@ -1593,37 +1593,37 @@ void setCellMovements(FullState& session, int32_t tileIndex, const MaskVector& m
 void setCellRigidGroupIndexMask(FullState& session, int32_t tileIndex, const MaskVector& masks) {
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
-        session.rigidGroupIndexMasks[base + static_cast<size_t>(word)] = masks[static_cast<size_t>(word)];
+        session.scratch.rigidGroupIndexMasks[base + static_cast<size_t>(word)] = masks[static_cast<size_t>(word)];
     }
 }
 
 void setCellRigidMovementAppliedMask(FullState& session, int32_t tileIndex, const MaskVector& masks) {
     const size_t base = static_cast<size_t>(tileIndex * session.game->strideMovement);
     for (int32_t word = 0; word < session.game->strideMovement; ++word) {
-        session.rigidMovementAppliedMasks[base + static_cast<size_t>(word)] = masks[static_cast<size_t>(word)];
+        session.scratch.rigidMovementAppliedMasks[base + static_cast<size_t>(word)] = masks[static_cast<size_t>(word)];
     }
 }
 
 void clearRigidState(FullState& session) {
-    std::fill(session.rigidGroupIndexMasks.begin(), session.rigidGroupIndexMasks.end(), 0);
-    std::fill(session.rigidMovementAppliedMasks.begin(), session.rigidMovementAppliedMasks.end(), 0);
+    std::fill(session.scratch.rigidGroupIndexMasks.begin(), session.scratch.rigidGroupIndexMasks.end(), 0);
+    std::fill(session.scratch.rigidMovementAppliedMasks.begin(), session.scratch.rigidMovementAppliedMasks.end(), 0);
 }
 
 void clearMovementState(FullState& session) {
-    std::fill(session.liveMovements.begin(), session.liveMovements.end(), 0);
-    std::fill(session.rowMovementMasks.begin(), session.rowMovementMasks.end(), 0);
-    std::fill(session.columnMovementMasks.begin(), session.columnMovementMasks.end(), 0);
-    std::fill(session.boardMovementMask.begin(), session.boardMovementMask.end(), 0);
-    std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 0);
-    std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 0);
-    session.dirtyMovementBoard = false;
+    std::fill(session.scratch.liveMovements.begin(), session.scratch.liveMovements.end(), 0);
+    std::fill(session.scratch.rowMovementMasks.begin(), session.scratch.rowMovementMasks.end(), 0);
+    std::fill(session.scratch.columnMovementMasks.begin(), session.scratch.columnMovementMasks.end(), 0);
+    std::fill(session.scratch.boardMovementMask.begin(), session.scratch.boardMovementMask.end(), 0);
+    std::fill(session.scratch.dirtyMovementRows.begin(), session.scratch.dirtyMovementRows.end(), 0);
+    std::fill(session.scratch.dirtyMovementColumns.begin(), session.scratch.dirtyMovementColumns.end(), 0);
+    session.scratch.dirtyMovementBoard = false;
     clearRigidState(session);
 
-    const bool objectDirty = session.dirtyObjectBoard
-        || std::any_of(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), [](uint8_t value) { return value != 0; })
-        || std::any_of(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), [](uint8_t value) { return value != 0; });
+    const bool objectDirty = session.scratch.dirtyObjectBoard
+        || std::any_of(session.scratch.dirtyObjectRows.begin(), session.scratch.dirtyObjectRows.end(), [](uint8_t value) { return value != 0; })
+        || std::any_of(session.scratch.dirtyObjectColumns.begin(), session.scratch.dirtyObjectColumns.end(), [](uint8_t value) { return value != 0; });
     if (!objectDirty) {
-        session.anyMasksDirty = false;
+        session.scratch.anyMasksDirty = false;
     }
 }
 
@@ -1689,7 +1689,7 @@ bool seedPlayerMovements(FullState& session, int32_t directionMask) {
     const uint32_t wordCount = game.wordCount;
 
     bool changed = false;
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     const uint32_t objectStride = static_cast<uint32_t>(game.strideObject);
     const uint32_t movementStride = static_cast<uint32_t>(game.strideMovement);
     MaskVector playerCellMask;
@@ -1761,7 +1761,7 @@ std::vector<int32_t> collectPlayerPositions(const FullState& session) {
     if (session.game->playerMask == kNullMaskOffset) {
         return positions;
     }
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
         if (cellContainsPlayer(session, tileIndex)) {
             positions.push_back(tileIndex);
@@ -1772,15 +1772,15 @@ std::vector<int32_t> collectPlayerPositions(const FullState& session) {
 
 bool resolveOneLayerMovement(FullState& session, TurnResult& out, int32_t tileIndex, int32_t layer, int32_t directionMask, bool emitAudio) {
     const auto [dx, dy] = directionMaskToDelta(directionMask);
-    const int32_t x = tileIndex / session.liveLevel.height;
-    const int32_t y = tileIndex % session.liveLevel.height;
+    const int32_t x = tileIndex / session.levelState.liveLevel.height;
+    const int32_t y = tileIndex % session.levelState.liveLevel.height;
     const int32_t targetX = x + dx;
     const int32_t targetY = y + dy;
-    if (targetX < 0 || targetX >= session.liveLevel.width || targetY < 0 || targetY >= session.liveLevel.height) {
+    if (targetX < 0 || targetX >= session.levelState.liveLevel.width || targetY < 0 || targetY >= session.levelState.liveLevel.height) {
         return false;
     }
 
-    const int32_t targetIndex = tileIndex + dy + dx * session.liveLevel.height;
+    const int32_t targetIndex = tileIndex + dy + dx * session.levelState.liveLevel.height;
     const Game& game = *session.game;
     const MaskWord* layerMask = maskPtr(game, game.layerMaskOffsets[static_cast<size_t>(layer)]);
     const uint32_t wordCount = game.wordCount;
@@ -1837,7 +1837,7 @@ bool resolveOneLayerMovement(FullState& session, TurnResult& out, int32_t tileIn
 MovementResolveOutcome resolveMovements(FullState& session, TurnResult& out, std::vector<bool>* bannedGroups, bool emitAudio) {
     MovementResolveOutcome outcome;
     bool moved = true;
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     while (moved) {
         moved = false;
         const uint32_t movementStride = static_cast<uint32_t>(session.game->strideMovement);
@@ -1882,16 +1882,16 @@ MovementResolveOutcome resolveMovements(FullState& session, TurnResult& out, std
 
                     if (playerHasMovement && playerDirection != 0) {
                         const auto [pdx, pdy] = directionMaskToDelta(playerDirection);
-                        const int32_t x = tileIndex / session.liveLevel.height;
-                        const int32_t y = tileIndex % session.liveLevel.height;
+                        const int32_t x = tileIndex / session.levelState.liveLevel.height;
+                        const int32_t y = tileIndex % session.levelState.liveLevel.height;
                         const int32_t targetX = x + pdx;
                         const int32_t targetY = y + pdy;
                         bool canMoveAll = true;
-                        if (targetX < 0 || targetX >= session.liveLevel.width || targetY < 0 || targetY >= session.liveLevel.height) {
+                        if (targetX < 0 || targetX >= session.levelState.liveLevel.width || targetY < 0 || targetY >= session.levelState.liveLevel.height) {
                             canMoveAll = false;
                             preventAggregateSplit = true;
                         } else {
-                            const int32_t targetIndex = tileIndex + pdy + pdx * session.liveLevel.height;
+                            const int32_t targetIndex = tileIndex + pdy + pdx * session.levelState.liveLevel.height;
                             const MaskVector targetMaskAll = getCellObjects(session, targetIndex);
                             bool blockedByPlayerConstituent = false;
                             for (const int32_t layer : playerLayers) {
@@ -2165,11 +2165,11 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
         }
         if (objectsChanged) {
             setCellObjectsFromWords(session, tileIndex, newObjects.data());
-            if (!session.pendingCreateMask.empty()) {
-                accumulateMaskWords(session.pendingCreateMask, created.data(), created.size());
+            if (!session.scratch.pendingCreateMask.empty()) {
+                accumulateMaskWords(session.scratch.pendingCreateMask, created.data(), created.size());
             }
-            if (!session.pendingDestroyMask.empty()) {
-                accumulateMaskWords(session.pendingDestroyMask, destroyed.data(), destroyed.size());
+            if (!session.scratch.pendingDestroyMask.empty()) {
+                accumulateMaskWords(session.scratch.pendingDestroyMask, destroyed.data(), destroyed.size());
             }
         }
         if (movementsChanged) {
@@ -2243,7 +2243,7 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
     if (replacement.hasRandomEntityMask) {
         const std::vector<int32_t>& choices = replacement.randomEntityChoices;
         if (!choices.empty()) {
-            const double randomValue = randomUniform(session.randomState);
+            const double randomValue = randomUniform(session.levelState.rng);
             const size_t chosen = std::min(
                 choices.size() - 1,
                 static_cast<size_t>(std::floor(randomValue * static_cast<double>(choices.size())))
@@ -2301,7 +2301,7 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
             const int32_t dirBits = (wordIdx < randomDirMaskWidth)
                 ? static_cast<int32_t>((randomDirMask[wordIdx] >> bitIdx) & 0x1F) : 0;
             if (dirBits != 0) {
-                const double randomValue = randomUniform(session.randomState);
+                const double randomValue = randomUniform(session.levelState.rng);
                 const int32_t randomDir = static_cast<int32_t>(std::floor(randomValue * 4.0));
                 if (randomDebugEnabled()) {
                     std::ostringstream stream;
@@ -2378,7 +2378,7 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
         std::ostringstream stream;
         stream << "line=" << rule.lineNumber
                << " apply tile=" << tileIndex
-               << "@(" << (tileIndex / session.liveLevel.height) << "," << (tileIndex % session.liveLevel.height) << ")"
+               << "@(" << (tileIndex / session.levelState.liveLevel.height) << "," << (tileIndex % session.levelState.liveLevel.height) << ")"
                << " objects_before=" << describeObjects(session, oldObjects)
                << " objects_after=" << describeObjects(session, objects)
                << " movements_before=" << describeMovements(session, oldMovements)
@@ -2387,11 +2387,11 @@ bool applyReplacementAt(FullState& session, const Rule& rule, const Pattern& pat
     }
     setCellObjects(session, tileIndex, objects);
     setCellMovements(session, tileIndex, movements);
-    if (!session.pendingCreateMask.empty()) {
-        accumulateMask(session.pendingCreateMask, created);
+    if (!session.scratch.pendingCreateMask.empty()) {
+        accumulateMask(session.scratch.pendingCreateMask, created);
     }
-    if (!session.pendingDestroyMask.empty()) {
-        accumulateMask(session.pendingDestroyMask, destroyed);
+    if (!session.scratch.pendingDestroyMask.empty()) {
+        accumulateMask(session.scratch.pendingDestroyMask, destroyed);
     }
     if (rigidChange) {
         setCellRigidGroupIndexMask(session, tileIndex, rigidGroupIndexMask);
@@ -2410,14 +2410,14 @@ struct RowAnchor {
 uint64_t objectPresenceCount(const FullState& session, int32_t objectId) {
     if (objectId < 0
         || objectId >= session.game->objectCount
-        || static_cast<size_t>(objectId) >= session.objectCellCounts.size()) {
+        || static_cast<size_t>(objectId) >= session.scratch.objectCellCounts.size()) {
         return 0;
     }
-    return session.objectCellCounts[static_cast<size_t>(objectId)];
+    return session.scratch.objectCellCounts[static_cast<size_t>(objectId)];
 }
 
 std::optional<RowAnchor> chooseRowAnchor(const FullState& session, const std::vector<Pattern>& row) {
-    if (session.objectCellIndexDirty || session.objectCellBits.empty()) {
+    if (session.scratch.objectCellIndexDirty || session.scratch.objectCellBits.empty()) {
         return std::nullopt;
     }
     const Game& game = *session.game;
@@ -2481,19 +2481,19 @@ bool collectAnchoredRowMatchesInto(
     const auto [dx, dy] = directionMaskToDelta(direction);
     const size_t cellWordCount = objectCellWordCount(session);
 
-    const int32_t height = session.liveLevel.height;
-    const int32_t width = session.liveLevel.width;
+    const int32_t height = session.levelState.liveLevel.height;
+    const int32_t width = session.levelState.liveLevel.width;
     const int32_t tileCount = width * height;
     for (const int32_t objectId : *anchor->objectIds) {
         if (objectId < 0 || objectId >= session.game->objectCount) {
             continue;
         }
         const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-        if (objectBase + cellWordCount > session.objectCellBits.size()) {
+        if (objectBase + cellWordCount > session.scratch.objectCellBits.size()) {
             continue;
         }
         for (size_t wordIndex = 0; wordIndex < cellWordCount; ++wordIndex) {
-            uint64_t bits = session.objectCellBits[objectBase + wordIndex];
+            uint64_t bits = session.scratch.objectCellBits[objectBase + wordIndex];
             while (bits != 0) {
                 const int32_t bit = __builtin_ctzll(bits);
                 const int32_t anchorTile = static_cast<int32_t>(wordIndex * 64 + static_cast<size_t>(bit));
@@ -2511,11 +2511,11 @@ bool collectAnchoredRowMatchesInto(
                 }
 
                 const MaskWord* lineObjects = horizontal
-                    ? session.rowMasks.data() + static_cast<size_t>(startY * session.game->strideObject)
-                    : session.columnMasks.data() + static_cast<size_t>(startX * session.game->strideObject);
+                    ? session.scratch.rowMasks.data() + static_cast<size_t>(startY * session.game->strideObject)
+                    : session.scratch.columnMasks.data() + static_cast<size_t>(startX * session.game->strideObject);
                 const MaskWord* lineMovements = horizontal
-                    ? session.rowMovementMasks.data() + static_cast<size_t>(startY * session.game->strideMovement)
-                    : session.columnMovementMasks.data() + static_cast<size_t>(startX * session.game->strideMovement);
+                    ? session.scratch.rowMovementMasks.data() + static_cast<size_t>(startY * session.game->strideMovement)
+                    : session.scratch.columnMovementMasks.data() + static_cast<size_t>(startX * session.game->strideMovement);
                 if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, lineObjects, static_cast<size_t>(session.game->strideObject))
                     || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, lineMovements, static_cast<size_t>(session.game->strideMovement))) {
                     continue;
@@ -2566,9 +2566,9 @@ void collectRowMatchesInto(
 
     const int32_t len = static_cast<int32_t>(row.size());
     int32_t xmin = 0;
-    int32_t xmax = session.liveLevel.width;
+    int32_t xmax = session.levelState.liveLevel.width;
     int32_t ymin = 0;
-    int32_t ymax = session.liveLevel.height;
+    int32_t ymax = session.levelState.liveLevel.height;
     switch (direction) {
         case 1:
             ymin += (len - 1);
@@ -2588,13 +2588,13 @@ void collectRowMatchesInto(
 
     const bool horizontal = direction > 2;
     const auto [dx, dy] = directionMaskToDelta(direction);
-    const int32_t delta = dx * session.liveLevel.height + dy;
+    const int32_t delta = dx * session.levelState.liveLevel.height + dy;
     if (delta == 0) {
         return;
     }
 
-    if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, session.boardMask.data(), session.boardMask.size())
-        || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, session.boardMovementMask.data(), session.boardMovementMask.size())) {
+    if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, session.scratch.boardMask.data(), session.scratch.boardMask.size())
+        || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, session.scratch.boardMovementMask.data(), session.scratch.boardMovementMask.size())) {
         return;
     }
 
@@ -2609,15 +2609,15 @@ void collectRowMatchesInto(
     if (horizontal) {
         for (int32_t y = ymin; y < ymax; ++y) {
             addCounter(gRuntimeCounters.rowScans);
-            const MaskWord* rowObjects = session.rowMasks.data() + static_cast<size_t>(y * session.game->strideObject);
-            const MaskWord* rowMovements = session.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement);
+            const MaskWord* rowObjects = session.scratch.rowMasks.data() + static_cast<size_t>(y * session.game->strideObject);
+            const MaskWord* rowMovements = session.scratch.rowMovementMasks.data() + static_cast<size_t>(y * session.game->strideMovement);
             if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, rowObjects, static_cast<size_t>(session.game->strideObject))
                 || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, rowMovements, static_cast<size_t>(session.game->strideMovement))) {
                 continue;
             }
             for (int32_t x = xmin; x < xmax; ++x) {
                 addCounter(gRuntimeCounters.candidateCellsTested);
-                const int32_t startIndex = x * session.liveLevel.height + y;
+                const int32_t startIndex = x * session.levelState.liveLevel.height + y;
                 bool matched = true;
                 for (int32_t cellIndex = 0; cellIndex < len; ++cellIndex) {
                     if (!matchesPatternAt(session, row[static_cast<size_t>(cellIndex)], startIndex + cellIndex * delta)) {
@@ -2633,15 +2633,15 @@ void collectRowMatchesInto(
     } else {
         for (int32_t x = xmin; x < xmax; ++x) {
             addCounter(gRuntimeCounters.rowScans);
-            const MaskWord* columnObjects = session.columnMasks.data() + static_cast<size_t>(x * session.game->strideObject);
-            const MaskWord* columnMovements = session.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);
+            const MaskWord* columnObjects = session.scratch.columnMasks.data() + static_cast<size_t>(x * session.game->strideObject);
+            const MaskWord* columnMovements = session.scratch.columnMovementMasks.data() + static_cast<size_t>(x * session.game->strideMovement);
             if (!bitsSetInArray(rowObjectMask, rowObjectMaskWords, columnObjects, static_cast<size_t>(session.game->strideObject))
                 || !bitsSetInArray(rowMovementMask, rowMovementMaskWords, columnMovements, static_cast<size_t>(session.game->strideMovement))) {
                 continue;
             }
             for (int32_t y = ymin; y < ymax; ++y) {
                 addCounter(gRuntimeCounters.candidateCellsTested);
-                const int32_t startIndex = x * session.liveLevel.height + y;
+                const int32_t startIndex = x * session.levelState.liveLevel.height + y;
                 bool matched = true;
                 for (int32_t cellIndex = 0; cellIndex < len; ++cellIndex) {
                     if (!matchesPatternAt(session, row[static_cast<size_t>(cellIndex)], startIndex + cellIndex * delta)) {
@@ -2721,21 +2721,21 @@ std::vector<RowMatch> collectEllipsisRowMatches(
     }
 
     const auto [dx, dy] = directionMaskToDelta(direction);
-    const int32_t parallelDelta = dx * session.liveLevel.height + dy;
+    const int32_t parallelDelta = dx * session.levelState.liveLevel.height + dy;
     if (parallelDelta == 0) {
         return matches;
     }
     const bool horizontal = direction > 2;
-    const int32_t lineCount = horizontal ? session.liveLevel.height : session.liveLevel.width;
-    std::vector<uint8_t>& linePossible = session.ellipsisLinePossibleScratch;
+    const int32_t lineCount = horizontal ? session.levelState.liveLevel.height : session.levelState.liveLevel.width;
+    std::vector<uint8_t>& linePossible = session.scratch.ellipsisLinePossibleScratch;
     linePossible.assign(static_cast<size_t>(std::max(lineCount, 0)), 0);
     for (int32_t line = 0; line < lineCount; ++line) {
         const MaskWord* lineObjects = horizontal
-            ? session.rowMasks.data() + static_cast<size_t>(line * session.game->strideObject)
-            : session.columnMasks.data() + static_cast<size_t>(line * session.game->strideObject);
+            ? session.scratch.rowMasks.data() + static_cast<size_t>(line * session.game->strideObject)
+            : session.scratch.columnMasks.data() + static_cast<size_t>(line * session.game->strideObject);
         const MaskWord* lineMovements = horizontal
-            ? session.rowMovementMasks.data() + static_cast<size_t>(line * session.game->strideMovement)
-            : session.columnMovementMasks.data() + static_cast<size_t>(line * session.game->strideMovement);
+            ? session.scratch.rowMovementMasks.data() + static_cast<size_t>(line * session.game->strideMovement)
+            : session.scratch.columnMovementMasks.data() + static_cast<size_t>(line * session.game->strideMovement);
         linePossible[static_cast<size_t>(line)] =
             bitsSetInArray(rowObjectMask, rowObjectMaskWords,
                            lineObjects, static_cast<size_t>(session.game->strideObject))
@@ -2746,28 +2746,28 @@ std::vector<RowMatch> collectEllipsisRowMatches(
     auto availableAlongDirection = [&](int32_t x, int32_t y) {
         switch (direction) {
             case 1: return y + 1;
-            case 2: return session.liveLevel.height - y;
+            case 2: return session.levelState.liveLevel.height - y;
             case 4: return x + 1;
-            case 8: return session.liveLevel.width - x;
+            case 8: return session.levelState.liveLevel.width - x;
             default: return 0;
         }
     };
 
-    std::vector<int32_t>& minConcreteSuffix = session.ellipsisMinConcreteSuffixScratch;
+    std::vector<int32_t>& minConcreteSuffix = session.scratch.ellipsisMinConcreteSuffixScratch;
     minConcreteSuffix.assign(row.size() + 1, 0);
     for (int32_t rowIndex = static_cast<int32_t>(row.size()) - 1; rowIndex >= 0; --rowIndex) {
         minConcreteSuffix[static_cast<size_t>(rowIndex)] = minConcreteSuffix[static_cast<size_t>(rowIndex + 1)]
             + (row[static_cast<size_t>(rowIndex)].kind == Pattern::Kind::Ellipsis ? 0 : 1);
     }
 
-    RowMatch& positions = session.ellipsisPositionsScratch;
+    RowMatch& positions = session.scratch.ellipsisPositionsScratch;
     positions.clear();
     positions.reserve(static_cast<size_t>(concreteCount));
-    for (int32_t x = 0; x < session.liveLevel.width; ++x) {
+    for (int32_t x = 0; x < session.levelState.liveLevel.width; ++x) {
         if (!horizontal && (x < 0 || x >= lineCount || !linePossible[static_cast<size_t>(x)])) {
             continue;
         }
-        for (int32_t y = 0; y < session.liveLevel.height; ++y) {
+        for (int32_t y = 0; y < session.levelState.liveLevel.height; ++y) {
             if (horizontal && (y < 0 || y >= lineCount || !linePossible[static_cast<size_t>(y)])) {
                 continue;
             }
@@ -2776,7 +2776,7 @@ std::vector<RowMatch> collectEllipsisRowMatches(
             if (available < concreteCount) {
                 continue;
             }
-            const int32_t tileIndex = x * session.liveLevel.height + y;
+            const int32_t tileIndex = x * session.levelState.liveLevel.height + y;
 
             positions.clear();
             auto search = [&](auto&& self, int32_t rowIndex, int32_t offset) -> void {
@@ -2875,13 +2875,13 @@ bool rowMatchStillMatches(
 bool ruleCanPossiblyMatch(const FullState& session, const Rule& rule) {
     const Game& game = *session.game;
     const MaskWord* required = game.maskArena.data() + rule.ruleMask;
-    if (!bitsSetInArray(required, game.wordCount, session.boardMask.data(), session.boardMask.size())) {
+    if (!bitsSetInArray(required, game.wordCount, session.scratch.boardMask.data(), session.scratch.boardMask.size())) {
         return false;
     }
     if (rule.hasRuleMovementMask) {
         const MaskWord* requiredMovements = game.maskArena.data() + rule.ruleMovementMask;
         if (!bitsSetInArray(requiredMovements, game.movementWordCount,
-                            session.boardMovementMask.data(), session.boardMovementMask.size())) {
+                            session.scratch.boardMovementMask.data(), session.scratch.boardMovementMask.size())) {
             return false;
         }
     }
@@ -2914,13 +2914,13 @@ RuleApplyOutcome tryApplySimpleRule(FullState& session, const Rule& rule, Comman
             stream << "line=" << rule.lineNumber
                    << " skip reason=rule-mask"
                    << " rule_mask=" << describeObjects(session, arenaCopy(*session.game, rule.ruleMask, session.game->wordCount))
-                   << " board_mask=" << describeObjects(session, session.boardMask);
+                   << " board_mask=" << describeObjects(session, session.scratch.boardMask);
             ruleDebugLog(stream.str());
         }
         return {};
     }
     const auto [dx, dy] = directionMaskToDelta(rule.direction);
-    const int32_t delta = dx * session.liveLevel.height + dy;
+    const int32_t delta = dx * session.levelState.liveLevel.height + dy;
     if (delta == 0) {
         if (logRule) {
             std::ostringstream stream;
@@ -2951,7 +2951,7 @@ RuleApplyOutcome tryApplySimpleRule(FullState& session, const Rule& rule, Comman
                 : kNullMaskOffset;
             const MaskWord* rowMovementMask = maskPtr(game, rowMovementOffset);
             const uint32_t rowMovementMaskWords = rowMovementMask != nullptr ? game.movementWordCount : 0;
-            std::vector<int32_t>& matches = session.singleRowMatchScratch;
+            std::vector<int32_t>& matches = session.scratch.singleRowMatchScratch;
             collectRowMatchesInto(session, row, rule.direction,
                                   rowObjectMask, game.wordCount,
                                   rowMovementMask, rowMovementMaskWords,
@@ -2976,7 +2976,7 @@ RuleApplyOutcome tryApplySimpleRule(FullState& session, const Rule& rule, Comman
                 std::ostringstream stream;
                 stream << "line=" << rule.lineNumber
                        << " row=0 matches=" << matches.size()
-                       << " starts=" << formatMatchList(matches, session.liveLevel.height);
+                       << " starts=" << formatMatchList(matches, session.levelState.liveLevel.height);
                 ruleDebugLog(stream.str());
             }
             for (size_t matchIndex = 0; matchIndex < matches.size(); ++matchIndex) {
@@ -3083,7 +3083,7 @@ RuleApplyOutcome tryApplySimpleRule(FullState& session, const Rule& rule, Comman
                 stream << "line=" << rule.lineNumber
                        << " row=" << rowIndex
                        << " matches=" << matches.size()
-                       << " starts=" << formatMatchList(matches, session.liveLevel.height);
+                       << " starts=" << formatMatchList(matches, session.levelState.liveLevel.height);
                 ruleDebugLog(stream.str());
             }
             std::vector<RowMatch> wrappedMatches;
@@ -3198,7 +3198,7 @@ bool collectRandomRuleMatches(FullState& session, const Rule& rule, std::vector<
     }
 
     const auto [dx, dy] = directionMaskToDelta(rule.direction);
-    const int32_t delta = dx * session.liveLevel.height + dy;
+    const int32_t delta = dx * session.levelState.liveLevel.height + dy;
     if (delta == 0) {
         return false;
     }
@@ -3326,7 +3326,7 @@ bool applyRandomRuleGroup(FullState& session, const std::vector<Rule>& group, Co
         }
     }
 
-    const double randomValue = randomUniform(session.randomState);
+    const double randomValue = randomUniform(session.levelState.rng);
     const size_t chosenIndex = std::min(
         candidates.size() - 1,
         static_cast<size_t>(std::floor(randomValue * static_cast<double>(candidates.size())))
@@ -3359,7 +3359,7 @@ bool applyRandomRuleGroup(FullState& session, const std::vector<Rule>& group, Co
     }
     queueRuleCommands(*chosen.rule, commands);
     const auto [dx, dy] = directionMaskToDelta(chosen.rule->direction);
-    const int32_t delta = dx * session.liveLevel.height + dy;
+    const int32_t delta = dx * session.levelState.liveLevel.height + dy;
     if (delta == 0) {
         return false;
     }
@@ -3426,7 +3426,7 @@ bool applyRuleGroup(FullState& session, const std::vector<Rule>& group, CommandS
                     stream << "line=" << rule.lineNumber
                            << " skip reason=rule-mask"
                            << " rule_mask=" << describeObjects(session, arenaCopy(*session.game, rule.ruleMask, session.game->wordCount))
-                           << " board_mask=" << describeObjects(session, session.boardMask);
+                           << " board_mask=" << describeObjects(session, session.scratch.boardMask);
                     ruleDebugLog(stream.str());
                 }
                 continue;
@@ -3515,35 +3515,35 @@ size_t countNonZeroWords(const MaskVector& values) {
 
 void rebuildObjectCellIndex(FullState& session) {
     const int32_t objectCount = session.game->objectCount;
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
-    session.objectCellBitTileCount = tileCount;
-    session.objectCellBits.assign(static_cast<size_t>(objectCount) * cellWordCount, 0);
-    session.objectCellCounts.assign(static_cast<size_t>(std::max(objectCount, 0)), 0);
+    session.scratch.objectCellBitTileCount = tileCount;
+    session.scratch.objectCellBits.assign(static_cast<size_t>(objectCount) * cellWordCount, 0);
+    session.scratch.objectCellCounts.assign(static_cast<size_t>(std::max(objectCount, 0)), 0);
     if (objectCount <= 0 || tileCount <= 0 || cellWordCount == 0) {
-        session.objectCellIndexDirty = false;
+        session.scratch.objectCellIndexDirty = false;
         return;
     }
 
     // Compact-first: objectCellBits shares the same object-major layout as
     // occupancy.objectBits, so we can copy and count set bits directly.
     const size_t expectedWords = static_cast<size_t>(objectCount) * cellWordCount;
-    if (session.occupancy.objectBits.size() == expectedWords) {
-        session.objectCellBits = session.occupancy.objectBits;
+    if (session.levelState.boardOccupancy.objectBits.size() == expectedWords) {
+        session.scratch.objectCellBits = session.levelState.boardOccupancy.objectBits;
         for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
             const size_t base = static_cast<size_t>(objectId) * cellWordCount;
             uint32_t count = 0;
             for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-                count += static_cast<uint32_t>(__builtin_popcountll(session.objectCellBits[base + bitWord]));
+                count += static_cast<uint32_t>(__builtin_popcountll(session.scratch.objectCellBits[base + bitWord]));
             }
-            session.objectCellCounts[static_cast<size_t>(objectId)] = count;
+            session.scratch.objectCellCounts[static_cast<size_t>(objectId)] = count;
         }
     } else {
         // Fallback if occupancy mirror is stale/mismatched (should be rare).
-        session.objectCellIndexDirty = true;
+        session.scratch.objectCellIndexDirty = true;
         return;
     }
-    session.objectCellIndexDirty = false;
+    session.scratch.objectCellIndexDirty = false;
 }
 
 // Incremental rebuildMasks: setCellObjects/setCellMovements already OR new
@@ -3556,15 +3556,15 @@ void rebuildMasks(FullState& session) {
     addCounter(gRuntimeCounters.maskRebuildCalls);
     const int32_t objectStride = session.game->strideObject;
     const int32_t movementStride = session.game->strideMovement;
-    const int32_t width = session.liveLevel.width;
-    const int32_t height = session.liveLevel.height;
+    const int32_t width = session.levelState.liveLevel.width;
+    const int32_t height = session.levelState.liveLevel.height;
     const int32_t tileCount = width * height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
-    if (!session.anyMasksDirty
-        && !session.objectCellIndexDirty
-        && session.objectCellBitTileCount == tileCount
-        && session.objectCellBits.size() == static_cast<size_t>(session.game->objectCount) * cellWordCount
-        && session.objectCellCounts.size() == static_cast<size_t>(session.game->objectCount)) {
+    if (!session.scratch.anyMasksDirty
+        && !session.scratch.objectCellIndexDirty
+        && session.scratch.objectCellBitTileCount == tileCount
+        && session.scratch.objectCellBits.size() == static_cast<size_t>(session.game->objectCount) * cellWordCount
+        && session.scratch.objectCellCounts.size() == static_cast<size_t>(session.game->objectCount)) {
         return;
     }
 
@@ -3580,47 +3580,47 @@ void rebuildMasks(FullState& session) {
     auto ensureSize = [&sizeChanged](MaskVector& v, size_t n) {
         if (v.size() != n) { v.assign(n, 0); sizeChanged = true; }
     };
-    ensureSize(session.rowMasks, rowObjectSize);
-    ensureSize(session.columnMasks, columnObjectSize);
-    ensureSize(session.boardMask, static_cast<size_t>(objectStride));
-    ensureSize(session.rowMovementMasks, rowMovementSize);
-    ensureSize(session.columnMovementMasks, columnMovementSize);
-    ensureSize(session.boardMovementMask, static_cast<size_t>(movementStride));
-    if (session.dirtyObjectRows.size() != static_cast<size_t>(height)) {
-        session.dirtyObjectRows.assign(static_cast<size_t>(height), 1);
+    ensureSize(session.scratch.rowMasks, rowObjectSize);
+    ensureSize(session.scratch.columnMasks, columnObjectSize);
+    ensureSize(session.scratch.boardMask, static_cast<size_t>(objectStride));
+    ensureSize(session.scratch.rowMovementMasks, rowMovementSize);
+    ensureSize(session.scratch.columnMovementMasks, columnMovementSize);
+    ensureSize(session.scratch.boardMovementMask, static_cast<size_t>(movementStride));
+    if (session.scratch.dirtyObjectRows.size() != static_cast<size_t>(height)) {
+        session.scratch.dirtyObjectRows.assign(static_cast<size_t>(height), 1);
         sizeChanged = true;
     }
-    if (session.dirtyObjectColumns.size() != static_cast<size_t>(width)) {
-        session.dirtyObjectColumns.assign(static_cast<size_t>(width), 1);
+    if (session.scratch.dirtyObjectColumns.size() != static_cast<size_t>(width)) {
+        session.scratch.dirtyObjectColumns.assign(static_cast<size_t>(width), 1);
         sizeChanged = true;
     }
-    if (session.dirtyMovementRows.size() != static_cast<size_t>(height)) {
-        session.dirtyMovementRows.assign(static_cast<size_t>(height), 1);
+    if (session.scratch.dirtyMovementRows.size() != static_cast<size_t>(height)) {
+        session.scratch.dirtyMovementRows.assign(static_cast<size_t>(height), 1);
         sizeChanged = true;
     }
-    if (session.dirtyMovementColumns.size() != static_cast<size_t>(width)) {
-        session.dirtyMovementColumns.assign(static_cast<size_t>(width), 1);
+    if (session.scratch.dirtyMovementColumns.size() != static_cast<size_t>(width)) {
+        session.scratch.dirtyMovementColumns.assign(static_cast<size_t>(width), 1);
         sizeChanged = true;
     }
     if (sizeChanged) {
-        std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
-        std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
-        std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
-        std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
-        session.dirtyObjectBoard = true;
-        session.dirtyMovementBoard = true;
-        session.objectCellIndexDirty = true;
-        session.anyMasksDirty = true;
+        std::fill(session.scratch.dirtyObjectRows.begin(), session.scratch.dirtyObjectRows.end(), 1);
+        std::fill(session.scratch.dirtyObjectColumns.begin(), session.scratch.dirtyObjectColumns.end(), 1);
+        std::fill(session.scratch.dirtyMovementRows.begin(), session.scratch.dirtyMovementRows.end(), 1);
+        std::fill(session.scratch.dirtyMovementColumns.begin(), session.scratch.dirtyMovementColumns.end(), 1);
+        session.scratch.dirtyObjectBoard = true;
+        session.scratch.dirtyMovementBoard = true;
+        session.scratch.objectCellIndexDirty = true;
+        session.scratch.anyMasksDirty = true;
     }
 
-    if (session.objectCellIndexDirty
-        || session.objectCellBitTileCount != width * height
-        || session.objectCellBits.size() != static_cast<size_t>(session.game->objectCount) * objectCellWordCount(session)
-        || session.objectCellCounts.size() != static_cast<size_t>(session.game->objectCount)) {
+    if (session.scratch.objectCellIndexDirty
+        || session.scratch.objectCellBitTileCount != width * height
+        || session.scratch.objectCellBits.size() != static_cast<size_t>(session.game->objectCount) * objectCellWordCount(session)
+        || session.scratch.objectCellCounts.size() != static_cast<size_t>(session.game->objectCount)) {
         rebuildObjectCellIndex(session);
     }
 
-    if (!session.anyMasksDirty) {
+    if (!session.scratch.anyMasksDirty) {
         return;
     }
     addCounter(gRuntimeCounters.maskRebuildDirtyCalls);
@@ -3628,86 +3628,86 @@ void rebuildMasks(FullState& session) {
     // ---- Object masks ---------------------------------------------------
     // Rebuild each dirty row: zero its slice, then OR every tile in that row.
     for (int32_t y = 0; y < height; ++y) {
-        if (!session.dirtyObjectRows[static_cast<size_t>(y)]) continue;
+        if (!session.scratch.dirtyObjectRows[static_cast<size_t>(y)]) continue;
         addCounter(gRuntimeCounters.maskRebuildRows);
-        MaskWord* rowStart = session.rowMasks.data() + static_cast<size_t>(y * objectStride);
+        MaskWord* rowStart = session.scratch.rowMasks.data() + static_cast<size_t>(y * objectStride);
         std::fill(rowStart, rowStart + objectStride, 0);
         for (int32_t x = 0; x < width; ++x) {
             const size_t objectBase = static_cast<size_t>((x * height + y) * objectStride);
-            const MaskWord* cell = session.liveLevel.objects.data() + objectBase;
+            const MaskWord* cell = session.levelState.liveLevel.objects.data() + objectBase;
             for (int32_t word = 0; word < objectStride; ++word) {
                 rowStart[word] |= cell[word];
             }
         }
-        session.dirtyObjectRows[static_cast<size_t>(y)] = 0;
+        session.scratch.dirtyObjectRows[static_cast<size_t>(y)] = 0;
     }
     for (int32_t x = 0; x < width; ++x) {
-        if (!session.dirtyObjectColumns[static_cast<size_t>(x)]) continue;
+        if (!session.scratch.dirtyObjectColumns[static_cast<size_t>(x)]) continue;
         addCounter(gRuntimeCounters.maskRebuildColumns);
-        MaskWord* colStart = session.columnMasks.data() + static_cast<size_t>(x * objectStride);
+        MaskWord* colStart = session.scratch.columnMasks.data() + static_cast<size_t>(x * objectStride);
         std::fill(colStart, colStart + objectStride, 0);
         for (int32_t y = 0; y < height; ++y) {
             const size_t objectBase = static_cast<size_t>((x * height + y) * objectStride);
-            const MaskWord* cell = session.liveLevel.objects.data() + objectBase;
+            const MaskWord* cell = session.levelState.liveLevel.objects.data() + objectBase;
             for (int32_t word = 0; word < objectStride; ++word) {
                 colStart[word] |= cell[word];
             }
         }
-        session.dirtyObjectColumns[static_cast<size_t>(x)] = 0;
+        session.scratch.dirtyObjectColumns[static_cast<size_t>(x)] = 0;
     }
-    if (session.dirtyObjectBoard) {
+    if (session.scratch.dirtyObjectBoard) {
         // boardMask = OR over all rowMasks slices.
-        std::fill(session.boardMask.begin(), session.boardMask.end(), 0);
+        std::fill(session.scratch.boardMask.begin(), session.scratch.boardMask.end(), 0);
         for (int32_t y = 0; y < height; ++y) {
-            const MaskWord* rowStart = session.rowMasks.data() + static_cast<size_t>(y * objectStride);
+            const MaskWord* rowStart = session.scratch.rowMasks.data() + static_cast<size_t>(y * objectStride);
             for (int32_t word = 0; word < objectStride; ++word) {
-                session.boardMask[static_cast<size_t>(word)] |= rowStart[word];
+                session.scratch.boardMask[static_cast<size_t>(word)] |= rowStart[word];
             }
         }
-        session.dirtyObjectBoard = false;
+        session.scratch.dirtyObjectBoard = false;
     }
 
     // ---- Movement masks -------------------------------------------------
     for (int32_t y = 0; y < height; ++y) {
-        if (!session.dirtyMovementRows[static_cast<size_t>(y)]) continue;
+        if (!session.scratch.dirtyMovementRows[static_cast<size_t>(y)]) continue;
         addCounter(gRuntimeCounters.maskRebuildRows);
-        MaskWord* rowStart = session.rowMovementMasks.data() + static_cast<size_t>(y * movementStride);
+        MaskWord* rowStart = session.scratch.rowMovementMasks.data() + static_cast<size_t>(y * movementStride);
         std::fill(rowStart, rowStart + movementStride, 0);
         for (int32_t x = 0; x < width; ++x) {
             const size_t movementBase = static_cast<size_t>((x * height + y) * movementStride);
-            const MaskWord* cell = session.liveMovements.data() + movementBase;
+            const MaskWord* cell = session.scratch.liveMovements.data() + movementBase;
             for (int32_t word = 0; word < movementStride; ++word) {
                 rowStart[word] |= cell[word];
             }
         }
-        session.dirtyMovementRows[static_cast<size_t>(y)] = 0;
+        session.scratch.dirtyMovementRows[static_cast<size_t>(y)] = 0;
     }
     for (int32_t x = 0; x < width; ++x) {
-        if (!session.dirtyMovementColumns[static_cast<size_t>(x)]) continue;
+        if (!session.scratch.dirtyMovementColumns[static_cast<size_t>(x)]) continue;
         addCounter(gRuntimeCounters.maskRebuildColumns);
-        MaskWord* colStart = session.columnMovementMasks.data() + static_cast<size_t>(x * movementStride);
+        MaskWord* colStart = session.scratch.columnMovementMasks.data() + static_cast<size_t>(x * movementStride);
         std::fill(colStart, colStart + movementStride, 0);
         for (int32_t y = 0; y < height; ++y) {
             const size_t movementBase = static_cast<size_t>((x * height + y) * movementStride);
-            const MaskWord* cell = session.liveMovements.data() + movementBase;
+            const MaskWord* cell = session.scratch.liveMovements.data() + movementBase;
             for (int32_t word = 0; word < movementStride; ++word) {
                 colStart[word] |= cell[word];
             }
         }
-        session.dirtyMovementColumns[static_cast<size_t>(x)] = 0;
+        session.scratch.dirtyMovementColumns[static_cast<size_t>(x)] = 0;
     }
-    if (session.dirtyMovementBoard) {
-        std::fill(session.boardMovementMask.begin(), session.boardMovementMask.end(), 0);
+    if (session.scratch.dirtyMovementBoard) {
+        std::fill(session.scratch.boardMovementMask.begin(), session.scratch.boardMovementMask.end(), 0);
         for (int32_t y = 0; y < height; ++y) {
-            const MaskWord* rowStart = session.rowMovementMasks.data() + static_cast<size_t>(y * movementStride);
+            const MaskWord* rowStart = session.scratch.rowMovementMasks.data() + static_cast<size_t>(y * movementStride);
             for (int32_t word = 0; word < movementStride; ++word) {
-                session.boardMovementMask[static_cast<size_t>(word)] |= rowStart[word];
+                session.scratch.boardMovementMask[static_cast<size_t>(word)] |= rowStart[word];
             }
         }
-        session.dirtyMovementBoard = false;
+        session.scratch.dirtyMovementBoard = false;
     }
 
-    session.anyMasksDirty = false;
+    session.scratch.anyMasksDirty = false;
 }
 
 std::vector<uint8_t> buildSessionHashBytes(const FullState& session) {
@@ -3721,17 +3721,17 @@ std::vector<uint8_t> buildSessionHashBytes(const FullState& session) {
     append(session.meta.titleScreen);
     append(session.meta.textMode);
     append(session.meta.winning);
-    append(session.pendingAgain);
-    append(session.randomState.i);
-    append(session.randomState.j);
-    append(session.randomState.valid);
-    const auto* randomBytes = reinterpret_cast<const uint8_t*>(session.randomState.s.data());
-    bytes.insert(bytes.end(), randomBytes, randomBytes + session.randomState.s.size() * sizeof(uint8_t));
+    append(session.meta.pendingAgain);
+    append(session.levelState.rng.i);
+    append(session.levelState.rng.j);
+    append(session.levelState.rng.valid);
+    const auto* randomBytes = reinterpret_cast<const uint8_t*>(session.levelState.rng.s.data());
+    bytes.insert(bytes.end(), randomBytes, randomBytes + session.levelState.rng.s.size() * sizeof(uint8_t));
 
-    const auto& objectBits = session.occupancy.objectBits;
+    const auto& objectBits = session.levelState.boardOccupancy.objectBits;
     const auto* objectBytes = reinterpret_cast<const uint8_t*>(objectBits.data());
     bytes.insert(bytes.end(), objectBytes, objectBytes + objectBits.size() * sizeof(uint64_t));
-    const auto& movements = session.liveMovements;
+    const auto& movements = session.scratch.liveMovements;
     const auto* movementBytes = reinterpret_cast<const uint8_t*>(movements.data());
     bytes.insert(bytes.end(), movementBytes, movementBytes + movements.size() * sizeof(MaskWord));
     bytes.insert(bytes.end(), session.meta.loadedLevelSeed.begin(), session.meta.loadedLevelSeed.end());
@@ -3758,15 +3758,15 @@ uint64_t hashFullState64NoAlloc(const FullState& session, uint64_t seed) {
     appendHashValue(hash, session.meta.titleScreen);
     appendHashValue(hash, session.meta.textMode);
     appendHashValue(hash, session.meta.winning);
-    appendHashValue(hash, session.pendingAgain);
-    appendHashValue(hash, session.randomState.i);
-    appendHashValue(hash, session.randomState.j);
-    appendHashValue(hash, session.randomState.valid);
-    appendHashBytes(hash, session.randomState.s.data(), session.randomState.s.size() * sizeof(uint8_t));
+    appendHashValue(hash, session.meta.pendingAgain);
+    appendHashValue(hash, session.levelState.rng.i);
+    appendHashValue(hash, session.levelState.rng.j);
+    appendHashValue(hash, session.levelState.rng.valid);
+    appendHashBytes(hash, session.levelState.rng.s.data(), session.levelState.rng.s.size() * sizeof(uint8_t));
 
-    const auto& objectBits = session.occupancy.objectBits;
+    const auto& objectBits = session.levelState.boardOccupancy.objectBits;
     appendHashBytes(hash, objectBits.data(), objectBits.size() * sizeof(uint64_t));
-    const auto& movements = session.liveMovements;
+    const auto& movements = session.scratch.liveMovements;
     appendHashBytes(hash, movements.data(), movements.size() * sizeof(MaskWord));
     appendHashBytes(hash, session.meta.loadedLevelSeed.data(), session.meta.loadedLevelSeed.size());
 
@@ -3809,14 +3809,14 @@ bool showContinueOptionOnTitleScreen(const PreparedFullState& prepared) {
 }
 
 void markAllMasksDirty(FullState& session) {
-    std::fill(session.dirtyObjectRows.begin(), session.dirtyObjectRows.end(), 1);
-    std::fill(session.dirtyObjectColumns.begin(), session.dirtyObjectColumns.end(), 1);
-    std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
-    std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
-    session.dirtyObjectBoard = true;
-    session.dirtyMovementBoard = true;
-    session.objectCellIndexDirty = true;
-    session.anyMasksDirty = true;
+    std::fill(session.scratch.dirtyObjectRows.begin(), session.scratch.dirtyObjectRows.end(), 1);
+    std::fill(session.scratch.dirtyObjectColumns.begin(), session.scratch.dirtyObjectColumns.end(), 1);
+    std::fill(session.scratch.dirtyMovementRows.begin(), session.scratch.dirtyMovementRows.end(), 1);
+    std::fill(session.scratch.dirtyMovementColumns.begin(), session.scratch.dirtyMovementColumns.end(), 1);
+    session.scratch.dirtyObjectBoard = true;
+    session.scratch.dirtyMovementBoard = true;
+    session.scratch.objectCellIndexDirty = true;
+    session.scratch.anyMasksDirty = true;
 }
 
 // Variant for callers that bulk-zero liveMovements without going through
@@ -3824,73 +3824,76 @@ void markAllMasksDirty(FullState& session) {
 // until the next rebuild; mark them all dirty so the next rebuildMasks()
 // recomputes from the current (zeroed or just-seeded) movement state.
 void markAllMovementMasksDirty(FullState& session) {
-    std::fill(session.dirtyMovementRows.begin(), session.dirtyMovementRows.end(), 1);
-    std::fill(session.dirtyMovementColumns.begin(), session.dirtyMovementColumns.end(), 1);
-    session.dirtyMovementBoard = true;
-    session.anyMasksDirty = true;
+    std::fill(session.scratch.dirtyMovementRows.begin(), session.scratch.dirtyMovementRows.end(), 1);
+    std::fill(session.scratch.dirtyMovementColumns.begin(), session.scratch.dirtyMovementColumns.end(), 1);
+    session.scratch.dirtyMovementBoard = true;
+    session.scratch.anyMasksDirty = true;
 }
 
-void restoreSnapshot(FullState& session, const FullState::UndoSnapshot& snapshot, bool restoreRandomState) {
+void restoreSnapshot(FullState& session, const UndoSnapshot& snapshot, bool restoreRandomState) {
+    std::vector<UndoSnapshot> undoStack = std::move(session.meta.undoStack);
     session.meta = snapshot.meta;
-    session.liveLevel = snapshot.liveLevel;
+    session.meta.undoStack = std::move(undoStack);
+    session.levelState.liveLevel = snapshot.liveLevel;
     if (snapshot.liveMovements.empty()) {
-        session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
+        session.scratch.liveMovements.assign(static_cast<size_t>(session.levelState.liveLevel.width * session.levelState.liveLevel.height * session.game->strideMovement), 0);
     } else {
-        session.liveMovements = snapshot.liveMovements;
+        session.scratch.liveMovements = snapshot.liveMovements;
     }
     if (snapshot.rigidGroupIndexMasks.empty()) {
-        session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
+        session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
     } else {
-        session.rigidGroupIndexMasks = snapshot.rigidGroupIndexMasks;
+        session.scratch.rigidGroupIndexMasks = snapshot.rigidGroupIndexMasks;
     }
     if (snapshot.rigidMovementAppliedMasks.empty()) {
-        session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
+        session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
     } else {
-        session.rigidMovementAppliedMasks = snapshot.rigidMovementAppliedMasks;
+        session.scratch.rigidMovementAppliedMasks = snapshot.rigidMovementAppliedMasks;
     }
     if (restoreRandomState) {
-        session.randomState = snapshot.randomState;
+        session.levelState.rng = snapshot.randomState;
     }
-    session.pendingAgain = false;
+    session.meta.pendingAgain = false;
     resizeBoardOccupancyObjectBits(session);
     syncOccupancyRngFromAuthoritativeRandomState(session);
     markAllMasksDirty(session);
     rebuildMasks(session);
 }
 
-FullState::UndoSnapshot makeUndoSnapshot(const FullState& session) {
-    return FullState::UndoSnapshot{
-        session.meta,
-        session.liveLevel,
+UndoSnapshot makeUndoSnapshot(const FullState& session) {
+    MetaGameState meta = session.meta;
+    meta.undoStack.clear();
+    return UndoSnapshot{
+        std::move(meta),
+        session.levelState.liveLevel,
         {},
         {},
         {},
-        session.randomState,
+        session.levelState.rng,
     };
 }
 
 void pushUndoSnapshot(FullState& session) {
-    session.undoStack.push_back(makeUndoSnapshot(session));
-    session.canUndo = true;
+    session.meta.undoStack.push_back(makeUndoSnapshot(session));
 }
 
 void restoreRestartTarget(FullState& session) {
-    session.liveLevel = session.meta.level;
+    session.levelState.liveLevel = session.meta.level;
     if (session.meta.restart.width > 0 && session.meta.restart.height > 0
         && !session.meta.restart.objectBits.empty()) {
-        session.liveLevel.width = session.meta.restart.width;
-        session.liveLevel.height = session.meta.restart.height;
+        session.levelState.liveLevel.width = session.meta.restart.width;
+        session.levelState.liveLevel.height = session.meta.restart.height;
         fillLiveLevelObjectsFromCompactObjectBits(
-            session.liveLevel,
+            session.levelState.liveLevel,
             *session.game,
             session.meta.restart.objectBits
         );
         session.meta.oldFlickscreenDat = session.meta.restart.oldFlickscreenDat;
     }
-    session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
-    session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
-    session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
-    session.pendingAgain = false;
+    session.scratch.liveMovements.assign(static_cast<size_t>(session.levelState.liveLevel.width * session.levelState.liveLevel.height * session.game->strideMovement), 0);
+    session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
+    session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
+    session.meta.pendingAgain = false;
     resizeBoardOccupancyObjectBits(session);
     syncOccupancyRngFromAuthoritativeRandomState(session);
     markAllMasksDirty(session);
@@ -3914,7 +3917,7 @@ bool evaluateWinConditions(const FullState& session) {
 
     const Game& game = *session.game;
     const uint32_t wordCount = game.wordCount;
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     for (const auto& condition : game.winConditions) {
         const MaskWord* filter1 = maskPtr(game, condition.filter1);
         const MaskWord* filter2 = maskPtr(game, condition.filter2);
@@ -3987,14 +3990,13 @@ bool advanceToNextLevel(FullState& session) {
     session.meta.messageText.clear();
     session.meta.winning = false;
         if (session.meta.textMode) {
-            session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
-            session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
-            session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
-            session.pendingAgain = false;
+            session.scratch.liveMovements.assign(static_cast<size_t>(session.levelState.liveLevel.width * session.levelState.liveLevel.height * session.game->strideMovement), 0);
+            session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
+            session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
+            session.meta.pendingAgain = false;
             markAllMovementMasksDirty(session);
             rebuildMasks(session);
-            session.undoStack.clear();
-            session.canUndo = false;
+            session.meta.undoStack.clear();
             return true;
         }
         session.meta.restart.width = session.meta.level.width;
@@ -4009,8 +4011,7 @@ bool advanceToNextLevel(FullState& session) {
         session.meta.restart.oldFlickscreenDat = session.meta.oldFlickscreenDat;
         restoreRestartTarget(session);
         ::puzzlescript::runRulesOnLevelStart(session);
-        session.undoStack.clear();
-        session.canUndo = false;
+        session.meta.undoStack.clear();
         return true;
     }
 
@@ -4024,38 +4025,36 @@ bool advanceToNextLevel(FullState& session) {
     session.meta.messageSelected = false;
     session.meta.messageText.clear();
     session.meta.winning = false;
-    session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
-    session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
-    session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
-    session.pendingAgain = false;
+    session.scratch.liveMovements.assign(static_cast<size_t>(session.levelState.liveLevel.width * session.levelState.liveLevel.height * session.game->strideMovement), 0);
+    session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
+    session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
+    session.meta.pendingAgain = false;
     markAllMovementMasksDirty(session);
     rebuildMasks(session);
-    session.undoStack.clear();
-    session.canUndo = false;
+    session.meta.undoStack.clear();
     return true;
 }
 
 void resetToPrepared(FullState& session) {
-    session.liveLevel = session.meta.level;
-    session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
-    session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
-    session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
-    session.canUndo = false;
-    session.undoStack.clear();
-    session.pendingAgain = false;
+    session.levelState.liveLevel = session.meta.level;
+    session.scratch.liveMovements.assign(static_cast<size_t>(session.levelState.liveLevel.width * session.levelState.liveLevel.height * session.game->strideMovement), 0);
+    session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
+    session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
+    session.meta.undoStack.clear();
+    session.meta.pendingAgain = false;
     markAllMasksDirty(session);
     if (session.meta.hasRandomState
-        && session.meta.randomStateS.size() == session.randomState.s.size()) {
-        session.randomState.valid = session.meta.randomStateValid;
-        session.randomState.i = session.meta.randomStateI;
-        session.randomState.j = session.meta.randomStateJ;
+        && session.meta.randomStateS.size() == session.levelState.rng.s.size()) {
+        session.levelState.rng.valid = session.meta.randomStateValid;
+        session.levelState.rng.i = session.meta.randomStateI;
+        session.levelState.rng.j = session.meta.randomStateJ;
         std::copy(
             session.meta.randomStateS.begin(),
             session.meta.randomStateS.end(),
-            session.randomState.s.begin()
+            session.levelState.rng.s.begin()
         );
     } else {
-        seedRandomState(session.randomState, session.meta.loadedLevelSeed);
+        seedRandomState(session.levelState.rng, session.meta.loadedLevelSeed);
     }
     resizeBoardOccupancyObjectBits(session);
     syncOccupancyRngFromAuthoritativeRandomState(session);
@@ -4127,6 +4126,36 @@ void fillLiveLevelObjectsFromCompactObjectBits(
     }
 }
 
+void canonicalizeCompactObjectBits(
+    const Game& game,
+    int32_t width,
+    int32_t height,
+    uint64_t* objectBits,
+    size_t objectBitWordCount
+) {
+    if (objectBits == nullptr || width <= 0 || height <= 0 || game.objectCount <= 0) {
+        return;
+    }
+    const int32_t tileCount = width * height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    if (cellWordCount == 0) {
+        return;
+    }
+    const uint32_t usedBitsInLastWord = static_cast<uint32_t>(tileCount & 63);
+    if (usedBitsInLastWord == 0) {
+        return;
+    }
+    const uint64_t validMask = (uint64_t{1} << usedBitsInLastWord) - uint64_t{1};
+    const size_t lastWord = cellWordCount - 1;
+    for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
+        const size_t index = static_cast<size_t>(objectId) * cellWordCount + lastWord;
+        if (index >= objectBitWordCount) {
+            break;
+        }
+        objectBits[index] &= validMask;
+    }
+}
+
 void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector<uint64_t>& objectBits) {
     if (session.game == nullptr) {
         objectBits.clear();
@@ -4134,15 +4163,15 @@ void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector
     }
     fillCompactOccupancyBitsFromLiveLevelData(
         *session.game,
-        session.liveLevel.width,
-        session.liveLevel.height,
-        session.liveLevel.objects,
+        session.levelState.liveLevel.width,
+        session.levelState.liveLevel.height,
+        session.levelState.liveLevel.objects,
         objectBits
     );
 }
 
 void syncOccupancyObjectBitsFromLiveLevel(FullState& session) {
-    fillCompactOccupancyBitsFromLiveLevel(session, session.occupancy.objectBits);
+    fillCompactOccupancyBitsFromLiveLevel(session, session.levelState.boardOccupancy.objectBits);
 }
 
 void resizeBoardOccupancyObjectBits(FullState& session) {
@@ -4150,7 +4179,7 @@ void resizeBoardOccupancyObjectBits(FullState& session) {
 }
 
 void syncOccupancyRngFromAuthoritativeRandomState(FullState& session) {
-    session.occupancy.rng = session.randomState;
+    (void)session;
 }
 
 void syncBoardOccupancyMirrorFromAuthoritativeState(FullState& session) {
@@ -4186,11 +4215,11 @@ void compiledRuleSetCellObjectsFromWords(
     const MaskWord* destroyed
 ) {
     setCellObjectsFromWords(session, tileIndex, objects);
-    if (created != nullptr && !session.pendingCreateMask.empty()) {
-        accumulateMaskWords(session.pendingCreateMask, created, session.pendingCreateMask.size());
+    if (created != nullptr && !session.scratch.pendingCreateMask.empty()) {
+        accumulateMaskWords(session.scratch.pendingCreateMask, created, session.scratch.pendingCreateMask.size());
     }
-    if (destroyed != nullptr && !session.pendingDestroyMask.empty()) {
-        accumulateMaskWords(session.pendingDestroyMask, destroyed, session.pendingDestroyMask.size());
+    if (destroyed != nullptr && !session.scratch.pendingDestroyMask.empty()) {
+        accumulateMaskWords(session.scratch.pendingDestroyMask, destroyed, session.scratch.pendingDestroyMask.size());
     }
 }
 
@@ -4213,33 +4242,33 @@ void compiledRuleSetCellObjectsWord1(
     }
     cell[0] = objects;
     setCellObjectsFromWords(session, tileIndex, cell.data());
-    if (!session.pendingCreateMask.empty()) {
-        session.pendingCreateMask[0] |= created;
+    if (!session.scratch.pendingCreateMask.empty()) {
+        session.scratch.pendingCreateMask[0] |= created;
     }
-    if (!session.pendingDestroyMask.empty()) {
-        session.pendingDestroyMask[0] |= destroyed;
+    if (!session.scratch.pendingDestroyMask.empty()) {
+        session.scratch.pendingDestroyMask[0] |= destroyed;
     }
 }
 
 void compiledRuleSetCellMovementsWord1(FullState& session, int32_t tileIndex, MaskWord movements) {
     const int32_t stride = session.game->strideMovement;
     const size_t base = static_cast<size_t>(tileIndex * stride);
-    const int32_t columnIndex = tileIndex / session.liveLevel.height;
-    const int32_t rowIndex = tileIndex % session.liveLevel.height;
-    const MaskWord oldValue = session.liveMovements[base];
+    const int32_t columnIndex = tileIndex / session.levelState.liveLevel.height;
+    const int32_t rowIndex = tileIndex % session.levelState.liveLevel.height;
+    const MaskWord oldValue = session.scratch.liveMovements[base];
 
-    session.liveMovements[base] = movements;
-    session.columnMovementMasks[static_cast<size_t>(columnIndex * stride)] |= movements;
-    session.rowMovementMasks[static_cast<size_t>(rowIndex * stride)] |= movements;
-    session.boardMovementMask[0] |= movements;
+    session.scratch.liveMovements[base] = movements;
+    session.scratch.columnMovementMasks[static_cast<size_t>(columnIndex * stride)] |= movements;
+    session.scratch.rowMovementMasks[static_cast<size_t>(rowIndex * stride)] |= movements;
+    session.scratch.boardMovementMask[0] |= movements;
 
     if ((oldValue & ~movements) != 0) {
-        if (static_cast<size_t>(rowIndex) < session.dirtyMovementRows.size())
-            session.dirtyMovementRows[static_cast<size_t>(rowIndex)] = 1;
-        if (static_cast<size_t>(columnIndex) < session.dirtyMovementColumns.size())
-            session.dirtyMovementColumns[static_cast<size_t>(columnIndex)] = 1;
-        session.dirtyMovementBoard = true;
-        session.anyMasksDirty = true;
+        if (static_cast<size_t>(rowIndex) < session.scratch.dirtyMovementRows.size())
+            session.scratch.dirtyMovementRows[static_cast<size_t>(rowIndex)] = 1;
+        if (static_cast<size_t>(columnIndex) < session.scratch.dirtyMovementColumns.size())
+            session.scratch.dirtyMovementColumns[static_cast<size_t>(columnIndex)] = 1;
+        session.scratch.dirtyMovementBoard = true;
+        session.scratch.anyMasksDirty = true;
     }
 }
 
@@ -4365,7 +4394,7 @@ bool compiledRuleRowMatchStillMatches(
         ? rule.ellipsisCount[rowIndex]
         : 0;
     const auto [dx, dy] = directionMaskToDelta(rule.direction);
-    const int32_t delta = dx * session.liveLevel.height + dy;
+    const int32_t delta = dx * session.levelState.liveLevel.height + dy;
     return delta != 0 && rowMatchStillMatches(session, rule.patterns[rowIndex], ellipsisCount, match, delta);
 }
 
@@ -4382,7 +4411,7 @@ bool compiledRuleApplyRowMatch(
         ? rule.ellipsisCount[rowIndex]
         : 0;
     const auto [dx, dy] = directionMaskToDelta(rule.direction);
-    const int32_t delta = dx * session.liveLevel.height + dy;
+    const int32_t delta = dx * session.levelState.liveLevel.height + dy;
     return delta != 0 && applyRowMatchAt(session, rule, rule.patterns[rowIndex], ellipsisCount, match, delta);
 }
 
@@ -4399,7 +4428,7 @@ void runRulesOnLevelStart(FullState& session, RuntimeStepOptions options);
 bool wouldAgainChange(FullState& session, bool* outWouldModify = nullptr, bool emitAudio = true);
 void settlePendingAgain(FullState& session);
 
-std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame) {
+std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, LoadedGame& outGame) {
     try {
         json::Value root = json::parse(jsonText);
         const auto& rootObject = root.asObject();
@@ -4427,13 +4456,13 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
         game->backgroundLayer = toInt(requireField(background, "layer"));
 
         if (const auto metadataPairs = gameObject.find("metadata_pairs"); metadataPairs != gameObject.end()) {
-            game->metadataPairs = parseStringVector(metadataPairs->second);
+            game->metadata.pairs = parseStringVector(metadataPairs->second);
         }
         if (const auto metadataMap = gameObject.find("metadata_map"); metadataMap != gameObject.end()) {
-            game->metadataMap = parseStringMap(metadataMap->second);
+            game->metadata.values = parseStringMap(metadataMap->second);
         }
         if (const auto metadataLines = gameObject.find("metadata_lines"); metadataLines != gameObject.end()) {
-            game->metadataLines = parseIntMap(metadataLines->second);
+            game->metadata.lines = parseIntMap(metadataLines->second);
         }
 
         game->idDict = parseStringVector(requireField(gameObject, "id_dict"));
@@ -4551,55 +4580,55 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
 
         if (const auto prepared = rootObject.find("prepared_session"); prepared != rootObject.end()) {
             try {
-                game->meta = parsePreparedSession(prepared->second, *game);
-                if (game->meta.level.width == 0
-                    && game->meta.level.height == 0
-                    && game->meta.level.objects.empty()
-                    && game->meta.currentLevelIndex >= 0
-                    && static_cast<size_t>(game->meta.currentLevelIndex) < game->levels.size()) {
-                    game->meta.level = game->levels[static_cast<size_t>(game->meta.currentLevelIndex)];
+                outGame.initialMetaGameState = parsePreparedSession(prepared->second, *game);
+                if (outGame.initialMetaGameState.level.width == 0
+                    && outGame.initialMetaGameState.level.height == 0
+                    && outGame.initialMetaGameState.level.objects.empty()
+                    && outGame.initialMetaGameState.currentLevelIndex >= 0
+                    && static_cast<size_t>(outGame.initialMetaGameState.currentLevelIndex) < game->levels.size()) {
+                    outGame.initialMetaGameState.level = game->levels[static_cast<size_t>(outGame.initialMetaGameState.currentLevelIndex)];
                 }
             } catch (const std::exception& error) {
                 throw json::ParseError("Failed parsing prepared_session: " + std::string(error.what()));
             }
         }
-        outGame = std::move(game);
+        outGame.information = std::move(game);
         return nullptr;
     } catch (const std::exception& error) {
         return std::make_unique<Error>(error.what());
     }
 }
 
-std::unique_ptr<FullState> createFullState(std::shared_ptr<const Game> game) {
+std::unique_ptr<FullState> createFullState(const LoadedGame& loadedGame) {
     auto session = std::make_unique<FullState>();
-    session->game = std::move(game);
-    session->meta = session->game->meta;
-    session->backend = detectBestBackend();
+    session->game = loadedGame.information;
+    session->meta = loadedGame.initialMetaGameState;
+    session->scratch.backend = detectBestBackend();
     resetToPrepared(*session);
     return session;
 }
 
-std::unique_ptr<FullState> createFullStateWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed) {
+std::unique_ptr<FullState> createFullStateWithLoadedLevelSeed(const LoadedGame& loadedGame, std::string loadedLevelSeed) {
     auto session = std::make_unique<FullState>();
-    session->game = std::move(game);
-    session->meta = session->game->meta;
+    session->game = loadedGame.information;
+    session->meta = loadedGame.initialMetaGameState;
     session->meta.loadedLevelSeed = std::move(loadedLevelSeed);
     session->meta.hasRandomState = false;
     session->meta.randomStateValid = false;
     session->meta.randomStateI = 0;
     session->meta.randomStateJ = 0;
     session->meta.randomStateS.clear();
-    session->backend = detectBestBackend();
+    session->scratch.backend = detectBestBackend();
     resetToPrepared(*session);
     return session;
 }
 
-std::unique_ptr<FullState> createSession(std::shared_ptr<const Game> game) {
-    return createFullState(std::move(game));
+std::unique_ptr<FullState> createSession(const LoadedGame& loadedGame) {
+    return createFullState(loadedGame);
 }
 
-std::unique_ptr<FullState> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed) {
-    return createFullStateWithLoadedLevelSeed(std::move(game), std::move(loadedLevelSeed));
+std::unique_ptr<FullState> createSessionWithLoadedLevelSeed(const LoadedGame& loadedGame, std::string loadedLevelSeed) {
+    return createFullStateWithLoadedLevelSeed(loadedGame, std::move(loadedLevelSeed));
 }
 
 namespace {
@@ -4679,7 +4708,7 @@ std::unique_ptr<Error> advanceLevel(FullState& session) {
 }
 
 bool restart(FullState& session, RuntimeStepOptions options) {
-    if (session.game->metadataMap.find("norestart") != session.game->metadataMap.end()) {
+    if (session.game->metadata.values.find("norestart") != session.game->metadata.values.end()) {
         return true;
     }
     if (options.playableUndo) {
@@ -4695,26 +4724,24 @@ bool restart(FullState& session) {
 }
 
 bool undo(FullState& session) {
-    if (session.game->metadataMap.find("noundo") != session.game->metadataMap.end()) {
+    if (session.game->metadata.values.find("noundo") != session.game->metadata.values.end()) {
         return true;
     }
-    while (!session.undoStack.empty()) {
-        const auto& top = session.undoStack.back();
-        if (top.liveLevel.width != session.liveLevel.width
-            || top.liveLevel.height != session.liveLevel.height
-            || top.liveLevel.objects != session.liveLevel.objects) {
+    while (!session.meta.undoStack.empty()) {
+        const auto& top = session.meta.undoStack.back();
+        if (top.liveLevel.width != session.levelState.liveLevel.width
+            || top.liveLevel.height != session.levelState.liveLevel.height
+            || top.liveLevel.objects != session.levelState.liveLevel.objects) {
             break;
         }
-        session.undoStack.pop_back();
+        session.meta.undoStack.pop_back();
     }
-    if (session.undoStack.empty()) {
-        session.canUndo = false;
+    if (session.meta.undoStack.empty()) {
         return false;
     }
-    const auto snapshot = std::move(session.undoStack.back());
-    session.undoStack.pop_back();
+    const auto snapshot = std::move(session.meta.undoStack.back());
+    session.meta.undoStack.pop_back();
     restoreSnapshot(session, snapshot, false);
-    session.canUndo = !session.undoStack.empty();
     return true;
 }
 
@@ -4739,12 +4766,12 @@ std::string serializeTestString(const FullState& session) {
     std::map<std::string, int32_t> seenCells;
     int32_t nextIndex = 0;
     const int32_t stride = session.game->strideObject;
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
 
-    for (int32_t y = 0; y < session.liveLevel.height; ++y) {
-        for (int32_t x = 0; x < session.liveLevel.width; ++x) {
-            const int32_t tileIndex = y * session.liveLevel.width + x;
+    for (int32_t y = 0; y < session.levelState.liveLevel.height; ++y) {
+        for (int32_t x = 0; x < session.levelState.liveLevel.width; ++x) {
+            const int32_t tileIndex = y * session.levelState.liveLevel.width + x;
             const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
             const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
             std::vector<std::string> objects;
@@ -4752,8 +4779,8 @@ std::string serializeTestString(const FullState& session) {
                 const int32_t objectId = bit;
                 const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
                 if (cellWordCount > 0
-                    && objectBase + bitWord < session.occupancy.objectBits.size()
-                    && (session.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
+                    && objectBase + bitWord < session.levelState.boardOccupancy.objectBits.size()
+                    && (session.levelState.boardOccupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
                     if (static_cast<size_t>(bit) < session.game->idDict.size()) {
                         objects.push_back(session.game->idDict[static_cast<size_t>(bit)]);
                     }
@@ -4803,23 +4830,23 @@ std::string exportSnapshot(const FullState& session) {
            << "\"title_selected\":" << (session.meta.titleSelected ? "true" : "false") << ","
            << "\"message_selected\":" << (session.meta.messageSelected ? "true" : "false") << ","
            << "\"winning\":" << (session.meta.winning ? "true" : "false") << ","
-           << "\"movement_word_count_nonzero\":" << countNonZeroWords(session.liveMovements) << ","
-           << "\"random_state_valid\":" << (session.randomState.valid ? "true" : "false") << ","
-           << "\"random_state_i\":" << static_cast<int32_t>(session.randomState.i) << ","
-           << "\"random_state_j\":" << static_cast<int32_t>(session.randomState.j) << ","
+           << "\"movement_word_count_nonzero\":" << countNonZeroWords(session.scratch.liveMovements) << ","
+           << "\"random_state_valid\":" << (session.levelState.rng.valid ? "true" : "false") << ","
+           << "\"random_state_i\":" << static_cast<int32_t>(session.levelState.rng.i) << ","
+           << "\"random_state_j\":" << static_cast<int32_t>(session.levelState.rng.j) << ","
            << "\"loaded_level_seed\":\"" << escapeJson(session.meta.loadedLevelSeed) << "\","
            << "\"hash64\":" << hash64 << ","
            << "\"hash128\":{\"lo\":" << hash128.lo << ",\"hi\":" << hash128.hi << "},"
            << "\"movement_board_mask\":[";
-    for (size_t index = 0; index < session.boardMovementMask.size(); ++index) {
+    for (size_t index = 0; index < session.scratch.boardMovementMask.size(); ++index) {
         if (index > 0) {
             stream << ",";
         }
-        stream << session.boardMovementMask[index];
+        stream << session.scratch.boardMovementMask[index];
     }
     stream << "],"
            << "\"random_state_preview_bytes\":[";
-    const std::vector<int32_t> previewBytes = previewRandomBytes(session.randomState, 8);
+    const std::vector<int32_t> previewBytes = previewRandomBytes(session.levelState.rng, 8);
     for (size_t index = 0; index < previewBytes.size(); ++index) {
         if (index > 0) {
             stream << ",";
@@ -4833,10 +4860,9 @@ std::string exportSnapshot(const FullState& session) {
 }
 
 void discardTopUndoSnapshot(FullState& session) {
-    if (!session.undoStack.empty()) {
-        session.undoStack.pop_back();
+    if (!session.meta.undoStack.empty()) {
+        session.meta.undoStack.pop_back();
     }
-    session.canUndo = !session.undoStack.empty();
 }
 
 TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOptions options);
@@ -4846,11 +4872,11 @@ void runRulesOnLevelStart(FullState& session) {
 }
 
 void runRulesOnLevelStart(FullState& session, RuntimeStepOptions options) {
-    if (session.game->metadataMap.find("run_rules_on_level_start") == session.game->metadataMap.end()) {
+    if (session.game->metadata.values.find("run_rules_on_level_start") == session.game->metadata.values.end()) {
         return;
     }
 
-    session.pendingAgain = false;
+    session.meta.pendingAgain = false;
     (void)executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
         .recordRestartUndo = options.playableUndo,
@@ -4862,7 +4888,7 @@ void runRulesOnLevelStart(FullState& session, RuntimeStepOptions options) {
 
 bool wouldAgainChange(FullState& session, bool* outWouldModify, bool emitAudio) {
     const uint64_t beforeHash = hashFullState64(session);
-    session.pendingAgain = false;
+    session.meta.pendingAgain = false;
     bool wouldModify = false;
     const ps_step_result result = executeTurn(session, 0, ExecuteTurnOptions{
         .pushUndo = false,
@@ -4907,32 +4933,32 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
     TurnResult out;
     ps_step_result& result = out.core;
     if (options.emitAudio && !session.game->sfxCreationMasks.empty()) {
-        session.pendingCreateMask.assign(static_cast<size_t>(session.game->strideObject), 0);
+        session.scratch.pendingCreateMask.assign(static_cast<size_t>(session.game->strideObject), 0);
     } else {
-        session.pendingCreateMask.clear();
+        session.scratch.pendingCreateMask.clear();
     }
     if (options.emitAudio && !session.game->sfxDestructionMasks.empty()) {
-        session.pendingDestroyMask.assign(static_cast<size_t>(session.game->strideObject), 0);
+        session.scratch.pendingDestroyMask.assign(static_cast<size_t>(session.game->strideObject), 0);
     } else {
-        session.pendingDestroyMask.clear();
+        session.scratch.pendingDestroyMask.clear();
     }
 
-    std::optional<FullState::UndoSnapshot> localTurnStart;
-    const FullState::UndoSnapshot* turnStartPtr = nullptr;
+    std::optional<UndoSnapshot> localTurnStart;
+    const UndoSnapshot* turnStartPtr = nullptr;
     if (options.pushUndo) {
         pushUndoSnapshot(session);
-        turnStartPtr = &session.undoStack.back();
+        turnStartPtr = &session.meta.undoStack.back();
     } else {
         localTurnStart = makeUndoSnapshot(session);
         turnStartPtr = &*localTurnStart;
     }
-    const FullState::UndoSnapshot& turnStart = *turnStartPtr;
-    const bool requiresPlayerMovement = session.game->metadataMap.find("require_player_movement") != session.game->metadataMap.end();
+    const UndoSnapshot& turnStart = *turnStartPtr;
+    const bool requiresPlayerMovement = session.game->metadata.values.find("require_player_movement") != session.game->metadata.values.end();
     const std::vector<int32_t> startPlayerPositions = directionMask != 0 && requiresPlayerMovement
         ? collectPlayerPositions(session)
         : std::vector<int32_t>{};
 
-    session.pendingAgain = false;
+    session.meta.pendingAgain = false;
     bool seeded = false;
     bool ruleChanged = false;
     bool moved = false;
@@ -5010,7 +5036,7 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
         }
         break;
     }
-    const bool modified = session.liveLevel.objects != turnStart.liveLevel.objects;
+    const bool modified = session.levelState.liveLevel.objects != turnStart.liveLevel.objects;
     if (options.observedModification != nullptr) {
         *options.observedModification = modified;
     }
@@ -5069,8 +5095,8 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
     }
 
     if (options.emitAudio) {
-        tryPlayMaskSounds(session, out, session.game->sfxCreationMasks, session.pendingCreateMask, "create");
-        tryPlayMaskSounds(session, out, session.game->sfxDestructionMasks, session.pendingDestroyMask, "destroy");
+        tryPlayMaskSounds(session, out, session.game->sfxCreationMasks, session.scratch.pendingCreateMask, "create");
+        tryPlayMaskSounds(session, out, session.game->sfxDestructionMasks, session.scratch.pendingDestroyMask, "destroy");
     }
     const bool hasRestart = commandQueueContains(commands, "restart");
     if (!options.solverMode) {
@@ -5097,13 +5123,13 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
         (void)transitioned;
     }
     if (!options.solverMode && !won && commandQueueContains(commands, "checkpoint")) {
-        session.meta.restart.width = session.liveLevel.width;
-        session.meta.restart.height = session.liveLevel.height;
+        session.meta.restart.width = session.levelState.liveLevel.width;
+        session.meta.restart.height = session.levelState.liveLevel.height;
         fillCompactOccupancyBitsFromLiveLevelData(
             *session.game,
-            session.liveLevel.width,
-            session.liveLevel.height,
-            session.liveLevel.objects,
+            session.levelState.liveLevel.width,
+            session.levelState.liveLevel.height,
+            session.levelState.liveLevel.objects,
             session.meta.restart.objectBits
         );
         session.meta.restart.oldFlickscreenDat = session.meta.oldFlickscreenDat;
@@ -5134,7 +5160,7 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
                << " schedule_again=" << (againWouldChange ? 1 : 0);
         ruleDebugLog(stream.str());
     }
-    if (againDebugEnabled() && (hasAgain || session.pendingAgain || modified)) {
+    if (againDebugEnabled() && (hasAgain || session.meta.pendingAgain || modified)) {
         std::ostringstream stream;
         stream << "post-turn modified=" << (modified ? 1 : 0)
                << " won=" << (won ? 1 : 0)
@@ -5151,7 +5177,7 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
         againDebugLog(stream.str());
     }
     if (againWouldChange) {
-        session.pendingAgain = true;
+        session.meta.pendingAgain = true;
     }
 
     result.changed = seeded || ruleChanged || moved || lateRuleChanged || modified || transitioned || !commands.queue.empty();
@@ -5282,7 +5308,7 @@ ps_step_result interpretedTurnWithSpecializedRulegroups(
     }
 
     constexpr int kMaxAgainIterations = 500;
-    for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
+    for (int iteration = 0; iteration < kMaxAgainIterations && session.meta.pendingAgain; ++iteration) {
         const ps_step_result tickResult = interpretedTurnOnceWithSpecializedRulegroups(
             session,
             PS_INPUT_TICK,
@@ -5406,7 +5432,7 @@ TurnResult turnResult(FullState& session, ps_input input, RuntimeStepOptions opt
         return acc;
     }
     constexpr int kMaxAgainIterations = 500;
-    for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
+    for (int iteration = 0; iteration < kMaxAgainIterations && session.meta.pendingAgain; ++iteration) {
         (void)turnOnce(session, PS_INPUT_TICK, yieldOptions);
         // Merge drained tick core; keep the last tick's audio vectors.
         acc.core.changed = acc.core.changed || gThreadTurnResult.core.changed;
@@ -5463,7 +5489,7 @@ void settlePendingAgain(FullState& session, RuntimeStepOptions options) {
     constexpr int kMaxAgainIterations = 500;
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
-    for (int iteration = 0; iteration < kMaxAgainIterations && session.pendingAgain; ++iteration) {
+    for (int iteration = 0; iteration < kMaxAgainIterations && session.meta.pendingAgain; ++iteration) {
         (void)tick(session, yieldOptions);
     }
 }

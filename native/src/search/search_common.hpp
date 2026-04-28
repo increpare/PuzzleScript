@@ -56,15 +56,15 @@ inline StateKey fullStateKey(const FullState& session, bool includeRandomState, 
     appendStateKeyValue(key, session.meta.titleScreen ? 1 : 0);
     appendStateKeyValue(key, session.meta.textMode ? 1 : 0);
     appendStateKeyValue(key, session.meta.winning ? 1 : 0);
-    appendStateKeyValue(key, session.pendingAgain ? 1 : 0);
+    appendStateKeyValue(key, session.meta.pendingAgain ? 1 : 0);
 
     if (includeRandomState) {
-        appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.randomState.i)));
-        appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.randomState.j)));
-        appendStateKeyValue(key, session.randomState.valid ? 1 : 0);
+        appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.levelState.rng.i)));
+        appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.levelState.rng.j)));
+        appendStateKeyValue(key, session.levelState.rng.valid ? 1 : 0);
         uint64_t packed = 0;
         uint32_t shift = 0;
-        for (const uint8_t byte : session.randomState.s) {
+        for (const uint8_t byte : session.levelState.rng.s) {
             packed |= static_cast<uint64_t>(byte) << shift;
             shift += 8;
             if (shift == 64) {
@@ -78,7 +78,7 @@ inline StateKey fullStateKey(const FullState& session, bool includeRandomState, 
         }
     }
 
-    const auto& objects = session.liveLevel.objects;
+    const auto& objects = session.levelState.liveLevel.objects;
     for (size_t index = 0; index < objects.size(); ++index) {
         appendStateKeyValue(key, static_cast<uint64_t>(static_cast<MaskWordUnsigned>(projectWord(index, objects[index]))));
     }
@@ -119,7 +119,7 @@ inline const MaskWord* maskPtr(const Game& game, MaskOffset offset) {
 }
 
 inline const MaskWord* cellObjects(const FullState& session, int32_t tileIndex) {
-    return session.liveLevel.objects.data() + static_cast<size_t>(tileIndex * session.game->strideObject);
+    return session.levelState.liveLevel.objects.data() + static_cast<size_t>(tileIndex * session.game->strideObject);
 }
 
 inline bool anyBits(const MaskWord* lhs, uint32_t lhsCount, const MaskWord* rhs, uint32_t rhsCount) {
@@ -166,8 +166,8 @@ inline void matchingDistanceField(
     bool aggregate,
     std::vector<int32_t>& distances
 ) {
-    const int32_t width = session.liveLevel.width;
-    const int32_t height = session.liveLevel.height;
+    const int32_t width = session.levelState.liveLevel.width;
+    const int32_t height = session.levelState.liveLevel.height;
     const int32_t tileCount = width * height;
     distances.assign(static_cast<size_t>(tileCount), std::numeric_limits<int32_t>::max());
     if (filter == nullptr) {
@@ -222,7 +222,7 @@ inline int32_t winConditionHeuristicScore(const FullState& session, HeuristicOpt
     }
 
     int32_t score = 0;
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     for (const auto& condition : game.winConditions) {
         const MaskWord* filter1 = maskPtr(game, condition.filter1);
         const MaskWord* filter2 = maskPtr(game, condition.filter2);

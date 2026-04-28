@@ -14,8 +14,7 @@ namespace puzzlescript::compiler {
 // the existing JS test corpus can be used as a correctness gate.
 std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     const ParserState& state,
-    std::shared_ptr<const puzzlescript::Game>& outGame
+    puzzlescript::LoadedGame& outGame
 );
 
 } // namespace puzzlescript::compiler
-

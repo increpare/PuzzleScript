@@ -225,25 +225,26 @@ int32_t getShiftedMask5(const puzzlescript::MaskVector& words, int32_t shift) {
 
 std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     const ParserState& state,
-    std::shared_ptr<const puzzlescript::Game>& outGame
+    puzzlescript::LoadedGame& outGame
 ) {
     auto game = std::make_shared<puzzlescript::Game>();
+    puzzlescript::MetaGameState initialMetaGameState;
     game->schemaVersion = 1;
 
     // --- Metadata ---
     // ParserState.metadata is a flat [key, value, key, value...] list.
-    game->metadataPairs = state.metadata;
+    game->metadata.pairs = state.metadata;
     for (size_t i = 0; i + 1 < state.metadata.size(); i += 2) {
-        game->metadataMap[state.metadata[i]] = state.metadata[i + 1];
+        game->metadata.values[state.metadata[i]] = state.metadata[i + 1];
     }
-    game->metadataLines = state.metadataLines;
+    game->metadata.lines = state.metadataLines;
 
     // Preserve existing JS exporter behavior: background/text colors are part of IR.
     // If we don't resolve palettes yet, prefer explicit metadata.
-    if (const auto it = game->metadataMap.find("text_color"); it != game->metadataMap.end()) {
+    if (const auto it = game->metadata.values.find("text_color"); it != game->metadata.values.end()) {
         game->foregroundColor = it->second;
     }
-    if (const auto it = game->metadataMap.find("background_color"); it != game->metadataMap.end()) {
+    if (const auto it = game->metadata.values.find("background_color"); it != game->metadata.values.end()) {
         game->backgroundColor = it->second;
     }
 
@@ -781,33 +782,33 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     }
 
     // --- Prepared session ---
-    game->meta.currentLevelIndex = 0;
-    game->meta.currentLevelTarget.reset();
-    game->meta.titleScreen = false;
-    game->meta.textMode = !game->levels.empty() && game->levels.front().isMessage;
-    game->meta.titleMode = 0;
-    game->meta.titleSelection = 0;
-    game->meta.titleSelected = false;
-    game->meta.messageSelected = false;
-    game->meta.messageText.clear();
-    game->meta.winning = false;
-    game->meta.loadedLevelSeed = "native";
-    game->meta.hasRandomState = false;
-    game->meta.randomStateValid = false;
-    game->meta.randomStateS.clear();
-    game->meta.oldFlickscreenDat.clear();
+    initialMetaGameState.currentLevelIndex = 0;
+    initialMetaGameState.currentLevelTarget.reset();
+    initialMetaGameState.titleScreen = false;
+    initialMetaGameState.textMode = !game->levels.empty() && game->levels.front().isMessage;
+    initialMetaGameState.titleMode = 0;
+    initialMetaGameState.titleSelection = 0;
+    initialMetaGameState.titleSelected = false;
+    initialMetaGameState.messageSelected = false;
+    initialMetaGameState.messageText.clear();
+    initialMetaGameState.winning = false;
+    initialMetaGameState.loadedLevelSeed = "native";
+    initialMetaGameState.hasRandomState = false;
+    initialMetaGameState.randomStateValid = false;
+    initialMetaGameState.randomStateS.clear();
+    initialMetaGameState.oldFlickscreenDat.clear();
     if (!game->levels.empty()) {
-        game->meta.level = game->levels.front();
-        game->meta.restart.width = game->meta.level.width;
-        game->meta.restart.height = game->meta.level.height;
+        initialMetaGameState.level = game->levels.front();
+        initialMetaGameState.restart.width = initialMetaGameState.level.width;
+        initialMetaGameState.restart.height = initialMetaGameState.level.height;
         puzzlescript::fillCompactOccupancyBitsFromLiveLevelData(
             *game,
-            game->meta.level.width,
-            game->meta.level.height,
-            game->meta.level.objects,
-            game->meta.restart.objectBits
+            initialMetaGameState.level.width,
+            initialMetaGameState.level.height,
+            initialMetaGameState.level.objects,
+            initialMetaGameState.restart.objectBits
         );
-        game->meta.restart.oldFlickscreenDat.clear();
+        initialMetaGameState.restart.oldFlickscreenDat.clear();
     }
 
     // --- Rules / winconditions / sounds / loop points ---
@@ -2755,7 +2756,8 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         }
     }
 
-    outGame = std::move(game);
+    outGame.information = std::move(game);
+    outGame.initialMetaGameState = std::move(initialMetaGameState);
     return nullptr;
 }
 

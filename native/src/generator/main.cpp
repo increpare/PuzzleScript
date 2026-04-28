@@ -553,20 +553,20 @@ struct NameResolver {
     }
 };
 
-std::shared_ptr<const Game> compileGame(const std::string& source, puzzlescript::compiler::ParserState* outState = nullptr) {
+puzzlescript::LoadedGame compileGame(const std::string& source, puzzlescript::compiler::ParserState* outState = nullptr) {
     puzzlescript::compiler::DiagnosticSink diagnostics;
     auto state = puzzlescript::compiler::parseSource(source, diagnostics);
-    std::shared_ptr<const Game> game;
-    if (auto error = puzzlescript::compiler::lowerToRuntimeGame(state, game)) {
+    puzzlescript::LoadedGame loadedGame;
+    if (auto error = puzzlescript::compiler::lowerToRuntimeGame(state, loadedGame)) {
         throw std::runtime_error(error->message);
     }
-    if (game) {
-        puzzlescript::attachLinkedCompiledRules(*std::const_pointer_cast<Game>(game), source);
+    if (loadedGame.information) {
+        puzzlescript::attachLinkedCompiledRules(*std::const_pointer_cast<Game>(loadedGame.information), source);
     }
     if (outState != nullptr) {
         *outState = std::move(state);
     }
-    return game;
+    return loadedGame;
 }
 
 struct Spec {
@@ -1002,7 +1002,7 @@ std::string inputName(ps_input input) {
 
 std::vector<ps_input> solverInputsForGame(const Game& game) {
     std::vector<ps_input> inputs{PS_INPUT_RIGHT, PS_INPUT_UP, PS_INPUT_DOWN, PS_INPUT_LEFT};
-    if (game.metadataMap.find("noaction") == game.metadataMap.end()) {
+    if (game.metadata.values.find("noaction") == game.metadata.values.end()) {
         inputs.push_back(PS_INPUT_ACTION);
     }
     return inputs;
@@ -1114,16 +1114,17 @@ bool solvedByStep(const ps_step_result& stepResult, const FullState& session, in
 }
 
 SolveResult runSearch(
-    const std::shared_ptr<const Game>& game,
+    const puzzlescript::LoadedGame& loadedGame,
     const LevelTemplate& generatedLevel,
     const SolverMetadata& metadata,
     uint64_t sampleId,
     SearchMode mode,
     TimePoint deadline
 ) {
+    const std::shared_ptr<const Game>& game = loadedGame.information;
     SolveResult result;
-    auto initial = puzzlescript::createFullStateWithLoadedLevelSeed(game, "generator:" + std::to_string(sampleId));
-    initial->suppressRuleMessages = true;
+    auto initial = puzzlescript::createFullStateWithLoadedLevelSeed(loadedGame, "generator:" + std::to_string(sampleId));
+    initial->meta.suppressRuleMessages = true;
     constexpr puzzlescript::RuntimeStepOptions solverStepOptions{
         .playableUndo = false,
         .emitAudio = false,
@@ -1212,25 +1213,26 @@ void mergeStats(SolveResult& target, const SolveResult& source) {
 }
 
 SolveResult solveGeneratedLevel(
-    const std::shared_ptr<const Game>& game,
+    const puzzlescript::LoadedGame& loadedGame,
     const LevelTemplate& generatedLevel,
     const SolverMetadata& metadata,
     uint64_t sampleId,
     int64_t timeoutMs,
     std::optional<SearchMode> mode
 ) {
+    const std::shared_ptr<const Game>& game = loadedGame.information;
     const TimePoint start = Clock::now();
     const TimePoint deadline = start + std::chrono::milliseconds(timeoutMs);
-    if (mode) return runSearch(game, generatedLevel, metadata, sampleId, *mode, deadline);
+    if (mode) return runSearch(loadedGame, generatedLevel, metadata, sampleId, *mode, deadline);
 
     SolveResult combined;
     combined.status = SolveStatus::Timeout;
     const TimePoint bfsDeadline = start + std::chrono::milliseconds(std::max<int64_t>(1, timeoutMs / 6));
-    SolveResult bfs = runSearch(game, generatedLevel, metadata, sampleId, SearchMode::Bfs, std::min(bfsDeadline, deadline));
+    SolveResult bfs = runSearch(loadedGame, generatedLevel, metadata, sampleId, SearchMode::Bfs, std::min(bfsDeadline, deadline));
     mergeStats(combined, bfs);
     if (bfs.status == SolveStatus::Solved || bfs.status == SolveStatus::LevelError) return bfs;
     if (Clock::now() < deadline) {
-        SolveResult weighted = runSearch(game, generatedLevel, metadata, sampleId, SearchMode::WeightedAStar, deadline);
+        SolveResult weighted = runSearch(loadedGame, generatedLevel, metadata, sampleId, SearchMode::WeightedAStar, deadline);
         mergeStats(combined, weighted);
         if (weighted.status == SolveStatus::Solved || weighted.status == SolveStatus::LevelError) return weighted;
         combined.status = weighted.status == SolveStatus::Exhausted ? SolveStatus::Exhausted : SolveStatus::Timeout;
@@ -1282,13 +1284,14 @@ SolverMetadata buildSolverMetadata(const Game& game) {
 
 void workerMain(
     const Options& options,
-    const std::shared_ptr<const Game>& game,
+    const puzzlescript::LoadedGame& loadedGame,
     const SolverMetadata& solverMetadata,
     const GenerationProgram& program,
     const LevelTemplate& initLevel,
     SharedState& shared,
     TimePoint deadline
 ) {
+    const std::shared_ptr<const Game>& game = loadedGame.information;
     while (!shared.cancel.load(std::memory_order_relaxed)) {
         const uint64_t sampleId = shared.nextSample.fetch_add(1, std::memory_order_relaxed);
         if (options.samples && sampleId >= *options.samples) {
@@ -1313,7 +1316,7 @@ void workerMain(
             shared.counters.deduped.fetch_add(1, std::memory_order_relaxed);
             continue;
         }
-        SolveResult solved = solveGeneratedLevel(game, candidateLevel, solverMetadata, sampleId, options.solverTimeoutMs, options.solverMode);
+        SolveResult solved = solveGeneratedLevel(loadedGame, candidateLevel, solverMetadata, sampleId, options.solverTimeoutMs, options.solverMode);
         shared.counters.solverSearches.fetch_add(1, std::memory_order_relaxed);
         shared.counters.solverExpanded.fetch_add(solved.expanded, std::memory_order_relaxed);
         shared.counters.solverGenerated.fetch_add(solved.generated, std::memory_order_relaxed);
@@ -1528,7 +1531,8 @@ int main(int argc, char** argv) {
         const Spec spec = parseSpec(readFile(options.specPath));
         puzzlescript::compiler::ParserState parserState;
         const std::string initSource = sourceWithInitLevel(gameSource, spec.initRows);
-        auto game = compileGame(initSource, &parserState);
+        auto loadedGame = compileGame(initSource, &parserState);
+        const auto& game = loadedGame.information;
         if (game->levels.empty() || game->levels.front().isMessage) {
             throw std::runtime_error("Compiled init level did not produce a playable level");
         }
@@ -1546,7 +1550,7 @@ int main(int argc, char** argv) {
         std::vector<std::thread> workers;
         workers.reserve(options.jobs);
         for (size_t i = 0; i < options.jobs; ++i) {
-            workers.emplace_back(workerMain, std::cref(options), game, std::cref(solverMetadata), std::cref(program), std::cref(game->levels.front()), std::ref(shared), deadline);
+            workers.emplace_back(workerMain, std::cref(options), std::cref(loadedGame), std::cref(solverMetadata), std::cref(program), std::cref(game->levels.front()), std::ref(shared), deadline);
         }
 
         const bool dashboard = !options.quiet && isatty(STDOUT_FILENO);

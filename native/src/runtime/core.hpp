@@ -123,13 +123,22 @@ struct LevelTemplate {
     MaskVector objects;
 };
 
+struct RandomState {
+    std::array<uint8_t, 256> s{};
+    uint8_t i = 0;
+    uint8_t j = 0;
+    bool valid = false;
+};
+
 struct RestartSnapshot {
     int32_t width = 0;
     int32_t height = 0;
-    /// Object-major compact occupancy (same layout as `BoardOccupancy::objectBits` / solver `CompactState`).
+    /// Object-major compact occupancy (same layout as `BoardOccupancy::objectBits`).
     std::vector<uint64_t> objectBits;
     std::vector<int32_t> oldFlickscreenDat;
 };
+
+struct UndoSnapshot;
 
 struct PreparedFullState {
     int32_t currentLevelIndex = 0;
@@ -152,6 +161,9 @@ struct PreparedFullState {
     LevelTemplate level;
     RestartSnapshot restart;
     std::string serializedLevel;
+    std::vector<UndoSnapshot> undoStack;
+    bool pendingAgain = false;
+    bool suppressRuleMessages = false;
 };
 
 using MetaGameState = PreparedFullState;
@@ -280,19 +292,37 @@ struct SoundMaskEntry {
     int32_t seed = 0;
 };
 
-struct RandomState {
-    std::array<uint8_t, 256> s{};
-    uint8_t i = 0;
-    uint8_t j = 0;
-    bool valid = false;
-};
-
 struct BoardOccupancy {
     std::vector<uint64_t> objectBits;
+};
+
+struct PersistentLevelState {
+    // Authoritative board (cell-major). Per-tile writes: setCellObjectsFromWords / setCellObjects.
+    LevelTemplate liveLevel;
+    BoardOccupancy boardOccupancy;
     RandomState rng;
 };
 
-struct Game {
+struct GameMetadata {
+    std::vector<std::string> pairs;
+    std::map<std::string, std::string> values;
+    std::map<std::string, int32_t> lines;
+};
+
+// Intended turn-core boundary:
+//   takeTurn(
+//       const GameInformation& gameInformation,
+//       const MetaGameState& metaGameState,
+//       PersistentLevelState& levelState,
+//       ps_input input,
+//       const RuntimeStepOptions& options,
+//       Scratch& scratch) -> TurnResult
+//
+// Game information, metagame context, input, and options are read-only.
+// The turn mutates only persistent within-level state and scratch, then
+// returns events for the caller to apply to metagame/session state.
+
+struct GameInformation {
     int32_t schemaVersion = 1;
     int32_t strideObject = 1;
     int32_t strideMovement = 1;
@@ -314,9 +344,7 @@ struct Game {
     int32_t backgroundLayer = -1;
     std::string foregroundColor;
     std::string backgroundColor;
-    std::vector<std::string> metadataPairs;
-    std::map<std::string, std::string> metadataMap;
-    std::map<std::string, int32_t> metadataLines;
+    GameMetadata metadata;
     std::vector<std::string> idDict;
     std::vector<std::string> glyphOrder;
 
@@ -353,42 +381,14 @@ struct Game {
     std::vector<SoundMaskEntry> sfxDestructionMasks;
     std::vector<std::vector<SoundMaskEntry>> sfxMovementMasks;
     std::vector<SoundMaskEntry> sfxMovementFailureMasks;
-    MetaGameState meta;
     const SpecializedRulegroupsBackend* specializedRulegroups = nullptr;
     const SpecializedFullTurnBackend* specializedFullTurn = nullptr;
     const SpecializedCompactTurnBackend* specializedCompactTurn = nullptr;
 };
 
+using Game = GameInformation;
+
 struct Scratch {
-    MaskVector replacementObjectsClearScratch;
-    MaskVector replacementObjectsSetScratch;
-    MaskVector replacementMovementsClearScratch;
-    MaskVector replacementMovementsSetScratch;
-    MaskVector replacementObjectsScratch;
-    MaskVector replacementMovementsScratch;
-    MaskVector replacementOldObjectsScratch;
-    MaskVector replacementOldMovementsScratch;
-    MaskVector replacementCreatedScratch;
-    MaskVector replacementDestroyedScratch;
-    MaskVector replacementRigidMaskScratch;
-};
-
-struct FullState {
-    struct UndoSnapshot {
-        MetaGameState meta;
-        LevelTemplate liveLevel;
-        MaskVector liveMovements;
-        MaskVector rigidGroupIndexMasks;
-        MaskVector rigidMovementAppliedMasks;
-        RandomState randomState;
-    };
-
-    std::shared_ptr<const Game> game;
-    MetaGameState meta;
-    // Authoritative board (cell-major). Per-tile writes: setCellObjectsFromWords / setCellObjects.
-    LevelTemplate liveLevel;
-    // Object-major mirror of `liveLevel` + RNG; updated at turn end via sync helpers.
-    BoardOccupancy occupancy;
     MaskVector liveMovements;
     MaskVector rowMasks;
     MaskVector columnMasks;
@@ -423,20 +423,46 @@ struct FullState {
     MaskVector rigidMovementAppliedMasks;
     MaskVector pendingCreateMask;
     MaskVector pendingDestroyMask;
-    // Scratch buffers reused across applyReplacementAt invocations to avoid
-    // per-call heap allocation. Contents are overwritten on every call.
-    Scratch scratch;
+    MaskVector replacementObjectsClearScratch;
+    MaskVector replacementObjectsSetScratch;
+    MaskVector replacementMovementsClearScratch;
+    MaskVector replacementMovementsSetScratch;
+    MaskVector replacementObjectsScratch;
+    MaskVector replacementMovementsScratch;
+    MaskVector replacementOldObjectsScratch;
+    MaskVector replacementOldMovementsScratch;
+    MaskVector replacementCreatedScratch;
+    MaskVector replacementDestroyedScratch;
+    MaskVector replacementRigidMaskScratch;
     std::vector<int32_t> singleRowMatchScratch;
     std::vector<uint8_t> ellipsisLinePossibleScratch;
     std::vector<int32_t> ellipsisMinConcreteSuffixScratch;
     std::vector<int32_t> ellipsisPositionsScratch;
-    std::vector<UndoSnapshot> undoStack;
-    bool canUndo = false;
-    bool pendingAgain = false;
-    bool suppressRuleMessages = false;
-    RandomState randomState;
     SimdBackend backend = SimdBackend::Scalar;
 };
+
+struct UndoSnapshot {
+    MetaGameState meta;
+    LevelTemplate liveLevel;
+    MaskVector liveMovements;
+    MaskVector rigidGroupIndexMasks;
+    MaskVector rigidMovementAppliedMasks;
+    RandomState randomState;
+};
+
+struct LoadedGame {
+    std::shared_ptr<const GameInformation> information;
+    MetaGameState initialMetaGameState;
+};
+
+struct GameSession {
+    std::shared_ptr<const GameInformation> game;
+    MetaGameState meta;
+    PersistentLevelState levelState;
+    Scratch scratch;
+};
+
+using FullState = GameSession;
 
 struct TurnResult {
     ps_step_result core{};
@@ -444,7 +470,7 @@ struct TurnResult {
     std::vector<ps_audio_event> uiAudio;
 };
 
-/// Cell-major → object-major compact bits (same layout as solver `CompactState::objectBits`).
+/// Cell-major → object-major compact bits (same layout as `BoardOccupancy::objectBits`).
 void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector<uint64_t>& objectBits);
 
 void fillCompactOccupancyBitsFromLiveLevelData(
@@ -459,29 +485,37 @@ void fillLiveLevelObjectsFromCompactObjectBits(
     const Game& game,
     const std::vector<uint64_t>& objectBits);
 
-/// Resize/fill `session.occupancy.objectBits` from authoritative `liveLevel.objects`.
+void canonicalizeCompactObjectBits(
+    const Game& game,
+    int32_t width,
+    int32_t height,
+    uint64_t* objectBits,
+    size_t objectBitWordCount);
+
+/// Resize/fill compact object bits from authoritative `liveLevel.objects`.
 void syncOccupancyObjectBitsFromLiveLevel(FullState& session);
 
-/// Keeps `occupancy.objectBits` sized and aligned with the live board (delegates to sync).
+/// Keeps compact object bits sized and aligned with the live board (delegates to sync).
 void resizeBoardOccupancyObjectBits(FullState& session);
 
-/// RNG mirror for Task B migration — authoritative source is still FullState::randomState.
+/// Compatibility hook for callers that sync compact board state and RNG together.
+/// RNG already lives in `PersistentLevelState::rng`.
 void syncOccupancyRngFromAuthoritativeRandomState(FullState& session);
 
-/// Updates RNG + compact object bits in `BoardOccupancy` from authoritative session fields.
+/// Updates compact object bits from authoritative session fields.
 /// Call after any turn completes (including specialized full-turn paths that bypass `executeTurn`).
 void syncBoardOccupancyMirrorFromAuthoritativeState(FullState& session);
 
 struct CompileResult {
-    std::shared_ptr<const Game> game;
+    LoadedGame loadedGame;
     std::unique_ptr<Error> error;
 };
 
-std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_ptr<const Game>& outGame);
-std::unique_ptr<FullState> createFullState(std::shared_ptr<const Game> game);
-std::unique_ptr<FullState> createFullStateWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed);
-std::unique_ptr<FullState> createSession(std::shared_ptr<const Game> game);
-std::unique_ptr<FullState> createSessionWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed);
+std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, LoadedGame& outGame);
+std::unique_ptr<FullState> createFullState(const LoadedGame& loadedGame);
+std::unique_ptr<FullState> createFullStateWithLoadedLevelSeed(const LoadedGame& loadedGame, std::string loadedLevelSeed);
+std::unique_ptr<FullState> createSession(const LoadedGame& loadedGame);
+std::unique_ptr<FullState> createSessionWithLoadedLevelSeed(const LoadedGame& loadedGame, std::string loadedLevelSeed);
 std::unique_ptr<Error> loadLevel(FullState& state, int32_t levelIndex);
 std::unique_ptr<Error> advanceLevel(FullState& state);
 bool restart(FullState& state);

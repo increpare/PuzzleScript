@@ -17,12 +17,13 @@ using puzzlescript::CompactStateView;
 using puzzlescript::Error;
 using puzzlescript::FullState;
 using puzzlescript::Game;
+using puzzlescript::LoadedGame;
 using puzzlescript::kMaskWordBits;
 using puzzlescript::MaskWordUnsigned;
 using puzzlescript::RuntimeStepOptions;
 
 struct ps_game {
-    std::shared_ptr<const Game> impl;
+    LoadedGame impl;
 };
 
 struct ps_full_state {
@@ -71,8 +72,8 @@ uint32_t compactOracleTrailingZeros(MaskWordUnsigned value) {
 
 CompactOracleState compactOracleStateFromFullState(const FullState& session) {
     CompactOracleState state;
-    state.randomState = session.randomState;
-    state.movementWords = session.liveMovements;
+    state.randomState = session.levelState.rng;
+    state.movementWords = session.scratch.liveMovements;
     puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.objectBits);
     return state;
 }
@@ -146,8 +147,8 @@ bool ps_load_ir_json(const char* json_utf8, size_t json_size, ps_game** out_game
         return false;
     }
 
-    std::shared_ptr<const Game> game;
-    if (auto error = puzzlescript::loadGameFromJson(std::string_view(json_utf8, json_size), game)) {
+    LoadedGame loadedGame;
+    if (auto error = puzzlescript::loadGameFromJson(std::string_view(json_utf8, json_size), loadedGame)) {
         if (out_error) {
             *out_error = makeError(std::move(error));
         }
@@ -155,7 +156,7 @@ bool ps_load_ir_json(const char* json_utf8, size_t json_size, ps_game** out_game
     }
 
     auto* wrapper = new ps_game();
-    wrapper->impl = std::move(game);
+    wrapper->impl = std::move(loadedGame);
     *out_game = wrapper;
     return true;
 }
@@ -174,19 +175,19 @@ bool ps_compile_source(const char* source_utf8, size_t source_size, ps_compile_r
         );
         // For now, treat any lowering failure as a compile error. (Once lowering
         // is implemented, we can choose to gate on diagnostic severity.)
-        std::shared_ptr<const Game> game;
-        if (auto error = puzzlescript::compiler::lowerToRuntimeGame(state, game)) {
+        LoadedGame loadedGame;
+        if (auto error = puzzlescript::compiler::lowerToRuntimeGame(state, loadedGame)) {
             wrapper->impl->error = std::move(error);
             *out_result = wrapper;
             return false;
         }
-        if (game) {
+        if (loadedGame.information) {
             puzzlescript::attachLinkedCompiledRules(
-                *std::const_pointer_cast<Game>(game),
+                *std::const_pointer_cast<Game>(loadedGame.information),
                 source_utf8 == nullptr ? std::string_view{} : std::string_view(source_utf8, source_size)
             );
         }
-        wrapper->impl->game = std::move(game);
+        wrapper->impl->loadedGame = std::move(loadedGame);
         *out_result = wrapper;
         return true;
     } catch (const std::exception& e) {
@@ -197,11 +198,11 @@ bool ps_compile_source(const char* source_utf8, size_t source_size, ps_compile_r
 }
 
 const ps_game* ps_compile_result_game(const ps_compile_result* result) {
-    if (!result || !result->impl || !result->impl->game) {
+    if (!result || !result->impl || !result->impl->loadedGame.information) {
         return nullptr;
     }
     auto* wrapper = new ps_game();
-    wrapper->impl = result->impl->game;
+    wrapper->impl = result->impl->loadedGame;
     return wrapper;
 }
 
@@ -303,7 +304,7 @@ void ps_full_state_set_unit_testing(ps_full_state* state, bool enabled) {
     if (state == nullptr || !state->impl) {
         return;
     }
-    state->impl->suppressRuleMessages = enabled;
+    state->impl->meta.suppressRuleMessages = enabled;
 }
 
 bool ps_full_state_load_level(ps_full_state* state, int32_t level_index, ps_error** out_error) {
@@ -352,8 +353,8 @@ bool ps_full_state_compact_turn_oracle_check(
         compact.objectBits.size(),
         compact.movementWords.empty() ? nullptr : compact.movementWords.data(),
         compact.movementWords.size(),
-        original.liveLevel.width,
-        original.liveLevel.height,
+        original.levelState.liveLevel.width,
+        original.levelState.liveLevel.height,
         compact.randomState.s.data(),
         compact.randomState.s.size(),
         &compact.randomState.i,
@@ -365,6 +366,15 @@ bool ps_full_state_compact_turn_oracle_check(
     options.emitAudio = false;
     options.againPolicy = puzzlescript::AgainPolicy::Drain;
     const SpecializedCompactTurnOutcome compactOutcome = backend->step(*original.game, view, input, options);
+    if (compactOutcome.handled) {
+        puzzlescript::canonicalizeCompactObjectBits(
+            *original.game,
+            view.width,
+            view.height,
+            view.objectBits,
+            view.objectBitWordCount
+        );
+    }
 
     FullState interpreter = original;
     ps_step_result interpreterResult = interpretedTurn(interpreter, input, options);
@@ -380,8 +390,8 @@ bool ps_full_state_compact_turn_oracle_check(
         || interpreterResult.transitioned;
     if (matched
         && !terminal
-        && interpreter.liveLevel.width == original.liveLevel.width
-        && interpreter.liveLevel.height == original.liveLevel.height) {
+        && interpreter.levelState.liveLevel.width == original.levelState.liveLevel.width
+        && interpreter.levelState.liveLevel.height == original.levelState.liveLevel.height) {
         stateChecked = true;
         const CompactOracleState interpreterState = compactOracleStateFromFullState(interpreter);
         matched = compactOracleStatesEqual(compact, interpreterState);
@@ -402,7 +412,7 @@ bool ps_full_state_compact_turn_oracle_check(
 }
 
 bool ps_full_state_pending_again(const ps_full_state* state) {
-    return state && state->impl->pendingAgain;
+    return state && state->impl->meta.pendingAgain;
 }
 
 bool ps_full_state_undo(ps_full_state* state) {
@@ -442,11 +452,11 @@ void ps_full_state_status(const ps_full_state* state, ps_full_state_status_info*
     out_status->current_level_index = state->impl->meta.currentLevelIndex;
     out_status->has_current_level_target = state->impl->meta.currentLevelTarget.has_value();
     out_status->current_level_target = state->impl->meta.currentLevelTarget.value_or(0);
-    out_status->width = state->impl->liveLevel.width;
-    out_status->height = state->impl->liveLevel.height;
+    out_status->width = state->impl->levelState.liveLevel.width;
+    out_status->height = state->impl->levelState.liveLevel.height;
     out_status->title_mode = state->impl->meta.titleMode;
     out_status->title_selection = state->impl->meta.titleSelection;
-    out_status->can_undo = state->impl->canUndo;
+    out_status->can_undo = !state->impl->meta.undoStack.empty();
     out_status->winning = state->impl->meta.winning;
     out_status->title_screen = state->impl->meta.titleScreen;
     out_status->text_mode = state->impl->meta.textMode;
@@ -473,7 +483,7 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
         return false;
     }
     const FullState& impl = *state->impl;
-    if (x < 0 || y < 0 || x >= impl.liveLevel.width || y >= impl.liveLevel.height) {
+    if (x < 0 || y < 0 || x >= impl.levelState.liveLevel.width || y >= impl.levelState.liveLevel.height) {
         return false;
     }
     if (object_id >= impl.game->objectCount) {
@@ -483,16 +493,16 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
     if (word >= impl.game->wordCount) {
         return false;
     }
-    const int32_t tile_index = x * impl.liveLevel.height + y;
-    const int32_t tileCount = impl.liveLevel.width * impl.liveLevel.height;
+    const int32_t tile_index = x * impl.levelState.liveLevel.height + y;
+    const int32_t tileCount = impl.levelState.liveLevel.width * impl.levelState.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const size_t objectBase = static_cast<size_t>(object_id) * cellWordCount;
     const size_t bitWord = static_cast<size_t>(tile_index >> 6);
     const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tile_index & 63);
-    if (cellWordCount == 0 || objectBase + bitWord >= impl.occupancy.objectBits.size()) {
+    if (cellWordCount == 0 || objectBase + bitWord >= impl.levelState.boardOccupancy.objectBits.size()) {
         return false;
     }
-    return (impl.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0;
+    return (impl.levelState.boardOccupancy.objectBits[objectBase + bitWord] & bitMask) != 0;
 }
 
 bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* out_x, int32_t* out_y) {
@@ -506,7 +516,7 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         return false;
     }
     const FullState& impl = *state->impl;
-    if (impl.game->playerMask == puzzlescript::kNullMaskOffset || impl.liveLevel.width <= 0 || impl.liveLevel.height <= 0) {
+    if (impl.game->playerMask == puzzlescript::kNullMaskOffset || impl.levelState.liveLevel.width <= 0 || impl.levelState.liveLevel.height <= 0) {
         return false;
     }
     const puzzlescript::MaskWord* playerMask = impl.game->maskArena.data() + impl.game->playerMask;
@@ -519,7 +529,7 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
             playerObjectIds.push_back(objectId);
         }
     }
-    const int32_t tileCount = impl.liveLevel.width * impl.liveLevel.height;
+    const int32_t tileCount = impl.levelState.liveLevel.width * impl.levelState.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     if (cellWordCount == 0) {
         return false;
@@ -531,8 +541,8 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         if (impl.game->playerMaskAggregate) {
             for (int32_t objectId : playerObjectIds) {
                 const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-                if (objectBase + bitWord >= impl.occupancy.objectBits.size()
-                    || (impl.occupancy.objectBits[objectBase + bitWord] & bitMask) == 0) {
+                if (objectBase + bitWord >= impl.levelState.boardOccupancy.objectBits.size()
+                    || (impl.levelState.boardOccupancy.objectBits[objectBase + bitWord] & bitMask) == 0) {
                     containsPlayer = false;
                     break;
                 }
@@ -541,8 +551,8 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
             containsPlayer = false;
             for (int32_t objectId : playerObjectIds) {
                 const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-                if (objectBase + bitWord < impl.occupancy.objectBits.size()
-                    && (impl.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
+                if (objectBase + bitWord < impl.levelState.boardOccupancy.objectBits.size()
+                    && (impl.levelState.boardOccupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
                     containsPlayer = true;
                     break;
                 }
@@ -552,10 +562,10 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
             continue;
         }
         if (out_x) {
-            *out_x = tile_index / impl.liveLevel.height;
+            *out_x = tile_index / impl.levelState.liveLevel.height;
         }
         if (out_y) {
-            *out_y = tile_index % impl.liveLevel.height;
+            *out_y = tile_index % impl.levelState.liveLevel.height;
         }
         return true;
     }
@@ -622,49 +632,49 @@ void ps_runtime_counters_snapshot(ps_runtime_counters* out_counters) {
 }
 
 int32_t ps_game_level_count(const ps_game* game) {
-    return game && game->impl ? static_cast<int32_t>(game->impl->levels.size()) : 0;
+    return game && game->impl.information ? static_cast<int32_t>(game->impl.information->levels.size()) : 0;
 }
 
 int32_t ps_game_object_count(const ps_game* game) {
-    return game && game->impl ? game->impl->objectCount : 0;
+    return game && game->impl.information ? game->impl.information->objectCount : 0;
 }
 
 uint32_t ps_game_word_count(const ps_game* game) {
-    return game && game->impl ? game->impl->wordCount : 0;
+    return game && game->impl.information ? game->impl.information->wordCount : 0;
 }
 
 const char* ps_game_foreground_color(const ps_game* game) {
-    return game && game->impl ? game->impl->foregroundColor.c_str() : "";
+    return game && game->impl.information ? game->impl.information->foregroundColor.c_str() : "";
 }
 
 const char* ps_game_background_color(const ps_game* game) {
-    return game && game->impl ? game->impl->backgroundColor.c_str() : "";
+    return game && game->impl.information ? game->impl.information->backgroundColor.c_str() : "";
 }
 
 bool ps_game_has_metadata(const ps_game* game, const char* key_utf8) {
-    if (!game || !game->impl || !key_utf8) {
+    if (!game || !game->impl.information || !key_utf8) {
         return false;
     }
-    return game->impl->metadataMap.find(key_utf8) != game->impl->metadataMap.end();
+    return game->impl.information->metadata.values.find(key_utf8) != game->impl.information->metadata.values.end();
 }
 
 const char* ps_game_metadata_value(const ps_game* game, const char* key_utf8) {
-    if (!game || !game->impl || !key_utf8) {
+    if (!game || !game->impl.information || !key_utf8) {
         return "";
     }
-    const auto it = game->impl->metadataMap.find(key_utf8);
-    return it == game->impl->metadataMap.end() ? "" : it->second.c_str();
+    const auto it = game->impl.information->metadata.values.find(key_utf8);
+    return it == game->impl.information->metadata.values.end() ? "" : it->second.c_str();
 }
 
 bool ps_game_sound_seed(const ps_game* game, const char* sound_name_utf8, int32_t* out_seed) {
     if (out_seed) {
         *out_seed = 0;
     }
-    if (!game || !game->impl || !sound_name_utf8) {
+    if (!game || !game->impl.information || !sound_name_utf8) {
         return false;
     }
-    const auto it = game->impl->sfxEvents.find(sound_name_utf8);
-    if (it == game->impl->sfxEvents.end()) {
+    const auto it = game->impl.information->sfxEvents.find(sound_name_utf8);
+    if (it == game->impl.information->sfxEvents.end()) {
         return false;
     }
     if (out_seed) {
@@ -674,10 +684,10 @@ bool ps_game_sound_seed(const ps_game* game, const char* sound_name_utf8, int32_
 }
 
 bool ps_game_object_info(const ps_game* game, int32_t object_id, ps_object_info* out_info) {
-    if (!game || !game->impl || !out_info || object_id < 0 || object_id >= game->impl->objectCount) {
+    if (!game || !game->impl.information || !out_info || object_id < 0 || object_id >= game->impl.information->objectCount) {
         return false;
     }
-    const auto& object = game->impl->objectsById[static_cast<size_t>(object_id)];
+    const auto& object = game->impl.information->objectsById[static_cast<size_t>(object_id)];
     out_info->name = object.name.c_str();
     out_info->id = object.id;
     out_info->layer = object.layer;
@@ -688,18 +698,18 @@ bool ps_game_object_info(const ps_game* game, int32_t object_id, ps_object_info*
 }
 
 const char* ps_game_object_color(const ps_game* game, int32_t object_id, size_t color_index) {
-    if (!game || !game->impl || object_id < 0 || object_id >= game->impl->objectCount) {
+    if (!game || !game->impl.information || object_id < 0 || object_id >= game->impl.information->objectCount) {
         return "";
     }
-    const auto& colors = game->impl->objectsById[static_cast<size_t>(object_id)].colors;
+    const auto& colors = game->impl.information->objectsById[static_cast<size_t>(object_id)].colors;
     return color_index < colors.size() ? colors[color_index].c_str() : "";
 }
 
 int32_t ps_game_object_sprite_value(const ps_game* game, int32_t object_id, int32_t x, int32_t y) {
-    if (!game || !game->impl || object_id < 0 || object_id >= game->impl->objectCount || x < 0 || y < 0) {
+    if (!game || !game->impl.information || object_id < 0 || object_id >= game->impl.information->objectCount || x < 0 || y < 0) {
         return -1;
     }
-    const auto& sprite = game->impl->objectsById[static_cast<size_t>(object_id)].sprite;
+    const auto& sprite = game->impl.information->objectsById[static_cast<size_t>(object_id)].sprite;
     if (static_cast<size_t>(y) >= sprite.size() || static_cast<size_t>(x) >= sprite[static_cast<size_t>(y)].size()) {
         return -1;
     }
