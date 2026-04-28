@@ -303,7 +303,10 @@ node src/tests/run_tests_node.js --verbose  # spot-check audio-heavy games if fi
 
 **Purpose:** Stop constructing **`FullState(*initial)` three times** when scratch buckets can be reset between edges. Pass **`Scratch&`** reset or allocate once per worker.
 
-- [ ] **Step 1:** Profile current `cloneNs` timing fields in solver JSON output (baseline).
+- [x] **Step 1: Baseline (2026-04-28, commit 1b7813bb).** `make solver_benchmark` (portfolio, 250ms, jobs=1, 3/5 runs sampled): wall_ms ≈ **210.9 s**, generated_per_sec ≈ **87 k**. Single-run `puzzlescript_solver` over `src/tests/solver_tests` (2956 levels) — totals stored at `docs/superpowers/notes/2026-04-28-f1-solver-clone-baseline.json`:
+  - `clone_ms` = **18 212 ms = 8.1 %** of summed timing (224 413 ms).
+  - `0 / 2956` levels flagged `compact_node_storage=true` ⇒ every edge hits `make_unique<FullState>(parentSession)` at `solver/main.cpp:893`.
+  - generated edges = **13 638 593** ⇒ ≈ **1.34 µs / per-edge full FullState clone**.
 
 - [ ] **Step 2:** Implement reset-on-edge.
 

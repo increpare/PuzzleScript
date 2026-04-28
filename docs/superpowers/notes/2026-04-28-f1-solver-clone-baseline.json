@@ -1,0 +1,70 @@
+{
+  "source": "make solver_benchmark + once via puzzlescript_solver --strategy portfolio --timeout-ms 250",
+  "date": "2026-04-28",
+  "branch": "cpp",
+  "commit_pre_f1": "1b7813bbeaf4014f61d44a3948aa1ca77f7b49ab",
+  "benchmark_3run": {
+    "runs": [
+      {
+        "wall_ms": 210757.8,
+        "solved": 828,
+        "generated_per_sec": 87722
+      },
+      {
+        "wall_ms": 210974.6,
+        "solved": 829,
+        "generated_per_sec": 87087
+      },
+      {
+        "wall_ms": 210879.5,
+        "solved": 828,
+        "generated_per_sec": 86920
+      }
+    ]
+  },
+  "per_game_totals": {
+    "levels": 2956,
+    "solved": 769,
+    "timeout": 709,
+    "exhausted": 28,
+    "skipped_message": 1450,
+    "errors": 0,
+    "expanded": 2854222,
+    "generated": 13638593,
+    "compact_turn_attempts": 0,
+    "compact_turn_hits": 0,
+    "compact_turn_fallbacks": 0,
+    "compact_turn_unsupported": 0,
+    "compact_turn_oracle_checks": 0,
+    "compact_turn_oracle_failures": 0,
+    "compile_ms": 10406.9,
+    "load_ms": 662.078,
+    "clone_ms": 18212,
+    "step_ms": 143206,
+    "hash_ms": 39114.3,
+    "queue_ms": 0,
+    "frontier_pop_ms": 362.808,
+    "frontier_push_ms": 211.075,
+    "visited_lookup_ms": 457.021,
+    "visited_insert_ms": 2116.24,
+    "visited_lookup_probes": 3084101,
+    "visited_insert_probes": 13991485,
+    "visited_grows": 0,
+    "visited_capacity": 32768,
+    "visited_max_probe": 23,
+    "visited_key_collisions": 0,
+    "compact_state_bytes": 2679980406,
+    "compact_max_state_bytes": 30059,
+    "node_store_ms": 222.976,
+    "heuristic_ms": 8350.95,
+    "solved_check_ms": 340.77,
+    "timeout_check_ms": 747.51,
+    "reconstruct_ms": 2.62054,
+    "unattributed_ms": 12008.4
+  },
+  "notes": [
+    "0/2956 levels exercise compact_node_storage path; every edge hits make_unique<FullState>(parentSession) at solver/main.cpp:893.",
+    "clone_ms 18212 ms = 8.1% of summed timing across whole corpus.",
+    "13,638,593 generated edges => ~1.34 us per per-edge full FullState copy."
+  ]
+}
