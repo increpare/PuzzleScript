@@ -2,6 +2,8 @@
 
 The native implementation is exposed as `puzzlescript_cpp`: a C++ PuzzleScript compiler/runtime/player toolkit with a stable C API.
 
+For current native solver/generator roadmap work, see `native/PLAN.md`.
+
 Directory map:
 
 - `native/src/compiler/`: C++ parser/compiler and JS-compatible diagnostics.

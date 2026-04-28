@@ -13,7 +13,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
 endif()
 
 # Release-build flags: -O3, optional LTO, native codegen, NDEBUG. Tuned for the
-# performance target in docs/superpowers/specs/2026-04-22-native-perf-crush-design.md.
+# native performance roadmap in native/PLAN.md.
 # Note: -fno-exceptions / -fno-rtti omitted because core.cpp and cli_main.cpp
 # use throw / try / catch (e.g. json::ParseError) pervasively for parse-error
 # reporting; enabling those flags would require a large rewrite outside the

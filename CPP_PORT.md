@@ -2,6 +2,8 @@
 
 `puzzlescript_cpp` is the C++ PuzzleScript compiler/runtime/player command.
 
+For current native solver/generator roadmap work, see `native/PLAN.md`.
+
 ## What Lives Where
 
 - Core compiler: `native/src/compiler/`
