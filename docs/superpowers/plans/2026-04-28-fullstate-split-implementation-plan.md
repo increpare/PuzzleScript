@@ -205,26 +205,13 @@ Pass: `469/469`, `compact_turn_oracle_failures=0` (2026-04-28).
 
 **Purpose:** Generated C++ must call **`setCellObjects` / readers** (whatever the Phase B API stabilizes on) instead of raw vector indexing.
 
-- [ ] **Step 1:** Search emission patterns:
+**Progress (2026-04-28):**
 
-```bash
-rg 'liveLevel\.objects' native/src/cli/main.cpp | head -50
-```
+- [x] **`emitPatternPredicate`:** `tileIdx` + **`getCellObjectsPtr`** / **`getCellMovementsPtr`** (no `liveLevel.objects.data()` / `liveMovements.data()` offset math).
+- [x] **`emitReplacementApply`:** **`oldObjects`** / **`oldMovements`** from **`getCellObjectsPtr(session, tile)`** / **`getCellMovementsPtr(session, tile)`** (removed `objectBase` / `movementBase`).
+- [x] **Gate:** `make compact_turn_simulation_tests` (469/469), `node src/tests/run_tests_node.js --sim-only` (469/469).
 
-- [ ] **Step 2:** For each generator branch, emit accessor calls. Rebuild generated fixtures / re-run codegen pipeline per repo convention (`node compile.js` does not apply to native — native codegen runs when building games).
-
-- [ ] **Step 3:**
-
-```bash
-make compiled_rules_simulation_suite_coverage
-```
-(or the narrowest native rule suite Makefile exposes)
-
-- [ ] **Step 4: Commit**
-
-```bash
-git commit -am "refactor(codegen): emit occupancy accessors instead of raw liveLevel.objects"
-```
+- [x] **Commit** — Task C1 tranche 1.
 
 ---
 
