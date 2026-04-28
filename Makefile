@@ -94,16 +94,22 @@ SOLVER_FOCUS_SOLVER_ARG_ARGS = $(foreach arg,$(SOLVER_FOCUS_SOLVER_ARGS),--solve
 # Set this to a non-zero value (e.g. 60) if you want mining to exclude targets
 # that cannot be specialized within the time/budget constraints.
 SOLVER_FOCUS_PROBE_TIMEOUT_SECONDS ?= 0
-SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS ?= 60
+SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS ?= $(if $(filter true,$(COMPILED_RULES_PERF)),180,60)
 SOLVER_FOCUS_COMPILE_TIMEOUT_PREFIX = $(if $(filter-out 0,$(SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS)),$(NODE) src/tests/run_with_timeout.js $(SOLVER_FOCUS_COMPILE_TIMEOUT_SECONDS) --,)
 SOLVER_FOCUS_COMPILE_PROBE_ROOT ?= $(BUILD_DIR)/native/solver_focus_compile_probes
 SOLVER_FOCUS_COMPILE_PROBE_JOBS ?= auto
 SOLVER_FOCUS_COMPILE_BUILD_JOBS ?= 1
 COMPILED_RULES_PERF ?= false
 SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS ?= 99
-SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE ?= $(if $(filter true,$(COMPILED_RULES_PERF)),,500)
+# Limit codegen size per source for focus builds.
+#
+# If these are too low, "compiled" focus runs become misleading because the
+# biggest focus sources are skipped and their specialized backends never attach.
+# For perf runs, allow larger per-source outputs so the report reflects actual
+# specialization rather than fallback.
+SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE ?= $(if $(filter true,$(COMPILED_RULES_PERF)),5000,500)
 SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE_ARG = $(if $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),--max-compiled-rules-per-source $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),)
-SOLVER_FOCUS_MAX_GENERATED_LINES_PER_SOURCE ?= 20000
+SOLVER_FOCUS_MAX_GENERATED_LINES_PER_SOURCE ?= $(if $(filter true,$(COMPILED_RULES_PERF)),200000,20000)
 SOLVER_FOCUS_MAX_GENERATED_LINES_PER_SOURCE_ARG = $(if $(SOLVER_FOCUS_MAX_GENERATED_LINES_PER_SOURCE),--max-generated-lines-per-source $(SOLVER_FOCUS_MAX_GENERATED_LINES_PER_SOURCE),)
 SOLVER_FOCUS_MINE_MAX_COMPILED_RULES_PER_SOURCE_ARG = $(if $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),--compile-max-compiled-rules-per-source $(SOLVER_FOCUS_MAX_COMPILED_RULES_PER_SOURCE),)
 SOLVER_FOCUS_MINE_MAX_GENERATED_LINES_PER_SOURCE_ARG = $(if $(SOLVER_FOCUS_MAX_GENERATED_LINES_PER_SOURCE),--compile-max-generated-lines-per-source $(SOLVER_FOCUS_MAX_GENERATED_LINES_PER_SOURCE),)
@@ -681,8 +687,14 @@ solver_focus_mine: $(PUZZLESCRIPT_SOLVER)
 	$(COMPILED_RULES_BOOTSTRAP_CPP); \
 	$(NODE) src/tests/mine_solver_focus_group.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_CORPUS) --timeout-ms $(SOLVER_FOCUS_TIMEOUT_MS) --min-elapsed-ms $(SOLVER_FOCUS_MIN_ELAPSED_MS) --max-targets $(SOLVER_FOCUS_MAX_TARGETS) --strategy $(SOLVER_FOCUS_STRATEGY) --jobs $(SOLVER_FOCUS_JOBS) $(SOLVER_FOCUS_EXCLUDE_GAMES_ARG) --out $(SOLVER_FOCUS_MANIFEST) --repo-root "$$PWD" --puzzlescript-cpp $(PUZZLESCRIPT_CPP) --compile-probe-root $(SOLVER_FOCUS_COMPILE_PROBE_ROOT) --compile-timeout-seconds $(SOLVER_FOCUS_PROBE_TIMEOUT_SECONDS) --compile-max-rows $(SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS) $(SOLVER_FOCUS_MINE_MAX_COMPILED_RULES_PER_SOURCE_ARG) $(SOLVER_FOCUS_MINE_MAX_GENERATED_LINES_PER_SOURCE_ARG) --cmake $(CMAKE) $(SOLVER_FOCUS_MINE_CMAKE_GENERATOR_ARG) --compile-opt-level $(COMPILED_RULES_OPT_LEVEL) --compile-probe-jobs $(SOLVER_FOCUS_COMPILE_PROBE_JOBS) --compile-build-jobs $(SOLVER_FOCUS_COMPILE_BUILD_JOBS)
 
-$(SOLVER_FOCUS_MANIFEST): $(PUZZLESCRIPT_SOLVER)
-	$(MAKE) solver_focus_mine
+# The focus manifest is expensive to mine; don't implicitly re-mine just because
+# the solver binary changed. Regenerate explicitly via `make solver_focus_mine`.
+$(SOLVER_FOCUS_MANIFEST):
+	@if [ -e "$@" ]; then \
+		echo "solver_focus_manifest: reuse $@"; \
+	else \
+		$(MAKE) solver_focus_mine; \
+	fi
 
 solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \

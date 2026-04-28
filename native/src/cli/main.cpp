@@ -4855,8 +4855,8 @@ void emitPatternPredicate(
     const std::string& tileExpr
 ) {
     out << "    const int32_t tileIdx" << suffix << " = static_cast<int32_t>(" << tileExpr << ");\n"
-        << "    const MaskWord* objects" << suffix << " = getCellObjectsPtr(session, tileIdx" << suffix << ");\n"
-        << "    const MaskWord* movements" << suffix << " = getCellMovementsPtr(session, tileIdx" << suffix << ");\n";
+        << "    const MaskWord* objects" << suffix << " = compiledRuleCellObjects(session, tileIdx" << suffix << ");\n"
+        << "    const MaskWord* movements" << suffix << " = compiledRuleCellMovements(session, tileIdx" << suffix << ");\n";
     if (pattern.hasObjectsPresent) {
         emitMaskBitsSetCheck(out, game, "objectsPresent" + suffix, pattern.objectsPresent, game.wordCount, "objects" + suffix, std::to_string(game.wordCount) + "U");
     }
@@ -4918,7 +4918,7 @@ void emitReplacementApply(
         << "        bool objectsChanged = false;\n"
         << "        bool movementsChanged = false;\n";
     if (hasObjectEffect) {
-        out << "        const MaskWord* oldObjects = getCellObjectsPtr(session, tile);\n"
+        out << "        const MaskWord* oldObjects = compiledRuleCellObjects(session, tile);\n"
             << "        MaskWord newObjects[" << game.wordCount << "];\n"
             << "        MaskWord created[" << game.wordCount << "];\n"
             << "        MaskWord destroyed[" << game.wordCount << "];\n";
@@ -4940,7 +4940,7 @@ void emitReplacementApply(
         }
     }
     if (hasMovementEffect) {
-        out << "        const MaskWord* oldMovements = getCellMovementsPtr(session, tile);\n"
+        out << "        const MaskWord* oldMovements = compiledRuleCellMovements(session, tile);\n"
             << "        MaskWord newMovements[" << game.movementWordCount << "];\n";
         for (uint32_t word = 0; word < game.movementWordCount; ++word) {
             const auto clearWord = static_cast<puzzlescript::MaskWord>(
