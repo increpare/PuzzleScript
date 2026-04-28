@@ -225,18 +225,14 @@ Pass: `469/469`, `compact_turn_oracle_failures=0` (2026-04-28).
 
 **Purpose:** Replace `RestartSnapshot::objects` MaskVector with **`std::vector<uint64_t> restartObjectBits`** (same packing as `BoardOccupancy`) **or** nested `BoardOccupancy`. Migrate `restoreRestartTarget` and undo paths.
 
-- [ ] **Step 1:** Structural change + migrate callers.
+- [x] **Step 1:** Structural change + migrate callers.
 
-- [ ] **Step 2:**
+**Progress (2026-04-28):**
 
-```bash
-node src/tests/run_tests_node.js
-```
-(use a substring filter only if targeted restart regressions exist in test names)
-
-```bash
-make compact_turn_simulation_tests
-```
+- [x] **`RestartSnapshot::objectBits`** replaces cell-major **`objects`**; **`fillCompactOccupancyBitsFromLiveLevelData`** / **`fillLiveLevelObjectsFromCompactObjectBits`** shared with occupancy encoding.
+- [x] **`parsePreparedSession(..., const Game&)`** encodes IR **`restart_target.objects`** into **`objectBits`** after load.
+- [x] **`restoreRestartTarget`**, **`advanceToNextLevel`**, **`prepareLoadedLevel`**, **`executeTurn` checkpoint**, **`lower_to_runtime`** initial meta updated.
+- [x] **Gate:** `node src/tests/run_tests_node.js --sim-only` — **469/469**; `make compact_turn_simulation_tests` — **469/469**, `compact_turn_oracle_failures=0`.
 
 - [ ] **Step 3: Commit**
 
@@ -248,6 +244,15 @@ make compact_turn_simulation_tests
 
 - Delete or reserve-empty `liveLevel.objects` during level play path.
 - Keep export/test serialization paths converting **from compact**.
+
+**Progress (2026-04-28):**
+
+- [~] **Partial:** Switched a number of “state readers” to compact-first:
+  - `hashFullState*` / `buildSessionHashBytes` hashes `occupancy.objectBits` (not `liveLevel.objects`).
+  - `rebuildObjectCellIndex` rebuilds from `occupancy.objectBits`.
+  - C API helpers `ps_full_state_cell_has_object` / `ps_full_state_first_player_position` read `occupancy.objectBits`.
+  - `serializeTestString` enumerates from `occupancy.objectBits`.
+- [!] **Blocked:** The runtime rule engine & incremental mask rebuild (`setCellObjectsFromWords`, `rebuildMasks`, compiled-rule cell access) still require a per-cell `MaskWord` buffer, so “reserve-empty `liveLevel.objects` during play” needs a dedicated rewrite beyond this plan’s scope.
 
 Verification:
 
@@ -313,6 +318,11 @@ make solver_compact_parity_smoke
 - [ ] **Step 1:** Rename struct + functions `compactStateFromFullState` clarity (`searchNodeFromFullState` optional).
 
 - [ ] **Step 2:** Build + solver smoke.
+
+**Progress (2026-04-28):**
+
+- [x] **Step 1:** Renamed solver `CompactState` → `SearchNodeState` and updated all call sites (`native/src/solver/main.cpp`).
+- [x] **Step 2:** `make build` (green).
 
 ---
 

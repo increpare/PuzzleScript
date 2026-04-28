@@ -1348,7 +1348,7 @@ LevelTemplate parseLevelTemplate(const json::Value& value) {
     return level;
 }
 
-PreparedFullState parsePreparedSession(const json::Value& value) {
+PreparedFullState parsePreparedSession(const json::Value& value, const Game& game) {
     const auto& object = value.asObject();
     PreparedFullState prepared;
     prepared.currentLevelIndex = toInt(requireField(object, "current_level_index"));
@@ -1399,7 +1399,14 @@ PreparedFullState parsePreparedSession(const json::Value& value) {
         const auto& restartObject = restart->asObject();
         prepared.restart.width = toInt(requireField(restartObject, "width"));
         prepared.restart.height = toInt(requireField(restartObject, "height"));
-        prepared.restart.objects = parseMaskVector(requireField(restartObject, "objects"));
+        const MaskVector restartObjects = parseMaskVector(requireField(restartObject, "objects"));
+        fillCompactOccupancyBitsFromLiveLevelData(
+            game,
+            prepared.restart.width,
+            prepared.restart.height,
+            restartObjects,
+            prepared.restart.objectBits
+        );
         prepared.restart.oldFlickscreenDat = parseIntVector(requireField(restartObject, "old_flickscreen_dat"));
     }
 
@@ -3505,33 +3512,33 @@ size_t countNonZeroWords(const MaskVector& values) {
 
 void rebuildObjectCellIndex(FullState& session) {
     const int32_t objectCount = session.game->objectCount;
-    const int32_t stride = session.game->strideObject;
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     session.objectCellBitTileCount = tileCount;
     session.objectCellBits.assign(static_cast<size_t>(objectCount) * cellWordCount, 0);
     session.objectCellCounts.assign(static_cast<size_t>(std::max(objectCount, 0)), 0);
-    if (objectCount <= 0 || stride <= 0 || tileCount <= 0 || cellWordCount == 0) {
+    if (objectCount <= 0 || tileCount <= 0 || cellWordCount == 0) {
         session.objectCellIndexDirty = false;
         return;
     }
 
-    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-        const size_t cellBase = static_cast<size_t>(tileIndex * stride);
-        const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
-        const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
-        for (int32_t word = 0; word < stride; ++word) {
-            MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(session.liveLevel.objects[cellBase + static_cast<size_t>(word)]);
-            while (bits != 0) {
-                const int32_t bit = maskWordCountTrailingZeros(bits);
-                const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + bit;
-                if (objectId < objectCount) {
-                    session.objectCellBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
-                    ++session.objectCellCounts[static_cast<size_t>(objectId)];
-                }
-                bits &= bits - 1;
+    // Compact-first: objectCellBits shares the same object-major layout as
+    // occupancy.objectBits, so we can copy and count set bits directly.
+    const size_t expectedWords = static_cast<size_t>(objectCount) * cellWordCount;
+    if (session.occupancy.objectBits.size() == expectedWords) {
+        session.objectCellBits = session.occupancy.objectBits;
+        for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
+            const size_t base = static_cast<size_t>(objectId) * cellWordCount;
+            uint32_t count = 0;
+            for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
+                count += static_cast<uint32_t>(__builtin_popcountll(session.objectCellBits[base + bitWord]));
             }
+            session.objectCellCounts[static_cast<size_t>(objectId)] = count;
         }
+    } else {
+        // Fallback if occupancy mirror is stale/mismatched (should be rare).
+        session.objectCellIndexDirty = true;
+        return;
     }
     session.objectCellIndexDirty = false;
 }
@@ -3718,9 +3725,9 @@ std::vector<uint8_t> buildSessionHashBytes(const FullState& session) {
     const auto* randomBytes = reinterpret_cast<const uint8_t*>(session.randomState.s.data());
     bytes.insert(bytes.end(), randomBytes, randomBytes + session.randomState.s.size() * sizeof(uint8_t));
 
-    const auto& objects = session.liveLevel.objects;
-    const auto* objectBytes = reinterpret_cast<const uint8_t*>(objects.data());
-    bytes.insert(bytes.end(), objectBytes, objectBytes + objects.size() * sizeof(MaskWord));
+    const auto& objectBits = session.occupancy.objectBits;
+    const auto* objectBytes = reinterpret_cast<const uint8_t*>(objectBits.data());
+    bytes.insert(bytes.end(), objectBytes, objectBytes + objectBits.size() * sizeof(uint64_t));
     const auto& movements = session.liveMovements;
     const auto* movementBytes = reinterpret_cast<const uint8_t*>(movements.data());
     bytes.insert(bytes.end(), movementBytes, movementBytes + movements.size() * sizeof(MaskWord));
@@ -3754,8 +3761,8 @@ uint64_t hashFullState64NoAlloc(const FullState& session, uint64_t seed) {
     appendHashValue(hash, session.randomState.valid);
     appendHashBytes(hash, session.randomState.s.data(), session.randomState.s.size() * sizeof(uint8_t));
 
-    const auto& objects = session.liveLevel.objects;
-    appendHashBytes(hash, objects.data(), objects.size() * sizeof(MaskWord));
+    const auto& objectBits = session.occupancy.objectBits;
+    appendHashBytes(hash, objectBits.data(), objectBits.size() * sizeof(uint64_t));
     const auto& movements = session.liveMovements;
     appendHashBytes(hash, movements.data(), movements.size() * sizeof(MaskWord));
     appendHashBytes(hash, session.meta.loadedLevelSeed.data(), session.meta.loadedLevelSeed.size());
@@ -3866,10 +3873,15 @@ void pushUndoSnapshot(FullState& session) {
 
 void restoreRestartTarget(FullState& session) {
     session.liveLevel = session.meta.level;
-    if (!session.meta.restart.objects.empty()) {
+    if (session.meta.restart.width > 0 && session.meta.restart.height > 0
+        && !session.meta.restart.objectBits.empty()) {
         session.liveLevel.width = session.meta.restart.width;
         session.liveLevel.height = session.meta.restart.height;
-        session.liveLevel.objects = session.meta.restart.objects;
+        fillLiveLevelObjectsFromCompactObjectBits(
+            session.liveLevel,
+            *session.game,
+            session.meta.restart.objectBits
+        );
         session.meta.oldFlickscreenDat = session.meta.restart.oldFlickscreenDat;
     }
     session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
@@ -3984,7 +3996,13 @@ bool advanceToNextLevel(FullState& session) {
         }
         session.meta.restart.width = session.meta.level.width;
         session.meta.restart.height = session.meta.level.height;
-        session.meta.restart.objects = session.meta.level.objects;
+        fillCompactOccupancyBitsFromLiveLevelData(
+            *session.game,
+            session.meta.level.width,
+            session.meta.level.height,
+            session.meta.level.objects,
+            session.meta.restart.objectBits
+        );
         session.meta.restart.oldFlickscreenDat = session.meta.oldFlickscreenDat;
         restoreRestartTarget(session);
         ::puzzlescript::runRulesOnLevelStart(session);
@@ -4043,20 +4061,28 @@ void resetToPrepared(FullState& session) {
 
 } // namespace
 
-void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector<uint64_t>& objectBits) {
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+void fillCompactOccupancyBitsFromLiveLevelData(
+    const Game& game,
+    int32_t width,
+    int32_t height,
+    const MaskVector& liveObjects,
+    std::vector<uint64_t>& objectBits
+) {
+    const int32_t tileCount = width * height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
-    const int32_t objectCount = session.game ? session.game->objectCount : 0;
+    const int32_t objectCount = game.objectCount;
     objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
-    if (objectCount > 0 && tileCount > 0 && cellWordCount > 0 && session.game != nullptr) {
-        const int32_t stride = session.game->strideObject;
+    if (objectCount > 0 && tileCount > 0 && cellWordCount > 0) {
+        const int32_t stride = game.strideObject;
         for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
             const size_t sourceBase = static_cast<size_t>(tileIndex * stride);
             const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
             const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
             for (int32_t word = 0; word < stride; ++word) {
-                MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(
-                    session.liveLevel.objects[sourceBase + static_cast<size_t>(word)]);
+                MaskWordUnsigned bits = 0;
+                if (sourceBase + static_cast<size_t>(word) < liveObjects.size()) {
+                    bits = static_cast<MaskWordUnsigned>(liveObjects[sourceBase + static_cast<size_t>(word)]);
+                }
                 while (bits != 0) {
                     const uint32_t bit = static_cast<uint32_t>(maskWordCountTrailingZeros(bits));
                     const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
@@ -4068,6 +4094,48 @@ void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector
             }
         }
     }
+}
+
+void fillLiveLevelObjectsFromCompactObjectBits(
+    LevelTemplate& level,
+    const Game& game,
+    const std::vector<uint64_t>& objectBits
+) {
+    const int32_t tileCount = level.width * level.height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const int32_t objectCount = game.objectCount;
+    const int32_t stride = game.strideObject;
+    level.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
+    for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
+        const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
+        for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
+            uint64_t bits = objectBase + bitWord < objectBits.size() ? objectBits[objectBase + bitWord] : 0;
+            while (bits != 0) {
+                const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(bits));
+                const int32_t tileIndex = static_cast<int32_t>(bitWord * 64 + bit);
+                if (tileIndex < tileCount) {
+                    const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
+                    const uint32_t objectBit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
+                    level.objects[static_cast<size_t>(tileIndex * stride + word)] |= maskBit(objectBit);
+                }
+                bits &= bits - 1;
+            }
+        }
+    }
+}
+
+void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector<uint64_t>& objectBits) {
+    if (session.game == nullptr) {
+        objectBits.clear();
+        return;
+    }
+    fillCompactOccupancyBitsFromLiveLevelData(
+        *session.game,
+        session.liveLevel.width,
+        session.liveLevel.height,
+        session.liveLevel.objects,
+        objectBits
+    );
 }
 
 void syncOccupancyObjectBitsFromLiveLevel(FullState& session) {
@@ -4480,7 +4548,7 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
 
         if (const auto prepared = rootObject.find("prepared_session"); prepared != rootObject.end()) {
             try {
-                game->meta = parsePreparedSession(prepared->second);
+                game->meta = parsePreparedSession(prepared->second, *game);
                 if (game->meta.level.width == 0
                     && game->meta.level.height == 0
                     && game->meta.level.objects.empty()
@@ -4537,7 +4605,6 @@ void prepareLoadedLevel(FullState& session, LevelTemplate level, int32_t levelIn
     PreparedFullState& prepared = session.meta;
     const int32_t restartWidth = level.width;
     const int32_t restartHeight = level.height;
-    MaskVector restartObjects = level.objects;
 
     prepared.currentLevelIndex = levelIndex;
     prepared.currentLevelTarget.reset();
@@ -4554,7 +4621,13 @@ void prepareLoadedLevel(FullState& session, LevelTemplate level, int32_t levelIn
     prepared.winning = false;
     prepared.restart.width = restartWidth;
     prepared.restart.height = restartHeight;
-    prepared.restart.objects = std::move(restartObjects);
+    fillCompactOccupancyBitsFromLiveLevelData(
+        *session.game,
+        restartWidth,
+        restartHeight,
+        prepared.level.objects,
+        prepared.restart.objectBits
+    );
     prepared.restart.oldFlickscreenDat = prepared.oldFlickscreenDat;
     resetToPrepared(session);
 }
@@ -4663,14 +4736,21 @@ std::string serializeTestString(const FullState& session) {
     std::map<std::string, int32_t> seenCells;
     int32_t nextIndex = 0;
     const int32_t stride = session.game->strideObject;
+    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
 
     for (int32_t y = 0; y < session.liveLevel.height; ++y) {
         for (int32_t x = 0; x < session.liveLevel.width; ++x) {
-            const size_t cellOffset = static_cast<size_t>((y * session.liveLevel.width + x) * stride);
+            const int32_t tileIndex = y * session.liveLevel.width + x;
+            const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
+            const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
             std::vector<std::string> objects;
             for (int32_t bit = 0; bit < static_cast<int32_t>(kMaskWordBits) * stride; ++bit) {
-                const uint32_t word = maskWordIndex(static_cast<uint32_t>(bit));
-                if ((session.liveLevel.objects[cellOffset + static_cast<size_t>(word)] & maskBit(static_cast<uint32_t>(bit))) != 0) {
+                const int32_t objectId = bit;
+                const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
+                if (cellWordCount > 0
+                    && objectBase + bitWord < session.occupancy.objectBits.size()
+                    && (session.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
                     if (static_cast<size_t>(bit) < session.game->idDict.size()) {
                         objects.push_back(session.game->idDict[static_cast<size_t>(bit)]);
                     }
@@ -5015,7 +5095,13 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
     if (!won && commandQueueContains(commands, "checkpoint")) {
         session.meta.restart.width = session.liveLevel.width;
         session.meta.restart.height = session.liveLevel.height;
-        session.meta.restart.objects = session.liveLevel.objects;
+        fillCompactOccupancyBitsFromLiveLevelData(
+            *session.game,
+            session.liveLevel.width,
+            session.liveLevel.height,
+            session.liveLevel.objects,
+            session.meta.restart.objectBits
+        );
         session.meta.restart.oldFlickscreenDat = session.meta.oldFlickscreenDat;
     }
 

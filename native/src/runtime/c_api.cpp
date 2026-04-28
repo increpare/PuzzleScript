@@ -72,30 +72,7 @@ CompactOracleState compactOracleStateFromFullState(const FullState& session) {
     CompactOracleState state;
     state.randomState = session.randomState;
     state.movementWords = session.liveMovements;
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
-    const int32_t objectCount = session.game ? session.game->objectCount : 0;
-    state.objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
-    if (objectCount <= 0 || tileCount <= 0 || cellWordCount == 0) {
-        return state;
-    }
-    const int32_t stride = session.game->strideObject;
-    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-        const size_t sourceBase = static_cast<size_t>(tileIndex * stride);
-        const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
-        const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
-        for (int32_t word = 0; word < stride; ++word) {
-            MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(session.liveLevel.objects[sourceBase + static_cast<size_t>(word)]);
-            while (bits != 0) {
-                const uint32_t bit = compactOracleTrailingZeros(bits);
-                const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
-                if (objectId < objectCount) {
-                    state.objectBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
-                }
-                bits &= bits - 1;
-            }
-        }
-    }
+    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.objectBits);
     return state;
 }
 
@@ -492,11 +469,15 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
         return false;
     }
     const int32_t tile_index = x * impl.liveLevel.height + y;
-    const size_t offset = static_cast<size_t>(tile_index) * impl.game->wordCount + word;
-    if (offset >= impl.liveLevel.objects.size()) {
+    const int32_t tileCount = impl.liveLevel.width * impl.liveLevel.height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t objectBase = static_cast<size_t>(object_id) * cellWordCount;
+    const size_t bitWord = static_cast<size_t>(tile_index >> 6);
+    const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tile_index & 63);
+    if (cellWordCount == 0 || objectBase + bitWord >= impl.occupancy.objectBits.size()) {
         return false;
     }
-    return (impl.liveLevel.objects[offset] & puzzlescript::maskBit(static_cast<uint32_t>(object_id))) != 0;
+    return (impl.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0;
 }
 
 bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* out_x, int32_t* out_y) {
@@ -514,21 +495,39 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         return false;
     }
     const puzzlescript::MaskWord* playerMask = impl.game->maskArena.data() + impl.game->playerMask;
+    std::vector<int32_t> playerObjectIds;
+    playerObjectIds.reserve(static_cast<size_t>(impl.game->objectCount));
+    for (int32_t objectId = 0; objectId < impl.game->objectCount; ++objectId) {
+        const uint32_t maskWord = puzzlescript::maskWordIndex(static_cast<uint32_t>(objectId));
+        const uint32_t bit = static_cast<uint32_t>(objectId % static_cast<int32_t>(puzzlescript::kMaskWordBits));
+        if (maskWord < impl.game->wordCount && (playerMask[maskWord] & puzzlescript::maskBit(bit)) != 0) {
+            playerObjectIds.push_back(objectId);
+        }
+    }
     const int32_t tileCount = impl.liveLevel.width * impl.liveLevel.height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    if (cellWordCount == 0) {
+        return false;
+    }
     for (int32_t tile_index = 0; tile_index < tileCount; ++tile_index) {
-        const size_t cellBase = static_cast<size_t>(tile_index) * impl.game->wordCount;
+        const size_t bitWord = static_cast<size_t>(tile_index >> 6);
+        const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tile_index & 63);
         bool containsPlayer = impl.game->playerMaskAggregate;
         if (impl.game->playerMaskAggregate) {
-            for (uint32_t word = 0; word < impl.game->wordCount; ++word) {
-                if ((impl.liveLevel.objects[cellBase + word] & playerMask[word]) != playerMask[word]) {
+            for (int32_t objectId : playerObjectIds) {
+                const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
+                if (objectBase + bitWord >= impl.occupancy.objectBits.size()
+                    || (impl.occupancy.objectBits[objectBase + bitWord] & bitMask) == 0) {
                     containsPlayer = false;
                     break;
                 }
             }
         } else {
             containsPlayer = false;
-            for (uint32_t word = 0; word < impl.game->wordCount; ++word) {
-                if ((impl.liveLevel.objects[cellBase + word] & playerMask[word]) != 0) {
+            for (int32_t objectId : playerObjectIds) {
+                const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
+                if (objectBase + bitWord < impl.occupancy.objectBits.size()
+                    && (impl.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
                     containsPlayer = true;
                     break;
                 }

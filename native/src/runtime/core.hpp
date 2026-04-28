@@ -126,7 +126,8 @@ struct LevelTemplate {
 struct RestartSnapshot {
     int32_t width = 0;
     int32_t height = 0;
-    MaskVector objects;
+    /// Object-major compact occupancy (same layout as `BoardOccupancy::objectBits` / solver `CompactState`).
+    std::vector<uint64_t> objectBits;
     std::vector<int32_t> oldFlickscreenDat;
 };
 
@@ -441,6 +442,18 @@ struct FullState {
 
 /// Cell-major → object-major compact bits (same layout as solver `CompactState::objectBits`).
 void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector<uint64_t>& objectBits);
+
+void fillCompactOccupancyBitsFromLiveLevelData(
+    const Game& game,
+    int32_t width,
+    int32_t height,
+    const MaskVector& liveObjects,
+    std::vector<uint64_t>& objectBits);
+
+void fillLiveLevelObjectsFromCompactObjectBits(
+    LevelTemplate& level,
+    const Game& game,
+    const std::vector<uint64_t>& objectBits);
 
 /// Resize/fill `session.occupancy.objectBits` from authoritative `liveLevel.objects`.
 void syncOccupancyObjectBitsFromLiveLevel(FullState& session);

@@ -800,7 +800,13 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         game->meta.level = game->levels.front();
         game->meta.restart.width = game->meta.level.width;
         game->meta.restart.height = game->meta.level.height;
-        game->meta.restart.objects = game->meta.level.objects;
+        puzzlescript::fillCompactOccupancyBitsFromLiveLevelData(
+            *game,
+            game->meta.level.width,
+            game->meta.level.height,
+            game->meta.level.objects,
+            game->meta.restart.objectBits
+        );
         game->meta.restart.oldFlickscreenDat.clear();
     }
 

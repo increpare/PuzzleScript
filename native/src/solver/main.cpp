@@ -91,14 +91,14 @@ struct Options {
     int32_t astarWeight = 2;
 };
 
-struct CompactState {
+struct SearchNodeState {
     std::vector<uint64_t> objectBits;
     std::array<uint8_t, 256> randomStateS{};
     uint8_t randomStateI = 0;
     uint8_t randomStateJ = 0;
     bool randomStateValid = false;
 
-    bool operator==(const CompactState& other) const {
+    bool operator==(const SearchNodeState& other) const {
         return objectBits == other.objectBits
             && randomStateS == other.randomStateS
             && randomStateI == other.randomStateI
@@ -117,7 +117,7 @@ struct CompactState {
 
 struct Node {
     std::unique_ptr<FullState> session;
-    CompactState compact;
+    SearchNodeState state;
     StateKey key;
     int32_t parent = -1;
     ps_input input = PS_INPUT_UP;
@@ -581,8 +581,8 @@ uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
     }
 }
 
-CompactState compactStateFromFullState(const FullState& session) {
-    CompactState state;
+SearchNodeState searchNodeStateFromFullState(const FullState& session) {
+    SearchNodeState state;
     state.randomStateS = session.randomState.s;
     state.randomStateI = session.randomState.i;
     state.randomStateJ = session.randomState.j;
@@ -591,7 +591,7 @@ CompactState compactStateFromFullState(const FullState& session) {
     return state;
 }
 
-StateKey compactStateKey(const CompactState& state, Timing& timing) {
+StateKey searchNodeStateKey(const SearchNodeState& state, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
     for (uint64_t word : state.objectBits) {
@@ -606,9 +606,9 @@ StateKey compactStateKey(const CompactState& state, Timing& timing) {
     return key;
 }
 
-CompactState compactStateWithTiming(const FullState& session, Timing& timing) {
+SearchNodeState searchNodeStateWithTiming(const FullState& session, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
-    return compactStateFromFullState(session);
+    return searchNodeStateFromFullState(session);
 }
 
 void markMaterializedFullStateDirty(FullState& session) {
@@ -622,7 +622,7 @@ void markMaterializedFullStateDirty(FullState& session) {
     session.anyMasksDirty = true;
 }
 
-void materializeCompactStateIntoFullState(const CompactState& state, const FullState& base, FullState& session) {
+void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const FullState& base, FullState& session) {
     session.game = base.game;
     session.meta.currentLevelIndex = base.meta.currentLevelIndex;
     session.meta.currentLevelTarget = base.meta.currentLevelTarget;
@@ -709,7 +709,7 @@ void prepareSolverChildFullStateFromParent(FullState& child, const FullState& pa
     markMaterializedFullStateDirty(child);
 }
 
-void recordCompactStateStorage(Timing& timing, const CompactState& state) {
+void recordSearchNodeStateStorage(Timing& timing, const SearchNodeState& state) {
     const uint64_t bytes = static_cast<uint64_t>(state.byteSize());
     timing.compactStateBytes += bytes;
     timing.compactMaxStateBytes = std::max(timing.compactMaxStateBytes, bytes);
@@ -718,7 +718,7 @@ void recordCompactStateStorage(Timing& timing, const CompactState& state) {
 struct CompactTurnTryResult {
     bool attempted = false;
     bool handled = false;
-    CompactState compact;
+    SearchNodeState state;
     ps_step_result stepResult{};
 };
 
@@ -749,7 +749,7 @@ std::string stepResultSummary(const ps_step_result& result) {
     return out.str();
 }
 
-std::string compactStateDiffSummary(const CompactState& lhs, const CompactState& rhs) {
+std::string searchNodeStateDiffSummary(const SearchNodeState& lhs, const SearchNodeState& rhs) {
     const size_t wordCount = std::max(lhs.objectBits.size(), rhs.objectBits.size());
     for (size_t index = 0; index < wordCount; ++index) {
         const uint64_t left = index < lhs.objectBits.size() ? lhs.objectBits[index] : 0;
@@ -778,7 +778,7 @@ std::string compactStateDiffSummary(const CompactState& lhs, const CompactState&
 
 CompactTurnTryResult trySpecializedCompactTurn(
     const Game& game,
-    const CompactState& parent,
+    const SearchNodeState& parent,
     ps_input input,
     int32_t width,
     int32_t height,
@@ -790,19 +790,19 @@ CompactTurnTryResult trySpecializedCompactTurn(
         return result;
     }
     result.attempted = true;
-    result.compact = parent;
+    result.state = parent;
     puzzlescript::CompactStateView view{
-        result.compact.objectBits.empty() ? nullptr : result.compact.objectBits.data(),
-        result.compact.objectBits.size(),
+        result.state.objectBits.empty() ? nullptr : result.state.objectBits.data(),
+        result.state.objectBits.size(),
         nullptr,
         0,
         width,
         height,
-        result.compact.randomStateS.data(),
-        result.compact.randomStateS.size(),
-        &result.compact.randomStateI,
-        &result.compact.randomStateJ,
-        &result.compact.randomStateValid,
+        result.state.randomStateS.data(),
+        result.state.randomStateS.size(),
+        &result.state.randomStateI,
+        &result.state.randomStateJ,
+        &result.state.randomStateValid,
         currentLevelIndex,
     };
     const puzzlescript::SpecializedCompactTurnOutcome outcome =
@@ -839,7 +839,7 @@ SolverEdgeStep stepSolverEdge(
                     ScopedTimer timer(result.timing.stepNs);
                     edge.compactTurn = trySpecializedCompactTurn(
                         *game,
-                        parentNode.compact,
+                        parentNode.state,
                         input,
                         width,
                         height,
@@ -866,19 +866,19 @@ SolverEdgeStep stepSolverEdge(
                             || oracleStepResult.transitioned
                             || edge.compactTurn.stepResult.restarted
                             || oracleStepResult.restarted;
-                        CompactState oracleCompact;
+                        SearchNodeState oracleState;
                         if (!terminalEdge) {
-                            oracleCompact = compactStateWithTiming(childScratch, result.timing);
+                            oracleState = searchNodeStateWithTiming(childScratch, result.timing);
                         }
                         if (!equivalentSolverStepResult(edge.compactTurn.stepResult, oracleStepResult)
-                            || (!terminalEdge && !(edge.compactTurn.compact == oracleCompact))) {
+                            || (!terminalEdge && !(edge.compactTurn.state == oracleState))) {
                             ++result.compactTurnOracleFailures;
                             edge.oracleMismatch = true;
                             edge.oracleError = "compact turn oracle mismatch input=" + inputName(input)
                                 + " depth=" + std::to_string(parentNode.depth)
                                 + " compact_step=" + stepResultSummary(edge.compactTurn.stepResult)
                                 + " interpreter_step=" + stepResultSummary(oracleStepResult)
-                                + compactStateDiffSummary(edge.compactTurn.compact, oracleCompact);
+                                + searchNodeStateDiffSummary(edge.compactTurn.state, oracleState);
                         }
                     }
                 } else {
@@ -965,7 +965,7 @@ int32_t heuristicScore(FullState& session, puzzlescript::search::HeuristicScratc
 }
 
 bool compactObjectPresent(
-    const CompactState& state,
+    const SearchNodeState& state,
     int32_t objectId,
     int32_t tileIndex,
     size_t cellWordCount
@@ -977,7 +977,7 @@ bool compactObjectPresent(
 }
 
 bool compactMatchesFilter(
-    const CompactState& state,
+    const SearchNodeState& state,
     const Game& game,
     const puzzlescript::MaskWord* filter,
     bool aggregate,
@@ -1008,7 +1008,7 @@ bool compactMatchesFilter(
 }
 
 std::vector<int32_t> compactMatchingDistanceField(
-    const CompactState& state,
+    const SearchNodeState& state,
     const Game& game,
     int32_t width,
     int32_t height,
@@ -1054,7 +1054,7 @@ std::vector<int32_t> compactMatchingDistanceField(
 }
 
 int32_t compactHeuristicScore(
-    const CompactState& state,
+    const SearchNodeState& state,
     const Game& game,
     int32_t width,
     int32_t height
@@ -1172,14 +1172,14 @@ public:
 
     std::optional<uint32_t> find(
         const StateKey& key,
-        const CompactState& compact,
+        const SearchNodeState& state,
         const std::vector<Node>& nodes
     ) {
         if (entries.empty()) {
             return std::nullopt;
         }
         size_t probes = 0;
-        const size_t slot = findSlot(key, compact, nodes, probes);
+        const size_t slot = findSlot(key, state, nodes, probes);
         recordLookup(probes);
         if (!entries[slot].occupied) {
             return std::nullopt;
@@ -1189,14 +1189,14 @@ public:
 
     bool insertOrAssignIfBetter(
         const StateKey& key,
-        const CompactState& compact,
+        const SearchNodeState& state,
         uint32_t depth,
         uint32_t nodeIndex,
         const std::vector<Node>& nodes
     ) {
         ensureCapacityForInsert();
         size_t probes = 0;
-        const size_t slot = findSlot(key, compact, nodes, probes);
+        const size_t slot = findSlot(key, state, nodes, probes);
         recordInsert(probes);
         Entry& entry = entries[slot];
         if (entry.occupied) {
@@ -1265,7 +1265,7 @@ private:
 
     size_t findSlot(
         const StateKey& key,
-        const CompactState& compact,
+        const SearchNodeState& state,
         const std::vector<Node>& nodes,
         size_t& probes
     ) {
@@ -1281,7 +1281,7 @@ private:
                 if (!exactStateKeys) {
                     return slot;
                 }
-                if (nodes[entry.nodeIndex].compact == compact) {
+                if (nodes[entry.nodeIndex].state == state) {
                     return slot;
                 }
                 ++timing.visitedKeyCollisions;
@@ -1375,23 +1375,23 @@ Result runSearch(
     result.uniqueStates = 1;
     puzzlescript::search::HeuristicScratch heuristicScratch;
 
-    CompactState initialCompact = compactStateWithTiming(*initial, result.timing);
-    const StateKey initialKey = compactStateKey(initialCompact, result.timing);
+    SearchNodeState initialState = searchNodeStateWithTiming(*initial, result.timing);
+    const StateKey initialKey = searchNodeStateKey(initialState, result.timing);
     int32_t initialHeuristic = 0;
     if (mode != SearchMode::Bfs) {
         ScopedTimer timer(result.timing.heuristicNs);
         initialHeuristic = compactNodeStorage
-            ? compactHeuristicScore(initialCompact, *game, searchWidth, searchHeight)
+            ? compactHeuristicScore(initialState, *game, searchWidth, searchHeight)
             : heuristicScore(*initial, heuristicScratch);
     }
     {
         ScopedTimer timer(result.timing.nodeStoreNs);
-        nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(initial), std::move(initialCompact), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
-        recordCompactStateStorage(result.timing, nodes.back().compact);
+        nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(initial), std::move(initialState), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
+        recordSearchNodeStateStorage(result.timing, nodes.back().state);
     }
     {
         ScopedTimer timer(result.timing.visitedInsertNs);
-        bestDepth.insertOrAssignIfBetter(initialKey, nodes[0].compact, 0, 0, nodes);
+        bestDepth.insertOrAssignIfBetter(initialKey, nodes[0].state, 0, 0, nodes);
     }
     std::priority_queue<QueueEntry, std::vector<QueueEntry>, QueueEntryGreater> frontier;
     {
@@ -1425,7 +1425,7 @@ Result runSearch(
         std::optional<uint32_t> best;
         {
             ScopedTimer timer(result.timing.visitedLookupNs);
-            best = bestDepth.find(parentNode.key, parentNode.compact, nodes);
+            best = bestDepth.find(parentNode.key, parentNode.state, nodes);
         }
         if (best && *best < parentNode.depth) {
             ++result.duplicates;
@@ -1436,7 +1436,7 @@ Result runSearch(
         if (parentSessionPtr == nullptr) {
             {
                 ScopedTimer timer(result.timing.cloneNs);
-                materializeCompactStateIntoFullState(parentNode.compact, *compactSessionBase, *parentScratch);
+                materializeSearchNodeStateIntoFullState(parentNode.state, *compactSessionBase, *parentScratch);
             }
             parentSessionPtr = parentScratch.get();
         }
@@ -1493,10 +1493,10 @@ Result runSearch(
                 continue;
             }
 
-            CompactState compact = edge.compactTurn.handled
-                ? std::move(edge.compactTurn.compact)
-                : compactStateWithTiming(*edge.child, result.timing);
-            const StateKey key = compactStateKey(compact, result.timing);
+            SearchNodeState childState = edge.compactTurn.handled
+                ? std::move(edge.compactTurn.state)
+                : searchNodeStateWithTiming(*edge.child, result.timing);
+            const StateKey key = searchNodeStateKey(childState, result.timing);
             const uint32_t childDepth = parentDepth + 1;
             uint32_t childIndex = static_cast<uint32_t>(nodes.size());
             int32_t childHeuristic = 0;
@@ -1504,7 +1504,7 @@ Result runSearch(
                 bool shouldStore = false;
                 {
                     ScopedTimer timer(result.timing.visitedInsertNs);
-                    shouldStore = bestDepth.insertOrAssignIfBetter(key, compact, childDepth, childIndex, nodes);
+                    shouldStore = bestDepth.insertOrAssignIfBetter(key, childState, childDepth, childIndex, nodes);
                     result.uniqueStates = bestDepth.size();
                 }
                 if (!shouldStore) {
@@ -1514,19 +1514,19 @@ Result runSearch(
                 if (mode != SearchMode::Bfs) {
                     ScopedTimer timer(result.timing.heuristicNs);
                     childHeuristic = compactNodeStorage
-                        ? compactHeuristicScore(compact, *game, searchWidth, searchHeight)
+                        ? compactHeuristicScore(childState, *game, searchWidth, searchHeight)
                         : heuristicScore(*edge.child, heuristicScratch);
                 }
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(edge.ownedChild), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
-                    recordCompactStateStorage(result.timing, nodes.back().compact);
+                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(edge.ownedChild), std::move(childState), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    recordSearchNodeStateStorage(result.timing, nodes.back().state);
                 }
             } else {
                 bool shouldStore = false;
                 {
                     ScopedTimer timer(result.timing.visitedInsertNs);
-                    shouldStore = bestDepth.insertOrAssignIfBetter(key, compact, childDepth, 0, nodes);
+                    shouldStore = bestDepth.insertOrAssignIfBetter(key, childState, childDepth, 0, nodes);
                     result.uniqueStates = bestDepth.size();
                 }
                 if (!shouldStore) {
@@ -1536,14 +1536,14 @@ Result runSearch(
                 if (mode != SearchMode::Bfs) {
                     ScopedTimer timer(result.timing.heuristicNs);
                     childHeuristic = compactNodeStorage
-                        ? compactHeuristicScore(compact, *game, searchWidth, searchHeight)
+                        ? compactHeuristicScore(childState, *game, searchWidth, searchHeight)
                         : heuristicScore(*edge.child, heuristicScratch);
                 }
                 childIndex = static_cast<uint32_t>(nodes.size());
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
-                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(edge.ownedChild), std::move(compact), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
-                    recordCompactStateStorage(result.timing, nodes.back().compact);
+                    nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(edge.ownedChild), std::move(childState), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
+                    recordSearchNodeStateStorage(result.timing, nodes.back().state);
                 }
             }
             {
