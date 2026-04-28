@@ -72,8 +72,11 @@ typedef struct ps_step_result {
     bool transitioned;
     bool restarted;
     size_t audio_event_count;
+    // Valid until the next `ps_full_state_turn*` call on the same `ps_full_state`
+    // (or until the state is destroyed). Do not store beyond that.
     const ps_audio_event* audio_events;
     size_t ui_audio_event_count;
+    // Same lifetime rules as `audio_events`.
     const ps_audio_event* ui_audio_events;
 } ps_step_result;
 
@@ -139,6 +142,8 @@ void ps_full_state_destroy(ps_full_state* state);
 void ps_full_state_set_unit_testing(ps_full_state* state, bool enabled);
 bool ps_full_state_load_level(ps_full_state* state, int32_t level_index, ps_error** out_error);
 ps_step_result ps_full_state_turn(ps_full_state* state, ps_input input);
+// Solver/cosmetic suppression mode: disables non-solver-relevant outputs
+// (message/sfx) and ignores checkpoint.
 ps_step_result ps_full_state_turn_with_options(ps_full_state* state, ps_input input, bool solver_mode);
 bool ps_full_state_compact_turn_oracle_check(
     const ps_full_state* state,

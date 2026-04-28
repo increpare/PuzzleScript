@@ -234,7 +234,7 @@ Pass: `469/469`, `compact_turn_oracle_failures=0` (2026-04-28).
 - [x] **`restoreRestartTarget`**, **`advanceToNextLevel`**, **`prepareLoadedLevel`**, **`executeTurn` checkpoint**, **`lower_to_runtime`** initial meta updated.
 - [x] **Gate:** `node src/tests/run_tests_node.js --sim-only` — **469/469**; `make compact_turn_simulation_tests` — **469/469**, `compact_turn_oracle_failures=0`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit** — `79009c9c PhaseUse compact objectBits for restart & rename state`.
 
 ---
 
@@ -284,6 +284,13 @@ make compact_turn_simulation_tests
 make build
 node src/tests/run_tests_node.js --verbose  # spot-check audio-heavy games if filter exists
 ```
+
+**Progress (2026-04-28):**
+
+- [x] **Step 1:** Added `puzzlescript::TurnResult` (core + `audio` + `uiAudio`) and removed `FullState::{lastAudioEvents,lastUiAudioEvents}`.
+- [x] **Step 2:** Added `puzzlescript::turnResult(...)` and implemented `turn()`/`step()` wrappers that return `ps_step_result` backed by TLS for pointer stability.
+- [x] **C API:** `ps_full_state_turn(...)` now stores last `TurnResult` on the wrapper to keep `ps_step_result.audio_events` pointers valid until the next call; added `ps_full_state_turn_with_options(..., solver_mode)`.
+- [x] **Gate:** `make build`, `./build/native/puzzlescript_cpp_player_api_tests`, `make compact_turn_simulation_tests` (469/469, oracle failures 0), `node src/tests/run_tests_node.js --sim-only` (469/469).
 
 ---
 
