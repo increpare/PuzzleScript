@@ -3645,31 +3645,31 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::Game& game) {
 
     // prepared_session is optional, but emitting it makes native-vs-js diffs much easier.
     out << ",\n  \"prepared_session\": {";
-    out << "\"current_level_index\":" << game.preparedFullState.currentLevelIndex << ",";
+    out << "\"current_level_index\":" << game.meta.currentLevelIndex << ",";
     out << "\"current_level_target\":null,";
-    out << "\"title_screen\":" << (game.preparedFullState.titleScreen ? "true" : "false") << ",";
-    out << "\"text_mode\":" << (game.preparedFullState.textMode ? "true" : "false") << ",";
-    out << "\"title_mode\":" << game.preparedFullState.titleMode << ",";
-    out << "\"title_selection\":" << game.preparedFullState.titleSelection << ",";
-    out << "\"title_selected\":" << (game.preparedFullState.titleSelected ? "true" : "false") << ",";
-    out << "\"message_selected\":" << (game.preparedFullState.messageSelected ? "true" : "false") << ",";
-    out << "\"winning\":" << (game.preparedFullState.winning ? "true" : "false") << ",";
-    out << "\"loaded_level_seed\":" << jsonStringLiteral(game.preparedFullState.loadedLevelSeed) << ",";
+    out << "\"title_screen\":" << (game.meta.titleScreen ? "true" : "false") << ",";
+    out << "\"text_mode\":" << (game.meta.textMode ? "true" : "false") << ",";
+    out << "\"title_mode\":" << game.meta.titleMode << ",";
+    out << "\"title_selection\":" << game.meta.titleSelection << ",";
+    out << "\"title_selected\":" << (game.meta.titleSelected ? "true" : "false") << ",";
+    out << "\"message_selected\":" << (game.meta.messageSelected ? "true" : "false") << ",";
+    out << "\"winning\":" << (game.meta.winning ? "true" : "false") << ",";
+    out << "\"loaded_level_seed\":" << jsonStringLiteral(game.meta.loadedLevelSeed) << ",";
     out << "\"random_state\":null,";
     out << "\"old_flickscreen_dat\":[],";
     out << "\"level\":";
-    if (game.preparedFullState.level.isMessage) {
-        out << "{\"kind\":\"message\",\"message\":" << jsonStringLiteral(game.preparedFullState.level.message) << "}";
+    if (game.meta.level.isMessage) {
+        out << "{\"kind\":\"message\",\"message\":" << jsonStringLiteral(game.meta.level.message) << "}";
     } else {
-        out << "{\"kind\":\"level\",\"line_number\":" << game.preparedFullState.level.lineNumber
-            << ",\"width\":" << game.preparedFullState.level.width
-            << ",\"height\":" << game.preparedFullState.level.height
-            << ",\"layer_count\":" << game.preparedFullState.level.layerCount
+        out << "{\"kind\":\"level\",\"line_number\":" << game.meta.level.lineNumber
+            << ",\"width\":" << game.meta.level.width
+            << ",\"height\":" << game.meta.level.height
+            << ",\"layer_count\":" << game.meta.level.layerCount
             << ",\"objects\":";
-        appendJsonIntArray(out, game.preparedFullState.level.objects);
+        appendJsonIntArray(out, game.meta.level.objects);
         out << "}";
     }
-    out << ",\"serialized_level\":" << jsonStringLiteral(game.preparedFullState.serializedLevel);
+    out << ",\"serialized_level\":" << jsonStringLiteral(game.meta.serializedLevel);
     out << ",\"restart_target\":null";
     out << "}\n";
     out << "}\n";

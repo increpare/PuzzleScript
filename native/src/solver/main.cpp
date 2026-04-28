@@ -646,17 +646,17 @@ void markMaterializedFullStateDirty(FullState& session) {
 
 void materializeCompactStateIntoFullState(const CompactState& state, const FullState& base, FullState& session) {
     session.game = base.game;
-    session.preparedFullState.currentLevelIndex = base.preparedFullState.currentLevelIndex;
-    session.preparedFullState.currentLevelTarget = base.preparedFullState.currentLevelTarget;
-    session.preparedFullState.titleScreen = base.preparedFullState.titleScreen;
-    session.preparedFullState.textMode = base.preparedFullState.textMode;
-    session.preparedFullState.titleMode = base.preparedFullState.titleMode;
-    session.preparedFullState.titleSelection = base.preparedFullState.titleSelection;
-    session.preparedFullState.titleSelected = base.preparedFullState.titleSelected;
-    session.preparedFullState.messageSelected = base.preparedFullState.messageSelected;
-    session.preparedFullState.winning = base.preparedFullState.winning;
-    session.preparedFullState.messageText = base.preparedFullState.messageText;
-    session.preparedFullState.loadedLevelSeed = base.preparedFullState.loadedLevelSeed;
+    session.meta.currentLevelIndex = base.meta.currentLevelIndex;
+    session.meta.currentLevelTarget = base.meta.currentLevelTarget;
+    session.meta.titleScreen = base.meta.titleScreen;
+    session.meta.textMode = base.meta.textMode;
+    session.meta.titleMode = base.meta.titleMode;
+    session.meta.titleSelection = base.meta.titleSelection;
+    session.meta.titleSelected = base.meta.titleSelected;
+    session.meta.messageSelected = base.meta.messageSelected;
+    session.meta.winning = base.meta.winning;
+    session.meta.messageText = base.meta.messageText;
+    session.meta.loadedLevelSeed = base.meta.loadedLevelSeed;
     session.liveLevel.isMessage = base.liveLevel.isMessage;
     session.liveLevel.message = base.liveLevel.message;
     session.liveLevel.lineNumber = base.liveLevel.lineNumber;
@@ -702,7 +702,7 @@ void materializeCompactStateIntoFullState(const CompactState& state, const FullS
 
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
-    child.preparedFullState = parent.preparedFullState;
+    child.meta = parent.meta;
     child.liveLevel.isMessage = parent.liveLevel.isMessage;
     child.liveLevel.message = parent.liveLevel.message;
     child.liveLevel.lineNumber = parent.liveLevel.lineNumber;
@@ -861,7 +861,7 @@ SolverEdgeStep stepSolverEdge(
                         input,
                         width,
                         height,
-                        parentSession.preparedFullState.currentLevelIndex,
+                        parentSession.meta.currentLevelIndex,
                         solverStepOptions
                     );
                 }
@@ -1176,7 +1176,7 @@ std::unique_ptr<FullState> createLoadedSession(
 }
 
 bool solvedByStep(const ps_step_result& stepResult, const FullState& session, int32_t levelIndex) {
-    return stepResult.won || session.preparedFullState.currentLevelIndex != levelIndex;
+    return stepResult.won || session.meta.currentLevelIndex != levelIndex;
 }
 
 class FlatBestDepth {
@@ -1370,7 +1370,7 @@ Result runSearch(
     if (!initial) {
         return result;
     }
-    if (initial->preparedFullState.textMode || initial->preparedFullState.level.isMessage) {
+    if (initial->meta.textMode || initial->meta.level.isMessage) {
         result.status = "skipped_message";
         return result;
     }

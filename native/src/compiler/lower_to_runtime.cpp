@@ -781,27 +781,27 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     }
 
     // --- Prepared session ---
-    game->preparedFullState.currentLevelIndex = 0;
-    game->preparedFullState.currentLevelTarget.reset();
-    game->preparedFullState.titleScreen = false;
-    game->preparedFullState.textMode = !game->levels.empty() && game->levels.front().isMessage;
-    game->preparedFullState.titleMode = 0;
-    game->preparedFullState.titleSelection = 0;
-    game->preparedFullState.titleSelected = false;
-    game->preparedFullState.messageSelected = false;
-    game->preparedFullState.messageText.clear();
-    game->preparedFullState.winning = false;
-    game->preparedFullState.loadedLevelSeed = "native";
-    game->preparedFullState.hasRandomState = false;
-    game->preparedFullState.randomStateValid = false;
-    game->preparedFullState.randomStateS.clear();
-    game->preparedFullState.oldFlickscreenDat.clear();
+    game->meta.currentLevelIndex = 0;
+    game->meta.currentLevelTarget.reset();
+    game->meta.titleScreen = false;
+    game->meta.textMode = !game->levels.empty() && game->levels.front().isMessage;
+    game->meta.titleMode = 0;
+    game->meta.titleSelection = 0;
+    game->meta.titleSelected = false;
+    game->meta.messageSelected = false;
+    game->meta.messageText.clear();
+    game->meta.winning = false;
+    game->meta.loadedLevelSeed = "native";
+    game->meta.hasRandomState = false;
+    game->meta.randomStateValid = false;
+    game->meta.randomStateS.clear();
+    game->meta.oldFlickscreenDat.clear();
     if (!game->levels.empty()) {
-        game->preparedFullState.level = game->levels.front();
-        game->preparedFullState.restart.width = game->preparedFullState.level.width;
-        game->preparedFullState.restart.height = game->preparedFullState.level.height;
-        game->preparedFullState.restart.objects = game->preparedFullState.level.objects;
-        game->preparedFullState.restart.oldFlickscreenDat.clear();
+        game->meta.level = game->levels.front();
+        game->meta.restart.width = game->meta.level.width;
+        game->meta.restart.height = game->meta.level.height;
+        game->meta.restart.objects = game->meta.level.objects;
+        game->meta.restart.oldFlickscreenDat.clear();
     }
 
     // --- Rules / winconditions / sounds / loop points ---

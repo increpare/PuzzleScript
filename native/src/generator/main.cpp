@@ -1110,7 +1110,7 @@ std::vector<std::string> reconstructSolution(const std::vector<Node>& nodes, uin
 }
 
 bool solvedByStep(const ps_step_result& stepResult, const FullState& session, int32_t levelIndex) {
-    return stepResult.won || session.preparedFullState.currentLevelIndex != levelIndex;
+    return stepResult.won || session.meta.currentLevelIndex != levelIndex;
 }
 
 SolveResult runSearch(

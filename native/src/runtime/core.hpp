@@ -147,6 +147,8 @@ struct PreparedFullState {
     std::string serializedLevel;
 };
 
+using MetaGameState = PreparedFullState;
+
 struct Replacement {
     // All masks live in Game::maskArena; these are offsets (in words).
     // The "objects" / "movements" / "movementsLayerMask" fields have width
@@ -332,7 +334,7 @@ struct Game {
     std::vector<SoundMaskEntry> sfxDestructionMasks;
     std::vector<std::vector<SoundMaskEntry>> sfxMovementMasks;
     std::vector<SoundMaskEntry> sfxMovementFailureMasks;
-    PreparedFullState preparedFullState;
+    MetaGameState meta;
     const SpecializedRulegroupsBackend* specializedRulegroups = nullptr;
     const SpecializedFullTurnBackend* specializedFullTurn = nullptr;
     const SpecializedCompactTurnBackend* specializedCompactTurn = nullptr;
@@ -347,7 +349,7 @@ struct FullState {
     };
 
     struct UndoSnapshot {
-        PreparedFullState preparedFullState;
+        MetaGameState meta;
         LevelTemplate liveLevel;
         MaskVector liveMovements;
         MaskVector rigidGroupIndexMasks;
@@ -356,7 +358,7 @@ struct FullState {
     };
 
     std::shared_ptr<const Game> game;
-    PreparedFullState preparedFullState;
+    MetaGameState meta;
     LevelTemplate liveLevel;
     MaskVector liveMovements;
     MaskVector rowMasks;

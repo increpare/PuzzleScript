@@ -446,10 +446,10 @@ void processOutputCommands(FullState& session, const CommandState& commands, boo
             if (suppressMessages || session.suppressRuleMessages) {
                 continue;
             }
-            session.preparedFullState.messageText = commands.messageText;
-            session.preparedFullState.textMode = true;
-            session.preparedFullState.titleScreen = false;
-            session.preparedFullState.messageSelected = false;
+            session.meta.messageText = commands.messageText;
+            session.meta.textMode = true;
+            session.meta.titleScreen = false;
+            session.meta.messageSelected = false;
             if (emitAudio) {
                 tryPlaySimpleSound(session, "showmessage");
             }
@@ -3707,10 +3707,10 @@ std::vector<uint8_t> buildSessionHashBytes(const FullState& session) {
         bytes.insert(bytes.end(), data, data + sizeof(value));
     };
 
-    append(session.preparedFullState.currentLevelIndex);
-    append(session.preparedFullState.titleScreen);
-    append(session.preparedFullState.textMode);
-    append(session.preparedFullState.winning);
+    append(session.meta.currentLevelIndex);
+    append(session.meta.titleScreen);
+    append(session.meta.textMode);
+    append(session.meta.winning);
     append(session.pendingAgain);
     append(session.randomState.i);
     append(session.randomState.j);
@@ -3724,7 +3724,7 @@ std::vector<uint8_t> buildSessionHashBytes(const FullState& session) {
     const auto& movements = session.liveMovements;
     const auto* movementBytes = reinterpret_cast<const uint8_t*>(movements.data());
     bytes.insert(bytes.end(), movementBytes, movementBytes + movements.size() * sizeof(MaskWord));
-    bytes.insert(bytes.end(), session.preparedFullState.loadedLevelSeed.begin(), session.preparedFullState.loadedLevelSeed.end());
+    bytes.insert(bytes.end(), session.meta.loadedLevelSeed.begin(), session.meta.loadedLevelSeed.end());
     return bytes;
 }
 
@@ -3744,10 +3744,10 @@ void appendHashValue(uint64_t& hash, const T& value) {
 uint64_t hashFullState64NoAlloc(const FullState& session, uint64_t seed) {
     uint64_t hash = seed;
 
-    appendHashValue(hash, session.preparedFullState.currentLevelIndex);
-    appendHashValue(hash, session.preparedFullState.titleScreen);
-    appendHashValue(hash, session.preparedFullState.textMode);
-    appendHashValue(hash, session.preparedFullState.winning);
+    appendHashValue(hash, session.meta.currentLevelIndex);
+    appendHashValue(hash, session.meta.titleScreen);
+    appendHashValue(hash, session.meta.textMode);
+    appendHashValue(hash, session.meta.winning);
     appendHashValue(hash, session.pendingAgain);
     appendHashValue(hash, session.randomState.i);
     appendHashValue(hash, session.randomState.j);
@@ -3758,7 +3758,7 @@ uint64_t hashFullState64NoAlloc(const FullState& session, uint64_t seed) {
     appendHashBytes(hash, objects.data(), objects.size() * sizeof(MaskWord));
     const auto& movements = session.liveMovements;
     appendHashBytes(hash, movements.data(), movements.size() * sizeof(MaskWord));
-    appendHashBytes(hash, session.preparedFullState.loadedLevelSeed.data(), session.preparedFullState.loadedLevelSeed.size());
+    appendHashBytes(hash, session.meta.loadedLevelSeed.data(), session.meta.loadedLevelSeed.size());
 
     return hash;
 }
@@ -3821,7 +3821,7 @@ void markAllMovementMasksDirty(FullState& session) {
 }
 
 void restoreSnapshot(FullState& session, const FullState::UndoSnapshot& snapshot, bool restoreRandomState) {
-    session.preparedFullState = snapshot.preparedFullState;
+    session.meta = snapshot.meta;
     session.liveLevel = snapshot.liveLevel;
     if (snapshot.liveMovements.empty()) {
         session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
@@ -3848,7 +3848,7 @@ void restoreSnapshot(FullState& session, const FullState::UndoSnapshot& snapshot
 
 FullState::UndoSnapshot makeUndoSnapshot(const FullState& session) {
     return FullState::UndoSnapshot{
-        session.preparedFullState,
+        session.meta,
         session.liveLevel,
         {},
         {},
@@ -3863,12 +3863,12 @@ void pushUndoSnapshot(FullState& session) {
 }
 
 void restoreRestartTarget(FullState& session) {
-    session.liveLevel = session.preparedFullState.level;
-    if (!session.preparedFullState.restart.objects.empty()) {
-        session.liveLevel.width = session.preparedFullState.restart.width;
-        session.liveLevel.height = session.preparedFullState.restart.height;
-        session.liveLevel.objects = session.preparedFullState.restart.objects;
-        session.preparedFullState.oldFlickscreenDat = session.preparedFullState.restart.oldFlickscreenDat;
+    session.liveLevel = session.meta.level;
+    if (!session.meta.restart.objects.empty()) {
+        session.liveLevel.width = session.meta.restart.width;
+        session.liveLevel.height = session.meta.restart.height;
+        session.liveLevel.objects = session.meta.restart.objects;
+        session.meta.oldFlickscreenDat = session.meta.restart.oldFlickscreenDat;
     }
     session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
@@ -3953,21 +3953,21 @@ bool advanceToNextLevel(FullState& session) {
         return false;
     }
 
-    if (session.preparedFullState.currentLevelIndex < static_cast<int32_t>(session.game->levels.size()) - 1) {
-        session.preparedFullState.currentLevelIndex += 1;
-        session.preparedFullState.currentLevelTarget.reset();
-        session.preparedFullState.titleScreen = false;
-        session.preparedFullState.level = session.game->levels[static_cast<size_t>(session.preparedFullState.currentLevelIndex)];
-        session.preparedFullState.textMode = session.preparedFullState.level.isMessage;
-        if (!session.preparedFullState.textMode) {
-        session.preparedFullState.titleMode = 0;
-        session.preparedFullState.titleSelection = showContinueOptionOnTitleScreen(session.preparedFullState) ? 1 : 0;
+    if (session.meta.currentLevelIndex < static_cast<int32_t>(session.game->levels.size()) - 1) {
+        session.meta.currentLevelIndex += 1;
+        session.meta.currentLevelTarget.reset();
+        session.meta.titleScreen = false;
+        session.meta.level = session.game->levels[static_cast<size_t>(session.meta.currentLevelIndex)];
+        session.meta.textMode = session.meta.level.isMessage;
+        if (!session.meta.textMode) {
+        session.meta.titleMode = 0;
+        session.meta.titleSelection = showContinueOptionOnTitleScreen(session.meta) ? 1 : 0;
     }
-    session.preparedFullState.titleSelected = false;
-    session.preparedFullState.messageSelected = false;
-    session.preparedFullState.messageText.clear();
-    session.preparedFullState.winning = false;
-        if (session.preparedFullState.textMode) {
+    session.meta.titleSelected = false;
+    session.meta.messageSelected = false;
+    session.meta.messageText.clear();
+    session.meta.winning = false;
+        if (session.meta.textMode) {
             session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
             session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
             session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
@@ -3978,10 +3978,10 @@ bool advanceToNextLevel(FullState& session) {
             session.canUndo = false;
             return true;
         }
-        session.preparedFullState.restart.width = session.preparedFullState.level.width;
-        session.preparedFullState.restart.height = session.preparedFullState.level.height;
-        session.preparedFullState.restart.objects = session.preparedFullState.level.objects;
-        session.preparedFullState.restart.oldFlickscreenDat = session.preparedFullState.oldFlickscreenDat;
+        session.meta.restart.width = session.meta.level.width;
+        session.meta.restart.height = session.meta.level.height;
+        session.meta.restart.objects = session.meta.level.objects;
+        session.meta.restart.oldFlickscreenDat = session.meta.oldFlickscreenDat;
         restoreRestartTarget(session);
         ::puzzlescript::runRulesOnLevelStart(session);
         session.undoStack.clear();
@@ -3989,16 +3989,16 @@ bool advanceToNextLevel(FullState& session) {
         return true;
     }
 
-    session.preparedFullState.currentLevelIndex = 0;
-    session.preparedFullState.currentLevelTarget.reset();
-    session.preparedFullState.titleScreen = true;
-    session.preparedFullState.textMode = true;
-    session.preparedFullState.titleMode = showContinueOptionOnTitleScreen(session.preparedFullState) ? 1 : 0;
-    session.preparedFullState.titleSelection = showContinueOptionOnTitleScreen(session.preparedFullState) ? 1 : 0;
-    session.preparedFullState.titleSelected = false;
-    session.preparedFullState.messageSelected = false;
-    session.preparedFullState.messageText.clear();
-    session.preparedFullState.winning = false;
+    session.meta.currentLevelIndex = 0;
+    session.meta.currentLevelTarget.reset();
+    session.meta.titleScreen = true;
+    session.meta.textMode = true;
+    session.meta.titleMode = showContinueOptionOnTitleScreen(session.meta) ? 1 : 0;
+    session.meta.titleSelection = showContinueOptionOnTitleScreen(session.meta) ? 1 : 0;
+    session.meta.titleSelected = false;
+    session.meta.messageSelected = false;
+    session.meta.messageText.clear();
+    session.meta.winning = false;
     session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
     session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
@@ -4011,7 +4011,7 @@ bool advanceToNextLevel(FullState& session) {
 }
 
 void resetToPrepared(FullState& session) {
-    session.liveLevel = session.preparedFullState.level;
+    session.liveLevel = session.meta.level;
     session.liveMovements.assign(static_cast<size_t>(session.liveLevel.width * session.liveLevel.height * session.game->strideMovement), 0);
     session.rigidGroupIndexMasks.assign(session.liveMovements.size(), 0);
     session.rigidMovementAppliedMasks.assign(session.liveMovements.size(), 0);
@@ -4019,18 +4019,18 @@ void resetToPrepared(FullState& session) {
     session.undoStack.clear();
     session.pendingAgain = false;
     markAllMasksDirty(session);
-    if (session.preparedFullState.hasRandomState
-        && session.preparedFullState.randomStateS.size() == session.randomState.s.size()) {
-        session.randomState.valid = session.preparedFullState.randomStateValid;
-        session.randomState.i = session.preparedFullState.randomStateI;
-        session.randomState.j = session.preparedFullState.randomStateJ;
+    if (session.meta.hasRandomState
+        && session.meta.randomStateS.size() == session.randomState.s.size()) {
+        session.randomState.valid = session.meta.randomStateValid;
+        session.randomState.i = session.meta.randomStateI;
+        session.randomState.j = session.meta.randomStateJ;
         std::copy(
-            session.preparedFullState.randomStateS.begin(),
-            session.preparedFullState.randomStateS.end(),
+            session.meta.randomStateS.begin(),
+            session.meta.randomStateS.end(),
             session.randomState.s.begin()
         );
     } else {
-        seedRandomState(session.randomState, session.preparedFullState.loadedLevelSeed);
+        seedRandomState(session.randomState, session.meta.loadedLevelSeed);
     }
     rebuildMasks(session);
 }
@@ -4453,13 +4453,13 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
 
         if (const auto prepared = rootObject.find("prepared_session"); prepared != rootObject.end()) {
             try {
-                game->preparedFullState = parsePreparedSession(prepared->second);
-                if (game->preparedFullState.level.width == 0
-                    && game->preparedFullState.level.height == 0
-                    && game->preparedFullState.level.objects.empty()
-                    && game->preparedFullState.currentLevelIndex >= 0
-                    && static_cast<size_t>(game->preparedFullState.currentLevelIndex) < game->levels.size()) {
-                    game->preparedFullState.level = game->levels[static_cast<size_t>(game->preparedFullState.currentLevelIndex)];
+                game->meta = parsePreparedSession(prepared->second);
+                if (game->meta.level.width == 0
+                    && game->meta.level.height == 0
+                    && game->meta.level.objects.empty()
+                    && game->meta.currentLevelIndex >= 0
+                    && static_cast<size_t>(game->meta.currentLevelIndex) < game->levels.size()) {
+                    game->meta.level = game->levels[static_cast<size_t>(game->meta.currentLevelIndex)];
                 }
             } catch (const std::exception& error) {
                 throw json::ParseError("Failed parsing prepared_session: " + std::string(error.what()));
@@ -4475,7 +4475,7 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, std::shared_p
 std::unique_ptr<FullState> createFullState(std::shared_ptr<const Game> game) {
     auto session = std::make_unique<FullState>();
     session->game = std::move(game);
-    session->preparedFullState = session->game->preparedFullState;
+    session->meta = session->game->meta;
     session->backend = detectBestBackend();
     resetToPrepared(*session);
     return session;
@@ -4484,13 +4484,13 @@ std::unique_ptr<FullState> createFullState(std::shared_ptr<const Game> game) {
 std::unique_ptr<FullState> createFullStateWithLoadedLevelSeed(std::shared_ptr<const Game> game, std::string loadedLevelSeed) {
     auto session = std::make_unique<FullState>();
     session->game = std::move(game);
-    session->preparedFullState = session->game->preparedFullState;
-    session->preparedFullState.loadedLevelSeed = std::move(loadedLevelSeed);
-    session->preparedFullState.hasRandomState = false;
-    session->preparedFullState.randomStateValid = false;
-    session->preparedFullState.randomStateI = 0;
-    session->preparedFullState.randomStateJ = 0;
-    session->preparedFullState.randomStateS.clear();
+    session->meta = session->game->meta;
+    session->meta.loadedLevelSeed = std::move(loadedLevelSeed);
+    session->meta.hasRandomState = false;
+    session->meta.randomStateValid = false;
+    session->meta.randomStateI = 0;
+    session->meta.randomStateJ = 0;
+    session->meta.randomStateS.clear();
     session->backend = detectBestBackend();
     resetToPrepared(*session);
     return session;
@@ -4507,7 +4507,7 @@ std::unique_ptr<FullState> createSessionWithLoadedLevelSeed(std::shared_ptr<cons
 namespace {
 
 void prepareLoadedLevel(FullState& session, LevelTemplate level, int32_t levelIndex) {
-    PreparedFullState& prepared = session.preparedFullState;
+    PreparedFullState& prepared = session.meta;
     const int32_t restartWidth = level.width;
     const int32_t restartHeight = level.height;
     MaskVector restartObjects = level.objects;
@@ -4678,26 +4678,26 @@ std::string exportSnapshot(const FullState& session) {
     const ps_hash128 hash128 = hashFullState128(session);
     std::ostringstream stream;
     stream << "{"
-           << "\"current_level_index\":" << session.preparedFullState.currentLevelIndex << ","
+           << "\"current_level_index\":" << session.meta.currentLevelIndex << ","
            << "\"current_level_target\":";
-    if (session.preparedFullState.currentLevelTarget.has_value()) {
-        stream << *session.preparedFullState.currentLevelTarget;
+    if (session.meta.currentLevelTarget.has_value()) {
+        stream << *session.meta.currentLevelTarget;
     } else {
         stream << "null";
     }
     stream << ","
-           << "\"title_screen\":" << (session.preparedFullState.titleScreen ? "true" : "false") << ","
-           << "\"text_mode\":" << (session.preparedFullState.textMode ? "true" : "false") << ","
-           << "\"title_mode\":" << session.preparedFullState.titleMode << ","
-           << "\"title_selection\":" << session.preparedFullState.titleSelection << ","
-           << "\"title_selected\":" << (session.preparedFullState.titleSelected ? "true" : "false") << ","
-           << "\"message_selected\":" << (session.preparedFullState.messageSelected ? "true" : "false") << ","
-           << "\"winning\":" << (session.preparedFullState.winning ? "true" : "false") << ","
+           << "\"title_screen\":" << (session.meta.titleScreen ? "true" : "false") << ","
+           << "\"text_mode\":" << (session.meta.textMode ? "true" : "false") << ","
+           << "\"title_mode\":" << session.meta.titleMode << ","
+           << "\"title_selection\":" << session.meta.titleSelection << ","
+           << "\"title_selected\":" << (session.meta.titleSelected ? "true" : "false") << ","
+           << "\"message_selected\":" << (session.meta.messageSelected ? "true" : "false") << ","
+           << "\"winning\":" << (session.meta.winning ? "true" : "false") << ","
            << "\"movement_word_count_nonzero\":" << countNonZeroWords(session.liveMovements) << ","
            << "\"random_state_valid\":" << (session.randomState.valid ? "true" : "false") << ","
            << "\"random_state_i\":" << static_cast<int32_t>(session.randomState.i) << ","
            << "\"random_state_j\":" << static_cast<int32_t>(session.randomState.j) << ","
-           << "\"loaded_level_seed\":\"" << escapeJson(session.preparedFullState.loadedLevelSeed) << "\","
+           << "\"loaded_level_seed\":\"" << escapeJson(session.meta.loadedLevelSeed) << "\","
            << "\"hash64\":" << hash64 << ","
            << "\"hash128\":{\"lo\":" << hash128.lo << ",\"hi\":" << hash128.hi << "},"
            << "\"movement_board_mask\":[";
@@ -4986,10 +4986,10 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
         (void)transitioned;
     }
     if (!won && commandQueueContains(commands, "checkpoint")) {
-        session.preparedFullState.restart.width = session.liveLevel.width;
-        session.preparedFullState.restart.height = session.liveLevel.height;
-        session.preparedFullState.restart.objects = session.liveLevel.objects;
-        session.preparedFullState.restart.oldFlickscreenDat = session.preparedFullState.oldFlickscreenDat;
+        session.meta.restart.width = session.liveLevel.width;
+        session.meta.restart.height = session.liveLevel.height;
+        session.meta.restart.objects = session.liveLevel.objects;
+        session.meta.restart.oldFlickscreenDat = session.meta.oldFlickscreenDat;
     }
 
     const bool hasAgain = commandQueueContains(commands, "again");
@@ -5099,13 +5099,13 @@ ps_step_result interpretedTurnOnceWithSpecializedRulegroups(
     ps_step_result result{};
     session.lastAudioEvents.clear();
     session.lastUiAudioEvents.clear();
-    if (session.preparedFullState.textMode && !session.preparedFullState.titleScreen && input == PS_INPUT_ACTION) {
-        if (session.preparedFullState.level.isMessage) {
+    if (session.meta.textMode && !session.meta.titleScreen && input == PS_INPUT_ACTION) {
+        if (session.meta.level.isMessage) {
             result.transitioned = advanceToNextLevel(session);
         } else {
-            session.preparedFullState.textMode = false;
-            session.preparedFullState.messageText.clear();
-            session.preparedFullState.messageSelected = false;
+            session.meta.textMode = false;
+            session.meta.messageText.clear();
+            session.meta.messageSelected = false;
             result.transitioned = true;
             rebuildMasks(session);
         }
@@ -5117,8 +5117,8 @@ ps_step_result interpretedTurnOnceWithSpecializedRulegroups(
         result.ui_audio_events = session.lastUiAudioEvents.empty() ? nullptr : session.lastUiAudioEvents.data();
         return result;
     }
-    if (session.preparedFullState.titleScreen && input == PS_INPUT_ACTION) {
-        session.preparedFullState.titleScreen = false;
+    if (session.meta.titleScreen && input == PS_INPUT_ACTION) {
+        session.meta.titleScreen = false;
         result.changed = true;
         result.transitioned = true;
         result.audio_event_count = 0;
