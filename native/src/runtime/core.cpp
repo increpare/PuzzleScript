@@ -4082,6 +4082,11 @@ void syncOccupancyRngFromAuthoritativeRandomState(FullState& session) {
     session.occupancy.rng = session.randomState;
 }
 
+void syncBoardOccupancyMirrorFromAuthoritativeState(FullState& session) {
+    syncOccupancyRngFromAuthoritativeRandomState(session);
+    syncOccupancyObjectBitsFromLiveLevel(session);
+}
+
 const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset) {
     return maskPtr(game, offset);
 }
@@ -5094,6 +5099,7 @@ ps_step_result executeTurn(FullState& session, int32_t directionMask, ExecuteTur
     result.ui_audio_event_count = session.lastUiAudioEvents.size();
     result.ui_audio_events = session.lastUiAudioEvents.empty() ? nullptr : session.lastUiAudioEvents.data();
     rebuildMasks(session);
+    syncBoardOccupancyMirrorFromAuthoritativeState(session);
     return result;
 }
 
@@ -5305,6 +5311,7 @@ ps_step_result turnOnce(FullState& session, ps_input input, RuntimeStepOptions o
         const SpecializedFullTurnOutcome outcome = session.game->specializedFullTurn->step(session, input, options);
         if (outcome.handled) {
             addCounter(gRuntimeCounters.specializedFullTurnHits);
+            syncBoardOccupancyMirrorFromAuthoritativeState(session);
             return outcome.result;
         }
         addCounter(gRuntimeCounters.specializedFullTurnFallbacks);
@@ -5349,6 +5356,7 @@ ps_step_result tick(FullState& session, RuntimeStepOptions options) {
         const SpecializedFullTurnOutcome outcome = session.game->specializedFullTurn->tick(session, options);
         if (outcome.handled) {
             addCounter(gRuntimeCounters.specializedFullTurnHits);
+            syncBoardOccupancyMirrorFromAuthoritativeState(session);
             return outcome.result;
         }
         addCounter(gRuntimeCounters.specializedFullTurnFallbacks);

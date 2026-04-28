@@ -443,6 +443,10 @@ void resizeBoardOccupancyObjectBits(FullState& session);
 /// RNG mirror for Task B migration — authoritative source is still FullState::randomState.
 void syncOccupancyRngFromAuthoritativeRandomState(FullState& session);
 
+/// Updates RNG + compact object bits in `BoardOccupancy` from authoritative session fields.
+/// Call after any turn completes (including specialized full-turn paths that bypass `executeTurn`).
+void syncBoardOccupancyMirrorFromAuthoritativeState(FullState& session);
+
 struct CompileResult {
     std::shared_ptr<const Game> game;
     std::unique_ptr<Error> error;

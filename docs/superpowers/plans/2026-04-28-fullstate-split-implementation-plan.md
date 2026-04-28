@@ -162,20 +162,19 @@ git commit -am "refactor(native): nest replacement scratch vectors under Scratch
 **Progress (2026-04-28):**
 
 - [x] **Step 1 (partial — live → compact):** Implemented **`fillCompactOccupancyBitsFromLiveLevel`**, **`syncOccupancyObjectBitsFromLiveLevel`**, and **`resizeBoardOccupancyObjectBits`** now delegates to sync so **`occupancy.objectBits` stays aligned with `liveLevel.objects`** after every resize hook. Solver **`compactStateFromFullState`** calls the shared encoder (no duplicated loop).
+- [x] **End-of-turn + specialized-turn mirror:** **`syncBoardOccupancyMirrorFromAuthoritativeState`** runs after **`executeTurn`** and after **specialized full-turn** `step` / `tick` hits (paths that bypass `executeTurn`).
 - [ ] **Step 1 (remainder):** **`syncLiveLevelFromOccupancy`** / inverse materialization helpers if extracted to shared module; optional small free functions for `cellWordCount` / `occupancyWordCount`.
-- [ ] **Step 2: Dev-only assert**
+- [ ] **Step 2: Dev-only assert** (deferred): Per-cell `setCellObjects` asserts are expensive; end-of-turn **full re-encode** via sync is the current consistency guarantee. Optional: incremental assert when Task B2 updates both sides per cell.
 
-After hot mutations in `setCellObjects`-style paths (locate in `core.cpp`), `#ifndef NDEBUG` call both directions and **memcmp** cell-major vs derived up to tileCount×stride.
-
-- [ ] **Step 3: Tests**
+- [x] **Step 3: Tests**
 
 ```bash
 make compact_turn_simulation_tests
 ```
 
-Expected: PASS (same as baseline).
+Pass: `469/469`, `compact_turn_oracle_failures=0` (2026-04-28).
 
-- [ ] **Step 4: Commit** (next tranche when asserts + full test gate run)
+- [x] **Step 4: Commit** — landed with mirror sync + plan update.
 
 ---
 
