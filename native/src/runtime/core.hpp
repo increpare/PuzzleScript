@@ -431,7 +431,13 @@ struct FullState {
     SimdBackend backend = SimdBackend::Scalar;
 };
 
-/// Cell-major-compact occupancy shell sizing (zeros); mirrors solver compact layout formula.
+/// Cell-major → object-major compact bits (same layout as solver `CompactState::objectBits`).
+void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector<uint64_t>& objectBits);
+
+/// Resize/fill `session.occupancy.objectBits` from authoritative `liveLevel.objects`.
+void syncOccupancyObjectBitsFromLiveLevel(FullState& session);
+
+/// Keeps `occupancy.objectBits` sized and aligned with the live board (delegates to sync).
 void resizeBoardOccupancyObjectBits(FullState& session);
 
 /// RNG mirror for Task B migration — authoritative source is still FullState::randomState.

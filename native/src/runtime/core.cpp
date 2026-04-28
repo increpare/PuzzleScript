@@ -4043,11 +4043,39 @@ void resetToPrepared(FullState& session) {
 
 } // namespace
 
-void resizeBoardOccupancyObjectBits(FullState& session) {
+void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector<uint64_t>& objectBits) {
     const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const int32_t objectCount = session.game ? session.game->objectCount : 0;
-    session.occupancy.objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
+    objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
+    if (objectCount > 0 && tileCount > 0 && cellWordCount > 0 && session.game != nullptr) {
+        const int32_t stride = session.game->strideObject;
+        for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
+            const size_t sourceBase = static_cast<size_t>(tileIndex * stride);
+            const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
+            const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+            for (int32_t word = 0; word < stride; ++word) {
+                MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(
+                    session.liveLevel.objects[sourceBase + static_cast<size_t>(word)]);
+                while (bits != 0) {
+                    const uint32_t bit = static_cast<uint32_t>(maskWordCountTrailingZeros(bits));
+                    const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
+                    if (objectId < objectCount) {
+                        objectBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
+                    }
+                    bits &= bits - 1;
+                }
+            }
+        }
+    }
+}
+
+void syncOccupancyObjectBitsFromLiveLevel(FullState& session) {
+    fillCompactOccupancyBitsFromLiveLevel(session, session.occupancy.objectBits);
+}
+
+void resizeBoardOccupancyObjectBits(FullState& session) {
+    syncOccupancyObjectBitsFromLiveLevel(session);
 }
 
 void syncOccupancyRngFromAuthoritativeRandomState(FullState& session) {

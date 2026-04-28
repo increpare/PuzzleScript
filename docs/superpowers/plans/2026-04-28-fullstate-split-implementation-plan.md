@@ -153,23 +153,16 @@ git commit -am "refactor(native): nest replacement scratch vectors under Scratch
 ### Task B1: Centralize compact ↔ cell-major helpers
 
 **Files:**
-- Create: `native/src/runtime/occupancy_access.hpp`
-- Create: `native/src/runtime/occupancy_access.cpp` (if non-inline)
-- Modify: `native/src/solver/main.cpp` — eventually delegate conversion to shared helpers (avoid drift).
+- Create: `native/src/runtime/occupancy_access.hpp` *(optional split later — logic currently lives in `core.hpp` / `core.cpp`)*
+- Modify: `native/src/runtime/core.hpp`, `native/src/runtime/core.cpp`
+- Modify: `native/src/solver/main.cpp` — delegates encode to runtime helper.
 
 **Purpose:** Single implementation for sizing `objectBits`, indexing `(objectId, tileIndex)`, and converting **to/from** `liveLevel.objects` stride layout (`compactStateFromFullState` / `materializeCompactStateIntoFullState` logic lifted from `solver/main.cpp`).
 
-- [ ] **Step 1: Implement**
+**Progress (2026-04-28):**
 
-Functions (names illustrative):
-
-- `size_t occupancyWordCount(int32_t tileCount);`
-- `void resizeOccupancy(BoardOccupancy&, const Game&, int32_t tileCount);`
-- `void syncOccupancyFromLiveLevel(FullState&);` — fills `occupancy.objectBits` from `liveLevel.objects`
-- `void syncLiveLevelFromOccupancy(FullState&);` — fills `liveLevel.objects` from `occupancy.objectBits`
-
-Use existing loops from `compactStateFromFullState` / inverse in `materializeCompactStateIntoFullState` as **golden reference**.
-
+- [x] **Step 1 (partial — live → compact):** Implemented **`fillCompactOccupancyBitsFromLiveLevel`**, **`syncOccupancyObjectBitsFromLiveLevel`**, and **`resizeBoardOccupancyObjectBits`** now delegates to sync so **`occupancy.objectBits` stays aligned with `liveLevel.objects`** after every resize hook. Solver **`compactStateFromFullState`** calls the shared encoder (no duplicated loop).
+- [ ] **Step 1 (remainder):** **`syncLiveLevelFromOccupancy`** / inverse materialization helpers if extracted to shared module; optional small free functions for `cellWordCount` / `occupancyWordCount`.
 - [ ] **Step 2: Dev-only assert**
 
 After hot mutations in `setCellObjects`-style paths (locate in `core.cpp`), `#ifndef NDEBUG` call both directions and **memcmp** cell-major vs derived up to tileCount×stride.
@@ -182,12 +175,7 @@ make compact_turn_simulation_tests
 
 Expected: PASS (same as baseline).
 
-- [ ] **Step 4: Commit**
-
-```bash
-git add native/src/runtime/occupancy_access.cpp native/src/runtime/occupancy_access.hpp native/Makefile.native # if include paths changed
-git commit -m "feat(native): shared occupancy sync helpers + debug invariant"
-```
+- [ ] **Step 4: Commit** (next tranche when asserts + full test gate run)
 
 ---
 

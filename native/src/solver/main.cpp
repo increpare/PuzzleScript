@@ -587,29 +587,7 @@ CompactState compactStateFromFullState(const FullState& session) {
     state.randomStateI = session.randomState.i;
     state.randomStateJ = session.randomState.j;
     state.randomStateValid = session.randomState.valid;
-    const int32_t tileCount = session.liveLevel.width * session.liveLevel.height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
-    const int32_t objectCount = session.game ? session.game->objectCount : 0;
-    state.objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
-    if (objectCount > 0 && tileCount > 0 && cellWordCount > 0) {
-        const int32_t stride = session.game->strideObject;
-        for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-            const size_t sourceBase = static_cast<size_t>(tileIndex * stride);
-            const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
-            const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
-            for (int32_t word = 0; word < stride; ++word) {
-                MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(session.liveLevel.objects[sourceBase + static_cast<size_t>(word)]);
-                while (bits != 0) {
-                    const uint32_t bit = compactWordTrailingZeros(bits);
-                    const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
-                    if (objectId < objectCount) {
-                        state.objectBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
-                    }
-                    bits &= bits - 1;
-                }
-            }
-        }
-    }
+    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.objectBits);
     return state;
 }
 
