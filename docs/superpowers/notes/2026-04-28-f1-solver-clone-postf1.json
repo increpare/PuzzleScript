@@ -1,0 +1,69 @@
+{
+  "source": "make solver_benchmark + once via puzzlescript_solver --strategy portfolio --timeout-ms 250",
+  "date": "2026-04-28",
+  "branch": "cpp",
+  "benchmark_3run": {
+    "runs": [
+      {
+        "wall_ms": 208236.8,
+        "solved": 829,
+        "generated_per_sec": 90239
+      },
+      {
+        "wall_ms": 207172.8,
+        "solved": 834,
+        "generated_per_sec": 91600
+      },
+      {
+        "wall_ms": 207500.1,
+        "solved": 832,
+        "generated_per_sec": 91040
+      }
+    ]
+  },
+  "per_game_totals": {
+    "levels": 2956,
+    "solved": 803,
+    "timeout": 673,
+    "exhausted": 30,
+    "skipped_message": 1450,
+    "errors": 0,
+    "expanded": 3438180,
+    "generated": 16446925,
+    "compact_turn_attempts": 0,
+    "compact_turn_hits": 0,
+    "compact_turn_fallbacks": 0,
+    "compact_turn_unsupported": 0,
+    "compact_turn_oracle_checks": 0,
+    "compact_turn_oracle_failures": 0,
+    "compile_ms": 8838.85,
+    "load_ms": 473.193,
+    "clone_ms": 17538.2,
+    "step_ms": 139292,
+    "hash_ms": 40001.4,
+    "queue_ms": 0,
+    "frontier_pop_ms": 319.859,
+    "frontier_push_ms": 187.169,
+    "visited_lookup_ms": 606.054,
+    "visited_insert_ms": 2342.5,
+    "visited_lookup_probes": 3784681,
+    "visited_insert_probes": 17165128,
+    "visited_grows": 0,
+    "visited_capacity": 32768,
+    "visited_max_probe": 49,
+    "visited_key_collisions": 0,
+    "compact_state_bytes": 3264979978,
+    "compact_max_state_bytes": 30059,
+    "node_store_ms": 223.025,
+    "heuristic_ms": 8160.26,
+    "solved_check_ms": 357.844,
+    "timeout_check_ms": 777.557,
+    "reconstruct_ms": 2.38221,
+    "unattributed_ms": 5250.63
+  },
+  "notes": [
+    "Post-F1: childScratch shared across compact + non-compact storage; on accept the Node-owned FullState is allocated via prepareSolverChildFullStateFromParent (thin snapshot, empty replacement/ellipsis/undo scratch).",
+    "vs baseline (1dc75c04): solved 769->803 (+34) within the per-level 250ms timeout, 13.6M->16.4M edges (+21%), per-edge clone 1.34us->1.07us (-20%), per-edge step 10.50us->8.47us (-19%).",
+    "Wall median (3 runs): 210879ms -> 207500ms (-1.6%); generated/sec 87087 -> 91040 (+4.5%)."
+  ]
+}

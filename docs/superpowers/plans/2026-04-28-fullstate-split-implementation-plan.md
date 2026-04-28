@@ -308,13 +308,29 @@ node src/tests/run_tests_node.js --verbose  # spot-check audio-heavy games if fi
   - `0 / 2956` levels flagged `compact_node_storage=true` ⇒ every edge hits `make_unique<FullState>(parentSession)` at `solver/main.cpp:893`.
   - generated edges = **13 638 593** ⇒ ≈ **1.34 µs / per-edge full FullState clone**.
 
-- [ ] **Step 2:** Implement reset-on-edge.
+- [x] **Step 2: Reset-on-edge implemented (2026-04-28).** Always step into the shared `childScratch` (compact + non-compact); on accept allocate the Node-owned FullState via `snapshotSolverNodeFullState` → `prepareSolverChildFullStateFromParent` (thin snapshot — copies `liveLevel.objects` + dimensions + RNG, leaves replacement/ellipsis/undo scratch empty). Eliminates the per-edge `make_unique<FullState>(parentSession)` deep clone of every scratch/mask vector. `childScratch` now allocated unconditionally at solver init so non-compact mode can use it.
 
-- [ ] **Step 3:**
+- [x] **Step 3: Gates green.**
 
-```bash
-make solver_compact_parity_smoke
-```
+  ```bash
+  make solver_compact_parity_smoke   # passed games=5/5 levels=7 strategy=bfs timeout_ms=1000
+  make solver_smoke_tests             # solver_smoke_assert passed cases=7
+  make solver_parity_smoke            # solver_parity_smoke passed cases=7
+  make solver_determinism_tests       # solver_determinism passed runs=5
+  make compact_turn_simulation_tests  # 469/469, oracle failures 0
+  node src/tests/run_tests_node.js --sim-only  # 469/469
+  ```
+
+  **Perf (vs baseline 1dc75c04, see `docs/superpowers/notes/2026-04-28-f1-solver-clone-postf1.json`):**
+
+  | metric | baseline | post-F1 | delta |
+  |---|---:|---:|---:|
+  | corpus solved (250 ms/level, single run) | 769 | **803** | +34 (+4.4%) |
+  | corpus generated edges | 13.64 M | **16.45 M** | +20.6% |
+  | clone µs / edge | 1.34 | **1.07** | −20% |
+  | step µs / edge | 10.50 | **8.47** | −19% |
+  | wall median (3-run, portfolio) | 210 879 ms | **207 500 ms** | −1.6% |
+  | generated/sec median | 87 087 | **91 040** | +4.5% |
 
 ---
 
