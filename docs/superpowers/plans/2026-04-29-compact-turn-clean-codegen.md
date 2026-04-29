@@ -471,6 +471,8 @@ Additional ranked-frontier probes:
   case 16, "annoying edge case": passes
   case 23, "beginloop/endloop with mutual recursion": passes
   case 26, "simple sokobond test": passes
+  case 27, "loop length 1": passes
+    added coverage: generated group dispatcher honors startloop/endloop loop-point propagation
   case 36, "rule application hat test": passes
   case 37, "ortho test 1": passes
   case 38, "ortho test 2": passes
@@ -491,8 +493,10 @@ Additional ranked-frontier probes:
   case 122, "Synonym confusion": passes
   case 125, "Reserved keywords are too greedy (#419)": passes
   case 126, "Removing background tiles breaks \"no X\" wincondition (#534)": passes
+  case 131, "undoing reset undoes two steps, not one #453": passes
   case 134, "Win condition test \"NO X\"": passes
   case 135, "Win condition test \"SOME X\"": passes
+  case 140, "Test for trigger message at same time as cancel": passes
   case 143, "third test for #492 movement not getting correctly cleared from tile": passes
   case 144, "fourth test for #492 movement not getting correctly cleared from tile": passes
   case 145, "fifth test for #492 movement not getting correctly cleared from tile": passes
@@ -507,17 +511,21 @@ Additional ranked-frontier probes:
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
   case 322, "\"right [ Player ] -> [ up Player ]\" gets compiled to down #755": passes
     added coverage: horizontal row-match traversal order matches interpreter row-major scan
+  case 363, "rigid applies to movements even if the movements are chagned by subsequent non-rigid rules in other groups": passes
   case 364, "rigid applies to movements even if the objects are changed to different objects in the same layer": passes
+  case 367, "rigid applies to movements even if the initial movement applied is an ACTION that is later changed to a movement": passes
   case 374, "misc rigid test": passes
+  case 382, "Audio Test 2": passes
   case 398, "Autowin": passes
   case 399, "Autowin2": passes
   case 415, "trigger delete newmetadata.flickscreen": passes
   case 416, "trigger delete newmetadata.zoomscreen": passes
+  case 417, "parser rigid in strange place highlighting test": passes
   case 418, "background_color transparent code path": passes
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 57/469 known passing.
+Selected compiler-mode testdata progress: 64/469 known passing.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests

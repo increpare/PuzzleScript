@@ -624,6 +624,7 @@ void emitCompactRulegroupFunctions(
     std::ostream& out,
     const Game& game,
     const std::vector<std::vector<Rule>>& groups,
+    const LoopPointTable& loopPoint,
     std::string_view suffix,
     std::string_view phase
 ) {
@@ -709,6 +710,17 @@ void emitCompactRulegroupFunctions(
             << "}\n\n";
     }
 
+    out << "int32_t compact_turn_lookup_" << phase << "_loop_point_" << suffix << "(int32_t index) {\n"
+        << "    switch (index) {\n";
+    for (size_t index = 0; index < loopPoint.entries.size(); ++index) {
+        if (loopPoint.entries[index].has_value()) {
+            out << "        case " << index << ": return " << *loopPoint.entries[index] << ";\n";
+        }
+    }
+    out << "        default: return -1;\n"
+        << "    }\n"
+        << "}\n\n";
+
     out << "bool compact_turn_apply_" << phase << "_rules_" << suffix << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands, std::vector<bool>* bannedGroups) {\n";
     if (groups.empty()) {
         out << "    (void)dimensions;\n"
@@ -718,12 +730,45 @@ void emitCompactRulegroupFunctions(
             << "    (void)bannedGroups;\n"
             << "    return false;\n";
     } else {
-        out << "    bool changed = false;\n";
+        out << "    bool loopPropagated = false;\n"
+            << "    bool changed = false;\n"
+            << "    int32_t loopCount = 0;\n"
+            << "    int32_t groupIndex = 0;\n"
+            << "    constexpr int32_t groupCount = " << groups.size() << ";\n"
+            << "    while (groupIndex < groupCount) {\n"
+            << "        bool groupChanged = false;\n"
+            << "        switch (groupIndex) {\n";
         for (size_t groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
-            out << "    changed = " << compactGroupPrefix(suffix, phase, groupIndex)
-                << "_apply(dimensions, levelState, scratch, commands, bannedGroups) || changed;\n";
+            out << "            case " << groupIndex << ":\n"
+                << "                groupChanged = " << compactGroupPrefix(suffix, phase, groupIndex)
+                << "_apply(dimensions, levelState, scratch, commands, bannedGroups);\n"
+                << "                break;\n";
         }
-        out << "    return changed;\n";
+        out << "            default:\n"
+            << "                break;\n"
+            << "        }\n"
+            << "        loopPropagated = groupChanged || loopPropagated;\n"
+            << "        changed = groupChanged || changed;\n"
+            << "        if (loopPropagated) {\n"
+            << "            const int32_t target = compact_turn_lookup_" << phase << "_loop_point_" << suffix << "(groupIndex);\n"
+            << "            if (target >= 0) {\n"
+            << "                groupIndex = target;\n"
+            << "                loopPropagated = false;\n"
+            << "                if (++loopCount > 200) break;\n"
+            << "                continue;\n"
+            << "            }\n"
+            << "        }\n"
+            << "        ++groupIndex;\n"
+            << "        if (groupIndex == groupCount && loopPropagated) {\n"
+            << "            const int32_t target = compact_turn_lookup_" << phase << "_loop_point_" << suffix << "(groupIndex);\n"
+            << "            if (target >= 0) {\n"
+            << "                groupIndex = target;\n"
+            << "                loopPropagated = false;\n"
+            << "                if (++loopCount > 200) break;\n"
+            << "            }\n"
+            << "        }\n"
+            << "    }\n"
+            << "    return changed;\n";
     }
     out << "}\n\n";
 }
@@ -1388,8 +1433,8 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    return outcome;\n"
         << "}\n\n";
 
-    emitCompactRulegroupFunctions(out, game, game.rules, suffix, "early");
-    emitCompactRulegroupFunctions(out, game, game.lateRules, suffix, "late");
+    emitCompactRulegroupFunctions(out, game, game.rules, game.loopPoint, suffix, "early");
+    emitCompactRulegroupFunctions(out, game, game.lateRules, game.lateLoopPoint, suffix, "late");
 }
 
 } // namespace
