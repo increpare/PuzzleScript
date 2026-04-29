@@ -324,6 +324,15 @@ Acceptance:
 
 **Goal:** Implement PuzzleScript movement resolution as a generic algorithm over collision layers and movement masks.
 
+**Progress:**
+- [x] Align generated compact tile indexing with the JS/native column-major
+  level layout.
+- [x] Emit a generic collision-layer movement pass over
+  `Scratch::liveMovements`.
+- [ ] Handle blocked movement side effects and rigid/cancel interactions.
+- [ ] Return handled compiler-mode transitions once win/terminal semantics are
+  available.
+
 Features:
 - blocked movement
 - chain movement / pushing as a consequence of movement propagation
