@@ -176,6 +176,19 @@ SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
     if (state.objectBits == nullptr || state.width <= 0 || state.height <= 0) {
         return {false, {}};
     }
+    const bool profileCompactTurn = runtimeCountersEnabled();
+    uint64_t profileMarkNs = profileCompactTurn ? runtimeCounterNowNs() : 0;
+    auto addProfileNs = [&](RuntimeCounterId id) {
+        if (!profileCompactTurn) {
+            return;
+        }
+        const uint64_t nowNs = runtimeCounterNowNs();
+        addRuntimeCounter(id, nowNs - profileMarkNs);
+        profileMarkNs = nowNs;
+    };
+    if (profileCompactTurn) {
+        addRuntimeCounter(RuntimeCounterId::CompactTurnBridgeCalls);
+    }
     std::shared_ptr<const Game> gameRef(&game, [](const Game*) {});
     LoadedGame loadedGame{std::move(gameRef), MetaGameState{}};
     std::unique_ptr<FullState> session = createFullState(loadedGame);
@@ -185,11 +198,15 @@ SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
             return {false, {}};
         }
     }
+    addProfileNs(RuntimeCounterId::CompactTurnBridgeCreateNs);
     materializeCompactBridgeState(game, state, *session);
+    addProfileNs(RuntimeCounterId::CompactTurnBridgeMaterializeNs);
     RuntimeStepOptions drainOptions = options;
     drainOptions.againPolicy = AgainPolicy::Drain;
     ps_step_result result = interpretedTurn(*session, input, drainOptions);
+    addProfileNs(RuntimeCounterId::CompactTurnBridgeTurnNs);
     copyCompactBridgeStateBack(*session, state);
+    addProfileNs(RuntimeCounterId::CompactTurnBridgeCopybackNs);
     return {true, result};
 }
 

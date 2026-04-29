@@ -88,6 +88,24 @@ function metricSum(summary, keys) {
     return seen ? total : null;
 }
 
+function sampleMetric(sample, key) {
+    let value = sample && sample[key];
+    if (!Number.isFinite(value) && key.startsWith('compact_turn_')) {
+        value = sample && sample[key.replace('compact_turn_', 'compact_tick_')];
+    }
+    return Number.isFinite(value) ? value : 0;
+}
+
+function aggregateSampleMetric(benchmark, key) {
+    let total = 0;
+    for (const target of benchmark.targets || []) {
+        for (const sample of target.samples || []) {
+            total += sampleMetric(sample, key);
+        }
+    }
+    return total;
+}
+
 const interpreted = readJson(process.argv[2]);
 const compiled = readJson(process.argv[3]);
 const interpretedKeys = (interpreted.targets || []).map(targetKey);
@@ -343,6 +361,34 @@ function printCompactTurnSummary() {
         ` interpreted=${interpretedHitRate === null ? 'n/a' : formatNumber(interpretedHitRate * 100, 1) + '%'}` +
         ` compiled=${compiledHitRate === null ? 'n/a' : formatNumber(compiledHitRate * 100, 1) + '%'}\n`
     );
+    const nativeAttempts = metricMedian(compiled, 'compact_turn_native_attempts');
+    const nativeHits = metricMedian(compiled, 'compact_turn_native_hits');
+    const bridgeAttempts = metricMedian(compiled, 'compact_turn_bridge_attempts');
+    const bridgeHits = metricMedian(compiled, 'compact_turn_bridge_hits');
+    if (nativeAttempts !== null || nativeHits !== null || bridgeAttempts !== null || bridgeHits !== null) {
+        const nativeHitRate = ratio(nativeHits, nativeAttempts);
+        const bridgeHitRate = ratio(bridgeHits, bridgeAttempts);
+        process.stdout.write(
+            `  median_compact_turn_modes:` +
+            ` native=${formatNumber(nativeHits, 0)}/${formatNumber(nativeAttempts, 0)}` +
+            `(${nativeHitRate === null ? 'n/a' : formatNumber(nativeHitRate * 100, 1) + '%'})` +
+            ` bridge=${formatNumber(bridgeHits, 0)}/${formatNumber(bridgeAttempts, 0)}` +
+            `(${bridgeHitRate === null ? 'n/a' : formatNumber(bridgeHitRate * 100, 1) + '%'})\n`
+        );
+    }
+    const totalNativeAttempts = aggregateSampleMetric(compiled, 'compact_turn_native_attempts');
+    const totalNativeHits = aggregateSampleMetric(compiled, 'compact_turn_native_hits');
+    const totalBridgeAttempts = aggregateSampleMetric(compiled, 'compact_turn_bridge_attempts');
+    const totalBridgeHits = aggregateSampleMetric(compiled, 'compact_turn_bridge_hits');
+    const totalUnsupported = aggregateSampleMetric(compiled, 'compact_turn_unsupported');
+    if (totalNativeAttempts > 0 || totalBridgeAttempts > 0 || totalUnsupported > 0) {
+        process.stdout.write(
+            `  total_compact_turn_modes:` +
+            ` native=${formatNumber(totalNativeHits, 0)}/${formatNumber(totalNativeAttempts, 0)}` +
+            ` bridge=${formatNumber(totalBridgeHits, 0)}/${formatNumber(totalBridgeAttempts, 0)}` +
+            ` unsupported=${formatNumber(totalUnsupported, 0)}\n`
+        );
+    }
 }
 
 function printGraphSplit() {
@@ -515,6 +561,10 @@ printMedianMetric('compact_state_bytes', 'compact_state_bytes');
 printMedianMetric('compact_max_state_bytes', 'compact_max_state_bytes');
 printMedianMetric('compact_turn_attempts', 'compact_turn_attempts');
 printMedianMetric('compact_turn_hits', 'compact_turn_hits');
+printMedianMetric('compact_turn_native_attempts', 'compact_turn_native_attempts');
+printMedianMetric('compact_turn_native_hits', 'compact_turn_native_hits');
+printMedianMetric('compact_turn_bridge_attempts', 'compact_turn_bridge_attempts');
+printMedianMetric('compact_turn_bridge_hits', 'compact_turn_bridge_hits');
 printMedianMetric('compact_turn_fallbacks', 'compact_turn_fallbacks');
 printMedianMetric('compact_turn_unsupported', 'compact_turn_unsupported');
 printCompactTurnSummary();

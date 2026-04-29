@@ -613,7 +613,24 @@ void settlePendingAgain(FullState& state, RuntimeStepOptions options);
 
 TurnResult turnResult(FullState& state, ps_input input, RuntimeStepOptions options);
 std::unique_ptr<Error> benchmarkCloneHash(const FullState& state, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult);
+enum class RuntimeCounterId {
+    CompactTurnNativeCalls,
+    CompactTurnBridgeCalls,
+    CompactTurnSetupNs,
+    CompactTurnEarlyRulesNs,
+    CompactTurnMovementNs,
+    CompactTurnLateRulesNs,
+    CompactTurnWinNs,
+    CompactTurnCanonicalizeNs,
+    CompactTurnBridgeCreateNs,
+    CompactTurnBridgeMaterializeNs,
+    CompactTurnBridgeTurnNs,
+    CompactTurnBridgeCopybackNs,
+};
 void setRuntimeCountersEnabled(bool enabled);
+bool runtimeCountersEnabled();
+uint64_t runtimeCounterNowNs();
+void addRuntimeCounter(RuntimeCounterId id, uint64_t amount = 1);
 void resetRuntimeCounters();
 ps_runtime_counters snapshotRuntimeCounters();
 

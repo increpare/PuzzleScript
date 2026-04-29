@@ -123,6 +123,18 @@ typedef struct ps_runtime_counters {
     uint64_t specialized_rulegroup_attempts;
     uint64_t specialized_rulegroup_hits;
     uint64_t specialized_rulegroup_fallbacks;
+    uint64_t compact_turn_native_calls;
+    uint64_t compact_turn_bridge_calls;
+    uint64_t compact_turn_setup_ns;
+    uint64_t compact_turn_early_rules_ns;
+    uint64_t compact_turn_movement_ns;
+    uint64_t compact_turn_late_rules_ns;
+    uint64_t compact_turn_win_ns;
+    uint64_t compact_turn_canonicalize_ns;
+    uint64_t compact_turn_bridge_create_ns;
+    uint64_t compact_turn_bridge_materialize_ns;
+    uint64_t compact_turn_bridge_turn_ns;
+    uint64_t compact_turn_bridge_copyback_ns;
 } ps_runtime_counters;
 
 bool ps_load_ir_json(const char* json_utf8, size_t json_size, ps_game** out_game, ps_error** out_error);

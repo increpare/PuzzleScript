@@ -2693,6 +2693,18 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " specialized_full_turn_attempts=" << counters.specialized_full_turn_attempts
                   << " specialized_full_turn_hits=" << counters.specialized_full_turn_hits
                   << " specialized_full_turn_fallbacks=" << counters.specialized_full_turn_fallbacks
+                  << " compact_turn_native_calls=" << counters.compact_turn_native_calls
+                  << " compact_turn_bridge_calls=" << counters.compact_turn_bridge_calls
+                  << " compact_turn_setup_ns=" << counters.compact_turn_setup_ns
+                  << " compact_turn_early_rules_ns=" << counters.compact_turn_early_rules_ns
+                  << " compact_turn_movement_ns=" << counters.compact_turn_movement_ns
+                  << " compact_turn_late_rules_ns=" << counters.compact_turn_late_rules_ns
+                  << " compact_turn_win_ns=" << counters.compact_turn_win_ns
+                  << " compact_turn_canonicalize_ns=" << counters.compact_turn_canonicalize_ns
+                  << " compact_turn_bridge_create_ns=" << counters.compact_turn_bridge_create_ns
+                  << " compact_turn_bridge_materialize_ns=" << counters.compact_turn_bridge_materialize_ns
+                  << " compact_turn_bridge_turn_ns=" << counters.compact_turn_bridge_turn_ns
+                  << " compact_turn_bridge_copyback_ns=" << counters.compact_turn_bridge_copyback_ns
                   << "\n";
     }
     if (options.topSlowCases > 0 && !cases.empty()) {
@@ -6471,6 +6483,19 @@ std::string generateCompiledRulesCpp(
                 << "    if (state.objectBitWordCount < cellWordCount * static_cast<size_t>(kObjectCount)) {\n"
                 << "        return {false, {}};\n"
                 << "    }\n"
+                << "    const bool profileCompactTurn = puzzlescript::runtimeCountersEnabled();\n"
+                << "    uint64_t profileMarkNs = profileCompactTurn ? puzzlescript::runtimeCounterNowNs() : 0;\n"
+                << "    auto addProfileNs = [&](puzzlescript::RuntimeCounterId id) {\n"
+                << "        if (!profileCompactTurn) {\n"
+                << "            return;\n"
+                << "        }\n"
+                << "        const uint64_t nowNs = puzzlescript::runtimeCounterNowNs();\n"
+                << "        puzzlescript::addRuntimeCounter(id, nowNs - profileMarkNs);\n"
+                << "        profileMarkNs = nowNs;\n"
+                << "    };\n"
+                << "    if (profileCompactTurn) {\n"
+                << "        puzzlescript::addRuntimeCounter(puzzlescript::RuntimeCounterId::CompactTurnNativeCalls);\n"
+                << "    }\n"
                 << "    int32_t directionMask = 0;\n"
                 << "    int32_t dx = 0;\n"
                 << "    int32_t dy = 0;\n"
@@ -6495,7 +6520,8 @@ std::string generateCompiledRulesCpp(
                 << "            }\n"
                 << "        }\n"
                 << "    }\n"
-                << "    bool ruleChanged = false;\n";
+                << "    bool ruleChanged = false;\n"
+                << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnSetupNs);\n";
             if (compactTurnSupport.directCellObjectRules) {
                 for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
                     const auto& group = game.rules[groupIndex];
@@ -6511,6 +6537,7 @@ std::string generateCompiledRulesCpp(
                         << "    }\n";
                 }
             }
+            out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnEarlyRulesNs);\n";
             const bool multiPlayerMovementOnly = !compactTurnSupport.simplePush
                 && !compactTurnSupport.simpleConsume
                 && compactTurnSupport.playerObjectIds.size() > 1;
@@ -6719,8 +6746,9 @@ std::string generateCompiledRulesCpp(
                 << "                moved = true;\n"
                 << "            }\n"
                 << "        }\n"
-                << "    }\n";
+                    << "    }\n";
             }
+            out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnMovementNs);\n";
             if (compactTurnSupport.directLateCellObjectRules) {
                 for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
                     const auto& group = game.lateRules[groupIndex];
@@ -6736,6 +6764,7 @@ std::string generateCompiledRulesCpp(
                         << "    }\n";
                 }
             }
+            out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnLateRulesNs);\n";
             out
                 << "    bool won = " << (compactTurnSupport.winConditions.empty() ? "false" : "true") << ";\n";
             for (size_t conditionIndex = 0; conditionIndex < compactTurnSupport.winConditions.size(); ++conditionIndex) {
@@ -6770,6 +6799,7 @@ std::string generateCompiledRulesCpp(
                     << "    }\n";
             }
             out
+                << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnWinNs);\n"
                 << "    ps_step_result result{};\n"
                 << "    result.changed = seeded || ruleChanged || moved;\n"
                 << "    result.won = won;\n"
@@ -6783,6 +6813,7 @@ std::string generateCompiledRulesCpp(
             << "    specialized_compact_turn_source_" << sourceIndex << ",\n"
             << "    {" << (compactTurnSupport.supported ? "true" : "false")
             << ", " << cppStringLiteral(compactTurnSupport.fallbackReason) << "},\n"
+            << "    " << (compactTurnSupport.supported && !compactTurnSupport.interpreterBridge ? "true" : "false") << ",\n"
             << "};\n\n";
     }
 

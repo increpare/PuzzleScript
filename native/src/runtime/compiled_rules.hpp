@@ -82,6 +82,7 @@ struct SpecializedCompactTurnBackend {
     const char* name = nullptr;
     SpecializedCompactTurnFn step = nullptr;
     SpecializedFullTurnSupportInfo support{};
+    bool nativeKernel = false;
 };
 
 enum class CompiledRuleCommandKind {

@@ -91,6 +91,18 @@ struct RuntimeCounterStorage {
     std::atomic<uint64_t> specializedFullTurnAttempts{0};
     std::atomic<uint64_t> specializedFullTurnHits{0};
     std::atomic<uint64_t> specializedFullTurnFallbacks{0};
+    std::atomic<uint64_t> compactTurnNativeCalls{0};
+    std::atomic<uint64_t> compactTurnBridgeCalls{0};
+    std::atomic<uint64_t> compactTurnSetupNs{0};
+    std::atomic<uint64_t> compactTurnEarlyRulesNs{0};
+    std::atomic<uint64_t> compactTurnMovementNs{0};
+    std::atomic<uint64_t> compactTurnLateRulesNs{0};
+    std::atomic<uint64_t> compactTurnWinNs{0};
+    std::atomic<uint64_t> compactTurnCanonicalizeNs{0};
+    std::atomic<uint64_t> compactTurnBridgeCreateNs{0};
+    std::atomic<uint64_t> compactTurnBridgeMaterializeNs{0};
+    std::atomic<uint64_t> compactTurnBridgeTurnNs{0};
+    std::atomic<uint64_t> compactTurnBridgeCopybackNs{0};
 };
 
 bool gRuntimeCountersEnabled = false;
@@ -5542,6 +5554,33 @@ void setRuntimeCountersEnabled(bool enabled) {
     gRuntimeCountersEnabled = enabled;
 }
 
+bool runtimeCountersEnabled() {
+    return gRuntimeCountersEnabled;
+}
+
+uint64_t runtimeCounterNowNs() {
+    return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
+        std::chrono::steady_clock::now().time_since_epoch()
+    ).count());
+}
+
+void addRuntimeCounter(RuntimeCounterId id, uint64_t amount) {
+    switch (id) {
+        case RuntimeCounterId::CompactTurnNativeCalls: addCounter(gRuntimeCounters.compactTurnNativeCalls, amount); break;
+        case RuntimeCounterId::CompactTurnBridgeCalls: addCounter(gRuntimeCounters.compactTurnBridgeCalls, amount); break;
+        case RuntimeCounterId::CompactTurnSetupNs: addCounter(gRuntimeCounters.compactTurnSetupNs, amount); break;
+        case RuntimeCounterId::CompactTurnEarlyRulesNs: addCounter(gRuntimeCounters.compactTurnEarlyRulesNs, amount); break;
+        case RuntimeCounterId::CompactTurnMovementNs: addCounter(gRuntimeCounters.compactTurnMovementNs, amount); break;
+        case RuntimeCounterId::CompactTurnLateRulesNs: addCounter(gRuntimeCounters.compactTurnLateRulesNs, amount); break;
+        case RuntimeCounterId::CompactTurnWinNs: addCounter(gRuntimeCounters.compactTurnWinNs, amount); break;
+        case RuntimeCounterId::CompactTurnCanonicalizeNs: addCounter(gRuntimeCounters.compactTurnCanonicalizeNs, amount); break;
+        case RuntimeCounterId::CompactTurnBridgeCreateNs: addCounter(gRuntimeCounters.compactTurnBridgeCreateNs, amount); break;
+        case RuntimeCounterId::CompactTurnBridgeMaterializeNs: addCounter(gRuntimeCounters.compactTurnBridgeMaterializeNs, amount); break;
+        case RuntimeCounterId::CompactTurnBridgeTurnNs: addCounter(gRuntimeCounters.compactTurnBridgeTurnNs, amount); break;
+        case RuntimeCounterId::CompactTurnBridgeCopybackNs: addCounter(gRuntimeCounters.compactTurnBridgeCopybackNs, amount); break;
+    }
+}
+
 void resetRuntimeCounters() {
     gRuntimeCounters.rulesVisited.store(0, std::memory_order_relaxed);
     gRuntimeCounters.rulesSkippedByMask.store(0, std::memory_order_relaxed);
@@ -5562,6 +5601,18 @@ void resetRuntimeCounters() {
     gRuntimeCounters.specializedFullTurnAttempts.store(0, std::memory_order_relaxed);
     gRuntimeCounters.specializedFullTurnHits.store(0, std::memory_order_relaxed);
     gRuntimeCounters.specializedFullTurnFallbacks.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnNativeCalls.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnBridgeCalls.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnSetupNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnEarlyRulesNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnMovementNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnLateRulesNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnWinNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnCanonicalizeNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnBridgeCreateNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnBridgeMaterializeNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnBridgeTurnNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnBridgeCopybackNs.store(0, std::memory_order_relaxed);
 }
 
 ps_runtime_counters snapshotRuntimeCounters() {
@@ -5591,6 +5642,18 @@ ps_runtime_counters snapshotRuntimeCounters() {
     counters.compiled_tick_attempts = counters.specialized_full_turn_attempts;
     counters.compiled_tick_hits = counters.specialized_full_turn_hits;
     counters.compiled_tick_fallbacks = counters.specialized_full_turn_fallbacks;
+    counters.compact_turn_native_calls = gRuntimeCounters.compactTurnNativeCalls.load(std::memory_order_relaxed);
+    counters.compact_turn_bridge_calls = gRuntimeCounters.compactTurnBridgeCalls.load(std::memory_order_relaxed);
+    counters.compact_turn_setup_ns = gRuntimeCounters.compactTurnSetupNs.load(std::memory_order_relaxed);
+    counters.compact_turn_early_rules_ns = gRuntimeCounters.compactTurnEarlyRulesNs.load(std::memory_order_relaxed);
+    counters.compact_turn_movement_ns = gRuntimeCounters.compactTurnMovementNs.load(std::memory_order_relaxed);
+    counters.compact_turn_late_rules_ns = gRuntimeCounters.compactTurnLateRulesNs.load(std::memory_order_relaxed);
+    counters.compact_turn_win_ns = gRuntimeCounters.compactTurnWinNs.load(std::memory_order_relaxed);
+    counters.compact_turn_canonicalize_ns = gRuntimeCounters.compactTurnCanonicalizeNs.load(std::memory_order_relaxed);
+    counters.compact_turn_bridge_create_ns = gRuntimeCounters.compactTurnBridgeCreateNs.load(std::memory_order_relaxed);
+    counters.compact_turn_bridge_materialize_ns = gRuntimeCounters.compactTurnBridgeMaterializeNs.load(std::memory_order_relaxed);
+    counters.compact_turn_bridge_turn_ns = gRuntimeCounters.compactTurnBridgeTurnNs.load(std::memory_order_relaxed);
+    counters.compact_turn_bridge_copyback_ns = gRuntimeCounters.compactTurnBridgeCopybackNs.load(std::memory_order_relaxed);
     return counters;
 }
 

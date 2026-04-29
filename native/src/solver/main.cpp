@@ -186,6 +186,10 @@ struct Result {
     int32_t astarWeight = 2;
     uint64_t compactTurnAttempts = 0;
     uint64_t compactTurnHits = 0;
+    uint64_t compactTurnNativeAttempts = 0;
+    uint64_t compactTurnNativeHits = 0;
+    uint64_t compactTurnBridgeAttempts = 0;
+    uint64_t compactTurnBridgeHits = 0;
     uint64_t compactTurnFallbacks = 0;
     uint64_t compactTurnUnsupported = 0;
     uint64_t compactTurnOracleChecks = 0;
@@ -811,6 +815,8 @@ CompactTurnTryResult trySpecializedCompactTurn(
     const puzzlescript::SpecializedCompactTurnOutcome outcome =
         game.specializedCompactTurn->step(game, view, input, options);
     if (outcome.handled) {
+        const bool profileCompactTurn = puzzlescript::runtimeCountersEnabled();
+        const uint64_t canonicalizeStartNs = profileCompactTurn ? puzzlescript::runtimeCounterNowNs() : 0;
         puzzlescript::canonicalizeCompactObjectBits(
             game,
             view.width,
@@ -818,6 +824,12 @@ CompactTurnTryResult trySpecializedCompactTurn(
             view.objectBits,
             view.objectBitWordCount
         );
+        if (profileCompactTurn) {
+            puzzlescript::addRuntimeCounter(
+                puzzlescript::RuntimeCounterId::CompactTurnCanonicalizeNs,
+                puzzlescript::runtimeCounterNowNs() - canonicalizeStartNs
+            );
+        }
     }
     result.handled = outcome.handled;
     result.stepResult = outcome.result;
@@ -846,8 +858,9 @@ SolverEdgeStep stepSolverEdge(
     if (compactNodeStorage) {
         const puzzlescript::SpecializedCompactTurnBackend* compactTurn = game ? game->specializedCompactTurn : nullptr;
         if (compactTurn != nullptr && compactTurn->step != nullptr) {
-            if (compactTurn->support.wholeTurnSupported) {
+            if (compactTurn->support.wholeTurnSupported && compactTurn->nativeKernel) {
                 ++result.compactTurnAttempts;
+                ++result.compactTurnNativeAttempts;
                 {
                     ScopedTimer timer(result.timing.stepNs);
                     edge.compactTurn = trySpecializedCompactTurn(
@@ -862,6 +875,7 @@ SolverEdgeStep stepSolverEdge(
                 }
                 if (edge.compactTurn.handled) {
                     ++result.compactTurnHits;
+                    ++result.compactTurnNativeHits;
                     if (compactTurnOracle) {
                         ++result.compactTurnOracleChecks;
                         {
@@ -1592,6 +1606,10 @@ void mergeStats(Result& target, const Result& source) {
     target.maxFrontier = std::max(target.maxFrontier, source.maxFrontier);
     target.compactTurnAttempts += source.compactTurnAttempts;
     target.compactTurnHits += source.compactTurnHits;
+    target.compactTurnNativeAttempts += source.compactTurnNativeAttempts;
+    target.compactTurnNativeHits += source.compactTurnNativeHits;
+    target.compactTurnBridgeAttempts += source.compactTurnBridgeAttempts;
+    target.compactTurnBridgeHits += source.compactTurnBridgeHits;
     target.compactTurnFallbacks += source.compactTurnFallbacks;
     target.compactTurnUnsupported += source.compactTurnUnsupported;
     target.compactTurnOracleChecks += source.compactTurnOracleChecks;
@@ -1875,6 +1893,10 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"astar_weight\":" << result.astarWeight;
     out << ",\"compact_turn_attempts\":" << result.compactTurnAttempts;
     out << ",\"compact_turn_hits\":" << result.compactTurnHits;
+    out << ",\"compact_turn_native_attempts\":" << result.compactTurnNativeAttempts;
+    out << ",\"compact_turn_native_hits\":" << result.compactTurnNativeHits;
+    out << ",\"compact_turn_bridge_attempts\":" << result.compactTurnBridgeAttempts;
+    out << ",\"compact_turn_bridge_hits\":" << result.compactTurnBridgeHits;
     out << ",\"compact_turn_fallbacks\":" << result.compactTurnFallbacks;
     out << ",\"compact_turn_unsupported\":" << result.compactTurnUnsupported;
     out << ",\"compact_turn_oracle_checks\":" << result.compactTurnOracleChecks;
@@ -1917,6 +1939,10 @@ void printJson(const std::vector<Result>& results) {
     uint64_t generated = 0;
     uint64_t compactTurnAttempts = 0;
     uint64_t compactTurnHits = 0;
+    uint64_t compactTurnNativeAttempts = 0;
+    uint64_t compactTurnNativeHits = 0;
+    uint64_t compactTurnBridgeAttempts = 0;
+    uint64_t compactTurnBridgeHits = 0;
     uint64_t compactTurnFallbacks = 0;
     uint64_t compactTurnUnsupported = 0;
     uint64_t compactTurnOracleChecks = 0;
@@ -1931,6 +1957,10 @@ void printJson(const std::vector<Result>& results) {
         generated += result.generated;
         compactTurnAttempts += result.compactTurnAttempts;
         compactTurnHits += result.compactTurnHits;
+        compactTurnNativeAttempts += result.compactTurnNativeAttempts;
+        compactTurnNativeHits += result.compactTurnNativeHits;
+        compactTurnBridgeAttempts += result.compactTurnBridgeAttempts;
+        compactTurnBridgeHits += result.compactTurnBridgeHits;
         compactTurnFallbacks += result.compactTurnFallbacks;
         compactTurnUnsupported += result.compactTurnUnsupported;
         compactTurnOracleChecks += result.compactTurnOracleChecks;
@@ -1977,6 +2007,10 @@ void printJson(const std::vector<Result>& results) {
     std::cout << ",\"generated\":" << generated;
     std::cout << ",\"compact_turn_attempts\":" << compactTurnAttempts;
     std::cout << ",\"compact_turn_hits\":" << compactTurnHits;
+    std::cout << ",\"compact_turn_native_attempts\":" << compactTurnNativeAttempts;
+    std::cout << ",\"compact_turn_native_hits\":" << compactTurnNativeHits;
+    std::cout << ",\"compact_turn_bridge_attempts\":" << compactTurnBridgeAttempts;
+    std::cout << ",\"compact_turn_bridge_hits\":" << compactTurnBridgeHits;
     std::cout << ",\"compact_turn_fallbacks\":" << compactTurnFallbacks;
     std::cout << ",\"compact_turn_unsupported\":" << compactTurnUnsupported;
     std::cout << ",\"compact_turn_oracle_checks\":" << compactTurnOracleChecks;
@@ -2272,8 +2306,24 @@ int main(int argc, char** argv) {
                       << " specialized_full_turn_attempts=" << runtimeCounters.specialized_full_turn_attempts
                       << " specialized_full_turn_hits=" << runtimeCounters.specialized_full_turn_hits
                       << " specialized_full_turn_fallbacks=" << runtimeCounters.specialized_full_turn_fallbacks
+                      << " compact_turn_native_calls=" << runtimeCounters.compact_turn_native_calls
+                      << " compact_turn_bridge_calls=" << runtimeCounters.compact_turn_bridge_calls
+                      << " compact_turn_setup_ns=" << runtimeCounters.compact_turn_setup_ns
+                      << " compact_turn_early_rules_ns=" << runtimeCounters.compact_turn_early_rules_ns
+                      << " compact_turn_movement_ns=" << runtimeCounters.compact_turn_movement_ns
+                      << " compact_turn_late_rules_ns=" << runtimeCounters.compact_turn_late_rules_ns
+                      << " compact_turn_win_ns=" << runtimeCounters.compact_turn_win_ns
+                      << " compact_turn_canonicalize_ns=" << runtimeCounters.compact_turn_canonicalize_ns
+                      << " compact_turn_bridge_create_ns=" << runtimeCounters.compact_turn_bridge_create_ns
+                      << " compact_turn_bridge_materialize_ns=" << runtimeCounters.compact_turn_bridge_materialize_ns
+                      << " compact_turn_bridge_turn_ns=" << runtimeCounters.compact_turn_bridge_turn_ns
+                      << " compact_turn_bridge_copyback_ns=" << runtimeCounters.compact_turn_bridge_copyback_ns
                       << " compact_turn_attempts=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnAttempts; })
                       << " compact_turn_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnHits; })
+                      << " compact_turn_native_attempts=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnNativeAttempts; })
+                      << " compact_turn_native_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnNativeHits; })
+                      << " compact_turn_bridge_attempts=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnBridgeAttempts; })
+                      << " compact_turn_bridge_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnBridgeHits; })
                       << " compact_turn_fallbacks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnFallbacks; })
                       << " compact_turn_unsupported=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnUnsupported; })
                       << " compact_turn_oracle_checks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnOracleChecks; })
