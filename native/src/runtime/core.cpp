@@ -1478,6 +1478,13 @@ size_t objectCellWordCount(const FullState& session) {
 }
 
 void setObjectCellIndexBit(FullState& session, int32_t objectId, int32_t tileIndex, bool present) {
+#if !PS_INTERPRETER_OBJECT_CELL_INDEX
+    (void)session;
+    (void)objectId;
+    (void)tileIndex;
+    (void)present;
+    return;
+#else
     const size_t cellWordCount = objectCellWordCount(session);
     if (objectId < 0 || objectId >= session.game->objectCount || tileIndex < 0 || cellWordCount == 0) {
         return;
@@ -1502,6 +1509,7 @@ void setObjectCellIndexBit(FullState& session, int32_t objectId, int32_t tileInd
             --session.scratch.objectCellCounts[static_cast<size_t>(objectId)];
         }
     }
+#endif
 }
 
 void setCellObjectsFromWords(FullState& session, int32_t tileIndex, const MaskWord* objects) {
@@ -2543,15 +2551,26 @@ struct RowAnchor {
 };
 
 uint64_t objectPresenceCount(const FullState& session, int32_t objectId) {
+#if !PS_INTERPRETER_OBJECT_CELL_INDEX
+    (void)session;
+    (void)objectId;
+    return 0;
+#else
     if (objectId < 0
         || objectId >= session.game->objectCount
         || static_cast<size_t>(objectId) >= session.scratch.objectCellCounts.size()) {
         return 0;
     }
     return session.scratch.objectCellCounts[static_cast<size_t>(objectId)];
+#endif
 }
 
 std::optional<RowAnchor> chooseRowAnchor(const FullState& session, const std::vector<Pattern>& row) {
+#if !PS_INTERPRETER_OBJECT_CELL_INDEX
+    (void)session;
+    (void)row;
+    return std::nullopt;
+#else
     if (session.scratch.objectCellIndexDirty || session.scratch.objectCellBits.empty()) {
         return std::nullopt;
     }
@@ -2582,6 +2601,7 @@ std::optional<RowAnchor> chooseRowAnchor(const FullState& session, const std::ve
         }
     }
     return best;
+#endif
 }
 
 bool collectAnchoredRowMatchesInto(
@@ -3649,6 +3669,13 @@ size_t countNonZeroWords(const MaskVector& values) {
 #endif
 
 void rebuildObjectCellIndex(FullState& session) {
+#if !PS_INTERPRETER_OBJECT_CELL_INDEX
+    session.scratch.objectCellBits.clear();
+    session.scratch.objectCellCounts.clear();
+    session.scratch.objectCellBitTileCount = currentLevelWidth(session) * currentLevelHeight(session);
+    session.scratch.objectCellIndexDirty = false;
+    return;
+#else
     const int32_t objectCount = session.game->objectCount;
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
     const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
@@ -3693,6 +3720,7 @@ void rebuildObjectCellIndex(FullState& session) {
         return;
     }
     session.scratch.objectCellIndexDirty = false;
+#endif
 }
 
 // Incremental rebuildMasks: setCellObjects/setCellMovements already OR new
@@ -3708,7 +3736,10 @@ void rebuildMasks(FullState& session) {
     const int32_t width = currentLevelWidth(session);
     const int32_t height = currentLevelHeight(session);
     const int32_t tileCount = width * height;
+#if PS_INTERPRETER_OBJECT_CELL_INDEX
     const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
+#endif
+#if PS_INTERPRETER_OBJECT_CELL_INDEX
     if (!session.scratch.anyMasksDirty
         && !session.scratch.objectCellIndexDirty
         && session.scratch.objectCellBitTileCount == tileCount
@@ -3716,6 +3747,11 @@ void rebuildMasks(FullState& session) {
         && session.scratch.objectCellCounts.size() == static_cast<size_t>(session.game->objectCount)) {
         return;
     }
+#else
+    if (!session.scratch.anyMasksDirty) {
+        return;
+    }
+#endif
 
     // Reshape storage on first call / level-dimension change. We compare
     // against the expected sizes and (re)allocate uniformly if anything is
@@ -3758,16 +3794,20 @@ void rebuildMasks(FullState& session) {
         std::fill(session.scratch.dirtyMovementColumns.begin(), session.scratch.dirtyMovementColumns.end(), 1);
         session.scratch.dirtyObjectBoard = true;
         session.scratch.dirtyMovementBoard = true;
+#if PS_INTERPRETER_OBJECT_CELL_INDEX
         session.scratch.objectCellIndexDirty = true;
+#endif
         session.scratch.anyMasksDirty = true;
     }
 
+#if PS_INTERPRETER_OBJECT_CELL_INDEX
     if (session.scratch.objectCellIndexDirty
         || session.scratch.objectCellBitTileCount != width * height
         || session.scratch.objectCellBits.size() != static_cast<size_t>(session.game->objectCount) * objectCellWordCount(session)
         || session.scratch.objectCellCounts.size() != static_cast<size_t>(session.game->objectCount)) {
         rebuildObjectCellIndex(session);
     }
+#endif
 
     if (!session.scratch.anyMasksDirty) {
         return;

@@ -45,6 +45,10 @@ struct CompileResult;
 #define PS_INTERPRETER_OBJECT_MAJOR 0
 #endif
 
+#ifndef PS_INTERPRETER_OBJECT_CELL_INDEX
+#define PS_INTERPRETER_OBJECT_CELL_INDEX 1
+#endif
+
 #if PS_MASK_WORD_BITS == 32
 using MaskWord = int32_t;
 using MaskWordUnsigned = uint32_t;
