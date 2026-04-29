@@ -140,7 +140,7 @@ struct RestartSnapshot {
 
 struct UndoSnapshot;
 
-struct PreparedFullState {
+struct MetaGameState {
     int32_t currentLevelIndex = 0;
     std::optional<int32_t> currentLevelTarget;
     bool titleScreen = false;
@@ -165,8 +165,6 @@ struct PreparedFullState {
     bool pendingAgain = false;
     bool suppressRuleMessages = false;
 };
-
-using MetaGameState = PreparedFullState;
 
 struct Replacement {
     // All masks live in Game::maskArena; these are offsets (in words).

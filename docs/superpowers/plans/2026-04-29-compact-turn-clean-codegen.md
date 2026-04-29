@@ -72,6 +72,29 @@ Compiler mode means generated compact code is mandatory. The backend should not 
 
 The generated code can still contain explicit TODO traps for unimplemented semantic constructs, but those traps are part of compiler bring-up, not a fallback system.
 
+## Phase 0: Sane Runtime Ontology
+
+Before compact compiler work resumes, remove duplicated state vocabularies. The codebase should have one name for each concept:
+
+- `GameInformation`: immutable compiled game data.
+- `GameSession`: runtime session container.
+- `MetaGameState`: session/metagame flow only.
+- `PersistentLevelState`: turn-persistent within-level state only.
+- `LevelDimensions`: immutable per-level width/height context.
+- `Scratch`: temporary turn execution buffers.
+- `TurnResult`: turn effects and summary.
+
+Cleanup order:
+
+1. Remove alias/legacy type layers such as `PreparedFullState`; the type is `MetaGameState`.
+2. Stop storing `LevelTemplate liveLevel` beside `BoardOccupancy`; board contents should have one authority.
+3. Collapse solver-local `SearchNodeState` into the cleaned `PersistentLevelState` or a thin alias.
+4. Quarantine `CompactStateView` as interpreter-bridge plumbing only, then replace it in compiler mode.
+5. Merge duplicated compact materialization paths into one runtime helper.
+6. Move compiler/codegen responsibilities out of `native/src/cli/main.cpp`.
+
+This phase is now the #1 priority. New compact codegen should not build on duplicated infrastructure.
+
 ## Turn Core Boundary
 
 The compiler-mode turn boundary should follow the four-part runtime state model instead of introducing parallel compact state structures.

@@ -1363,9 +1363,9 @@ LevelTemplate parseLevelTemplate(const json::Value& value) {
     return level;
 }
 
-PreparedFullState parsePreparedSession(const json::Value& value, const Game& game) {
+MetaGameState parsePreparedSession(const json::Value& value, const Game& game) {
     const auto& object = value.asObject();
-    PreparedFullState prepared;
+    MetaGameState prepared;
     prepared.currentLevelIndex = toInt(requireField(object, "current_level_index"));
     if (const auto* target = value.find("current_level_target"); target && !target->isNull()) {
         prepared.currentLevelTarget = toInt(*target);
@@ -3816,7 +3816,7 @@ std::string escapeJson(std::string_view input) {
     return out;
 }
 
-bool showContinueOptionOnTitleScreen(const PreparedFullState& prepared) {
+bool showContinueOptionOnTitleScreen(const MetaGameState& prepared) {
     return prepared.currentLevelIndex > 0 || prepared.currentLevelTarget.has_value();
 }
 
@@ -4646,7 +4646,7 @@ std::unique_ptr<FullState> createSessionWithLoadedLevelSeed(const LoadedGame& lo
 namespace {
 
 void prepareLoadedLevel(FullState& session, LevelTemplate level, int32_t levelIndex) {
-    PreparedFullState& prepared = session.meta;
+    MetaGameState& prepared = session.meta;
     const int32_t restartWidth = level.width;
     const int32_t restartHeight = level.height;
 
