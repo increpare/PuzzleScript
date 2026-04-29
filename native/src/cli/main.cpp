@@ -3930,6 +3930,56 @@ struct CompactTurnSupport {
     std::vector<WinCondition> winConditions;
 };
 
+enum class CompactMovementKind {
+    SinglePlayer,
+    MultiPlayerMovementOnly,
+};
+
+struct CompactMovementPlan {
+    CompactMovementKind kind = CompactMovementKind::SinglePlayer;
+    bool simplePush = false;
+    bool simplePushChain = false;
+    bool simpleConsume = false;
+    bool simpleClearTarget = false;
+    std::vector<int32_t> playerObjectIds;
+    std::vector<int32_t> playerLayerObjectIds;
+    std::vector<int32_t> pushObjectIds;
+    std::vector<int32_t> pushLayerObjectIds;
+    std::vector<int32_t> consumeObjectIds;
+    std::vector<int32_t> clearTargetObjectIds;
+};
+
+struct CompactTurnPlan {
+    bool directCellObjectRules = false;
+    bool directLateCellObjectRules = false;
+    int32_t playerObjectId = -1;
+    CompactMovementPlan movement;
+    std::vector<CompactTurnSupport::WinCondition> winConditions;
+};
+
+CompactTurnPlan compactTurnPlanFromSupport(const CompactTurnSupport& support) {
+    CompactTurnPlan plan;
+    plan.directCellObjectRules = support.directCellObjectRules;
+    plan.directLateCellObjectRules = support.directLateCellObjectRules;
+    plan.playerObjectId = support.playerObjectId;
+    plan.winConditions = support.winConditions;
+
+    plan.movement.simplePush = support.simplePush;
+    plan.movement.simplePushChain = support.simplePushChain;
+    plan.movement.simpleConsume = support.simpleConsume;
+    plan.movement.simpleClearTarget = support.simpleClearTarget;
+    plan.movement.playerObjectIds = support.playerObjectIds;
+    plan.movement.playerLayerObjectIds = support.playerLayerObjectIds;
+    plan.movement.pushObjectIds = support.pushObjectIds;
+    plan.movement.pushLayerObjectIds = support.pushLayerObjectIds;
+    plan.movement.consumeObjectIds = support.consumeObjectIds;
+    plan.movement.clearTargetObjectIds = support.clearTargetObjectIds;
+    if (!support.simplePush && !support.simpleConsume && support.playerObjectIds.size() > 1) {
+        plan.movement.kind = CompactMovementKind::MultiPlayerMovementOnly;
+    }
+    return plan;
+}
+
 std::optional<int32_t> singleObjectIdInMask(
     const puzzlescript::Game& game,
     puzzlescript::MaskOffset offset
@@ -6014,7 +6064,7 @@ void emitCompactDirectCellObjectGroups(
 void emitCompactNativeTurnPrologue(
     std::ostream& out,
     const puzzlescript::Game& game,
-    const CompactTurnSupport& support
+    const CompactTurnPlan& plan
 ) {
     appendCodeTemplate(out, R"cpp(    if (options.emitAudio) {
         return {false, {}};
@@ -6072,18 +6122,18 @@ void emitCompactNativeTurnPrologue(
     addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnSetupNs);
 )cpp", {
         {"object_count", std::to_string(game.objectCount)},
-        {"player_object_id", std::to_string(support.playerObjectId)},
+        {"player_object_id", std::to_string(plan.playerObjectId)},
     });
 }
 
 void emitCompactMultiPlayerMovementOnly(
     std::ostream& out,
-    const CompactTurnSupport& support
+    const CompactMovementPlan& movement
 ) {
     appendCodeTemplate(out, R"cpp(    if (directionMask != 0) {
         std::vector<uint64_t> pending(cellWordCount, 0);
 )cpp");
-    for (const int32_t objectId : support.playerObjectIds) {
+    for (const int32_t objectId : movement.playerObjectIds) {
         appendCodeTemplate(out, R"cpp(        for (size_t word = 0; word < cellWordCount; ++word) {
             pending[word] |= state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + word];
         }
@@ -6116,7 +6166,7 @@ void emitCompactMultiPlayerMovementOnly(
                 const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);
                 bool blocked = false;
 )cpp");
-    for (const int32_t objectId : support.playerLayerObjectIds) {
+    for (const int32_t objectId : movement.playerLayerObjectIds) {
         appendCodeTemplate(out, R"cpp(                blocked = blocked || ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0);
 )cpp", {{"object_id", std::to_string(objectId)}});
     }
@@ -6124,7 +6174,7 @@ void emitCompactMultiPlayerMovementOnly(
                     continue;
                 }
 )cpp");
-    for (const int32_t objectId : support.playerLayerObjectIds) {
+    for (const int32_t objectId : movement.playerLayerObjectIds) {
         appendCodeTemplate(out, R"cpp(                if ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + sourceWordIndex] & sourceBit) != 0) {
                     state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + sourceWordIndex] &= ~sourceBit;
                     state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] |= targetBit;
@@ -6142,20 +6192,20 @@ void emitCompactMultiPlayerMovementOnly(
 
 void emitCompactPushConsumeTargetSetup(
     std::ostream& out,
-    const CompactTurnSupport& support
+    const CompactMovementPlan& movement
 ) {
     appendCodeTemplate(out, R"cpp(                int32_t pushedObject = -1;
                 size_t pushBase = 0;
                 int32_t consumedObject = -1;
 )cpp");
-    for (const int32_t pushObjectId : support.pushObjectIds) {
+    for (const int32_t pushObjectId : movement.pushObjectIds) {
         appendCodeTemplate(out, R"cpp(                if (directionMask != 16 && pushedObject < 0 && ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0)) {
                     pushedObject = {{object_id}};
                     pushBase = static_cast<size_t>({{object_id}}) * cellWordCount;
                 }
 )cpp", {{"object_id", std::to_string(pushObjectId)}});
     }
-    for (const int32_t consumeObjectId : support.consumeObjectIds) {
+    for (const int32_t consumeObjectId : movement.consumeObjectIds) {
         appendCodeTemplate(out, R"cpp(                if (directionMask != 16 && consumedObject < 0 && ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0)) {
                     consumedObject = {{object_id}};
                 }
@@ -6169,7 +6219,7 @@ void emitCompactPushConsumeTargetSetup(
 
 void emitCompactPushChainMovement(
     std::ostream& out,
-    const CompactTurnSupport& support
+    const CompactMovementPlan& movement
 ) {
     appendCodeTemplate(out, R"cpp(                    bool pushBlocked = false;
                     int32_t pushX = targetX;
@@ -6187,7 +6237,7 @@ void emitCompactPushChainMovement(
                         const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);
                         int32_t chainObject = -1;
 )cpp");
-    for (const int32_t pushObjectId : support.pushObjectIds) {
+    for (const int32_t pushObjectId : movement.pushObjectIds) {
         appendCodeTemplate(out, R"cpp(                        if (chainObject < 0 && ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + pushWordIndex] & pushBit) != 0)) {
                             chainObject = {{object_id}};
                         }
@@ -6195,7 +6245,7 @@ void emitCompactPushChainMovement(
     }
     appendCodeTemplate(out, R"cpp(                        bool layerBlocked = false;
 )cpp");
-    for (const int32_t objectId : support.pushLayerObjectIds) {
+    for (const int32_t objectId : movement.pushLayerObjectIds) {
         appendCodeTemplate(out, R"cpp(                        layerBlocked = layerBlocked || ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + pushWordIndex] & pushBit) != 0);
 )cpp", {{"object_id", std::to_string(objectId)}});
     }
@@ -6220,7 +6270,7 @@ void emitCompactPushChainMovement(
                         const uint64_t readBit = uint64_t{1} << static_cast<uint32_t>(readTile & 63);
                         int32_t movedObject = -1;
 )cpp");
-    for (const int32_t pushObjectId : support.pushObjectIds) {
+    for (const int32_t pushObjectId : movement.pushObjectIds) {
         appendCodeTemplate(out, R"cpp(                        if (movedObject < 0 && ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + readWordIndex] & readBit) != 0)) {
                             movedObject = {{object_id}};
                         }
@@ -6243,7 +6293,7 @@ void emitCompactPushChainMovement(
 
 void emitCompactSimplePushMovement(
     std::ostream& out,
-    const CompactTurnSupport& support
+    const CompactMovementPlan& movement
 ) {
     appendCodeTemplate(out, R"cpp(                    const int32_t pushX = targetX + dx;
                     const int32_t pushY = targetY + dy;
@@ -6255,7 +6305,7 @@ void emitCompactSimplePushMovement(
                     const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);
                     bool pushBlocked = false;
 )cpp");
-    for (const int32_t objectId : support.pushLayerObjectIds) {
+    for (const int32_t objectId : movement.pushLayerObjectIds) {
         appendCodeTemplate(out, R"cpp(                    pushBlocked = pushBlocked || ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + pushWordIndex] & pushBit) != 0);
 )cpp", {{"object_id", std::to_string(objectId)}});
     }
@@ -6269,12 +6319,12 @@ void emitCompactSimplePushMovement(
 
 void emitCompactTargetClearAndBlockers(
     std::ostream& out,
-    const CompactTurnSupport& support
+    const CompactMovementPlan& movement
 ) {
-    if (support.simpleClearTarget) {
+    if (movement.simpleClearTarget) {
         appendCodeTemplate(out, R"cpp(                    bool targetClearChanged = false;
 )cpp");
-        for (const int32_t objectId : support.clearTargetObjectIds) {
+        for (const int32_t objectId : movement.clearTargetObjectIds) {
             appendCodeTemplate(out, R"cpp(                    if ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0) {
                         state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] &= ~targetBit;
                         targetClearChanged = true;
@@ -6284,7 +6334,7 @@ void emitCompactTargetClearAndBlockers(
         appendCodeTemplate(out, R"cpp(                    ruleChanged = ruleChanged || targetClearChanged;
 )cpp");
     }
-    for (const int32_t objectId : support.playerLayerObjectIds) {
+    for (const int32_t objectId : movement.playerLayerObjectIds) {
         appendCodeTemplate(out, R"cpp(                    blocked = blocked || ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0);
 )cpp", {{"object_id", std::to_string(objectId)}});
     }
@@ -6292,7 +6342,7 @@ void emitCompactTargetClearAndBlockers(
 
 void emitCompactSinglePlayerMovement(
     std::ostream& out,
-    const CompactTurnSupport& support
+    const CompactMovementPlan& movement
 ) {
     appendCodeTemplate(out, R"cpp(    if (directionMask != 0) {
         for (size_t sourceWordIndex = 0; sourceWordIndex < cellWordCount; ++sourceWordIndex) {
@@ -6317,16 +6367,16 @@ void emitCompactSinglePlayerMovement(
                 const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);
                 bool blocked = false;
 )cpp");
-    if (support.simplePush || support.simpleConsume) {
-        emitCompactPushConsumeTargetSetup(out, support);
-        if (support.simplePushChain) {
-            emitCompactPushChainMovement(out, support);
+    if (movement.simplePush || movement.simpleConsume) {
+        emitCompactPushConsumeTargetSetup(out, movement);
+        if (movement.simplePushChain) {
+            emitCompactPushChainMovement(out, movement);
         } else {
-            emitCompactSimplePushMovement(out, support);
+            emitCompactSimplePushMovement(out, movement);
         }
         appendCodeTemplate(out, R"cpp(                } else if (targetHasConsume) {
 )cpp");
-        for (const int32_t objectId : support.playerLayerObjectIds) {
+        for (const int32_t objectId : movement.playerLayerObjectIds) {
             appendCodeTemplate(out, R"cpp(                    state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] &= ~targetBit;
 )cpp", {{"object_id", std::to_string(objectId)}});
         }
@@ -6336,7 +6386,7 @@ void emitCompactSinglePlayerMovement(
         appendCodeTemplate(out, R"cpp(                if (directionMask != 16) {
 )cpp");
     }
-    emitCompactTargetClearAndBlockers(out, support);
+    emitCompactTargetClearAndBlockers(out, movement);
     appendCodeTemplate(out, R"cpp(                }
                 if (blocked) {
                     continue;
@@ -6353,24 +6403,21 @@ void emitCompactSinglePlayerMovement(
 
 void emitCompactMovement(
     std::ostream& out,
-    const CompactTurnSupport& support
+    const CompactMovementPlan& movement
 ) {
-    const bool multiPlayerMovementOnly = !support.simplePush
-        && !support.simpleConsume
-        && support.playerObjectIds.size() > 1;
-    if (multiPlayerMovementOnly) {
-        emitCompactMultiPlayerMovementOnly(out, support);
+    if (movement.kind == CompactMovementKind::MultiPlayerMovementOnly) {
+        emitCompactMultiPlayerMovementOnly(out, movement);
     } else {
-        emitCompactSinglePlayerMovement(out, support);
+        emitCompactSinglePlayerMovement(out, movement);
     }
 }
 
 void emitCompactWinConditions(
     std::ostream& out,
-    const CompactTurnSupport& support
+    const CompactTurnPlan& plan
 ) {
-    out << "    bool won = " << (support.winConditions.empty() ? "false" : "true") << ";\n";
-    for (const auto& condition : support.winConditions) {
+    out << "    bool won = " << (plan.winConditions.empty() ? "false" : "true") << ";\n";
+    for (const auto& condition : plan.winConditions) {
         appendCodeTemplate(out, R"cpp(    if (won) {
         bool conditionPassed = {{initial_condition_passed}};
         for (int32_t tile = 0; tile < tileCount; ++tile) {
@@ -6924,18 +6971,19 @@ std::string generateCompiledRulesCpp(
             out << "    return compactStateInterpretedTurnBridge(game, state, input, options);\n"
                 << "}\n\n";
         } else {
-            emitCompactNativeTurnPrologue(out, game, compactTurnSupport);
-            if (compactTurnSupport.directCellObjectRules) {
+            const CompactTurnPlan compactTurnPlan = compactTurnPlanFromSupport(compactTurnSupport);
+            emitCompactNativeTurnPrologue(out, game, compactTurnPlan);
+            if (compactTurnPlan.directCellObjectRules) {
                 emitCompactDirectCellObjectGroups(out, game, game.rules);
             }
             out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnEarlyRulesNs);\n";
-            emitCompactMovement(out, compactTurnSupport);
+            emitCompactMovement(out, compactTurnPlan.movement);
             out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnMovementNs);\n";
-            if (compactTurnSupport.directLateCellObjectRules) {
+            if (compactTurnPlan.directLateCellObjectRules) {
                 emitCompactDirectCellObjectGroups(out, game, game.lateRules);
             }
             out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnLateRulesNs);\n";
-            emitCompactWinConditions(out, compactTurnSupport);
+            emitCompactWinConditions(out, compactTurnPlan);
             emitCompactTurnResultEpilogue(out);
         }
         out
