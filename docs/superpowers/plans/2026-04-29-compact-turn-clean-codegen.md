@@ -531,7 +531,7 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 83/469 known passing.
+Selected compiler-mode testdata progress: 103/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -636,6 +636,15 @@ Aggregate/transition progress update, 2026-04-29:
     constituent layer is blocked.
     Generated compact turn results now mark win transitions when another level
     exists and include board modification/transition in `result.changed`.
+
+Frontier expansion update, 2026-04-29:
+  ranked-frontier replay:
+    cases: 136 123 129 110 17 130 137 14 251 138 139 387 397 396 376 19 141 142 28 384
+    result: 20/20 pass
+  added coverage:
+    `SOME/NO X ON Y` win conditions, property clearing from `no property` RHS,
+    restart/cancel/message command interactions, additional loop/rigid cases,
+    double-ellipsis fixtures, and aggregate win-condition variants.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
