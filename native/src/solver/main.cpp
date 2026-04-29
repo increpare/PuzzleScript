@@ -94,7 +94,7 @@ struct Options {
 };
 
 bool persistentLevelStatesEqual(const PersistentLevelState& lhs, const PersistentLevelState& rhs) {
-    return lhs.boardOccupancy.objectBits == rhs.boardOccupancy.objectBits
+    return lhs.board.occupancy.objectBits == rhs.board.occupancy.objectBits
         && lhs.rng.s == rhs.rng.s
         && lhs.rng.i == rhs.rng.i
         && lhs.rng.j == rhs.rng.j
@@ -102,7 +102,7 @@ bool persistentLevelStatesEqual(const PersistentLevelState& lhs, const Persisten
 }
 
 size_t persistentLevelStateByteSize(const PersistentLevelState& state) {
-    return state.boardOccupancy.objectBits.size() * sizeof(uint64_t)
+    return state.board.occupancy.objectBits.size() * sizeof(uint64_t)
         + state.rng.s.size() * sizeof(uint8_t)
         + sizeof(state.rng.i)
         + sizeof(state.rng.j)
@@ -586,14 +586,14 @@ PersistentLevelState persistentLevelStateFromFullState(const FullState& session)
     state.rng.i = session.levelState.rng.i;
     state.rng.j = session.levelState.rng.j;
     state.rng.valid = session.levelState.rng.valid;
-    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.boardOccupancy.objectBits);
+    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.board.occupancy.objectBits);
     return state;
 }
 
 StateKey persistentLevelStateKey(const PersistentLevelState& state, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
-    for (uint64_t word : state.boardOccupancy.objectBits) {
+    for (uint64_t word : state.board.occupancy.objectBits) {
         puzzlescript::search::appendStateKeyValue(key, word);
     }
     for (uint8_t byte : state.rng.s) {
@@ -634,25 +634,25 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
     session.meta.winning = base.meta.winning;
     session.meta.messageText = base.meta.messageText;
     session.meta.loadedLevelSeed = base.meta.loadedLevelSeed;
-    session.levelState.liveLevel.width = base.levelState.liveLevel.width;
-    session.levelState.liveLevel.height = base.levelState.liveLevel.height;
-    session.levelState.liveLevel.layerCount = base.levelState.liveLevel.layerCount;
-    const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
+    session.levelState.board.liveLevel.width = base.levelState.board.liveLevel.width;
+    session.levelState.board.liveLevel.height = base.levelState.board.liveLevel.height;
+    session.levelState.board.liveLevel.layerCount = base.levelState.board.liveLevel.layerCount;
+    const int32_t tileCount = session.levelState.board.liveLevel.width * session.levelState.board.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const int32_t objectCount = session.game ? session.game->objectCount : 0;
     const int32_t stride = session.game ? session.game->strideObject : 0;
-    session.levelState.liveLevel.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
+    session.levelState.board.liveLevel.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
     for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
         const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
         for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-            uint64_t bits = objectBase + bitWord < state.boardOccupancy.objectBits.size() ? state.boardOccupancy.objectBits[objectBase + bitWord] : 0;
+            uint64_t bits = objectBase + bitWord < state.board.occupancy.objectBits.size() ? state.board.occupancy.objectBits[objectBase + bitWord] : 0;
             while (bits != 0) {
                 const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(bits));
                 const int32_t tileIndex = static_cast<int32_t>(bitWord * 64 + bit);
                 if (tileIndex < tileCount) {
                     const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
                     const uint32_t objectBit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
-                    session.levelState.liveLevel.objects[static_cast<size_t>(tileIndex * stride + word)] |= puzzlescript::maskBit(objectBit);
+                    session.levelState.board.liveLevel.objects[static_cast<size_t>(tileIndex * stride + word)] |= puzzlescript::maskBit(objectBit);
                 }
                 bits &= bits - 1;
             }
@@ -676,10 +676,10 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
     child.meta = parent.meta;
-    child.levelState.liveLevel.width = parent.levelState.liveLevel.width;
-    child.levelState.liveLevel.height = parent.levelState.liveLevel.height;
-    child.levelState.liveLevel.layerCount = parent.levelState.liveLevel.layerCount;
-    child.levelState.liveLevel.objects = parent.levelState.liveLevel.objects;
+    child.levelState.board.liveLevel.width = parent.levelState.board.liveLevel.width;
+    child.levelState.board.liveLevel.height = parent.levelState.board.liveLevel.height;
+    child.levelState.board.liveLevel.layerCount = parent.levelState.board.liveLevel.layerCount;
+    child.levelState.board.liveLevel.objects = parent.levelState.board.liveLevel.objects;
 
     child.scratch.liveMovements.assign(parent.scratch.liveMovements.size(), 0);
     child.scratch.rigidGroupIndexMasks.assign(parent.scratch.rigidGroupIndexMasks.size(), 0);
@@ -754,10 +754,10 @@ std::string stepResultSummary(const ps_step_result& result) {
 }
 
 std::string persistentLevelStateDiffSummary(const PersistentLevelState& lhs, const PersistentLevelState& rhs) {
-    const size_t wordCount = std::max(lhs.boardOccupancy.objectBits.size(), rhs.boardOccupancy.objectBits.size());
+    const size_t wordCount = std::max(lhs.board.occupancy.objectBits.size(), rhs.board.occupancy.objectBits.size());
     for (size_t index = 0; index < wordCount; ++index) {
-        const uint64_t left = index < lhs.boardOccupancy.objectBits.size() ? lhs.boardOccupancy.objectBits[index] : 0;
-        const uint64_t right = index < rhs.boardOccupancy.objectBits.size() ? rhs.boardOccupancy.objectBits[index] : 0;
+        const uint64_t left = index < lhs.board.occupancy.objectBits.size() ? lhs.board.occupancy.objectBits[index] : 0;
+        const uint64_t right = index < rhs.board.occupancy.objectBits.size() ? rhs.board.occupancy.objectBits[index] : 0;
         if (left != right) {
             std::ostringstream out;
             out << " word=" << index << " compact=" << left << " interpreter=" << right;
@@ -805,8 +805,8 @@ CompactTurnTryResult trySpecializedCompactTurn(
             game,
             dimensions.width,
             dimensions.height,
-            result.state.boardOccupancy.objectBits.empty() ? nullptr : result.state.boardOccupancy.objectBits.data(),
-            result.state.boardOccupancy.objectBits.size()
+            result.state.board.occupancy.objectBits.empty() ? nullptr : result.state.board.occupancy.objectBits.data(),
+            result.state.board.occupancy.objectBits.size()
         );
         if (profileCompactTurn) {
             puzzlescript::addRuntimeCounter(
@@ -991,7 +991,7 @@ bool compactObjectPresent(
     const size_t word = static_cast<size_t>(tileIndex >> 6);
     const uint64_t mask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
     const size_t offset = static_cast<size_t>(objectId) * cellWordCount + word;
-    return offset < state.boardOccupancy.objectBits.size() && (state.boardOccupancy.objectBits[offset] & mask) != 0;
+    return offset < state.board.occupancy.objectBits.size() && (state.board.occupancy.objectBits[offset] & mask) != 0;
 }
 
 bool compactMatchesFilter(
@@ -1375,8 +1375,8 @@ Result runSearch(
         result.status = "skipped_message";
         return result;
     }
-    const int32_t searchWidth = initial->levelState.liveLevel.width;
-    const int32_t searchHeight = initial->levelState.liveLevel.height;
+    const int32_t searchWidth = initial->levelState.board.liveLevel.width;
+    const int32_t searchHeight = initial->levelState.board.liveLevel.height;
     std::unique_ptr<FullState> compactSessionBase;
     std::unique_ptr<FullState> parentScratch;
     // Shared per-edge step buffer used by both storage modes (F1). One full

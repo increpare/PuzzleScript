@@ -348,12 +348,12 @@ bool ps_full_state_compact_turn_oracle_check(
 
     CompactOracleState compact = compactOracleStateFromFullState(original);
     puzzlescript::PersistentLevelState compactLevelState;
-    compactLevelState.boardOccupancy.objectBits = compact.objectBits;
+    compactLevelState.board.occupancy.objectBits = compact.objectBits;
     compactLevelState.rng = compact.randomState;
     puzzlescript::Scratch compactScratch;
     compactScratch.liveMovements = compact.movementWords;
     puzzlescript::SpecializedCompactTurnContext context{
-        puzzlescript::LevelDimensions{original.levelState.liveLevel.width, original.levelState.liveLevel.height},
+        puzzlescript::LevelDimensions{original.levelState.board.liveLevel.width, original.levelState.board.liveLevel.height},
         original.meta.currentLevelIndex,
     };
     RuntimeStepOptions options{};
@@ -372,10 +372,10 @@ bool ps_full_state_compact_turn_oracle_check(
             *original.game,
             context.dimensions.width,
             context.dimensions.height,
-            compactLevelState.boardOccupancy.objectBits.empty() ? nullptr : compactLevelState.boardOccupancy.objectBits.data(),
-            compactLevelState.boardOccupancy.objectBits.size()
+            compactLevelState.board.occupancy.objectBits.empty() ? nullptr : compactLevelState.board.occupancy.objectBits.data(),
+            compactLevelState.board.occupancy.objectBits.size()
         );
-        compact.objectBits = compactLevelState.boardOccupancy.objectBits;
+        compact.objectBits = compactLevelState.board.occupancy.objectBits;
         compact.movementWords = compactScratch.liveMovements;
         compact.randomState = compactLevelState.rng;
     }
@@ -394,8 +394,8 @@ bool ps_full_state_compact_turn_oracle_check(
         || interpreterResult.transitioned;
     if (matched
         && !terminal
-        && interpreter.levelState.liveLevel.width == original.levelState.liveLevel.width
-        && interpreter.levelState.liveLevel.height == original.levelState.liveLevel.height) {
+        && interpreter.levelState.board.liveLevel.width == original.levelState.board.liveLevel.width
+        && interpreter.levelState.board.liveLevel.height == original.levelState.board.liveLevel.height) {
         stateChecked = true;
         const CompactOracleState interpreterState = compactOracleStateFromFullState(interpreter);
         matched = compactOracleStatesEqual(compact, interpreterState);
@@ -456,8 +456,8 @@ void ps_full_state_status(const ps_full_state* state, ps_full_state_status_info*
     out_status->current_level_index = state->impl->meta.currentLevelIndex;
     out_status->has_current_level_target = state->impl->meta.currentLevelTarget.has_value();
     out_status->current_level_target = state->impl->meta.currentLevelTarget.value_or(0);
-    out_status->width = state->impl->levelState.liveLevel.width;
-    out_status->height = state->impl->levelState.liveLevel.height;
+    out_status->width = state->impl->levelState.board.liveLevel.width;
+    out_status->height = state->impl->levelState.board.liveLevel.height;
     out_status->title_mode = state->impl->meta.titleMode;
     out_status->title_selection = state->impl->meta.titleSelection;
     out_status->can_undo = !state->impl->meta.undoStack.empty();
@@ -487,7 +487,7 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
         return false;
     }
     const FullState& impl = *state->impl;
-    if (x < 0 || y < 0 || x >= impl.levelState.liveLevel.width || y >= impl.levelState.liveLevel.height) {
+    if (x < 0 || y < 0 || x >= impl.levelState.board.liveLevel.width || y >= impl.levelState.board.liveLevel.height) {
         return false;
     }
     if (object_id >= impl.game->objectCount) {
@@ -497,16 +497,16 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
     if (word >= impl.game->wordCount) {
         return false;
     }
-    const int32_t tile_index = x * impl.levelState.liveLevel.height + y;
-    const int32_t tileCount = impl.levelState.liveLevel.width * impl.levelState.liveLevel.height;
+    const int32_t tile_index = x * impl.levelState.board.liveLevel.height + y;
+    const int32_t tileCount = impl.levelState.board.liveLevel.width * impl.levelState.board.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const size_t objectBase = static_cast<size_t>(object_id) * cellWordCount;
     const size_t bitWord = static_cast<size_t>(tile_index >> 6);
     const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tile_index & 63);
-    if (cellWordCount == 0 || objectBase + bitWord >= impl.levelState.boardOccupancy.objectBits.size()) {
+    if (cellWordCount == 0 || objectBase + bitWord >= impl.levelState.board.occupancy.objectBits.size()) {
         return false;
     }
-    return (impl.levelState.boardOccupancy.objectBits[objectBase + bitWord] & bitMask) != 0;
+    return (impl.levelState.board.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0;
 }
 
 bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* out_x, int32_t* out_y) {
@@ -520,7 +520,7 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         return false;
     }
     const FullState& impl = *state->impl;
-    if (impl.game->playerMask == puzzlescript::kNullMaskOffset || impl.levelState.liveLevel.width <= 0 || impl.levelState.liveLevel.height <= 0) {
+    if (impl.game->playerMask == puzzlescript::kNullMaskOffset || impl.levelState.board.liveLevel.width <= 0 || impl.levelState.board.liveLevel.height <= 0) {
         return false;
     }
     const puzzlescript::MaskWord* playerMask = impl.game->maskArena.data() + impl.game->playerMask;
@@ -533,7 +533,7 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
             playerObjectIds.push_back(objectId);
         }
     }
-    const int32_t tileCount = impl.levelState.liveLevel.width * impl.levelState.liveLevel.height;
+    const int32_t tileCount = impl.levelState.board.liveLevel.width * impl.levelState.board.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     if (cellWordCount == 0) {
         return false;
@@ -545,8 +545,8 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         if (impl.game->playerMaskAggregate) {
             for (int32_t objectId : playerObjectIds) {
                 const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-                if (objectBase + bitWord >= impl.levelState.boardOccupancy.objectBits.size()
-                    || (impl.levelState.boardOccupancy.objectBits[objectBase + bitWord] & bitMask) == 0) {
+                if (objectBase + bitWord >= impl.levelState.board.occupancy.objectBits.size()
+                    || (impl.levelState.board.occupancy.objectBits[objectBase + bitWord] & bitMask) == 0) {
                     containsPlayer = false;
                     break;
                 }
@@ -555,8 +555,8 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
             containsPlayer = false;
             for (int32_t objectId : playerObjectIds) {
                 const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-                if (objectBase + bitWord < impl.levelState.boardOccupancy.objectBits.size()
-                    && (impl.levelState.boardOccupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
+                if (objectBase + bitWord < impl.levelState.board.occupancy.objectBits.size()
+                    && (impl.levelState.board.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
                     containsPlayer = true;
                     break;
                 }
@@ -566,10 +566,10 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
             continue;
         }
         if (out_x) {
-            *out_x = tile_index / impl.levelState.liveLevel.height;
+            *out_x = tile_index / impl.levelState.board.liveLevel.height;
         }
         if (out_y) {
-            *out_y = tile_index % impl.levelState.liveLevel.height;
+            *out_y = tile_index % impl.levelState.board.liveLevel.height;
         }
         return true;
     }

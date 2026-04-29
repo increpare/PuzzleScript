@@ -4208,7 +4208,7 @@ void emitRuleRowFunctions(
 
     out << "bool match_" << prefix << "_row" << rowIndex << "(FullState& session, int32_t startIndex) {\n"
         << "    const Game& game = *session.game;\n"
-        << "    const int32_t delta = (" << dx << ") * session.levelState.liveLevel.height + (" << dy << ");\n";
+        << "    const int32_t delta = (" << dx << ") * session.levelState.board.liveLevel.height + (" << dy << ");\n";
     for (size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex) {
         emitPatternPredicate(
             out,
@@ -4223,7 +4223,7 @@ void emitRuleRowFunctions(
 
     out << "bool apply_replacements_" << prefix << "_row" << rowIndex << "(FullState& session, int32_t startIndex) {\n"
         << "    const Game& game = *session.game;\n"
-        << "    const int32_t delta = (" << dx << ") * session.levelState.liveLevel.height + (" << dy << ");\n"
+        << "    const int32_t delta = (" << dx << ") * session.levelState.board.liveLevel.height + (" << dy << ");\n"
         << "    bool changed = false;\n";
     for (size_t cellIndex = 0; cellIndex < row.size(); ++cellIndex) {
         if (!row[cellIndex].replacement.has_value()) {
@@ -4280,9 +4280,9 @@ void emitCollectRowMatches(
         out << "    std::vector<int32_t> " << matchesName << ";\n";
     }
     out << "    int32_t xmin_" << rowIndex << " = 0;\n"
-        << "    int32_t xmax_" << rowIndex << " = session.levelState.liveLevel.width;\n"
+        << "    int32_t xmax_" << rowIndex << " = session.levelState.board.liveLevel.width;\n"
         << "    int32_t ymin_" << rowIndex << " = 0;\n"
-        << "    int32_t ymax_" << rowIndex << " = session.levelState.liveLevel.height;\n";
+        << "    int32_t ymax_" << rowIndex << " = session.levelState.board.liveLevel.height;\n";
     switch (rule.direction) {
         case 1:
             out << "    ymin_" << rowIndex << " += " << (len - 1) << ";\n";
@@ -4356,7 +4356,7 @@ void emitCollectRowMatches(
         out << "    }\n"
             << "    if (bestAnchor_" << rowIndex << " >= 0 && bestAnchorCount_" << rowIndex
             << " < static_cast<uint64_t>(std::max(8, validStartCount_" << rowIndex << "))) {\n"
-            << "        const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;\n"
+            << "        const int32_t tileCount = session.levelState.board.liveLevel.width * session.levelState.board.liveLevel.height;\n"
             << "        const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);\n"
             << "        auto scanAnchor_" << rowIndex << " = [&](int32_t patternIndex, const int32_t* objectIds, size_t objectIdCount) {\n"
             << "            for (size_t objectIdIndex = 0; objectIdIndex < objectIdCount; ++objectIdIndex) {\n"
@@ -4371,8 +4371,8 @@ void emitCollectRowMatches(
             << "                        const int32_t anchorTile = static_cast<int32_t>(wordIndex * 64 + static_cast<size_t>(bit));\n"
             << "                        bits &= bits - 1;\n"
             << "                        if (anchorTile >= tileCount) continue;\n"
-            << "                        const int32_t anchorX = anchorTile / session.levelState.liveLevel.height;\n"
-            << "                        const int32_t anchorY = anchorTile % session.levelState.liveLevel.height;\n"
+            << "                        const int32_t anchorX = anchorTile / session.levelState.board.liveLevel.height;\n"
+            << "                        const int32_t anchorY = anchorTile % session.levelState.board.liveLevel.height;\n"
             << "                        const int32_t startX = anchorX - patternIndex * (" << dx << ");\n"
             << "                        const int32_t startY = anchorY - patternIndex * (" << dy << ");\n"
             << "                        if (startX < xmin_" << rowIndex << " || startX >= xmax_" << rowIndex
@@ -4392,7 +4392,7 @@ void emitCollectRowMatches(
         if (rowMovementOffset != puzzlescript::kNullMaskOffset) {
             emitInlineMaskBitsSetCheck(out, game, rowMovementOffset, game.movementWordCount, "lineMovements", "                        ", "continue");
         }
-        out << "                        const int32_t startIndex = startX * session.levelState.liveLevel.height + startY;\n"
+        out << "                        const int32_t startIndex = startX * session.levelState.board.liveLevel.height + startY;\n"
             << "                        if (match_" << prefix << "_row" << rowIndex << "(session, startIndex)) "
             << matchesName << ".push_back(startIndex);\n"
             << "                    }\n"
@@ -4401,10 +4401,10 @@ void emitCollectRowMatches(
         if (horizontal) {
             out << "            if (" << matchesName << ".size() > 1) {\n"
                 << "                std::sort(" << matchesName << ".begin(), " << matchesName << ".end(), [&](int32_t lhs, int32_t rhs) {\n"
-                << "                    const int32_t lhsX = lhs / session.levelState.liveLevel.height;\n"
-                << "                    const int32_t lhsY = lhs % session.levelState.liveLevel.height;\n"
-                << "                    const int32_t rhsX = rhs / session.levelState.liveLevel.height;\n"
-                << "                    const int32_t rhsY = rhs % session.levelState.liveLevel.height;\n"
+                << "                    const int32_t lhsX = lhs / session.levelState.board.liveLevel.height;\n"
+                << "                    const int32_t lhsY = lhs % session.levelState.board.liveLevel.height;\n"
+                << "                    const int32_t rhsX = rhs / session.levelState.board.liveLevel.height;\n"
+                << "                    const int32_t rhsY = rhs % session.levelState.board.liveLevel.height;\n"
                 << "                    return lhsY == rhsY ? lhsX < rhsX : lhsY < rhsY;\n"
                 << "                });\n"
                 << "                if (objectIdCount > 1) {\n"
@@ -4439,7 +4439,7 @@ void emitCollectRowMatches(
             emitInlineMaskBitsSetCheck(out, game, rowMovementOffset, game.movementWordCount, "lineMovements", "        ", "continue");
         }
         out << "        for (int32_t x = xmin_" << rowIndex << "; x < xmax_" << rowIndex << "; ++x) {\n"
-            << "            const int32_t startIndex = x * session.levelState.liveLevel.height + y;\n"
+            << "            const int32_t startIndex = x * session.levelState.board.liveLevel.height + y;\n"
             << "            if (match_" << prefix << "_row" << rowIndex << "(session, startIndex)) " << matchesName << ".push_back(startIndex);\n"
             << "        }\n"
             << "    }\n";
@@ -4452,7 +4452,7 @@ void emitCollectRowMatches(
             emitInlineMaskBitsSetCheck(out, game, rowMovementOffset, game.movementWordCount, "lineMovements", "        ", "continue");
         }
         out << "        for (int32_t y = ymin_" << rowIndex << "; y < ymax_" << rowIndex << "; ++y) {\n"
-            << "            const int32_t startIndex = x * session.levelState.liveLevel.height + y;\n"
+            << "            const int32_t startIndex = x * session.levelState.board.liveLevel.height + y;\n"
             << "            if (match_" << prefix << "_row" << rowIndex << "(session, startIndex)) " << matchesName << ".push_back(startIndex);\n"
             << "        }\n"
             << "    }\n";

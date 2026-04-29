@@ -299,10 +299,16 @@ struct LevelDimensions {
     int32_t height = 0;
 };
 
-struct PersistentLevelState {
-    // Authoritative board (cell-major). Per-tile writes: setCellObjectsFromWords / setCellObjects.
+struct PersistentBoardState {
+    // Interpreter cell-major board. Per-tile writes go through setCellObjects /
+    // setCellObjectsFromWords until the interpreter moves to compact bits.
     LevelTemplate liveLevel;
-    BoardOccupancy boardOccupancy;
+    // Object-major compact board mirror used by solver and compact turn paths.
+    BoardOccupancy occupancy;
+};
+
+struct PersistentLevelState {
+    PersistentBoardState board;
     RandomState rng;
 };
 
