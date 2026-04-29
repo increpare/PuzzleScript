@@ -13,15 +13,6 @@ std::string compactRulePatternUnsupportedReason(const Pattern& pattern) {
     if (pattern.kind == Pattern::Kind::Ellipsis) {
         return {};
     }
-    if (pattern.replacement.has_value()) {
-        const Replacement& replacement = *pattern.replacement;
-        if (replacement.hasRandomEntityMask) {
-            return "random_entity_replacement";
-        }
-        if (replacement.hasRandomDirMask) {
-            return "random_direction_replacement";
-        }
-    }
     return {};
 }
 
@@ -178,6 +169,34 @@ void emitCompactRuleMaskData(
                         emitMaskArray(out, prefix + "_movements_clear", compiledMaskWords(game, replacement.movementsClear, game.movementWordCount));
                         emitMaskArray(out, prefix + "_movements_set", compiledMaskWords(game, replacement.movementsSet, game.movementWordCount));
                         emitMaskArray(out, prefix + "_movements_layer_mask", compiledMaskWords(game, replacement.movementsLayerMask, game.movementWordCount));
+                        if (replacement.hasRandomEntityMask) {
+                            out << "constexpr int32_t " << prefix << "_random_entity_choices[] = {";
+                            if (replacement.randomEntityChoices.empty()) {
+                                out << "0";
+                            } else {
+                                for (size_t choiceIndex = 0; choiceIndex < replacement.randomEntityChoices.size(); ++choiceIndex) {
+                                    if (choiceIndex > 0) out << ", ";
+                                    out << replacement.randomEntityChoices[choiceIndex];
+                                }
+                            }
+                            out << "};\n";
+                            out << "constexpr size_t " << prefix << "_random_entity_choice_count = "
+                                << replacement.randomEntityChoices.size() << ";\n";
+                        }
+                        if (replacement.hasRandomDirMask) {
+                            out << "constexpr int32_t " << prefix << "_random_dir_layers[] = {";
+                            if (replacement.randomDirLayers.empty()) {
+                                out << "0";
+                            } else {
+                                for (size_t layerIndex = 0; layerIndex < replacement.randomDirLayers.size(); ++layerIndex) {
+                                    if (layerIndex > 0) out << ", ";
+                                    out << replacement.randomDirLayers[layerIndex];
+                                }
+                            }
+                            out << "};\n";
+                            out << "constexpr size_t " << prefix << "_random_dir_layer_count = "
+                                << replacement.randomDirLayers.size() << ";\n";
+                        }
                     }
                 }
             }
@@ -230,18 +249,60 @@ void emitCompactPatternFunctions(
 
     out << "    bool changed = false;\n"
         << "    bool rigidChange = false;\n"
+        << "    MaskWord objectsClear[compact_turn_object_stride_" << suffix << "] = {};\n"
+        << "    MaskWord objectsSet[compact_turn_object_stride_" << suffix << "] = {};\n"
+        << "    MaskWord movementsClear[compact_turn_movement_stride_" << suffix << "] = {};\n"
+        << "    MaskWord movementsSet[compact_turn_movement_stride_" << suffix << "] = {};\n"
+        << "    for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
+        << "        objectsClear[word] = " << prefix << "_objects_clear[word];\n"
+        << "        objectsSet[word] = " << prefix << "_objects_set[word];\n"
+        << "    }\n"
+        << "    for (int32_t word = 0; word < compact_turn_movement_stride_" << suffix << "; ++word) {\n"
+        << "        movementsClear[word] = " << prefix << "_movements_clear[word];\n"
+        << "        movementsSet[word] = " << prefix << "_movements_set[word];\n"
+        << "    }\n";
+    const Replacement& replacement = *pattern.replacement;
+    if (replacement.hasRandomEntityMask) {
+        out << "    if (" << prefix << "_random_entity_choice_count > 0) {\n"
+            << "        const double randomValue = compact_turn_random_uniform_" << suffix << "(levelState.rng);\n"
+            << "        const size_t chosenIndex = std::min(" << prefix << "_random_entity_choice_count - 1, static_cast<size_t>(randomValue * static_cast<double>(" << prefix << "_random_entity_choice_count)));\n"
+            << "        const int32_t objectId = " << prefix << "_random_entity_choices[chosenIndex];\n"
+            << "        if (objectId >= 0 && objectId < compact_turn_object_count_" << suffix << ") {\n"
+            << "            const uint32_t objectBit = static_cast<uint32_t>(objectId);\n"
+            << "            objectsSet[maskWordIndex(objectBit)] |= maskBit(objectBit);\n"
+            << "            const int32_t layer = compact_turn_object_layer_" << suffix << "[objectId];\n"
+            << "            const MaskWord* layerMask = compact_turn_layer_mask_" << suffix << "(layer);\n"
+            << "            if (layerMask != nullptr) {\n"
+            << "                for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) objectsClear[word] |= layerMask[word];\n"
+            << "                compact_turn_set_layer_bits_" << suffix << "(movementsClear, layer, 0x1f);\n"
+            << "            }\n"
+            << "        }\n"
+            << "    }\n";
+    }
+    if (replacement.hasRandomDirMask) {
+        out << "    for (size_t randomLayerIndex = 0; randomLayerIndex < " << prefix << "_random_dir_layer_count; ++randomLayerIndex) {\n"
+            << "        const int32_t layer = " << prefix << "_random_dir_layers[randomLayerIndex];\n"
+            << "        const double randomValue = compact_turn_random_uniform_" << suffix << "(levelState.rng);\n"
+            << "        const int32_t randomDir = std::min(3, static_cast<int32_t>(randomValue * 4.0));\n"
+            << "        const int32_t beforeBits = compact_turn_layer_bits_" << suffix << "(movementsSet, layer);\n"
+            << "        compact_turn_set_layer_bits_" << suffix << "(movementsSet, layer, beforeBits | (1 << randomDir));\n"
+            << "    }\n";
+    }
+    out
+        << "    for (int32_t word = 0; word < compact_turn_movement_stride_" << suffix << "; ++word) {\n"
+        << "        movementsClear[word] |= " << prefix << "_movements_layer_mask[word];\n"
+        << "    }\n"
         << "    MaskWord* objects = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
         << "    for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
         << "        const MaskWord before = objects[word];\n"
-        << "        const MaskWord after = (before & ~" << prefix << "_objects_clear[word]) | " << prefix << "_objects_set[word];\n"
+        << "        const MaskWord after = (before & ~objectsClear[word]) | objectsSet[word];\n"
         << "        objects[word] = after;\n"
         << "        changed = changed || before != after;\n"
         << "    }\n"
         << "    MaskWord* movements = compact_turn_cell_movements_" << suffix << "(scratch, tileIndex);\n"
         << "    for (int32_t word = 0; word < compact_turn_movement_stride_" << suffix << "; ++word) {\n"
         << "        const MaskWord before = movements[word];\n"
-        << "        const MaskWord clear = " << prefix << "_movements_clear[word] | " << prefix << "_movements_layer_mask[word];\n"
-        << "        const MaskWord after = (before & ~clear) | " << prefix << "_movements_set[word];\n"
+        << "        const MaskWord after = (before & ~movementsClear[word]) | movementsSet[word];\n"
         << "        movements[word] = after;\n"
         << "        changed = changed || before != after;\n"
         << "    }\n"

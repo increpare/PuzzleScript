@@ -380,10 +380,10 @@ Recently added compiler coverage:
 - ellipsis rows
 - random rule groups
 - rigid rule retry for unresolved movement
+- random replacements
 
 Remaining coverage:
 
-- random replacements
 - loop points
 - commands
 - sfx/message/checkpoint effects
@@ -475,12 +475,15 @@ Additional ranked-frontier probes:
   case 43, "movement matching - correctly matching different objects same cell moving in different directions": passes
   case 44, "movement matching - ellipsis bug - forgot to include one case in above": passes
   case 45, "ellipsis bug: rule matches two candidates, first replacement invalidates second": passes
+  case 48, "random movement determinism test": passes
+  case 49, "random instances of properties": passes
   case 111, "Make synonyms of properties work. #215": passes
   case 114, "Make synonyms of properties work. #243": passes
   case 121, "Rigid weirdness test (#369)": passes
   case 122, "Synonym confusion": passes
   case 125, "Reserved keywords are too greedy (#419)": passes
   case 126, "Removing background tiles breaks \"no X\" wincondition (#534)": passes
+  case 135, "Win condition test \"SOME X\"": passes
   case 144, "fourth test for #492 movement not getting correctly cleared from tile": passes
   case 145, "fifth test for #492 movement not getting correctly cleared from tile": passes
   case 146, "random rules - report by caeth": passes
@@ -493,18 +496,17 @@ Additional ranked-frontier probes:
   case 152, "super tricky (related to #469) right [ vertical playerortarget | vertical player ] -> [ playerortarget | playerortarget ]": passes
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
 
-Selected compiler-mode testdata progress: 36/469 known passing.
+Selected compiler-mode testdata progress: 39/469 known passing.
 
 Additional ranked-frontier command probe:
   case 93, "again + message combo": passes
   added coverage: simple `message` and `again` command queueing
 
 Known next unsupported ranked-frontier feature:
-  case 48: random_direction_replacement at source rule line 81
+  case 398: command_cancel at source rule line 53
 
 Known ranked-frontier unsupported feature:
-  random replacements remain unsupported until replacement emission can choose
-  random entities/directions from the compiled masks.
+  control commands beyond `message` and `again` remain unsupported.
 ```
 
 Recommended progress report:
