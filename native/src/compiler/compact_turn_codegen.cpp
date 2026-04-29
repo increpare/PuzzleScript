@@ -472,9 +472,17 @@ void emitCompactRuleFunction(
 
         out << "bool " << rowPrefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<int32_t>>& rowMatches) {\n"
             << "    rowMatches.clear();\n"
-            << "    const int32_t tileCount = compact_turn_tile_count_" << suffix << "(dimensions);\n";
+            << "    const int32_t tileCount = compact_turn_tile_count_" << suffix << "(dimensions);\n"
+            << "    if (tileCount <= 0) return false;\n"
+            << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
+            << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
+            << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
         if (rule.ellipsisCount[rowIndex] == 0) {
-            out << "    for (int32_t startIndex = 0; startIndex < tileCount; ++startIndex) {\n"
+            out << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
+                << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
+                << "        const int32_t x = horizontalScan ? secondary : primary;\n"
+                << "        const int32_t y = horizontalScan ? primary : secondary;\n"
+                << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
                 << "        std::vector<int32_t> positions;\n"
                 << "        bool matched = true;\n";
             for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
@@ -486,6 +494,7 @@ void emitCompactRuleFunction(
                     << "        if (matched) positions.push_back(tile_" << patternIndex << ");\n";
             }
             out << "        if (matched) rowMatches.push_back(positions);\n"
+                << "    }\n"
                 << "    }\n";
         } else {
             int32_t concreteCount = 0;
@@ -499,7 +508,11 @@ void emitCompactRuleFunction(
                     ++concreteCount;
                 }
             }
-            out << "    for (int32_t startIndex = 0; startIndex < tileCount; ++startIndex) {\n"
+            out << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
+                << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
+                << "        const int32_t x = horizontalScan ? secondary : primary;\n"
+                << "        const int32_t y = horizontalScan ? primary : secondary;\n"
+                << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
                 << "        const int32_t available = compact_turn_available_at_direction_" << suffix
                 << "(dimensions, startIndex, " << rule.direction << ");\n"
                 << "        if (available < " << concreteCount << ") continue;\n"
@@ -540,6 +553,7 @@ void emitCompactRuleFunction(
                 << "            }\n"
                 << "        };\n"
                 << "        search(search, 0, 0);\n"
+                << "    }\n"
                 << "    }\n";
         }
         out << "    return !rowMatches.empty();\n"

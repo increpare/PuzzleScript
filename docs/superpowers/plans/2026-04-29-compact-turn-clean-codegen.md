@@ -500,11 +500,13 @@ Additional ranked-frontier probes:
   case 151, "2nd alternative test for: right [ vertical Player | perpendicular Player ] -> [ perpendicular Player | ] produces error #682": passes
   case 152, "super tricky (related to #469) right [ vertical playerortarget | vertical player ] -> [ playerortarget | playerortarget ]": passes
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
+  case 322, "\"right [ Player ] -> [ up Player ]\" gets compiled to down #755": passes
+    added coverage: horizontal row-match traversal order matches interpreter row-major scan
   case 398, "Autowin": passes
   case 399, "Autowin2": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 45/469 known passing.
+Selected compiler-mode testdata progress: 46/469 known passing.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
