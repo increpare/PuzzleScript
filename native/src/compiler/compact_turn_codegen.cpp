@@ -9,32 +9,52 @@ namespace puzzlescript::compiler {
 
 namespace {
 
-bool isCompactRulePatternSupported(const Pattern& pattern) {
+std::string compactRulePatternUnsupportedReason(const Pattern& pattern) {
     if (pattern.kind != Pattern::Kind::CellPattern) {
-        return false;
+        return "non_cell_pattern";
     }
     if (pattern.replacement.has_value()) {
         const Replacement& replacement = *pattern.replacement;
-        if (replacement.hasRandomEntityMask || replacement.hasRandomDirMask) {
-            return false;
+        if (replacement.hasRandomEntityMask) {
+            return "random_entity_replacement";
+        }
+        if (replacement.hasRandomDirMask) {
+            return "random_direction_replacement";
         }
     }
-    return true;
+    return {};
+}
+
+std::string compactRuleUnsupportedReason(const Rule& rule) {
+    if (rule.isRandom) {
+        return "random_rule";
+    }
+    if (rule.rigid) {
+        return "rigid_rule";
+    }
+    if (!rule.commands.empty()) {
+        return "commands";
+    }
+    if (rule.patterns.size() != 1) {
+        return "multi_row_rule";
+    }
+    if (!rule.ellipsisCount.empty() && rule.ellipsisCount[0] != 0) {
+        return "ellipsis";
+    }
+    if (rule.patterns.empty()) {
+        return "empty_rule";
+    }
+    for (const Pattern& pattern : rule.patterns[0]) {
+        const std::string reason = compactRulePatternUnsupportedReason(pattern);
+        if (!reason.empty()) {
+            return reason;
+        }
+    }
+    return {};
 }
 
 bool isCompactRuleSupported(const Rule& rule) {
-    if (rule.isRandom || rule.rigid || !rule.commands.empty() || rule.patterns.size() != 1) {
-        return false;
-    }
-    if (!rule.ellipsisCount.empty() && rule.ellipsisCount[0] != 0) {
-        return false;
-    }
-    for (const Pattern& pattern : rule.patterns[0]) {
-        if (!isCompactRulePatternSupported(pattern)) {
-            return false;
-        }
-    }
-    return true;
+    return compactRuleUnsupportedReason(rule).empty();
 }
 
 bool canCompactCompilerHandleTurn(const Game& game) {
@@ -209,11 +229,15 @@ void emitCompactRuleFunction(
 ) {
     const std::string prefix = compactRulePrefix(suffix, phase, groupIndex, ruleIndex);
     if (!isCompactRuleSupported(rule)) {
+        const std::string reason = "compact turn compiler TODO: "
+            + compactRuleUnsupportedReason(rule)
+            + " at source rule line "
+            + std::to_string(rule.lineNumber);
         out << "bool " << prefix << "_apply(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch) {\n"
             << "    (void)dimensions;\n"
             << "    (void)levelState;\n"
             << "    (void)scratch;\n"
-            << "    static_assert(false, \"compact turn compiler TODO: unsupported rule semantic\");\n"
+            << "    static_assert(false, " << cppStringLiteral(reason) << ");\n"
             << "    return false;\n"
             << "}\n\n";
         return;

@@ -425,6 +425,10 @@ make compact_turn_codegen_testdata_one
 make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=2
   case: "sokoban with win condition"
   result: passes with compact oracle checks
+
+make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=5
+  case: "by your side"
+  first unsupported semantic: multi_row_rule at source rule lines 224-225
 ```
 
 Recommended progress report:
