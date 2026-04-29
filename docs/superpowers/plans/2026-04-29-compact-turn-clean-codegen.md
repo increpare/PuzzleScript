@@ -308,6 +308,7 @@ Features:
 - [x] object set/clear replacements
 - [x] movement set/clear replacements
 - [x] rulegroup loop-until-stable behavior
+- [x] deterministic multi-row rule tuples
 
 Deferred until later:
 - ellipsis
@@ -353,6 +354,7 @@ Acceptance:
   rulegroups.
 - [x] Apply late rulegroups through the same deterministic one-row rulegroup
   emitter used for early rules.
+- [x] Handle `require_player_movement` cancellation for compiler-mode turns.
 - [ ] Handle restart/reset/cancel terminal treatment for solver.
 - [ ] Handle `again` policy.
 - [ ] Thread deterministic RNG for semantics that use it.
@@ -426,9 +428,16 @@ make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=2
   case: "sokoban with win condition"
   result: passes with compact oracle checks
 
+make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=3
+  result: passes with compact oracle checks
+
+make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=4
+  result: passes with compact oracle checks
+
 make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=5
   case: "by your side"
-  first unsupported semantic: multi_row_rule at source rule lines 224-225
+  result: passes with compact oracle checks
+  added coverage: deterministic multi-row rules and require_player_movement cancellation
 ```
 
 Recommended progress report:
