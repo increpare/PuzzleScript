@@ -379,11 +379,11 @@ Recently added compiler coverage:
 
 - ellipsis rows
 - random rule groups
+- rigid rule retry for unresolved movement
 
 Remaining coverage:
 
 - random replacements
-- rigid rules
 - loop points
 - commands
 - sfx/message/checkpoint effects
@@ -464,6 +464,7 @@ make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=6
 
 Additional ranked-frontier probes:
   case 7, "ellipsisPropagationBug1": passes
+  case 13, "rigid body test": passes
   case 40, "don't mask movements if no movements happening": passes
   case 42, "Remove movements from empty layers after rule application": passes
   case 43, "movement matching - correctly matching different objects same cell moving in different directions": passes
@@ -471,6 +472,7 @@ Additional ranked-frontier probes:
   case 45, "ellipsis bug: rule matches two candidates, first replacement invalidates second": passes
   case 111, "Make synonyms of properties work. #215": passes
   case 114, "Make synonyms of properties work. #243": passes
+  case 121, "Rigid weirdness test (#369)": passes
   case 122, "Synonym confusion": passes
   case 125, "Reserved keywords are too greedy (#419)": passes
   case 126, "Removing background tiles breaks \"no X\" wincondition (#534)": passes
@@ -486,14 +488,14 @@ Additional ranked-frontier probes:
   case 152, "super tricky (related to #469) right [ vertical playerortarget | vertical player ] -> [ playerortarget | playerortarget ]": passes
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
 
-Selected compiler-mode testdata progress: 29/469 known passing.
+Selected compiler-mode testdata progress: 31/469 known passing.
 
 Additional ranked-frontier command probe:
   case 93, "again + message combo": passes
   added coverage: simple `message` and `again` command queueing
 
 Known next unsupported ranked-frontier feature:
-  case 13: rigid rules
+  loop points / loop command structure
 
 Known ranked-frontier unsupported feature:
   random replacements remain unsupported until replacement emission can choose
