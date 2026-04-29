@@ -1,0 +1,254 @@
+# Compact Turn Clean Codegen Plan
+
+> **Intent:** Rebuild native compact turn code generation from PuzzleScript semantics, not from game-shape recognizers. The compiler should grow by implementing language features directly and letting tests expose missing semantics.
+
+## Summary
+
+The previous compact turn prototype drifted into shape-specific helpers such as simple push, push chain, target clear, and movement-only variants. That direction is too complex and too brittle: it encourages recognizing individual game families instead of compiling PuzzleScript.
+
+This plan resets compact turn code generation around a strict mode split:
+
+```text
+interpreter mode: always use the interpreter / bridge
+compiler mode: always use generated compact native code
+```
+
+There should not be an expanding matrix of native eligibility checks and fallback reasons. If compiler mode is selected, the generator emits code for the current implementation level. At first much of the corpus will fail. The job is to work through failures until the compiler becomes correct.
+
+## Non-Goals
+
+- Do not add per-game or per-shape recognizers.
+- Do not reintroduce helpers like `emitCompactSimplePushMovement`, `emitCompactPushChainMovement`, or `compactLooksLikeSimplePushRules`.
+- Do not maintain a live-service-style feature fallback matrix.
+- Do not silently fall back from compiler mode to interpreter mode on unsupported features.
+- Do not optimize before the generic semantic compiler is correct.
+
+## Design Principles
+
+- **Compile PuzzleScript features, not game shapes.**
+- **Let tests fail loudly in compiler mode.**
+- **Keep interpreter mode as an explicit switch for correctness comparison and normal safe execution.**
+- **Use the simulation corpus as the bring-up queue.**
+- **Prefer one generic code path per semantic phase.**
+- **Use templates only to make emitted C++ readable, not to hide bespoke special cases.**
+
+## Runtime Modes
+
+### Interpreter Mode
+
+Interpreter mode is the stable path. It may use the existing interpreter bridge for compact state execution. This is the mode to use when we want known-correct behavior while the compiler is incomplete.
+
+### Compiler Mode
+
+Compiler mode means generated compact code is mandatory. The backend should not decline individual games based on detected feature combinations. Unsupported semantics should fail through compile errors, runtime assertions, oracle mismatches, or simulation failures.
+
+The generated code can still contain explicit TODO traps for unimplemented semantic constructs, but those traps are part of compiler bring-up, not a fallback system.
+
+## Compiler Architecture
+
+### Phase 1: Move Compact Codegen Out Of The CLI Blob
+
+**Goal:** Create a dedicated compact codegen module with small, named semantic emitters.
+
+Files:
+- Create: `native/src/compiler/compact_turn_codegen.hpp`
+- Create: `native/src/compiler/compact_turn_codegen.cpp`
+- Modify: `native/src/cli/main.cpp`
+
+Expected shape:
+
+```cpp
+struct CompactCodegenOptions {
+    bool interpreterMode = false;
+};
+
+std::string generateCompactTurnBackend(
+    const GameInformation& game,
+    size_t sourceIndex,
+    CompactCodegenOptions options);
+```
+
+The CLI should choose interpreter mode or compiler mode at a coarse level only.
+
+### Phase 2: Emit A Semantic Turn Skeleton
+
+**Goal:** Generate a full compact turn function with all major PuzzleScript phases present, even if many phases initially contain TODO traps.
+
+Generated structure:
+
+```cpp
+SpecializedCompactTurnOutcome specialized_compact_turn_source_N(
+    const Game& game,
+    CompactStateView state,
+    ps_input input,
+    RuntimeStepOptions options
+) {
+    // validate compact view
+    // decode input direction
+    // seed input movements
+    // apply early rulegroups
+    // resolve movement
+    // apply late rulegroups
+    // process commands / again policy
+    // evaluate win conditions
+    // canonicalize / return result
+}
+```
+
+Acceptance:
+- Compiler mode emits this function for every source.
+- Interpreter mode emits the bridge call.
+- There is no per-source native eligibility gate.
+
+### Phase 3: Compact State Access Layer
+
+**Goal:** Establish generic helpers for compact state reads/writes used by every generated phase.
+
+Features:
+- object bit query
+- object bit set/clear
+- movement bit query/set/clear
+- collision layer helpers
+- cell coordinate iteration
+- row scan helpers for directional rules
+
+Acceptance:
+- Generated code no longer hand-writes object-major bit indexing in every semantic emitter.
+- Tests may still fail because semantics are incomplete.
+
+### Phase 4: Input Movement Seeding
+
+**Goal:** Implement generic player input movement seeding.
+
+Semantics:
+- map input to movement mask
+- find all player objects from compiled player mask
+- mark player layer movements
+- respect action/tick input behavior
+
+Acceptance:
+- Simple movement-only games start producing meaningful compact native transitions in compiler mode.
+- Oracle mismatches become the driver for missing edge cases.
+
+### Phase 5: Rule Matching Without Movement Resolution
+
+**Goal:** Compile generic rule matching and replacements before solving push/movement.
+
+Features:
+- one-row rules
+- multi-cell directional scans
+- object-present constraints
+- object-missing constraints
+- movement-present constraints
+- movement-missing constraints
+- object set/clear replacements
+- movement set/clear replacements
+- rulegroup loop-until-stable behavior
+
+Deferred until later:
+- ellipsis
+- random
+- rigid
+- commands with control flow
+- loop points
+
+Acceptance:
+- No-movement transformation games should pass in compiler mode.
+- Failures should be semantic mismatches, not missing shape recognizers.
+
+### Phase 6: Generic Movement Resolution
+
+**Goal:** Implement PuzzleScript movement resolution as a generic algorithm over collision layers and movement masks.
+
+Features:
+- blocked movement
+- chain movement / pushing as a consequence of movement propagation
+- collision layer occupancy rules
+- movement mask clearing
+- changed flag computation
+
+Acceptance:
+- Sokoban-like games pass because the generic movement algorithm works, not because Sokoban was recognized.
+
+### Phase 7: Late Rules, Win Conditions, And Terminal Events
+
+**Goal:** Complete the standard turn envelope.
+
+Features:
+- late rulegroups
+- win conditions
+- restart/reset/cancel terminal treatment for solver
+- `again` according to `RuntimeStepOptions::againPolicy`
+- deterministic RNG state threading where needed
+
+Acceptance:
+- Compact compiler mode can run a meaningful subset of the simulation corpus end-to-end.
+
+### Phase 8: Expand Language Coverage
+
+Implement remaining PuzzleScript semantics one feature at a time:
+
+- ellipsis
+- random rules and random replacements
+- rigid rules
+- loop points
+- commands
+- sfx/message/checkpoint effects
+- aggregate masks and properties where current lowering exposes them
+
+Each feature should be implemented in the generic semantic emitters, not in a game-shape side path.
+
+## CLI / Harness Controls
+
+Add a coarse switch for compact turn execution mode.
+
+Suggested names:
+
+```text
+--compact-turn-mode=interpreter
+--compact-turn-mode=compiler
+```
+
+Default can remain interpreter mode until compiler mode has substantial corpus coverage.
+
+Compiler-focused targets should force compiler mode and expect failures early in development:
+
+```text
+make compact_turn_codegen_bringup
+make compact_turn_codegen_one SOURCE=...
+```
+
+The existing oracle/simulation targets can keep using interpreter mode unless explicitly testing compiler mode.
+
+## Test Strategy
+
+Use tests as the feature backlog.
+
+1. Start with one tiny fixture in compiler mode.
+2. Run oracle against interpreter.
+3. Fix the first semantic mismatch.
+4. Add the next fixture.
+5. Scale from solver smoke fixtures to selected testdata.
+6. Then run the full simulation corpus.
+
+Useful gates:
+
+```bash
+git diff --check
+make build
+make compact_turn_coverage
+make compact_turn_oracle_smoke
+make compact_turn_simulation_tests
+```
+
+For compiler bring-up, add new failing-friendly targets rather than weakening stable gates.
+
+## Acceptance Criteria
+
+- Compact codegen is organized in a dedicated module, not embedded as a long CLI string-concatenation block.
+- There are exactly two high-level modes: interpreter and compiler.
+- Compiler mode does not silently fall back per feature or per game.
+- No shape-specific recognizers or emitters exist.
+- Generic semantic phases drive the generated code.
+- The corpus is used as the roadmap for missing compiler semantics.
+
