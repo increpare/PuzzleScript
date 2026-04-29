@@ -465,6 +465,7 @@ make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=6
 
 Additional ranked-frontier probes:
   case 7, "ellipsisPropagationBug1": passes
+  case 8, "ellipsisPropagationBug2": passes
   case 9, "undo test": passes
   case 13, "rigid body test": passes
   case 16, "annoying edge case": passes
@@ -506,11 +507,17 @@ Additional ranked-frontier probes:
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
   case 322, "\"right [ Player ] -> [ up Player ]\" gets compiled to down #755": passes
     added coverage: horizontal row-match traversal order matches interpreter row-major scan
+  case 364, "rigid applies to movements even if the objects are changed to different objects in the same layer": passes
+  case 374, "misc rigid test": passes
   case 398, "Autowin": passes
   case 399, "Autowin2": passes
+  case 415, "trigger delete newmetadata.flickscreen": passes
+  case 416, "trigger delete newmetadata.zoomscreen": passes
+  case 418, "background_color transparent code path": passes
+  case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 50/469 known passing.
+Selected compiler-mode testdata progress: 57/469 known passing.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
