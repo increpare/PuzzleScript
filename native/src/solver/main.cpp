@@ -647,11 +647,7 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
     child.meta = parent.meta;
-#if PS_INTERPRETER_OBJECT_MAJOR
-    puzzlescript::setInterpreterBoardObjectsFromCellMajor(child, puzzlescript::copyInterpreterBoardObjectsAsCellMajor(parent));
-#else
     child.scratch.interpreterBoard.objects = parent.scratch.interpreterBoard.objects;
-#endif
 
     child.scratch.liveMovements.assign(parent.scratch.liveMovements.size(), 0);
     child.scratch.rigidGroupIndexMasks.assign(parent.scratch.rigidGroupIndexMasks.size(), 0);

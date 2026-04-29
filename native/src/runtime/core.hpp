@@ -41,10 +41,6 @@ struct CompileResult;
 #define PS_MASK_WORD_BITS 64
 #endif
 
-#ifndef PS_INTERPRETER_OBJECT_MAJOR
-#define PS_INTERPRETER_OBJECT_MAJOR 0
-#endif
-
 #ifndef PS_INTERPRETER_OBJECT_CELL_INDEX
 #define PS_INTERPRETER_OBJECT_CELL_INDEX 1
 #endif
@@ -322,11 +318,7 @@ struct PersistentLevelState {
 };
 
 struct InterpreterBoardScratch {
-#if PS_INTERPRETER_OBJECT_MAJOR
-    mutable MaskVector cellScratch;
-#else
     MaskVector objects;
-#endif
 };
 
 struct GameMetadata {
@@ -470,11 +462,7 @@ struct Scratch {
 
 struct InterpreterBoardSnapshot {
     LevelDimensions dimensions;
-#if PS_INTERPRETER_OBJECT_MAJOR
-    std::vector<MaskWordUnsigned> objectBits;
-#else
     MaskVector objects;
-#endif
 };
 
 struct UndoSnapshot {

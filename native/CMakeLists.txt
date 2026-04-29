@@ -98,10 +98,6 @@ if(NOT PS_MASK_WORD_BITS STREQUAL "32" AND NOT PS_MASK_WORD_BITS STREQUAL "64")
   message(FATAL_ERROR "PS_MASK_WORD_BITS must be 32 or 64")
 endif()
 option(PS_INTERPRETER_OBJECT_CELL_INDEX "Maintain per-object cell index for anchored interpreter rule scans" ON)
-option(PS_INTERPRETER_OBJECT_MAJOR "Use experimental object-major interpreter board storage" OFF)
-if(PS_INTERPRETER_OBJECT_MAJOR AND NOT PS_INTERPRETER_OBJECT_CELL_INDEX)
-  message(FATAL_ERROR "PS_INTERPRETER_OBJECT_MAJOR requires PS_INTERPRETER_OBJECT_CELL_INDEX")
-endif()
 
 add_library(puzzlescript_compiler STATIC
   ${PUZZLESCRIPT_COMPILER_PUBLIC_HEADERS}
@@ -151,7 +147,6 @@ target_compile_definitions(puzzlescript_native
   PUBLIC
     PS_MASK_WORD_BITS=${PS_MASK_WORD_BITS}
     PS_INTERPRETER_OBJECT_CELL_INDEX=$<BOOL:${PS_INTERPRETER_OBJECT_CELL_INDEX}>
-    $<$<BOOL:${PS_INTERPRETER_OBJECT_MAJOR}>:PS_INTERPRETER_OBJECT_MAJOR=1>
 )
 
 add_executable(puzzlescript_cpp
