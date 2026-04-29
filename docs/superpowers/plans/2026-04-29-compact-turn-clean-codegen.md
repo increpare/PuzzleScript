@@ -105,6 +105,10 @@ Cleanup order:
 4. Quarantine `CompactStateView` as interpreter-bridge plumbing only, then replace it in compiler mode.
 5. Merge duplicated compact materialization paths into one runtime helper.
 6. Move compiler/codegen responsibilities out of `native/src/cli/main.cpp`.
+7. Make `native/src/runtime/core.hpp` a beautiful first-contact file: split
+   mask primitives, compiled-game IR, session types, and runtime API into
+   focused headers so `core.hpp` can read as a small front door rather than a
+   warehouse.
 
 This phase is now the #1 priority. New compact codegen should not build on duplicated infrastructure.
 
