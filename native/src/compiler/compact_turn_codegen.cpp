@@ -6,6 +6,41 @@
 
 namespace puzzlescript::compiler {
 
+namespace {
+
+void emitCompactTurnUnsupportedBody(std::ostream& out) {
+    out << "    (void)game;\n"
+        << "    (void)levelState;\n"
+        << "    (void)scratch;\n"
+        << "    (void)context;\n"
+        << "    (void)options;\n"
+        << "    (void)input;\n"
+        << "    return {false, {}};\n";
+}
+
+void emitCompactTurnCompilerSkeletonBody(std::ostream& out) {
+    out << "    (void)game;\n"
+        << "    (void)levelState;\n"
+        << "    (void)scratch;\n"
+        << "    (void)context;\n"
+        << "    (void)options;\n"
+        << "    (void)input;\n"
+        << "    ps_step_result result{};\n"
+        << "    // Semantic compact turn compiler skeleton:\n"
+        << "    // 1. validate level dimensions and persistent board storage\n"
+        << "    // 2. decode input direction\n"
+        << "    // 3. seed input movements\n"
+        << "    // 4. apply early rulegroups\n"
+        << "    // 5. resolve movement\n"
+        << "    // 6. apply late rulegroups\n"
+        << "    // 7. process commands and again policy\n"
+        << "    // 8. evaluate win conditions\n"
+        << "    // 9. canonicalize and return result\n"
+        << "    return {false, result};\n";
+}
+
+} // namespace
+
 void emitCompactTurnBackend(
     std::ostream& out,
     const Game& game,
@@ -24,26 +59,14 @@ void emitCompactTurnBackend(
         << "    RuntimeStepOptions options\n"
         << ") {\n";
     if (!compactTurnSupport.supported) {
-        out << "    (void)game;\n"
-            << "    (void)levelState;\n"
-            << "    (void)scratch;\n"
-            << "    (void)context;\n"
-            << "    (void)options;\n"
-            << "    (void)input;\n"
-            << "    return {false, {}};\n"
-            << "}\n\n";
+        emitCompactTurnUnsupportedBody(out);
+        out << "}\n\n";
     } else if (compactTurnSupport.interpreterBridge) {
         out << "    return compactStateInterpretedTurnBridge(game, levelState, scratch, context, input, options);\n"
             << "}\n\n";
     } else {
-        out << "    (void)game;\n"
-            << "    (void)levelState;\n"
-            << "    (void)scratch;\n"
-            << "    (void)context;\n"
-            << "    (void)options;\n"
-            << "    (void)input;\n"
-            << "    return {false, {}};\n"
-            << "}\n\n";
+        emitCompactTurnCompilerSkeletonBody(out);
+        out << "}\n\n";
     }
     out
         << "const SpecializedCompactTurnBackend specialized_compact_turn_backend_" << sourceIndex << " = {\n"
@@ -67,6 +90,13 @@ CompactTurnSupport compactNativeTurnSupportForGame(const Game& game) {
 CompactTurnSupport compactTurnSupportForGame(const Game& game, const CompactCodegenOptions& options) {
     CompactTurnSupport support = compactNativeTurnSupportForGame(game);
     support.nativeFallbackReason = support.fallbackReason;
+    if (!options.interpreterMode) {
+        support.supported = true;
+        support.interpreterBridge = false;
+        support.fallbackReason = "compiler_mode";
+        support.nativeFallbackReason = "compiler_mode";
+        return support;
+    }
     if (options.interpreterMode && !support.supported) {
         support.supported = true;
         support.interpreterBridge = true;

@@ -210,6 +210,14 @@ The CLI should choose interpreter mode or compiler mode at a coarse level only.
 
 **Goal:** Generate a full compact turn function with all major PuzzleScript phases present, even if many phases initially contain TODO traps.
 
+**Progress:**
+- [x] Added coarse compact turn codegen mode plumbing.
+- [x] Compiler mode emits a native compact-turn skeleton with the semantic
+  phase outline.
+- [ ] Add compiler-mode bring-up targets that expect current failures.
+- [ ] Replace the skeleton TODO phases with generated code, one phase at a
+  time.
+
 Generated structure:
 
 ```cpp
