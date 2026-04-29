@@ -33,9 +33,6 @@ std::string compactRuleCommandUnsupportedReason(const RuleCommand& command) {
 }
 
 std::string compactRuleUnsupportedReason(const Rule& rule) {
-    if (rule.isRandom) {
-        return "random_rule";
-    }
     if (rule.rigid) {
         return "rigid_rule";
     }
@@ -254,9 +251,24 @@ void emitCompactPatternFunctions(
 void emitCompactRuleCommandQueue(
     std::ostream& out,
     const Rule& rule,
-    std::string_view suffix
+    const std::string& prefix
 ) {
     if (rule.commands.empty()) {
+        return;
+    }
+    out << "    " << prefix << "_queue_commands(commands);\n";
+}
+
+void emitCompactRuleCommandFunction(
+    std::ostream& out,
+    const Rule& rule,
+    const std::string& prefix,
+    std::string_view suffix
+) {
+    out << "void " << prefix << "_queue_commands(CompactTurnCommands_" << suffix << "& commands) {\n";
+    if (rule.commands.empty()) {
+        out << "    (void)commands;\n"
+            << "}\n\n";
         return;
     }
     out << "    commands.any = true;\n";
@@ -272,7 +284,7 @@ void emitCompactRuleCommandQueue(
             out << "    static_assert(false, \"compact turn compiler command queue emitted unsupported command\");\n";
         }
     }
-    (void)suffix;
+    out << "}\n\n";
 }
 
 void emitCompactRuleFunction(
@@ -333,11 +345,13 @@ void emitCompactRuleFunction(
         out << "    return changed;\n"
             << "}\n\n";
     }
+    emitCompactRuleCommandFunction(out, rule, prefix, suffix);
 
-    out << "bool " << prefix << "_apply(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
+    out << "bool " << prefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<int32_t>>& matches) {\n"
         << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
+        << "    matches.assign(rowCount, std::vector<int32_t>{});\n"
         << "    const int32_t tileCount = compact_turn_tile_count_" << suffix << "(dimensions);\n"
-        << "    std::vector<std::vector<int32_t>> matches(rowCount);\n";
+        << "    (void)tileCount;\n";
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
         const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
         out << "    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {\n"
@@ -347,25 +361,43 @@ void emitCompactRuleFunction(
             << "    }\n"
             << "    if (matches[" << rowIndex << "].empty()) return false;\n";
     }
-    emitCompactRuleCommandQueue(out, rule, suffix);
+    out << "    return true;\n"
+        << "}\n\n";
+
+    out << "bool " << prefix << "_tuple_still_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, const std::vector<std::vector<int32_t>>& matches, const std::vector<size_t>& tupleIndex) {\n";
+    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+        const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
+        out << "    if (!" << rowPrefix
+            << "_matches(dimensions, levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) return false;\n";
+    }
+    out << "    return true;\n"
+        << "}\n\n";
+
+    out << "bool " << prefix << "_apply_tuple(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, const std::vector<std::vector<int32_t>>& matches, const std::vector<size_t>& tupleIndex) {\n"
+        << "    bool changed = false;\n";
+    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+        const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
+        out << "    changed = " << rowPrefix
+            << "_apply_replacements(dimensions, levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
+    }
+    out << "    return changed;\n"
+        << "}\n\n";
+
+    out << "bool " << prefix << "_apply(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
+        << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
+        << "    std::vector<std::vector<int32_t>> matches;\n"
+        << "    if (!" << prefix << "_collect_matches(dimensions, levelState, scratch, matches)) return false;\n";
+    emitCompactRuleCommandQueue(out, rule, prefix);
     out << "    std::vector<size_t> tupleIndex(rowCount, 0);\n"
         << "    bool firstTuple = true;\n"
         << "    bool changed = false;\n"
         << "    while (true) {\n"
         << "        bool stillMatches = true;\n"
         << "        if (!firstTuple) {\n";
-    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-        const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-        out << "            if (!" << rowPrefix
-            << "_matches(dimensions, levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) stillMatches = false;\n";
-    }
+    out << "            stillMatches = " << prefix << "_tuple_still_matches(dimensions, levelState, scratch, matches, tupleIndex);\n";
     out << "        }\n"
         << "        if (stillMatches) {\n";
-    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-        const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-        out << "            changed = " << rowPrefix
-            << "_apply_replacements(dimensions, levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
-    }
+    out << "            changed = " << prefix << "_apply_tuple(dimensions, levelState, scratch, matches, tupleIndex) || changed;\n";
     out << "        }\n"
         << "        firstTuple = false;\n"
         << "        size_t rowToIncrement = 0;\n"
@@ -405,12 +437,43 @@ void emitCompactRulegroupFunctions(
             continue;
         }
         if (group[0].isRandom) {
-            out << "    (void)dimensions;\n"
-                << "    (void)levelState;\n"
-                << "    (void)scratch;\n"
-                << "    (void)commands;\n"
-                << "    static_assert(false, \"compact turn compiler TODO: random rule group\");\n"
-                << "    return false;\n"
+            out << "    struct Candidate {\n"
+                << "        size_t ruleIndex = 0;\n"
+                << "        std::vector<size_t> tupleIndex;\n"
+                << "    };\n"
+                << "    std::vector<std::vector<std::vector<int32_t>>> groupMatches(" << group.size() << ");\n"
+                << "    std::vector<Candidate> candidates;\n";
+            for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                const std::string rulePrefix = compactRulePrefix(suffix, phase, groupIndex, ruleIndex);
+                out << "    if (" << rulePrefix << "_collect_matches(dimensions, levelState, scratch, groupMatches[" << ruleIndex << "])) {\n"
+                    << "        std::vector<size_t> tupleIndex(groupMatches[" << ruleIndex << "].size(), 0);\n"
+                    << "        while (true) {\n"
+                    << "            candidates.push_back(Candidate{" << ruleIndex << ", tupleIndex});\n"
+                    << "            size_t rowToIncrement = 0;\n"
+                    << "            while (rowToIncrement < groupMatches[" << ruleIndex << "].size()) {\n"
+                    << "                ++tupleIndex[rowToIncrement];\n"
+                    << "                if (tupleIndex[rowToIncrement] < groupMatches[" << ruleIndex << "][rowToIncrement].size()) break;\n"
+                    << "                tupleIndex[rowToIncrement] = 0;\n"
+                    << "                ++rowToIncrement;\n"
+                    << "            }\n"
+                    << "            if (rowToIncrement == groupMatches[" << ruleIndex << "].size()) break;\n"
+                    << "        }\n"
+                    << "    }\n";
+            }
+            out << "    if (candidates.empty()) return false;\n"
+                << "    const double randomValue = compact_turn_random_uniform_" << suffix << "(levelState.rng);\n"
+                << "    const size_t chosenIndex = std::min(candidates.size() - 1, static_cast<size_t>(randomValue * static_cast<double>(candidates.size())));\n"
+                << "    const Candidate& chosen = candidates[chosenIndex];\n"
+                << "    switch (chosen.ruleIndex) {\n";
+            for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
+                const std::string rulePrefix = compactRulePrefix(suffix, phase, groupIndex, ruleIndex);
+                out << "        case " << ruleIndex << ":\n"
+                    << "            " << rulePrefix << "_queue_commands(commands);\n"
+                    << "            return " << rulePrefix << "_apply_tuple(dimensions, levelState, scratch, groupMatches[" << ruleIndex << "], chosen.tupleIndex);\n";
+            }
+            out << "        default:\n"
+                << "            return false;\n"
+                << "    }\n"
                 << "}\n\n";
             continue;
         }
@@ -569,6 +632,23 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    bool hasMessage = false;\n"
         << "    std::string messageText;\n"
         << "};\n\n";
+
+    out << "uint8_t compact_turn_next_random_byte_" << suffix << "(RandomState& state) {\n"
+        << "    state.i = static_cast<uint8_t>((state.i + 1) % 256);\n"
+        << "    state.j = static_cast<uint8_t>((state.j + state.s[static_cast<size_t>(state.i)]) % 256);\n"
+        << "    std::swap(state.s[static_cast<size_t>(state.i)], state.s[static_cast<size_t>(state.j)]);\n"
+        << "    const uint8_t index = static_cast<uint8_t>((state.s[static_cast<size_t>(state.i)] + state.s[static_cast<size_t>(state.j)]) % 256);\n"
+        << "    return state.s[static_cast<size_t>(index)];\n"
+        << "}\n\n";
+
+    out << "double compact_turn_random_uniform_" << suffix << "(RandomState& state) {\n"
+        << "    double output = 0.0;\n"
+        << "    for (int32_t index = 0; index < 7; ++index) {\n"
+        << "        output *= 256.0;\n"
+        << "        output += compact_turn_next_random_byte_" << suffix << "(state);\n"
+        << "    }\n"
+        << "    return output / 72057594037927935.0;\n"
+        << "}\n\n";
 
     out << "bool compact_turn_can_handle_turn_" << suffix << "() {\n"
         << "    return " << (canCompactCompilerHandleTurn(game) ? "true" : "false") << ";\n"

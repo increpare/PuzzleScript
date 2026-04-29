@@ -357,7 +357,7 @@ Acceptance:
 - [x] Handle `require_player_movement` cancellation for compiler-mode turns.
 - [ ] Handle restart/reset/cancel terminal treatment for solver.
 - [ ] Handle `again` policy.
-- [ ] Thread deterministic RNG for semantics that use it.
+- [x] Thread deterministic RNG for random rule-group selection.
 - [x] Queue simple output commands (`message`, `again`) for compiler-mode
   result parity.
 
@@ -376,7 +376,8 @@ Acceptance:
 Implement remaining PuzzleScript semantics one feature at a time:
 
 - ellipsis
-- random rules and random replacements
+- random rules
+- random replacements
 - rigid rules
 - loop points
 - commands
@@ -463,6 +464,8 @@ Additional ranked-frontier probes:
   case 126, "Removing background tiles breaks \"no X\" wincondition (#534)": passes
   case 144, "fourth test for #492 movement not getting correctly cleared from tile": passes
   case 145, "fifth test for #492 movement not getting correctly cleared from tile": passes
+  case 146, "random rules - report by caeth": passes
+    added coverage: generic random rule-group candidate selection and persistent RNG threading
   case 147, "right [ vertical Player | perpendicular Player ] -> [ perpendicular Player | ] produces error #682": passes
   case 148, "right [ horizontal TestObject1 | perpendicular TestObject1 ] -> [ perpendicular TestObject1 | ] produces an error #498": passes
   case 149, "[ orthogonal a | moving a ] -> [ moving a | orthogonal a ] produces an error #496": passes
@@ -471,7 +474,7 @@ Additional ranked-frontier probes:
   case 152, "super tricky (related to #469) right [ vertical playerortarget | vertical player ] -> [ playerortarget | playerortarget ]": passes
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
 
-Selected compiler-mode testdata progress: 24/469 known passing.
+Selected compiler-mode testdata progress: 25/469 known passing.
 
 Additional ranked-frontier command probe:
   case 93, "again + message combo": passes
@@ -481,7 +484,8 @@ Known next unsupported feature from numeric case 6:
   ellipsis at source rule line 51
 
 Known ranked-frontier unsupported feature:
-  case 146: random_rule at source rule line 56
+  random replacements remain unsupported until replacement emission can choose
+  random entities/directions from the compiled masks.
 ```
 
 Recommended progress report:
