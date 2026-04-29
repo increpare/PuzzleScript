@@ -465,6 +465,11 @@ make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=6
 Additional ranked-frontier probes:
   case 7, "ellipsisPropagationBug1": passes
   case 13, "rigid body test": passes
+  case 16, "annoying edge case": passes
+  case 23, "beginloop/endloop with mutual recursion": passes
+  case 26, "simple sokobond test": passes
+  case 37, "ortho test 1": passes
+  case 38, "ortho test 2": passes
   case 40, "don't mask movements if no movements happening": passes
   case 42, "Remove movements from empty layers after rule application": passes
   case 43, "movement matching - correctly matching different objects same cell moving in different directions": passes
@@ -488,14 +493,14 @@ Additional ranked-frontier probes:
   case 152, "super tricky (related to #469) right [ vertical playerortarget | vertical player ] -> [ playerortarget | playerortarget ]": passes
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
 
-Selected compiler-mode testdata progress: 31/469 known passing.
+Selected compiler-mode testdata progress: 36/469 known passing.
 
 Additional ranked-frontier command probe:
   case 93, "again + message combo": passes
   added coverage: simple `message` and `again` command queueing
 
 Known next unsupported ranked-frontier feature:
-  loop points / loop command structure
+  case 48: random_direction_replacement at source rule line 81
 
 Known ranked-frontier unsupported feature:
   random replacements remain unsupported until replacement emission can choose
