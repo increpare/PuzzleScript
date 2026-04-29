@@ -456,8 +456,13 @@ Additional ranked-frontier probes:
   case 40, "don't mask movements if no movements happening": passes
   case 42, "Remove movements from empty layers after rule application": passes
   case 43, "movement matching - correctly matching different objects same cell moving in different directions": passes
+  case 111, "Make synonyms of properties work. #215": passes
   case 114, "Make synonyms of properties work. #243": passes
+  case 122, "Synonym confusion": passes
   case 125, "Reserved keywords are too greedy (#419)": passes
+  case 126, "Removing background tiles breaks \"no X\" wincondition (#534)": passes
+
+Selected compiler-mode testdata progress: 14/469 known passing.
 
 Additional ranked-frontier command probe:
   case 93, "again + message combo": passes
