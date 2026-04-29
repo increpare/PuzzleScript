@@ -794,31 +794,19 @@ CompactTurnTryResult trySpecializedCompactTurn(
     }
     result.attempted = true;
     result.state = parent;
-    puzzlescript::CompactStateView view{
-        result.state.boardOccupancy.objectBits.empty() ? nullptr : result.state.boardOccupancy.objectBits.data(),
-        result.state.boardOccupancy.objectBits.size(),
-        nullptr,
-        0,
-        dimensions.width,
-        dimensions.height,
-        result.state.rng.s.data(),
-        result.state.rng.s.size(),
-        &result.state.rng.i,
-        &result.state.rng.j,
-        &result.state.rng.valid,
-        currentLevelIndex,
-    };
+    puzzlescript::Scratch scratch;
+    puzzlescript::SpecializedCompactTurnContext context{dimensions, currentLevelIndex};
     const puzzlescript::SpecializedCompactTurnOutcome outcome =
-        game.specializedCompactTurn->step(game, view, input, options);
+        game.specializedCompactTurn->step(game, result.state, scratch, context, input, options);
     if (outcome.handled) {
         const bool profileCompactTurn = puzzlescript::runtimeCountersEnabled();
         const uint64_t canonicalizeStartNs = profileCompactTurn ? puzzlescript::runtimeCounterNowNs() : 0;
         puzzlescript::canonicalizeCompactObjectBits(
             game,
-            view.width,
-            view.height,
-            view.objectBits,
-            view.objectBitWordCount
+            dimensions.width,
+            dimensions.height,
+            result.state.boardOccupancy.objectBits.empty() ? nullptr : result.state.boardOccupancy.objectBits.data(),
+            result.state.boardOccupancy.objectBits.size()
         );
         if (profileCompactTurn) {
             puzzlescript::addRuntimeCounter(

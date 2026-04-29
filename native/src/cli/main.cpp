@@ -5441,23 +5441,29 @@ std::string generateCompiledRulesCpp(
             << "};\n\n"
             << "SpecializedCompactTurnOutcome specialized_compact_turn_source_" << sourceIndex << "(\n"
             << "    const Game& game,\n"
-            << "    CompactStateView state,\n"
+            << "    PersistentLevelState& levelState,\n"
+            << "    Scratch& scratch,\n"
+            << "    SpecializedCompactTurnContext context,\n"
             << "    ps_input input,\n"
             << "    RuntimeStepOptions options\n"
             << ") {\n";
         if (!compactTurnSupport.supported) {
             out << "    (void)game;\n"
-                << "    (void)state;\n"
+                << "    (void)levelState;\n"
+                << "    (void)scratch;\n"
+                << "    (void)context;\n"
                 << "    (void)options;\n"
                 << "    (void)input;\n"
                 << "    return {false, {}};\n"
                 << "}\n\n";
         } else if (compactTurnSupport.interpreterBridge) {
-            out << "    return compactStateInterpretedTurnBridge(game, state, input, options);\n"
+            out << "    return compactStateInterpretedTurnBridge(game, levelState, scratch, context, input, options);\n"
                 << "}\n\n";
         } else {
             out << "    (void)game;\n"
-                << "    (void)state;\n"
+                << "    (void)levelState;\n"
+                << "    (void)scratch;\n"
+                << "    (void)context;\n"
                 << "    (void)options;\n"
                 << "    (void)input;\n"
                 << "    return {false, {}};\n"

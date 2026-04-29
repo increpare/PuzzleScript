@@ -70,18 +70,24 @@ void markCompactBridgeFullStateDirty(FullState& session) {
     session.scratch.anyMasksDirty = true;
 }
 
-void materializeCompactBridgeState(const Game& game, CompactStateView state, FullState& session) {
-    session.levelState.liveLevel.width = state.width;
-    session.levelState.liveLevel.height = state.height;
+void materializeCompactBridgeState(
+    const Game& game,
+    const PersistentLevelState& levelState,
+    const Scratch& scratch,
+    LevelDimensions dimensions,
+    FullState& session
+) {
+    session.levelState.liveLevel.width = dimensions.width;
+    session.levelState.liveLevel.height = dimensions.height;
     session.levelState.liveLevel.layerCount = game.layerCount;
-    const int32_t tileCount = state.width * state.height;
+    const int32_t tileCount = dimensions.width * dimensions.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     session.levelState.liveLevel.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(game.strideObject, 0)), 0);
     for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
         const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
         for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-            uint64_t bits = objectBase + bitWord < state.objectBitWordCount
-                ? state.objectBits[objectBase + bitWord]
+            uint64_t bits = objectBase + bitWord < levelState.boardOccupancy.objectBits.size()
+                ? levelState.boardOccupancy.objectBits[objectBase + bitWord]
                 : 0;
             while (bits != 0) {
                 const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(bits));
@@ -97,8 +103,8 @@ void materializeCompactBridgeState(const Game& game, CompactStateView state, Ful
     }
     const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * std::max(game.strideMovement, 0));
     session.scratch.liveMovements.assign(movementWordCount, 0);
-    if (state.movementWords != nullptr && state.movementWordCount == movementWordCount) {
-        std::copy(state.movementWords, state.movementWords + state.movementWordCount, session.scratch.liveMovements.begin());
+    if (scratch.liveMovements.size() == movementWordCount) {
+        std::copy(scratch.liveMovements.begin(), scratch.liveMovements.end(), session.scratch.liveMovements.begin());
     }
     session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
     session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
@@ -106,15 +112,8 @@ void materializeCompactBridgeState(const Game& game, CompactStateView state, Ful
     session.scratch.pendingDestroyMask.clear();
     session.meta.pendingAgain = false;
     session.meta.undoStack.clear();
-    if (state.randomStateS != nullptr
-        && state.randomStateSize == session.levelState.rng.s.size()
-        && state.randomStateI != nullptr
-        && state.randomStateJ != nullptr
-        && state.randomStateValid != nullptr) {
-        session.levelState.rng.i = *state.randomStateI;
-        session.levelState.rng.j = *state.randomStateJ;
-        session.levelState.rng.valid = *state.randomStateValid;
-        std::copy(state.randomStateS, state.randomStateS + state.randomStateSize, session.levelState.rng.s.begin());
+    if (levelState.rng.s.size() == session.levelState.rng.s.size()) {
+        session.levelState.rng = levelState.rng;
     }
     resizeBoardOccupancyObjectBits(session);
     syncOccupancyRngFromAuthoritativeRandomState(session);
@@ -122,58 +121,47 @@ void materializeCompactBridgeState(const Game& game, CompactStateView state, Ful
     compiledRuleRebuildMasks(session);
 }
 
-void copyCompactBridgeStateBack(const FullState& session, CompactStateView state) {
+void copyCompactBridgeStateBack(const FullState& session, PersistentLevelState& levelState, Scratch& scratch) {
     const Game& game = *session.game;
     const int32_t tileCount = session.levelState.liveLevel.width * session.levelState.liveLevel.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const size_t requiredWords = static_cast<size_t>(std::max(game.objectCount, 0)) * cellWordCount;
-    if (state.objectBits != nullptr && state.objectBitWordCount >= requiredWords) {
-        std::fill(state.objectBits, state.objectBits + state.objectBitWordCount, 0);
-        for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-            const size_t sourceBase = static_cast<size_t>(tileIndex * game.strideObject);
-            const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
-            const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
-            for (int32_t word = 0; word < game.strideObject; ++word) {
-                MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(session.levelState.liveLevel.objects[sourceBase + static_cast<size_t>(word)]);
-                while (bits != 0) {
-                    const uint32_t bit = static_cast<uint32_t>(
-                        sizeof(MaskWordUnsigned) <= sizeof(unsigned int)
-                            ? __builtin_ctz(static_cast<unsigned int>(bits))
-                            : __builtin_ctzll(static_cast<unsigned long long>(bits))
-                    );
-                    const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
-                    if (objectId < game.objectCount) {
-                        state.objectBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
-                    }
-                    bits &= bits - 1;
+    levelState.boardOccupancy.objectBits.assign(requiredWords, 0);
+    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
+        const size_t sourceBase = static_cast<size_t>(tileIndex * game.strideObject);
+        const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
+        const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+        for (int32_t word = 0; word < game.strideObject; ++word) {
+            MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(session.levelState.liveLevel.objects[sourceBase + static_cast<size_t>(word)]);
+            while (bits != 0) {
+                const uint32_t bit = static_cast<uint32_t>(
+                    sizeof(MaskWordUnsigned) <= sizeof(unsigned int)
+                        ? __builtin_ctz(static_cast<unsigned int>(bits))
+                        : __builtin_ctzll(static_cast<unsigned long long>(bits))
+                );
+                const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
+                if (objectId < game.objectCount) {
+                    levelState.boardOccupancy.objectBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
                 }
+                bits &= bits - 1;
             }
         }
     }
-    if (state.randomStateS != nullptr
-        && state.randomStateSize == session.levelState.rng.s.size()
-        && state.randomStateI != nullptr
-        && state.randomStateJ != nullptr
-        && state.randomStateValid != nullptr) {
-        *state.randomStateI = session.levelState.rng.i;
-        *state.randomStateJ = session.levelState.rng.j;
-        *state.randomStateValid = session.levelState.rng.valid;
-        std::copy(session.levelState.rng.s.begin(), session.levelState.rng.s.end(), state.randomStateS);
-    }
-    if (state.movementWords != nullptr && state.movementWordCount == session.scratch.liveMovements.size()) {
-        std::copy(session.scratch.liveMovements.begin(), session.scratch.liveMovements.end(), state.movementWords);
-    }
+    levelState.rng = session.levelState.rng;
+    scratch.liveMovements = session.scratch.liveMovements;
 }
 
 } // namespace
 
 SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
     const Game& game,
-    CompactStateView state,
+    PersistentLevelState& levelState,
+    Scratch& scratch,
+    SpecializedCompactTurnContext context,
     ps_input input,
     RuntimeStepOptions options
 ) {
-    if (state.objectBits == nullptr || state.width <= 0 || state.height <= 0) {
+    if (levelState.boardOccupancy.objectBits.empty() || context.dimensions.width <= 0 || context.dimensions.height <= 0) {
         return {false, {}};
     }
     const bool profileCompactTurn = runtimeCountersEnabled();
@@ -192,20 +180,20 @@ SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
     std::shared_ptr<const Game> gameRef(&game, [](const Game*) {});
     LoadedGame loadedGame{std::move(gameRef), MetaGameState{}};
     std::unique_ptr<FullState> session = createFullState(loadedGame);
-    if (state.currentLevelIndex >= 0 && static_cast<size_t>(state.currentLevelIndex) < game.levels.size()) {
-        if (auto error = loadLevel(*session, state.currentLevelIndex)) {
+    if (context.currentLevelIndex >= 0 && static_cast<size_t>(context.currentLevelIndex) < game.levels.size()) {
+        if (auto error = loadLevel(*session, context.currentLevelIndex)) {
             (void)error;
             return {false, {}};
         }
     }
     addProfileNs(RuntimeCounterId::CompactTurnBridgeCreateNs);
-    materializeCompactBridgeState(game, state, *session);
+    materializeCompactBridgeState(game, levelState, scratch, context.dimensions, *session);
     addProfileNs(RuntimeCounterId::CompactTurnBridgeMaterializeNs);
     RuntimeStepOptions drainOptions = options;
     drainOptions.againPolicy = AgainPolicy::Drain;
     ps_step_result result = interpretedTurn(*session, input, drainOptions);
     addProfileNs(RuntimeCounterId::CompactTurnBridgeTurnNs);
-    copyCompactBridgeStateBack(*session, state);
+    copyCompactBridgeStateBack(*session, levelState, scratch);
     addProfileNs(RuntimeCounterId::CompactTurnBridgeCopybackNs);
     return {true, result};
 }

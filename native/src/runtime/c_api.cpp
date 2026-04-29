@@ -13,7 +13,6 @@
 using puzzlescript::CompileResult;
 using puzzlescript::SpecializedCompactTurnOutcome;
 using puzzlescript::SpecializedCompactTurnBackend;
-using puzzlescript::CompactStateView;
 using puzzlescript::Error;
 using puzzlescript::FullState;
 using puzzlescript::Game;
@@ -348,32 +347,37 @@ bool ps_full_state_compact_turn_oracle_check(
     }
 
     CompactOracleState compact = compactOracleStateFromFullState(original);
-    CompactStateView view{
-        compact.objectBits.empty() ? nullptr : compact.objectBits.data(),
-        compact.objectBits.size(),
-        compact.movementWords.empty() ? nullptr : compact.movementWords.data(),
-        compact.movementWords.size(),
-        original.levelState.liveLevel.width,
-        original.levelState.liveLevel.height,
-        compact.randomState.s.data(),
-        compact.randomState.s.size(),
-        &compact.randomState.i,
-        &compact.randomState.j,
-        &compact.randomState.valid,
+    puzzlescript::PersistentLevelState compactLevelState;
+    compactLevelState.boardOccupancy.objectBits = compact.objectBits;
+    compactLevelState.rng = compact.randomState;
+    puzzlescript::Scratch compactScratch;
+    compactScratch.liveMovements = compact.movementWords;
+    puzzlescript::SpecializedCompactTurnContext context{
+        puzzlescript::LevelDimensions{original.levelState.liveLevel.width, original.levelState.liveLevel.height},
         original.meta.currentLevelIndex,
     };
     RuntimeStepOptions options{};
     options.emitAudio = false;
     options.againPolicy = puzzlescript::AgainPolicy::Drain;
-    const SpecializedCompactTurnOutcome compactOutcome = backend->step(*original.game, view, input, options);
+    const SpecializedCompactTurnOutcome compactOutcome = backend->step(
+        *original.game,
+        compactLevelState,
+        compactScratch,
+        context,
+        input,
+        options
+    );
     if (compactOutcome.handled) {
         puzzlescript::canonicalizeCompactObjectBits(
             *original.game,
-            view.width,
-            view.height,
-            view.objectBits,
-            view.objectBitWordCount
+            context.dimensions.width,
+            context.dimensions.height,
+            compactLevelState.boardOccupancy.objectBits.empty() ? nullptr : compactLevelState.boardOccupancy.objectBits.data(),
+            compactLevelState.boardOccupancy.objectBits.size()
         );
+        compact.objectBits = compactLevelState.boardOccupancy.objectBits;
+        compact.movementWords = compactScratch.liveMovements;
+        compact.randomState = compactLevelState.rng;
     }
 
     FullState interpreter = original;

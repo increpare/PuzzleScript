@@ -50,29 +50,21 @@ struct SpecializedFullTurnBackend {
     SpecializedFullTurnSupportInfo support{};
 };
 
-struct CompactStateView {
-    uint64_t* objectBits = nullptr;
-    size_t objectBitWordCount = 0;
-    MaskWord* movementWords = nullptr;
-    size_t movementWordCount = 0;
-    int32_t width = 0;
-    int32_t height = 0;
-    uint8_t* randomStateS = nullptr;
-    size_t randomStateSize = 0;
-    uint8_t* randomStateI = nullptr;
-    uint8_t* randomStateJ = nullptr;
-    bool* randomStateValid = nullptr;
-    int32_t currentLevelIndex = 0;
-};
-
 struct SpecializedCompactTurnOutcome {
     bool handled = false;
     ps_step_result result{};
 };
 
+struct SpecializedCompactTurnContext {
+    LevelDimensions dimensions;
+    int32_t currentLevelIndex = 0;
+};
+
 using SpecializedCompactTurnFn = SpecializedCompactTurnOutcome (*)(
     const Game& game,
-    CompactStateView state,
+    PersistentLevelState& levelState,
+    Scratch& scratch,
+    SpecializedCompactTurnContext context,
     ps_input input,
     RuntimeStepOptions options
 );
@@ -101,7 +93,9 @@ void attachLinkedCompiledRules(Game& game, std::string_view source);
 const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset);
 SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
     const Game& game,
-    CompactStateView state,
+    PersistentLevelState& levelState,
+    Scratch& scratch,
+    SpecializedCompactTurnContext context,
     ps_input input,
     RuntimeStepOptions options
 );
