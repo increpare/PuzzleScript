@@ -734,190 +734,53 @@ attribute graph cost -> no-allocation hash -> flat visited table
     compact_timeout_regressions=2
   ```
 
-- [ ] Add a generated compact turn prototype.
+- [x] Preserve historical compact-turn prototype evidence.
 
-  Intent: once compact state exists, whole-game compilation should target it
-  directly: `turn(compact_state, input) -> compact_state`, with `FullState`
-  retained as oracle and fallback rather than as the hot state container.
+  Status: the first compact-turn prototype proved backend linkage, solver
+  dispatch counters, oracle comparison, and the cell-major persistent board
+  boundary. Its shape-specific support list is now historical evidence only;
+  it is not the active growth strategy.
 
-  Near-term task list:
-
-  - [x] Add a separate compact turn backend type and weak finder instead of changing
-    the existing `SpecializedFullTurnBackend` layout.
-  - [x] Attach the compact backend by source hash next to specialized
-    rulegroups and specialized full-turn backends.
-  - [x] Add solver-side capability checks and counters that distinguish:
-    `compact_turn_attempt`, `compact_turn_hit`, `compact_turn_fallback`, and
-    `compact_turn_unsupported`.
-  - [x] Try compact turn before the interpreter-backed scratch fallback when a
-    supported compact backend is attached.
-  - [x] Generate a `handled=false` compact backend stub so linkage, dispatch, and
-    counters are proven before behavior moves.
-  - [x] Refactor the current solver edge into a named helper with two
-    implementations: compact turn first, interpreter-backed scratch fallback
-    second.
-  - [x] Pick one deterministic, no-random, no-again, no-restart focus fixture for
-    the first `handled=true` compact turn.
-    First target: `src/tests/solver_smoke_tests/one_move.txt`.
-  - [x] Generate direct object-bitset input seeding and fixed movement execution
-    for that fixture.
-  - [x] Generalize simple push compact turns to multiple pushed objects on one
-    collision layer, including property/aggregate push cells whose possible
-    object ids are all in the pushed-object set.
-  - [x] Generalize compact win checks from one object pair to multiple simple
-    `all subject on target` object pairs.
-  - [x] Support no-win-condition compact turns for command-free movement-only
-    and simple-push games by reporting `won=false`.
-  - [x] Compare the compact turn output against the interpreter fallback inside a
-    debug/oracle mode before allowing solver use.
-  - [ ] Only then fold compact heuristic/hash computation into the compact turn
-    result when it can reuse touched state.
-
-  Current first-slice behavior:
-
-  - Supports movement-only games with no early/late rules, no rigid behavior,
-    no turn-affecting metadata except `require_player_movement`, one
-    non-aggregate player object, one player in every non-message level, and one
-    simple `all player on target` win condition.
-  - Supports a conservative simple push shape in either common win orientation:
-    `all Crate on Target` or `all Target on Crate`, including multiple crates
-    and targets.
-  - Supports multiple independent simple win pairs, such as crate-swap games
-    with `all Target1 on Crate1` and `all Target2 on Crate2`.
-  - Supports property/aggregate push cells when the aggregate is known to contain
-    only the pushed objects and all pushed objects share one collision layer.
-  - Supports games with no win conditions only when the compact-supported rule
-    shape has no commands, so `win` commands cannot be missed.
-  - Generated compact turn falls back if audio emission is requested; solver
-    calls use `emitAudio=false`, so sound declarations do not block compact
-    state stepping.
-  - Compact/search state now uses the cell-major persistent board; derived
-    object-major `objectCellBits` are scratch-only rule-scan indexes.
-  - Unsupported games still attach a compact backend with
-    `wholeTurnSupported=false` and remain on the interpreter-backed scratch
-    fallback.
-
-  Current evidence:
+  Last validated evidence after the cell-major cleanup:
 
   ```text
-  one_move.txt specialized compact solver:
-    solution=right
-    compact_turn_attempts=1
-    compact_turn_hits=1
-    compact_turn_fallbacks=0
-    compact_turn_unsupported=0
-    step_ms=0.000084
+  make compact_turn_oracle_smoke:
+    solver_smoke_assert passed cases=7
+    compact_turn_oracle_checks=18
+    compact_turn_oracle_failures=0
 
-  push_goal.txt specialized compact solver:
-    solution=right,right
-    compact_turn_attempts=6
-    compact_turn_hits=6
-    compact_turn_fallbacks=0
-    compact_turn_unsupported=0
-    interpreted_step_ms=0.021585
-    compact_step_ms=0.000375
-
-  solver_tests compact turn source support:
-    before simple-push win orientation expansion: 4/182
-    after simple-push win orientation expansion: 5/182
-    after multi-win aggregate-push expansion: 6/182
-
-  a cliche for bedtime.txt specialized compact solver:
-    compact_turn_attempts=1498591
-    compact_turn_hits=1498572
-    compact_turn_fallbacks=19
-    compact_turn_unsupported=0
-
-  crate swap.txt specialized compact solver:
-    compact_turn_attempts=73676
-    compact_turn_hits=73676
-    compact_turn_fallbacks=0
-    compact_turn_unsupported=0
-    interpreted_step_ms=90.6633
-    compact_step_ms=2.0415
-    step_speedup=44.4x
-
-  testdata.js compact turn source support:
-    before no-win simple-push support: 22/452
-    after no-win simple-push support: 23/452
-    after win-mask expansion: 25/452
-    after conservative push-chain expansion: 25/452
-    after direct one-cell object-rule expansion: 27/452
-    after non-push multi-player direct-cell expansion: 70/452
-    after simple consume movement expansion: 71/452
-    after direct late-cell expansion: 72/452
-    after simple target-clear movement expansion: 73/452
-    after non-player movement-clear direct-cell expansion: 75/452
-    after sound-only command allowance for compact movement shapes: 76/452
-    after rule-derived push candidate fallback: 77/452
-    after multi-player simple-push level allowance: 79/452
-    callable compact backends through native-or-bridge: 452/452
-
-  testdata.js#1 sokoban no win condition:
-    status parity: exhausted/exhausted/exhausted
-    expanded parity: 24149
-    generated parity: 120745
-    compact_turn_attempts=120745
-    compact_turn_hits=120740
-    compact_turn_fallbacks=5
-    compact_turn_unsupported=0
-    interpreted_step_ms=149.630
-    compact_step_ms=3.441
-    step_speedup=43.5x
-
-  compact turn oracle mode:
-    option: --compact-turn-oracle
-    behavior: materializes each generated compact turn parent through the
-      interpreter and compares solver-relevant step flags plus resulting compact
-      object bits, complete RNG state, and the settled movement-zero invariant
-      for non-terminal edges.
-    make target: make compact_turn_oracle_smoke
-    solver_smoke_tests specialized:
-      compact_turn_oracle_checks=18
-      compact_turn_oracle_failures=0
-    compact parity harness:
-      command: node src/tests/run_solver_compact_parity.js <specialized-solver>
-        src/tests/solver_smoke_tests --compact-turn-oracle
-        --require-compact-oracle-checks
-      compact_turn_oracle_checks=18
-      compact_turn_oracle_failures=0
-    crate swap.txt level=1 bfs:
-      compact_turn_attempts=28589
-      compact_turn_hits=28589
-      compact_turn_oracle_checks=28589
-      compact_turn_oracle_failures=0
-    full testdata.js compact turn oracle:
-      make target: make compact_turn_simulation_tests
-      cases=469
-      compact_turn_oracle_checks=16554
-      compact_turn_oracle_handled=16554
-      compact_turn_oracle_failures=0
+  make compact_turn_simulation_tests:
+    cpp_simulation_tests_direct passed=469 failed=0
+    compact_turn_oracle_checks=16554
+    compact_turn_oracle_handled=16554
+    compact_turn_oracle_failures=0
   ```
 
-  Acceptance criteria:
+- [ ] Rebuild compact turn codegen from semantic phases.
 
-  - One supported game has a generated C++ compact turn entrypoint.
-  - The entrypoint reads/writes compact state directly for the supported turn
-    slice.
-  - The compact turn result reports changed, won, game-over/restart, and
-    unsupported/fallback status without heap allocation.
-  - Interpreter parity compares compact turn output against the interpreted turn
-    path materialized through `FullState`.
-  - Solver can choose compact turn for supported states and fall back cleanly
-    before mutating state when unsupported behavior is encountered.
+  Active plan: `docs/superpowers/plans/2026-04-29-compact-turn-clean-codegen.md`.
 
-  Validation:
+  Intent: generated compact turns should compile PuzzleScript semantics, not
+  recognize individual game families. Interpreter mode remains an explicit
+  stable path; compiler mode emits native compact code and lets compile errors,
+  runtime traps, oracle mismatches, or simulation failures expose missing
+  semantics.
 
-  ```sh
-  make simulation_tests_cpp
-  make solver_smoke_tests SPECIALIZE=true
-  make solver_parity_smoke SPECIALIZE=true
-  make solver_focus_compare SPECIALIZE=true SOLVER_FOCUS_RUNS=1
-  make solver_focus_compact_compare SOLVER_FOCUS_RUNS=1
-  ```
+  Next acceptance criteria:
 
-- [ ] Retire duplicated compact-state checklist items once this track owns
-  them.
+  - Move compact turn codegen out of `native/src/cli/main.cpp` into a dedicated
+    compiler module.
+  - Add a coarse interpreter/compiler mode switch; do not add a new
+    per-feature fallback matrix.
+  - In compiler mode, emit a complete semantic turn skeleton for every source:
+    input decoding, movement seeding, early rules, movement resolution, late
+    rules, command/again handling, win checks, and result assembly.
+  - Use the cell-major `PersistentLevelState` + explicit `LevelDimensions` +
+    `Scratch` boundary.
+  - Measure progress by compiler-mode simulation pass count, not fallback
+    coverage.
+
+- [x] Retire duplicated compact-state checklist items from this track.
 
   Acceptance criteria:
 
@@ -1973,63 +1836,39 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 ## Specialized State Layout
 
-- [?] Decide the first specialized state boundary.
+- [x] Use the solver compact-state boundary defined above.
 
-  Options:
+  This section used to duplicate the compact-state boundary decision. The
+  active state-layout notes now live in `Define the solver compact-state
+  boundary` and the clean codegen plan. The current boundary is:
 
-  - Keep using `FullState` and specialize only code first.
-  - Introduce a compact generated state alongside `FullState`.
-  - Introduce a compact state only for solver/generator, leaving player/API
-    paths on `FullState`.
+  - `PersistentLevelState` owns the cell-major persistent board and RNG.
+  - `LevelDimensions` is explicit context.
+  - `Scratch` owns execution buffers, including derived object-cell indexes.
+  - Solver-node invariants remain: settled movement, exhausted `again`, level
+    as search context, checkpoint ignored, restart as terminal/dead edge.
 
-  Recommended default: keep using `FullState` until specialized full-turn code
-  has meaningful behavior, then introduce compact solver/generator state.
-
-- [ ] Add state-layout notes once the boundary is chosen.
-
-  Acceptance criteria:
-
-  - The chosen state owns canonical object occupancy for deterministic solver
-    focus games.
-  - Solver-node invariants state that movements are zero, pending-again is
-    exhausted, current level is a search parameter, checkpoint is ignored, and
-    restart is a game-over/dead-edge result.
-  - Conversion to/from `FullState` is defined for fallback and testing.
-
-- [ ] Prototype compact solver/generator state for one simple game.
-
-  Acceptance criteria:
-
-  - State clone cost is lower than `FullState` clone cost.
-  - Hashing and serialization for tests remain available.
-  - Interpreter fallback remains possible through a conversion path.
-
-- [ ] Replace solver child cloning for supported games.
-
-  Acceptance criteria:
-
-  - Solver parity remains green.
-  - Memory use and nodes/second improve on at least one benchmark.
+  Future state-layout tasks should be added to the active compact-state section
+  instead of reopening this duplicate section.
 
 ## Smaller Turn-Game ABI
 
-- [?] Decide whether the first compact ABI is C++-only or C-facing.
+- [x] Keep the first compact ABI C++-only.
 
-  Recommended default: C++-only until state layout stabilizes, then wrap in C.
+  The active compact-turn backend is C++-only and uses existing `ps_input`,
+  `RuntimeStepOptions`, and `SpecializedCompactTurnOutcome` / `ps_step_result`
+  compatibility. A C-facing ABI should wait until the semantic compact compiler
+  is stable enough to justify freezing a public boundary.
 
-- [ ] Define a compact turn result.
-
-  Acceptance criteria:
-
-  - Represents changed, won, transitioned, pending again, and optional audio.
-  - Does not require heap allocation on solver/generator hot paths.
-
-- [ ] Define compact input representation.
+- [ ] Revisit the C-facing ABI after compiler-mode semantics pass a meaningful
+  corpus slice.
 
   Acceptance criteria:
 
-  - Covers up, down, left, right, action, and `PS_INPUT_TICK`.
-  - Maps exactly to existing `ps_input` values or has a lossless adapter.
+  - The C++ compact turn boundary has stopped changing.
+  - Result fields cover changed, won, transitioned, restarted/dead-edge, and
+    optional audio without heap allocation on solver/generator hot paths.
+  - Input remains a lossless adapter to existing `ps_input` values.
 
 - [ ] Add generated ABI smoke test.
 

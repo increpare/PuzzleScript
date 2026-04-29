@@ -2,6 +2,17 @@
 
 > **Intent:** Rebuild native compact turn code generation from PuzzleScript semantics, not from game-shape recognizers. The compiler should grow by implementing language features directly and letting testdata failures expose missing semantics.
 
+## Status
+
+This is the active compact-turn implementation plan as of 2026-04-29. It
+supersedes the earlier shape-specific compact-turn prototype notes in
+`native/src/compiler/IMPLEMENTATION_CHECKLIST.md`.
+
+The runtime ontology has also settled since the first compact-state experiments:
+`PersistentLevelState` owns a cell-major persistent board plus RNG. The only
+object-major structure that should remain in the normal turn path is the
+derived `Scratch::objectCellBits` / `Scratch::objectCellCounts` rule-scan index.
+
 ## Summary
 
 The previous compact turn prototype drifted into shape-specific helpers such as simple push, push chain, target clear, and movement-only variants. That direction is too complex and too brittle: it encourages recognizing individual game families instead of compiling PuzzleScript.
@@ -87,7 +98,9 @@ Before compact compiler work resumes, remove duplicated state vocabularies. The 
 Cleanup order:
 
 1. Remove alias/legacy type layers such as `PreparedFullState`; the type is `MetaGameState`.
-2. Stop storing `LevelTemplate liveLevel` beside `BoardOccupancy`; board contents should have one authority.
+2. Keep one persistent board authority: `PersistentLevelState::board.objects`.
+   `LevelTemplate` is compiled/metagame level data, and scratch boards or
+   object-cell indexes are derived execution buffers.
 3. Collapse solver-local `SearchNodeState` into the cleaned `PersistentLevelState` or a thin alias.
 4. Quarantine `CompactStateView` as interpreter-bridge plumbing only, then replace it in compiler mode.
 5. Merge duplicated compact materialization paths into one runtime helper.
@@ -102,11 +115,20 @@ The compiler-mode turn boundary should follow the four-part runtime state model 
 Persistent within-level state contains only data that changes from turn to turn:
 
 ```cpp
+struct PersistentBoardState {
+    // Cell-major object masks: objects[tileIndex * strideObject + word].
+    MaskVector objects;
+};
+
 struct PersistentLevelState {
-    BoardOccupancy board;
+    PersistentBoardState board;
     RandomState rng;
 };
 ```
+
+If heuristics or profiling tools want an object-major view, they must derive it
+from this board or maintain an explicitly scratch-only cache. They should not
+introduce a second persistent state representation.
 
 Immutable per-level dimensions are context:
 

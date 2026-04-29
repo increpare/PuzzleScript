@@ -1,10 +1,18 @@
-# FullState split (MetaGameState, BoardOccupancy, Scratch, TurnResult) — Phased Implementation Plan
+# FullState Split (MetaGameState, PersistentLevelState, Scratch, TurnResult) — Historical Phased Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Refactor the native runtime so `FullState` is nested composition (`Game` + `MetaGameState` + `BoardOccupancy` + `Scratch`), with **canonical object-major compact occupancy** for the board, **modal/progression state** in meta (including restart snapshots in compact form), **turn-visible effects** in a `TurnResult`-style envelope, and **solver nodes** copying only occupancy+RNG — without changing PuzzleScript semantics (JS corpus + native compact/simulation gates stay green).
+> **Status update, 2026-04-29:** This plan is retained as historical migration
+> context, not as the current executable checklist. Its object-major
+> `BoardOccupancy::objectBits` premise has been superseded. The current runtime
+> model uses `PersistentLevelState { PersistentBoardState board; RandomState rng; }`,
+> where `PersistentBoardState::objects` is a cell-major `MaskVector`. The active
+> compact-turn/codegen plan is
+> `docs/superpowers/plans/2026-04-29-compact-turn-clean-codegen.md`.
 
-**Architecture:** (1) **Carve types** out of `core.hpp` into focused headers; (2) **migrate `preparedFullState` → `MetaGameState`** (mechanical rename + field moves from `FullState` where needed); (3) **lift occupancy to `BoardOccupancy`** and route all object cell reads/writes through a **single access layer** until `LevelTemplate::objects` is no longer authoritative; (4) **bucket derived+ephemeral vectors** into `Scratch` and fix **clone/fork** in the solver to avoid memcpy of scratch; (5) **route audio/UI** through return structs while keeping `ps_step_result` compatible at C boundaries; (6) **rename solver-local `CompactState`** → e.g. `SearchNodeState` after runtime types stabilize.
+**Goal:** Refactor the native runtime so `FullState` / `GameSession` is nested composition (`GameInformation` + `MetaGameState` + `PersistentLevelState` + `Scratch`), with **cell-major persistent board occupancy**, **modal/progression state** in meta, **turn-visible effects** in a `TurnResult`-style envelope, and **solver nodes** copying only persistent board state + RNG — without changing PuzzleScript semantics (JS corpus + native compact/simulation gates stay green).
+
+**Architecture:** (1) **Carve types** out of `core.hpp` into focused headers; (2) **migrate `preparedFullState` → `MetaGameState`** (mechanical rename + field moves from `FullState` where needed); (3) make `PersistentLevelState::board.objects` the **single cell-major persistent board authority** and keep object-major `objectCellBits` scratch-only; (4) **bucket derived+ephemeral vectors** into `Scratch` and fix **clone/fork** in the solver to avoid memcpy of scratch; (5) **route audio/UI** through return structs while keeping `ps_step_result` compatible at C boundaries; (6) collapse solver-local compact/search state into `PersistentLevelState` or a thin alias after runtime types stabilize.
 
 **Tech Stack:** C++17, native Makefile/CMake build under `native/`, QUnit corpus via `src/tests/run_tests_node.js`, native targets `compact_turn_simulation_tests`, solver parity Makefile targets.
 
@@ -81,42 +89,20 @@ git commit -m "refactor(native): rename preparedFullState to meta (MetaGameState
 
 ---
 
-### Task A2: Introduce `BoardOccupancy` shell + RNG placement decision
+### Task A2: Historical `BoardOccupancy` shell + RNG placement decision
+
+> Obsolete as written. Do not introduce an object-major `BoardOccupancy` shell.
+> The current shape is cell-major `PersistentBoardState::objects` inside
+> `PersistentLevelState`, with RNG stored beside it.
 
 **Files:**
 - Modify: `native/src/runtime/core.hpp`
 - Modify: `native/src/runtime/core.cpp` (constructors / zero-init only)
 
-**Purpose:** Reserve `BoardOccupancy` as `{ std::vector<uint64_t> objectBits; RandomState rng; }` (exact RNG type reuse `FullState::RandomState`). **Phase A:** duplicate RNG **temporarily**: keep existing `FullState::randomState` and sync in **one place** (`createFullState` / loadLevel) until Task B removes duplication.
-
-- [ ] **Step 1: Define struct** (in `core.hpp` near `FullState`)
-
-```cpp
-struct BoardOccupancy {
-    std::vector<uint64_t> objectBits;
-    RandomState rng;  // reuse nested RandomState from FullState scope — lift RandomState to namespace scope first if needed
-};
-```
-
-If `RandomState` is nested inside `FullState`, either move `struct RandomState` to namespace scope in `core.hpp` **above** `BoardOccupancy`, or duplicate minimal RNG fields inside `BoardOccupancy` and migrate later (**prefer moving `RandomState` out once**).
-
-- [ ] **Step 2: Add member** `BoardOccupancy occupancy;` to `FullState`.
-
-- [ ] **Step 3: Ensure sizing hooks**
-
-Find `createFullState`, `loadLevel`, `materializeCompactStateIntoFullState`, `compactStateFromFullState` and add **`occupancy.objectBits.resize(...)`** alongside **`liveLevel.objects`** sizing (same dimensions). Fill zeros.
-
-- [ ] **Step 4: Build + smoke**
-
-```bash
-cd /Users/stephenlavelle/Documents/GitHub/PuzzleScript && make build
-```
-
-- [ ] **Step 5: Commit**
-
-```bash
-git commit -am "refactor(native): add BoardOccupancy shell alongside liveLevel"
-```
+**Historical purpose:** This task reserved an object-major occupancy mirror
+while the state split was still unsettled. Do not execute these steps. The
+current model is already past this point and uses a cell-major
+`PersistentBoardState::objects` plus `RandomState` inside `PersistentLevelState`.
 
 ---
 
