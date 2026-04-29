@@ -1412,19 +1412,19 @@ MetaGameState parsePreparedSession(const json::Value& value, const Game& game) {
 
     if (const auto* restart = value.find("restart_target"); restart && restart->isObject()) {
         const auto& restartObject = restart->asObject();
-        prepared.restart.width = toInt(requireField(restartObject, "width"));
-        prepared.restart.height = toInt(requireField(restartObject, "height"));
+        const int32_t restartWidth = toInt(requireField(restartObject, "width"));
+        const int32_t restartHeight = toInt(requireField(restartObject, "height"));
         const MaskVector restartObjects = parseMaskVector(requireField(restartObject, "objects"));
         fillCompactOccupancyBitsFromInterpreterBoardData(
             game,
-            prepared.restart.width,
-            prepared.restart.height,
+            restartWidth,
+            restartHeight,
             restartObjects,
             prepared.restart.objectBits
         );
         prepared.restart.oldFlickscreenDat = parseIntVector(requireField(restartObject, "old_flickscreen_dat"));
-        if (prepared.restart.width > 0 && prepared.restart.height > 0) {
-            prepared.levelDimensions = LevelDimensions{prepared.restart.width, prepared.restart.height};
+        if (restartWidth > 0 && restartHeight > 0) {
+            prepared.levelDimensions = LevelDimensions{restartWidth, restartHeight};
         }
     }
 
@@ -3895,9 +3895,7 @@ void pushUndoSnapshot(FullState& session) {
 }
 
 void restoreRestartTarget(FullState& session) {
-    if (session.meta.restart.width > 0 && session.meta.restart.height > 0
-        && !session.meta.restart.objectBits.empty()) {
-        session.meta.levelDimensions = LevelDimensions{session.meta.restart.width, session.meta.restart.height};
+    if (!session.meta.restart.objectBits.empty()) {
         fillInterpreterBoardObjectsFromCompactObjectBits(
             *session.game,
             session.meta.levelDimensions,
@@ -4017,8 +4015,6 @@ bool advanceToNextLevel(FullState& session) {
             session.meta.undoStack.clear();
             return true;
         }
-        session.meta.restart.width = session.meta.level.width;
-        session.meta.restart.height = session.meta.level.height;
         fillCompactOccupancyBitsFromInterpreterBoardData(
             *session.game,
             session.meta.level.width,
@@ -4674,8 +4670,6 @@ void prepareLoadedLevel(FullState& session, LevelTemplate level, int32_t levelIn
     if (restartWidth > 0 && restartHeight > 0) {
         prepared.levelDimensions = LevelDimensions{restartWidth, restartHeight};
     }
-    prepared.restart.width = restartWidth;
-    prepared.restart.height = restartHeight;
     fillCompactOccupancyBitsFromInterpreterBoardData(
         *session.game,
         restartWidth,
@@ -5146,8 +5140,6 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
         (void)transitioned;
     }
     if (!options.solverMode && !won && commandQueueContains(commands, "checkpoint")) {
-        session.meta.restart.width = currentLevelWidth(session);
-        session.meta.restart.height = currentLevelHeight(session);
         fillCompactOccupancyBitsFromInterpreterBoardData(
             *session.game,
             currentLevelWidth(session),

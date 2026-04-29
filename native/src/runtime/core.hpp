@@ -135,8 +135,6 @@ struct LevelDimensions {
 };
 
 struct RestartSnapshot {
-    int32_t width = 0;
-    int32_t height = 0;
     /// Object-major compact occupancy (same layout as `BoardOccupancy::objectBits`).
     std::vector<uint64_t> objectBits;
     std::vector<int32_t> oldFlickscreenDat;
