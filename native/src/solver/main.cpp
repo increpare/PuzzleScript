@@ -858,9 +858,13 @@ SolverEdgeStep stepSolverEdge(
     if (compactNodeStorage) {
         const puzzlescript::SpecializedCompactTurnBackend* compactTurn = game ? game->specializedCompactTurn : nullptr;
         if (compactTurn != nullptr && compactTurn->step != nullptr) {
-            if (compactTurn->support.wholeTurnSupported && compactTurn->nativeKernel) {
+            if (compactTurn->support.wholeTurnSupported) {
                 ++result.compactTurnAttempts;
-                ++result.compactTurnNativeAttempts;
+                if (compactTurn->nativeKernel) {
+                    ++result.compactTurnNativeAttempts;
+                } else {
+                    ++result.compactTurnBridgeAttempts;
+                }
                 {
                     ScopedTimer timer(result.timing.stepNs);
                     edge.compactTurn = trySpecializedCompactTurn(
@@ -875,7 +879,11 @@ SolverEdgeStep stepSolverEdge(
                 }
                 if (edge.compactTurn.handled) {
                     ++result.compactTurnHits;
-                    ++result.compactTurnNativeHits;
+                    if (compactTurn->nativeKernel) {
+                        ++result.compactTurnNativeHits;
+                    } else {
+                        ++result.compactTurnBridgeHits;
+                    }
                     if (compactTurnOracle) {
                         ++result.compactTurnOracleChecks;
                         {
