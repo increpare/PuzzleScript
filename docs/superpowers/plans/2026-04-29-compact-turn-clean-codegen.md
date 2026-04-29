@@ -461,8 +461,9 @@ Additional ranked-frontier probes:
   case 122, "Synonym confusion": passes
   case 125, "Reserved keywords are too greedy (#419)": passes
   case 126, "Removing background tiles breaks \"no X\" wincondition (#534)": passes
+  case 145, "fifth test for #492 movement not getting correctly cleared from tile": passes
 
-Selected compiler-mode testdata progress: 14/469 known passing.
+Selected compiler-mode testdata progress: 15/469 known passing.
 
 Additional ranked-frontier command probe:
   case 93, "again + message combo": passes
