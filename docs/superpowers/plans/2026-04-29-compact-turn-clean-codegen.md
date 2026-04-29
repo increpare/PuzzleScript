@@ -214,7 +214,7 @@ The CLI should choose interpreter mode or compiler mode at a coarse level only.
 - [x] Added coarse compact turn codegen mode plumbing.
 - [x] Compiler mode emits a native compact-turn skeleton with the semantic
   phase outline.
-- [ ] Add compiler-mode bring-up targets that expect current failures.
+- [x] Add compiler-mode bring-up targets that expect current failures.
 - [ ] Replace the skeleton TODO phases with generated code, one phase at a
   time.
 
