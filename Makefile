@@ -20,7 +20,7 @@
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_perf_report solver_focus_compact_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
-	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_turn_codegen_bringup compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
+	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_turn_codegen_bringup compact_turn_codegen_testdata_one compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
@@ -148,6 +148,7 @@ COMPILED_RULES_MAX_ROWS ?= 1
 COMPACT_TURN_TESTDATA_MAX_ROWS ?= 99
 COMPACT_TICK_TESTDATA_MAX_ROWS ?= $(COMPACT_TURN_TESTDATA_MAX_ROWS)
 COMPACT_TURN_CODEGEN_BRINGUP_CORPUS ?= src/tests/solver_smoke_tests
+COMPACT_TURN_CODEGEN_TESTDATA_CASE ?= 3
 COMPILED_RULES_LTO ?= false
 COMPILED_RULES_LINK_DEDUP ?= false
 COMPILED_RULES_EXPORT_SYMBOLS ?= false
@@ -308,6 +309,8 @@ help:
 	@echo "  make compact_turn_simulation_tests Run testdata.js through specialized compact turn oracle"
 	@echo "  make compact_turn_coverage         Report native-vs-bridge compact turn coverage"
 	@echo "  make compact_turn_codegen_bringup  Build compiler-mode compact smoke and require oracle parity"
+	@echo "  make compact_turn_codegen_testdata_one"
+	@echo "                                     Build/run one testdata.js case in compact compiler mode"
 	@echo "  make generator_smoke_tests         Run native generator smoke tests"
 	@echo "  make generator_benchmark           Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
@@ -579,6 +582,21 @@ compact_turn_codegen_bringup: build
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 	"$$build_dir/native/puzzlescript_solver" "$(COMPACT_TURN_CODEGEN_BRINGUP_CORPUS)" --timeout-ms 1000 --jobs 1 --strategy bfs --no-solutions --quiet --json --compact-turn-oracle > "$$out_dir/bringup.json"; \
 	$(NODE) -e 'const fs=require("fs"); const path=process.argv[1]; const j=JSON.parse(fs.readFileSync(path,"utf8")); const t=j.totals; const fail=m=>{ throw new Error(m); }; if (t.levels !== 7 || t.solved !== 5 || t.errors !== 0) fail("unexpected smoke baseline"); if (!(t.compact_turn_native_attempts > 0)) fail("expected native compact attempts"); if (t.compact_turn_native_hits !== t.compact_turn_native_attempts) fail("expected every compiler-mode native compact attempt to hit"); if (t.compact_turn_fallbacks !== 0) fail("expected no compiler-mode compact fallbacks"); if (t.compact_turn_oracle_failures !== 0) fail("expected compact oracle parity"); console.log("compact_turn_codegen_bringup observed compiler-mode attempts="+t.compact_turn_native_attempts+" hits="+t.compact_turn_native_hits+" fallbacks="+t.compact_turn_fallbacks);' "$$out_dir/bringup.json"
+
+compact_turn_codegen_testdata_one: build
+	@set -e; \
+	$(COMPILED_RULES_BOOTSTRAP_CPP); \
+	case_index="$(COMPACT_TURN_CODEGEN_TESTDATA_CASE)"; \
+	hash=$$(printf '%s\n%s\n' "$$case_index" "$$(shasum -a 256 src/tests/resources/testdata.js | awk '{print $$1}')" | shasum -a 256 | awk '{print $$1}'); \
+	out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/compact-codegen-testdata-case-$$case_index-$$hash"; \
+	build_dir="$(COMPILED_RULES_BUILD_ROOT)/compact-codegen-testdata-case-$$case_index-$$hash"; \
+	out_cpp_dir="$$out_dir/sources"; \
+	sources_file="$$out_dir/sources.txt"; \
+	mkdir -p "$$out_dir"; \
+	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/resources/testdata.js,compact_codegen_testdata_$$hash,--compact-turn-only --compact-turn-mode=compiler --case-index "$$case_index",$(COMPACT_TURN_TESTDATA_MAX_ROWS)); \
+	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
+	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_cpp; \
+	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js --case-index "$$case_index" --jobs 1 --progress-every 0 --compact-turn-oracle --require-compact-turn-oracle-checks
 
 compact_tick_simulation_tests: compact_turn_simulation_tests
 

@@ -398,7 +398,7 @@ Compiler-focused targets should force compiler mode and expect failures early in
 
 ```text
 make compact_turn_codegen_bringup
-make compact_turn_codegen_one SOURCE=...
+make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=...
 ```
 
 The existing oracle/simulation targets can keep using interpreter mode unless explicitly testing compiler mode.
@@ -414,6 +414,18 @@ Use tests as the feature backlog.
 5. Sort or group failing cases by feature only to make the work easier to batch.
 6. Scale from solver smoke fixtures to selected testdata.
 7. Then run the full simulation corpus.
+
+Current compiler-mode testdata foothold:
+
+```text
+make compact_turn_codegen_testdata_one
+  default case: 3, "block faker no win condition"
+  result: passes with compact oracle checks
+
+make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=1
+  first failure: "sokoban no win condition"
+  signal: compact/interpreter state mismatch after generic push/movement
+```
 
 Recommended progress report:
 

@@ -4891,7 +4891,11 @@ std::vector<std::filesystem::path> collectCompiledRuleSourcePaths(const std::fil
     return paths;
 }
 
-std::vector<CodegenSource> collectCompiledRuleSources(const std::filesystem::path& path) {
+std::vector<CodegenSource> collectCompiledRuleSources(
+    const std::filesystem::path& path,
+    std::optional<size_t> caseIndex = std::nullopt,
+    std::optional<std::string> caseNameFilter = std::nullopt
+) {
     std::vector<CodegenSource> sources;
     std::set<uint64_t> seenHashes;
     auto addSource = [&](CodegenSource source) {
@@ -4901,7 +4905,13 @@ std::vector<CodegenSource> collectCompiledRuleSources(const std::filesystem::pat
     };
 
     if (path.extension() == ".js") {
-        const auto cases = parseSimulationCorpusCases(loadJsDataArrayAsJson(path));
+        SimulationCorpusOptions filterOptions;
+        filterOptions.caseIndex = caseIndex;
+        filterOptions.caseNameFilter = std::move(caseNameFilter);
+        const auto cases = filterSimulationCorpusCases(
+            parseSimulationCorpusCases(loadJsDataArrayAsJson(path)),
+            filterOptions
+        );
         for (const auto& testCase : cases) {
             addSource(compileCodegenSourceText(
                 path.string() + "#" + std::to_string(testCase.index + 1) + ":" + testCase.name,
@@ -5525,6 +5535,8 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
     std::optional<std::filesystem::path> coverageJson;
     std::optional<uint64_t> maxCompiledRulesPerSource;
     std::optional<uint64_t> maxGeneratedLinesPerSource;
+    std::optional<size_t> caseIndex;
+    std::optional<std::string> caseNameFilter;
     std::string symbol = "puzzlescript_compiled_rules";
     CompiledRulesOptions options;
     CompactCodegenOptions compactOptions{true};
@@ -5561,6 +5573,16 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
             statsOnly = true;
         } else if (arg == "--compact-turn-only" || arg == "--compact-tick-only") {
             compactTurnOnly = true;
+        } else if (arg == "--case-index") {
+            if (++index >= argc) {
+                throw std::runtime_error("--case-index requires a positive integer");
+            }
+            caseIndex = static_cast<size_t>(std::stoull(argv[index]));
+        } else if (arg == "--case-name") {
+            if (++index >= argc) {
+                throw std::runtime_error("--case-name requires text");
+            }
+            caseNameFilter = argv[index];
         } else if (arg == "--compact-turn-mode") {
             if (++index >= argc) {
                 throw std::runtime_error("--compact-turn-mode requires interpreter or compiler");
@@ -5624,7 +5646,11 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
         }
     }
 
-    const std::vector<CodegenSource> inputSources = collectCompiledRuleSources(std::filesystem::path(sourcePath));
+    const std::vector<CodegenSource> inputSources = collectCompiledRuleSources(
+        std::filesystem::path(sourcePath),
+        caseIndex,
+        caseNameFilter
+    );
     uint64_t skippedSources = 0;
     uint64_t skippedCompiledRules = 0;
     uint64_t skippedGeneratedLineSources = 0;
@@ -6154,7 +6180,7 @@ void printCompileRulesHelp() {
         << "Usage: puzzlescript_cpp specialize-rulegroups game.txt --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
         << "       puzzlescript_cpp compile-rules game.txt --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
-        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N] [--compact-turn-only] [--compact-turn-mode interpreter|compiler] [--max-compiled-rules-per-source N] [--max-generated-lines-per-source N]\n"
+        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N] [--compact-turn-only] [--compact-turn-mode interpreter|compiler] [--case-index N] [--case-name text] [--max-compiled-rules-per-source N] [--max-generated-lines-per-source N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus --stats-only [--max-rows N] [--coverage-json out.json] [--compact-turn-mode interpreter|compiler]\n\n"
         << "Emits C++ specialized rulegroup kernels for conservative deterministic rulegroups.\n"
         << "compile-rules remains as the compatibility command name used by existing build scripts.\n"
