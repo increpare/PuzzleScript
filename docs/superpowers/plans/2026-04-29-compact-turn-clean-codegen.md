@@ -358,6 +358,8 @@ Acceptance:
 - [ ] Handle restart/reset/cancel terminal treatment for solver.
 - [ ] Handle `again` policy.
 - [ ] Thread deterministic RNG for semantics that use it.
+- [x] Queue simple output commands (`message`, `again`) for compiler-mode
+  result parity.
 
 Features:
 - late rulegroups
@@ -457,8 +459,9 @@ Additional ranked-frontier probes:
   case 114, "Make synonyms of properties work. #243": passes
   case 125, "Reserved keywords are too greedy (#419)": passes
 
-Known next unsupported feature from ranked frontier:
-  case 93, "again + message combo": commands at source rule line 48
+Additional ranked-frontier command probe:
+  case 93, "again + message combo": passes
+  added coverage: simple `message` and `again` command queueing
 
 Known next unsupported feature from numeric case 6:
   ellipsis at source rule line 51
