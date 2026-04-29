@@ -419,12 +419,12 @@ Current compiler-mode testdata foothold:
 
 ```text
 make compact_turn_codegen_testdata_one
-  default case: 3, "block faker no win condition"
+  default case: 1, "sokoban no win condition"
   result: passes with compact oracle checks
 
-make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=1
-  first failure: "sokoban no win condition"
-  signal: compact/interpreter state mismatch after generic push/movement
+make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=2
+  case: "sokoban with win condition"
+  result: passes with compact oracle checks
 ```
 
 Recommended progress report:

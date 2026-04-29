@@ -729,6 +729,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "            (void)changedTile;\n"
         << "        }\n"
         << "    }\n"
+        << "    std::fill(scratch.liveMovements.begin(), scratch.liveMovements.end(), 0);\n"
         << "    return movedAny;\n"
         << "}\n\n";
 
