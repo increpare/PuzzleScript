@@ -215,6 +215,9 @@ The CLI should choose interpreter mode or compiler mode at a coarse level only.
 - [x] Compiler mode emits a native compact-turn skeleton with the semantic
   phase outline.
 - [x] Add compiler-mode bring-up targets that expect current failures.
+- [x] Split compiler mode into an ABI wrapper plus an inner turn-core function
+  with the planned `LevelDimensions` / `PersistentLevelState` / `Scratch`
+  boundary.
 - [ ] Replace the skeleton TODO phases with generated code, one phase at a
   time.
 
@@ -249,6 +252,14 @@ Acceptance:
 ### Phase 3: Compact State Access Layer
 
 **Goal:** Establish generic helpers for compact state reads/writes used by every generated phase.
+
+**Progress:**
+- [x] Emit source-local cell-major access helpers for object and movement
+  storage.
+- [x] Emit state preparation/validation for dimensions, persistent board
+  storage, and scratch movement storage.
+- [ ] Add collision layer helpers.
+- [ ] Add row scan helpers for directional rules.
 
 Features:
 - object bit query
