@@ -17,7 +17,13 @@ std::string compactRulePatternUnsupportedReason(const Pattern& pattern) {
 }
 
 std::string compactRuleCommandUnsupportedReason(const RuleCommand& command) {
-    if (command.name == "again" || command.name == "message" || command.name == "cancel" || command.name == "restart") {
+    if (command.name == "again"
+        || command.name == "message"
+        || command.name == "cancel"
+        || command.name == "checkpoint"
+        || command.name == "restart"
+        || command.name == "win"
+        || command.name.rfind("sfx", 0) == 0) {
         return {};
     }
     return "command_" + command.name;
@@ -382,8 +388,12 @@ void emitCompactRuleCommandFunction(
             out << "    commands.hasAgain = true;\n";
         } else if (command.name == "cancel") {
             out << "    commands.hasCancel = true;\n";
+        } else if (command.name == "checkpoint") {
+            out << "    commands.hasCheckpoint = true;\n";
         } else if (command.name == "restart") {
             out << "    commands.hasRestart = true;\n";
+        } else if (command.name == "win") {
+            out << "    commands.hasWin = true;\n";
         } else if (command.name == "message") {
             if (command.argument.has_value()) {
                 out << "    if (!commands.hasMessage) {\n"
@@ -393,6 +403,8 @@ void emitCompactRuleCommandFunction(
             } else {
                 out << "    commands.hasMessage = true;\n";
             }
+        } else if (command.name.rfind("sfx", 0) == 0) {
+            out << "    // Sound effects are command output only; board/search state is unaffected.\n";
         } else {
             out << "    static_assert(false, \"compact turn compiler command queue emitted unsupported command\");\n";
         }
@@ -425,6 +437,26 @@ void emitCompactRuleFunction(
             << "    (void)levelState;\n"
             << "    (void)scratch;\n"
             << "    (void)commands;\n"
+            << "    static_assert(false, " << cppStringLiteral(reason) << ");\n"
+            << "    return false;\n"
+            << "}\n\n"
+            << "void " << prefix << "_queue_commands(CompactTurnCommands_" << suffix << "& commands) {\n"
+            << "    (void)commands;\n"
+            << "    static_assert(false, " << cppStringLiteral(reason) << ");\n"
+            << "}\n\n"
+            << "bool " << prefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<std::vector<int32_t>>>& matches) {\n"
+            << "    (void)dimensions;\n"
+            << "    (void)levelState;\n"
+            << "    (void)scratch;\n"
+            << "    (void)matches;\n"
+            << "    static_assert(false, " << cppStringLiteral(reason) << ");\n"
+            << "    return false;\n"
+            << "}\n\n"
+            << "bool " << prefix << "_apply_tuple(PersistentLevelState& levelState, Scratch& scratch, const std::vector<std::vector<std::vector<int32_t>>>& matches, const std::vector<size_t>& tupleIndex) {\n"
+            << "    (void)levelState;\n"
+            << "    (void)scratch;\n"
+            << "    (void)matches;\n"
+            << "    (void)tupleIndex;\n"
             << "    static_assert(false, " << cppStringLiteral(reason) << ");\n"
             << "    return false;\n"
             << "}\n\n";
@@ -874,7 +906,7 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "        result.restarted = true;\n"
         << "        return {true, result};\n"
         << "    }\n"
-        << "    const bool won = compact_turn_evaluate_win_" << suffix << "(dimensions, levelState);\n"
+        << "    const bool won = commands.hasWin || compact_turn_evaluate_win_" << suffix << "(dimensions, levelState);\n"
         << "    // 8. evaluate win conditions\n"
         << "    // 9. canonicalize and return result\n"
         << "    result.changed = seededInput || ruleChanged || moved || lateRuleChanged || commands.any;\n"
@@ -1007,7 +1039,9 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    bool any = false;\n"
         << "    bool hasAgain = false;\n"
         << "    bool hasCancel = false;\n"
+        << "    bool hasCheckpoint = false;\n"
         << "    bool hasRestart = false;\n"
+        << "    bool hasWin = false;\n"
         << "    bool hasMessage = false;\n"
         << "    std::string messageText;\n"
         << "};\n\n";

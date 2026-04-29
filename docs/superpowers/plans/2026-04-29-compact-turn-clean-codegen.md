@@ -527,6 +527,33 @@ Additional ranked-frontier probes:
 
 Selected compiler-mode testdata progress: 64/469 known passing.
 
+Full-prefix compiler-mode sweep, 2026-04-29:
+  command:
+    per-case `make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=N COMPILED_RULES_BUILD_JOBS=4`
+  result before interruption:
+    attempted 188/469
+    passed 177
+    failed 11
+    interrupted on case 189 after a pathological generated-source compile
+  failed semantic oracle cases:
+    31 "collapse simple"
+    32 "collapse long"
+    57 "Flying Kick"
+    62 "Cute Train"
+    85 "Sok7"
+    87 "Color Chained"
+    88 "Drop Swap"
+    89 "Drop Swap 2"
+    90 "Drop Swap 3"
+    155 "gallery game: at the hedges of time"
+    188 "gallery: marble shot"
+  compile-time blocker:
+    case 189 generates 200 groups / 4739 rules and did not finish compiling
+    within a useful interactive window.
+  artifacts:
+    build/compiled-rules/testdata-compact-compiler-per-case-sweep.tsv
+    build/compiled-rules/testdata-compact-compiler-per-case-sweep.log
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
@@ -540,8 +567,9 @@ Known next unsupported ranked-frontier feature:
   unrecorded case
 
 Known ranked-frontier unsupported feature:
-  control commands beyond `message`, `again`, `cancel`, and solver-terminal
-  `restart` remain unsupported.
+  The current failures are real compact-vs-interpreter state mismatches, not
+  feature-filter misses. Case 189 also shows generated C++ size/compile-time
+  pressure for very large rule sets.
 ```
 
 Recommended progress report:
