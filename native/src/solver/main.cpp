@@ -36,6 +36,7 @@ using Clock = std::chrono::steady_clock;
 using TimePoint = Clock::time_point;
 using puzzlescript::FullState;
 using puzzlescript::Game;
+using puzzlescript::LevelDimensions;
 using puzzlescript::MaskWordUnsigned;
 using puzzlescript::PersistentLevelState;
 using puzzlescript::kMaskWordBits;
@@ -92,29 +93,25 @@ struct Options {
     int32_t astarWeight = 2;
 };
 
-struct SearchNodeState {
-    PersistentLevelState levelState;
+bool persistentLevelStatesEqual(const PersistentLevelState& lhs, const PersistentLevelState& rhs) {
+    return lhs.boardOccupancy.objectBits == rhs.boardOccupancy.objectBits
+        && lhs.rng.s == rhs.rng.s
+        && lhs.rng.i == rhs.rng.i
+        && lhs.rng.j == rhs.rng.j
+        && lhs.rng.valid == rhs.rng.valid;
+}
 
-    bool operator==(const SearchNodeState& other) const {
-        return levelState.boardOccupancy.objectBits == other.levelState.boardOccupancy.objectBits
-            && levelState.rng.s == other.levelState.rng.s
-            && levelState.rng.i == other.levelState.rng.i
-            && levelState.rng.j == other.levelState.rng.j
-            && levelState.rng.valid == other.levelState.rng.valid;
-    }
-
-    size_t byteSize() const {
-        return levelState.boardOccupancy.objectBits.size() * sizeof(uint64_t)
-            + levelState.rng.s.size() * sizeof(uint8_t)
-            + sizeof(levelState.rng.i)
-            + sizeof(levelState.rng.j)
-            + sizeof(levelState.rng.valid);
-    }
-};
+size_t persistentLevelStateByteSize(const PersistentLevelState& state) {
+    return state.boardOccupancy.objectBits.size() * sizeof(uint64_t)
+        + state.rng.s.size() * sizeof(uint8_t)
+        + sizeof(state.rng.i)
+        + sizeof(state.rng.j)
+        + sizeof(state.rng.valid);
+}
 
 struct Node {
     std::unique_ptr<FullState> session;
-    SearchNodeState state;
+    PersistentLevelState state;
     StateKey key;
     int32_t parent = -1;
     ps_input input = PS_INPUT_UP;
@@ -583,34 +580,34 @@ uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
     }
 }
 
-SearchNodeState searchNodeStateFromFullState(const FullState& session) {
-    SearchNodeState state;
-    state.levelState.rng.s = session.levelState.rng.s;
-    state.levelState.rng.i = session.levelState.rng.i;
-    state.levelState.rng.j = session.levelState.rng.j;
-    state.levelState.rng.valid = session.levelState.rng.valid;
-    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.levelState.boardOccupancy.objectBits);
+PersistentLevelState persistentLevelStateFromFullState(const FullState& session) {
+    PersistentLevelState state;
+    state.rng.s = session.levelState.rng.s;
+    state.rng.i = session.levelState.rng.i;
+    state.rng.j = session.levelState.rng.j;
+    state.rng.valid = session.levelState.rng.valid;
+    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.boardOccupancy.objectBits);
     return state;
 }
 
-StateKey searchNodeStateKey(const SearchNodeState& state, Timing& timing) {
+StateKey persistentLevelStateKey(const PersistentLevelState& state, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
-    for (uint64_t word : state.levelState.boardOccupancy.objectBits) {
+    for (uint64_t word : state.boardOccupancy.objectBits) {
         puzzlescript::search::appendStateKeyValue(key, word);
     }
-    for (uint8_t byte : state.levelState.rng.s) {
+    for (uint8_t byte : state.rng.s) {
         puzzlescript::search::appendStateKeyValue(key, byte);
     }
-    puzzlescript::search::appendStateKeyValue(key, state.levelState.rng.i);
-    puzzlescript::search::appendStateKeyValue(key, state.levelState.rng.j);
-    puzzlescript::search::appendStateKeyValue(key, state.levelState.rng.valid);
+    puzzlescript::search::appendStateKeyValue(key, state.rng.i);
+    puzzlescript::search::appendStateKeyValue(key, state.rng.j);
+    puzzlescript::search::appendStateKeyValue(key, state.rng.valid);
     return key;
 }
 
-SearchNodeState searchNodeStateWithTiming(const FullState& session, Timing& timing) {
+PersistentLevelState persistentLevelStateWithTiming(const FullState& session, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
-    return searchNodeStateFromFullState(session);
+    return persistentLevelStateFromFullState(session);
 }
 
 void markMaterializedFullStateDirty(FullState& session) {
@@ -624,7 +621,7 @@ void markMaterializedFullStateDirty(FullState& session) {
     session.scratch.anyMasksDirty = true;
 }
 
-void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const FullState& base, FullState& session) {
+void materializePersistentLevelStateIntoFullState(const PersistentLevelState& state, const FullState& base, FullState& session) {
     session.game = base.game;
     session.meta.currentLevelIndex = base.meta.currentLevelIndex;
     session.meta.currentLevelTarget = base.meta.currentLevelTarget;
@@ -648,7 +645,7 @@ void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const
     for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
         const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
         for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-            uint64_t bits = objectBase + bitWord < state.levelState.boardOccupancy.objectBits.size() ? state.levelState.boardOccupancy.objectBits[objectBase + bitWord] : 0;
+            uint64_t bits = objectBase + bitWord < state.boardOccupancy.objectBits.size() ? state.boardOccupancy.objectBits[objectBase + bitWord] : 0;
             while (bits != 0) {
                 const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(bits));
                 const int32_t tileIndex = static_cast<int32_t>(bitWord * 64 + bit);
@@ -667,10 +664,10 @@ void materializeSearchNodeStateIntoFullState(const SearchNodeState& state, const
     session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
     session.meta.pendingAgain = false;
     session.meta.undoStack.clear();
-    session.levelState.rng.s = state.levelState.rng.s;
-    session.levelState.rng.i = state.levelState.rng.i;
-    session.levelState.rng.j = state.levelState.rng.j;
-    session.levelState.rng.valid = state.levelState.rng.valid;
+    session.levelState.rng.s = state.rng.s;
+    session.levelState.rng.i = state.rng.i;
+    session.levelState.rng.j = state.rng.j;
+    session.levelState.rng.valid = state.rng.valid;
     puzzlescript::resizeBoardOccupancyObjectBits(session);
     puzzlescript::syncOccupancyRngFromAuthoritativeRandomState(session);
     markMaterializedFullStateDirty(session);
@@ -713,8 +710,8 @@ std::unique_ptr<FullState> snapshotSolverNodeFullState(const FullState& source) 
     return owned;
 }
 
-void recordSearchNodeStateStorage(Timing& timing, const SearchNodeState& state) {
-    const uint64_t bytes = static_cast<uint64_t>(state.byteSize());
+void recordPersistentLevelStateStorage(Timing& timing, const PersistentLevelState& state) {
+    const uint64_t bytes = static_cast<uint64_t>(persistentLevelStateByteSize(state));
     timing.compactStateBytes += bytes;
     timing.compactMaxStateBytes = std::max(timing.compactMaxStateBytes, bytes);
 }
@@ -722,7 +719,7 @@ void recordSearchNodeStateStorage(Timing& timing, const SearchNodeState& state) 
 struct CompactTurnTryResult {
     bool attempted = false;
     bool handled = false;
-    SearchNodeState state;
+    PersistentLevelState state;
     ps_step_result stepResult{};
 };
 
@@ -756,28 +753,28 @@ std::string stepResultSummary(const ps_step_result& result) {
     return out.str();
 }
 
-std::string searchNodeStateDiffSummary(const SearchNodeState& lhs, const SearchNodeState& rhs) {
-    const size_t wordCount = std::max(lhs.levelState.boardOccupancy.objectBits.size(), rhs.levelState.boardOccupancy.objectBits.size());
+std::string persistentLevelStateDiffSummary(const PersistentLevelState& lhs, const PersistentLevelState& rhs) {
+    const size_t wordCount = std::max(lhs.boardOccupancy.objectBits.size(), rhs.boardOccupancy.objectBits.size());
     for (size_t index = 0; index < wordCount; ++index) {
-        const uint64_t left = index < lhs.levelState.boardOccupancy.objectBits.size() ? lhs.levelState.boardOccupancy.objectBits[index] : 0;
-        const uint64_t right = index < rhs.levelState.boardOccupancy.objectBits.size() ? rhs.levelState.boardOccupancy.objectBits[index] : 0;
+        const uint64_t left = index < lhs.boardOccupancy.objectBits.size() ? lhs.boardOccupancy.objectBits[index] : 0;
+        const uint64_t right = index < rhs.boardOccupancy.objectBits.size() ? rhs.boardOccupancy.objectBits[index] : 0;
         if (left != right) {
             std::ostringstream out;
             out << " word=" << index << " compact=" << left << " interpreter=" << right;
             return out.str();
         }
     }
-    if (lhs.levelState.rng.valid != rhs.levelState.rng.valid
-        || lhs.levelState.rng.i != rhs.levelState.rng.i
-        || lhs.levelState.rng.j != rhs.levelState.rng.j
-        || lhs.levelState.rng.s != rhs.levelState.rng.s) {
+    if (lhs.rng.valid != rhs.rng.valid
+        || lhs.rng.i != rhs.rng.i
+        || lhs.rng.j != rhs.rng.j
+        || lhs.rng.s != rhs.rng.s) {
         std::ostringstream out;
-        out << " random compact_valid=" << lhs.levelState.rng.valid
-            << " interpreter_valid=" << rhs.levelState.rng.valid
-            << " compact_i=" << static_cast<int32_t>(lhs.levelState.rng.i)
-            << " interpreter_i=" << static_cast<int32_t>(rhs.levelState.rng.i)
-            << " compact_j=" << static_cast<int32_t>(lhs.levelState.rng.j)
-            << " interpreter_j=" << static_cast<int32_t>(rhs.levelState.rng.j);
+        out << " random compact_valid=" << lhs.rng.valid
+            << " interpreter_valid=" << rhs.rng.valid
+            << " compact_i=" << static_cast<int32_t>(lhs.rng.i)
+            << " interpreter_i=" << static_cast<int32_t>(rhs.rng.i)
+            << " compact_j=" << static_cast<int32_t>(lhs.rng.j)
+            << " interpreter_j=" << static_cast<int32_t>(rhs.rng.j);
         return out.str();
     }
     return " state_equal";
@@ -785,10 +782,9 @@ std::string searchNodeStateDiffSummary(const SearchNodeState& lhs, const SearchN
 
 CompactTurnTryResult trySpecializedCompactTurn(
     const Game& game,
-    const SearchNodeState& parent,
+    const PersistentLevelState& parent,
     ps_input input,
-    int32_t width,
-    int32_t height,
+    LevelDimensions dimensions,
     int32_t currentLevelIndex,
     puzzlescript::RuntimeStepOptions options
 ) {
@@ -799,17 +795,17 @@ CompactTurnTryResult trySpecializedCompactTurn(
     result.attempted = true;
     result.state = parent;
     puzzlescript::CompactStateView view{
-        result.state.levelState.boardOccupancy.objectBits.empty() ? nullptr : result.state.levelState.boardOccupancy.objectBits.data(),
-        result.state.levelState.boardOccupancy.objectBits.size(),
+        result.state.boardOccupancy.objectBits.empty() ? nullptr : result.state.boardOccupancy.objectBits.data(),
+        result.state.boardOccupancy.objectBits.size(),
         nullptr,
         0,
-        width,
-        height,
-        result.state.levelState.rng.s.data(),
-        result.state.levelState.rng.s.size(),
-        &result.state.levelState.rng.i,
-        &result.state.levelState.rng.j,
-        &result.state.levelState.rng.valid,
+        dimensions.width,
+        dimensions.height,
+        result.state.rng.s.data(),
+        result.state.rng.s.size(),
+        &result.state.rng.i,
+        &result.state.rng.j,
+        &result.state.rng.valid,
         currentLevelIndex,
     };
     const puzzlescript::SpecializedCompactTurnOutcome outcome =
@@ -871,8 +867,7 @@ SolverEdgeStep stepSolverEdge(
                         *game,
                         parentNode.state,
                         input,
-                        width,
-                        height,
+                        LevelDimensions{width, height},
                         parentSession.meta.currentLevelIndex,
                         solverStepOptions
                     );
@@ -901,19 +896,19 @@ SolverEdgeStep stepSolverEdge(
                             || oracleStepResult.transitioned
                             || edge.compactTurn.stepResult.restarted
                             || oracleStepResult.restarted;
-                        SearchNodeState oracleState;
+                        PersistentLevelState oracleState;
                         if (!terminalEdge) {
-                            oracleState = searchNodeStateWithTiming(childScratch, result.timing);
+                            oracleState = persistentLevelStateWithTiming(childScratch, result.timing);
                         }
                         if (!equivalentSolverStepResult(edge.compactTurn.stepResult, oracleStepResult)
-                            || (!terminalEdge && !(edge.compactTurn.state == oracleState))) {
+                            || (!terminalEdge && !persistentLevelStatesEqual(edge.compactTurn.state, oracleState))) {
                             ++result.compactTurnOracleFailures;
                             edge.oracleMismatch = true;
                             edge.oracleError = "compact turn oracle mismatch input=" + inputName(input)
                                 + " depth=" + std::to_string(parentNode.depth)
                                 + " compact_step=" + stepResultSummary(edge.compactTurn.stepResult)
                                 + " interpreter_step=" + stepResultSummary(oracleStepResult)
-                                + searchNodeStateDiffSummary(edge.compactTurn.state, oracleState);
+                                + persistentLevelStateDiffSummary(edge.compactTurn.state, oracleState);
                         }
                     }
                 } else {
@@ -928,7 +923,7 @@ SolverEdgeStep stepSolverEdge(
     if (!edge.compactTurn.handled) {
         // Both compact and non-compact storage step through the shared
         // `childScratch` buffer; on accept the caller snapshots a thin
-        // Node-owned FullState (non-compact) or a SearchNodeState (compact).
+        // Node-owned FullState (non-compact) or a PersistentLevelState (compact).
         // This avoids the per-edge full FullState copy that previously
         // cloned every scratch/mask vector from the parent.
         ScopedTimer timer(result.timing.cloneNs);
@@ -1000,7 +995,7 @@ int32_t heuristicScore(FullState& session, puzzlescript::search::HeuristicScratc
 }
 
 bool compactObjectPresent(
-    const SearchNodeState& state,
+    const PersistentLevelState& state,
     int32_t objectId,
     int32_t tileIndex,
     size_t cellWordCount
@@ -1008,11 +1003,11 @@ bool compactObjectPresent(
     const size_t word = static_cast<size_t>(tileIndex >> 6);
     const uint64_t mask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
     const size_t offset = static_cast<size_t>(objectId) * cellWordCount + word;
-    return offset < state.levelState.boardOccupancy.objectBits.size() && (state.levelState.boardOccupancy.objectBits[offset] & mask) != 0;
+    return offset < state.boardOccupancy.objectBits.size() && (state.boardOccupancy.objectBits[offset] & mask) != 0;
 }
 
 bool compactMatchesFilter(
-    const SearchNodeState& state,
+    const PersistentLevelState& state,
     const Game& game,
     const puzzlescript::MaskWord* filter,
     bool aggregate,
@@ -1043,7 +1038,7 @@ bool compactMatchesFilter(
 }
 
 std::vector<int32_t> compactMatchingDistanceField(
-    const SearchNodeState& state,
+    const PersistentLevelState& state,
     const Game& game,
     int32_t width,
     int32_t height,
@@ -1089,7 +1084,7 @@ std::vector<int32_t> compactMatchingDistanceField(
 }
 
 int32_t compactHeuristicScore(
-    const SearchNodeState& state,
+    const PersistentLevelState& state,
     const Game& game,
     int32_t width,
     int32_t height
@@ -1207,7 +1202,7 @@ public:
 
     std::optional<uint32_t> find(
         const StateKey& key,
-        const SearchNodeState& state,
+        const PersistentLevelState& state,
         const std::vector<Node>& nodes
     ) {
         if (entries.empty()) {
@@ -1224,7 +1219,7 @@ public:
 
     bool insertOrAssignIfBetter(
         const StateKey& key,
-        const SearchNodeState& state,
+        const PersistentLevelState& state,
         uint32_t depth,
         uint32_t nodeIndex,
         const std::vector<Node>& nodes
@@ -1300,7 +1295,7 @@ private:
 
     size_t findSlot(
         const StateKey& key,
-        const SearchNodeState& state,
+        const PersistentLevelState& state,
         const std::vector<Node>& nodes,
         size_t& probes
     ) {
@@ -1316,7 +1311,7 @@ private:
                 if (!exactStateKeys) {
                     return slot;
                 }
-                if (nodes[entry.nodeIndex].state == state) {
+                if (persistentLevelStatesEqual(nodes[entry.nodeIndex].state, state)) {
                     return slot;
                 }
                 ++timing.visitedKeyCollisions;
@@ -1414,8 +1409,8 @@ Result runSearch(
     result.uniqueStates = 1;
     puzzlescript::search::HeuristicScratch heuristicScratch;
 
-    SearchNodeState initialState = searchNodeStateWithTiming(*initial, result.timing);
-    const StateKey initialKey = searchNodeStateKey(initialState, result.timing);
+    PersistentLevelState initialState = persistentLevelStateWithTiming(*initial, result.timing);
+    const StateKey initialKey = persistentLevelStateKey(initialState, result.timing);
     int32_t initialHeuristic = 0;
     if (mode != SearchMode::Bfs) {
         ScopedTimer timer(result.timing.heuristicNs);
@@ -1426,7 +1421,7 @@ Result runSearch(
     {
         ScopedTimer timer(result.timing.nodeStoreNs);
         nodes.push_back(Node{compactNodeStorage ? nullptr : std::move(initial), std::move(initialState), initialKey, -1, PS_INPUT_UP, 0, initialHeuristic});
-        recordSearchNodeStateStorage(result.timing, nodes.back().state);
+        recordPersistentLevelStateStorage(result.timing, nodes.back().state);
     }
     {
         ScopedTimer timer(result.timing.visitedInsertNs);
@@ -1475,7 +1470,7 @@ Result runSearch(
         if (parentSessionPtr == nullptr) {
             {
                 ScopedTimer timer(result.timing.cloneNs);
-                materializeSearchNodeStateIntoFullState(parentNode.state, *compactSessionBase, *parentScratch);
+                materializePersistentLevelStateIntoFullState(parentNode.state, *compactSessionBase, *parentScratch);
             }
             parentSessionPtr = parentScratch.get();
         }
@@ -1532,10 +1527,10 @@ Result runSearch(
                 continue;
             }
 
-            SearchNodeState childState = edge.compactTurn.handled
+            PersistentLevelState childState = edge.compactTurn.handled
                 ? std::move(edge.compactTurn.state)
-                : searchNodeStateWithTiming(*edge.child, result.timing);
-            const StateKey key = searchNodeStateKey(childState, result.timing);
+                : persistentLevelStateWithTiming(*edge.child, result.timing);
+            const StateKey key = persistentLevelStateKey(childState, result.timing);
             const uint32_t childDepth = parentDepth + 1;
             uint32_t childIndex = static_cast<uint32_t>(nodes.size());
             int32_t childHeuristic = 0;
@@ -1564,7 +1559,7 @@ Result runSearch(
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
                     nodes.push_back(Node{std::move(ownedChild), std::move(childState), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
-                    recordSearchNodeStateStorage(result.timing, nodes.back().state);
+                    recordPersistentLevelStateStorage(result.timing, nodes.back().state);
                 }
             } else {
                 bool shouldStore = false;
@@ -1592,7 +1587,7 @@ Result runSearch(
                 {
                     ScopedTimer timer(result.timing.nodeStoreNs);
                     nodes.push_back(Node{std::move(ownedChild), std::move(childState), key, static_cast<int32_t>(entry.nodeIndex), input, childDepth, childHeuristic});
-                    recordSearchNodeStateStorage(result.timing, nodes.back().state);
+                    recordPersistentLevelStateStorage(result.timing, nodes.back().state);
                 }
             }
             {

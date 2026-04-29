@@ -294,6 +294,11 @@ struct BoardOccupancy {
     std::vector<uint64_t> objectBits;
 };
 
+struct LevelDimensions {
+    int32_t width = 0;
+    int32_t height = 0;
+};
+
 struct PersistentLevelState {
     // Authoritative board (cell-major). Per-tile writes: setCellObjectsFromWords / setCellObjects.
     LevelTemplate liveLevel;
@@ -309,16 +314,14 @@ struct GameMetadata {
 
 // Intended turn-core boundary:
 //   takeTurn(
-//       const GameInformation& gameInformation,
-//       const MetaGameState& metaGameState,
+//       const LevelDimensions& dimensions,
 //       PersistentLevelState& levelState,
+//       Scratch& scratch,
 //       ps_input input,
-//       const RuntimeStepOptions& options,
-//       Scratch& scratch) -> TurnResult
+//       const RuntimeStepOptions& options) -> TurnResult
 //
-// Game information, metagame context, input, and options are read-only.
-// The turn mutates only persistent within-level state and scratch, then
-// returns events for the caller to apply to metagame/session state.
+// Fully specialized code can compile dimensions and game-level constants into
+// the generated function. Metagame/session context stays outside turn core.
 
 struct GameInformation {
     int32_t schemaVersion = 1;
