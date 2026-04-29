@@ -179,6 +179,13 @@ TurnResult take_turn_interpreted(
 
 **Goal:** Create a dedicated compact codegen module with small, named semantic emitters.
 
+**Progress:**
+- [x] Created `native/src/compiler/compact_turn_codegen.hpp`.
+- [x] Created `native/src/compiler/compact_turn_codegen.cpp`.
+- [x] Moved per-source compact backend emission out of `native/src/cli/main.cpp`.
+- [ ] Move mode selection and future semantic compact emitters into the new
+  module.
+
 Files:
 - Create: `native/src/compiler/compact_turn_codegen.hpp`
 - Create: `native/src/compiler/compact_turn_codegen.cpp`

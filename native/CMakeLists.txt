@@ -66,6 +66,7 @@ set(PUZZLESCRIPT_COMPILER_PUBLIC_HEADERS
 )
 
 set(PUZZLESCRIPT_COMPILER_SOURCES
+  src/compiler/compact_turn_codegen.cpp
   src/compiler/compiled_rules_codegen.cpp
   src/compiler/compile_diagnostics.cpp
   src/compiler/c_api.cpp

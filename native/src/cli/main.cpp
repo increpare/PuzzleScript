@@ -22,6 +22,7 @@
 #include <vector>
 
 #include "cli/diagnostics_parity.hpp"
+#include "compiler/compact_turn_codegen.hpp"
 #include "compiler/compiled_rules_codegen.hpp"
 #include "compiler/parser.hpp"
 #include "compiler/lower_to_runtime.hpp"
@@ -47,6 +48,7 @@ using puzzlescript::compiler::CompactTurnSupport;
 using puzzlescript::compiler::compactTurnSupportForGame;
 using puzzlescript::compiler::CompiledRulesOptions;
 using puzzlescript::compiler::cppStringLiteral;
+using puzzlescript::compiler::emitCompactTurnBackend;
 using puzzlescript::compiler::isCompilableGroup;
 using puzzlescript::compiler::isCompilableReplacement;
 using puzzlescript::compiler::isCompilableRule;
@@ -4945,7 +4947,6 @@ std::string generateCompiledRulesCpp(
         const auto& source = sources[sourceIndex];
         const auto& game = *source.game;
         const SpecializedFullTurnSupport tickSupport = specializedFullTurnSupportForGame(game, options);
-        const CompactTurnSupport compactTurnSupport = compactTurnSupportForGame(game);
         uint32_t sourceCompiledRules = 0;
         uint32_t sourceCompiledGroups = 0;
         if (!compactTurnOnly) {
@@ -5195,46 +5196,8 @@ std::string generateCompiledRulesCpp(
             << "    tick_source_" << sourceIndex << ",\n"
             << "    {" << (!compactTurnOnly && tickSupport.wholeTurnSupported ? "true" : "false")
             << ", " << cppStringLiteral(compactTurnOnly ? "compact_turn_only" : tickSupport.wholeTurnFallbackReason) << "},\n"
-            << "};\n\n"
-            << "SpecializedCompactTurnOutcome specialized_compact_turn_source_" << sourceIndex << "(\n"
-            << "    const Game& game,\n"
-            << "    PersistentLevelState& levelState,\n"
-            << "    Scratch& scratch,\n"
-            << "    SpecializedCompactTurnContext context,\n"
-            << "    ps_input input,\n"
-            << "    RuntimeStepOptions options\n"
-            << ") {\n";
-        if (!compactTurnSupport.supported) {
-            out << "    (void)game;\n"
-                << "    (void)levelState;\n"
-                << "    (void)scratch;\n"
-                << "    (void)context;\n"
-                << "    (void)options;\n"
-                << "    (void)input;\n"
-                << "    return {false, {}};\n"
-                << "}\n\n";
-        } else if (compactTurnSupport.interpreterBridge) {
-            out << "    return compactStateInterpretedTurnBridge(game, levelState, scratch, context, input, options);\n"
-                << "}\n\n";
-        } else {
-            out << "    (void)game;\n"
-                << "    (void)levelState;\n"
-                << "    (void)scratch;\n"
-                << "    (void)context;\n"
-                << "    (void)options;\n"
-                << "    (void)input;\n"
-                << "    return {false, {}};\n"
-                << "}\n\n";
-        }
-        out
-            << "const SpecializedCompactTurnBackend specialized_compact_turn_backend_" << sourceIndex << " = {\n"
-            << "    " << source.hash << "ULL,\n"
-            << "    " << cppStringLiteral(source.path.string()) << ",\n"
-            << "    specialized_compact_turn_source_" << sourceIndex << ",\n"
-            << "    {" << (compactTurnSupport.supported ? "true" : "false")
-            << ", " << cppStringLiteral(compactTurnSupport.fallbackReason) << "},\n"
-            << "    " << (compactTurnSupport.supported && !compactTurnSupport.interpreterBridge ? "true" : "false") << ",\n"
             << "};\n\n";
+        emitCompactTurnBackend(out, game, source.path.string(), source.hash, sourceIndex);
     }
 
     out << "} // namespace\n\n";
