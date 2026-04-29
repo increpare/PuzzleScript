@@ -373,10 +373,15 @@ Acceptance:
 
 ### Phase 8: Expand Language Coverage
 
-Implement remaining PuzzleScript semantics one feature at a time:
+Implement PuzzleScript semantics one feature at a time.
 
-- ellipsis
-- random rules
+Recently added compiler coverage:
+
+- ellipsis rows
+- random rule groups
+
+Remaining coverage:
+
 - random replacements
 - rigid rules
 - loop points
@@ -453,10 +458,17 @@ make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=5
   result: passes with compact oracle checks
   added coverage: deterministic multi-row rules and require_player_movement cancellation
 
+make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=6
+  result: passes with compact oracle checks
+  added coverage: ellipsis row matching with broad oracle exercise
+
 Additional ranked-frontier probes:
+  case 7, "ellipsisPropagationBug1": passes
   case 40, "don't mask movements if no movements happening": passes
   case 42, "Remove movements from empty layers after rule application": passes
   case 43, "movement matching - correctly matching different objects same cell moving in different directions": passes
+  case 44, "movement matching - ellipsis bug - forgot to include one case in above": passes
+  case 45, "ellipsis bug: rule matches two candidates, first replacement invalidates second": passes
   case 111, "Make synonyms of properties work. #215": passes
   case 114, "Make synonyms of properties work. #243": passes
   case 122, "Synonym confusion": passes
@@ -474,14 +486,14 @@ Additional ranked-frontier probes:
   case 152, "super tricky (related to #469) right [ vertical playerortarget | vertical player ] -> [ playerortarget | playerortarget ]": passes
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
 
-Selected compiler-mode testdata progress: 25/469 known passing.
+Selected compiler-mode testdata progress: 29/469 known passing.
 
 Additional ranked-frontier command probe:
   case 93, "again + message combo": passes
   added coverage: simple `message` and `again` command queueing
 
-Known next unsupported feature from numeric case 6:
-  ellipsis at source rule line 51
+Known next unsupported ranked-frontier feature:
+  case 13: rigid rules
 
 Known ranked-frontier unsupported feature:
   random replacements remain unsupported until replacement emission can choose
