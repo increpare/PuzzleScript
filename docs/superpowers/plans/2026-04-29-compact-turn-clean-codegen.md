@@ -258,8 +258,8 @@ Acceptance:
   storage.
 - [x] Emit state preparation/validation for dimensions, persistent board
   storage, and scratch movement storage.
-- [ ] Add collision layer helpers.
-- [ ] Add row scan helpers for directional rules.
+- [x] Add collision layer helpers.
+- [x] Add row scan helpers for directional rules.
 
 Features:
 - object bit query

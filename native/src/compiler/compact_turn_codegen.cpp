@@ -51,6 +51,22 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "constexpr int32_t compact_turn_object_count_" << suffix << " = " << game.objectCount << ";\n"
         << "constexpr int32_t compact_turn_layer_count_" << suffix << " = " << game.layerCount << ";\n\n";
 
+    for (int32_t layer = 0; layer < game.layerCount; ++layer) {
+        const MaskOffset offset = static_cast<size_t>(layer) < game.layerMaskOffsets.size()
+            ? game.layerMaskOffsets[static_cast<size_t>(layer)]
+            : kNullMaskOffset;
+        const std::vector<MaskWord> layerMask = compiledMaskWords(game, offset, game.wordCount);
+        out << "constexpr MaskWord compact_turn_layer_mask_" << suffix << "_" << layer << "[] = {";
+        for (size_t word = 0; word < layerMask.size(); ++word) {
+            if (word > 0) out << ", ";
+            out << compiledMaskWordLiteral(layerMask[word]);
+        }
+        out << "};\n";
+    }
+    if (game.layerCount > 0) {
+        out << "\n";
+    }
+
     out << "int32_t compact_turn_tile_count_" << suffix << "(LevelDimensions dimensions) {\n"
         << "    if (dimensions.width <= 0 || dimensions.height <= 0) return 0;\n"
         << "    return dimensions.width * dimensions.height;\n"
@@ -62,6 +78,41 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
 
     out << "int32_t compact_turn_tile_index_" << suffix << "(LevelDimensions dimensions, int32_t x, int32_t y) {\n"
         << "    return y * dimensions.width + x;\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_direction_delta_" << suffix << "(int32_t directionMask, int32_t& dx, int32_t& dy) {\n"
+        << "    switch (directionMask) {\n"
+        << "        case 1: dx = 0; dy = -1; return true;\n"
+        << "        case 2: dx = 0; dy = 1; return true;\n"
+        << "        case 4: dx = -1; dy = 0; return true;\n"
+        << "        case 8: dx = 1; dy = 0; return true;\n"
+        << "        case 16: dx = 0; dy = 0; return true;\n"
+        << "        default: dx = 0; dy = 0; return false;\n"
+        << "    }\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_step_cell_" << suffix << "(LevelDimensions dimensions, int32_t& x, int32_t& y, int32_t directionMask) {\n"
+        << "    int32_t dx = 0;\n"
+        << "    int32_t dy = 0;\n"
+        << "    if (!compact_turn_direction_delta_" << suffix << "(directionMask, dx, dy)) return false;\n"
+        << "    const int32_t nextX = x + dx;\n"
+        << "    const int32_t nextY = y + dy;\n"
+        << "    if (!compact_turn_in_bounds_" << suffix << "(dimensions, nextX, nextY)) return false;\n"
+        << "    x = nextX;\n"
+        << "    y = nextY;\n"
+        << "    return true;\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_cell_at_direction_" << suffix << "(LevelDimensions dimensions, int32_t originTileIndex, int32_t directionMask, int32_t distance, int32_t& outTileIndex) {\n"
+        << "    if (dimensions.width <= 0 || dimensions.height <= 0 || distance < 0 || originTileIndex < 0) return false;\n"
+        << "    int32_t x = originTileIndex % dimensions.width;\n"
+        << "    int32_t y = originTileIndex / dimensions.width;\n"
+        << "    if (!compact_turn_in_bounds_" << suffix << "(dimensions, x, y)) return false;\n"
+        << "    for (int32_t step = 0; step < distance; ++step) {\n"
+        << "        if (!compact_turn_step_cell_" << suffix << "(dimensions, x, y, directionMask)) return false;\n"
+        << "    }\n"
+        << "    outTileIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
+        << "    return true;\n"
         << "}\n\n";
 
     out << "bool compact_turn_prepare_state_" << suffix << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch) {\n"
@@ -98,6 +149,36 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    const uint32_t word = maskWordIndex(bit);\n"
         << "    if (word >= static_cast<uint32_t>(compact_turn_object_stride_" << suffix << ")) return false;\n"
         << "    return (compact_turn_cell_objects_" << suffix << "(levelState, tileIndex)[word] & maskBit(bit)) != 0;\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_cell_any_objects_" << suffix << "(const PersistentLevelState& levelState, int32_t tileIndex, const MaskWord* mask) {\n"
+        << "    const MaskWord* cell = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
+        << "    for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
+        << "        if ((cell[word] & mask[word]) != 0) return true;\n"
+        << "    }\n"
+        << "    return false;\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_cell_has_all_objects_" << suffix << "(const PersistentLevelState& levelState, int32_t tileIndex, const MaskWord* mask) {\n"
+        << "    const MaskWord* cell = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
+        << "    for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
+        << "        if ((cell[word] & mask[word]) != mask[word]) return false;\n"
+        << "    }\n"
+        << "    return true;\n"
+        << "}\n\n";
+
+    out << "const MaskWord* compact_turn_layer_mask_" << suffix << "(int32_t layer) {\n"
+        << "    switch (layer) {\n";
+    for (int32_t layer = 0; layer < game.layerCount; ++layer) {
+        out << "        case " << layer << ": return compact_turn_layer_mask_" << suffix << "_" << layer << ";\n";
+    }
+    out << "        default: return nullptr;\n"
+        << "    }\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_cell_has_layer_" << suffix << "(const PersistentLevelState& levelState, int32_t tileIndex, int32_t layer) {\n"
+        << "    const MaskWord* layerMask = compact_turn_layer_mask_" << suffix << "(layer);\n"
+        << "    return layerMask != nullptr && compact_turn_cell_any_objects_" << suffix << "(levelState, tileIndex, layerMask);\n"
         << "}\n\n";
 
     out << "void compact_turn_set_cell_object_" << suffix << "(PersistentLevelState& levelState, int32_t tileIndex, int32_t objectId) {\n"
