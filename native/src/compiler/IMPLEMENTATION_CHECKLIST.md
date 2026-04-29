@@ -914,6 +914,7 @@ attribute graph cost -> no-allocation hash -> flat visited table
   make solver_smoke_tests SPECIALIZE=true
   make solver_parity_smoke SPECIALIZE=true
   make solver_focus_compare SPECIALIZE=true SOLVER_FOCUS_RUNS=1
+  make solver_focus_compact_compare SOLVER_FOCUS_RUNS=1
   ```
 
 - [ ] Retire duplicated compact-state checklist items once this track owns

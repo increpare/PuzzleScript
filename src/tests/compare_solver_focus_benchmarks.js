@@ -63,6 +63,10 @@ function formatDelta(newValue, oldValue, digits = 1) {
     return `${formatNumber(valueRatio, 3)}x (${sign}${formatNumber(percent, digits)}%)`;
 }
 
+function formatArgs(value) {
+    return JSON.stringify(Array.isArray(value) ? value : []);
+}
+
 function metricMedian(summary, key) {
     let value = summary && summary.median && summary.median[key];
     if (!Number.isFinite(value) && key.startsWith('compact_turn_')) {
@@ -324,6 +328,23 @@ function printMedianMetricSum(label, keys, digits = 1) {
     );
 }
 
+function printCompactTurnSummary() {
+    const interpretedAttempts = metricMedian(interpreted, 'compact_turn_attempts');
+    const compiledAttempts = metricMedian(compiled, 'compact_turn_attempts');
+    if (interpretedAttempts === null && compiledAttempts === null) {
+        return;
+    }
+    const interpretedHits = metricMedian(interpreted, 'compact_turn_hits');
+    const compiledHits = metricMedian(compiled, 'compact_turn_hits');
+    const interpretedHitRate = ratio(interpretedHits, interpretedAttempts);
+    const compiledHitRate = ratio(compiledHits, compiledAttempts);
+    process.stdout.write(
+        `  median_compact_turn_hit_rate:` +
+        ` interpreted=${interpretedHitRate === null ? 'n/a' : formatNumber(interpretedHitRate * 100, 1) + '%'}` +
+        ` compiled=${compiledHitRate === null ? 'n/a' : formatNumber(compiledHitRate * 100, 1) + '%'}\n`
+    );
+}
+
 function printGraphSplit() {
     const split = [
         ['step', ['step_ms']],
@@ -465,6 +486,7 @@ function printGraphOverheadTable(label, rows) {
 process.stdout.write('solver_focus_compare\n');
 process.stdout.write(`  targets: interpreted=${interpreted.target_count} compiled=${compiled.target_count} same=${sameTargets ? 'yes' : 'no'}\n`);
 process.stdout.write(`  runs_per_target: interpreted=${interpreted.runs_per_target} compiled=${compiled.runs_per_target}\n`);
+process.stdout.write(`  solver_extra_args: interpreted=${formatArgs(interpreted.solver_extra_args)} compiled=${formatArgs(compiled.solver_extra_args)}\n`);
 process.stdout.write(`  status: interpreted=${JSON.stringify(interpretedStatus)} compiled=${JSON.stringify(compiledStatus)}\n`);
 process.stdout.write(
     `  median_wall_ms: interpreted=${formatNumber(interpreted.median.wall_ms)}` +
@@ -495,6 +517,7 @@ printMedianMetric('compact_turn_attempts', 'compact_turn_attempts');
 printMedianMetric('compact_turn_hits', 'compact_turn_hits');
 printMedianMetric('compact_turn_fallbacks', 'compact_turn_fallbacks');
 printMedianMetric('compact_turn_unsupported', 'compact_turn_unsupported');
+printCompactTurnSummary();
 printMedianMetricSum('frontier_ms', ['frontier_pop_ms', 'frontier_push_ms']);
 printMedianMetric('node_store_ms', 'node_store_ms');
 printMedianMetric('heuristic_ms', 'heuristic_ms');

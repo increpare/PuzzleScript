@@ -18,7 +18,7 @@
 .PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_perf_report solver_focus_compact_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
 	rule_plan_parity_tests \
@@ -75,8 +75,10 @@ SOLVER_FOCUS_MANIFEST ?= $(BUILD_DIR)/native/solver_focus_group.json
 SOLVER_FOCUS_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark.json
 SOLVER_FOCUS_INTERPRETED_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark_interpreted.json
 SOLVER_FOCUS_COMPILED_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark_compiled$(if $(filter true,$(COMPILED_RULES_PERF)),_perf,).json
+SOLVER_FOCUS_COMPACT_COMPILED_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark_compiled_compact$(if $(filter true,$(COMPILED_RULES_PERF)),_perf,).json
 SOLVER_FOCUS_PERF_INTERPRETED_OUT ?= $(BUILD_DIR)/native/solver_focus_perf_interpreted.json
 SOLVER_FOCUS_PERF_COMPILED_OUT ?= $(BUILD_DIR)/native/solver_focus_perf_compiled.json
+SOLVER_FOCUS_COMPACT_PERF_COMPILED_OUT ?= $(BUILD_DIR)/native/solver_focus_perf_compiled_compact.json
 SOLVER_FOCUS_TIMEOUT_MS ?= 500
 SOLVER_FOCUS_MIN_ELAPSED_MS ?= 250
 SOLVER_FOCUS_MAX_TARGETS ?= 50
@@ -89,6 +91,8 @@ SOLVER_FOCUS_PROFILE_COUNTERS ?= false
 SOLVER_FOCUS_PROFILE_COUNTERS_ARG = $(if $(filter true,$(SOLVER_FOCUS_PROFILE_COUNTERS)),--profile-runtime-counters,)
 SOLVER_FOCUS_SOLVER_ARGS ?=
 SOLVER_FOCUS_SOLVER_ARG_ARGS = $(foreach arg,$(SOLVER_FOCUS_SOLVER_ARGS),--solver-arg "$(arg)")
+SOLVER_FOCUS_COMPACT_SOLVER_ARGS ?= --compact-node-storage
+SOLVER_FOCUS_COMPACT_SOLVER_ARG_ARGS = $(foreach arg,$(SOLVER_FOCUS_COMPACT_SOLVER_ARGS),--solver-arg "$(arg)")
 # Compile-probe timeout only affects mining (solver_focus_mine). Default is
 # disabled so `make solver_focus_mine` always yields a usable focus set.
 # Set this to a non-zero value (e.g. 60) if you want mining to exclude targets
@@ -308,7 +312,10 @@ help:
 	@echo "  make solver_focus_mine             Mine a small solver optimization focus group"
 	@echo "  make solver_focus_benchmark        Benchmark the current solver focus group"
 	@echo "  make solver_focus_compare          Compare interpreted vs compiled focus outputs"
+	@echo "  make solver_focus_compact_compare  Compare interpreted vs compiled compact-node focus outputs"
 	@echo "  make solver_focus_perf_report      Compare focus outputs with runtime counters and the 2x goal"
+	@echo "  make solver_focus_compact_perf_report"
+	@echo "                                     Compare compact-node focus outputs with runtime counters"
 	@echo "  make solver_benchmark_targets      Benchmark mined solver targets repeatedly"
 	@echo "  make clean                         Remove native build outputs and JS parity data"
 	@echo ""
@@ -735,12 +742,29 @@ solver_focus_compare: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
 	fi; \
 	$(NODE) src/tests/compare_solver_focus_benchmarks.js "$(SOLVER_FOCUS_INTERPRETED_OUT)" "$(SOLVER_FOCUS_COMPILED_OUT)"
 
+solver_focus_compact_compare: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
+	@set -e; \
+	if ! $(NODE) src/tests/check_solver_focus_benchmark_fresh.js "$(SOLVER_FOCUS_INTERPRETED_OUT)" "$(SOLVER_FOCUS_MANIFEST)" --runs $(SOLVER_FOCUS_RUNS) --corpus "$(SOLVER_FOCUS_CORPUS)" --strategy "$(SOLVER_FOCUS_STRATEGY)" --profile-runtime-counters "$(SOLVER_FOCUS_PROFILE_COUNTERS)" $(SOLVER_FOCUS_BENCHMARK_FRESH_ARGS); then \
+		$(MAKE) solver_focus_benchmark SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_INTERPRETED_OUT)"; \
+	fi; \
+	if ! $(NODE) src/tests/check_solver_focus_benchmark_fresh.js "$(SOLVER_FOCUS_COMPACT_COMPILED_OUT)" "$(SOLVER_FOCUS_MANIFEST)" --runs $(SOLVER_FOCUS_RUNS) --corpus "$(SOLVER_FOCUS_CORPUS)" --strategy "$(SOLVER_FOCUS_STRATEGY)" --profile-runtime-counters "$(SOLVER_FOCUS_PROFILE_COUNTERS)" $(SOLVER_FOCUS_COMPACT_SOLVER_ARG_ARGS) $(SOLVER_FOCUS_BENCHMARK_FRESH_ARGS); then \
+		$(MAKE) solver_focus_benchmark SPECIALIZE=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_COMPACT_COMPILED_OUT)" SOLVER_FOCUS_SOLVER_ARGS="$(SOLVER_FOCUS_COMPACT_SOLVER_ARGS)"; \
+	fi; \
+	$(NODE) src/tests/compare_solver_focus_benchmarks.js "$(SOLVER_FOCUS_INTERPRETED_OUT)" "$(SOLVER_FOCUS_COMPACT_COMPILED_OUT)"
+
 solver_focus_perf_report: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
 	@set -e; \
 	$(MAKE) solver_focus_benchmark SOLVER_FOCUS_RUNS=$(SOLVER_FOCUS_RUNS) SOLVER_FOCUS_PROFILE_COUNTERS=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_PERF_INTERPRETED_OUT)"; \
 	$(MAKE) solver_focus_benchmark SPECIALIZE=true COMPILED_RULES_PERF=true SOLVER_FOCUS_RUNS=$(SOLVER_FOCUS_RUNS) SOLVER_FOCUS_PROFILE_COUNTERS=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_PERF_COMPILED_OUT)"; \
 	$(NODE) src/tests/compare_solver_focus_benchmarks.js "$(SOLVER_FOCUS_PERF_INTERPRETED_OUT)" "$(SOLVER_FOCUS_PERF_COMPILED_OUT)" --detail --goal-ratio 0.5 || \
 		(echo "solver_focus_perf_report: goal-ratio check failed (non-fatal); see metrics above." && true)
+
+solver_focus_compact_perf_report: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
+	@set -e; \
+	$(MAKE) solver_focus_benchmark SOLVER_FOCUS_RUNS=$(SOLVER_FOCUS_RUNS) SOLVER_FOCUS_PROFILE_COUNTERS=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_PERF_INTERPRETED_OUT)"; \
+	$(MAKE) solver_focus_benchmark SPECIALIZE=true COMPILED_RULES_PERF=true SOLVER_FOCUS_RUNS=$(SOLVER_FOCUS_RUNS) SOLVER_FOCUS_PROFILE_COUNTERS=true SOLVER_FOCUS_OUT="$(SOLVER_FOCUS_COMPACT_PERF_COMPILED_OUT)" SOLVER_FOCUS_SOLVER_ARGS="$(SOLVER_FOCUS_COMPACT_SOLVER_ARGS)"; \
+	$(NODE) src/tests/compare_solver_focus_benchmarks.js "$(SOLVER_FOCUS_PERF_INTERPRETED_OUT)" "$(SOLVER_FOCUS_COMPACT_PERF_COMPILED_OUT)" --detail --goal-ratio 0.5 || \
+		(echo "solver_focus_compact_perf_report: goal-ratio check failed (non-fatal); see metrics above." && true)
 
 solver_benchmark_targets: $(PUZZLESCRIPT_SOLVER) $(SOLVER_TARGET_BENCH_MANIFEST)
 	$(NODE) src/tests/run_solver_level_benchmark.js $(PUZZLESCRIPT_SOLVER) $(SOLVER_TARGET_BENCH_CORPUS) $(SOLVER_TARGET_BENCH_MANIFEST) --runs $(SOLVER_TARGET_BENCH_RUNS) --strategy $(SOLVER_TARGET_BENCH_STRATEGY) --out $(SOLVER_TARGET_BENCH_OUT) $(SOLVER_TARGET_BENCH_TIMEOUT_ARG)
