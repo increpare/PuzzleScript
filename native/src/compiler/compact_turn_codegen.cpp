@@ -385,26 +385,34 @@ void emitCompactRuleCommandFunction(
     out << "    commands.any = true;\n";
     for (const RuleCommand& command : rule.commands) {
         if (command.name == "again") {
-            out << "    commands.hasAgain = true;\n";
+            out << "    if (!commands.hasAgain) ++commands.commandCount;\n"
+                << "    commands.hasAgain = true;\n";
         } else if (command.name == "cancel") {
-            out << "    commands.hasCancel = true;\n";
+            out << "    if (!commands.hasCancel) ++commands.commandCount;\n"
+                << "    commands.hasCancel = true;\n";
         } else if (command.name == "checkpoint") {
-            out << "    commands.hasCheckpoint = true;\n";
+            out << "    if (!commands.hasCheckpoint) ++commands.commandCount;\n"
+                << "    commands.hasCheckpoint = true;\n";
         } else if (command.name == "restart") {
-            out << "    commands.hasRestart = true;\n";
+            out << "    if (!commands.hasRestart) ++commands.commandCount;\n"
+                << "    commands.hasRestart = true;\n";
         } else if (command.name == "win") {
-            out << "    commands.hasWin = true;\n";
+            out << "    if (!commands.hasWin) ++commands.commandCount;\n"
+                << "    commands.hasWin = true;\n";
         } else if (command.name == "message") {
             if (command.argument.has_value()) {
                 out << "    if (!commands.hasMessage) {\n"
+                    << "        ++commands.commandCount;\n"
                     << "        commands.hasMessage = true;\n"
                     << "        commands.messageText = " << cppStringLiteral(*command.argument) << ";\n"
                     << "    }\n";
             } else {
-                out << "    commands.hasMessage = true;\n";
+                out << "    if (!commands.hasMessage) ++commands.commandCount;\n"
+                    << "    commands.hasMessage = true;\n";
             }
         } else if (command.name.rfind("sfx", 0) == 0) {
-            out << "    // Sound effects are command output only; board/search state is unaffected.\n";
+            out << "    ++commands.commandCount;\n"
+                << "    // Sound effects are command output only; board/search state is unaffected.\n";
         } else {
             out << "    static_assert(false, \"compact turn compiler command queue emitted unsupported command\");\n";
         }
@@ -689,17 +697,26 @@ void emitCompactRulegroupFunctions(
             for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
                 const std::string rulePrefix = compactRulePrefix(suffix, phase, groupIndex, ruleIndex);
                 out << "    if (" << rulePrefix << "_collect_matches(dimensions, levelState, scratch, groupMatches[" << ruleIndex << "])) {\n"
-                    << "        std::vector<size_t> tupleIndex(groupMatches[" << ruleIndex << "].size(), 0);\n"
-                    << "        while (true) {\n"
-                    << "            candidates.push_back(Candidate{" << ruleIndex << ", tupleIndex});\n"
-                    << "            size_t rowToIncrement = 0;\n"
-                    << "            while (rowToIncrement < groupMatches[" << ruleIndex << "].size()) {\n"
-                    << "                ++tupleIndex[rowToIncrement];\n"
-                    << "                if (tupleIndex[rowToIncrement] < groupMatches[" << ruleIndex << "][rowToIncrement].size()) break;\n"
-                    << "                tupleIndex[rowToIncrement] = 0;\n"
-                    << "                ++rowToIncrement;\n"
+                    << "        bool hasMatchTuple = !groupMatches[" << ruleIndex << "].empty();\n"
+                    << "        for (const auto& rowMatches : groupMatches[" << ruleIndex << "]) {\n"
+                    << "            if (rowMatches.empty()) {\n"
+                    << "                hasMatchTuple = false;\n"
+                    << "                break;\n"
                     << "            }\n"
-                    << "            if (rowToIncrement == groupMatches[" << ruleIndex << "].size()) break;\n"
+                    << "        }\n"
+                    << "        if (hasMatchTuple) {\n"
+                    << "            std::vector<size_t> tupleIndex(groupMatches[" << ruleIndex << "].size(), 0);\n"
+                    << "            while (true) {\n"
+                    << "                candidates.push_back(Candidate{" << ruleIndex << ", tupleIndex});\n"
+                    << "                size_t rowToIncrement = 0;\n"
+                    << "                while (rowToIncrement < groupMatches[" << ruleIndex << "].size()) {\n"
+                    << "                    ++tupleIndex[rowToIncrement];\n"
+                    << "                    if (tupleIndex[rowToIncrement] < groupMatches[" << ruleIndex << "][rowToIncrement].size()) break;\n"
+                    << "                    tupleIndex[rowToIncrement] = 0;\n"
+                    << "                    ++rowToIncrement;\n"
+                    << "                }\n"
+                    << "                if (rowToIncrement == groupMatches[" << ruleIndex << "].size()) break;\n"
+                    << "            }\n"
                     << "        }\n"
                     << "    }\n";
             }
@@ -830,6 +847,16 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "    const int32_t directionMask = compact_turn_input_direction_" << suffix << "(input);\n"
         << "    const std::vector<MaskWord> turnStartObjects = levelState.board.objects;\n"
         << "    const RandomState turnStartRng = levelState.rng;\n"
+        << "    std::vector<MaskWord> turnStartMovements;\n"
+        << "    std::vector<MaskWord> turnStartRigidGroupIndexMasks;\n"
+        << "    std::vector<MaskWord> turnStartRigidMovementAppliedMasks;\n"
+        << "    if (probeOnly) {\n"
+        << "        turnStartMovements = scratch.liveMovements;\n"
+        << "        if (compact_turn_has_rigid_" << suffix << ") {\n"
+        << "            turnStartRigidGroupIndexMasks = scratch.rigidGroupIndexMasks;\n"
+        << "            turnStartRigidMovementAppliedMasks = scratch.rigidMovementAppliedMasks;\n"
+        << "        }\n"
+        << "    }\n"
         << "    std::vector<int32_t> startPlayerPositions;\n"
         << "    if (directionMask != 0 && compact_turn_requires_player_movement_" << suffix << ") {\n"
         << "        startPlayerPositions = compact_turn_collect_player_positions_" << suffix << "(dimensions, levelState);\n"
@@ -871,6 +898,18 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "    const bool modified = levelState.board.objects != turnStartObjects;\n"
         << "    // 6. apply late rulegroups\n"
         << "    // 7. process commands and again policy\n"
+        << "    if (probeOnly) {\n"
+        << "        result.changed = commands.hasCancel\n"
+        << "            ? commands.commandCount > 1\n"
+        << "            : (modified || commands.hasWin || commands.hasRestart);\n"
+        << "        levelState.board.objects = turnStartObjects;\n"
+        << "        scratch.liveMovements = turnStartMovements;\n"
+        << "        if (compact_turn_has_rigid_" << suffix << ") {\n"
+        << "            scratch.rigidGroupIndexMasks = turnStartRigidGroupIndexMasks;\n"
+        << "            scratch.rigidMovementAppliedMasks = turnStartRigidMovementAppliedMasks;\n"
+        << "        }\n"
+        << "        return {true, result};\n"
+        << "    }\n"
         << "    if (!startPlayerPositions.empty() && !compact_turn_any_start_player_moved_" << suffix << "(levelState, startPlayerPositions)) {\n"
         << "        levelState.board.objects = turnStartObjects;\n"
         << "        levelState.rng = turnStartRng;\n"
@@ -912,7 +951,23 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "    result.changed = seededInput || ruleChanged || moved || lateRuleChanged || commands.any;\n"
         << "    result.won = won;\n"
         << "    if (outHasAgain != nullptr) {\n"
-        << "        *outHasAgain = commands.hasAgain && modified && !won;\n"
+        << "        bool scheduleAgain = false;\n"
+        << "        if (commands.hasAgain && modified && !won) {\n"
+        << "            const SpecializedCompactTurnOutcome probeOutcome = specialized_compact_turn_single_" << suffix << "(\n"
+        << "                dimensions,\n"
+        << "                levelState,\n"
+        << "                scratch,\n"
+        << "                PS_INPUT_TICK,\n"
+        << "                options,\n"
+        << "                nullptr,\n"
+        << "                true\n"
+        << "            );\n"
+        << "            if (!probeOutcome.handled) {\n"
+        << "                return probeOutcome;\n"
+        << "            }\n"
+        << "            scheduleAgain = probeOutcome.result.changed || probeOutcome.result.transitioned || probeOutcome.result.won;\n"
+        << "        }\n"
+        << "        *outHasAgain = scheduleAgain;\n"
         << "    }\n"
         << "    return {true, result};\n";
 }
@@ -925,7 +980,8 @@ void emitCompactTurnCompilerDrainBody(std::ostream& out, std::string_view suffix
         << "        scratch,\n"
         << "        input,\n"
         << "        options,\n"
-        << "        &hasAgain\n"
+        << "        &hasAgain,\n"
+        << "        false\n"
         << "    );\n"
         << "    if (!outcome.handled || options.againPolicy != AgainPolicy::Drain) {\n"
         << "        return outcome;\n"
@@ -943,7 +999,8 @@ void emitCompactTurnCompilerDrainBody(std::ostream& out, std::string_view suffix
         << "            scratch,\n"
         << "            PS_INPUT_TICK,\n"
         << "            options,\n"
-        << "            &tickHasAgain\n"
+        << "            &tickHasAgain,\n"
+        << "            false\n"
         << "        );\n"
         << "        if (!tickOutcome.handled) {\n"
         << "            return tickOutcome;\n"
@@ -1037,6 +1094,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
 
     out << "struct CompactTurnCommands_" << suffix << " {\n"
         << "    bool any = false;\n"
+        << "    int32_t commandCount = 0;\n"
         << "    bool hasAgain = false;\n"
         << "    bool hasCancel = false;\n"
         << "    bool hasCheckpoint = false;\n"
@@ -1491,7 +1549,8 @@ void emitCompactTurnBackend(
             << "    Scratch& scratch,\n"
             << "    ps_input input,\n"
             << "    RuntimeStepOptions options,\n"
-            << "    bool* outHasAgain\n"
+            << "    bool* outHasAgain,\n"
+            << "    bool probeOnly\n"
             << ") {\n";
         emitCompactTurnCompilerSingleBody(out, suffix);
         out << "}\n\n";

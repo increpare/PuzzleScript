@@ -554,6 +554,29 @@ Full-prefix compiler-mode sweep, 2026-04-29:
     build/compiled-rules/testdata-compact-compiler-per-case-sweep.tsv
     build/compiled-rules/testdata-compact-compiler-per-case-sweep.log
 
+Again-probe progress update, 2026-04-29:
+  result against the previous attempted prefix:
+    attempted 188/469
+    passed 186
+    remaining semantic oracle failure: 155 "gallery game: at the hedges of time"
+    case 189 remains the next compile-time frontier
+  fixed from the previous failed set:
+    31 "collapse simple"
+    32 "collapse long"
+    57 "Flying Kick"
+    62 "Cute Train"
+    85 "Sok7"
+    87 "Color Chained"
+    88 "Drop Swap"
+    89 "Drop Swap 2"
+    90 "Drop Swap 3"
+    188 "gallery: marble shot"
+  semantic fix:
+    Generated compact turns now mirror the interpreter's `again` scheduling
+    probe: after a modifying turn with `again`, run one tick in dont-modify
+    probe mode, restore board/movement state, preserve RNG advancement, and
+    schedule another tick only if the probe would change state.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
