@@ -22,6 +22,7 @@
 #include <vector>
 
 #include "cli/diagnostics_parity.hpp"
+#include "compiler/compiled_rules_codegen.hpp"
 #include "compiler/parser.hpp"
 #include "compiler/lower_to_runtime.hpp"
 #include "runtime/json.hpp"
@@ -35,6 +36,20 @@ int puzzlescript_cpp_run_player_for_game(ps_game* game, const std::string& saveK
 #endif
 
 namespace {
+
+using puzzlescript::compiler::areAllGroupsCompilable;
+using puzzlescript::compiler::canGenerateCompiledRuleCommandQueue;
+using puzzlescript::compiler::compiledGroupMissReason;
+using puzzlescript::compiler::compiledRuleCommandKindExpression;
+using puzzlescript::compiler::CompactTurnSupport;
+using puzzlescript::compiler::compactTurnSupportForGame;
+using puzzlescript::compiler::CompiledRulesOptions;
+using puzzlescript::compiler::isCompilableGroup;
+using puzzlescript::compiler::isCompilableReplacement;
+using puzzlescript::compiler::isCompilableRule;
+using puzzlescript::compiler::SpecializedFullTurnSupport;
+using puzzlescript::compiler::specializedFullTurnSupportForGame;
+using puzzlescript::compiler::specializedFullTurnSupportForMissingGame;
 
 bool sessionCreateForGame(ps_game* game, const std::optional<std::string>& loadedLevelSeed, ps_full_state** outSession, ps_error** outError) {
     if (loadedLevelSeed.has_value()) {
@@ -3728,201 +3743,6 @@ std::string safeCppIdentifier(std::string_view value) {
         out.insert(out.begin(), '_');
     }
     return out;
-}
-
-bool isCompilableReplacement(const puzzlescript::Replacement& replacement) {
-    return !replacement.hasRandomEntityMask && !replacement.hasRandomDirMask;
-}
-
-struct CompiledRulesOptions {
-    size_t maxRows = 1;
-};
-
-std::string compiledRuleMissReason(
-    const puzzlescript::Rule& rule,
-    const CompiledRulesOptions& options,
-    bool allowRandomRule = false
-) {
-    if (rule.isRandom && !allowRandomRule) {
-        return "random_rule";
-    }
-    if (rule.patterns.empty()) {
-        return "empty_row";
-    }
-    if (rule.patterns.size() > options.maxRows) {
-        return "row_limit";
-    }
-    if (rule.ellipsisCount.size() < rule.patterns.size()) {
-        return "missing_ellipsis_metadata";
-    }
-    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-        if (rule.patterns[rowIndex].empty()) {
-            return "empty_row";
-        }
-        for (const auto& pattern : rule.patterns[rowIndex]) {
-            if (pattern.kind == puzzlescript::Pattern::Kind::Ellipsis) {
-                continue;
-            }
-            if (pattern.kind != puzzlescript::Pattern::Kind::CellPattern) {
-                return "non_cell_pattern";
-            }
-        }
-    }
-    return {};
-}
-
-bool isCompilableRule(const puzzlescript::Rule& rule, const CompiledRulesOptions& options) {
-    return compiledRuleMissReason(rule, options).empty();
-}
-
-std::string compiledGroupMissReason(const std::vector<puzzlescript::Rule>& group, const CompiledRulesOptions& options) {
-    if (group.empty()) {
-        return "empty_group";
-    }
-    const bool randomGroup = group[0].isRandom;
-    for (const auto& rule : group) {
-        const std::string reason = compiledRuleMissReason(rule, options, randomGroup);
-        if (!reason.empty()) {
-            return reason;
-        }
-    }
-    return {};
-}
-
-bool isCompilableGroup(const std::vector<puzzlescript::Rule>& group, const CompiledRulesOptions& options) {
-    return compiledGroupMissReason(group, options).empty();
-}
-
-bool areAllGroupsCompilable(const std::vector<std::vector<puzzlescript::Rule>>& groups, const CompiledRulesOptions& options) {
-    return std::all_of(groups.begin(), groups.end(), [&](const std::vector<puzzlescript::Rule>& group) {
-        return isCompilableGroup(group, options);
-    });
-}
-
-bool isKnownSpecializedFullTurnCommandName(std::string_view name) {
-    if (name == "again"
-        || name == "cancel"
-        || name == "checkpoint"
-        || name == "message"
-        || name == "restart"
-        || name == "win") {
-        return true;
-    }
-    if (name.size() <= 3 || name.substr(0, 3) != "sfx") {
-        return false;
-    }
-    return std::all_of(name.begin() + 3, name.end(), [](const char ch) {
-        return ch >= '0' && ch <= '9';
-    });
-}
-
-std::string specializedFullTurnCommandStatusForGroups(const std::vector<std::vector<puzzlescript::Rule>>& groups) {
-    bool sawCommand = false;
-    for (const auto& group : groups) {
-        for (const auto& rule : group) {
-            for (const auto& command : rule.commands) {
-                sawCommand = true;
-                if (!isKnownSpecializedFullTurnCommandName(command.name)) {
-                    return "unknown_interpreter";
-                }
-            }
-        }
-    }
-    return sawCommand ? "generated_queue_interpreter_tail" : "none";
-}
-
-std::string specializedFullTurnCommandStatus(const puzzlescript::Game& game) {
-    const std::string earlyStatus = specializedFullTurnCommandStatusForGroups(game.rules);
-    const std::string lateStatus = specializedFullTurnCommandStatusForGroups(game.lateRules);
-    if (earlyStatus == "unknown_interpreter" || lateStatus == "unknown_interpreter") {
-        return "unknown_interpreter";
-    }
-    if (earlyStatus == "generated_queue_interpreter_tail" || lateStatus == "generated_queue_interpreter_tail") {
-        return "generated_queue_interpreter_tail";
-    }
-    return "none";
-}
-
-std::optional<std::string_view> compiledRuleCommandKindExpression(std::string_view commandName) {
-    if (commandName == "again") return "CompiledRuleCommandKind::Again";
-    if (commandName == "cancel") return "CompiledRuleCommandKind::Cancel";
-    if (commandName == "checkpoint") return "CompiledRuleCommandKind::Checkpoint";
-    if (commandName == "message") return "CompiledRuleCommandKind::Message";
-    if (commandName == "restart") return "CompiledRuleCommandKind::Restart";
-    if (commandName == "win") return "CompiledRuleCommandKind::Win";
-    if (isKnownSpecializedFullTurnCommandName(commandName)
-        && commandName.size() > 3
-        && commandName.substr(0, 3) == "sfx") {
-        return "CompiledRuleCommandKind::Output";
-    }
-    return std::nullopt;
-}
-
-bool canGenerateCompiledRuleCommandQueue(const puzzlescript::Rule& rule) {
-    return std::all_of(rule.commands.begin(), rule.commands.end(), [](const puzzlescript::RuleCommand& command) {
-        return compiledRuleCommandKindExpression(command.name).has_value();
-    });
-}
-
-struct SpecializedFullTurnSupport {
-    // These are the generated top-level early/late rule loops: they sequence
-    // rulegroups and preserve BEGIN LOOP / END LOOP loop-point jumps.
-    bool earlyRuleLoopsGenerated = false;
-    bool lateRuleLoopsGenerated = false;
-    std::string commandStatus = "unknown_interpreter";
-    bool wholeTurnSupported = false;
-    std::string wholeTurnFallbackReason = "interpreter_delegation";
-};
-
-struct CompactTurnSupport {
-    bool supported = false;
-    std::string fallbackReason = "interpreter_delegation";
-    bool interpreterBridge = false;
-    std::string nativeFallbackReason = "interpreter_delegation";
-};
-
-CompactTurnSupport compactNativeTurnSupportForGame(const puzzlescript::Game& game) {
-    (void)game;
-    CompactTurnSupport support;
-    support.fallbackReason = "native_compact_generator_rebuild";
-    support.nativeFallbackReason = support.fallbackReason;
-    return support;
-}
-
-CompactTurnSupport compactTurnSupportForGame(const puzzlescript::Game& game) {
-    CompactTurnSupport support = compactNativeTurnSupportForGame(game);
-    support.nativeFallbackReason = support.fallbackReason;
-    if (!support.supported) {
-        support.supported = true;
-        support.interpreterBridge = true;
-        support.fallbackReason = "interpreter_bridge";
-    }
-    return support;
-}
-
-SpecializedFullTurnSupport specializedFullTurnSupportForGame(
-    const puzzlescript::Game& game,
-    const CompiledRulesOptions& options
-) {
-    SpecializedFullTurnSupport support;
-    support.earlyRuleLoopsGenerated = areAllGroupsCompilable(game.rules, options);
-    support.lateRuleLoopsGenerated = areAllGroupsCompilable(game.lateRules, options);
-    support.commandStatus = specializedFullTurnCommandStatus(game);
-
-    if (!support.earlyRuleLoopsGenerated) {
-        support.wholeTurnFallbackReason = "early_rule_loops_interpreter";
-    } else if (!support.lateRuleLoopsGenerated) {
-        support.wholeTurnFallbackReason = "late_rule_loops_interpreter";
-    } else if (support.commandStatus == "unknown_interpreter") {
-        support.wholeTurnFallbackReason = "unsupported_command";
-    } else {
-        support.wholeTurnFallbackReason = "movement_interpreter";
-    }
-    return support;
-}
-
-SpecializedFullTurnSupport specializedFullTurnSupportForMissingGame() {
-    return SpecializedFullTurnSupport{};
 }
 
 bool ruleHasEllipsis(const puzzlescript::Rule& rule) {
