@@ -1447,14 +1447,6 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    compact_turn_cell_objects_" << suffix << "(levelState, tileIndex)[maskWordIndex(bit)] &= ~maskBit(bit);\n"
         << "}\n\n";
 
-    out << "int32_t compact_turn_layer_movement_" << suffix << "(const Scratch& scratch, int32_t tileIndex, int32_t layer) {\n"
-        << "    return compact_turn_layer_bits_" << suffix << "(compact_turn_cell_movements_" << suffix << "(scratch, tileIndex), layer);\n"
-        << "}\n\n";
-
-    out << "void compact_turn_set_layer_movement_" << suffix << "(Scratch& scratch, int32_t tileIndex, int32_t layer, int32_t directionMask) {\n"
-        << "    compact_turn_set_layer_bits_" << suffix << "(compact_turn_cell_movements_" << suffix << "(scratch, tileIndex), layer, directionMask);\n"
-        << "}\n\n";
-
     out << "bool compact_turn_seed_player_movements_" << suffix << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, int32_t directionMask) {\n"
         << "    if (directionMask == 0 || !compact_turn_has_player_mask_" << suffix << ") return false;\n"
         << "    bool changed = false;\n"
@@ -1462,6 +1454,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {\n"
         << "        if (!compact_turn_cell_matches_player_" << suffix << "(levelState, tileIndex)) continue;\n"
         << "        const MaskWord* cell = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
+        << "        MaskWord* movementCell = compact_turn_cell_movements_" << suffix << "(scratch, tileIndex);\n"
         << "        for (int32_t objectId = 0; objectId < compact_turn_object_count_" << suffix << "; ++objectId) {\n"
         << "            const uint32_t objectBit = static_cast<uint32_t>(objectId);\n"
         << "            const uint32_t word = maskWordIndex(objectBit);\n"
@@ -1469,9 +1462,9 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "            if ((compact_turn_player_mask_" << suffix << "[word] & bit) == 0 || (cell[word] & bit) == 0) continue;\n"
         << "            const int32_t layer = compact_turn_object_layer_" << suffix << "[objectId];\n"
         << "            if (layer < 0) continue;\n"
-        << "            const int32_t before = compact_turn_layer_movement_" << suffix << "(scratch, tileIndex, layer);\n"
-        << "            compact_turn_set_layer_movement_" << suffix << "(scratch, tileIndex, layer, directionMask);\n"
-        << "            const int32_t after = compact_turn_layer_movement_" << suffix << "(scratch, tileIndex, layer);\n"
+        << "            const int32_t before = compact_turn_layer_bits_" << suffix << "(movementCell, layer);\n"
+        << "            compact_turn_set_layer_bits_" << suffix << "(movementCell, layer, directionMask);\n"
+        << "            const int32_t after = compact_turn_layer_bits_" << suffix << "(movementCell, layer);\n"
         << "            changed = changed || before != after;\n"
         << "        }\n"
         << "    }\n"
@@ -1504,11 +1497,12 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "        movedThisPass = false;\n"
         << "        for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {\n"
         << "            bool changedTile = false;\n"
+        << "            MaskWord* movementCell = compact_turn_cell_movements_" << suffix << "(scratch, tileIndex);\n"
         << "            for (int32_t layer = 0; layer < compact_turn_layer_count_" << suffix << "; ++layer) {\n"
-        << "                const int32_t layerMovement = compact_turn_layer_movement_" << suffix << "(scratch, tileIndex, layer);\n"
+        << "                const int32_t layerMovement = compact_turn_layer_bits_" << suffix << "(movementCell, layer);\n"
         << "                if (layerMovement == 0) continue;\n"
         << "                if (compact_turn_resolve_one_layer_movement_" << suffix << "(dimensions, levelState, tileIndex, layer, layerMovement)) {\n"
-        << "                    compact_turn_set_layer_movement_" << suffix << "(scratch, tileIndex, layer, 0);\n"
+        << "                    compact_turn_set_layer_bits_" << suffix << "(movementCell, layer, 0);\n"
         << "                    movedThisPass = true;\n"
         << "                    movedAny = true;\n"
         << "                    changedTile = true;\n"
