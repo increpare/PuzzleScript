@@ -84,18 +84,23 @@ void debugCompactOracleStateMismatch(const CompactOracleState& compact, const Co
     }
     if (compact.objects != interpreter.objects) {
         const size_t count = std::min(compact.objects.size(), interpreter.objects.size());
+        size_t printed = 0;
         for (size_t index = 0; index < count; ++index) {
             if (compact.objects[index] != interpreter.objects[index]) {
                 std::cerr << "compact oracle objects mismatch index=" << index
                           << " compact=" << compact.objects[index]
                           << " interpreter=" << interpreter.objects[index]
                           << "\n";
-                return;
+                if (++printed >= 16) {
+                    return;
+                }
             }
         }
-        std::cerr << "compact oracle objects size mismatch compact=" << compact.objects.size()
-                  << " interpreter=" << interpreter.objects.size()
-                  << "\n";
+        if (compact.objects.size() != interpreter.objects.size()) {
+            std::cerr << "compact oracle objects size mismatch compact=" << compact.objects.size()
+                      << " interpreter=" << interpreter.objects.size()
+                      << "\n";
+        }
         return;
     }
     if (compact.movementWords != interpreter.movementWords) {

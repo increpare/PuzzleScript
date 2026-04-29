@@ -1253,21 +1253,31 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
 
     out << "int32_t compact_turn_layer_bits_" << suffix << "(const MaskWord* cell, int32_t layer) {\n"
         << "    if (layer < 0 || layer >= compact_turn_layer_count_" << suffix << ") return 0;\n"
-        << "    const uint32_t layerIndex = static_cast<uint32_t>(layer);\n"
-        << "    const uint32_t word = movementWordIndexForLayer(layerIndex);\n"
+        << "    const uint32_t shiftIndex = static_cast<uint32_t>(layer) * 5U;\n"
+        << "    const uint32_t word = shiftIndex >> kMaskWordShift;\n"
         << "    if (word >= static_cast<uint32_t>(compact_turn_movement_stride_" << suffix << ")) return 0;\n"
-        << "    const uint32_t shift = movementBitShiftForLayer(layerIndex);\n"
-        << "    return static_cast<int32_t>((static_cast<MaskWordUnsigned>(cell[word]) >> shift) & MaskWordUnsigned{0x1f});\n"
+        << "    const uint32_t bit = shiftIndex & kMaskWordBitMask;\n"
+        << "    MaskWordUnsigned result = static_cast<MaskWordUnsigned>(cell[word]) >> bit;\n"
+        << "    if (bit > kMaskWordBits - 5U && word + 1U < static_cast<uint32_t>(compact_turn_movement_stride_" << suffix << ")) {\n"
+        << "        result |= static_cast<MaskWordUnsigned>(cell[word + 1U]) << (kMaskWordBits - bit);\n"
+        << "    }\n"
+        << "    return static_cast<int32_t>(result & MaskWordUnsigned{0x1f});\n"
         << "}\n\n";
 
     out << "void compact_turn_set_layer_bits_" << suffix << "(MaskWord* cell, int32_t layer, int32_t value) {\n"
         << "    if (layer < 0 || layer >= compact_turn_layer_count_" << suffix << ") return;\n"
-        << "    const uint32_t layerIndex = static_cast<uint32_t>(layer);\n"
-        << "    const uint32_t word = movementWordIndexForLayer(layerIndex);\n"
+        << "    const uint32_t shiftIndex = static_cast<uint32_t>(layer) * 5U;\n"
+        << "    const uint32_t word = shiftIndex >> kMaskWordShift;\n"
         << "    if (word >= static_cast<uint32_t>(compact_turn_movement_stride_" << suffix << ")) return;\n"
-        << "    const uint32_t shift = movementBitShiftForLayer(layerIndex);\n"
-        << "    const MaskWord mask = static_cast<MaskWord>(MaskWordUnsigned{0x1f} << shift);\n"
-        << "    cell[word] = static_cast<MaskWord>((static_cast<MaskWordUnsigned>(cell[word]) & ~static_cast<MaskWordUnsigned>(mask)) | (MaskWordUnsigned{static_cast<uint32_t>(value) & 0x1fU} << shift));\n"
+        << "    const uint32_t bit = shiftIndex & kMaskWordBitMask;\n"
+        << "    const MaskWordUnsigned packed = MaskWordUnsigned{static_cast<uint32_t>(value) & 0x1fU};\n"
+        << "    const MaskWordUnsigned lowMask = MaskWordUnsigned{0x1f} << bit;\n"
+        << "    cell[word] = static_cast<MaskWord>((static_cast<MaskWordUnsigned>(cell[word]) & ~lowMask) | (packed << bit));\n"
+        << "    if (bit > kMaskWordBits - 5U && word + 1U < static_cast<uint32_t>(compact_turn_movement_stride_" << suffix << ")) {\n"
+        << "        const uint32_t highShift = kMaskWordBits - bit;\n"
+        << "        const MaskWordUnsigned highMask = MaskWordUnsigned{0x1f} >> highShift;\n"
+        << "        cell[word + 1U] = static_cast<MaskWord>((static_cast<MaskWordUnsigned>(cell[word + 1U]) & ~highMask) | (packed >> highShift));\n"
+        << "    }\n"
         << "}\n\n";
 
     out << "bool compact_turn_cell_has_object_" << suffix << "(const PersistentLevelState& levelState, int32_t tileIndex, int32_t objectId) {\n"
@@ -1409,25 +1419,11 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "}\n\n";
 
     out << "int32_t compact_turn_layer_movement_" << suffix << "(const Scratch& scratch, int32_t tileIndex, int32_t layer) {\n"
-        << "    if (layer < 0 || layer >= compact_turn_layer_count_" << suffix << ") return 0;\n"
-        << "    const uint32_t layerIndex = static_cast<uint32_t>(layer);\n"
-        << "    const uint32_t word = movementWordIndexForLayer(layerIndex);\n"
-        << "    if (word >= static_cast<uint32_t>(compact_turn_movement_stride_" << suffix << ")) return 0;\n"
-        << "    const uint32_t shift = movementBitShiftForLayer(layerIndex);\n"
-        << "    const MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(compact_turn_cell_movements_" << suffix << "(scratch, tileIndex)[word]);\n"
-        << "    return static_cast<int32_t>((bits >> shift) & MaskWordUnsigned{0x1f});\n"
+        << "    return compact_turn_layer_bits_" << suffix << "(compact_turn_cell_movements_" << suffix << "(scratch, tileIndex), layer);\n"
         << "}\n\n";
 
     out << "void compact_turn_set_layer_movement_" << suffix << "(Scratch& scratch, int32_t tileIndex, int32_t layer, int32_t directionMask) {\n"
-        << "    if (layer < 0 || layer >= compact_turn_layer_count_" << suffix << ") return;\n"
-        << "    const uint32_t layerIndex = static_cast<uint32_t>(layer);\n"
-        << "    const uint32_t word = movementWordIndexForLayer(layerIndex);\n"
-        << "    if (word >= static_cast<uint32_t>(compact_turn_movement_stride_" << suffix << ")) return;\n"
-        << "    const uint32_t shift = movementBitShiftForLayer(layerIndex);\n"
-        << "    MaskWord& cellWord = compact_turn_cell_movements_" << suffix << "(scratch, tileIndex)[word];\n"
-        << "    const MaskWord mask = static_cast<MaskWord>(MaskWordUnsigned{0x1f} << shift);\n"
-        << "    const MaskWord value = static_cast<MaskWord>((MaskWordUnsigned{static_cast<uint32_t>(directionMask) & 0x1fU}) << shift);\n"
-        << "    cellWord = static_cast<MaskWord>((static_cast<MaskWordUnsigned>(cellWord) & ~static_cast<MaskWordUnsigned>(mask)) | static_cast<MaskWordUnsigned>(value));\n"
+        << "    compact_turn_set_layer_bits_" << suffix << "(compact_turn_cell_movements_" << suffix << "(scratch, tileIndex), layer, directionMask);\n"
         << "}\n\n";
 
     out << "void compact_turn_clear_layer_movement_" << suffix << "(Scratch& scratch, int32_t tileIndex, int32_t layer) {\n"

@@ -260,6 +260,8 @@ Acceptance:
   storage, and scratch movement storage.
 - [x] Add collision layer helpers.
 - [x] Add row scan helpers for directional rules.
+- [x] Read and write packed 5-bit movement fields across `MaskWord`
+  boundaries, matching the interpreter mask helpers.
 
 Features:
 - object bit query
@@ -330,6 +332,8 @@ Acceptance:
   level layout.
 - [x] Emit a generic collision-layer movement pass over
   `Scratch::liveMovements`.
+- [x] Resolve movement for collision layers whose 5-bit movement field spans
+  two mask words.
 - [ ] Handle blocked movement side effects and rigid/cancel interactions.
 - [ ] Return handled compiler-mode transitions once win/terminal semantics are
   available.
@@ -509,6 +513,8 @@ Additional ranked-frontier probes:
   case 151, "2nd alternative test for: right [ vertical Player | perpendicular Player ] -> [ perpendicular Player | ] produces error #682": passes
   case 152, "super tricky (related to #469) right [ vertical playerortarget | vertical player ] -> [ playerortarget | playerortarget ]": passes
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
+  case 155, "gallery game: at the hedges of time": passes
+    added coverage: movement resolution for packed 5-bit layer fields that cross `MaskWord` boundaries
   case 322, "\"right [ Player ] -> [ up Player ]\" gets compiled to down #755": passes
     added coverage: horizontal row-match traversal order matches interpreter row-major scan
   case 363, "rigid applies to movements even if the movements are chagned by subsequent non-rigid rules in other groups": passes
@@ -576,6 +582,23 @@ Again-probe progress update, 2026-04-29:
     probe: after a modifying turn with `again`, run one tick in dont-modify
     probe mode, restore board/movement state, preserve RNG advancement, and
     schedule another tick only if the probe would change state.
+
+Cross-word movement progress update, 2026-04-29:
+  selected old-failure replay:
+    cases: 31 32 57 62 85 87 88 89 90 155 188
+    result: 11/11 pass
+  prefix status:
+    attempted 188/469
+    passed 187
+    case 189 remains the next compile-time frontier
+  fixed semantic oracle failure:
+    155 "gallery game: at the hedges of time"
+  semantic fix:
+    Generated compact movement helpers now mirror the interpreter's packed
+    movement-bit access when a layer's 5-bit direction field spans two
+    `MaskWord`s. This keeps rule replacements, player seeding, rigid masks,
+    and movement resolution on one generic movement accessor instead of
+    assuming every layer fits in one word.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
