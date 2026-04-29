@@ -72,6 +72,58 @@ Compiler mode means generated compact code is mandatory. The backend should not 
 
 The generated code can still contain explicit TODO traps for unimplemented semantic constructs, but those traps are part of compiler bring-up, not a fallback system.
 
+## Turn Core Boundary
+
+The compiler-mode turn boundary should follow the four-part runtime state model instead of introducing parallel compact state structures.
+
+Persistent within-level state contains only data that changes from turn to turn:
+
+```cpp
+struct PersistentLevelState {
+    BoardOccupancy board;
+    RandomState rng;
+};
+```
+
+Immutable per-level dimensions are context:
+
+```cpp
+struct LevelDimensions {
+    int32_t width;
+    int32_t height;
+};
+```
+
+`layerCount` is not part of `LevelDimensions`; all levels in a game share the same collision-layer structure, and the specialized compiler knows the layer count from compiled game data. Message levels are metagame/session flow and should not enter solver or turn-core simulation.
+
+The generic compiled turn shape is:
+
+```cpp
+TurnResult take_turn_compiled(
+    const LevelDimensions& dimensions,
+    PersistentLevelState& levelState,
+    Scratch& scratch,
+    ps_input input,
+    const RuntimeStepOptions& options);
+```
+
+For fully specialized generated code, `LevelDimensions` may be compiled into the generated function for a known level. `Scratch` is still explicit: movements, dirty masks, replacement buffers, rigid masks, and other temporary execution storage are not persistent state.
+
+`GameInformation` and `MetaGameState` do not belong in the compiled turn-core boundary. They are orchestration inputs for session/interpreter paths:
+
+```cpp
+TurnResult take_turn_interpreted(
+    const GameInformation& game,
+    const MetaGameState& meta,
+    const LevelDimensions& dimensions,
+    PersistentLevelState& levelState,
+    Scratch& scratch,
+    ps_input input,
+    const RuntimeStepOptions& options);
+```
+
+`CompactStateView` is bridge-era adapter plumbing only. It can remain while the interpreter bridge needs raw pointers, but compiler-mode codegen should not be designed around it.
+
 ## Compiler Architecture
 
 ### Phase 1: Move Compact Codegen Out Of The CLI Blob
@@ -91,7 +143,7 @@ struct CompactCodegenOptions {
 };
 
 std::string generateCompactTurnBackend(
-    const GameInformation& game,
+    const GameInformation& compiledGame,
     size_t sourceIndex,
     CompactCodegenOptions options);
 ```
@@ -105,13 +157,14 @@ The CLI should choose interpreter mode or compiler mode at a coarse level only.
 Generated structure:
 
 ```cpp
-SpecializedCompactTurnOutcome specialized_compact_turn_source_N(
-    const Game& game,
-    CompactStateView state,
+TurnResult specialized_compact_turn_source_N(
+    const LevelDimensions& dimensions,
+    PersistentLevelState& levelState,
+    Scratch& scratch,
     ps_input input,
-    RuntimeStepOptions options
+    const RuntimeStepOptions& options
 ) {
-    // validate compact view
+    // validate level dimensions / state storage
     // decode input direction
     // seed input movements
     // apply early rulegroups
@@ -127,6 +180,7 @@ Acceptance:
 - Compiler mode emits this function for every source.
 - Interpreter mode emits the bridge call.
 - There is no per-source native eligibility gate.
+- Compiler-mode code does not take `Game&` or `CompactStateView` as its semantic turn boundary.
 
 ### Phase 3: Compact State Access Layer
 
