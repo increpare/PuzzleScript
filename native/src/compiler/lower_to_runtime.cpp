@@ -798,13 +798,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
     initialMetaGameState.oldFlickscreenDat.clear();
     if (!game->levels.empty()) {
         initialMetaGameState.level = game->levels.front();
-        puzzlescript::fillCompactOccupancyBitsFromInterpreterBoardData(
-            *game,
-            initialMetaGameState.level.width,
-            initialMetaGameState.level.height,
-            initialMetaGameState.level.objects,
-            initialMetaGameState.restart.objectBits
-        );
+        initialMetaGameState.restart.objects = initialMetaGameState.level.objects;
         initialMetaGameState.restart.oldFlickscreenDat.clear();
     }
 

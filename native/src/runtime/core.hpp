@@ -119,9 +119,8 @@ struct ObjectDef {
     std::vector<std::vector<int32_t>> sprite;
 };
 
-// Cell-major object bitmask grid used by the interpreter. Persistent board
-// storage lives in PersistentLevelState::board.objectBits; Scratch::interpreterBoard
-// is materialized from or synced back to that compact board at runtime boundaries.
+// Cell-major object bitmask grid used by the interpreter and persistent board
+// state.
 // **Engine rule:** change per-cell interpreter occupancy only through
 // `setCellObjects` / `setCellObjectsFromWords` (and compiled-rule wrappers),
 // not by mutating `objects` directly.
@@ -147,8 +146,8 @@ struct LevelDimensions {
 };
 
 struct RestartSnapshot {
-    /// Object-major compact occupancy (same layout as `PersistentBoardState::objectBits`).
-    std::vector<MaskWordUnsigned> objectBits;
+    /// Cell-major object masks (same layout as `PersistentBoardState::objects`).
+    MaskVector objects;
     std::vector<int32_t> oldFlickscreenDat;
 };
 
@@ -306,10 +305,8 @@ struct SoundMaskEntry {
 };
 
 struct PersistentBoardState {
-    // Object-major compact board. This is the persistent board shape used by
-    // solver and compact turn paths; interpreter execution materializes the
-    // legacy cell-major board in Scratch::interpreterBoard.
-    std::vector<MaskWordUnsigned> objectBits;
+    // Cell-major object masks. Layout: objects[tileIndex * strideObject + word].
+    MaskVector objects;
 };
 
 struct PersistentLevelState {
@@ -460,18 +457,12 @@ struct Scratch {
     SimdBackend backend = SimdBackend::Scalar;
 };
 
-struct InterpreterBoardSnapshot {
-    LevelDimensions dimensions;
-    MaskVector objects;
-};
-
 struct UndoSnapshot {
     MetaGameState meta;
-    InterpreterBoardSnapshot interpreterBoard;
+    PersistentLevelState levelState;
     MaskVector liveMovements;
     MaskVector rigidGroupIndexMasks;
     MaskVector rigidMovementAppliedMasks;
-    RandomState randomState;
 };
 
 struct LoadedGame {
@@ -506,38 +497,19 @@ struct TurnResult {
     std::vector<ps_audio_event> uiAudio;
 };
 
-/// Cell-major → object-major compact bits (same layout as `PersistentBoardState::objectBits`).
-void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std::vector<MaskWordUnsigned>& objectBits);
-
-void fillCompactOccupancyBitsFromInterpreterBoardData(
+/// Build the derived object-cell index from cell-major board objects.
+void fillObjectCellBitsFromCellMajorData(
     const Game& game,
     int32_t width,
     int32_t height,
     const MaskVector& interpreterObjects,
-    std::vector<MaskWordUnsigned>& objectBits);
-
-void fillInterpreterBoardObjectsFromCompactObjectBits(
-    const Game& game,
-    LevelDimensions dimensions,
-    const std::vector<MaskWordUnsigned>& objectBits,
-    MaskVector& interpreterObjects);
+    std::vector<MaskWordUnsigned>& objectCellBits);
 
 void setInterpreterBoardObjectsFromCellMajor(FullState& session, const MaskVector& objects);
-void setInterpreterBoardObjectsFromCompactBits(FullState& session, const std::vector<MaskWordUnsigned>& objectBits);
 void clearInterpreterBoardObjects(FullState& session);
 MaskVector copyInterpreterBoardObjectsAsCellMajor(const FullState& session);
-InterpreterBoardSnapshot makeInterpreterBoardSnapshot(const FullState& session);
-void restoreInterpreterBoardSnapshot(FullState& session, const InterpreterBoardSnapshot& snapshot);
-bool interpreterBoardMatchesSnapshot(const FullState& session, const InterpreterBoardSnapshot& snapshot);
 
-void canonicalizeCompactObjectBits(
-    const Game& game,
-    int32_t width,
-    int32_t height,
-    MaskWordUnsigned* objectBits,
-    size_t objectBitWordCount);
-
-/// Updates persistent compact board occupancy from the interpreter scratch board.
+/// Updates persistent board occupancy from the interpreter scratch board.
 void syncPersistentBoardFromScratch(FullState& session);
 
 /// Updates persistent within-level state from scratch after interpreter execution.

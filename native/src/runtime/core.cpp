@@ -1417,13 +1417,7 @@ MetaGameState parsePreparedSession(const json::Value& value, const Game& game) {
         const int32_t restartWidth = toInt(requireField(restartObject, "width"));
         const int32_t restartHeight = toInt(requireField(restartObject, "height"));
         const MaskVector restartObjects = parseMaskVector(requireField(restartObject, "objects"));
-        fillCompactOccupancyBitsFromInterpreterBoardData(
-            game,
-            restartWidth,
-            restartHeight,
-            restartObjects,
-            prepared.restart.objectBits
-        );
+        prepared.restart.objects = restartObjects;
         prepared.restart.oldFlickscreenDat = parseIntVector(requireField(restartObject, "old_flickscreen_dat"));
         if (restartWidth > 0 && restartHeight > 0) {
             prepared.levelDimensions = LevelDimensions{restartWidth, restartHeight};
@@ -3570,22 +3564,25 @@ void rebuildObjectCellIndex(FullState& session) {
         return;
     }
 
-    // Compact-first: objectCellBits shares the same object-major layout as
-    // objectBits, so we can copy and count set bits directly.
-    if (session.levelState.board.objectBits.size() == expectedWords) {
-        session.scratch.objectCellBits = session.levelState.board.objectBits;
-        for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
-            const size_t base = static_cast<size_t>(objectId) * cellWordCount;
-            uint32_t count = 0;
-            for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-                count += static_cast<uint32_t>(maskWordPopcount(session.scratch.objectCellBits[base + bitWord]));
-            }
-            session.scratch.objectCellCounts[static_cast<size_t>(objectId)] = count;
-        }
-    } else {
-        // Fallback if occupancy mirror is stale/mismatched (should be rare).
+    const size_t expectedCellMajorWords = static_cast<size_t>(std::max(tileCount, 0) * session.game->strideObject);
+    if (session.scratch.interpreterBoard.objects.size() != expectedCellMajorWords) {
         session.scratch.objectCellIndexDirty = true;
         return;
+    }
+    fillObjectCellBitsFromCellMajorData(
+        *session.game,
+        currentLevelWidth(session),
+        currentLevelHeight(session),
+        session.scratch.interpreterBoard.objects,
+        session.scratch.objectCellBits
+    );
+    for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
+        const size_t base = static_cast<size_t>(objectId) * cellWordCount;
+        uint32_t count = 0;
+        for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
+            count += static_cast<uint32_t>(maskWordPopcount(session.scratch.objectCellBits[base + bitWord]));
+        }
+        session.scratch.objectCellCounts[static_cast<size_t>(objectId)] = count;
     }
     session.scratch.objectCellIndexDirty = false;
 #endif
@@ -3785,9 +3782,9 @@ std::vector<uint8_t> buildSessionHashBytes(const FullState& session) {
     const auto* randomBytes = reinterpret_cast<const uint8_t*>(session.levelState.rng.s.data());
     bytes.insert(bytes.end(), randomBytes, randomBytes + session.levelState.rng.s.size() * sizeof(uint8_t));
 
-    const auto& objectBits = session.levelState.board.objectBits;
-    const auto* objectBytes = reinterpret_cast<const uint8_t*>(objectBits.data());
-    bytes.insert(bytes.end(), objectBytes, objectBytes + objectBits.size() * sizeof(MaskWordUnsigned));
+    const auto& objects = session.levelState.board.objects;
+    const auto* objectBytes = reinterpret_cast<const uint8_t*>(objects.data());
+    bytes.insert(bytes.end(), objectBytes, objectBytes + objects.size() * sizeof(MaskWord));
     const auto& movements = session.scratch.liveMovements;
     const auto* movementBytes = reinterpret_cast<const uint8_t*>(movements.data());
     bytes.insert(bytes.end(), movementBytes, movementBytes + movements.size() * sizeof(MaskWord));
@@ -3821,8 +3818,8 @@ uint64_t hashFullState64NoAlloc(const FullState& session, uint64_t seed) {
     appendHashValue(hash, session.levelState.rng.valid);
     appendHashBytes(hash, session.levelState.rng.s.data(), session.levelState.rng.s.size() * sizeof(uint8_t));
 
-    const auto& objectBits = session.levelState.board.objectBits;
-    appendHashBytes(hash, objectBits.data(), objectBits.size() * sizeof(MaskWordUnsigned));
+    const auto& objects = session.levelState.board.objects;
+    appendHashBytes(hash, objects.data(), objects.size() * sizeof(MaskWord));
     const auto& movements = session.scratch.liveMovements;
     appendHashBytes(hash, movements.data(), movements.size() * sizeof(MaskWord));
     appendHashBytes(hash, session.meta.loadedLevelSeed.data(), session.meta.loadedLevelSeed.size());
@@ -3891,7 +3888,11 @@ void restoreSnapshot(FullState& session, const UndoSnapshot& snapshot, bool rest
     std::vector<UndoSnapshot> undoStack = std::move(session.meta.undoStack);
     session.meta = snapshot.meta;
     session.meta.undoStack = std::move(undoStack);
-    restoreInterpreterBoardSnapshot(session, snapshot.interpreterBoard);
+    session.levelState.board = snapshot.levelState.board;
+    if (restoreRandomState) {
+        session.levelState.rng = snapshot.levelState.rng;
+    }
+    setInterpreterBoardObjectsFromCellMajor(session, session.levelState.board.objects);
     if (snapshot.liveMovements.empty()) {
         session.scratch.liveMovements.assign(static_cast<size_t>(currentLevelWidth(session) * currentLevelHeight(session) * session.game->strideMovement), 0);
     } else {
@@ -3907,13 +3908,24 @@ void restoreSnapshot(FullState& session, const UndoSnapshot& snapshot, bool rest
     } else {
         session.scratch.rigidMovementAppliedMasks = snapshot.rigidMovementAppliedMasks;
     }
-    if (restoreRandomState) {
-        session.levelState.rng = snapshot.randomState;
-    }
     session.meta.pendingAgain = false;
     syncPersistentLevelStateFromScratch(session);
     markAllMasksDirty(session);
     rebuildMasks(session);
+}
+
+PersistentLevelState makeLevelStateSnapshot(const FullState& session) {
+    PersistentLevelState snapshot = session.levelState;
+    snapshot.board.objects = session.scratch.interpreterBoard.objects;
+    return snapshot;
+}
+
+bool levelBoardMatchesSnapshot(const FullState& session, const UndoSnapshot& snapshot) {
+    if (snapshot.meta.levelDimensions.width != currentLevelWidth(session)
+        || snapshot.meta.levelDimensions.height != currentLevelHeight(session)) {
+        return false;
+    }
+    return session.scratch.interpreterBoard.objects == snapshot.levelState.board.objects;
 }
 
 UndoSnapshot makeUndoSnapshot(const FullState& session) {
@@ -3921,11 +3933,10 @@ UndoSnapshot makeUndoSnapshot(const FullState& session) {
     meta.undoStack.clear();
     return UndoSnapshot{
         std::move(meta),
-        makeInterpreterBoardSnapshot(session),
+        makeLevelStateSnapshot(session),
         {},
         {},
-        {},
-        session.levelState.rng,
+        {}
     };
 }
 
@@ -3934,8 +3945,8 @@ void pushUndoSnapshot(FullState& session) {
 }
 
 void restoreRestartTarget(FullState& session) {
-    if (!session.meta.restart.objectBits.empty()) {
-        setInterpreterBoardObjectsFromCompactBits(session, session.meta.restart.objectBits);
+    if (!session.meta.restart.objects.empty()) {
+        setInterpreterBoardObjectsFromCellMajor(session, session.meta.restart.objects);
         session.meta.oldFlickscreenDat = session.meta.restart.oldFlickscreenDat;
     } else {
         setInterpreterBoardObjectsFromCellMajor(session, session.meta.level.objects);
@@ -4049,13 +4060,7 @@ bool advanceToNextLevel(FullState& session) {
             session.meta.undoStack.clear();
             return true;
         }
-        fillCompactOccupancyBitsFromInterpreterBoardData(
-            *session.game,
-            session.meta.level.width,
-            session.meta.level.height,
-            session.meta.level.objects,
-            session.meta.restart.objectBits
-        );
+        session.meta.restart.objects = session.meta.level.objects;
         session.meta.restart.oldFlickscreenDat = session.meta.oldFlickscreenDat;
         restoreRestartTarget(session);
         ::puzzlescript::runRulesOnLevelStart(session);
@@ -4114,17 +4119,17 @@ void resetToPrepared(FullState& session) {
 
 } // namespace
 
-void fillCompactOccupancyBitsFromInterpreterBoardData(
+void fillObjectCellBitsFromCellMajorData(
     const Game& game,
     int32_t width,
     int32_t height,
     const MaskVector& interpreterObjects,
-    std::vector<MaskWordUnsigned>& objectBits
+    std::vector<MaskWordUnsigned>& objectCellBits
 ) {
     const int32_t tileCount = width * height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     const int32_t objectCount = game.objectCount;
-    objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
+    objectCellBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
     if (objectCount > 0 && tileCount > 0 && cellWordCount > 0) {
         const int32_t stride = game.strideObject;
         for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
@@ -4140,7 +4145,7 @@ void fillCompactOccupancyBitsFromInterpreterBoardData(
                     const uint32_t bit = static_cast<uint32_t>(maskWordCountTrailingZeros(bits));
                     const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
                     if (objectId < objectCount) {
-                        objectBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
+                        objectCellBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
                     }
                     bits &= bits - 1;
                 }
@@ -4149,46 +4154,8 @@ void fillCompactOccupancyBitsFromInterpreterBoardData(
     }
 }
 
-void fillInterpreterBoardObjectsFromCompactObjectBits(
-    const Game& game,
-    LevelDimensions dimensions,
-    const std::vector<MaskWordUnsigned>& objectBits,
-    MaskVector& interpreterObjects
-) {
-    const int32_t tileCount = dimensions.width * dimensions.height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
-    const int32_t objectCount = game.objectCount;
-    const int32_t stride = game.strideObject;
-    interpreterObjects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
-    for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
-        const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-        for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-            MaskWordUnsigned bits = objectBase + bitWord < objectBits.size() ? objectBits[objectBase + bitWord] : 0;
-            while (bits != 0) {
-                const uint32_t bit = static_cast<uint32_t>(maskWordCountTrailingZeros(bits));
-                const int32_t tileIndex = static_cast<int32_t>(bitWord * kMaskWordBits + bit);
-                if (tileIndex < tileCount) {
-                    const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
-                    const uint32_t objectBit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
-                    interpreterObjects[static_cast<size_t>(tileIndex * stride + word)] |= maskBit(objectBit);
-                }
-                bits &= bits - 1;
-            }
-        }
-    }
-}
-
 void setInterpreterBoardObjectsFromCellMajor(FullState& session, const MaskVector& objects) {
     session.scratch.interpreterBoard.objects = objects;
-}
-
-void setInterpreterBoardObjectsFromCompactBits(FullState& session, const std::vector<MaskWordUnsigned>& objectBits) {
-    fillInterpreterBoardObjectsFromCompactObjectBits(
-        *session.game,
-        currentLevelDimensions(session),
-        objectBits,
-        session.scratch.interpreterBoard.objects
-    );
 }
 
 void clearInterpreterBoardObjects(FullState& session) {
@@ -4199,72 +4166,8 @@ MaskVector copyInterpreterBoardObjectsAsCellMajor(const FullState& session) {
     return session.scratch.interpreterBoard.objects;
 }
 
-InterpreterBoardSnapshot makeInterpreterBoardSnapshot(const FullState& session) {
-    InterpreterBoardSnapshot snapshot;
-    snapshot.dimensions = currentLevelDimensions(session);
-    snapshot.objects = session.scratch.interpreterBoard.objects;
-    return snapshot;
-}
-
-void restoreInterpreterBoardSnapshot(FullState& session, const InterpreterBoardSnapshot& snapshot) {
-    session.meta.levelDimensions = snapshot.dimensions;
-    session.scratch.interpreterBoard.objects = snapshot.objects;
-}
-
-bool interpreterBoardMatchesSnapshot(const FullState& session, const InterpreterBoardSnapshot& snapshot) {
-    if (snapshot.dimensions.width != currentLevelWidth(session)
-        || snapshot.dimensions.height != currentLevelHeight(session)) {
-        return false;
-    }
-    return snapshot.objects == session.scratch.interpreterBoard.objects;
-}
-
-void canonicalizeCompactObjectBits(
-    const Game& game,
-    int32_t width,
-    int32_t height,
-    MaskWordUnsigned* objectBits,
-    size_t objectBitWordCount
-) {
-    if (objectBits == nullptr || width <= 0 || height <= 0 || game.objectCount <= 0) {
-        return;
-    }
-    const int32_t tileCount = width * height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
-    if (cellWordCount == 0) {
-        return;
-    }
-    const uint32_t usedBitsInLastWord = maskBitIndex(static_cast<uint32_t>(tileCount));
-    if (usedBitsInLastWord == 0) {
-        return;
-    }
-    const MaskWordUnsigned validMask = (MaskWordUnsigned{1} << usedBitsInLastWord) - MaskWordUnsigned{1};
-    const size_t lastWord = cellWordCount - 1;
-    for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
-        const size_t index = static_cast<size_t>(objectId) * cellWordCount + lastWord;
-        if (index >= objectBitWordCount) {
-            break;
-        }
-        objectBits[index] &= validMask;
-    }
-}
-
-void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std::vector<MaskWordUnsigned>& objectBits) {
-    if (session.game == nullptr) {
-        objectBits.clear();
-        return;
-    }
-    fillCompactOccupancyBitsFromInterpreterBoardData(
-        *session.game,
-        currentLevelWidth(session),
-        currentLevelHeight(session),
-        session.scratch.interpreterBoard.objects,
-        objectBits
-    );
-}
-
 void syncPersistentBoardFromScratch(FullState& session) {
-    fillCompactOccupancyBitsFromInterpreterBoard(session, session.levelState.board.objectBits);
+    session.levelState.board.objects = session.scratch.interpreterBoard.objects;
 }
 
 void syncPersistentLevelStateFromScratch(FullState& session) {
@@ -4745,13 +4648,7 @@ void prepareLoadedLevel(FullState& session, LevelTemplate level, int32_t levelIn
     if (restartWidth > 0 && restartHeight > 0) {
         prepared.levelDimensions = LevelDimensions{restartWidth, restartHeight};
     }
-    fillCompactOccupancyBitsFromInterpreterBoardData(
-        *session.game,
-        restartWidth,
-        restartHeight,
-        prepared.level.objects,
-        prepared.restart.objectBits
-    );
+    prepared.restart.objects = prepared.level.objects;
     prepared.restart.oldFlickscreenDat = prepared.oldFlickscreenDat;
     resetToPrepared(session);
 }
@@ -4821,7 +4718,7 @@ bool undo(FullState& session) {
     }
     while (!session.meta.undoStack.empty()) {
         const auto& top = session.meta.undoStack.back();
-        if (!interpreterBoardMatchesSnapshot(session, top.interpreterBoard)) {
+        if (!levelBoardMatchesSnapshot(session, top)) {
             break;
         }
         session.meta.undoStack.pop_back();
@@ -4856,21 +4753,17 @@ std::string serializeTestString(const FullState& session) {
     std::map<std::string, int32_t> seenCells;
     int32_t nextIndex = 0;
     const int32_t stride = session.game->strideObject;
-    const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
-    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
 
     for (int32_t y = 0; y < currentLevelHeight(session); ++y) {
         for (int32_t x = 0; x < currentLevelWidth(session); ++x) {
             const int32_t tileIndex = y * currentLevelWidth(session) + x;
-            const size_t bitWord = static_cast<size_t>(maskWordIndex(static_cast<uint32_t>(tileIndex)));
-            const MaskWordUnsigned bitMask = MaskWordUnsigned{1} << maskBitIndex(static_cast<uint32_t>(tileIndex));
+            const size_t base = static_cast<size_t>(tileIndex * stride);
             std::vector<std::string> objects;
             for (int32_t bit = 0; bit < static_cast<int32_t>(kMaskWordBits) * stride; ++bit) {
                 const int32_t objectId = bit;
-                const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-                if (cellWordCount > 0
-                    && objectBase + bitWord < session.levelState.board.objectBits.size()
-                    && (session.levelState.board.objectBits[objectBase + bitWord] & bitMask) != 0) {
+                const size_t word = base + maskWordIndex(static_cast<uint32_t>(objectId));
+                if (word < session.levelState.board.objects.size()
+                    && (session.levelState.board.objects[word] & maskBit(static_cast<uint32_t>(objectId))) != 0) {
                     if (static_cast<size_t>(bit) < session.game->idDict.size()) {
                         objects.push_back(session.game->idDict[static_cast<size_t>(bit)]);
                     }
@@ -5126,7 +5019,7 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
         }
         break;
     }
-    const bool modified = !interpreterBoardMatchesSnapshot(session, turnStart.interpreterBoard);
+    const bool modified = !levelBoardMatchesSnapshot(session, turnStart);
     if (options.observedModification != nullptr) {
         *options.observedModification = modified;
     }
@@ -5213,7 +5106,7 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
         (void)transitioned;
     }
     if (!options.solverMode && !won && commandQueueContains(commands, "checkpoint")) {
-        fillCompactOccupancyBitsFromInterpreterBoard(session, session.meta.restart.objectBits);
+        session.meta.restart.objects = session.scratch.interpreterBoard.objects;
         session.meta.restart.oldFlickscreenDat = session.meta.oldFlickscreenDat;
     }
 

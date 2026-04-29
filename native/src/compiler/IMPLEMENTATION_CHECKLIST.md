@@ -488,8 +488,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
 
 - [?] Define the solver compact-state boundary.
 
-  Status: first solver-side boundary is implemented. Solver nodes now carry a
-  canonical compact state made from object-major occupancy bitsets. Random-rule
+  Status: first solver-side boundary is implemented. Solver nodes now carry the
+  cell-major `PersistentLevelState` board plus RNG. Random-rule
   games are usually excluded from focus mining for fast iteration, but the
   architecture direction is that `CompactState` includes complete RNG state
   whenever random-capable compact execution is used. The interpreter
@@ -791,9 +791,8 @@ attribute graph cost -> no-allocation hash -> flat visited table
   - Generated compact turn falls back if audio emission is requested; solver
     calls use `emitAudio=false`, so sound declarations do not block compact
     state stepping.
-  - Generated compact turn mutates object-major `objectBits` directly, handles
-    directional/action inputs, reports `changed`, and evaluates the simple win
-    condition.
+  - Compact/search state now uses the cell-major persistent board; derived
+    object-major `objectCellBits` are scratch-only rule-scan indexes.
   - Unsupported games still attach a compact backend with
     `wholeTurnSupported=false` and remain on the interpreter-backed scratch
     fallback.

@@ -94,7 +94,7 @@ struct Options {
 };
 
 bool persistentLevelStatesEqual(const PersistentLevelState& lhs, const PersistentLevelState& rhs) {
-    return lhs.board.objectBits == rhs.board.objectBits
+    return lhs.board.objects == rhs.board.objects
         && lhs.rng.s == rhs.rng.s
         && lhs.rng.i == rhs.rng.i
         && lhs.rng.j == rhs.rng.j
@@ -102,7 +102,7 @@ bool persistentLevelStatesEqual(const PersistentLevelState& lhs, const Persisten
 }
 
 size_t persistentLevelStateByteSize(const PersistentLevelState& state) {
-    return state.board.objectBits.size() * sizeof(MaskWordUnsigned)
+    return state.board.objects.size() * sizeof(puzzlescript::MaskWord)
         + state.rng.s.size() * sizeof(uint8_t)
         + sizeof(state.rng.i)
         + sizeof(state.rng.j)
@@ -586,15 +586,15 @@ PersistentLevelState persistentLevelStateFromFullState(const FullState& session)
     state.rng.i = session.levelState.rng.i;
     state.rng.j = session.levelState.rng.j;
     state.rng.valid = session.levelState.rng.valid;
-    puzzlescript::fillCompactOccupancyBitsFromInterpreterBoard(session, state.board.objectBits);
+    state.board.objects = session.scratch.interpreterBoard.objects;
     return state;
 }
 
 StateKey persistentLevelStateKey(const PersistentLevelState& state, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
-    for (MaskWordUnsigned word : state.board.objectBits) {
-        puzzlescript::search::appendStateKeyValue(key, word);
+    for (puzzlescript::MaskWord word : state.board.objects) {
+        puzzlescript::search::appendStateKeyValue(key, static_cast<MaskWordUnsigned>(word));
     }
     for (uint8_t byte : state.rng.s) {
         puzzlescript::search::appendStateKeyValue(key, byte);
@@ -626,7 +626,7 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
     session.meta = base.meta;
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
     if (session.game != nullptr) {
-        puzzlescript::setInterpreterBoardObjectsFromCompactBits(session, state.board.objectBits);
+        puzzlescript::setInterpreterBoardObjectsFromCellMajor(session, state.board.objects);
     } else {
         puzzlescript::clearInterpreterBoardObjects(session);
     }
@@ -721,10 +721,10 @@ std::string stepResultSummary(const ps_step_result& result) {
 }
 
 std::string persistentLevelStateDiffSummary(const PersistentLevelState& lhs, const PersistentLevelState& rhs) {
-    const size_t wordCount = std::max(lhs.board.objectBits.size(), rhs.board.objectBits.size());
+    const size_t wordCount = std::max(lhs.board.objects.size(), rhs.board.objects.size());
     for (size_t index = 0; index < wordCount; ++index) {
-        const MaskWordUnsigned left = index < lhs.board.objectBits.size() ? lhs.board.objectBits[index] : 0;
-        const MaskWordUnsigned right = index < rhs.board.objectBits.size() ? rhs.board.objectBits[index] : 0;
+        const puzzlescript::MaskWord left = index < lhs.board.objects.size() ? lhs.board.objects[index] : 0;
+        const puzzlescript::MaskWord right = index < rhs.board.objects.size() ? rhs.board.objects[index] : 0;
         if (left != right) {
             std::ostringstream out;
             out << " word=" << index << " compact=" << left << " interpreter=" << right;
@@ -765,23 +765,6 @@ CompactTurnTryResult trySpecializedCompactTurn(
     puzzlescript::SpecializedCompactTurnContext context{dimensions, currentLevelIndex};
     const puzzlescript::SpecializedCompactTurnOutcome outcome =
         game.specializedCompactTurn->step(game, result.state, scratch, context, input, options);
-    if (outcome.handled) {
-        const bool profileCompactTurn = puzzlescript::runtimeCountersEnabled();
-        const uint64_t canonicalizeStartNs = profileCompactTurn ? puzzlescript::runtimeCounterNowNs() : 0;
-        puzzlescript::canonicalizeCompactObjectBits(
-            game,
-            dimensions.width,
-            dimensions.height,
-            result.state.board.objectBits.empty() ? nullptr : result.state.board.objectBits.data(),
-            result.state.board.objectBits.size()
-        );
-        if (profileCompactTurn) {
-            puzzlescript::addRuntimeCounter(
-                puzzlescript::RuntimeCounterId::CompactTurnCanonicalizeNs,
-                puzzlescript::runtimeCounterNowNs() - canonicalizeStartNs
-            );
-        }
-    }
     result.handled = outcome.handled;
     result.stepResult = outcome.result;
     return result;
@@ -951,14 +934,13 @@ int32_t heuristicScore(FullState& session, puzzlescript::search::HeuristicScratc
 
 bool compactObjectPresent(
     const PersistentLevelState& state,
+    const Game& game,
     int32_t objectId,
-    int32_t tileIndex,
-    size_t cellWordCount
+    int32_t tileIndex
 ) {
-    const size_t word = static_cast<size_t>(puzzlescript::maskWordIndex(static_cast<uint32_t>(tileIndex)));
-    const MaskWordUnsigned mask = MaskWordUnsigned{1} << puzzlescript::maskBitIndex(static_cast<uint32_t>(tileIndex));
-    const size_t offset = static_cast<size_t>(objectId) * cellWordCount + word;
-    return offset < state.board.objectBits.size() && (state.board.objectBits[offset] & mask) != 0;
+    const size_t word = static_cast<size_t>(tileIndex * game.strideObject + puzzlescript::maskWordIndex(static_cast<uint32_t>(objectId)));
+    return word < state.board.objects.size()
+        && (state.board.objects[word] & puzzlescript::maskBit(static_cast<uint32_t>(objectId))) != 0;
 }
 
 bool compactMatchesFilter(
@@ -966,8 +948,7 @@ bool compactMatchesFilter(
     const Game& game,
     const puzzlescript::MaskWord* filter,
     bool aggregate,
-    int32_t tileIndex,
-    size_t cellWordCount
+    int32_t tileIndex
 ) {
     if (filter == nullptr) {
         return false;
@@ -979,7 +960,7 @@ bool compactMatchesFilter(
             sawFilterBit = true;
             const uint32_t bit = compactWordTrailingZeros(bits);
             const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
-            const bool present = compactObjectPresent(state, objectId, tileIndex, cellWordCount);
+            const bool present = compactObjectPresent(state, game, objectId, tileIndex);
             if (aggregate && !present) {
                 return false;
             }
@@ -1001,14 +982,13 @@ std::vector<int32_t> compactMatchingDistanceField(
     bool aggregate
 ) {
     const int32_t tileCount = width * height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     std::vector<int32_t> distances(static_cast<size_t>(tileCount), std::numeric_limits<int32_t>::max());
     if (filter == nullptr) {
         return distances;
     }
 
     for (int32_t tile = 0; tile < tileCount; ++tile) {
-        if (compactMatchesFilter(state, game, filter, aggregate, tile, cellWordCount)) {
+        if (compactMatchesFilter(state, game, filter, aggregate, tile)) {
             distances[static_cast<size_t>(tile)] = 0;
         }
     }
@@ -1050,7 +1030,6 @@ int32_t compactHeuristicScore(
 
     int32_t score = 0;
     const int32_t tileCount = width * height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     for (const auto& condition : game.winConditions) {
         const puzzlescript::MaskWord* filter1 = puzzlescript::search::maskPtr(game, condition.filter1);
         const puzzlescript::MaskWord* filter2 = puzzlescript::search::maskPtr(game, condition.filter2);
@@ -1060,10 +1039,10 @@ int32_t compactHeuristicScore(
         const std::vector<int32_t> filter2Distances = compactMatchingDistanceField(state, game, width, height, filter2, condition.aggr2);
         if (condition.quantifier == 1) {
             for (int32_t tile = 0; tile < tileCount; ++tile) {
-                if (!compactMatchesFilter(state, game, filter1, condition.aggr1, tile, cellWordCount)) {
+                if (!compactMatchesFilter(state, game, filter1, condition.aggr1, tile)) {
                     continue;
                 }
-                if (compactMatchesFilter(state, game, filter2, condition.aggr2, tile, cellWordCount)) {
+                if (compactMatchesFilter(state, game, filter2, condition.aggr2, tile)) {
                     continue;
                 }
                 score += 10 + puzzlescript::search::distanceOrFallback(filter2Distances[static_cast<size_t>(tile)]);
@@ -1072,10 +1051,10 @@ int32_t compactHeuristicScore(
             bool passed = false;
             int32_t best = puzzlescript::search::kNoMatchingDistance;
             for (int32_t tile = 0; tile < tileCount; ++tile) {
-                if (!compactMatchesFilter(state, game, filter1, condition.aggr1, tile, cellWordCount)) {
+                if (!compactMatchesFilter(state, game, filter1, condition.aggr1, tile)) {
                     continue;
                 }
-                if (compactMatchesFilter(state, game, filter2, condition.aggr2, tile, cellWordCount)) {
+                if (compactMatchesFilter(state, game, filter2, condition.aggr2, tile)) {
                     passed = true;
                     break;
                 }
@@ -1084,8 +1063,8 @@ int32_t compactHeuristicScore(
             score += passed ? 0 : best;
         } else if (condition.quantifier == -1) {
             for (int32_t tile = 0; tile < tileCount; ++tile) {
-                if (compactMatchesFilter(state, game, filter1, condition.aggr1, tile, cellWordCount)
-                    && compactMatchesFilter(state, game, filter2, condition.aggr2, tile, cellWordCount)) {
+                if (compactMatchesFilter(state, game, filter1, condition.aggr1, tile)
+                    && compactMatchesFilter(state, game, filter2, condition.aggr2, tile)) {
                     score += 10;
                 }
             }
@@ -1109,7 +1088,7 @@ int32_t compactHeuristicScore(
             ));
         }
         for (int32_t player = 0; player < tileCount; ++player) {
-            if (!compactMatchesFilter(state, game, playerMask, game.playerMaskAggregate, player, cellWordCount)) {
+            if (!compactMatchesFilter(state, game, playerMask, game.playerMaskAggregate, player)) {
                 continue;
             }
             hasPlayer = true;

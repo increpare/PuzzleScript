@@ -56,7 +56,7 @@ char* duplicateString(const std::string& value) {
 }
 
 struct CompactOracleState {
-    std::vector<MaskWordUnsigned> objectBits;
+    std::vector<puzzlescript::MaskWord> objects;
     std::vector<puzzlescript::MaskWord> movementWords;
     puzzlescript::RandomState randomState;
 };
@@ -65,12 +65,12 @@ CompactOracleState compactOracleStateFromFullState(const FullState& session) {
     CompactOracleState state;
     state.randomState = session.levelState.rng;
     state.movementWords = session.scratch.liveMovements;
-    puzzlescript::fillCompactOccupancyBitsFromInterpreterBoard(session, state.objectBits);
+    state.objects = session.scratch.interpreterBoard.objects;
     return state;
 }
 
 bool compactOracleStatesEqual(const CompactOracleState& lhs, const CompactOracleState& rhs) {
-    return lhs.objectBits == rhs.objectBits
+    return lhs.objects == rhs.objects
         && lhs.movementWords == rhs.movementWords
         && lhs.randomState.s == rhs.randomState.s
         && lhs.randomState.i == rhs.randomState.i
@@ -82,19 +82,19 @@ void debugCompactOracleStateMismatch(const CompactOracleState& compact, const Co
     if (std::getenv("PS_COMPACT_ORACLE_DEBUG") == nullptr) {
         return;
     }
-    if (compact.objectBits != interpreter.objectBits) {
-        const size_t count = std::min(compact.objectBits.size(), interpreter.objectBits.size());
+    if (compact.objects != interpreter.objects) {
+        const size_t count = std::min(compact.objects.size(), interpreter.objects.size());
         for (size_t index = 0; index < count; ++index) {
-            if (compact.objectBits[index] != interpreter.objectBits[index]) {
-                std::cerr << "compact oracle objectBits mismatch index=" << index
-                          << " compact=" << compact.objectBits[index]
-                          << " interpreter=" << interpreter.objectBits[index]
+            if (compact.objects[index] != interpreter.objects[index]) {
+                std::cerr << "compact oracle objects mismatch index=" << index
+                          << " compact=" << compact.objects[index]
+                          << " interpreter=" << interpreter.objects[index]
                           << "\n";
                 return;
             }
         }
-        std::cerr << "compact oracle objectBits size mismatch compact=" << compact.objectBits.size()
-                  << " interpreter=" << interpreter.objectBits.size()
+        std::cerr << "compact oracle objects size mismatch compact=" << compact.objects.size()
+                  << " interpreter=" << interpreter.objects.size()
                   << "\n";
         return;
     }
@@ -340,7 +340,7 @@ bool ps_full_state_compact_turn_oracle_check(
 
     CompactOracleState compact = compactOracleStateFromFullState(original);
     puzzlescript::PersistentLevelState compactLevelState;
-    compactLevelState.board.objectBits = compact.objectBits;
+    compactLevelState.board.objects = compact.objects;
     compactLevelState.rng = compact.randomState;
     puzzlescript::Scratch compactScratch;
     compactScratch.liveMovements = compact.movementWords;
@@ -360,14 +360,7 @@ bool ps_full_state_compact_turn_oracle_check(
         options
     );
     if (compactOutcome.handled) {
-        puzzlescript::canonicalizeCompactObjectBits(
-            *original.game,
-            context.dimensions.width,
-            context.dimensions.height,
-            compactLevelState.board.objectBits.empty() ? nullptr : compactLevelState.board.objectBits.data(),
-            compactLevelState.board.objectBits.size()
-        );
-        compact.objectBits = compactLevelState.board.objectBits;
+        compact.objects = compactLevelState.board.objects;
         compact.movementWords = compactScratch.liveMovements;
         compact.randomState = compactLevelState.rng;
     }
@@ -489,16 +482,12 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
     if (word >= impl.game->wordCount) {
         return false;
     }
-    const int32_t tile_index = x * currentLevelHeight(impl) + y;
-    const int32_t tileCount = currentLevelWidth(impl) * currentLevelHeight(impl);
-    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(puzzlescript::kMaskWordBits) - 1) / static_cast<int32_t>(puzzlescript::kMaskWordBits));
-    const size_t objectBase = static_cast<size_t>(object_id) * cellWordCount;
-    const size_t bitWord = static_cast<size_t>(puzzlescript::maskWordIndex(static_cast<uint32_t>(tile_index)));
-    const MaskWordUnsigned bitMask = MaskWordUnsigned{1} << puzzlescript::maskBitIndex(static_cast<uint32_t>(tile_index));
-    if (cellWordCount == 0 || objectBase + bitWord >= impl.levelState.board.objectBits.size()) {
+    const int32_t tileIndex = x * currentLevelHeight(impl) + y;
+    const size_t offset = static_cast<size_t>(tileIndex * impl.game->strideObject + word);
+    if (offset >= impl.levelState.board.objects.size()) {
         return false;
     }
-    return (impl.levelState.board.objectBits[objectBase + bitWord] & bitMask) != 0;
+    return (impl.levelState.board.objects[offset] & puzzlescript::maskBit(static_cast<uint32_t>(object_id))) != 0;
 }
 
 bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* out_x, int32_t* out_y) {
@@ -526,19 +515,14 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         }
     }
     const int32_t tileCount = currentLevelWidth(impl) * currentLevelHeight(impl);
-    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(puzzlescript::kMaskWordBits) - 1) / static_cast<int32_t>(puzzlescript::kMaskWordBits));
-    if (cellWordCount == 0) {
-        return false;
-    }
     for (int32_t tile_index = 0; tile_index < tileCount; ++tile_index) {
-        const size_t bitWord = static_cast<size_t>(puzzlescript::maskWordIndex(static_cast<uint32_t>(tile_index)));
-        const MaskWordUnsigned bitMask = MaskWordUnsigned{1} << puzzlescript::maskBitIndex(static_cast<uint32_t>(tile_index));
+        const size_t tileBase = static_cast<size_t>(tile_index * impl.game->strideObject);
         bool containsPlayer = impl.game->playerMaskAggregate;
         if (impl.game->playerMaskAggregate) {
             for (int32_t objectId : playerObjectIds) {
-                const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-                if (objectBase + bitWord >= impl.levelState.board.objectBits.size()
-                    || (impl.levelState.board.objectBits[objectBase + bitWord] & bitMask) == 0) {
+                const size_t offset = tileBase + puzzlescript::maskWordIndex(static_cast<uint32_t>(objectId));
+                if (offset >= impl.levelState.board.objects.size()
+                    || (impl.levelState.board.objects[offset] & puzzlescript::maskBit(static_cast<uint32_t>(objectId))) == 0) {
                     containsPlayer = false;
                     break;
                 }
@@ -546,9 +530,9 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         } else {
             containsPlayer = false;
             for (int32_t objectId : playerObjectIds) {
-                const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-                if (objectBase + bitWord < impl.levelState.board.objectBits.size()
-                    && (impl.levelState.board.objectBits[objectBase + bitWord] & bitMask) != 0) {
+                const size_t offset = tileBase + puzzlescript::maskWordIndex(static_cast<uint32_t>(objectId));
+                if (offset < impl.levelState.board.objects.size()
+                    && (impl.levelState.board.objects[offset] & puzzlescript::maskBit(static_cast<uint32_t>(objectId))) != 0) {
                     containsPlayer = true;
                     break;
                 }
