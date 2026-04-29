@@ -73,7 +73,7 @@ CompactOracleState compactOracleStateFromFullState(const FullState& session) {
     CompactOracleState state;
     state.randomState = session.levelState.rng;
     state.movementWords = session.scratch.liveMovements;
-    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.objectBits);
+    puzzlescript::fillCompactOccupancyBitsFromInterpreterBoard(session, state.objectBits);
     return state;
 }
 

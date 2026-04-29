@@ -497,19 +497,20 @@ struct TurnResult {
 };
 
 /// Cell-major → object-major compact bits (same layout as `BoardOccupancy::objectBits`).
-void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector<uint64_t>& objectBits);
+void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std::vector<uint64_t>& objectBits);
 
-void fillCompactOccupancyBitsFromLiveLevelData(
+void fillCompactOccupancyBitsFromInterpreterBoardData(
     const Game& game,
     int32_t width,
     int32_t height,
-    const MaskVector& liveObjects,
+    const MaskVector& interpreterObjects,
     std::vector<uint64_t>& objectBits);
 
-void fillLiveLevelObjectsFromCompactObjectBits(
-    LevelTemplate& level,
+void fillInterpreterBoardObjectsFromCompactObjectBits(
     const Game& game,
-    const std::vector<uint64_t>& objectBits);
+    LevelDimensions dimensions,
+    const std::vector<uint64_t>& objectBits,
+    MaskVector& interpreterObjects);
 
 void canonicalizeCompactObjectBits(
     const Game& game,

@@ -801,7 +801,7 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
         initialMetaGameState.level = game->levels.front();
         initialMetaGameState.restart.width = initialMetaGameState.level.width;
         initialMetaGameState.restart.height = initialMetaGameState.level.height;
-        puzzlescript::fillCompactOccupancyBitsFromLiveLevelData(
+        puzzlescript::fillCompactOccupancyBitsFromInterpreterBoardData(
             *game,
             initialMetaGameState.level.width,
             initialMetaGameState.level.height,

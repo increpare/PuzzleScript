@@ -586,7 +586,7 @@ PersistentLevelState persistentLevelStateFromFullState(const FullState& session)
     state.rng.i = session.levelState.rng.i;
     state.rng.j = session.levelState.rng.j;
     state.rng.valid = session.levelState.rng.valid;
-    puzzlescript::fillCompactOccupancyBitsFromLiveLevel(session, state.board.occupancy.objectBits);
+    puzzlescript::fillCompactOccupancyBitsFromInterpreterBoard(session, state.board.occupancy.objectBits);
     return state;
 }
 
@@ -625,25 +625,15 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
     session.game = base.game;
     session.meta = base.meta;
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
-    const int32_t objectCount = session.game ? session.game->objectCount : 0;
-    const int32_t stride = session.game ? session.game->strideObject : 0;
-    session.scratch.interpreterBoard.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
-    for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
-        const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-        for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-            uint64_t bits = objectBase + bitWord < state.board.occupancy.objectBits.size() ? state.board.occupancy.objectBits[objectBase + bitWord] : 0;
-            while (bits != 0) {
-                const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(bits));
-                const int32_t tileIndex = static_cast<int32_t>(bitWord * 64 + bit);
-                if (tileIndex < tileCount) {
-                    const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
-                    const uint32_t objectBit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
-                    session.scratch.interpreterBoard.objects[static_cast<size_t>(tileIndex * stride + word)] |= puzzlescript::maskBit(objectBit);
-                }
-                bits &= bits - 1;
-            }
-        }
+    if (session.game != nullptr) {
+        puzzlescript::fillInterpreterBoardObjectsFromCompactObjectBits(
+            *session.game,
+            currentLevelDimensions(session),
+            state.board.occupancy.objectBits,
+            session.scratch.interpreterBoard.objects
+        );
+    } else {
+        session.scratch.interpreterBoard.objects.clear();
     }
     const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * (session.game ? session.game->strideMovement : 0));
     session.scratch.liveMovements.assign(movementWordCount, 0);

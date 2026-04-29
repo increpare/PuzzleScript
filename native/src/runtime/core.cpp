@@ -1416,7 +1416,7 @@ MetaGameState parsePreparedSession(const json::Value& value, const Game& game) {
         prepared.restart.width = toInt(requireField(restartObject, "width"));
         prepared.restart.height = toInt(requireField(restartObject, "height"));
         const MaskVector restartObjects = parseMaskVector(requireField(restartObject, "objects"));
-        fillCompactOccupancyBitsFromLiveLevelData(
+        fillCompactOccupancyBitsFromInterpreterBoardData(
             game,
             prepared.restart.width,
             prepared.restart.height,
@@ -3895,20 +3895,19 @@ void pushUndoSnapshot(FullState& session) {
 }
 
 void restoreRestartTarget(FullState& session) {
-    LevelTemplate liveLevel = session.meta.level;
     if (session.meta.restart.width > 0 && session.meta.restart.height > 0
         && !session.meta.restart.objectBits.empty()) {
         session.meta.levelDimensions = LevelDimensions{session.meta.restart.width, session.meta.restart.height};
-        liveLevel.width = session.meta.restart.width;
-        liveLevel.height = session.meta.restart.height;
-        fillLiveLevelObjectsFromCompactObjectBits(
-            liveLevel,
+        fillInterpreterBoardObjectsFromCompactObjectBits(
             *session.game,
-            session.meta.restart.objectBits
+            session.meta.levelDimensions,
+            session.meta.restart.objectBits,
+            session.scratch.interpreterBoard.objects
         );
         session.meta.oldFlickscreenDat = session.meta.restart.oldFlickscreenDat;
+    } else {
+        session.scratch.interpreterBoard.objects = session.meta.level.objects;
     }
-    session.scratch.interpreterBoard.objects = std::move(liveLevel.objects);
     session.scratch.liveMovements.assign(static_cast<size_t>(currentLevelWidth(session) * currentLevelHeight(session) * session.game->strideMovement), 0);
     session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
     session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
@@ -4020,7 +4019,7 @@ bool advanceToNextLevel(FullState& session) {
         }
         session.meta.restart.width = session.meta.level.width;
         session.meta.restart.height = session.meta.level.height;
-        fillCompactOccupancyBitsFromLiveLevelData(
+        fillCompactOccupancyBitsFromInterpreterBoardData(
             *session.game,
             session.meta.level.width,
             session.meta.level.height,
@@ -4085,11 +4084,11 @@ void resetToPrepared(FullState& session) {
 
 } // namespace
 
-void fillCompactOccupancyBitsFromLiveLevelData(
+void fillCompactOccupancyBitsFromInterpreterBoardData(
     const Game& game,
     int32_t width,
     int32_t height,
-    const MaskVector& liveObjects,
+    const MaskVector& interpreterObjects,
     std::vector<uint64_t>& objectBits
 ) {
     const int32_t tileCount = width * height;
@@ -4104,8 +4103,8 @@ void fillCompactOccupancyBitsFromLiveLevelData(
             const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
             for (int32_t word = 0; word < stride; ++word) {
                 MaskWordUnsigned bits = 0;
-                if (sourceBase + static_cast<size_t>(word) < liveObjects.size()) {
-                    bits = static_cast<MaskWordUnsigned>(liveObjects[sourceBase + static_cast<size_t>(word)]);
+                if (sourceBase + static_cast<size_t>(word) < interpreterObjects.size()) {
+                    bits = static_cast<MaskWordUnsigned>(interpreterObjects[sourceBase + static_cast<size_t>(word)]);
                 }
                 while (bits != 0) {
                     const uint32_t bit = static_cast<uint32_t>(maskWordCountTrailingZeros(bits));
@@ -4120,16 +4119,17 @@ void fillCompactOccupancyBitsFromLiveLevelData(
     }
 }
 
-void fillLiveLevelObjectsFromCompactObjectBits(
-    LevelTemplate& level,
+void fillInterpreterBoardObjectsFromCompactObjectBits(
     const Game& game,
-    const std::vector<uint64_t>& objectBits
+    LevelDimensions dimensions,
+    const std::vector<uint64_t>& objectBits,
+    MaskVector& interpreterObjects
 ) {
-    const int32_t tileCount = level.width * level.height;
+    const int32_t tileCount = dimensions.width * dimensions.height;
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const int32_t objectCount = game.objectCount;
     const int32_t stride = game.strideObject;
-    level.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
+    interpreterObjects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
     for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
         const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
         for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
@@ -4140,7 +4140,7 @@ void fillLiveLevelObjectsFromCompactObjectBits(
                 if (tileIndex < tileCount) {
                     const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
                     const uint32_t objectBit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
-                    level.objects[static_cast<size_t>(tileIndex * stride + word)] |= maskBit(objectBit);
+                    interpreterObjects[static_cast<size_t>(tileIndex * stride + word)] |= maskBit(objectBit);
                 }
                 bits &= bits - 1;
             }
@@ -4178,12 +4178,12 @@ void canonicalizeCompactObjectBits(
     }
 }
 
-void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector<uint64_t>& objectBits) {
+void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std::vector<uint64_t>& objectBits) {
     if (session.game == nullptr) {
         objectBits.clear();
         return;
     }
-    fillCompactOccupancyBitsFromLiveLevelData(
+    fillCompactOccupancyBitsFromInterpreterBoardData(
         *session.game,
         currentLevelWidth(session),
         currentLevelHeight(session),
@@ -4193,7 +4193,7 @@ void fillCompactOccupancyBitsFromLiveLevel(const FullState& session, std::vector
 }
 
 void syncPersistentBoardOccupancyFromScratch(FullState& session) {
-    fillCompactOccupancyBitsFromLiveLevel(session, session.levelState.board.occupancy.objectBits);
+    fillCompactOccupancyBitsFromInterpreterBoard(session, session.levelState.board.occupancy.objectBits);
 }
 
 void syncPersistentLevelStateFromScratch(FullState& session) {
@@ -4676,7 +4676,7 @@ void prepareLoadedLevel(FullState& session, LevelTemplate level, int32_t levelIn
     }
     prepared.restart.width = restartWidth;
     prepared.restart.height = restartHeight;
-    fillCompactOccupancyBitsFromLiveLevelData(
+    fillCompactOccupancyBitsFromInterpreterBoardData(
         *session.game,
         restartWidth,
         restartHeight,
@@ -5148,7 +5148,7 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
     if (!options.solverMode && !won && commandQueueContains(commands, "checkpoint")) {
         session.meta.restart.width = currentLevelWidth(session);
         session.meta.restart.height = currentLevelHeight(session);
-        fillCompactOccupancyBitsFromLiveLevelData(
+        fillCompactOccupancyBitsFromInterpreterBoardData(
             *session.game,
             currentLevelWidth(session),
             currentLevelHeight(session),
