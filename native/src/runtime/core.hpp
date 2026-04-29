@@ -41,6 +41,10 @@ struct CompileResult;
 #define PS_MASK_WORD_BITS 64
 #endif
 
+#ifndef PS_INTERPRETER_OBJECT_MAJOR
+#define PS_INTERPRETER_OBJECT_MAJOR 0
+#endif
+
 #if PS_MASK_WORD_BITS == 32
 using MaskWord = int32_t;
 using MaskWordUnsigned = uint32_t;
@@ -314,7 +318,11 @@ struct PersistentLevelState {
 };
 
 struct InterpreterBoardScratch {
+#if PS_INTERPRETER_OBJECT_MAJOR
+    mutable MaskVector cellScratch;
+#else
     MaskVector objects;
+#endif
 };
 
 struct GameMetadata {
@@ -458,7 +466,11 @@ struct Scratch {
 
 struct InterpreterBoardSnapshot {
     LevelDimensions dimensions;
+#if PS_INTERPRETER_OBJECT_MAJOR
+    std::vector<MaskWordUnsigned> objectBits;
+#else
     MaskVector objects;
+#endif
 };
 
 struct UndoSnapshot {
@@ -517,6 +529,14 @@ void fillInterpreterBoardObjectsFromCompactObjectBits(
     LevelDimensions dimensions,
     const std::vector<MaskWordUnsigned>& objectBits,
     MaskVector& interpreterObjects);
+
+void setInterpreterBoardObjectsFromCellMajor(FullState& session, const MaskVector& objects);
+void setInterpreterBoardObjectsFromCompactBits(FullState& session, const std::vector<MaskWordUnsigned>& objectBits);
+void clearInterpreterBoardObjects(FullState& session);
+MaskVector copyInterpreterBoardObjectsAsCellMajor(const FullState& session);
+InterpreterBoardSnapshot makeInterpreterBoardSnapshot(const FullState& session);
+void restoreInterpreterBoardSnapshot(FullState& session, const InterpreterBoardSnapshot& snapshot);
+bool interpreterBoardMatchesSnapshot(const FullState& session, const InterpreterBoardSnapshot& snapshot);
 
 void canonicalizeCompactObjectBits(
     const Game& game,

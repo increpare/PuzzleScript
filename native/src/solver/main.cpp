@@ -626,14 +626,9 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
     session.meta = base.meta;
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
     if (session.game != nullptr) {
-        puzzlescript::fillInterpreterBoardObjectsFromCompactObjectBits(
-            *session.game,
-            currentLevelDimensions(session),
-            state.board.objectBits,
-            session.scratch.interpreterBoard.objects
-        );
+        puzzlescript::setInterpreterBoardObjectsFromCompactBits(session, state.board.objectBits);
     } else {
-        session.scratch.interpreterBoard.objects.clear();
+        puzzlescript::clearInterpreterBoardObjects(session);
     }
     const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * (session.game ? session.game->strideMovement : 0));
     session.scratch.liveMovements.assign(movementWordCount, 0);
@@ -652,7 +647,11 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
     child.meta = parent.meta;
+#if PS_INTERPRETER_OBJECT_MAJOR
+    puzzlescript::setInterpreterBoardObjectsFromCellMajor(child, puzzlescript::copyInterpreterBoardObjectsAsCellMajor(parent));
+#else
     child.scratch.interpreterBoard.objects = parent.scratch.interpreterBoard.objects;
+#endif
 
     child.scratch.liveMovements.assign(parent.scratch.liveMovements.size(), 0);
     child.scratch.rigidGroupIndexMasks.assign(parent.scratch.rigidGroupIndexMasks.size(), 0);

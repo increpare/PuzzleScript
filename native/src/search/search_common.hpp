@@ -78,7 +78,11 @@ inline StateKey fullStateKey(const FullState& session, bool includeRandomState, 
         }
     }
 
+#if PS_INTERPRETER_OBJECT_MAJOR
+    const MaskVector objects = copyInterpreterBoardObjectsAsCellMajor(session);
+#else
     const auto& objects = session.scratch.interpreterBoard.objects;
+#endif
     for (size_t index = 0; index < objects.size(); ++index) {
         appendStateKeyValue(key, static_cast<uint64_t>(static_cast<MaskWordUnsigned>(projectWord(index, objects[index]))));
     }
@@ -119,7 +123,29 @@ inline const MaskWord* maskPtr(const Game& game, MaskOffset offset) {
 }
 
 inline const MaskWord* cellObjects(const FullState& session, int32_t tileIndex) {
+#if PS_INTERPRETER_OBJECT_MAJOR
+    MaskVector& result = session.scratch.interpreterBoard.cellScratch;
+    result.assign(static_cast<size_t>(session.game->strideObject), 0);
+    const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
+    const size_t bitWord = static_cast<size_t>(maskWordIndex(static_cast<uint32_t>(tileIndex)));
+    const MaskWordUnsigned bitMask = MaskWordUnsigned{1} << maskBitIndex(static_cast<uint32_t>(tileIndex));
+    for (int32_t objectId = 0; objectId < session.game->objectCount; ++objectId) {
+        const size_t offset = static_cast<size_t>(objectId) * cellWordCount + bitWord;
+        if (offset >= session.scratch.objectCellBits.size()
+            || (session.scratch.objectCellBits[offset] & bitMask) == 0) {
+            continue;
+        }
+        const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
+        const uint32_t bit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
+        if (word >= 0 && word < session.game->strideObject) {
+            result[static_cast<size_t>(word)] |= maskBit(bit);
+        }
+    }
+    return result.data();
+#else
     return session.scratch.interpreterBoard.objects.data() + static_cast<size_t>(tileIndex * session.game->strideObject);
+#endif
 }
 
 inline bool anyBits(const MaskWord* lhs, uint32_t lhsCount, const MaskWord* rhs, uint32_t rhsCount) {

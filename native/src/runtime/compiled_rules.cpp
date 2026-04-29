@@ -81,12 +81,7 @@ void materializeCompactBridgeState(
     session.meta.level.height = dimensions.height;
     session.meta.levelDimensions = dimensions;
     const int32_t tileCount = dimensions.width * dimensions.height;
-    fillInterpreterBoardObjectsFromCompactObjectBits(
-        game,
-        dimensions,
-        levelState.board.objectBits,
-        session.scratch.interpreterBoard.objects
-    );
+    setInterpreterBoardObjectsFromCompactBits(session, levelState.board.objectBits);
     const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * std::max(game.strideMovement, 0));
     session.scratch.liveMovements.assign(movementWordCount, 0);
     if (scratch.liveMovements.size() == movementWordCount) {

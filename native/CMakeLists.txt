@@ -97,6 +97,7 @@ set_property(CACHE PS_MASK_WORD_BITS PROPERTY STRINGS 32 64)
 if(NOT PS_MASK_WORD_BITS STREQUAL "32" AND NOT PS_MASK_WORD_BITS STREQUAL "64")
   message(FATAL_ERROR "PS_MASK_WORD_BITS must be 32 or 64")
 endif()
+option(PS_INTERPRETER_OBJECT_MAJOR "Use experimental object-major interpreter board storage" OFF)
 
 add_library(puzzlescript_compiler STATIC
   ${PUZZLESCRIPT_COMPILER_PUBLIC_HEADERS}
@@ -145,6 +146,7 @@ target_link_libraries(puzzlescript_native
 target_compile_definitions(puzzlescript_native
   PUBLIC
     PS_MASK_WORD_BITS=${PS_MASK_WORD_BITS}
+    $<$<BOOL:${PS_INTERPRETER_OBJECT_MAJOR}>:PS_INTERPRETER_OBJECT_MAJOR=1>
 )
 
 add_executable(puzzlescript_cpp
