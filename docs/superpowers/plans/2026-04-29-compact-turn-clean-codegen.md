@@ -612,6 +612,18 @@ Codegen-size iteration note, 2026-04-29:
     out of the fast selected replay, then return to them when evaluating source
     size, sharding, constant deduplication, and other compile-time work.
 
+Codegen-size cleanup update, 2026-04-29:
+  selected replay after direct canonical mask references:
+    cases: 31 32 57 62 85 87 88 89 90 188
+    result: 10/10 pass
+  case 189 generated-source probe:
+    before direct references: 1,256,987 lines, 73 MB, 81,663 pointer aliases
+    after direct references: 1,175,324 lines, 62 MB, 0 pointer aliases
+  cleanup:
+    Pattern functions still stay specialized, but generated mask uses now
+    reference canonical `compact_turn_mask_data_*` arrays directly instead of
+    emitting one pointer alias per pattern field.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile

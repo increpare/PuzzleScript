@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <map>
 #include <ostream>
+#include <stdexcept>
 
 namespace puzzlescript::compiler {
 
@@ -93,9 +94,16 @@ public:
         , suffix_(suffix)
         , phase_(phase) {}
 
-    void emitAlias(const std::string& alias, const std::vector<MaskWord>& words) {
-        const std::string& canonical = canonicalName(words);
-        out_ << "constexpr const MaskWord* " << alias << " = " << canonical << ";\n";
+    const std::string& emitName(const std::vector<MaskWord>& words) {
+        return canonicalName(words);
+    }
+
+    const std::string& name(const std::vector<MaskWord>& words) const {
+        const auto existing = names_.find(words);
+        if (existing == names_.end()) {
+            throw std::logic_error("compact mask constant was not emitted before use");
+        }
+        return existing->second;
     }
 
 private:
@@ -117,6 +125,15 @@ private:
     size_t nextIndex_ = 0;
     std::map<std::vector<MaskWord>, std::string> names_;
 };
+
+std::string compactMaskName(
+    const CompactMaskConstantEmitter& masks,
+    const Game& game,
+    MaskOffset offset,
+    uint32_t wordCount
+) {
+    return masks.name(compiledMaskWords(game, offset, wordCount));
+}
 
 std::string compactPatternPrefix(
     std::string_view suffix,
@@ -172,9 +189,9 @@ void emitCompactRuleMaskData(
     const Game& game,
     std::string_view suffix,
     std::string_view phase,
-    const std::vector<std::vector<Rule>>& groups
+    const std::vector<std::vector<Rule>>& groups,
+    CompactMaskConstantEmitter& masks
 ) {
-    CompactMaskConstantEmitter masks(out, suffix, phase);
     for (size_t groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
         const std::vector<Rule>& group = groups[groupIndex];
         for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
@@ -189,25 +206,22 @@ void emitCompactRuleMaskData(
                     if (pattern.kind == Pattern::Kind::Ellipsis) {
                         continue;
                     }
-                    const std::string prefix = compactPatternPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex);
-                    masks.emitAlias(prefix + "_objects_present", compiledMaskWords(game, pattern.objectsPresent, game.wordCount));
-                    masks.emitAlias(prefix + "_objects_missing", compiledMaskWords(game, pattern.objectsMissing, game.wordCount));
-                    masks.emitAlias(prefix + "_movements_present", compiledMaskWords(game, pattern.movementsPresent, game.movementWordCount));
-                    masks.emitAlias(prefix + "_movements_missing", compiledMaskWords(game, pattern.movementsMissing, game.movementWordCount));
+                    masks.emitName(compiledMaskWords(game, pattern.objectsPresent, game.wordCount));
+                    masks.emitName(compiledMaskWords(game, pattern.objectsMissing, game.wordCount));
+                    masks.emitName(compiledMaskWords(game, pattern.movementsPresent, game.movementWordCount));
+                    masks.emitName(compiledMaskWords(game, pattern.movementsMissing, game.movementWordCount));
                     for (uint32_t anyIndex = 0; anyIndex < pattern.anyObjectsCount; ++anyIndex) {
                         const MaskOffset offset = game.anyObjectOffsets[pattern.anyObjectsFirst + anyIndex];
-                        masks.emitAlias(
-                            prefix + "_any_objects_" + std::to_string(anyIndex),
-                            compiledMaskWords(game, offset, game.wordCount)
-                        );
+                        masks.emitName(compiledMaskWords(game, offset, game.wordCount));
                     }
                     if (pattern.replacement.has_value()) {
+                        const std::string prefix = compactPatternPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex);
                         const Replacement& replacement = *pattern.replacement;
-                        masks.emitAlias(prefix + "_objects_clear", compiledMaskWords(game, replacement.objectsClear, game.wordCount));
-                        masks.emitAlias(prefix + "_objects_set", compiledMaskWords(game, replacement.objectsSet, game.wordCount));
-                        masks.emitAlias(prefix + "_movements_clear", compiledMaskWords(game, replacement.movementsClear, game.movementWordCount));
-                        masks.emitAlias(prefix + "_movements_set", compiledMaskWords(game, replacement.movementsSet, game.movementWordCount));
-                        masks.emitAlias(prefix + "_movements_layer_mask", compiledMaskWords(game, replacement.movementsLayerMask, game.movementWordCount));
+                        masks.emitName(compiledMaskWords(game, replacement.objectsClear, game.wordCount));
+                        masks.emitName(compiledMaskWords(game, replacement.objectsSet, game.wordCount));
+                        masks.emitName(compiledMaskWords(game, replacement.movementsClear, game.movementWordCount));
+                        masks.emitName(compiledMaskWords(game, replacement.movementsSet, game.movementWordCount));
+                        masks.emitName(compiledMaskWords(game, replacement.movementsLayerMask, game.movementWordCount));
                         if (replacement.hasRandomEntityMask) {
                             out << "constexpr int32_t " << prefix << "_random_entity_choices[] = {";
                             if (replacement.randomEntityChoices.empty()) {
@@ -245,6 +259,8 @@ void emitCompactRuleMaskData(
 
 void emitCompactPatternFunctions(
     std::ostream& out,
+    const Game& game,
+    const CompactMaskConstantEmitter& masks,
     const Pattern& pattern,
     std::string_view suffix,
     std::string_view phase,
@@ -257,20 +273,26 @@ void emitCompactPatternFunctions(
     if (pattern.kind == Pattern::Kind::Ellipsis) {
         return;
     }
+    const std::string objectsPresent = compactMaskName(masks, game, pattern.objectsPresent, game.wordCount);
+    const std::string objectsMissing = compactMaskName(masks, game, pattern.objectsMissing, game.wordCount);
+    const std::string movementsPresent = compactMaskName(masks, game, pattern.movementsPresent, game.movementWordCount);
+    const std::string movementsMissing = compactMaskName(masks, game, pattern.movementsMissing, game.movementWordCount);
     out << "bool " << prefix << "_matches(const PersistentLevelState& levelState, const Scratch& scratch, int32_t tileIndex) {\n"
         << "    const MaskWord* objects = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
         << "    const MaskWord* movements = compact_turn_cell_movements_" << suffix << "(scratch, tileIndex);\n"
         << "    for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
-        << "        if ((objects[word] & " << prefix << "_objects_present[word]) != " << prefix << "_objects_present[word]) return false;\n"
-        << "        if ((objects[word] & " << prefix << "_objects_missing[word]) != 0) return false;\n"
+        << "        if ((objects[word] & " << objectsPresent << "[word]) != " << objectsPresent << "[word]) return false;\n"
+        << "        if ((objects[word] & " << objectsMissing << "[word]) != 0) return false;\n"
         << "    }\n";
     for (uint32_t anyIndex = 0; anyIndex < pattern.anyObjectsCount; ++anyIndex) {
+        const MaskOffset offset = game.anyObjectOffsets[pattern.anyObjectsFirst + anyIndex];
+        const std::string anyObjects = compactMaskName(masks, game, offset, game.wordCount);
         out << "    if (!compact_turn_cell_any_objects_" << suffix
-            << "(levelState, tileIndex, " << prefix << "_any_objects_" << anyIndex << ")) return false;\n";
+            << "(levelState, tileIndex, " << anyObjects << ")) return false;\n";
     }
     out << "    for (int32_t word = 0; word < compact_turn_movement_stride_" << suffix << "; ++word) {\n"
-        << "        if ((movements[word] & " << prefix << "_movements_present[word]) != " << prefix << "_movements_present[word]) return false;\n"
-        << "        if ((movements[word] & " << prefix << "_movements_missing[word]) != 0) return false;\n"
+        << "        if ((movements[word] & " << movementsPresent << "[word]) != " << movementsPresent << "[word]) return false;\n"
+        << "        if ((movements[word] & " << movementsMissing << "[word]) != 0) return false;\n"
         << "    }\n"
         << "    return true;\n"
         << "}\n\n";
@@ -280,6 +302,12 @@ void emitCompactPatternFunctions(
     }
 
     out << "bool " << prefix << "_apply(PersistentLevelState& levelState, Scratch& scratch, int32_t tileIndex, int32_t rigidGroupIndex) {\n";
+    const Replacement& replacement = *pattern.replacement;
+    const std::string objectsClearMask = compactMaskName(masks, game, replacement.objectsClear, game.wordCount);
+    const std::string objectsSetMask = compactMaskName(masks, game, replacement.objectsSet, game.wordCount);
+    const std::string movementsClearMask = compactMaskName(masks, game, replacement.movementsClear, game.movementWordCount);
+    const std::string movementsSetMask = compactMaskName(masks, game, replacement.movementsSet, game.movementWordCount);
+    const std::string movementsLayerMask = compactMaskName(masks, game, replacement.movementsLayerMask, game.movementWordCount);
     out << "    bool changed = false;\n"
         << "    bool rigidChange = false;\n"
         << "    MaskWord objectsClear[compact_turn_object_stride_" << suffix << "] = {};\n"
@@ -287,14 +315,13 @@ void emitCompactPatternFunctions(
         << "    MaskWord movementsClear[compact_turn_movement_stride_" << suffix << "] = {};\n"
         << "    MaskWord movementsSet[compact_turn_movement_stride_" << suffix << "] = {};\n"
         << "    for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
-        << "        objectsClear[word] = " << prefix << "_objects_clear[word];\n"
-        << "        objectsSet[word] = " << prefix << "_objects_set[word];\n"
+        << "        objectsClear[word] = " << objectsClearMask << "[word];\n"
+        << "        objectsSet[word] = " << objectsSetMask << "[word];\n"
         << "    }\n"
         << "    for (int32_t word = 0; word < compact_turn_movement_stride_" << suffix << "; ++word) {\n"
-        << "        movementsClear[word] = " << prefix << "_movements_clear[word];\n"
-        << "        movementsSet[word] = " << prefix << "_movements_set[word];\n"
+        << "        movementsClear[word] = " << movementsClearMask << "[word];\n"
+        << "        movementsSet[word] = " << movementsSetMask << "[word];\n"
         << "    }\n";
-    const Replacement& replacement = *pattern.replacement;
     if (replacement.hasRandomEntityMask) {
         out << "    if (" << prefix << "_random_entity_choice_count > 0) {\n"
             << "        const double randomValue = compact_turn_random_uniform_" << suffix << "(levelState.rng);\n"
@@ -323,7 +350,7 @@ void emitCompactPatternFunctions(
     }
     out
         << "    for (int32_t word = 0; word < compact_turn_movement_stride_" << suffix << "; ++word) {\n"
-        << "        movementsClear[word] |= " << prefix << "_movements_layer_mask[word];\n"
+        << "        movementsClear[word] |= " << movementsLayerMask << "[word];\n"
         << "    }\n"
         << "    MaskWord* objects = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
         << "    for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
@@ -342,7 +369,7 @@ void emitCompactPatternFunctions(
         << "    if (rigidGroupIndex > 0) {\n"
         << "        MaskWord rigidMask[compact_turn_movement_stride_" << suffix << "] = {};\n"
         << "        for (int32_t layer = 0; layer < compact_turn_layer_count_" << suffix << "; ++layer) {\n"
-        << "            if (compact_turn_layer_bits_" << suffix << "(" << prefix << "_movements_layer_mask, layer) != 0) {\n"
+        << "            if (compact_turn_layer_bits_" << suffix << "(" << movementsLayerMask << ", layer) != 0) {\n"
         << "                compact_turn_set_layer_bits_" << suffix << "(rigidMask, layer, rigidGroupIndex);\n"
         << "            }\n"
         << "        }\n"
@@ -352,12 +379,12 @@ void emitCompactPatternFunctions(
         << "        bool rigidMovementAlreadySet = true;\n"
         << "        for (int32_t word = 0; word < compact_turn_movement_stride_" << suffix << "; ++word) {\n"
         << "            if ((rigidGroupMask[word] & rigidMask[word]) != rigidMask[word]) rigidGroupAlreadySet = false;\n"
-        << "            if ((rigidAppliedMask[word] & " << prefix << "_movements_layer_mask[word]) != " << prefix << "_movements_layer_mask[word]) rigidMovementAlreadySet = false;\n"
+        << "            if ((rigidAppliedMask[word] & " << movementsLayerMask << "[word]) != " << movementsLayerMask << "[word]) rigidMovementAlreadySet = false;\n"
         << "        }\n"
         << "        if (!rigidGroupAlreadySet && !rigidMovementAlreadySet) {\n"
         << "            for (int32_t word = 0; word < compact_turn_movement_stride_" << suffix << "; ++word) {\n"
         << "                rigidGroupMask[word] |= rigidMask[word];\n"
-        << "                rigidAppliedMask[word] |= " << prefix << "_movements_layer_mask[word];\n"
+        << "                rigidAppliedMask[word] |= " << movementsLayerMask << "[word];\n"
         << "            }\n"
         << "            rigidChange = true;\n"
         << "        }\n"
@@ -450,6 +477,7 @@ void emitCompactRuleCommandFunction(
 void emitCompactRuleFunction(
     std::ostream& out,
     const Game& game,
+    const CompactMaskConstantEmitter& masks,
     const Rule& rule,
     std::string_view suffix,
     std::string_view phase,
@@ -501,7 +529,7 @@ void emitCompactRuleFunction(
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
         const std::vector<Pattern>& row = rule.patterns[rowIndex];
         for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-            emitCompactPatternFunctions(out, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex);
+            emitCompactPatternFunctions(out, game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex);
         }
     }
 
@@ -692,6 +720,7 @@ void emitCompactRuleFunction(
 void emitCompactRulegroupFunctions(
     std::ostream& out,
     const Game& game,
+    const CompactMaskConstantEmitter& masks,
     const std::vector<std::vector<Rule>>& groups,
     const LoopPointTable& loopPoint,
     std::string_view suffix,
@@ -700,7 +729,7 @@ void emitCompactRulegroupFunctions(
     for (size_t groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
         const std::vector<Rule>& group = groups[groupIndex];
         for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-            emitCompactRuleFunction(out, game, group[ruleIndex], suffix, phase, groupIndex, ruleIndex);
+            emitCompactRuleFunction(out, game, masks, group[ruleIndex], suffix, phase, groupIndex, ruleIndex);
         }
 
         const std::string groupPrefix = compactGroupPrefix(suffix, phase, groupIndex);
@@ -1115,8 +1144,10 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
     if (!game.winConditions.empty()) {
         out << "\n";
     }
-    emitCompactRuleMaskData(out, game, suffix, "early", game.rules);
-    emitCompactRuleMaskData(out, game, suffix, "late", game.lateRules);
+    CompactMaskConstantEmitter earlyMasks(out, suffix, "early");
+    CompactMaskConstantEmitter lateMasks(out, suffix, "late");
+    emitCompactRuleMaskData(out, game, suffix, "early", game.rules, earlyMasks);
+    emitCompactRuleMaskData(out, game, suffix, "late", game.lateRules, lateMasks);
     if (hasAnyRulegroups(game.rules) || hasAnyRulegroups(game.lateRules)) {
         out << "\n";
     }
@@ -1540,8 +1571,8 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    return outcome;\n"
         << "}\n\n";
 
-    emitCompactRulegroupFunctions(out, game, game.rules, game.loopPoint, suffix, "early");
-    emitCompactRulegroupFunctions(out, game, game.lateRules, game.lateLoopPoint, suffix, "late");
+    emitCompactRulegroupFunctions(out, game, earlyMasks, game.rules, game.loopPoint, suffix, "early");
+    emitCompactRulegroupFunctions(out, game, lateMasks, game.lateRules, game.lateLoopPoint, suffix, "late");
 }
 
 } // namespace
