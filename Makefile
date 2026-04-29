@@ -307,7 +307,7 @@ help:
 	@echo "  make compact_turn_oracle_smoke     Run specialized compact turns against interpreter oracle"
 	@echo "  make compact_turn_simulation_tests Run testdata.js through specialized compact turn oracle"
 	@echo "  make compact_turn_coverage         Report native-vs-bridge compact turn coverage"
-	@echo "  make compact_turn_codegen_bringup  Build compiler-mode compact skeleton and expect oracle failure"
+	@echo "  make compact_turn_codegen_bringup  Build compiler-mode compact smoke and require oracle parity"
 	@echo "  make generator_smoke_tests         Run native generator smoke tests"
 	@echo "  make generator_benchmark           Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
@@ -578,7 +578,7 @@ compact_turn_codegen_bringup: build
 	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
 	"$$build_dir/native/puzzlescript_solver" "$(COMPACT_TURN_CODEGEN_BRINGUP_CORPUS)" --timeout-ms 1000 --jobs 1 --strategy bfs --no-solutions --quiet --json --compact-turn-oracle > "$$out_dir/bringup.json"; \
-	$(NODE) -e 'const fs=require("fs"); const path=process.argv[1]; const j=JSON.parse(fs.readFileSync(path,"utf8")); const t=j.totals; const fail=m=>{ throw new Error(m); }; if (t.levels !== 7 || t.solved !== 5 || t.errors !== 0) fail("unexpected smoke baseline"); if (!(t.compact_turn_native_attempts > 0)) fail("expected native compact attempts"); if (!(t.compact_turn_native_hits > 0)) fail("expected native compact hits"); if (!(t.compact_turn_fallbacks > 0)) fail("expected remaining compiler fallbacks"); console.log("compact_turn_codegen_bringup observed compiler-mode attempts="+t.compact_turn_native_attempts+" hits="+t.compact_turn_native_hits+" fallbacks="+t.compact_turn_fallbacks);' "$$out_dir/bringup.json"
+	$(NODE) -e 'const fs=require("fs"); const path=process.argv[1]; const j=JSON.parse(fs.readFileSync(path,"utf8")); const t=j.totals; const fail=m=>{ throw new Error(m); }; if (t.levels !== 7 || t.solved !== 5 || t.errors !== 0) fail("unexpected smoke baseline"); if (!(t.compact_turn_native_attempts > 0)) fail("expected native compact attempts"); if (t.compact_turn_native_hits !== t.compact_turn_native_attempts) fail("expected every compiler-mode native compact attempt to hit"); if (t.compact_turn_fallbacks !== 0) fail("expected no compiler-mode compact fallbacks"); if (t.compact_turn_oracle_failures !== 0) fail("expected compact oracle parity"); console.log("compact_turn_codegen_bringup observed compiler-mode attempts="+t.compact_turn_native_attempts+" hits="+t.compact_turn_native_hits+" fallbacks="+t.compact_turn_fallbacks);' "$$out_dir/bringup.json"
 
 compact_tick_simulation_tests: compact_turn_simulation_tests
 

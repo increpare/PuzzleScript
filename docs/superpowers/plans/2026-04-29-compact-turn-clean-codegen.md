@@ -281,7 +281,7 @@ Acceptance:
 - [x] Emit generated input-to-direction mapping.
 - [x] Emit player-mask and object-layer tables from compiled game data.
 - [x] Seed player collision-layer movement bits in `Scratch::liveMovements`.
-- [ ] Turn seeded movement into handled transitions once movement resolution
+- [x] Turn seeded movement into handled transitions once movement resolution
   exists.
 
 Semantics:
@@ -299,15 +299,15 @@ Acceptance:
 **Goal:** Compile generic rule matching and replacements before solving push/movement.
 
 Features:
-- one-row rules
-- multi-cell directional scans
-- object-present constraints
-- object-missing constraints
-- movement-present constraints
-- movement-missing constraints
-- object set/clear replacements
-- movement set/clear replacements
-- rulegroup loop-until-stable behavior
+- [x] one-row rules
+- [x] multi-cell directional scans
+- [x] object-present constraints
+- [x] object-missing constraints
+- [x] movement-present constraints
+- [x] movement-missing constraints
+- [x] object set/clear replacements
+- [x] movement set/clear replacements
+- [x] rulegroup loop-until-stable behavior
 
 Deferred until later:
 - ellipsis
@@ -351,7 +351,8 @@ Acceptance:
 - [x] Emit generic win-condition evaluation for compiler mode.
 - [x] Return handled compiler-mode turns for games with no early/late
   rulegroups.
-- [ ] Apply late rulegroups.
+- [x] Apply late rulegroups through the same deterministic one-row rulegroup
+  emitter used for early rules.
 - [ ] Handle restart/reset/cancel terminal treatment for solver.
 - [ ] Handle `again` policy.
 - [ ] Thread deterministic RNG for semantics that use it.
