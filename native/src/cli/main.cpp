@@ -3730,6 +3730,29 @@ std::string safeCppIdentifier(std::string_view value) {
     return out;
 }
 
+using CodeTemplateVars = std::vector<std::pair<std::string, std::string>>;
+
+std::string renderCodeTemplate(std::string_view templateText, const CodeTemplateVars& vars) {
+    std::string rendered(templateText);
+    for (const auto& [name, value] : vars) {
+        const std::string marker = "{{" + name + "}}";
+        size_t position = 0;
+        while ((position = rendered.find(marker, position)) != std::string::npos) {
+            rendered.replace(position, marker.size(), value);
+            position += value.size();
+        }
+    }
+    return rendered;
+}
+
+void appendCodeTemplate(
+    std::ostream& out,
+    std::string_view templateText,
+    const CodeTemplateVars& vars = {}
+) {
+    out << renderCodeTemplate(templateText, vars);
+}
+
 bool isCompilableReplacement(const puzzlescript::Replacement& replacement) {
     return !replacement.hasRandomEntityMask && !replacement.hasRandomDirMask;
 }
@@ -5967,6 +5990,436 @@ void emitCompactDirectCellObjectRuleBody(
         << "            }\n";
 }
 
+void emitCompactDirectCellObjectGroups(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    const std::vector<std::vector<puzzlescript::Rule>>& groups
+) {
+    for (const auto& group : groups) {
+        appendCodeTemplate(out, R"cpp(    {
+        bool groupChanged = true;
+        int loopCount = 0;
+        while (groupChanged && loopCount++ < 200) {
+            groupChanged = false;
+)cpp");
+        for (const auto& rule : group) {
+            emitCompactDirectCellObjectRuleBody(out, game, rule);
+        }
+        appendCodeTemplate(out, R"cpp(        }
+    }
+)cpp");
+    }
+}
+
+void emitCompactNativeTurnPrologue(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    const CompactTurnSupport& support
+) {
+    appendCodeTemplate(out, R"cpp(    if (options.emitAudio) {
+        return {false, {}};
+    }
+    constexpr int32_t kObjectCount = {{object_count}};
+    constexpr int32_t kPlayerObject = {{player_object_id}};
+    const int32_t width = state.width;
+    const int32_t height = state.height;
+    if (state.objectBits == nullptr || width <= 0 || height <= 0) {
+        return {false, {}};
+    }
+    const int32_t tileCount = width * height;
+    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    if (state.objectBitWordCount < cellWordCount * static_cast<size_t>(kObjectCount)) {
+        return {false, {}};
+    }
+    const bool profileCompactTurn = puzzlescript::runtimeCountersEnabled();
+    uint64_t profileMarkNs = profileCompactTurn ? puzzlescript::runtimeCounterNowNs() : 0;
+    auto addProfileNs = [&](puzzlescript::RuntimeCounterId id) {
+        if (!profileCompactTurn) {
+            return;
+        }
+        const uint64_t nowNs = puzzlescript::runtimeCounterNowNs();
+        puzzlescript::addRuntimeCounter(id, nowNs - profileMarkNs);
+        profileMarkNs = nowNs;
+    };
+    if (profileCompactTurn) {
+        puzzlescript::addRuntimeCounter(puzzlescript::RuntimeCounterId::CompactTurnNativeCalls);
+    }
+    int32_t directionMask = 0;
+    int32_t dx = 0;
+    int32_t dy = 0;
+    switch (input) {
+        case PS_INPUT_UP: directionMask = 1; dy = -1; break;
+        case PS_INPUT_DOWN: directionMask = 2; dy = 1; break;
+        case PS_INPUT_LEFT: directionMask = 4; dx = -1; break;
+        case PS_INPUT_RIGHT: directionMask = 8; dx = 1; break;
+        case PS_INPUT_ACTION: directionMask = 16; break;
+        case PS_INPUT_TICK: break;
+        default: return {false, {}};
+    }
+    const size_t playerBase = static_cast<size_t>(kPlayerObject) * cellWordCount;
+    bool hasPlayer = false;
+    bool moved = false;
+    bool seeded = false;
+    if (directionMask != 0) {
+        for (size_t word = 0; word < cellWordCount; ++word) {
+            if (state.objectBits[playerBase + word] != 0) {
+                seeded = true;
+                break;
+            }
+        }
+    }
+    bool ruleChanged = false;
+    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnSetupNs);
+)cpp", {
+        {"object_count", std::to_string(game.objectCount)},
+        {"player_object_id", std::to_string(support.playerObjectId)},
+    });
+}
+
+void emitCompactMultiPlayerMovementOnly(
+    std::ostream& out,
+    const CompactTurnSupport& support
+) {
+    appendCodeTemplate(out, R"cpp(    if (directionMask != 0) {
+        std::vector<uint64_t> pending(cellWordCount, 0);
+)cpp");
+    for (const int32_t objectId : support.playerObjectIds) {
+        appendCodeTemplate(out, R"cpp(        for (size_t word = 0; word < cellWordCount; ++word) {
+            pending[word] |= state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + word];
+        }
+)cpp", {{"object_id", std::to_string(objectId)}});
+    }
+    appendCodeTemplate(out, R"cpp(        for (size_t word = 0; word < cellWordCount; ++word) {
+            if (pending[word] != 0) {
+                hasPlayer = true;
+                break;
+            }
+        }
+        bool scanMoved = directionMask != 16;
+        while (scanMoved) {
+            scanMoved = false;
+            for (int32_t tile = 0; tile < tileCount; ++tile) {
+                const size_t sourceWordIndex = static_cast<size_t>(tile >> 6);
+                const uint64_t sourceBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);
+                if ((pending[sourceWordIndex] & sourceBit) == 0) {
+                    continue;
+                }
+                const int32_t x = tile / height;
+                const int32_t y = tile % height;
+                const int32_t targetX = x + dx;
+                const int32_t targetY = y + dy;
+                if (targetX < 0 || targetX >= width || targetY < 0 || targetY >= height) {
+                    continue;
+                }
+                const int32_t targetTile = targetX * height + targetY;
+                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);
+                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);
+                bool blocked = false;
+)cpp");
+    for (const int32_t objectId : support.playerLayerObjectIds) {
+        appendCodeTemplate(out, R"cpp(                blocked = blocked || ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0);
+)cpp", {{"object_id", std::to_string(objectId)}});
+    }
+    appendCodeTemplate(out, R"cpp(                if (blocked) {
+                    continue;
+                }
+)cpp");
+    for (const int32_t objectId : support.playerLayerObjectIds) {
+        appendCodeTemplate(out, R"cpp(                if ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + sourceWordIndex] & sourceBit) != 0) {
+                    state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + sourceWordIndex] &= ~sourceBit;
+                    state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] |= targetBit;
+                }
+)cpp", {{"object_id", std::to_string(objectId)}});
+    }
+    appendCodeTemplate(out, R"cpp(                pending[sourceWordIndex] &= ~sourceBit;
+                moved = true;
+                scanMoved = true;
+            }
+        }
+    }
+)cpp");
+}
+
+void emitCompactPushConsumeTargetSetup(
+    std::ostream& out,
+    const CompactTurnSupport& support
+) {
+    appendCodeTemplate(out, R"cpp(                int32_t pushedObject = -1;
+                size_t pushBase = 0;
+                int32_t consumedObject = -1;
+)cpp");
+    for (const int32_t pushObjectId : support.pushObjectIds) {
+        appendCodeTemplate(out, R"cpp(                if (directionMask != 16 && pushedObject < 0 && ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0)) {
+                    pushedObject = {{object_id}};
+                    pushBase = static_cast<size_t>({{object_id}}) * cellWordCount;
+                }
+)cpp", {{"object_id", std::to_string(pushObjectId)}});
+    }
+    for (const int32_t consumeObjectId : support.consumeObjectIds) {
+        appendCodeTemplate(out, R"cpp(                if (directionMask != 16 && consumedObject < 0 && ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0)) {
+                    consumedObject = {{object_id}};
+                }
+)cpp", {{"object_id", std::to_string(consumeObjectId)}});
+    }
+    appendCodeTemplate(out, R"cpp(                const bool targetHasPush = pushedObject >= 0;
+                const bool targetHasConsume = consumedObject >= 0;
+                if (targetHasPush) {
+)cpp");
+}
+
+void emitCompactPushChainMovement(
+    std::ostream& out,
+    const CompactTurnSupport& support
+) {
+    appendCodeTemplate(out, R"cpp(                    bool pushBlocked = false;
+                    int32_t pushX = targetX;
+                    int32_t pushY = targetY;
+                    int32_t pushTile = targetTile;
+                    while (true) {
+                        pushX += dx;
+                        pushY += dy;
+                        if (pushX < 0 || pushX >= width || pushY < 0 || pushY >= height) {
+                            pushBlocked = true;
+                            break;
+                        }
+                        pushTile = pushX * height + pushY;
+                        const size_t pushWordIndex = static_cast<size_t>(pushTile >> 6);
+                        const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);
+                        int32_t chainObject = -1;
+)cpp");
+    for (const int32_t pushObjectId : support.pushObjectIds) {
+        appendCodeTemplate(out, R"cpp(                        if (chainObject < 0 && ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + pushWordIndex] & pushBit) != 0)) {
+                            chainObject = {{object_id}};
+                        }
+)cpp", {{"object_id", std::to_string(pushObjectId)}});
+    }
+    appendCodeTemplate(out, R"cpp(                        bool layerBlocked = false;
+)cpp");
+    for (const int32_t objectId : support.pushLayerObjectIds) {
+        appendCodeTemplate(out, R"cpp(                        layerBlocked = layerBlocked || ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + pushWordIndex] & pushBit) != 0);
+)cpp", {{"object_id", std::to_string(objectId)}});
+    }
+    appendCodeTemplate(out, R"cpp(                        if (chainObject < 0) {
+                            pushBlocked = layerBlocked;
+                            break;
+                        }
+                    }
+                    if (pushBlocked) {
+                        continue;
+                    }
+                    int32_t writeTile = pushTile;
+                    while (writeTile != targetTile) {
+                        const int32_t writeX = writeTile / height;
+                        const int32_t writeY = writeTile % height;
+                        const int32_t readX = writeX - dx;
+                        const int32_t readY = writeY - dy;
+                        const int32_t readTile = readX * height + readY;
+                        const size_t writeWordIndex = static_cast<size_t>(writeTile >> 6);
+                        const uint64_t writeBit = uint64_t{1} << static_cast<uint32_t>(writeTile & 63);
+                        const size_t readWordIndex = static_cast<size_t>(readTile >> 6);
+                        const uint64_t readBit = uint64_t{1} << static_cast<uint32_t>(readTile & 63);
+                        int32_t movedObject = -1;
+)cpp");
+    for (const int32_t pushObjectId : support.pushObjectIds) {
+        appendCodeTemplate(out, R"cpp(                        if (movedObject < 0 && ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + readWordIndex] & readBit) != 0)) {
+                            movedObject = {{object_id}};
+                        }
+)cpp", {{"object_id", std::to_string(pushObjectId)}});
+    }
+    appendCodeTemplate(out, R"cpp(                        if (movedObject < 0) {
+                            pushBlocked = true;
+                            break;
+                        }
+                        const size_t movedBase = static_cast<size_t>(movedObject) * cellWordCount;
+                        state.objectBits[movedBase + readWordIndex] &= ~readBit;
+                        state.objectBits[movedBase + writeWordIndex] |= writeBit;
+                        writeTile = readTile;
+                    }
+                    if (pushBlocked) {
+                        continue;
+                    }
+)cpp");
+}
+
+void emitCompactSimplePushMovement(
+    std::ostream& out,
+    const CompactTurnSupport& support
+) {
+    appendCodeTemplate(out, R"cpp(                    const int32_t pushX = targetX + dx;
+                    const int32_t pushY = targetY + dy;
+                    if (pushX < 0 || pushX >= width || pushY < 0 || pushY >= height) {
+                        continue;
+                    }
+                    const int32_t pushTile = pushX * height + pushY;
+                    const size_t pushWordIndex = static_cast<size_t>(pushTile >> 6);
+                    const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);
+                    bool pushBlocked = false;
+)cpp");
+    for (const int32_t objectId : support.pushLayerObjectIds) {
+        appendCodeTemplate(out, R"cpp(                    pushBlocked = pushBlocked || ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + pushWordIndex] & pushBit) != 0);
+)cpp", {{"object_id", std::to_string(objectId)}});
+    }
+    appendCodeTemplate(out, R"cpp(                    if (pushBlocked) {
+                        continue;
+                    }
+                    state.objectBits[pushBase + targetWordIndex] &= ~targetBit;
+                    state.objectBits[pushBase + pushWordIndex] |= pushBit;
+)cpp");
+}
+
+void emitCompactTargetClearAndBlockers(
+    std::ostream& out,
+    const CompactTurnSupport& support
+) {
+    if (support.simpleClearTarget) {
+        appendCodeTemplate(out, R"cpp(                    bool targetClearChanged = false;
+)cpp");
+        for (const int32_t objectId : support.clearTargetObjectIds) {
+            appendCodeTemplate(out, R"cpp(                    if ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0) {
+                        state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] &= ~targetBit;
+                        targetClearChanged = true;
+                    }
+)cpp", {{"object_id", std::to_string(objectId)}});
+        }
+        appendCodeTemplate(out, R"cpp(                    ruleChanged = ruleChanged || targetClearChanged;
+)cpp");
+    }
+    for (const int32_t objectId : support.playerLayerObjectIds) {
+        appendCodeTemplate(out, R"cpp(                    blocked = blocked || ((state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] & targetBit) != 0);
+)cpp", {{"object_id", std::to_string(objectId)}});
+    }
+}
+
+void emitCompactSinglePlayerMovement(
+    std::ostream& out,
+    const CompactTurnSupport& support
+) {
+    appendCodeTemplate(out, R"cpp(    if (directionMask != 0) {
+        for (size_t sourceWordIndex = 0; sourceWordIndex < cellWordCount; ++sourceWordIndex) {
+            uint64_t players = state.objectBits[playerBase + sourceWordIndex];
+            while (players != 0) {
+                const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(players));
+                const int32_t tile = static_cast<int32_t>(sourceWordIndex * 64 + bit);
+                players &= players - 1;
+                if (tile >= tileCount) {
+                    continue;
+                }
+                hasPlayer = true;
+                const int32_t x = tile / height;
+                const int32_t y = tile % height;
+                const int32_t targetX = x + dx;
+                const int32_t targetY = y + dy;
+                if (targetX < 0 || targetX >= width || targetY < 0 || targetY >= height) {
+                    continue;
+                }
+                const int32_t targetTile = targetX * height + targetY;
+                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);
+                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);
+                bool blocked = false;
+)cpp");
+    if (support.simplePush || support.simpleConsume) {
+        emitCompactPushConsumeTargetSetup(out, support);
+        if (support.simplePushChain) {
+            emitCompactPushChainMovement(out, support);
+        } else {
+            emitCompactSimplePushMovement(out, support);
+        }
+        appendCodeTemplate(out, R"cpp(                } else if (targetHasConsume) {
+)cpp");
+        for (const int32_t objectId : support.playerLayerObjectIds) {
+            appendCodeTemplate(out, R"cpp(                    state.objectBits[static_cast<size_t>({{object_id}}) * cellWordCount + targetWordIndex] &= ~targetBit;
+)cpp", {{"object_id", std::to_string(objectId)}});
+        }
+        appendCodeTemplate(out, R"cpp(                } else if (directionMask != 16) {
+)cpp");
+    } else {
+        appendCodeTemplate(out, R"cpp(                if (directionMask != 16) {
+)cpp");
+    }
+    emitCompactTargetClearAndBlockers(out, support);
+    appendCodeTemplate(out, R"cpp(                }
+                if (blocked) {
+                    continue;
+                }
+                const uint64_t sourceBit = uint64_t{1} << bit;
+                state.objectBits[playerBase + sourceWordIndex] &= ~sourceBit;
+                state.objectBits[playerBase + targetWordIndex] |= targetBit;
+                moved = true;
+            }
+        }
+    }
+)cpp");
+}
+
+void emitCompactMovement(
+    std::ostream& out,
+    const CompactTurnSupport& support
+) {
+    const bool multiPlayerMovementOnly = !support.simplePush
+        && !support.simpleConsume
+        && support.playerObjectIds.size() > 1;
+    if (multiPlayerMovementOnly) {
+        emitCompactMultiPlayerMovementOnly(out, support);
+    } else {
+        emitCompactSinglePlayerMovement(out, support);
+    }
+}
+
+void emitCompactWinConditions(
+    std::ostream& out,
+    const CompactTurnSupport& support
+) {
+    out << "    bool won = " << (support.winConditions.empty() ? "false" : "true") << ";\n";
+    for (const auto& condition : support.winConditions) {
+        appendCodeTemplate(out, R"cpp(    if (won) {
+        bool conditionPassed = {{initial_condition_passed}};
+        for (int32_t tile = 0; tile < tileCount; ++tile) {
+            const size_t tileWord = static_cast<size_t>(tile >> 6);
+            const uint64_t tileBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);
+            const bool match1 = {{match1}};
+            const bool match2 = {{match2}};
+)cpp", {
+            {"initial_condition_passed", condition.quantifier == 0 ? "false" : "true"},
+            {"match1", compactObjectMaskMatchExpression(condition.filter1ObjectIds, condition.aggregate1, "tileWord", "tileBit")},
+            {"match2", compactObjectMaskMatchExpression(condition.filter2ObjectIds, condition.aggregate2, "tileWord", "tileBit")},
+        });
+        if (condition.quantifier == -1) {
+            appendCodeTemplate(out, R"cpp(            if (match1 && match2) {
+                conditionPassed = false;
+                break;
+            }
+)cpp");
+        } else if (condition.quantifier == 0) {
+            appendCodeTemplate(out, R"cpp(            if (match1 && match2) {
+                conditionPassed = true;
+                break;
+            }
+)cpp");
+        } else {
+            appendCodeTemplate(out, R"cpp(            if (match1 && !match2) {
+                conditionPassed = false;
+                break;
+            }
+)cpp");
+        }
+        appendCodeTemplate(out, R"cpp(        }
+        won = conditionPassed;
+    }
+)cpp");
+    }
+}
+
+void emitCompactTurnResultEpilogue(std::ostream& out) {
+    appendCodeTemplate(out, R"cpp(    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnWinNs);
+    ps_step_result result{};
+    result.changed = seeded || ruleChanged || moved;
+    result.won = won;
+    return {true, result};
+}
+
+)cpp");
+}
+
 std::string generateCompiledRulesCoverageJson(
     const std::vector<CodegenSource>& sources,
     const CompiledRulesOptions& options,
@@ -6451,13 +6904,16 @@ std::string generateCompiledRulesCpp(
             << "    {" << (!compactTurnOnly && tickSupport.wholeTurnSupported ? "true" : "false")
             << ", " << cppStringLiteral(compactTurnOnly ? "compact_turn_only" : tickSupport.wholeTurnFallbackReason) << "},\n"
             << "};\n\n"
-            << "SpecializedCompactTurnOutcome specialized_compact_turn_source_" << sourceIndex << "(\n"
-            << "    const Game& game,\n"
-            << "    CompactStateView state,\n"
-            << "    ps_input input,\n"
-            << "    RuntimeStepOptions options\n"
-            << ") {\n"
-            << (compactTurnSupport.interpreterBridge ? "" : "    (void)game;\n");
+            << renderCodeTemplate(R"cpp(SpecializedCompactTurnOutcome specialized_compact_turn_source_{{source_index}}(
+    const Game& game,
+    CompactStateView state,
+    ps_input input,
+    RuntimeStepOptions options
+) {
+{{game_unused}})cpp", {
+                {"source_index", std::to_string(sourceIndex)},
+                {"game_unused", compactTurnSupport.interpreterBridge ? "" : "    (void)game;\n"},
+            });
         if (!compactTurnSupport.supported) {
             out << "    (void)state;\n"
                 << "    (void)options;\n"
@@ -6468,343 +6924,19 @@ std::string generateCompiledRulesCpp(
             out << "    return compactStateInterpretedTurnBridge(game, state, input, options);\n"
                 << "}\n\n";
         } else {
-            out << "    if (options.emitAudio) {\n"
-                << "        return {false, {}};\n"
-                << "    }\n"
-                << "    constexpr int32_t kObjectCount = " << game.objectCount << ";\n"
-                << "    constexpr int32_t kPlayerObject = " << compactTurnSupport.playerObjectId << ";\n"
-                << "    const int32_t width = state.width;\n"
-                << "    const int32_t height = state.height;\n"
-                << "    if (state.objectBits == nullptr || width <= 0 || height <= 0) {\n"
-                << "        return {false, {}};\n"
-                << "    }\n"
-                << "    const int32_t tileCount = width * height;\n"
-                << "    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);\n"
-                << "    if (state.objectBitWordCount < cellWordCount * static_cast<size_t>(kObjectCount)) {\n"
-                << "        return {false, {}};\n"
-                << "    }\n"
-                << "    const bool profileCompactTurn = puzzlescript::runtimeCountersEnabled();\n"
-                << "    uint64_t profileMarkNs = profileCompactTurn ? puzzlescript::runtimeCounterNowNs() : 0;\n"
-                << "    auto addProfileNs = [&](puzzlescript::RuntimeCounterId id) {\n"
-                << "        if (!profileCompactTurn) {\n"
-                << "            return;\n"
-                << "        }\n"
-                << "        const uint64_t nowNs = puzzlescript::runtimeCounterNowNs();\n"
-                << "        puzzlescript::addRuntimeCounter(id, nowNs - profileMarkNs);\n"
-                << "        profileMarkNs = nowNs;\n"
-                << "    };\n"
-                << "    if (profileCompactTurn) {\n"
-                << "        puzzlescript::addRuntimeCounter(puzzlescript::RuntimeCounterId::CompactTurnNativeCalls);\n"
-                << "    }\n"
-                << "    int32_t directionMask = 0;\n"
-                << "    int32_t dx = 0;\n"
-                << "    int32_t dy = 0;\n"
-                << "    switch (input) {\n"
-                << "        case PS_INPUT_UP: directionMask = 1; dy = -1; break;\n"
-                << "        case PS_INPUT_DOWN: directionMask = 2; dy = 1; break;\n"
-                << "        case PS_INPUT_LEFT: directionMask = 4; dx = -1; break;\n"
-                << "        case PS_INPUT_RIGHT: directionMask = 8; dx = 1; break;\n"
-                << "        case PS_INPUT_ACTION: directionMask = 16; break;\n"
-                << "        case PS_INPUT_TICK: break;\n"
-                << "        default: return {false, {}};\n"
-                << "    }\n"
-                << "    const size_t playerBase = static_cast<size_t>(kPlayerObject) * cellWordCount;\n"
-                << "    bool hasPlayer = false;\n"
-                << "    bool moved = false;\n"
-                << "    bool seeded = false;\n"
-                << "    if (directionMask != 0) {\n"
-                << "        for (size_t word = 0; word < cellWordCount; ++word) {\n"
-                << "            if (state.objectBits[playerBase + word] != 0) {\n"
-                << "                seeded = true;\n"
-                << "                break;\n"
-                << "            }\n"
-                << "        }\n"
-                << "    }\n"
-                << "    bool ruleChanged = false;\n"
-                << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnSetupNs);\n";
+            emitCompactNativeTurnPrologue(out, game, compactTurnSupport);
             if (compactTurnSupport.directCellObjectRules) {
-                for (size_t groupIndex = 0; groupIndex < game.rules.size(); ++groupIndex) {
-                    const auto& group = game.rules[groupIndex];
-                    out << "    {\n"
-                        << "        bool groupChanged = true;\n"
-                        << "        int loopCount = 0;\n"
-                        << "        while (groupChanged && loopCount++ < 200) {\n"
-                        << "            groupChanged = false;\n";
-                    for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                        emitCompactDirectCellObjectRuleBody(out, game, group[ruleIndex]);
-                    }
-                    out << "        }\n"
-                        << "    }\n";
-                }
+                emitCompactDirectCellObjectGroups(out, game, game.rules);
             }
             out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnEarlyRulesNs);\n";
-            const bool multiPlayerMovementOnly = !compactTurnSupport.simplePush
-                && !compactTurnSupport.simpleConsume
-                && compactTurnSupport.playerObjectIds.size() > 1;
-            if (multiPlayerMovementOnly) {
-                out << "    if (directionMask != 0) {\n"
-                    << "        std::vector<uint64_t> pending(cellWordCount, 0);\n";
-                for (const int32_t objectId : compactTurnSupport.playerObjectIds) {
-                    out << "        for (size_t word = 0; word < cellWordCount; ++word) {\n"
-                        << "            pending[word] |= state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + word];\n"
-                        << "        }\n";
-                }
-                out << "        for (size_t word = 0; word < cellWordCount; ++word) {\n"
-                    << "            if (pending[word] != 0) {\n"
-                    << "                hasPlayer = true;\n"
-                    << "                break;\n"
-                    << "            }\n"
-                    << "        }\n"
-                    << "        bool scanMoved = directionMask != 16;\n"
-                    << "        while (scanMoved) {\n"
-                    << "            scanMoved = false;\n"
-                    << "            for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
-                    << "                const size_t sourceWordIndex = static_cast<size_t>(tile >> 6);\n"
-                    << "                const uint64_t sourceBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);\n"
-                    << "                if ((pending[sourceWordIndex] & sourceBit) == 0) {\n"
-                    << "                    continue;\n"
-                    << "                }\n"
-                    << "                const int32_t x = tile / height;\n"
-                    << "                const int32_t y = tile % height;\n"
-                    << "                const int32_t targetX = x + dx;\n"
-                    << "                const int32_t targetY = y + dy;\n"
-                    << "                if (targetX < 0 || targetX >= width || targetY < 0 || targetY >= height) {\n"
-                    << "                    continue;\n"
-                    << "                }\n"
-                    << "                const int32_t targetTile = targetX * height + targetY;\n"
-                    << "                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);\n"
-                    << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
-                    << "                bool blocked = false;\n";
-                for (const int32_t objectId : compactTurnSupport.playerLayerObjectIds) {
-                    out << "                blocked = blocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0);\n";
-                }
-                out << "                if (blocked) {\n"
-                    << "                    continue;\n"
-                    << "                }\n";
-                for (const int32_t objectId : compactTurnSupport.playerLayerObjectIds) {
-                    out << "                if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + sourceWordIndex] & sourceBit) != 0) {\n"
-                        << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + sourceWordIndex] &= ~sourceBit;\n"
-                        << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] |= targetBit;\n"
-                        << "                }\n";
-                }
-                out << "                pending[sourceWordIndex] &= ~sourceBit;\n"
-                    << "                moved = true;\n"
-                    << "                scanMoved = true;\n"
-                    << "            }\n"
-                    << "        }\n"
-                    << "    }\n";
-            } else {
-                out << "    if (directionMask != 0) {\n"
-                    << "        for (size_t sourceWordIndex = 0; sourceWordIndex < cellWordCount; ++sourceWordIndex) {\n"
-                    << "            uint64_t players = state.objectBits[playerBase + sourceWordIndex];\n"
-                    << "            while (players != 0) {\n"
-                    << "                const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(players));\n"
-                    << "                const int32_t tile = static_cast<int32_t>(sourceWordIndex * 64 + bit);\n"
-                    << "                players &= players - 1;\n"
-                    << "                if (tile >= tileCount) {\n"
-                    << "                    continue;\n"
-                    << "                }\n"
-                    << "                hasPlayer = true;\n"
-                    << "                const int32_t x = tile / height;\n"
-                    << "                const int32_t y = tile % height;\n"
-                    << "                const int32_t targetX = x + dx;\n"
-                    << "                const int32_t targetY = y + dy;\n"
-                    << "                if (targetX < 0 || targetX >= width || targetY < 0 || targetY >= height) {\n"
-                    << "                    continue;\n"
-                    << "                }\n"
-                    << "                const int32_t targetTile = targetX * height + targetY;\n"
-                    << "                const size_t targetWordIndex = static_cast<size_t>(targetTile >> 6);\n"
-                    << "                const uint64_t targetBit = uint64_t{1} << static_cast<uint32_t>(targetTile & 63);\n"
-                    << "                bool blocked = false;\n";
-            if (compactTurnSupport.simplePush || compactTurnSupport.simpleConsume) {
-                out << "                int32_t pushedObject = -1;\n"
-                    << "                size_t pushBase = 0;\n"
-                    << "                int32_t consumedObject = -1;\n";
-                for (const int32_t pushObjectId : compactTurnSupport.pushObjectIds) {
-                    out << "                if (directionMask != 16 && pushedObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0)) {\n"
-                        << "                    pushedObject = " << pushObjectId << ";\n"
-                        << "                    pushBase = static_cast<size_t>(" << pushObjectId << ") * cellWordCount;\n"
-                        << "                }\n";
-                }
-                for (const int32_t consumeObjectId : compactTurnSupport.consumeObjectIds) {
-                    out << "                if (directionMask != 16 && consumedObject < 0 && ((state.objectBits[static_cast<size_t>(" << consumeObjectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0)) {\n"
-                        << "                    consumedObject = " << consumeObjectId << ";\n"
-                        << "                }\n";
-                }
-                out << "                const bool targetHasPush = pushedObject >= 0;\n"
-                    << "                const bool targetHasConsume = consumedObject >= 0;\n"
-                    << "                if (targetHasPush) {\n";
-                if (compactTurnSupport.simplePushChain) {
-                    out << "                    bool pushBlocked = false;\n"
-                        << "                    int32_t pushX = targetX;\n"
-                        << "                    int32_t pushY = targetY;\n"
-                        << "                    int32_t pushTile = targetTile;\n"
-                        << "                    while (true) {\n"
-                        << "                        pushX += dx;\n"
-                        << "                        pushY += dy;\n"
-                        << "                        if (pushX < 0 || pushX >= width || pushY < 0 || pushY >= height) {\n"
-                        << "                            pushBlocked = true;\n"
-                        << "                            break;\n"
-                        << "                        }\n"
-                        << "                        pushTile = pushX * height + pushY;\n"
-                        << "                        const size_t pushWordIndex = static_cast<size_t>(pushTile >> 6);\n"
-                        << "                        const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);\n"
-                        << "                        int32_t chainObject = -1;\n";
-                    for (const int32_t pushObjectId : compactTurnSupport.pushObjectIds) {
-                        out << "                        if (chainObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0)) {\n"
-                            << "                            chainObject = " << pushObjectId << ";\n"
-                            << "                        }\n";
-                    }
-                    out << "                        bool layerBlocked = false;\n";
-                    for (const int32_t objectId : compactTurnSupport.pushLayerObjectIds) {
-                        out << "                        layerBlocked = layerBlocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0);\n";
-                    }
-                    out << "                        if (chainObject < 0) {\n"
-                        << "                            pushBlocked = layerBlocked;\n"
-                        << "                            break;\n"
-                        << "                        }\n"
-                        << "                    }\n"
-                        << "                    if (pushBlocked) {\n"
-                        << "                        continue;\n"
-                        << "                    }\n"
-                        << "                    int32_t writeTile = pushTile;\n"
-                        << "                    while (writeTile != targetTile) {\n"
-                        << "                        const int32_t writeX = writeTile / height;\n"
-                        << "                        const int32_t writeY = writeTile % height;\n"
-                        << "                        const int32_t readX = writeX - dx;\n"
-                        << "                        const int32_t readY = writeY - dy;\n"
-                        << "                        const int32_t readTile = readX * height + readY;\n"
-                        << "                        const size_t writeWordIndex = static_cast<size_t>(writeTile >> 6);\n"
-                        << "                        const uint64_t writeBit = uint64_t{1} << static_cast<uint32_t>(writeTile & 63);\n"
-                        << "                        const size_t readWordIndex = static_cast<size_t>(readTile >> 6);\n"
-                        << "                        const uint64_t readBit = uint64_t{1} << static_cast<uint32_t>(readTile & 63);\n"
-                        << "                        int32_t movedObject = -1;\n";
-                    for (const int32_t pushObjectId : compactTurnSupport.pushObjectIds) {
-                        out << "                        if (movedObject < 0 && ((state.objectBits[static_cast<size_t>(" << pushObjectId << ") * cellWordCount + readWordIndex] & readBit) != 0)) {\n"
-                            << "                            movedObject = " << pushObjectId << ";\n"
-                            << "                        }\n";
-                    }
-                    out << "                        if (movedObject < 0) {\n"
-                        << "                            pushBlocked = true;\n"
-                        << "                            break;\n"
-                        << "                        }\n"
-                        << "                        const size_t movedBase = static_cast<size_t>(movedObject) * cellWordCount;\n"
-                        << "                        state.objectBits[movedBase + readWordIndex] &= ~readBit;\n"
-                        << "                        state.objectBits[movedBase + writeWordIndex] |= writeBit;\n"
-                        << "                        writeTile = readTile;\n"
-                        << "                    }\n"
-                        << "                    if (pushBlocked) {\n"
-                        << "                        continue;\n"
-                        << "                    }\n";
-                } else {
-                    out << "                    const int32_t pushX = targetX + dx;\n"
-                        << "                    const int32_t pushY = targetY + dy;\n"
-                        << "                    if (pushX < 0 || pushX >= width || pushY < 0 || pushY >= height) {\n"
-                        << "                        continue;\n"
-                        << "                    }\n"
-                        << "                    const int32_t pushTile = pushX * height + pushY;\n"
-                        << "                    const size_t pushWordIndex = static_cast<size_t>(pushTile >> 6);\n"
-                        << "                    const uint64_t pushBit = uint64_t{1} << static_cast<uint32_t>(pushTile & 63);\n"
-                        << "                    bool pushBlocked = false;\n";
-                    for (const int32_t objectId : compactTurnSupport.pushLayerObjectIds) {
-                        out << "                    pushBlocked = pushBlocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + pushWordIndex] & pushBit) != 0);\n";
-                    }
-                    out << "                    if (pushBlocked) {\n"
-                        << "                        continue;\n"
-                        << "                    }\n"
-                        << "                    state.objectBits[pushBase + targetWordIndex] &= ~targetBit;\n"
-                        << "                    state.objectBits[pushBase + pushWordIndex] |= pushBit;\n";
-                }
-                out << "                } else if (targetHasConsume) {\n";
-                for (const int32_t objectId : compactTurnSupport.playerLayerObjectIds) {
-                    out << "                    state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] &= ~targetBit;\n";
-                }
-                out << "                } else if (directionMask != 16) {\n";
-            } else {
-                out << "                if (directionMask != 16) {\n";
-            }
-            if (compactTurnSupport.simpleClearTarget) {
-                out << "                    bool targetClearChanged = false;\n";
-                for (const int32_t objectId : compactTurnSupport.clearTargetObjectIds) {
-                    out << "                    if ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0) {\n"
-                        << "                        state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] &= ~targetBit;\n"
-                        << "                        targetClearChanged = true;\n"
-                        << "                    }\n";
-                }
-                out << "                    ruleChanged = ruleChanged || targetClearChanged;\n";
-            }
-            for (const int32_t objectId : compactTurnSupport.playerLayerObjectIds) {
-                out << "                    blocked = blocked || ((state.objectBits[static_cast<size_t>(" << objectId << ") * cellWordCount + targetWordIndex] & targetBit) != 0);\n";
-            }
-            out << "                }\n"
-                << "                if (blocked) {\n"
-                << "                    continue;\n"
-                << "                }\n"
-                << "                const uint64_t sourceBit = uint64_t{1} << bit;\n"
-                << "                state.objectBits[playerBase + sourceWordIndex] &= ~sourceBit;\n"
-                << "                state.objectBits[playerBase + targetWordIndex] |= targetBit;\n"
-                << "                moved = true;\n"
-                << "            }\n"
-                << "        }\n"
-                    << "    }\n";
-            }
+            emitCompactMovement(out, compactTurnSupport);
             out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnMovementNs);\n";
             if (compactTurnSupport.directLateCellObjectRules) {
-                for (size_t groupIndex = 0; groupIndex < game.lateRules.size(); ++groupIndex) {
-                    const auto& group = game.lateRules[groupIndex];
-                    out << "    {\n"
-                        << "        bool groupChanged = true;\n"
-                        << "        int loopCount = 0;\n"
-                        << "        while (groupChanged && loopCount++ < 200) {\n"
-                        << "            groupChanged = false;\n";
-                    for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-                        emitCompactDirectCellObjectRuleBody(out, game, group[ruleIndex]);
-                    }
-                    out << "        }\n"
-                        << "    }\n";
-                }
+                emitCompactDirectCellObjectGroups(out, game, game.lateRules);
             }
             out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnLateRulesNs);\n";
-            out
-                << "    bool won = " << (compactTurnSupport.winConditions.empty() ? "false" : "true") << ";\n";
-            for (size_t conditionIndex = 0; conditionIndex < compactTurnSupport.winConditions.size(); ++conditionIndex) {
-                const auto& condition = compactTurnSupport.winConditions[conditionIndex];
-                out << "    if (won) {\n"
-                    << "        bool conditionPassed = " << (condition.quantifier == 0 ? "false" : "true") << ";\n"
-                    << "        for (int32_t tile = 0; tile < tileCount; ++tile) {\n"
-                    << "            const size_t tileWord = static_cast<size_t>(tile >> 6);\n"
-                    << "            const uint64_t tileBit = uint64_t{1} << static_cast<uint32_t>(tile & 63);\n"
-                    << "            const bool match1 = "
-                    << compactObjectMaskMatchExpression(condition.filter1ObjectIds, condition.aggregate1, "tileWord", "tileBit") << ";\n"
-                    << "            const bool match2 = "
-                    << compactObjectMaskMatchExpression(condition.filter2ObjectIds, condition.aggregate2, "tileWord", "tileBit") << ";\n";
-                if (condition.quantifier == -1) {
-                    out << "            if (match1 && match2) {\n"
-                        << "                conditionPassed = false;\n"
-                        << "                break;\n"
-                        << "            }\n";
-                } else if (condition.quantifier == 0) {
-                    out << "            if (match1 && match2) {\n"
-                        << "                conditionPassed = true;\n"
-                        << "                break;\n"
-                        << "            }\n";
-                } else {
-                    out << "            if (match1 && !match2) {\n"
-                        << "                conditionPassed = false;\n"
-                        << "                break;\n"
-                        << "            }\n";
-                }
-                out << "        }\n"
-                    << "        won = conditionPassed;\n"
-                    << "    }\n";
-            }
-            out
-                << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnWinNs);\n"
-                << "    ps_step_result result{};\n"
-                << "    result.changed = seeded || ruleChanged || moved;\n"
-                << "    result.won = won;\n"
-                << "    return {true, result};\n"
-                << "}\n\n";
+            emitCompactWinConditions(out, compactTurnSupport);
+            emitCompactTurnResultEpilogue(out);
         }
         out
             << "const SpecializedCompactTurnBackend specialized_compact_turn_backend_" << sourceIndex << " = {\n"
