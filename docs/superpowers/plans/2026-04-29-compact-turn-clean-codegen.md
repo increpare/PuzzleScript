@@ -465,10 +465,12 @@ make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=6
 
 Additional ranked-frontier probes:
   case 7, "ellipsisPropagationBug1": passes
+  case 9, "undo test": passes
   case 13, "rigid body test": passes
   case 16, "annoying edge case": passes
   case 23, "beginloop/endloop with mutual recursion": passes
   case 26, "simple sokobond test": passes
+  case 36, "rule application hat test": passes
   case 37, "ortho test 1": passes
   case 38, "ortho test 2": passes
   case 40, "don't mask movements if no movements happening": passes
@@ -482,11 +484,13 @@ Additional ranked-frontier probes:
   case 111, "Make synonyms of properties work. #215": passes
   case 112, "Make synonyms of properties work. #230": passes
   case 114, "Make synonyms of properties work. #243": passes
+  case 116, "Failed rigid groups shouldn't block late rule execution. #254": passes
   case 119, "Laser movement check (#264)": passes
   case 121, "Rigid weirdness test (#369)": passes
   case 122, "Synonym confusion": passes
   case 125, "Reserved keywords are too greedy (#419)": passes
   case 126, "Removing background tiles breaks \"no X\" wincondition (#534)": passes
+  case 134, "Win condition test \"NO X\"": passes
   case 135, "Win condition test \"SOME X\"": passes
   case 143, "third test for #492 movement not getting correctly cleared from tile": passes
   case 144, "fourth test for #492 movement not getting correctly cleared from tile": passes
@@ -506,7 +510,7 @@ Additional ranked-frontier probes:
   case 399, "Autowin2": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 46/469 known passing.
+Selected compiler-mode testdata progress: 50/469 known passing.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
