@@ -461,9 +461,17 @@ Additional ranked-frontier probes:
   case 122, "Synonym confusion": passes
   case 125, "Reserved keywords are too greedy (#419)": passes
   case 126, "Removing background tiles breaks \"no X\" wincondition (#534)": passes
+  case 144, "fourth test for #492 movement not getting correctly cleared from tile": passes
   case 145, "fifth test for #492 movement not getting correctly cleared from tile": passes
+  case 147, "right [ vertical Player | perpendicular Player ] -> [ perpendicular Player | ] produces error #682": passes
+  case 148, "right [ horizontal TestObject1 | perpendicular TestObject1 ] -> [ perpendicular TestObject1 | ] produces an error #498": passes
+  case 149, "[ orthogonal a | moving a ] -> [ moving a | orthogonal a ] produces an error #496": passes
+  case 150, "1st alternative test for: right [ vertical Player | perpendicular Player ] -> [ perpendicular Player | ] produces error #682": passes
+  case 151, "2nd alternative test for: right [ vertical Player | perpendicular Player ] -> [ perpendicular Player | ] produces error #682": passes
+  case 152, "super tricky (related to #469) right [ vertical playerortarget | vertical player ] -> [ playerortarget | playerortarget ]": passes
+  case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
 
-Selected compiler-mode testdata progress: 15/469 known passing.
+Selected compiler-mode testdata progress: 24/469 known passing.
 
 Additional ranked-frontier command probe:
   case 93, "again + message combo": passes
@@ -471,6 +479,9 @@ Additional ranked-frontier command probe:
 
 Known next unsupported feature from numeric case 6:
   ellipsis at source rule line 51
+
+Known ranked-frontier unsupported feature:
+  case 146: random_rule at source rule line 56
 ```
 
 Recommended progress report:
