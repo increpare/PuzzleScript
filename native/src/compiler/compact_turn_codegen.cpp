@@ -11,9 +11,10 @@ void emitCompactTurnBackend(
     const Game& game,
     std::string_view sourcePath,
     uint64_t sourceHash,
-    size_t sourceIndex
+    size_t sourceIndex,
+    CompactCodegenOptions options
 ) {
-    const CompactTurnSupport compactTurnSupport = compactTurnSupportForGame(game);
+    const CompactTurnSupport compactTurnSupport = compactTurnSupportForGame(game, options);
     out << "SpecializedCompactTurnOutcome specialized_compact_turn_source_" << sourceIndex << "(\n"
         << "    const Game& game,\n"
         << "    PersistentLevelState& levelState,\n"
@@ -53,6 +54,29 @@ void emitCompactTurnBackend(
         << ", " << cppStringLiteral(compactTurnSupport.fallbackReason) << "},\n"
         << "    " << (compactTurnSupport.supported && !compactTurnSupport.interpreterBridge ? "true" : "false") << ",\n"
         << "};\n\n";
+}
+
+CompactTurnSupport compactNativeTurnSupportForGame(const Game& game) {
+    (void)game;
+    CompactTurnSupport support;
+    support.fallbackReason = "native_compact_generator_rebuild";
+    support.nativeFallbackReason = support.fallbackReason;
+    return support;
+}
+
+CompactTurnSupport compactTurnSupportForGame(const Game& game, const CompactCodegenOptions& options) {
+    CompactTurnSupport support = compactNativeTurnSupportForGame(game);
+    support.nativeFallbackReason = support.fallbackReason;
+    if (options.interpreterMode && !support.supported) {
+        support.supported = true;
+        support.interpreterBridge = true;
+        support.fallbackReason = "interpreter_bridge";
+    }
+    return support;
+}
+
+CompactTurnSupport compactTurnSupportForGame(const Game& game) {
+    return compactTurnSupportForGame(game, CompactCodegenOptions{});
 }
 
 } // namespace puzzlescript::compiler

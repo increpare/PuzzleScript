@@ -25,13 +25,6 @@ struct SpecializedFullTurnSupport {
     std::string wholeTurnFallbackReason = "interpreter_delegation";
 };
 
-struct CompactTurnSupport {
-    bool supported = false;
-    std::string fallbackReason = "interpreter_delegation";
-    bool interpreterBridge = false;
-    std::string nativeFallbackReason = "interpreter_delegation";
-};
-
 bool isCompilableReplacement(const Replacement& replacement);
 std::string cppStringLiteral(std::string_view value);
 std::string safeCppIdentifier(std::string_view value);
@@ -49,8 +42,6 @@ std::string specializedFullTurnCommandStatus(const Game& game);
 std::optional<std::string_view> compiledRuleCommandKindExpression(std::string_view commandName);
 bool canGenerateCompiledRuleCommandQueue(const Rule& rule);
 
-CompactTurnSupport compactNativeTurnSupportForGame(const Game& game);
-CompactTurnSupport compactTurnSupportForGame(const Game& game);
 SpecializedFullTurnSupport specializedFullTurnSupportForGame(const Game& game, const CompiledRulesOptions& options);
 SpecializedFullTurnSupport specializedFullTurnSupportForMissingGame();
 

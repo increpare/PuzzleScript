@@ -202,25 +202,6 @@ bool canGenerateCompiledRuleCommandQueue(const Rule& rule) {
     });
 }
 
-CompactTurnSupport compactNativeTurnSupportForGame(const Game& game) {
-    (void)game;
-    CompactTurnSupport support;
-    support.fallbackReason = "native_compact_generator_rebuild";
-    support.nativeFallbackReason = support.fallbackReason;
-    return support;
-}
-
-CompactTurnSupport compactTurnSupportForGame(const Game& game) {
-    CompactTurnSupport support = compactNativeTurnSupportForGame(game);
-    support.nativeFallbackReason = support.fallbackReason;
-    if (!support.supported) {
-        support.supported = true;
-        support.interpreterBridge = true;
-        support.fallbackReason = "interpreter_bridge";
-    }
-    return support;
-}
-
 SpecializedFullTurnSupport specializedFullTurnSupportForGame(
     const Game& game,
     const CompiledRulesOptions& options
