@@ -1447,7 +1447,7 @@ const MaskWord* getCellObjectsPtr(const FullState& session, int32_t tileIndex) {
 
 size_t objectCellWordCount(const FullState& session) {
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
-    return static_cast<size_t>((tileCount + 63) / 64);
+    return static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
 }
 
 void setObjectCellIndexBit(FullState& session, int32_t objectId, int32_t tileIndex, bool present) {
@@ -1456,13 +1456,13 @@ void setObjectCellIndexBit(FullState& session, int32_t objectId, int32_t tileInd
         return;
     }
     const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-    const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
+    const size_t bitWord = static_cast<size_t>(maskWordIndex(static_cast<uint32_t>(tileIndex)));
     if (objectBase + bitWord >= session.scratch.objectCellBits.size()
         || static_cast<size_t>(objectId) >= session.scratch.objectCellCounts.size()) {
         session.scratch.objectCellIndexDirty = true;
         return;
     }
-    const uint64_t bit = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+    const MaskWordUnsigned bit = MaskWordUnsigned{1} << maskBitIndex(static_cast<uint32_t>(tileIndex));
     const bool wasPresent = (session.scratch.objectCellBits[objectBase + bitWord] & bit) != 0;
     if (present) {
         session.scratch.objectCellBits[objectBase + bitWord] |= bit;
@@ -2508,10 +2508,10 @@ bool collectAnchoredRowMatchesInto(
             continue;
         }
         for (size_t wordIndex = 0; wordIndex < cellWordCount; ++wordIndex) {
-            uint64_t bits = session.scratch.objectCellBits[objectBase + wordIndex];
+            MaskWordUnsigned bits = session.scratch.objectCellBits[objectBase + wordIndex];
             while (bits != 0) {
-                const int32_t bit = __builtin_ctzll(bits);
-                const int32_t anchorTile = static_cast<int32_t>(wordIndex * 64 + static_cast<size_t>(bit));
+                const int32_t bit = maskWordCountTrailingZeros(bits);
+                const int32_t anchorTile = static_cast<int32_t>(wordIndex * kMaskWordBits + static_cast<size_t>(bit));
                 bits &= bits - 1;
                 if (anchorTile >= tileCount) {
                     continue;
@@ -3531,7 +3531,7 @@ size_t countNonZeroWords(const MaskVector& values) {
 void rebuildObjectCellIndex(FullState& session) {
     const int32_t objectCount = session.game->objectCount;
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     session.scratch.objectCellBitTileCount = tileCount;
     session.scratch.objectCellBits.assign(static_cast<size_t>(objectCount) * cellWordCount, 0);
     session.scratch.objectCellCounts.assign(static_cast<size_t>(std::max(objectCount, 0)), 0);
@@ -3549,7 +3549,7 @@ void rebuildObjectCellIndex(FullState& session) {
             const size_t base = static_cast<size_t>(objectId) * cellWordCount;
             uint32_t count = 0;
             for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-                count += static_cast<uint32_t>(__builtin_popcountll(session.scratch.objectCellBits[base + bitWord]));
+                count += static_cast<uint32_t>(maskWordPopcount(session.scratch.objectCellBits[base + bitWord]));
             }
             session.scratch.objectCellCounts[static_cast<size_t>(objectId)] = count;
         }
@@ -3574,7 +3574,7 @@ void rebuildMasks(FullState& session) {
     const int32_t width = currentLevelWidth(session);
     const int32_t height = currentLevelHeight(session);
     const int32_t tileCount = width * height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     if (!session.scratch.anyMasksDirty
         && !session.scratch.objectCellIndexDirty
         && session.scratch.objectCellBitTileCount == tileCount
@@ -3745,7 +3745,7 @@ std::vector<uint8_t> buildSessionHashBytes(const FullState& session) {
 
     const auto& objectBits = session.levelState.board.objectBits;
     const auto* objectBytes = reinterpret_cast<const uint8_t*>(objectBits.data());
-    bytes.insert(bytes.end(), objectBytes, objectBytes + objectBits.size() * sizeof(uint64_t));
+    bytes.insert(bytes.end(), objectBytes, objectBytes + objectBits.size() * sizeof(MaskWordUnsigned));
     const auto& movements = session.scratch.liveMovements;
     const auto* movementBytes = reinterpret_cast<const uint8_t*>(movements.data());
     bytes.insert(bytes.end(), movementBytes, movementBytes + movements.size() * sizeof(MaskWord));
@@ -3780,7 +3780,7 @@ uint64_t hashFullState64NoAlloc(const FullState& session, uint64_t seed) {
     appendHashBytes(hash, session.levelState.rng.s.data(), session.levelState.rng.s.size() * sizeof(uint8_t));
 
     const auto& objectBits = session.levelState.board.objectBits;
-    appendHashBytes(hash, objectBits.data(), objectBits.size() * sizeof(uint64_t));
+    appendHashBytes(hash, objectBits.data(), objectBits.size() * sizeof(MaskWordUnsigned));
     const auto& movements = session.scratch.liveMovements;
     appendHashBytes(hash, movements.data(), movements.size() * sizeof(MaskWord));
     appendHashBytes(hash, session.meta.loadedLevelSeed.data(), session.meta.loadedLevelSeed.size());
@@ -4085,18 +4085,18 @@ void fillCompactOccupancyBitsFromInterpreterBoardData(
     int32_t width,
     int32_t height,
     const MaskVector& interpreterObjects,
-    std::vector<uint64_t>& objectBits
+    std::vector<MaskWordUnsigned>& objectBits
 ) {
     const int32_t tileCount = width * height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     const int32_t objectCount = game.objectCount;
     objectBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
     if (objectCount > 0 && tileCount > 0 && cellWordCount > 0) {
         const int32_t stride = game.strideObject;
         for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
             const size_t sourceBase = static_cast<size_t>(tileIndex * stride);
-            const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
-            const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+            const size_t bitWord = static_cast<size_t>(maskWordIndex(static_cast<uint32_t>(tileIndex)));
+            const MaskWordUnsigned bitMask = MaskWordUnsigned{1} << maskBitIndex(static_cast<uint32_t>(tileIndex));
             for (int32_t word = 0; word < stride; ++word) {
                 MaskWordUnsigned bits = 0;
                 if (sourceBase + static_cast<size_t>(word) < interpreterObjects.size()) {
@@ -4118,21 +4118,21 @@ void fillCompactOccupancyBitsFromInterpreterBoardData(
 void fillInterpreterBoardObjectsFromCompactObjectBits(
     const Game& game,
     LevelDimensions dimensions,
-    const std::vector<uint64_t>& objectBits,
+    const std::vector<MaskWordUnsigned>& objectBits,
     MaskVector& interpreterObjects
 ) {
     const int32_t tileCount = dimensions.width * dimensions.height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     const int32_t objectCount = game.objectCount;
     const int32_t stride = game.strideObject;
     interpreterObjects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
     for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
         const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
         for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-            uint64_t bits = objectBase + bitWord < objectBits.size() ? objectBits[objectBase + bitWord] : 0;
+            MaskWordUnsigned bits = objectBase + bitWord < objectBits.size() ? objectBits[objectBase + bitWord] : 0;
             while (bits != 0) {
-                const uint32_t bit = static_cast<uint32_t>(__builtin_ctzll(bits));
-                const int32_t tileIndex = static_cast<int32_t>(bitWord * 64 + bit);
+                const uint32_t bit = static_cast<uint32_t>(maskWordCountTrailingZeros(bits));
+                const int32_t tileIndex = static_cast<int32_t>(bitWord * kMaskWordBits + bit);
                 if (tileIndex < tileCount) {
                     const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
                     const uint32_t objectBit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
@@ -4148,22 +4148,22 @@ void canonicalizeCompactObjectBits(
     const Game& game,
     int32_t width,
     int32_t height,
-    uint64_t* objectBits,
+    MaskWordUnsigned* objectBits,
     size_t objectBitWordCount
 ) {
     if (objectBits == nullptr || width <= 0 || height <= 0 || game.objectCount <= 0) {
         return;
     }
     const int32_t tileCount = width * height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     if (cellWordCount == 0) {
         return;
     }
-    const uint32_t usedBitsInLastWord = static_cast<uint32_t>(tileCount & 63);
+    const uint32_t usedBitsInLastWord = maskBitIndex(static_cast<uint32_t>(tileCount));
     if (usedBitsInLastWord == 0) {
         return;
     }
-    const uint64_t validMask = (uint64_t{1} << usedBitsInLastWord) - uint64_t{1};
+    const MaskWordUnsigned validMask = (MaskWordUnsigned{1} << usedBitsInLastWord) - MaskWordUnsigned{1};
     const size_t lastWord = cellWordCount - 1;
     for (int32_t objectId = 0; objectId < game.objectCount; ++objectId) {
         const size_t index = static_cast<size_t>(objectId) * cellWordCount + lastWord;
@@ -4174,7 +4174,7 @@ void canonicalizeCompactObjectBits(
     }
 }
 
-void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std::vector<uint64_t>& objectBits) {
+void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std::vector<MaskWordUnsigned>& objectBits) {
     if (session.game == nullptr) {
         objectBits.clear();
         return;
@@ -4784,13 +4784,13 @@ std::string serializeTestString(const FullState& session) {
     int32_t nextIndex = 0;
     const int32_t stride = session.game->strideObject;
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
 
     for (int32_t y = 0; y < currentLevelHeight(session); ++y) {
         for (int32_t x = 0; x < currentLevelWidth(session); ++x) {
             const int32_t tileIndex = y * currentLevelWidth(session) + x;
-            const size_t bitWord = static_cast<size_t>(tileIndex >> 6);
-            const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+            const size_t bitWord = static_cast<size_t>(maskWordIndex(static_cast<uint32_t>(tileIndex)));
+            const MaskWordUnsigned bitMask = MaskWordUnsigned{1} << maskBitIndex(static_cast<uint32_t>(tileIndex));
             std::vector<std::string> objects;
             for (int32_t bit = 0; bit < static_cast<int32_t>(kMaskWordBits) * stride; ++bit) {
                 const int32_t objectId = bit;

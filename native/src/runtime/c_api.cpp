@@ -56,18 +56,10 @@ char* duplicateString(const std::string& value) {
 }
 
 struct CompactOracleState {
-    std::vector<uint64_t> objectBits;
+    std::vector<MaskWordUnsigned> objectBits;
     std::vector<puzzlescript::MaskWord> movementWords;
     puzzlescript::RandomState randomState;
 };
-
-uint32_t compactOracleTrailingZeros(MaskWordUnsigned value) {
-    if constexpr (sizeof(MaskWordUnsigned) <= sizeof(unsigned int)) {
-        return static_cast<uint32_t>(__builtin_ctz(static_cast<unsigned int>(value)));
-    } else {
-        return static_cast<uint32_t>(__builtin_ctzll(static_cast<unsigned long long>(value)));
-    }
-}
 
 CompactOracleState compactOracleStateFromFullState(const FullState& session) {
     CompactOracleState state;
@@ -499,10 +491,10 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
     }
     const int32_t tile_index = x * currentLevelHeight(impl) + y;
     const int32_t tileCount = currentLevelWidth(impl) * currentLevelHeight(impl);
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(puzzlescript::kMaskWordBits) - 1) / static_cast<int32_t>(puzzlescript::kMaskWordBits));
     const size_t objectBase = static_cast<size_t>(object_id) * cellWordCount;
-    const size_t bitWord = static_cast<size_t>(tile_index >> 6);
-    const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tile_index & 63);
+    const size_t bitWord = static_cast<size_t>(puzzlescript::maskWordIndex(static_cast<uint32_t>(tile_index)));
+    const MaskWordUnsigned bitMask = MaskWordUnsigned{1} << puzzlescript::maskBitIndex(static_cast<uint32_t>(tile_index));
     if (cellWordCount == 0 || objectBase + bitWord >= impl.levelState.board.objectBits.size()) {
         return false;
     }
@@ -534,13 +526,13 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         }
     }
     const int32_t tileCount = currentLevelWidth(impl) * currentLevelHeight(impl);
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(puzzlescript::kMaskWordBits) - 1) / static_cast<int32_t>(puzzlescript::kMaskWordBits));
     if (cellWordCount == 0) {
         return false;
     }
     for (int32_t tile_index = 0; tile_index < tileCount; ++tile_index) {
-        const size_t bitWord = static_cast<size_t>(tile_index >> 6);
-        const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tile_index & 63);
+        const size_t bitWord = static_cast<size_t>(puzzlescript::maskWordIndex(static_cast<uint32_t>(tile_index)));
+        const MaskWordUnsigned bitMask = MaskWordUnsigned{1} << puzzlescript::maskBitIndex(static_cast<uint32_t>(tile_index));
         bool containsPlayer = impl.game->playerMaskAggregate;
         if (impl.game->playerMaskAggregate) {
             for (int32_t objectId : playerObjectIds) {

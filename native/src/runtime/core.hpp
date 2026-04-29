@@ -91,6 +91,14 @@ inline int32_t maskWordCountTrailingZeros(MaskWordUnsigned bits) {
 #endif
 }
 
+inline int32_t maskWordPopcount(MaskWordUnsigned bits) {
+#if PS_MASK_WORD_BITS == 64
+    return __builtin_popcountll(bits);
+#else
+    return __builtin_popcount(bits);
+#endif
+}
+
 struct MaskRef { const MaskWord* data; };
 struct MaskMut { MaskWord* data; };
 
@@ -136,7 +144,7 @@ struct LevelDimensions {
 
 struct RestartSnapshot {
     /// Object-major compact occupancy (same layout as `PersistentBoardState::objectBits`).
-    std::vector<uint64_t> objectBits;
+    std::vector<MaskWordUnsigned> objectBits;
     std::vector<int32_t> oldFlickscreenDat;
 };
 
@@ -297,7 +305,7 @@ struct PersistentBoardState {
     // Object-major compact board. This is the persistent board shape used by
     // solver and compact turn paths; interpreter execution materializes the
     // legacy cell-major board in Scratch::interpreterBoard.
-    std::vector<uint64_t> objectBits;
+    std::vector<MaskWordUnsigned> objectBits;
 };
 
 struct PersistentLevelState {
@@ -405,7 +413,7 @@ struct Scratch {
     MaskVector boardMovementMask;
     // Per-object cell presence bitsets for anchored rule scans. Layout is
     // object-major: objectCellBits[objectId * cellWordCount + word].
-    std::vector<uint64_t> objectCellBits;
+    std::vector<MaskWordUnsigned> objectCellBits;
     std::vector<uint32_t> objectCellCounts;
     int32_t objectCellBitTileCount = 0;
     bool objectCellIndexDirty = true;
@@ -495,26 +503,26 @@ struct TurnResult {
 };
 
 /// Cell-major → object-major compact bits (same layout as `PersistentBoardState::objectBits`).
-void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std::vector<uint64_t>& objectBits);
+void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std::vector<MaskWordUnsigned>& objectBits);
 
 void fillCompactOccupancyBitsFromInterpreterBoardData(
     const Game& game,
     int32_t width,
     int32_t height,
     const MaskVector& interpreterObjects,
-    std::vector<uint64_t>& objectBits);
+    std::vector<MaskWordUnsigned>& objectBits);
 
 void fillInterpreterBoardObjectsFromCompactObjectBits(
     const Game& game,
     LevelDimensions dimensions,
-    const std::vector<uint64_t>& objectBits,
+    const std::vector<MaskWordUnsigned>& objectBits,
     MaskVector& interpreterObjects);
 
 void canonicalizeCompactObjectBits(
     const Game& game,
     int32_t width,
     int32_t height,
-    uint64_t* objectBits,
+    MaskWordUnsigned* objectBits,
     size_t objectBitWordCount);
 
 /// Updates persistent compact board occupancy from the interpreter scratch board.

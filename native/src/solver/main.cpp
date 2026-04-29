@@ -102,7 +102,7 @@ bool persistentLevelStatesEqual(const PersistentLevelState& lhs, const Persisten
 }
 
 size_t persistentLevelStateByteSize(const PersistentLevelState& state) {
-    return state.board.objectBits.size() * sizeof(uint64_t)
+    return state.board.objectBits.size() * sizeof(MaskWordUnsigned)
         + state.rng.s.size() * sizeof(uint8_t)
         + sizeof(state.rng.i)
         + sizeof(state.rng.j)
@@ -593,7 +593,7 @@ PersistentLevelState persistentLevelStateFromFullState(const FullState& session)
 StateKey persistentLevelStateKey(const PersistentLevelState& state, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
-    for (uint64_t word : state.board.objectBits) {
+    for (MaskWordUnsigned word : state.board.objectBits) {
         puzzlescript::search::appendStateKeyValue(key, word);
     }
     for (uint8_t byte : state.rng.s) {
@@ -728,8 +728,8 @@ std::string stepResultSummary(const ps_step_result& result) {
 std::string persistentLevelStateDiffSummary(const PersistentLevelState& lhs, const PersistentLevelState& rhs) {
     const size_t wordCount = std::max(lhs.board.objectBits.size(), rhs.board.objectBits.size());
     for (size_t index = 0; index < wordCount; ++index) {
-        const uint64_t left = index < lhs.board.objectBits.size() ? lhs.board.objectBits[index] : 0;
-        const uint64_t right = index < rhs.board.objectBits.size() ? rhs.board.objectBits[index] : 0;
+        const MaskWordUnsigned left = index < lhs.board.objectBits.size() ? lhs.board.objectBits[index] : 0;
+        const MaskWordUnsigned right = index < rhs.board.objectBits.size() ? rhs.board.objectBits[index] : 0;
         if (left != right) {
             std::ostringstream out;
             out << " word=" << index << " compact=" << left << " interpreter=" << right;
@@ -960,8 +960,8 @@ bool compactObjectPresent(
     int32_t tileIndex,
     size_t cellWordCount
 ) {
-    const size_t word = static_cast<size_t>(tileIndex >> 6);
-    const uint64_t mask = uint64_t{1} << static_cast<uint32_t>(tileIndex & 63);
+    const size_t word = static_cast<size_t>(puzzlescript::maskWordIndex(static_cast<uint32_t>(tileIndex)));
+    const MaskWordUnsigned mask = MaskWordUnsigned{1} << puzzlescript::maskBitIndex(static_cast<uint32_t>(tileIndex));
     const size_t offset = static_cast<size_t>(objectId) * cellWordCount + word;
     return offset < state.board.objectBits.size() && (state.board.objectBits[offset] & mask) != 0;
 }
@@ -1006,7 +1006,7 @@ std::vector<int32_t> compactMatchingDistanceField(
     bool aggregate
 ) {
     const int32_t tileCount = width * height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     std::vector<int32_t> distances(static_cast<size_t>(tileCount), std::numeric_limits<int32_t>::max());
     if (filter == nullptr) {
         return distances;
@@ -1055,7 +1055,7 @@ int32_t compactHeuristicScore(
 
     int32_t score = 0;
     const int32_t tileCount = width * height;
-    const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
+    const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     for (const auto& condition : game.winConditions) {
         const puzzlescript::MaskWord* filter1 = puzzlescript::search::maskPtr(game, condition.filter1);
         const puzzlescript::MaskWord* filter2 = puzzlescript::search::maskPtr(game, condition.filter2);
