@@ -623,25 +623,12 @@ void markMaterializedFullStateDirty(FullState& session) {
 
 void materializePersistentLevelStateIntoFullState(const PersistentLevelState& state, const FullState& base, FullState& session) {
     session.game = base.game;
-    session.meta.currentLevelIndex = base.meta.currentLevelIndex;
-    session.meta.currentLevelTarget = base.meta.currentLevelTarget;
-    session.meta.titleScreen = base.meta.titleScreen;
-    session.meta.textMode = base.meta.textMode;
-    session.meta.titleMode = base.meta.titleMode;
-    session.meta.titleSelection = base.meta.titleSelection;
-    session.meta.titleSelected = base.meta.titleSelected;
-    session.meta.messageSelected = base.meta.messageSelected;
-    session.meta.winning = base.meta.winning;
-    session.meta.messageText = base.meta.messageText;
-    session.meta.loadedLevelSeed = base.meta.loadedLevelSeed;
-    session.scratch.liveLevel.width = base.scratch.liveLevel.width;
-    session.scratch.liveLevel.height = base.scratch.liveLevel.height;
-    session.scratch.liveLevel.layerCount = base.scratch.liveLevel.layerCount;
-    const int32_t tileCount = session.scratch.liveLevel.width * session.scratch.liveLevel.height;
+    session.meta = base.meta;
+    const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const int32_t objectCount = session.game ? session.game->objectCount : 0;
     const int32_t stride = session.game ? session.game->strideObject : 0;
-    session.scratch.liveLevel.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
+    session.scratch.interpreterBoard.objects.assign(static_cast<size_t>(std::max(tileCount, 0) * std::max(stride, 0)), 0);
     for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
         const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
         for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
@@ -652,7 +639,7 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
                 if (tileIndex < tileCount) {
                     const int32_t word = objectId / static_cast<int32_t>(kMaskWordBits);
                     const uint32_t objectBit = static_cast<uint32_t>(objectId % static_cast<int32_t>(kMaskWordBits));
-                    session.scratch.liveLevel.objects[static_cast<size_t>(tileIndex * stride + word)] |= puzzlescript::maskBit(objectBit);
+                    session.scratch.interpreterBoard.objects[static_cast<size_t>(tileIndex * stride + word)] |= puzzlescript::maskBit(objectBit);
                 }
                 bits &= bits - 1;
             }
@@ -675,10 +662,7 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
     child.meta = parent.meta;
-    child.scratch.liveLevel.width = parent.scratch.liveLevel.width;
-    child.scratch.liveLevel.height = parent.scratch.liveLevel.height;
-    child.scratch.liveLevel.layerCount = parent.scratch.liveLevel.layerCount;
-    child.scratch.liveLevel.objects = parent.scratch.liveLevel.objects;
+    child.scratch.interpreterBoard.objects = parent.scratch.interpreterBoard.objects;
 
     child.scratch.liveMovements.assign(parent.scratch.liveMovements.size(), 0);
     child.scratch.rigidGroupIndexMasks.assign(parent.scratch.rigidGroupIndexMasks.size(), 0);
@@ -696,7 +680,7 @@ void prepareSolverChildFullStateFromParent(FullState& child, const FullState& pa
 
 // Allocate a Node-owned FullState that captures `source`'s post-step state
 // without copying its scratch/mask/undo buffers. Implemented in terms of
-// prepareSolverChildFullStateFromParent: that helper copies only liveLevel
+// prepareSolverChildFullStateFromParent: that helper copies only interpreterBoard
 // + meta + RNG and re-sizes (zero-fill) the small movement/rigid masks. The
 // resulting FullState has empty replacement/ellipsis scratch and undo stack;
 // when a future expansion uses it as `parentSession`, only those few fields
@@ -1373,8 +1357,8 @@ Result runSearch(
         result.status = "skipped_message";
         return result;
     }
-    const int32_t searchWidth = initial->scratch.liveLevel.width;
-    const int32_t searchHeight = initial->scratch.liveLevel.height;
+    const int32_t searchWidth = currentLevelWidth(*initial);
+    const int32_t searchHeight = currentLevelHeight(*initial);
     std::unique_ptr<FullState> compactSessionBase;
     std::unique_ptr<FullState> parentScratch;
     // Shared per-edge step buffer used by both storage modes (F1). One full

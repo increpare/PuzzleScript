@@ -108,8 +108,8 @@ struct ObjectDef {
 };
 
 // Cell-major object bitmask grid used by the interpreter. Persistent board
-// storage lives in PersistentLevelState::board.occupancy; Scratch::liveLevel is
-// materialized from or synced back to that compact board at runtime boundaries.
+// storage lives in PersistentLevelState::board.occupancy; Scratch::interpreterBoard
+// is materialized from or synced back to that compact board at runtime boundaries.
 // **Engine rule:** change per-cell interpreter occupancy only through
 // `setCellObjects` / `setCellObjectsFromWords` (and compiled-rule wrappers),
 // not by mutating `objects` directly.
@@ -128,6 +128,11 @@ struct RandomState {
     uint8_t i = 0;
     uint8_t j = 0;
     bool valid = false;
+};
+
+struct LevelDimensions {
+    int32_t width = 0;
+    int32_t height = 0;
 };
 
 struct RestartSnapshot {
@@ -159,6 +164,7 @@ struct MetaGameState {
     std::vector<uint8_t> randomStateS;
     std::vector<int32_t> oldFlickscreenDat;
     LevelTemplate level;
+    LevelDimensions levelDimensions;
     RestartSnapshot restart;
     std::string serializedLevel;
     std::vector<UndoSnapshot> undoStack;
@@ -294,21 +300,20 @@ struct BoardOccupancy {
     std::vector<uint64_t> objectBits;
 };
 
-struct LevelDimensions {
-    int32_t width = 0;
-    int32_t height = 0;
-};
-
 struct PersistentBoardState {
     // Object-major compact board. This is the persistent board shape used by
     // solver and compact turn paths; interpreter execution materializes the
-    // legacy cell-major board in Scratch::liveLevel.
+    // legacy cell-major board in Scratch::interpreterBoard.
     BoardOccupancy occupancy;
 };
 
 struct PersistentLevelState {
     PersistentBoardState board;
     RandomState rng;
+};
+
+struct InterpreterBoardScratch {
+    MaskVector objects;
 };
 
 struct GameMetadata {
@@ -397,7 +402,7 @@ using Game = GameInformation;
 struct Scratch {
     // Legacy interpreter cell-major board. Per-tile writes go through
     // setCellObjects / setCellObjectsFromWords.
-    LevelTemplate liveLevel;
+    InterpreterBoardScratch interpreterBoard;
     MaskVector liveMovements;
     MaskVector rowMasks;
     MaskVector columnMasks;
@@ -472,6 +477,18 @@ struct GameSession {
 };
 
 using FullState = GameSession;
+
+inline LevelDimensions currentLevelDimensions(const FullState& session) {
+    return session.meta.levelDimensions;
+}
+
+inline int32_t currentLevelWidth(const FullState& session) {
+    return session.meta.levelDimensions.width;
+}
+
+inline int32_t currentLevelHeight(const FullState& session) {
+    return session.meta.levelDimensions.height;
+}
 
 struct TurnResult {
     ps_step_result core{};

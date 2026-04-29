@@ -353,7 +353,7 @@ bool ps_full_state_compact_turn_oracle_check(
     puzzlescript::Scratch compactScratch;
     compactScratch.liveMovements = compact.movementWords;
     puzzlescript::SpecializedCompactTurnContext context{
-        puzzlescript::LevelDimensions{original.scratch.liveLevel.width, original.scratch.liveLevel.height},
+        puzzlescript::LevelDimensions{currentLevelWidth(original), currentLevelHeight(original)},
         original.meta.currentLevelIndex,
     };
     RuntimeStepOptions options{};
@@ -394,8 +394,8 @@ bool ps_full_state_compact_turn_oracle_check(
         || interpreterResult.transitioned;
     if (matched
         && !terminal
-        && interpreter.scratch.liveLevel.width == original.scratch.liveLevel.width
-        && interpreter.scratch.liveLevel.height == original.scratch.liveLevel.height) {
+        && currentLevelWidth(interpreter) == currentLevelWidth(original)
+        && currentLevelHeight(interpreter) == currentLevelHeight(original)) {
         stateChecked = true;
         const CompactOracleState interpreterState = compactOracleStateFromFullState(interpreter);
         matched = compactOracleStatesEqual(compact, interpreterState);
@@ -456,8 +456,8 @@ void ps_full_state_status(const ps_full_state* state, ps_full_state_status_info*
     out_status->current_level_index = state->impl->meta.currentLevelIndex;
     out_status->has_current_level_target = state->impl->meta.currentLevelTarget.has_value();
     out_status->current_level_target = state->impl->meta.currentLevelTarget.value_or(0);
-    out_status->width = state->impl->scratch.liveLevel.width;
-    out_status->height = state->impl->scratch.liveLevel.height;
+    out_status->width = currentLevelWidth(*state->impl);
+    out_status->height = currentLevelHeight(*state->impl);
     out_status->title_mode = state->impl->meta.titleMode;
     out_status->title_selection = state->impl->meta.titleSelection;
     out_status->can_undo = !state->impl->meta.undoStack.empty();
@@ -487,7 +487,7 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
         return false;
     }
     const FullState& impl = *state->impl;
-    if (x < 0 || y < 0 || x >= impl.scratch.liveLevel.width || y >= impl.scratch.liveLevel.height) {
+    if (x < 0 || y < 0 || x >= currentLevelWidth(impl) || y >= currentLevelHeight(impl)) {
         return false;
     }
     if (object_id >= impl.game->objectCount) {
@@ -497,8 +497,8 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
     if (word >= impl.game->wordCount) {
         return false;
     }
-    const int32_t tile_index = x * impl.scratch.liveLevel.height + y;
-    const int32_t tileCount = impl.scratch.liveLevel.width * impl.scratch.liveLevel.height;
+    const int32_t tile_index = x * currentLevelHeight(impl) + y;
+    const int32_t tileCount = currentLevelWidth(impl) * currentLevelHeight(impl);
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     const size_t objectBase = static_cast<size_t>(object_id) * cellWordCount;
     const size_t bitWord = static_cast<size_t>(tile_index >> 6);
@@ -520,7 +520,7 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         return false;
     }
     const FullState& impl = *state->impl;
-    if (impl.game->playerMask == puzzlescript::kNullMaskOffset || impl.scratch.liveLevel.width <= 0 || impl.scratch.liveLevel.height <= 0) {
+    if (impl.game->playerMask == puzzlescript::kNullMaskOffset || currentLevelWidth(impl) <= 0 || currentLevelHeight(impl) <= 0) {
         return false;
     }
     const puzzlescript::MaskWord* playerMask = impl.game->maskArena.data() + impl.game->playerMask;
@@ -533,7 +533,7 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
             playerObjectIds.push_back(objectId);
         }
     }
-    const int32_t tileCount = impl.scratch.liveLevel.width * impl.scratch.liveLevel.height;
+    const int32_t tileCount = currentLevelWidth(impl) * currentLevelHeight(impl);
     const size_t cellWordCount = static_cast<size_t>((tileCount + 63) / 64);
     if (cellWordCount == 0) {
         return false;
@@ -566,10 +566,10 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
             continue;
         }
         if (out_x) {
-            *out_x = tile_index / impl.scratch.liveLevel.height;
+            *out_x = tile_index / currentLevelHeight(impl);
         }
         if (out_y) {
-            *out_y = tile_index % impl.scratch.liveLevel.height;
+            *out_y = tile_index % currentLevelHeight(impl);
         }
         return true;
     }
