@@ -531,7 +531,7 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 64/469 known passing.
+Selected compiler-mode testdata progress: 83/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -623,6 +623,19 @@ Codegen-size cleanup update, 2026-04-29:
     Pattern functions still stay specialized, but generated mask uses now
     reference canonical `compact_turn_mask_data_*` arrays directly instead of
     emitting one pointer alias per pattern field.
+
+Aggregate/transition progress update, 2026-04-29:
+  ranked-frontier replay:
+    cases: 323 365 366 368 369 370 371 372 373 375 379 381 385 391 422 423 424 425
+    result: 18/18 pass
+  added targeted replay:
+    case 424 "aggregate player allowed C #1032": passes
+  semantic fixes:
+    Generated compact movement now mirrors the interpreter's atomic aggregate
+    player movement rule, so multi-layer aggregate players do not split when a
+    constituent layer is blocked.
+    Generated compact turn results now mark win transitions when another level
+    exists and include board modification/transition in `result.changed`.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
