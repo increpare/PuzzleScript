@@ -531,7 +531,7 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 163/469 known passing.
+Selected compiler-mode testdata progress: 183/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -671,6 +671,15 @@ Fourth frontier expansion update, 2026-04-29:
     Remaining small `#1067` object-absence fixtures, overlapping-object
     movement, rule direction inference, glyph parsing with `=`, audio-trigger
     rules, and simple level-change recording fixtures.
+
+Fifth frontier expansion update, 2026-04-29:
+  ranked-frontier replay:
+    cases: 455 133 326 47 173 194 99 388 345 30 261 100 11 243 10 362 304 95 22 105
+    result: 20/20 pass
+  added coverage:
+    Level-change recording, undo/realtime, many-layer and many-object
+    fixtures, multi-word dictionary names, restart, mirror rules, push/pull,
+    rigid preexisting movement behavior, and broader loop coverage.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
