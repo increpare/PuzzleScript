@@ -3935,6 +3935,15 @@ enum class CompactMovementKind {
     MultiPlayerMovementOnly,
 };
 
+enum class CompactRulePhaseKind {
+    DirectCellObjectGroups,
+};
+
+struct CompactRulePhasePlan {
+    CompactRulePhaseKind kind = CompactRulePhaseKind::DirectCellObjectGroups;
+    bool late = false;
+};
+
 struct CompactMovementPlan {
     CompactMovementKind kind = CompactMovementKind::SinglePlayer;
     bool simplePush = false;
@@ -3950,19 +3959,29 @@ struct CompactMovementPlan {
 };
 
 struct CompactTurnPlan {
-    bool directCellObjectRules = false;
-    bool directLateCellObjectRules = false;
     int32_t playerObjectId = -1;
+    std::vector<CompactRulePhasePlan> earlyRulePhases;
+    std::vector<CompactRulePhasePlan> lateRulePhases;
     CompactMovementPlan movement;
     std::vector<CompactTurnSupport::WinCondition> winConditions;
 };
 
 CompactTurnPlan compactTurnPlanFromSupport(const CompactTurnSupport& support) {
     CompactTurnPlan plan;
-    plan.directCellObjectRules = support.directCellObjectRules;
-    plan.directLateCellObjectRules = support.directLateCellObjectRules;
     plan.playerObjectId = support.playerObjectId;
     plan.winConditions = support.winConditions;
+    if (support.directCellObjectRules) {
+        plan.earlyRulePhases.push_back(CompactRulePhasePlan{
+            CompactRulePhaseKind::DirectCellObjectGroups,
+            false,
+        });
+    }
+    if (support.directLateCellObjectRules) {
+        plan.lateRulePhases.push_back(CompactRulePhasePlan{
+            CompactRulePhaseKind::DirectCellObjectGroups,
+            true,
+        });
+    }
 
     plan.movement.simplePush = support.simplePush;
     plan.movement.simplePushChain = support.simplePushChain;
@@ -6061,6 +6080,20 @@ void emitCompactDirectCellObjectGroups(
     }
 }
 
+void emitCompactRulePhases(
+    std::ostream& out,
+    const puzzlescript::Game& game,
+    const std::vector<CompactRulePhasePlan>& phases
+) {
+    for (const CompactRulePhasePlan& phase : phases) {
+        switch (phase.kind) {
+            case CompactRulePhaseKind::DirectCellObjectGroups:
+                emitCompactDirectCellObjectGroups(out, game, phase.late ? game.lateRules : game.rules);
+                break;
+        }
+    }
+}
+
 void emitCompactNativeTurnPrologue(
     std::ostream& out,
     const puzzlescript::Game& game,
@@ -6973,15 +7006,11 @@ std::string generateCompiledRulesCpp(
         } else {
             const CompactTurnPlan compactTurnPlan = compactTurnPlanFromSupport(compactTurnSupport);
             emitCompactNativeTurnPrologue(out, game, compactTurnPlan);
-            if (compactTurnPlan.directCellObjectRules) {
-                emitCompactDirectCellObjectGroups(out, game, game.rules);
-            }
+            emitCompactRulePhases(out, game, compactTurnPlan.earlyRulePhases);
             out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnEarlyRulesNs);\n";
             emitCompactMovement(out, compactTurnPlan.movement);
             out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnMovementNs);\n";
-            if (compactTurnPlan.directLateCellObjectRules) {
-                emitCompactDirectCellObjectGroups(out, game, game.lateRules);
-            }
+            emitCompactRulePhases(out, game, compactTurnPlan.lateRulePhases);
             out << "    addProfileNs(puzzlescript::RuntimeCounterId::CompactTurnLateRulesNs);\n";
             emitCompactWinConditions(out, compactTurnPlan);
             emitCompactTurnResultEpilogue(out);
