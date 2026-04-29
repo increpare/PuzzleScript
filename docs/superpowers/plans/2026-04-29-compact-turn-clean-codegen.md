@@ -455,6 +455,10 @@ Additional ranked-frontier probes:
   case 42, "Remove movements from empty layers after rule application": passes
   case 43, "movement matching - correctly matching different objects same cell moving in different directions": passes
   case 114, "Make synonyms of properties work. #243": passes
+  case 125, "Reserved keywords are too greedy (#419)": passes
+
+Known next unsupported feature from ranked frontier:
+  case 93, "again + message combo": commands at source rule line 48
 
 Known next unsupported feature from numeric case 6:
   ellipsis at source rule line 51
