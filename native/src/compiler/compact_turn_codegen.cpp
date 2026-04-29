@@ -17,7 +17,7 @@ std::string compactRulePatternUnsupportedReason(const Pattern& pattern) {
 }
 
 std::string compactRuleCommandUnsupportedReason(const RuleCommand& command) {
-    if (command.name == "again" || command.name == "message" || command.name == "cancel") {
+    if (command.name == "again" || command.name == "message" || command.name == "cancel" || command.name == "restart") {
         return {};
     }
     return "command_" + command.name;
@@ -358,16 +358,40 @@ void emitCompactRuleCommandFunction(
             << "}\n\n";
         return;
     }
+    const bool currentRuleCancel = std::any_of(rule.commands.begin(), rule.commands.end(), [](const RuleCommand& command) {
+        return command.name == "cancel";
+    });
+    const bool currentRuleRestart = std::any_of(rule.commands.begin(), rule.commands.end(), [](const RuleCommand& command) {
+        return command.name == "restart";
+    });
+
+    out << "    if (commands.hasCancel) {\n"
+        << "        return;\n"
+        << "    }\n";
+    if (!currentRuleCancel) {
+        out << "    if (commands.hasRestart) {\n"
+            << "        return;\n"
+            << "    }\n";
+    }
+    if (currentRuleCancel || currentRuleRestart) {
+        out << "    commands = CompactTurnCommands_" << suffix << "{};\n";
+    }
     out << "    commands.any = true;\n";
     for (const RuleCommand& command : rule.commands) {
         if (command.name == "again") {
             out << "    commands.hasAgain = true;\n";
         } else if (command.name == "cancel") {
             out << "    commands.hasCancel = true;\n";
+        } else if (command.name == "restart") {
+            out << "    commands.hasRestart = true;\n";
         } else if (command.name == "message") {
-            out << "    commands.hasMessage = true;\n";
             if (command.argument.has_value()) {
-                out << "    commands.messageText = " << cppStringLiteral(*command.argument) << ";\n";
+                out << "    if (!commands.hasMessage) {\n"
+                    << "        commands.hasMessage = true;\n"
+                    << "        commands.messageText = " << cppStringLiteral(*command.argument) << ";\n"
+                    << "    }\n";
+            } else {
+                out << "    commands.hasMessage = true;\n";
             }
         } else {
             out << "    static_assert(false, \"compact turn compiler command queue emitted unsupported command\");\n";
@@ -700,8 +724,11 @@ void emitCompactTurnUnsupportedBody(std::ostream& out) {
         << "    return {false, {}};\n";
 }
 
-void emitCompactTurnCompilerSkeletonBody(std::ostream& out, std::string_view suffix) {
-    out << "    (void)options;\n"
+void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffix) {
+    out << "    if (outHasAgain != nullptr) {\n"
+        << "        *outHasAgain = false;\n"
+        << "    }\n"
+        << "    (void)options;\n"
         << "    ps_step_result result{};\n"
         << "    if (!compact_turn_prepare_state_" << suffix << "(dimensions, levelState, scratch)) {\n"
         << "        return {false, result};\n"
@@ -750,6 +777,7 @@ void emitCompactTurnCompilerSkeletonBody(std::ostream& out, std::string_view suf
         << "        break;\n"
         << "    }\n"
         << "    const bool lateRuleChanged = compact_turn_apply_late_rules_" << suffix << "(dimensions, levelState, scratch, commands, nullptr);\n"
+        << "    const bool modified = levelState.board.objects != turnStartObjects;\n"
         << "    // 6. apply late rulegroups\n"
         << "    // 7. process commands and again policy\n"
         << "    if (!startPlayerPositions.empty() && !compact_turn_any_start_player_moved_" << suffix << "(levelState, startPlayerPositions)) {\n"
@@ -766,7 +794,25 @@ void emitCompactTurnCompilerSkeletonBody(std::ostream& out, std::string_view suf
         << "            std::fill(scratch.rigidGroupIndexMasks.begin(), scratch.rigidGroupIndexMasks.end(), 0);\n"
         << "            std::fill(scratch.rigidMovementAppliedMasks.begin(), scratch.rigidMovementAppliedMasks.end(), 0);\n"
         << "        }\n"
+        << "        if (outHasAgain != nullptr) {\n"
+        << "            *outHasAgain = false;\n"
+        << "        }\n"
         << "        result.changed = commands.any;\n"
+        << "        return {true, result};\n"
+        << "    }\n"
+        << "    if (commands.hasRestart) {\n"
+        << "        levelState.board.objects = turnStartObjects;\n"
+        << "        levelState.rng = turnStartRng;\n"
+        << "        std::fill(scratch.liveMovements.begin(), scratch.liveMovements.end(), 0);\n"
+        << "        if (compact_turn_has_rigid_" << suffix << ") {\n"
+        << "            std::fill(scratch.rigidGroupIndexMasks.begin(), scratch.rigidGroupIndexMasks.end(), 0);\n"
+        << "            std::fill(scratch.rigidMovementAppliedMasks.begin(), scratch.rigidMovementAppliedMasks.end(), 0);\n"
+        << "        }\n"
+        << "        if (outHasAgain != nullptr) {\n"
+        << "            *outHasAgain = false;\n"
+        << "        }\n"
+        << "        result.changed = commands.any;\n"
+        << "        result.restarted = true;\n"
         << "        return {true, result};\n"
         << "    }\n"
         << "    const bool won = compact_turn_evaluate_win_" << suffix << "(dimensions, levelState);\n"
@@ -774,7 +820,53 @@ void emitCompactTurnCompilerSkeletonBody(std::ostream& out, std::string_view suf
         << "    // 9. canonicalize and return result\n"
         << "    result.changed = seededInput || ruleChanged || moved || lateRuleChanged || commands.any;\n"
         << "    result.won = won;\n"
+        << "    if (outHasAgain != nullptr) {\n"
+        << "        *outHasAgain = commands.hasAgain && modified && !won;\n"
+        << "    }\n"
         << "    return {true, result};\n";
+}
+
+void emitCompactTurnCompilerDrainBody(std::ostream& out, std::string_view suffix) {
+    out << "    bool hasAgain = false;\n"
+        << "    SpecializedCompactTurnOutcome outcome = specialized_compact_turn_single_" << suffix << "(\n"
+        << "        dimensions,\n"
+        << "        levelState,\n"
+        << "        scratch,\n"
+        << "        input,\n"
+        << "        options,\n"
+        << "        &hasAgain\n"
+        << "    );\n"
+        << "    if (!outcome.handled || options.againPolicy != AgainPolicy::Drain) {\n"
+        << "        return outcome;\n"
+        << "    }\n"
+        << "    constexpr int kMaxAgainIterations = 500;\n"
+        << "    for (int iteration = 0; iteration < kMaxAgainIterations && hasAgain; ++iteration) {\n"
+        << "        const bool terminal = outcome.result.won || outcome.result.restarted || outcome.result.transitioned;\n"
+        << "        if (terminal || !outcome.result.changed) {\n"
+        << "            break;\n"
+        << "        }\n"
+        << "        bool tickHasAgain = false;\n"
+        << "        const SpecializedCompactTurnOutcome tickOutcome = specialized_compact_turn_single_" << suffix << "(\n"
+        << "            dimensions,\n"
+        << "            levelState,\n"
+        << "            scratch,\n"
+        << "            PS_INPUT_TICK,\n"
+        << "            options,\n"
+        << "            &tickHasAgain\n"
+        << "        );\n"
+        << "        if (!tickOutcome.handled) {\n"
+        << "            return tickOutcome;\n"
+        << "        }\n"
+        << "        outcome.result.changed = outcome.result.changed || tickOutcome.result.changed;\n"
+        << "        outcome.result.won = outcome.result.won || tickOutcome.result.won;\n"
+        << "        outcome.result.restarted = outcome.result.restarted || tickOutcome.result.restarted;\n"
+        << "        outcome.result.transitioned = outcome.result.transitioned || tickOutcome.result.transitioned;\n"
+        << "        hasAgain = tickHasAgain;\n"
+        << "        if (!tickOutcome.result.changed) {\n"
+        << "            break;\n"
+        << "        }\n"
+        << "    }\n"
+        << "    return outcome;\n";
 }
 
 std::string sourceSuffix(size_t sourceIndex) {
@@ -856,6 +948,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    bool any = false;\n"
         << "    bool hasAgain = false;\n"
         << "    bool hasCancel = false;\n"
+        << "    bool hasRestart = false;\n"
         << "    bool hasMessage = false;\n"
         << "    std::string messageText;\n"
         << "};\n\n";
@@ -1299,6 +1392,16 @@ void emitCompactTurnBackend(
     const std::string suffix = sourceSuffix(sourceIndex);
     if (compactTurnSupport.supported && !compactTurnSupport.interpreterBridge) {
         emitCompactTurnAccessLayer(out, game, sourceIndex);
+        out << "SpecializedCompactTurnOutcome specialized_compact_turn_single_" << sourceIndex << "(\n"
+            << "    LevelDimensions dimensions,\n"
+            << "    PersistentLevelState& levelState,\n"
+            << "    Scratch& scratch,\n"
+            << "    ps_input input,\n"
+            << "    RuntimeStepOptions options,\n"
+            << "    bool* outHasAgain\n"
+            << ") {\n";
+        emitCompactTurnCompilerSingleBody(out, suffix);
+        out << "}\n\n";
         out << "SpecializedCompactTurnOutcome specialized_compact_turn_core_" << sourceIndex << "(\n"
             << "    LevelDimensions dimensions,\n"
             << "    PersistentLevelState& levelState,\n"
@@ -1306,7 +1409,7 @@ void emitCompactTurnBackend(
             << "    ps_input input,\n"
             << "    RuntimeStepOptions options\n"
             << ") {\n";
-        emitCompactTurnCompilerSkeletonBody(out, suffix);
+        emitCompactTurnCompilerDrainBody(out, suffix);
         out << "}\n\n";
     }
     out << "SpecializedCompactTurnOutcome specialized_compact_turn_source_" << sourceIndex << "(\n"

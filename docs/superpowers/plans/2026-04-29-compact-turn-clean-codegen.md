@@ -478,7 +478,9 @@ Additional ranked-frontier probes:
   case 45, "ellipsis bug: rule matches two candidates, first replacement invalidates second": passes
   case 48, "random movement determinism test": passes
   case 49, "random instances of properties": passes
+  case 108, "multiple patterns not checking for modifications": passes
   case 111, "Make synonyms of properties work. #215": passes
+  case 112, "Make synonyms of properties work. #230": passes
   case 114, "Make synonyms of properties work. #243": passes
   case 119, "Laser movement check (#264)": passes
   case 121, "Rigid weirdness test (#369)": passes
@@ -486,6 +488,7 @@ Additional ranked-frontier probes:
   case 125, "Reserved keywords are too greedy (#419)": passes
   case 126, "Removing background tiles breaks \"no X\" wincondition (#534)": passes
   case 135, "Win condition test \"SOME X\"": passes
+  case 143, "third test for #492 movement not getting correctly cleared from tile": passes
   case 144, "fourth test for #492 movement not getting correctly cleared from tile": passes
   case 145, "fifth test for #492 movement not getting correctly cleared from tile": passes
   case 146, "random rules - report by caeth": passes
@@ -499,8 +502,9 @@ Additional ranked-frontier probes:
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
   case 398, "Autowin": passes
   case 399, "Autowin2": passes
+  case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 41/469 known passing.
+Selected compiler-mode testdata progress: 45/469 known passing.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
@@ -515,7 +519,8 @@ Known next unsupported ranked-frontier feature:
   unrecorded case
 
 Known ranked-frontier unsupported feature:
-  control commands beyond `message`, `again`, and `cancel` remain unsupported.
+  control commands beyond `message`, `again`, `cancel`, and solver-terminal
+  `restart` remain unsupported.
 ```
 
 Recommended progress report:
