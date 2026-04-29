@@ -531,7 +531,7 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 123/469 known passing.
+Selected compiler-mode testdata progress: 143/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -654,6 +654,14 @@ Second frontier expansion update, 2026-04-29:
     More loop and late-rule fixtures, random property concretization, broader
     rigid disablement checks, gallery-sized small games, and the first wave of
     `#1067` `[ player no wall ]` fixtures.
+
+Third frontier expansion update, 2026-04-29:
+  ranked-frontier replay:
+    cases: 431 432 440 445 452 439 446 426 435 436 437 441 438 447 442 444 453 454 448 450
+    result: 20/20 pass
+  added coverage:
+    More `#1067` `[ player no wall ]` fixtures covering one-rule
+    object-absence pattern variants.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
