@@ -2101,27 +2101,109 @@ bool matchesPatternAt(const FullState& session, const Pattern& pattern, int32_t 
     const Game& game = *session.game;
     const uint32_t objectWordCount   = game.wordCount;
     const uint32_t movementWordCount = game.movementWordCount;
-    const MaskWord* objects   = getCellObjectsPtr(session, tileIndex);
     const MaskWord* movements = getCellMovementsPtr(session, tileIndex);
     const MaskWord* arena    = game.maskArena.data();
 
+#if PS_INTERPRETER_OBJECT_MAJOR
+    const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
+    if (tileIndex < 0 || tileIndex >= tileCount) {
+        return false;
+    }
+    const size_t cellWordCount = objectCellWordCount(session);
+    const size_t tileWord = static_cast<size_t>(maskWordIndex(static_cast<uint32_t>(tileIndex)));
+    const MaskWordUnsigned tileBit = MaskWordUnsigned{1} << maskBitIndex(static_cast<uint32_t>(tileIndex));
+    auto objectPresentAtTile = [&](int32_t objectId) -> bool {
+        if (objectId < 0 || objectId >= game.objectCount) {
+            return false;
+        }
+        const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
+        return objectBase + tileWord < session.scratch.objectCellBits.size()
+            && (session.scratch.objectCellBits[objectBase + tileWord] & tileBit) != 0;
+    };
+    auto allObjectsInMaskPresent = [&](const MaskWord* mask) -> bool {
+        for (uint32_t word = 0; word < objectWordCount; ++word) {
+            MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(mask[word]);
+            while (bits != 0) {
+                const int32_t bit = maskWordCountTrailingZeros(bits);
+                const int32_t objectId = static_cast<int32_t>(word * kMaskWordBits + static_cast<uint32_t>(bit));
+                if (!objectPresentAtTile(objectId)) {
+                    return false;
+                }
+                bits &= bits - 1;
+            }
+        }
+        return true;
+    };
+    auto noObjectsInMaskPresent = [&](const MaskWord* mask) -> bool {
+        for (uint32_t word = 0; word < objectWordCount; ++word) {
+            MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(mask[word]);
+            while (bits != 0) {
+                const int32_t bit = maskWordCountTrailingZeros(bits);
+                const int32_t objectId = static_cast<int32_t>(word * kMaskWordBits + static_cast<uint32_t>(bit));
+                if (objectPresentAtTile(objectId)) {
+                    return false;
+                }
+                bits &= bits - 1;
+            }
+        }
+        return true;
+    };
+    auto anyObjectInMaskPresent = [&](const MaskWord* mask) -> bool {
+        for (uint32_t word = 0; word < objectWordCount; ++word) {
+            MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(mask[word]);
+            while (bits != 0) {
+                const int32_t bit = maskWordCountTrailingZeros(bits);
+                const int32_t objectId = static_cast<int32_t>(word * kMaskWordBits + static_cast<uint32_t>(bit));
+                if (objectPresentAtTile(objectId)) {
+                    return true;
+                }
+                bits &= bits - 1;
+            }
+        }
+        return false;
+    };
+#else
+    const MaskWord* objects = getCellObjectsPtr(session, tileIndex);
+#endif
+
     if (pattern.hasObjectsPresent) {
+#if PS_INTERPRETER_OBJECT_MAJOR
+        const MaskWord* objectsPresent = arena + pattern.objectsPresent;
+        if (!allObjectsInMaskPresent(objectsPresent)) {
+            return false;
+        }
+#else
         const MaskWord* objectsPresent = arena + pattern.objectsPresent;
         for (uint32_t w = 0; w < objectWordCount; ++w) {
             if ((objects[w] & objectsPresent[w]) != objectsPresent[w]) {
                 return false;
             }
         }
+#endif
     }
     if (pattern.hasObjectsMissing) {
+#if PS_INTERPRETER_OBJECT_MAJOR
+        const MaskWord* objectsMissing = arena + pattern.objectsMissing;
+        if (!noObjectsInMaskPresent(objectsMissing)) {
+            return false;
+        }
+#else
         const MaskWord* objectsMissing = arena + pattern.objectsMissing;
         for (uint32_t w = 0; w < objectWordCount; ++w) {
             if ((objects[w] & objectsMissing[w]) != 0) {
                 return false;
             }
         }
+#endif
     }
     for (uint32_t i = 0; i < pattern.anyObjectsCount; ++i) {
+#if PS_INTERPRETER_OBJECT_MAJOR
+        const MaskOffset offset = game.anyObjectOffsets[pattern.anyObjectsFirst + i];
+        const MaskWord* anyMask = arena + offset;
+        if (!anyObjectInMaskPresent(anyMask)) {
+            return false;
+        }
+#else
         const MaskOffset offset = game.anyObjectOffsets[pattern.anyObjectsFirst + i];
         const MaskWord* anyMask = arena + offset;
         bool found = false;
@@ -2134,6 +2216,7 @@ bool matchesPatternAt(const FullState& session, const Pattern& pattern, int32_t 
         if (!found) {
             return false;
         }
+#endif
     }
     if (pattern.hasMovementsPresent) {
         const MaskWord* movementsPresent = arena + pattern.movementsPresent;
