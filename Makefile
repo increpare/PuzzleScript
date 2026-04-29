@@ -21,6 +21,7 @@
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_perf_report solver_focus_compact_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_turn_codegen_bringup compact_turn_codegen_frontier compact_turn_codegen_testdata_one compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
+	compact_turn_codegen_selected_tests \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
@@ -151,6 +152,7 @@ COMPACT_TURN_CODEGEN_BRINGUP_CORPUS ?= src/tests/solver_smoke_tests
 COMPACT_TURN_CODEGEN_TESTDATA_CASE ?= 1
 COMPACT_TURN_CODEGEN_FRONTIER_LIMIT ?= 40
 COMPACT_TURN_CODEGEN_FRONTIER_AFTER ?= 0
+COMPACT_TURN_CODEGEN_SELECTED_CASES ?= 1 2 3 4 5 6 7 13 16 23 26 37 38 40 42 43 44 45 48 49 93 111 114 119 121 122 125 126 135 144 145 146 147 148 149 150 151 152 153 398 399
 COMPILED_RULES_LTO ?= false
 COMPILED_RULES_LINK_DEDUP ?= false
 COMPILED_RULES_EXPORT_SYMBOLS ?= false
@@ -313,6 +315,8 @@ help:
 	@echo "  make compact_turn_codegen_bringup  Build compiler-mode compact smoke and require oracle parity"
 	@echo "  make compact_turn_codegen_testdata_one"
 	@echo "                                     Build/run one testdata.js case in compact compiler mode"
+	@echo "  make compact_turn_codegen_selected_tests"
+	@echo "                                     Re-run selected known-passing compiler-mode testdata cases"
 	@echo "  make generator_smoke_tests         Run native generator smoke tests"
 	@echo "  make generator_benchmark           Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
@@ -602,6 +606,16 @@ compact_turn_codegen_testdata_one: build
 	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_cpp; \
 	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js --case-index "$$case_index" --jobs 1 --progress-every 0 --compact-turn-oracle --require-compact-turn-oracle-checks
+
+compact_turn_codegen_selected_tests:
+	@set -e; \
+	count=0; \
+	for case_index in $(COMPACT_TURN_CODEGEN_SELECTED_CASES); do \
+		echo "compact_turn_codegen_selected case=$$case_index"; \
+		$(MAKE) --no-print-directory compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=$$case_index; \
+		count=$$((count + 1)); \
+	done; \
+	echo "compact_turn_codegen_selected_tests passed=$$count"
 
 compact_tick_simulation_tests: compact_turn_simulation_tests
 

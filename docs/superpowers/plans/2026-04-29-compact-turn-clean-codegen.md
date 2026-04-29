@@ -409,6 +409,7 @@ Compiler-focused targets should force compiler mode and expect failures early in
 ```text
 make compact_turn_codegen_bringup
 make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=...
+make compact_turn_codegen_selected_tests
 ```
 
 The existing oracle/simulation targets can keep using interpreter mode unless explicitly testing compiler mode.
@@ -479,6 +480,7 @@ Additional ranked-frontier probes:
   case 49, "random instances of properties": passes
   case 111, "Make synonyms of properties work. #215": passes
   case 114, "Make synonyms of properties work. #243": passes
+  case 119, "Laser movement check (#264)": passes
   case 121, "Rigid weirdness test (#369)": passes
   case 122, "Synonym confusion": passes
   case 125, "Reserved keywords are too greedy (#419)": passes
@@ -495,18 +497,25 @@ Additional ranked-frontier probes:
   case 151, "2nd alternative test for: right [ vertical Player | perpendicular Player ] -> [ perpendicular Player | ] produces error #682": passes
   case 152, "super tricky (related to #469) right [ vertical playerortarget | vertical player ] -> [ playerortarget | playerortarget ]": passes
   case 153, "right [ vertical playerortarget | vertical player ] -> [ vertical player | vertical playerortarget ]": passes
+  case 398, "Autowin": passes
+  case 399, "Autowin2": passes
 
-Selected compiler-mode testdata progress: 39/469 known passing.
+Selected compiler-mode testdata progress: 41/469 known passing.
+
+Executable selected-pass target:
+  make compact_turn_codegen_selected_tests
+  cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
 
 Additional ranked-frontier command probe:
   case 93, "again + message combo": passes
   added coverage: simple `message` and `again` command queueing
 
 Known next unsupported ranked-frontier feature:
-  case 398: command_cancel at source rule line 53
+  run `make compact_turn_codegen_frontier` and probe the next smallest
+  unrecorded case
 
 Known ranked-frontier unsupported feature:
-  control commands beyond `message` and `again` remain unsupported.
+  control commands beyond `message`, `again`, and `cancel` remain unsupported.
 ```
 
 Recommended progress report:

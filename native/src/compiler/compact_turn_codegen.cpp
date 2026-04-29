@@ -17,7 +17,7 @@ std::string compactRulePatternUnsupportedReason(const Pattern& pattern) {
 }
 
 std::string compactRuleCommandUnsupportedReason(const RuleCommand& command) {
-    if (command.name == "again" || command.name == "message") {
+    if (command.name == "again" || command.name == "message" || command.name == "cancel") {
         return {};
     }
     return "command_" + command.name;
@@ -362,6 +362,8 @@ void emitCompactRuleCommandFunction(
     for (const RuleCommand& command : rule.commands) {
         if (command.name == "again") {
             out << "    commands.hasAgain = true;\n";
+        } else if (command.name == "cancel") {
+            out << "    commands.hasCancel = true;\n";
         } else if (command.name == "message") {
             out << "    commands.hasMessage = true;\n";
             if (command.argument.has_value()) {
@@ -756,6 +758,17 @@ void emitCompactTurnCompilerSkeletonBody(std::ostream& out, std::string_view suf
         << "        std::fill(scratch.liveMovements.begin(), scratch.liveMovements.end(), 0);\n"
         << "        return {true, result};\n"
         << "    }\n"
+        << "    if (commands.hasCancel) {\n"
+        << "        levelState.board.objects = turnStartObjects;\n"
+        << "        levelState.rng = turnStartRng;\n"
+        << "        std::fill(scratch.liveMovements.begin(), scratch.liveMovements.end(), 0);\n"
+        << "        if (compact_turn_has_rigid_" << suffix << ") {\n"
+        << "            std::fill(scratch.rigidGroupIndexMasks.begin(), scratch.rigidGroupIndexMasks.end(), 0);\n"
+        << "            std::fill(scratch.rigidMovementAppliedMasks.begin(), scratch.rigidMovementAppliedMasks.end(), 0);\n"
+        << "        }\n"
+        << "        result.changed = commands.any;\n"
+        << "        return {true, result};\n"
+        << "    }\n"
         << "    const bool won = compact_turn_evaluate_win_" << suffix << "(dimensions, levelState);\n"
         << "    // 8. evaluate win conditions\n"
         << "    // 9. canonicalize and return result\n"
@@ -842,6 +855,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
     out << "struct CompactTurnCommands_" << suffix << " {\n"
         << "    bool any = false;\n"
         << "    bool hasAgain = false;\n"
+        << "    bool hasCancel = false;\n"
         << "    bool hasMessage = false;\n"
         << "    std::string messageText;\n"
         << "};\n\n";
