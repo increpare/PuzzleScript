@@ -134,6 +134,12 @@ std::optional<uint64_t> debugEnvUint64(const char* name) {
     return static_cast<uint64_t>(parsed);
 }
 
+// Tuned on the simulation corpus: one mask word of set bits was the point
+// where dense block transposes consistently beat sparse scattering.
+constexpr uint32_t kObjectCellDenseThreshold = kMaskWordBits;
+constexpr uint32_t kObjectCellDenseMinRows = 16;
+constexpr uint32_t kObjectCellDenseMinObjectBits = 8;
+
 struct DebugConfig {
     bool rigid = debugEnvFlag("PS_DEBUG_RIGID");
     bool again = debugEnvFlag("PS_DEBUG_AGAIN");
@@ -1444,6 +1450,131 @@ const MaskWord* getCellObjectsPtr(const FullState& session, int32_t tileIndex) {
 size_t objectCellWordCount(const FullState& session) {
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
     return static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
+}
+
+MaskWordUnsigned lowMaskWordBits(uint32_t bitCount) {
+    if (bitCount >= kMaskWordBits) {
+        return ~MaskWordUnsigned{0};
+    }
+    if (bitCount == 0) {
+        return MaskWordUnsigned{0};
+    }
+    return (MaskWordUnsigned{1} << bitCount) - MaskWordUnsigned{1};
+}
+
+uint32_t validObjectBitsInWord(int32_t objectCount, int32_t objectWord) {
+    const int32_t firstObjectId = objectWord * static_cast<int32_t>(kMaskWordBits);
+    if (firstObjectId >= objectCount) {
+        return 0;
+    }
+    return static_cast<uint32_t>(std::min<int32_t>(
+        objectCount - firstObjectId,
+        static_cast<int32_t>(kMaskWordBits)
+    ));
+}
+
+void transposeMaskWordBlockInPlace(MaskWordUnsigned* rows) {
+#if PS_MASK_WORD_BITS == 64
+    constexpr int kShifts[] = {32, 16, 8, 4, 2, 1};
+    constexpr MaskWordUnsigned kMasks[] = {
+        0x00000000ffffffffULL,
+        0x0000ffff0000ffffULL,
+        0x00ff00ff00ff00ffULL,
+        0x0f0f0f0f0f0f0f0fULL,
+        0x3333333333333333ULL,
+        0x5555555555555555ULL,
+    };
+#else
+    constexpr int kShifts[] = {16, 8, 4, 2, 1};
+    constexpr MaskWordUnsigned kMasks[] = {
+        0x0000ffffU,
+        0x00ff00ffU,
+        0x0f0f0f0fU,
+        0x33333333U,
+        0x55555555U,
+    };
+#endif
+    // In-place square bit transpose: rows become object columns using SWAR
+    // mask-and-swap stages, matching kMaskWordBits at compile time.
+    for (size_t stage = 0; stage < sizeof(kShifts) / sizeof(kShifts[0]); ++stage) {
+        const int shift = kShifts[stage];
+        const MaskWordUnsigned mask = kMasks[stage];
+        for (uint32_t base = 0; base < kMaskWordBits; base += static_cast<uint32_t>(shift * 2)) {
+            for (int offset = 0; offset < shift; ++offset) {
+                MaskWordUnsigned& top = rows[base + static_cast<uint32_t>(offset)];
+                MaskWordUnsigned& bottom = rows[base + static_cast<uint32_t>(offset + shift)];
+                const MaskWordUnsigned moved = ((top >> shift) ^ bottom) & mask;
+                top ^= moved << shift;
+                bottom ^= moved;
+            }
+        }
+    }
+}
+
+// Sparse path for mostly-empty blocks. rows[tileBit] contains object bits; this
+// walks only set bits and accumulates the inverse columns for touched objects.
+void sparseTranspose(
+    const MaskWordUnsigned* rows,
+    uint32_t rowCount,
+    int32_t objectWord,
+    size_t cellWord,
+    size_t cellWordCount,
+    std::vector<MaskWordUnsigned>& objectCellBits,
+    std::vector<uint32_t>* objectCellCounts
+) {
+    MaskWordUnsigned columns[kMaskWordBits];
+    MaskWordUnsigned touchedObjectBits = 0;
+    for (uint32_t row = 0; row < rowCount; ++row) {
+        MaskWordUnsigned bits = rows[row];
+        const MaskWordUnsigned tileBit = MaskWordUnsigned{1} << row;
+        while (bits != 0) {
+            const uint32_t objectBit = static_cast<uint32_t>(maskWordCountTrailingZeros(bits));
+            const MaskWordUnsigned objectBitMask = MaskWordUnsigned{1} << objectBit;
+            if ((touchedObjectBits & objectBitMask) == 0) {
+                touchedObjectBits |= objectBitMask;
+                columns[objectBit] = tileBit;
+            } else {
+                columns[objectBit] |= tileBit;
+            }
+            if (objectCellCounts != nullptr) {
+                const size_t objectId = static_cast<size_t>(objectWord) * kMaskWordBits + objectBit;
+                ++(*objectCellCounts)[objectId];
+            }
+            bits &= bits - 1;
+        }
+    }
+
+    const size_t objectBaseId = static_cast<size_t>(objectWord) * kMaskWordBits;
+    while (touchedObjectBits != 0) {
+        const uint32_t objectBit = static_cast<uint32_t>(maskWordCountTrailingZeros(touchedObjectBits));
+        objectCellBits[(objectBaseId + objectBit) * cellWordCount + cellWord] = columns[objectBit];
+        touchedObjectBits &= touchedObjectBits - 1;
+    }
+}
+
+// Dense path for busy blocks. Transpose the whole kMaskWordBits square in-place,
+// then write each object column, masking off unused tile bits in the edge block.
+void denseTranspose(
+    MaskWordUnsigned* rows,
+    uint32_t validObjectBitCount,
+    MaskWordUnsigned validTileMask,
+    int32_t objectWord,
+    size_t cellWord,
+    size_t cellWordCount,
+    std::vector<MaskWordUnsigned>& objectCellBits,
+    std::vector<uint32_t>* objectCellCounts
+) {
+    transposeMaskWordBlockInPlace(rows);
+    const size_t objectBaseId = static_cast<size_t>(objectWord) * kMaskWordBits;
+    for (uint32_t objectBit = 0; objectBit < validObjectBitCount; ++objectBit) {
+        const MaskWordUnsigned column = rows[objectBit] & validTileMask;
+        if (column != 0) {
+            objectCellBits[(objectBaseId + objectBit) * cellWordCount + cellWord] = column;
+            if (objectCellCounts != nullptr) {
+                (*objectCellCounts)[objectBaseId + objectBit] += static_cast<uint32_t>(maskWordPopcount(column));
+            }
+        }
+    }
 }
 
 void setObjectCellIndexBit(FullState& session, int32_t objectId, int32_t tileIndex, bool present) {
@@ -3556,10 +3687,10 @@ void rebuildObjectCellIndex(FullState& session) {
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
     const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     session.scratch.objectCellBitTileCount = tileCount;
-    const size_t expectedWords = static_cast<size_t>(objectCount) * cellWordCount;
-    session.scratch.objectCellBits.assign(expectedWords, 0);
-    session.scratch.objectCellCounts.assign(static_cast<size_t>(std::max(objectCount, 0)), 0);
+    const size_t expectedWords = static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount;
     if (objectCount <= 0 || tileCount <= 0 || cellWordCount == 0) {
+        session.scratch.objectCellBits.assign(expectedWords, 0);
+        session.scratch.objectCellCounts.assign(static_cast<size_t>(std::max(objectCount, 0)), 0);
         session.scratch.objectCellIndexDirty = false;
         return;
     }
@@ -3569,21 +3700,14 @@ void rebuildObjectCellIndex(FullState& session) {
         session.scratch.objectCellIndexDirty = true;
         return;
     }
-    fillObjectCellBitsFromCellMajorData(
+    transposeCellMajorToObjectMajor(
         *session.game,
         currentLevelWidth(session),
         currentLevelHeight(session),
         session.scratch.interpreterBoard.objects,
-        session.scratch.objectCellBits
+        session.scratch.objectCellBits,
+        &session.scratch.objectCellCounts
     );
-    for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
-        const size_t base = static_cast<size_t>(objectId) * cellWordCount;
-        uint32_t count = 0;
-        for (size_t bitWord = 0; bitWord < cellWordCount; ++bitWord) {
-            count += static_cast<uint32_t>(maskWordPopcount(session.scratch.objectCellBits[base + bitWord]));
-        }
-        session.scratch.objectCellCounts[static_cast<size_t>(objectId)] = count;
-    }
     session.scratch.objectCellIndexDirty = false;
 #endif
 }
@@ -4119,36 +4243,87 @@ void resetToPrepared(FullState& session) {
 
 } // namespace
 
-void fillObjectCellBitsFromCellMajorData(
+void transposeCellMajorToObjectMajor(
     const Game& game,
     int32_t width,
     int32_t height,
     const MaskVector& interpreterObjects,
-    std::vector<MaskWordUnsigned>& objectCellBits
+    std::vector<MaskWordUnsigned>& objectCellBits,
+    std::vector<uint32_t>* objectCellCounts
 ) {
-    const int32_t tileCount = width * height;
+    const int32_t tileCount = (width > 0 && height > 0) ? width * height : 0;
     const size_t cellWordCount = static_cast<size_t>((tileCount + static_cast<int32_t>(kMaskWordBits) - 1) / static_cast<int32_t>(kMaskWordBits));
     const int32_t objectCount = game.objectCount;
     objectCellBits.assign(static_cast<size_t>(std::max(objectCount, 0)) * cellWordCount, 0);
-    if (objectCount > 0 && tileCount > 0 && cellWordCount > 0) {
-        const int32_t stride = game.strideObject;
-        for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {
-            const size_t sourceBase = static_cast<size_t>(tileIndex * stride);
-            const size_t bitWord = static_cast<size_t>(maskWordIndex(static_cast<uint32_t>(tileIndex)));
-            const MaskWordUnsigned bitMask = MaskWordUnsigned{1} << maskBitIndex(static_cast<uint32_t>(tileIndex));
-            for (int32_t word = 0; word < stride; ++word) {
+    if (objectCellCounts != nullptr) {
+        objectCellCounts->assign(static_cast<size_t>(std::max(objectCount, 0)), 0);
+    }
+    if (objectCount <= 0 || tileCount <= 0 || cellWordCount == 0 || game.strideObject <= 0) {
+        return;
+    }
+
+    const int32_t stride = game.strideObject;
+    MaskWordUnsigned rows[kMaskWordBits]{};
+    // Each iteration covers one tile-bit word by one object-bit word. The dense
+    // path transposes that square block; the sparse path only visits set bits.
+    for (size_t cellWord = 0; cellWord < cellWordCount; ++cellWord) {
+        const size_t tileStart = cellWord * kMaskWordBits;
+        const uint32_t rowCount = static_cast<uint32_t>(std::min<size_t>(
+            kMaskWordBits,
+            static_cast<size_t>(tileCount) - tileStart
+        ));
+        const MaskWordUnsigned validTileMask = lowMaskWordBits(rowCount);
+        for (int32_t objectWord = 0; objectWord < stride; ++objectWord) {
+            const uint32_t validObjectBitCount = validObjectBitsInWord(objectCount, objectWord);
+            if (validObjectBitCount == 0) {
+                continue;
+            }
+
+            const MaskWordUnsigned validObjectMask = lowMaskWordBits(validObjectBitCount);
+            uint32_t blockPopcount = 0;
+            for (uint32_t row = 0; row < kMaskWordBits; ++row) {
                 MaskWordUnsigned bits = 0;
-                if (sourceBase + static_cast<size_t>(word) < interpreterObjects.size()) {
-                    bits = static_cast<MaskWordUnsigned>(interpreterObjects[sourceBase + static_cast<size_t>(word)]);
-                }
-                while (bits != 0) {
-                    const uint32_t bit = static_cast<uint32_t>(maskWordCountTrailingZeros(bits));
-                    const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
-                    if (objectId < objectCount) {
-                        objectCellBits[static_cast<size_t>(objectId) * cellWordCount + bitWord] |= bitMask;
+                if (row < rowCount) {
+                    const size_t sourceIndex = (tileStart + row) * static_cast<size_t>(stride)
+                        + static_cast<size_t>(objectWord);
+                    if (sourceIndex < interpreterObjects.size()) {
+                        bits = static_cast<MaskWordUnsigned>(interpreterObjects[sourceIndex]) & validObjectMask;
                     }
-                    bits &= bits - 1;
                 }
+                rows[row] = bits;
+                blockPopcount += static_cast<uint32_t>(maskWordPopcount(bits));
+            }
+            if (blockPopcount == 0) {
+                continue;
+            }
+
+            const uint32_t denseThreshold = static_cast<uint32_t>(std::min<size_t>(
+                static_cast<size_t>(rowCount) * validObjectBitCount,
+                static_cast<size_t>(kObjectCellDenseThreshold)
+            ));
+            if (rowCount >= kObjectCellDenseMinRows
+                && validObjectBitCount >= kObjectCellDenseMinObjectBits
+                && blockPopcount >= denseThreshold) {
+                denseTranspose(
+                    rows,
+                    validObjectBitCount,
+                    validTileMask,
+                    objectWord,
+                    cellWord,
+                    cellWordCount,
+                    objectCellBits,
+                    objectCellCounts
+                );
+            } else {
+                sparseTranspose(
+                    rows,
+                    rowCount,
+                    objectWord,
+                    cellWord,
+                    cellWordCount,
+                    objectCellBits,
+                    objectCellCounts
+                );
             }
         }
     }

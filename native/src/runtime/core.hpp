@@ -498,12 +498,13 @@ struct TurnResult {
 };
 
 /// Build the derived object-cell index from cell-major board objects.
-void fillObjectCellBitsFromCellMajorData(
+void transposeCellMajorToObjectMajor(
     const Game& game,
     int32_t width,
     int32_t height,
     const MaskVector& interpreterObjects,
-    std::vector<MaskWordUnsigned>& objectCellBits);
+    std::vector<MaskWordUnsigned>& objectCellBits,
+    std::vector<uint32_t>* objectCellCounts = nullptr);
 
 void setInterpreterBoardObjectsFromCellMajor(FullState& session, const MaskVector& objects);
 void clearInterpreterBoardObjects(FullState& session);
