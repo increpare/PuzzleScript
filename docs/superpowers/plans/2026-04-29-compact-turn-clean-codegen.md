@@ -1,6 +1,6 @@
 # Compact Turn Clean Codegen Plan
 
-> **Intent:** Rebuild native compact turn code generation from PuzzleScript semantics, not from game-shape recognizers. The compiler should grow by implementing language features directly and letting tests expose missing semantics.
+> **Intent:** Rebuild native compact turn code generation from PuzzleScript semantics, not from game-shape recognizers. The compiler should grow by implementing language features directly and letting testdata failures expose missing semantics.
 
 ## Summary
 
@@ -15,6 +15,8 @@ compiler mode: always use generated compact native code
 
 There should not be an expanding matrix of native eligibility checks and fallback reasons. If compiler mode is selected, the generator emits code for the current implementation level. At first much of the corpus will fail. The job is to work through failures until the compiler becomes correct.
 
+The primary progress metric is **test case pass count in compiler mode**, not fallback coverage. Coverage can still describe what happened, but it is not the goal.
+
 ## Non-Goals
 
 - Do not add per-game or per-shape recognizers.
@@ -22,6 +24,7 @@ There should not be an expanding matrix of native eligibility checks and fallbac
 - Do not maintain a live-service-style feature fallback matrix.
 - Do not silently fall back from compiler mode to interpreter mode on unsupported features.
 - Do not optimize before the generic semantic compiler is correct.
+- Do not treat backend support/fallback percentages as the main success metric.
 
 ## Design Principles
 
@@ -29,8 +32,33 @@ There should not be an expanding matrix of native eligibility checks and fallbac
 - **Let tests fail loudly in compiler mode.**
 - **Keep interpreter mode as an explicit switch for correctness comparison and normal safe execution.**
 - **Use the simulation corpus as the bring-up queue.**
+- **Measure progress by compiler-mode testdata passes.**
 - **Prefer one generic code path per semantic phase.**
 - **Use templates only to make emitted C++ readable, not to hide bespoke special cases.**
+
+## Reference Implementation
+
+`src/js/engine.js` is a primary reference, not incidental background. It already contains working generated JavaScript for most of the rule interpreter machinery. The native generator should study and translate those generator structures before inventing new ones.
+
+Important reference points:
+
+- `generate_moveEntitiesAtIndex`
+- `generate_repositionEntitiesAtCell`
+- `Rule.prototype.generateCellRowMatchesFunction`
+- `CellPattern.prototype.generateMatchFunction`
+- `CellPattern.prototype.generateReplaceFunction`
+- `generateMatchCellRow`
+- `generateMatchCellRowWildCard`
+- `Rule.prototype.generateApplyAt`
+- `applyRandomRuleGroup`
+- `applyRuleGroup`
+- `applyRules`
+- `generate_resolveMovements`
+- `processInput`
+- `processCommandQueue`
+- `checkWin`
+
+The first implementation pass should map these JS generator phases to native compact codegen phases, noting where native compact state layout changes the emitted accessors but not the semantics.
 
 ## Runtime Modes
 
@@ -228,8 +256,19 @@ Use tests as the feature backlog.
 2. Run oracle against interpreter.
 3. Fix the first semantic mismatch.
 4. Add the next fixture.
-5. Scale from solver smoke fixtures to selected testdata.
-6. Then run the full simulation corpus.
+5. Sort or group failing cases by feature only to make the work easier to batch.
+6. Scale from solver smoke fixtures to selected testdata.
+7. Then run the full simulation corpus.
+
+Recommended progress report:
+
+```text
+compiler_mode_testdata: passed=N failed=M total=T
+first_failure: path/to/game.txt case=...
+suspected_feature: movement resolution / ellipsis / random / ...
+```
+
+This should replace “native fallback coverage” as the main planning signal.
 
 Useful gates:
 
@@ -250,5 +289,5 @@ For compiler bring-up, add new failing-friendly targets rather than weakening st
 - Compiler mode does not silently fall back per feature or per game.
 - No shape-specific recognizers or emitters exist.
 - Generic semantic phases drive the generated code.
-- The corpus is used as the roadmap for missing compiler semantics.
-
+- `src/js/engine.js` is used as the semantic codegen model.
+- Compiler-mode testdata pass count is used as the roadmap for missing compiler semantics.
