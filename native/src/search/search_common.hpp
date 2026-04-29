@@ -78,7 +78,7 @@ inline StateKey fullStateKey(const FullState& session, bool includeRandomState, 
         }
     }
 
-    const auto& objects = session.levelState.board.liveLevel.objects;
+    const auto& objects = session.scratch.liveLevel.objects;
     for (size_t index = 0; index < objects.size(); ++index) {
         appendStateKeyValue(key, static_cast<uint64_t>(static_cast<MaskWordUnsigned>(projectWord(index, objects[index]))));
     }
@@ -119,7 +119,7 @@ inline const MaskWord* maskPtr(const Game& game, MaskOffset offset) {
 }
 
 inline const MaskWord* cellObjects(const FullState& session, int32_t tileIndex) {
-    return session.levelState.board.liveLevel.objects.data() + static_cast<size_t>(tileIndex * session.game->strideObject);
+    return session.scratch.liveLevel.objects.data() + static_cast<size_t>(tileIndex * session.game->strideObject);
 }
 
 inline bool anyBits(const MaskWord* lhs, uint32_t lhsCount, const MaskWord* rhs, uint32_t rhsCount) {
@@ -166,8 +166,8 @@ inline void matchingDistanceField(
     bool aggregate,
     std::vector<int32_t>& distances
 ) {
-    const int32_t width = session.levelState.board.liveLevel.width;
-    const int32_t height = session.levelState.board.liveLevel.height;
+    const int32_t width = session.scratch.liveLevel.width;
+    const int32_t height = session.scratch.liveLevel.height;
     const int32_t tileCount = width * height;
     distances.assign(static_cast<size_t>(tileCount), std::numeric_limits<int32_t>::max());
     if (filter == nullptr) {
@@ -222,7 +222,7 @@ inline int32_t winConditionHeuristicScore(const FullState& session, HeuristicOpt
     }
 
     int32_t score = 0;
-    const int32_t tileCount = session.levelState.board.liveLevel.width * session.levelState.board.liveLevel.height;
+    const int32_t tileCount = session.scratch.liveLevel.width * session.scratch.liveLevel.height;
     for (const auto& condition : game.winConditions) {
         const MaskWord* filter1 = maskPtr(game, condition.filter1);
         const MaskWord* filter2 = maskPtr(game, condition.filter2);

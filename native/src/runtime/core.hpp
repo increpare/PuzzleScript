@@ -107,12 +107,12 @@ struct ObjectDef {
     std::vector<std::vector<int32_t>> sprite;
 };
 
-// Cell-major object bitmask grid: length = width * height * strideObject (see engine tests).
-// **Engine rule:** change per-cell occupancy only through `setCellObjects` /
-// `setCellObjectsFromWords` (and compiled-rule wrappers), not by mutating
-// `objects` directly. Bulk load paths (level load, compact materialize, bridge) may
-// `assign` the whole buffer, then call `syncBoardOccupancyMirrorFromAuthoritativeState` or
-// `resizeBoardOccupancyObjectBits` as appropriate.
+// Cell-major object bitmask grid used by the interpreter. Persistent board
+// storage lives in PersistentLevelState::board.occupancy; Scratch::liveLevel is
+// materialized from or synced back to that compact board at runtime boundaries.
+// **Engine rule:** change per-cell interpreter occupancy only through
+// `setCellObjects` / `setCellObjectsFromWords` (and compiled-rule wrappers),
+// not by mutating `objects` directly.
 struct LevelTemplate {
     bool isMessage = false;
     std::string message;
@@ -300,10 +300,9 @@ struct LevelDimensions {
 };
 
 struct PersistentBoardState {
-    // Interpreter cell-major board. Per-tile writes go through setCellObjects /
-    // setCellObjectsFromWords until the interpreter moves to compact bits.
-    LevelTemplate liveLevel;
-    // Object-major compact board mirror used by solver and compact turn paths.
+    // Object-major compact board. This is the persistent board shape used by
+    // solver and compact turn paths; interpreter execution materializes the
+    // legacy cell-major board in Scratch::liveLevel.
     BoardOccupancy occupancy;
 };
 
@@ -396,6 +395,9 @@ struct GameInformation {
 using Game = GameInformation;
 
 struct Scratch {
+    // Legacy interpreter cell-major board. Per-tile writes go through
+    // setCellObjects / setCellObjectsFromWords.
+    LevelTemplate liveLevel;
     MaskVector liveMovements;
     MaskVector rowMasks;
     MaskVector columnMasks;
@@ -499,19 +501,11 @@ void canonicalizeCompactObjectBits(
     uint64_t* objectBits,
     size_t objectBitWordCount);
 
-/// Resize/fill compact object bits from authoritative `liveLevel.objects`.
-void syncOccupancyObjectBitsFromLiveLevel(FullState& session);
+/// Updates persistent compact board occupancy from the interpreter scratch board.
+void syncPersistentBoardOccupancyFromScratch(FullState& session);
 
-/// Keeps compact object bits sized and aligned with the live board (delegates to sync).
-void resizeBoardOccupancyObjectBits(FullState& session);
-
-/// Compatibility hook for callers that sync compact board state and RNG together.
-/// RNG already lives in `PersistentLevelState::rng`.
-void syncOccupancyRngFromAuthoritativeRandomState(FullState& session);
-
-/// Updates compact object bits from authoritative session fields.
-/// Call after any turn completes (including specialized full-turn paths that bypass `executeTurn`).
-void syncBoardOccupancyMirrorFromAuthoritativeState(FullState& session);
+/// Updates persistent within-level state from scratch after interpreter execution.
+void syncPersistentLevelStateFromScratch(FullState& session);
 
 struct CompileResult {
     LoadedGame loadedGame;
