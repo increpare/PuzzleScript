@@ -35,6 +35,8 @@ struct CompactTurnSupport {
 bool isCompilableReplacement(const Replacement& replacement);
 std::string cppStringLiteral(std::string_view value);
 std::string safeCppIdentifier(std::string_view value);
+std::string compiledMaskWordLiteral(MaskWord word);
+std::vector<MaskWord> compiledMaskWords(const Game& game, MaskOffset offset, uint32_t wordCount);
 std::string compiledRuleMissReason(const Rule& rule, const CompiledRulesOptions& options, bool allowRandomRule = false);
 bool isCompilableRule(const Rule& rule, const CompiledRulesOptions& options);
 std::string compiledGroupMissReason(const std::vector<Rule>& group, const CompiledRulesOptions& options);

@@ -49,6 +49,33 @@ std::string safeCppIdentifier(std::string_view value) {
     return out;
 }
 
+std::string compiledMaskWordLiteral(MaskWord word) {
+    std::ostringstream out;
+    out << "static_cast<MaskWord>(static_cast<MaskWordUnsigned>("
+        << static_cast<MaskWordUnsigned>(word)
+        << "ULL))";
+    return out.str();
+}
+
+std::vector<MaskWord> compiledMaskWords(
+    const Game& game,
+    MaskOffset offset,
+    uint32_t wordCount
+) {
+    std::vector<MaskWord> words(static_cast<size_t>(wordCount), 0);
+    if (offset == kNullMaskOffset || wordCount == 0) {
+        return words;
+    }
+    const size_t begin = static_cast<size_t>(offset);
+    for (uint32_t word = 0; word < wordCount; ++word) {
+        const size_t index = begin + static_cast<size_t>(word);
+        if (index < game.maskArena.size()) {
+            words[static_cast<size_t>(word)] = game.maskArena[index];
+        }
+    }
+    return words;
+}
+
 std::string compiledRuleMissReason(
     const Rule& rule,
     const CompiledRulesOptions& options,

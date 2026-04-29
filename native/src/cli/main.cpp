@@ -40,6 +40,8 @@ namespace {
 using puzzlescript::compiler::areAllGroupsCompilable;
 using puzzlescript::compiler::canGenerateCompiledRuleCommandQueue;
 using puzzlescript::compiler::compiledGroupMissReason;
+using puzzlescript::compiler::compiledMaskWordLiteral;
+using puzzlescript::compiler::compiledMaskWords;
 using puzzlescript::compiler::compiledRuleCommandKindExpression;
 using puzzlescript::compiler::CompactTurnSupport;
 using puzzlescript::compiler::compactTurnSupportForGame;
@@ -3736,33 +3738,6 @@ bool ruleHasRandomReplacement(const puzzlescript::Rule& rule) {
 
 bool ruleUsesRuntimeRowHelpers(const puzzlescript::Rule& rule) {
     return rule.rigid || ruleHasEllipsis(rule) || ruleHasRandomReplacement(rule);
-}
-
-std::string compiledMaskWordLiteral(puzzlescript::MaskWord word) {
-    std::ostringstream out;
-    out << "static_cast<MaskWord>(static_cast<MaskWordUnsigned>("
-        << static_cast<puzzlescript::MaskWordUnsigned>(word)
-        << "ULL))";
-    return out.str();
-}
-
-std::vector<puzzlescript::MaskWord> compiledMaskWords(
-    const puzzlescript::Game& game,
-    puzzlescript::MaskOffset offset,
-    uint32_t wordCount
-) {
-    std::vector<puzzlescript::MaskWord> words(static_cast<size_t>(wordCount), 0);
-    if (offset == puzzlescript::kNullMaskOffset || wordCount == 0) {
-        return words;
-    }
-    const size_t begin = static_cast<size_t>(offset);
-    for (uint32_t word = 0; word < wordCount; ++word) {
-        const size_t index = begin + static_cast<size_t>(word);
-        if (index < game.maskArena.size()) {
-            words[static_cast<size_t>(word)] = game.maskArena[index];
-        }
-    }
-    return words;
 }
 
 void emitInlineMaskBitsSetCheck(
