@@ -84,7 +84,7 @@ void materializeCompactBridgeState(
     fillInterpreterBoardObjectsFromCompactObjectBits(
         game,
         dimensions,
-        levelState.board.occupancy.objectBits,
+        levelState.board.objectBits,
         session.scratch.interpreterBoard.objects
     );
     const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * std::max(game.strideMovement, 0));
@@ -107,7 +107,7 @@ void materializeCompactBridgeState(
 }
 
 void copyCompactBridgeStateBack(const FullState& session, PersistentLevelState& levelState, Scratch& scratch) {
-    fillCompactOccupancyBitsFromInterpreterBoard(session, levelState.board.occupancy.objectBits);
+    fillCompactOccupancyBitsFromInterpreterBoard(session, levelState.board.objectBits);
     levelState.rng = session.levelState.rng;
     scratch.liveMovements = session.scratch.liveMovements;
 }
@@ -122,7 +122,7 @@ SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(
     ps_input input,
     RuntimeStepOptions options
 ) {
-    if (levelState.board.occupancy.objectBits.empty() || context.dimensions.width <= 0 || context.dimensions.height <= 0) {
+    if (levelState.board.objectBits.empty() || context.dimensions.width <= 0 || context.dimensions.height <= 0) {
         return {false, {}};
     }
     const bool profileCompactTurn = runtimeCountersEnabled();

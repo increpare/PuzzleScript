@@ -108,7 +108,7 @@ struct ObjectDef {
 };
 
 // Cell-major object bitmask grid used by the interpreter. Persistent board
-// storage lives in PersistentLevelState::board.occupancy; Scratch::interpreterBoard
+// storage lives in PersistentLevelState::board.objectBits; Scratch::interpreterBoard
 // is materialized from or synced back to that compact board at runtime boundaries.
 // **Engine rule:** change per-cell interpreter occupancy only through
 // `setCellObjects` / `setCellObjectsFromWords` (and compiled-rule wrappers),
@@ -135,7 +135,7 @@ struct LevelDimensions {
 };
 
 struct RestartSnapshot {
-    /// Object-major compact occupancy (same layout as `BoardOccupancy::objectBits`).
+    /// Object-major compact occupancy (same layout as `PersistentBoardState::objectBits`).
     std::vector<uint64_t> objectBits;
     std::vector<int32_t> oldFlickscreenDat;
 };
@@ -293,15 +293,11 @@ struct SoundMaskEntry {
     int32_t seed = 0;
 };
 
-struct BoardOccupancy {
-    std::vector<uint64_t> objectBits;
-};
-
 struct PersistentBoardState {
     // Object-major compact board. This is the persistent board shape used by
     // solver and compact turn paths; interpreter execution materializes the
     // legacy cell-major board in Scratch::interpreterBoard.
-    BoardOccupancy occupancy;
+    std::vector<uint64_t> objectBits;
 };
 
 struct PersistentLevelState {
@@ -498,7 +494,7 @@ struct TurnResult {
     std::vector<ps_audio_event> uiAudio;
 };
 
-/// Cell-major → object-major compact bits (same layout as `BoardOccupancy::objectBits`).
+/// Cell-major → object-major compact bits (same layout as `PersistentBoardState::objectBits`).
 void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std::vector<uint64_t>& objectBits);
 
 void fillCompactOccupancyBitsFromInterpreterBoardData(
@@ -522,7 +518,7 @@ void canonicalizeCompactObjectBits(
     size_t objectBitWordCount);
 
 /// Updates persistent compact board occupancy from the interpreter scratch board.
-void syncPersistentBoardOccupancyFromScratch(FullState& session);
+void syncPersistentBoardFromScratch(FullState& session);
 
 /// Updates persistent within-level state from scratch after interpreter execution.
 void syncPersistentLevelStateFromScratch(FullState& session);

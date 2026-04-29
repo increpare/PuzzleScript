@@ -3541,10 +3541,10 @@ void rebuildObjectCellIndex(FullState& session) {
     }
 
     // Compact-first: objectCellBits shares the same object-major layout as
-    // occupancy.objectBits, so we can copy and count set bits directly.
+    // objectBits, so we can copy and count set bits directly.
     const size_t expectedWords = static_cast<size_t>(objectCount) * cellWordCount;
-    if (session.levelState.board.occupancy.objectBits.size() == expectedWords) {
-        session.scratch.objectCellBits = session.levelState.board.occupancy.objectBits;
+    if (session.levelState.board.objectBits.size() == expectedWords) {
+        session.scratch.objectCellBits = session.levelState.board.objectBits;
         for (int32_t objectId = 0; objectId < objectCount; ++objectId) {
             const size_t base = static_cast<size_t>(objectId) * cellWordCount;
             uint32_t count = 0;
@@ -3743,7 +3743,7 @@ std::vector<uint8_t> buildSessionHashBytes(const FullState& session) {
     const auto* randomBytes = reinterpret_cast<const uint8_t*>(session.levelState.rng.s.data());
     bytes.insert(bytes.end(), randomBytes, randomBytes + session.levelState.rng.s.size() * sizeof(uint8_t));
 
-    const auto& objectBits = session.levelState.board.occupancy.objectBits;
+    const auto& objectBits = session.levelState.board.objectBits;
     const auto* objectBytes = reinterpret_cast<const uint8_t*>(objectBits.data());
     bytes.insert(bytes.end(), objectBytes, objectBytes + objectBits.size() * sizeof(uint64_t));
     const auto& movements = session.scratch.liveMovements;
@@ -3779,7 +3779,7 @@ uint64_t hashFullState64NoAlloc(const FullState& session, uint64_t seed) {
     appendHashValue(hash, session.levelState.rng.valid);
     appendHashBytes(hash, session.levelState.rng.s.data(), session.levelState.rng.s.size() * sizeof(uint8_t));
 
-    const auto& objectBits = session.levelState.board.occupancy.objectBits;
+    const auto& objectBits = session.levelState.board.objectBits;
     appendHashBytes(hash, objectBits.data(), objectBits.size() * sizeof(uint64_t));
     const auto& movements = session.scratch.liveMovements;
     appendHashBytes(hash, movements.data(), movements.size() * sizeof(MaskWord));
@@ -4188,12 +4188,12 @@ void fillCompactOccupancyBitsFromInterpreterBoard(const FullState& session, std:
     );
 }
 
-void syncPersistentBoardOccupancyFromScratch(FullState& session) {
-    fillCompactOccupancyBitsFromInterpreterBoard(session, session.levelState.board.occupancy.objectBits);
+void syncPersistentBoardFromScratch(FullState& session) {
+    fillCompactOccupancyBitsFromInterpreterBoard(session, session.levelState.board.objectBits);
 }
 
 void syncPersistentLevelStateFromScratch(FullState& session) {
-    syncPersistentBoardOccupancyFromScratch(session);
+    syncPersistentBoardFromScratch(session);
 }
 
 const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset) {
@@ -4796,8 +4796,8 @@ std::string serializeTestString(const FullState& session) {
                 const int32_t objectId = bit;
                 const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
                 if (cellWordCount > 0
-                    && objectBase + bitWord < session.levelState.board.occupancy.objectBits.size()
-                    && (session.levelState.board.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
+                    && objectBase + bitWord < session.levelState.board.objectBits.size()
+                    && (session.levelState.board.objectBits[objectBase + bitWord] & bitMask) != 0) {
                     if (static_cast<size_t>(bit) < session.game->idDict.size()) {
                         objects.push_back(session.game->idDict[static_cast<size_t>(bit)]);
                     }

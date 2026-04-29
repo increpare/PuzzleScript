@@ -348,7 +348,7 @@ bool ps_full_state_compact_turn_oracle_check(
 
     CompactOracleState compact = compactOracleStateFromFullState(original);
     puzzlescript::PersistentLevelState compactLevelState;
-    compactLevelState.board.occupancy.objectBits = compact.objectBits;
+    compactLevelState.board.objectBits = compact.objectBits;
     compactLevelState.rng = compact.randomState;
     puzzlescript::Scratch compactScratch;
     compactScratch.liveMovements = compact.movementWords;
@@ -372,10 +372,10 @@ bool ps_full_state_compact_turn_oracle_check(
             *original.game,
             context.dimensions.width,
             context.dimensions.height,
-            compactLevelState.board.occupancy.objectBits.empty() ? nullptr : compactLevelState.board.occupancy.objectBits.data(),
-            compactLevelState.board.occupancy.objectBits.size()
+            compactLevelState.board.objectBits.empty() ? nullptr : compactLevelState.board.objectBits.data(),
+            compactLevelState.board.objectBits.size()
         );
-        compact.objectBits = compactLevelState.board.occupancy.objectBits;
+        compact.objectBits = compactLevelState.board.objectBits;
         compact.movementWords = compactScratch.liveMovements;
         compact.randomState = compactLevelState.rng;
     }
@@ -503,10 +503,10 @@ bool ps_full_state_cell_has_object(const ps_full_state* state, int32_t x, int32_
     const size_t objectBase = static_cast<size_t>(object_id) * cellWordCount;
     const size_t bitWord = static_cast<size_t>(tile_index >> 6);
     const uint64_t bitMask = uint64_t{1} << static_cast<uint32_t>(tile_index & 63);
-    if (cellWordCount == 0 || objectBase + bitWord >= impl.levelState.board.occupancy.objectBits.size()) {
+    if (cellWordCount == 0 || objectBase + bitWord >= impl.levelState.board.objectBits.size()) {
         return false;
     }
-    return (impl.levelState.board.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0;
+    return (impl.levelState.board.objectBits[objectBase + bitWord] & bitMask) != 0;
 }
 
 bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* out_x, int32_t* out_y) {
@@ -545,8 +545,8 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
         if (impl.game->playerMaskAggregate) {
             for (int32_t objectId : playerObjectIds) {
                 const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-                if (objectBase + bitWord >= impl.levelState.board.occupancy.objectBits.size()
-                    || (impl.levelState.board.occupancy.objectBits[objectBase + bitWord] & bitMask) == 0) {
+                if (objectBase + bitWord >= impl.levelState.board.objectBits.size()
+                    || (impl.levelState.board.objectBits[objectBase + bitWord] & bitMask) == 0) {
                     containsPlayer = false;
                     break;
                 }
@@ -555,8 +555,8 @@ bool ps_full_state_first_player_position(const ps_full_state* state, int32_t* ou
             containsPlayer = false;
             for (int32_t objectId : playerObjectIds) {
                 const size_t objectBase = static_cast<size_t>(objectId) * cellWordCount;
-                if (objectBase + bitWord < impl.levelState.board.occupancy.objectBits.size()
-                    && (impl.levelState.board.occupancy.objectBits[objectBase + bitWord] & bitMask) != 0) {
+                if (objectBase + bitWord < impl.levelState.board.objectBits.size()
+                    && (impl.levelState.board.objectBits[objectBase + bitWord] & bitMask) != 0) {
                     containsPlayer = true;
                     break;
                 }
