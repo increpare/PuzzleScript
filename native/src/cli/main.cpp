@@ -44,9 +44,11 @@ using puzzlescript::compiler::compiledRuleCommandKindExpression;
 using puzzlescript::compiler::CompactTurnSupport;
 using puzzlescript::compiler::compactTurnSupportForGame;
 using puzzlescript::compiler::CompiledRulesOptions;
+using puzzlescript::compiler::cppStringLiteral;
 using puzzlescript::compiler::isCompilableGroup;
 using puzzlescript::compiler::isCompilableReplacement;
 using puzzlescript::compiler::isCompilableRule;
+using puzzlescript::compiler::safeCppIdentifier;
 using puzzlescript::compiler::SpecializedFullTurnSupport;
 using puzzlescript::compiler::specializedFullTurnSupportForGame;
 using puzzlescript::compiler::specializedFullTurnSupportForMissingGame;
@@ -3703,46 +3705,6 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::LoadedGame& loaded
     out << "}\n";
     out << "}\n";
     return out.str();
-}
-
-std::string cppStringLiteral(std::string_view value) {
-    std::ostringstream out;
-    out << '"';
-    for (unsigned char ch : value) {
-        switch (ch) {
-            case '\\': out << "\\\\"; break;
-            case '"': out << "\\\""; break;
-            case '\n': out << "\\n"; break;
-            case '\r': out << "\\r"; break;
-            case '\t': out << "\\t"; break;
-            default:
-                if (ch < 0x20) {
-                    static constexpr char kHex[] = "0123456789abcdef";
-                    out << "\\x" << kHex[ch >> 4] << kHex[ch & 0x0f];
-                } else {
-                    out << static_cast<char>(ch);
-                }
-                break;
-        }
-    }
-    out << '"';
-    return out.str();
-}
-
-std::string safeCppIdentifier(std::string_view value) {
-    std::string out;
-    out.reserve(value.size() + 1);
-    for (const unsigned char ch : value) {
-        if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || (ch >= '0' && ch <= '9')) {
-            out.push_back(static_cast<char>(ch));
-        } else {
-            out.push_back('_');
-        }
-    }
-    if (out.empty() || (out[0] >= '0' && out[0] <= '9')) {
-        out.insert(out.begin(), '_');
-    }
-    return out;
 }
 
 bool ruleHasEllipsis(const puzzlescript::Rule& rule) {
