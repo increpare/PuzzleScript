@@ -347,6 +347,15 @@ Acceptance:
 
 **Goal:** Complete the standard turn envelope.
 
+**Progress:**
+- [x] Emit generic win-condition evaluation for compiler mode.
+- [x] Return handled compiler-mode turns for games with no early/late
+  rulegroups.
+- [ ] Apply late rulegroups.
+- [ ] Handle restart/reset/cancel terminal treatment for solver.
+- [ ] Handle `again` policy.
+- [ ] Thread deterministic RNG for semantics that use it.
+
 Features:
 - late rulegroups
 - win conditions

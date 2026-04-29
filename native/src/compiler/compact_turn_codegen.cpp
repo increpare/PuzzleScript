@@ -25,6 +25,9 @@ void emitCompactTurnCompilerSkeletonBody(std::ostream& out, std::string_view suf
         << "    if (!compact_turn_prepare_state_" << suffix << "(dimensions, levelState, scratch)) {\n"
         << "        return {false, result};\n"
         << "    }\n"
+        << "    if (!compact_turn_can_handle_turn_" << suffix << "()) {\n"
+        << "        return {false, result};\n"
+        << "    }\n"
         << "    const int32_t directionMask = compact_turn_input_direction_" << suffix << "(input);\n"
         << "    const bool seededInput = compact_turn_seed_player_movements_" << suffix << "(dimensions, levelState, scratch, directionMask);\n"
         << "    (void)seededInput;\n"
@@ -38,9 +41,12 @@ void emitCompactTurnCompilerSkeletonBody(std::ostream& out, std::string_view suf
         << "    // 5. resolve movement\n"
         << "    // 6. apply late rulegroups\n"
         << "    // 7. process commands and again policy\n"
+        << "    const bool won = compact_turn_evaluate_win_" << suffix << "(dimensions, levelState);\n"
         << "    // 8. evaluate win conditions\n"
         << "    // 9. canonicalize and return result\n"
-        << "    return {false, result};\n";
+        << "    result.changed = seededInput || moved;\n"
+        << "    result.won = won;\n"
+        << "    return {true, result};\n";
 }
 
 std::string sourceSuffix(size_t sourceIndex) {
@@ -54,7 +60,8 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "constexpr int32_t compact_turn_object_count_" << suffix << " = " << game.objectCount << ";\n"
         << "constexpr int32_t compact_turn_layer_count_" << suffix << " = " << game.layerCount << ";\n"
         << "constexpr bool compact_turn_has_player_mask_" << suffix << " = " << (game.playerMask != kNullMaskOffset ? "true" : "false") << ";\n"
-        << "constexpr bool compact_turn_player_mask_aggregate_" << suffix << " = " << (game.playerMaskAggregate ? "true" : "false") << ";\n\n";
+        << "constexpr bool compact_turn_player_mask_aggregate_" << suffix << " = " << (game.playerMaskAggregate ? "true" : "false") << ";\n"
+        << "constexpr int32_t compact_turn_win_condition_count_" << suffix << " = " << game.winConditions.size() << ";\n\n";
 
     const std::vector<MaskWord> playerMask = compiledMaskWords(game, game.playerMask, game.wordCount);
     out << "constexpr MaskWord compact_turn_player_mask_" << suffix << "[] = {";
@@ -90,6 +97,31 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
     if (game.layerCount > 0) {
         out << "\n";
     }
+
+    for (size_t conditionIndex = 0; conditionIndex < game.winConditions.size(); ++conditionIndex) {
+        const WinCondition& condition = game.winConditions[conditionIndex];
+        const std::vector<MaskWord> filter1 = compiledMaskWords(game, condition.filter1, game.wordCount);
+        const std::vector<MaskWord> filter2 = compiledMaskWords(game, condition.filter2, game.wordCount);
+        out << "constexpr MaskWord compact_turn_win_filter1_" << suffix << "_" << conditionIndex << "[] = {";
+        for (size_t word = 0; word < filter1.size(); ++word) {
+            if (word > 0) out << ", ";
+            out << compiledMaskWordLiteral(filter1[word]);
+        }
+        out << "};\n";
+        out << "constexpr MaskWord compact_turn_win_filter2_" << suffix << "_" << conditionIndex << "[] = {";
+        for (size_t word = 0; word < filter2.size(); ++word) {
+            if (word > 0) out << ", ";
+            out << compiledMaskWordLiteral(filter2[word]);
+        }
+        out << "};\n";
+    }
+    if (!game.winConditions.empty()) {
+        out << "\n";
+    }
+
+    out << "bool compact_turn_can_handle_turn_" << suffix << "() {\n"
+        << "    return " << (game.rules.empty() && game.lateRules.empty() ? "true" : "false") << ";\n"
+        << "}\n\n";
 
     out << "int32_t compact_turn_tile_count_" << suffix << "(LevelDimensions dimensions) {\n"
         << "    if (dimensions.width <= 0 || dimensions.height <= 0) return 0;\n"
@@ -201,6 +233,68 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    }\n"
         << "    return true;\n"
         << "}\n\n";
+
+    out << "bool compact_turn_matches_filter_" << suffix << "(const MaskWord* filter, bool aggregate, const MaskWord* cell) {\n"
+        << "    if (aggregate) {\n"
+        << "        for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
+        << "            if ((cell[word] & filter[word]) != filter[word]) return false;\n"
+        << "        }\n"
+        << "        return true;\n"
+        << "    }\n"
+        << "    for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
+        << "        if ((cell[word] & filter[word]) != 0) return true;\n"
+        << "    }\n"
+        << "    return false;\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_evaluate_win_condition_" << suffix << "(LevelDimensions dimensions, const PersistentLevelState& levelState, int32_t quantifier, const MaskWord* filter1, bool aggr1, const MaskWord* filter2, bool aggr2) {\n"
+        << "    const int32_t tileCount = compact_turn_tile_count_" << suffix << "(dimensions);\n"
+        << "    switch (quantifier) {\n"
+        << "        case -1:\n"
+        << "            for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {\n"
+        << "                const MaskWord* cell = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
+        << "                if (compact_turn_matches_filter_" << suffix << "(filter1, aggr1, cell) && compact_turn_matches_filter_" << suffix << "(filter2, aggr2, cell)) return false;\n"
+        << "            }\n"
+        << "            return true;\n"
+        << "        case 0:\n"
+        << "            for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {\n"
+        << "                const MaskWord* cell = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
+        << "                if (compact_turn_matches_filter_" << suffix << "(filter1, aggr1, cell) && compact_turn_matches_filter_" << suffix << "(filter2, aggr2, cell)) return true;\n"
+        << "            }\n"
+        << "            return false;\n"
+        << "        case 1:\n"
+        << "            for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {\n"
+        << "                const MaskWord* cell = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
+        << "                if (compact_turn_matches_filter_" << suffix << "(filter1, aggr1, cell) && !compact_turn_matches_filter_" << suffix << "(filter2, aggr2, cell)) return false;\n"
+        << "            }\n"
+        << "            return true;\n"
+        << "        default:\n"
+        << "            return false;\n"
+        << "    }\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_evaluate_win_" << suffix << "(LevelDimensions dimensions, const PersistentLevelState& levelState) {\n";
+    if (game.winConditions.empty()) {
+        out << "    (void)dimensions;\n"
+            << "    (void)levelState;\n"
+            << "    return false;\n";
+    } else {
+        for (size_t conditionIndex = 0; conditionIndex < game.winConditions.size(); ++conditionIndex) {
+            const WinCondition& condition = game.winConditions[conditionIndex];
+            out << "    if (!compact_turn_evaluate_win_condition_" << suffix << "(\n"
+                << "            dimensions,\n"
+                << "            levelState,\n"
+                << "            " << condition.quantifier << ",\n"
+                << "            compact_turn_win_filter1_" << suffix << "_" << conditionIndex << ",\n"
+                << "            " << (condition.aggr1 ? "true" : "false") << ",\n"
+                << "            compact_turn_win_filter2_" << suffix << "_" << conditionIndex << ",\n"
+                << "            " << (condition.aggr2 ? "true" : "false") << ")) {\n"
+                << "        return false;\n"
+                << "    }\n";
+        }
+        out << "    return true;\n";
+    }
+    out << "}\n\n";
 
     out << "const MaskWord* compact_turn_layer_mask_" << suffix << "(int32_t layer) {\n"
         << "    switch (layer) {\n";
