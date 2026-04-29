@@ -531,7 +531,7 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 183/469 known passing.
+Selected compiler-mode testdata progress: 203/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -680,6 +680,16 @@ Fifth frontier expansion update, 2026-04-29:
     Level-change recording, undo/realtime, many-layer and many-object
     fixtures, multi-word dictionary names, restart, mirror rules, push/pull,
     rigid preexisting movement behavior, and broader loop coverage.
+
+Sixth frontier expansion update, 2026-04-30:
+  ranked-frontier replay:
+    cases: 317 51 29 269 120 72 169 20 410 389 390 46 297 309 41 257 96 238 24 128
+    result: 20/20 pass
+  added coverage:
+    Sokoban-family nested fixtures, modality and mirror-loop cases, undo and
+    transition-heavy probes, aggregate win-condition variants, many-object and
+    Unicode parsing fixtures, double-ellipsis magnetism, and broader late-rule
+    coverage.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
