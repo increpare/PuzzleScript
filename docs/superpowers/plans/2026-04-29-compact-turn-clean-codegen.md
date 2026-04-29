@@ -417,6 +417,17 @@ Use tests as the feature backlog.
 6. Scale from solver smoke fixtures to selected testdata.
 7. Then run the full simulation corpus.
 
+Use the ranked frontier helper before choosing the next `testdata.js` case:
+
+```bash
+make compact_turn_codegen_frontier
+```
+
+This sorts cases by rough source/input/rule/level size so compiler bring-up
+does not accidentally chase large games just because they appear early in the
+file. Differential compact-oracle checks remain the authority once a case is
+chosen.
+
 Current compiler-mode testdata foothold:
 
 ```text
@@ -438,6 +449,15 @@ make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=5
   case: "by your side"
   result: passes with compact oracle checks
   added coverage: deterministic multi-row rules and require_player_movement cancellation
+
+Additional ranked-frontier probes:
+  case 40, "don't mask movements if no movements happening": passes
+  case 42, "Remove movements from empty layers after rule application": passes
+  case 43, "movement matching - correctly matching different objects same cell moving in different directions": passes
+  case 114, "Make synonyms of properties work. #243": passes
+
+Known next unsupported feature from numeric case 6:
+  ellipsis at source rule line 51
 ```
 
 Recommended progress report:
