@@ -277,6 +277,13 @@ Acceptance:
 
 **Goal:** Implement generic player input movement seeding.
 
+**Progress:**
+- [x] Emit generated input-to-direction mapping.
+- [x] Emit player-mask and object-layer tables from compiled game data.
+- [x] Seed player collision-layer movement bits in `Scratch::liveMovements`.
+- [ ] Turn seeded movement into handled transitions once movement resolution
+  exists.
+
 Semantics:
 - map input to movement mask
 - find all player objects from compiled player mask

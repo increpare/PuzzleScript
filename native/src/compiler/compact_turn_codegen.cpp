@@ -2,6 +2,7 @@
 
 #include "compiler/compiled_rules_codegen.hpp"
 
+#include <algorithm>
 #include <ostream>
 
 namespace puzzlescript::compiler {
@@ -19,14 +20,14 @@ void emitCompactTurnUnsupportedBody(std::ostream& out) {
 }
 
 void emitCompactTurnCompilerSkeletonBody(std::ostream& out, std::string_view suffix) {
-    out << "    (void)levelState;\n"
-        << "    (void)scratch;\n"
-        << "    (void)options;\n"
-        << "    (void)input;\n"
+    out << "    (void)options;\n"
         << "    ps_step_result result{};\n"
         << "    if (!compact_turn_prepare_state_" << suffix << "(dimensions, levelState, scratch)) {\n"
         << "        return {false, result};\n"
         << "    }\n"
+        << "    const int32_t directionMask = compact_turn_input_direction_" << suffix << "(input);\n"
+        << "    const bool seededInput = compact_turn_seed_player_movements_" << suffix << "(dimensions, levelState, scratch, directionMask);\n"
+        << "    (void)seededInput;\n"
         << "    // Semantic compact turn compiler skeleton:\n"
         << "    // 1. validate level dimensions and persistent board storage\n"
         << "    // 2. decode input direction\n"
@@ -49,7 +50,28 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
     out << "constexpr int32_t compact_turn_object_stride_" << suffix << " = " << game.strideObject << ";\n"
         << "constexpr int32_t compact_turn_movement_stride_" << suffix << " = " << game.strideMovement << ";\n"
         << "constexpr int32_t compact_turn_object_count_" << suffix << " = " << game.objectCount << ";\n"
-        << "constexpr int32_t compact_turn_layer_count_" << suffix << " = " << game.layerCount << ";\n\n";
+        << "constexpr int32_t compact_turn_layer_count_" << suffix << " = " << game.layerCount << ";\n"
+        << "constexpr bool compact_turn_has_player_mask_" << suffix << " = " << (game.playerMask != kNullMaskOffset ? "true" : "false") << ";\n"
+        << "constexpr bool compact_turn_player_mask_aggregate_" << suffix << " = " << (game.playerMaskAggregate ? "true" : "false") << ";\n\n";
+
+    const std::vector<MaskWord> playerMask = compiledMaskWords(game, game.playerMask, game.wordCount);
+    out << "constexpr MaskWord compact_turn_player_mask_" << suffix << "[] = {";
+    for (size_t word = 0; word < playerMask.size(); ++word) {
+        if (word > 0) out << ", ";
+        out << compiledMaskWordLiteral(playerMask[word]);
+    }
+    out << "};\n";
+
+    out << "constexpr int32_t compact_turn_object_layer_" << suffix << "[] = {";
+    const int32_t emittedObjectLayerCount = std::max(game.objectCount, 1);
+    for (int32_t objectId = 0; objectId < emittedObjectLayerCount; ++objectId) {
+        if (objectId > 0) out << ", ";
+        const int32_t layer = static_cast<size_t>(objectId) < game.objectsById.size()
+            ? game.objectsById[static_cast<size_t>(objectId)].layer
+            : -1;
+        out << layer;
+    }
+    out << "};\n\n";
 
     for (int32_t layer = 0; layer < game.layerCount; ++layer) {
         const MaskOffset offset = static_cast<size_t>(layer) < game.layerMaskOffsets.size()
@@ -88,6 +110,17 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "        case 8: dx = 1; dy = 0; return true;\n"
         << "        case 16: dx = 0; dy = 0; return true;\n"
         << "        default: dx = 0; dy = 0; return false;\n"
+        << "    }\n"
+        << "}\n\n";
+
+    out << "int32_t compact_turn_input_direction_" << suffix << "(ps_input input) {\n"
+        << "    switch (input) {\n"
+        << "        case PS_INPUT_UP: return 1;\n"
+        << "        case PS_INPUT_DOWN: return 2;\n"
+        << "        case PS_INPUT_LEFT: return 4;\n"
+        << "        case PS_INPUT_RIGHT: return 8;\n"
+        << "        case PS_INPUT_ACTION: return 16;\n"
+        << "        default: return 0;\n"
         << "    }\n"
         << "}\n\n";
 
@@ -181,6 +214,14 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    return layerMask != nullptr && compact_turn_cell_any_objects_" << suffix << "(levelState, tileIndex, layerMask);\n"
         << "}\n\n";
 
+    out << "bool compact_turn_cell_matches_player_" << suffix << "(const PersistentLevelState& levelState, int32_t tileIndex) {\n"
+        << "    if (!compact_turn_has_player_mask_" << suffix << ") return false;\n"
+        << "    if (compact_turn_player_mask_aggregate_" << suffix << ") {\n"
+        << "        return compact_turn_cell_has_all_objects_" << suffix << "(levelState, tileIndex, compact_turn_player_mask_" << suffix << ");\n"
+        << "    }\n"
+        << "    return compact_turn_cell_any_objects_" << suffix << "(levelState, tileIndex, compact_turn_player_mask_" << suffix << ");\n"
+        << "}\n\n";
+
     out << "void compact_turn_set_cell_object_" << suffix << "(PersistentLevelState& levelState, int32_t tileIndex, int32_t objectId) {\n"
         << "    if (objectId < 0 || objectId >= compact_turn_object_count_" << suffix << ") return;\n"
         << "    const uint32_t bit = static_cast<uint32_t>(objectId);\n"
@@ -217,6 +258,29 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
 
     out << "void compact_turn_clear_layer_movement_" << suffix << "(Scratch& scratch, int32_t tileIndex, int32_t layer) {\n"
         << "    compact_turn_set_layer_movement_" << suffix << "(scratch, tileIndex, layer, 0);\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_seed_player_movements_" << suffix << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, int32_t directionMask) {\n"
+        << "    if (directionMask == 0 || !compact_turn_has_player_mask_" << suffix << ") return false;\n"
+        << "    bool changed = false;\n"
+        << "    const int32_t tileCount = compact_turn_tile_count_" << suffix << "(dimensions);\n"
+        << "    for (int32_t tileIndex = 0; tileIndex < tileCount; ++tileIndex) {\n"
+        << "        if (!compact_turn_cell_matches_player_" << suffix << "(levelState, tileIndex)) continue;\n"
+        << "        const MaskWord* cell = compact_turn_cell_objects_" << suffix << "(levelState, tileIndex);\n"
+        << "        for (int32_t objectId = 0; objectId < compact_turn_object_count_" << suffix << "; ++objectId) {\n"
+        << "            const uint32_t objectBit = static_cast<uint32_t>(objectId);\n"
+        << "            const uint32_t word = maskWordIndex(objectBit);\n"
+        << "            const MaskWord bit = maskBit(objectBit);\n"
+        << "            if ((compact_turn_player_mask_" << suffix << "[word] & bit) == 0 || (cell[word] & bit) == 0) continue;\n"
+        << "            const int32_t layer = compact_turn_object_layer_" << suffix << "[objectId];\n"
+        << "            if (layer < 0) continue;\n"
+        << "            const int32_t before = compact_turn_layer_movement_" << suffix << "(scratch, tileIndex, layer);\n"
+        << "            compact_turn_set_layer_movement_" << suffix << "(scratch, tileIndex, layer, directionMask);\n"
+        << "            const int32_t after = compact_turn_layer_movement_" << suffix << "(scratch, tileIndex, layer);\n"
+        << "            changed = changed || before != after;\n"
+        << "        }\n"
+        << "    }\n"
+        << "    return changed;\n"
         << "}\n\n";
 }
 
