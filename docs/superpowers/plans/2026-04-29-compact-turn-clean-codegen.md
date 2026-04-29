@@ -600,6 +600,18 @@ Cross-word movement progress update, 2026-04-29:
     and movement resolution on one generic movement accessor instead of
     assuming every layer fits in one word.
 
+Codegen-size iteration note, 2026-04-29:
+  fast selected old-failure replay:
+    cases: 31 32 57 62 85 87 88 89 90 188
+  slow compile sentinels, run deliberately at the end of an iteration:
+    155 "gallery game: at the hedges of time"
+    189 "gallery: cyber-lasso"
+  rationale:
+    case 155 is semantically passing but compiles slowly enough to nuke the
+    inner loop; case 189 remains the generated-source size frontier. Keep both
+    out of the fast selected replay, then return to them when evaluating source
+    size, sharding, constant deduplication, and other compile-time work.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
