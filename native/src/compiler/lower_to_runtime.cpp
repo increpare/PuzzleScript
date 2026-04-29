@@ -672,7 +672,6 @@ std::unique_ptr<puzzlescript::Error> lowerToRuntimeGame(
             game->levels.push_back(std::move(level));
             continue;
         }
-        level.layerCount = game->layerCount;
         if (srcLevel.lineNumber.has_value()) {
             level.lineNumber = *srcLevel.lineNumber;
         }

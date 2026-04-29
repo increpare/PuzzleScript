@@ -79,7 +79,6 @@ void materializeCompactBridgeState(
 ) {
     session.meta.level.width = dimensions.width;
     session.meta.level.height = dimensions.height;
-    session.meta.level.layerCount = game.layerCount;
     session.meta.levelDimensions = dimensions;
     const int32_t tileCount = dimensions.width * dimensions.height;
     fillInterpreterBoardObjectsFromCompactObjectBits(

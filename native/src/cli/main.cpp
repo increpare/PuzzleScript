@@ -3531,7 +3531,7 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::LoadedGame& loaded
             out << "{\"kind\":\"message\",\"message\":" << jsonStringLiteral(level.message) << "}";
         } else {
             out << "{\"kind\":\"level\",\"line_number\":" << level.lineNumber << ",\"width\":" << level.width
-                << ",\"height\":" << level.height << ",\"layer_count\":" << level.layerCount << ",\"objects\":";
+                << ",\"height\":" << level.height << ",\"layer_count\":" << game.layerCount << ",\"objects\":";
             appendJsonIntArray(out, level.objects);
             out << "}";
         }
@@ -3697,7 +3697,7 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::LoadedGame& loaded
         out << "{\"kind\":\"level\",\"line_number\":" << initialMetaGameState.level.lineNumber
             << ",\"width\":" << initialMetaGameState.level.width
             << ",\"height\":" << initialMetaGameState.level.height
-            << ",\"layer_count\":" << initialMetaGameState.level.layerCount
+            << ",\"layer_count\":" << game.layerCount
             << ",\"objects\":";
         appendJsonIntArray(out, initialMetaGameState.level.objects);
         out << "}";

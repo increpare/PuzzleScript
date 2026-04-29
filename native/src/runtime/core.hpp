@@ -119,7 +119,6 @@ struct LevelTemplate {
     int32_t lineNumber = 0;
     int32_t width = 0;
     int32_t height = 0;
-    int32_t layerCount = 0;
     MaskVector objects;
 };
 

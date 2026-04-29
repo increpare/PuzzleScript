@@ -1358,7 +1358,6 @@ LevelTemplate parseLevelTemplate(const json::Value& value) {
     }
     level.width = toInt(requireField(object, "width"));
     level.height = toInt(requireField(object, "height"));
-    level.layerCount = toInt(requireField(object, "layer_count"));
     level.objects = parseMaskVector(requireField(object, "objects"));
     return level;
 }
