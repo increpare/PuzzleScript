@@ -455,9 +455,14 @@ struct Scratch {
     SimdBackend backend = SimdBackend::Scalar;
 };
 
+struct InterpreterBoardSnapshot {
+    LevelDimensions dimensions;
+    MaskVector objects;
+};
+
 struct UndoSnapshot {
     MetaGameState meta;
-    LevelTemplate liveLevel;
+    InterpreterBoardSnapshot interpreterBoard;
     MaskVector liveMovements;
     MaskVector rigidGroupIndexMasks;
     MaskVector rigidMovementAppliedMasks;

@@ -3850,7 +3850,7 @@ void restoreSnapshot(FullState& session, const UndoSnapshot& snapshot, bool rest
     std::vector<UndoSnapshot> undoStack = std::move(session.meta.undoStack);
     session.meta = snapshot.meta;
     session.meta.undoStack = std::move(undoStack);
-    session.scratch.interpreterBoard.objects = snapshot.liveLevel.objects;
+    session.scratch.interpreterBoard.objects = snapshot.interpreterBoard.objects;
     if (snapshot.liveMovements.empty()) {
         session.scratch.liveMovements.assign(static_cast<size_t>(currentLevelWidth(session) * currentLevelHeight(session) * session.game->strideMovement), 0);
     } else {
@@ -3878,11 +3878,12 @@ void restoreSnapshot(FullState& session, const UndoSnapshot& snapshot, bool rest
 UndoSnapshot makeUndoSnapshot(const FullState& session) {
     MetaGameState meta = session.meta;
     meta.undoStack.clear();
-    LevelTemplate liveLevel = session.meta.level;
-    liveLevel.objects = session.scratch.interpreterBoard.objects;
     return UndoSnapshot{
         std::move(meta),
-        std::move(liveLevel),
+        InterpreterBoardSnapshot{
+            currentLevelDimensions(session),
+            session.scratch.interpreterBoard.objects,
+        },
         {},
         {},
         {},
@@ -4752,9 +4753,9 @@ bool undo(FullState& session) {
     }
     while (!session.meta.undoStack.empty()) {
         const auto& top = session.meta.undoStack.back();
-        if (top.liveLevel.width != currentLevelWidth(session)
-            || top.liveLevel.height != currentLevelHeight(session)
-            || top.liveLevel.objects != session.scratch.interpreterBoard.objects) {
+        if (top.interpreterBoard.dimensions.width != currentLevelWidth(session)
+            || top.interpreterBoard.dimensions.height != currentLevelHeight(session)
+            || top.interpreterBoard.objects != session.scratch.interpreterBoard.objects) {
             break;
         }
         session.meta.undoStack.pop_back();
@@ -5059,7 +5060,7 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
         }
         break;
     }
-    const bool modified = session.scratch.interpreterBoard.objects != turnStart.liveLevel.objects;
+    const bool modified = session.scratch.interpreterBoard.objects != turnStart.interpreterBoard.objects;
     if (options.observedModification != nullptr) {
         *options.observedModification = modified;
     }
