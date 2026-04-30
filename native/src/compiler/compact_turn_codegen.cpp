@@ -576,7 +576,9 @@ void emitCompactRuleFunction(
         out << "    return !rowMatches.empty();\n"
             << "}\n\n";
     }
-    emitCompactRuleCommandFunction(out, rule, prefix, suffix);
+    if (!rule.commands.empty()) {
+        emitCompactRuleCommandFunction(out, rule, prefix, suffix);
+    }
 
     out << "bool " << prefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<std::vector<int32_t>>>& matches) {\n"
         << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
@@ -715,7 +717,9 @@ void emitCompactRulegroupFunctions(
             for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
                 const std::string rulePrefix = compactRulePrefix(suffix, phase, groupIndex, ruleIndex);
                 out << "        case " << ruleIndex << ":\n"
-                    << "            " << rulePrefix << "_queue_commands(commands);\n"
+                    << (group[ruleIndex].commands.empty()
+                        ? std::string{}
+                        : "            " + rulePrefix + "_queue_commands(commands);\n")
                     << "            return " << rulePrefix << "_apply_tuple(levelState, scratch, groupMatches[" << ruleIndex << "], chosen.tupleIndex);\n";
             }
             out << "        default:\n"
