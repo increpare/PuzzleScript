@@ -927,6 +927,12 @@ One-row deterministic apply cleanup, 2026-04-30:
   Case 403 still passes compact oracle replay; generated source dropped to
   about 30 MB / 537,292 lines.
 
+Full-corpus post-cleanup guard, 2026-04-30:
+  `make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4`
+  passes after the generated-source reductions with
+  `cpp_simulation_tests_direct passed=469 failed=0 total=469` and
+  `compact_turn_oracle_failures=0`.
+
 Runtime/reporting cleanup, 2026-04-30:
   Renamed runtime generated-backend support metadata from fallback-specific
   naming to neutral `statusReason`, and added solver JSON/profile aliases for
