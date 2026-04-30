@@ -699,7 +699,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                       << "    }\n";
         }
         emitCompactRuleCommandQueue(applyBody, commandQueueName);
-        applyBody << "    std::vector<size_t> tupleIndex(rowCount, 0);\n"
+        applyBody << "    std::array<size_t, rowCount> tupleIndex{};\n"
                   << "    bool firstTuple = true;\n"
                   << "    bool changed = false;\n"
                   << "    while (true) {\n"
@@ -1047,7 +1047,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
             }
         }
         emitCompactRuleCommandQueue(applyBody, commandQueueName);
-        applyBody << "    std::vector<size_t> tupleIndex(rowCount, 0);\n"
+        applyBody << "    std::array<size_t, rowCount> tupleIndex{};\n"
                   << "    bool firstTuple = true;\n"
                   << "    bool changed = false;\n"
                   << "    while (true) {\n"
