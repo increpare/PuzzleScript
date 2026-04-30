@@ -4664,11 +4664,12 @@ void appendCompactTurnAggregateJsonFields(
     size_t supported,
     size_t nativeKernelSupported,
     size_t interpreterBridgeSupported,
-    const std::unordered_map<std::string, size_t>& fallbackReasons,
-    const std::unordered_map<std::string, size_t>& nativeFallbackReasons
+    const std::unordered_map<std::string, size_t>& statusReasons,
+    const std::unordered_map<std::string, size_t>& nativeKernelStatusReasons
 ) {
-    const std::vector<std::string_view> compactFallbackReasonOrder{
+    const std::vector<std::string_view> compactStatusReasonOrder{
         "supported",
+        "native_kernel",
         "interpreter_bridge",
         "native_compact_generator_rebuild",
     };
@@ -4678,10 +4679,14 @@ void appendCompactTurnAggregateJsonFields(
         << ",\"whole_turn_supported\":" << supported
         << ",\"native_kernel_supported\":" << nativeKernelSupported
         << ",\"interpreter_bridge_supported\":" << interpreterBridgeSupported
-        << ",\"whole_turn_fallback_reason_counts\":";
-    appendJsonCountObject(out, fallbackReasons, compactFallbackReasonOrder);
+        << ",\"whole_turn_status_reason_counts\":";
+    appendJsonCountObject(out, statusReasons, compactStatusReasonOrder);
+    out << ",\"whole_turn_fallback_reason_counts\":";
+    appendJsonCountObject(out, statusReasons, compactStatusReasonOrder);
+    out << ",\"native_kernel_status_reason_counts\":";
+    appendJsonCountObject(out, nativeKernelStatusReasons, compactStatusReasonOrder);
     out << ",\"native_kernel_fallback_reason_counts\":";
-    appendJsonCountObject(out, nativeFallbackReasons, compactFallbackReasonOrder);
+    appendJsonCountObject(out, nativeKernelStatusReasons, compactStatusReasonOrder);
     out << ",\"misses\":{";
     if (sourceCount > supported) {
         out << "\"interpreter_delegation\":" << (sourceCount - supported);
@@ -4693,24 +4698,32 @@ void appendCompactTurnSourceJsonFields(
     std::ostream& out,
     const CompactTurnSupport& support
 ) {
+    const std::string_view mode = support.nativeKernel()
+        ? "native_kernel"
+        : (support.usesInterpreterBridge() ? "interpreter_bridge" : "unsupported");
+    const std::string_view featureStatus = support.usesInterpreterBridge()
+        ? "interpreter_bridge"
+        : (support.nativeKernel() ? "native_generator" : "unsupported");
     out << "\"compact_turn\":{"
         << "\"backend_codegen_available\":true"
         << ",\"step_entry\":true"
-        << ",\"whole_turn_supported\":" << (support.supported ? "true" : "false")
-        << ",\"whole_turn_fallback_reason\":" << jsonStringLiteral(support.fallbackReason)
-        << ",\"mode\":" << jsonStringLiteral(support.interpreterBridge ? "interpreter_bridge" : "native_kernel")
-        << ",\"native_kernel_supported\":" << ((!support.interpreterBridge && support.supported) ? "true" : "false")
-        << ",\"native_kernel_fallback_reason\":" << jsonStringLiteral(support.nativeFallbackReason)
+        << ",\"whole_turn_supported\":" << (support.supported() ? "true" : "false")
+        << ",\"whole_turn_status_reason\":" << jsonStringLiteral(support.statusReason)
+        << ",\"whole_turn_fallback_reason\":" << jsonStringLiteral(support.statusReason)
+        << ",\"mode\":" << jsonStringLiteral(mode)
+        << ",\"native_kernel_supported\":" << (support.nativeKernel() ? "true" : "false")
+        << ",\"native_kernel_status_reason\":" << jsonStringLiteral(support.nativeKernelStatusReason)
+        << ",\"native_kernel_fallback_reason\":" << jsonStringLiteral(support.nativeKernelStatusReason)
         << ",\"features\":{"
-        << "\"state_layout\":\"compact_object_bits\""
-        << ",\"movement\":" << jsonStringLiteral(support.interpreterBridge ? "interpreter_bridge" : "native_generator")
-        << ",\"rules\":" << jsonStringLiteral(support.interpreterBridge ? "interpreter_bridge" : "native_generator")
-        << ",\"late_rules\":" << jsonStringLiteral(support.interpreterBridge ? "interpreter_bridge" : "native_generator")
-        << ",\"win_conditions\":" << jsonStringLiteral(support.interpreterBridge ? "interpreter_bridge" : "native_generator")
+        << "\"state_layout\":\"cell_major\""
+        << ",\"movement\":" << jsonStringLiteral(featureStatus)
+        << ",\"rules\":" << jsonStringLiteral(featureStatus)
+        << ",\"late_rules\":" << jsonStringLiteral(featureStatus)
+        << ",\"win_conditions\":" << jsonStringLiteral(featureStatus)
         << "}"
         << ",\"misses\":{";
-    if (!support.supported) {
-        out << jsonStringLiteral(support.fallbackReason) << ":1";
+    if (!support.supported()) {
+        out << jsonStringLiteral(support.statusReason) << ":1";
     }
     out << "}}";
 }
@@ -4732,8 +4745,8 @@ std::string generateCompiledRulesCoverageJson(
     size_t compactTurnSupported = 0;
     size_t compactTurnNativeSupported = 0;
     size_t compactTurnInterpreterBridgeSupported = 0;
-    std::unordered_map<std::string, size_t> compactTurnFallbackReasons;
-    std::unordered_map<std::string, size_t> compactTurnNativeFallbackReasons;
+    std::unordered_map<std::string, size_t> compactTurnStatusReasons;
+    std::unordered_map<std::string, size_t> compactTurnNativeKernelStatusReasons;
     for (const CodegenSource& source : sources) {
         const SpecializedFullTurnSupport support = source.game
             ? specializedFullTurnSupportForGame(*source.game, options)
@@ -4759,16 +4772,16 @@ std::string generateCompiledRulesCoverageJson(
         const CompactTurnSupport compactSupport = source.game
             ? compactTurnSupportForGame(*source.game, compactOptions)
             : CompactTurnSupport{};
-        if (compactSupport.supported) {
+        if (compactSupport.supported()) {
             ++compactTurnSupported;
         }
-        if (compactSupport.interpreterBridge) {
+        if (compactSupport.usesInterpreterBridge()) {
             ++compactTurnInterpreterBridgeSupported;
-        } else if (compactSupport.supported) {
+        } else if (compactSupport.supported()) {
             ++compactTurnNativeSupported;
         }
-        ++compactTurnFallbackReasons[compactSupport.fallbackReason];
-        ++compactTurnNativeFallbackReasons[compactSupport.nativeFallbackReason];
+        ++compactTurnStatusReasons[compactSupport.statusReason];
+        ++compactTurnNativeKernelStatusReasons[compactSupport.nativeKernelStatusReason];
     }
     out << "{\n"
         << "  \"max_rows\":" << options.maxRows << ",\n"
@@ -4793,8 +4806,8 @@ std::string generateCompiledRulesCoverageJson(
         compactTurnSupported,
         compactTurnNativeSupported,
         compactTurnInterpreterBridgeSupported,
-        compactTurnFallbackReasons,
-        compactTurnNativeFallbackReasons
+        compactTurnStatusReasons,
+        compactTurnNativeKernelStatusReasons
     );
     out << "},\n"
         << "  \"sources\":[\n";

@@ -1729,7 +1729,7 @@ void emitCompactTurnBackend(
 ) {
     const CompactTurnSupport compactTurnSupport = compactTurnSupportForGame(game, options);
     const std::string suffix = sourceSuffix(sourceIndex);
-    if (compactTurnSupport.supported && !compactTurnSupport.interpreterBridge) {
+    if (compactTurnSupport.nativeKernel()) {
         emitCompactTurnAccessLayer(out, game, sourceIndex);
         out << "SpecializedCompactTurnOutcome specialized_compact_turn_single_" << sourceIndex << "(\n"
             << "    LevelDimensions dimensions,\n"
@@ -1762,10 +1762,10 @@ void emitCompactTurnBackend(
         << "    ps_input input,\n"
         << "    RuntimeStepOptions options\n"
         << ") {\n";
-    if (!compactTurnSupport.supported) {
+    if (!compactTurnSupport.supported()) {
         emitCompactTurnUnsupportedBody(out);
         out << "}\n\n";
-    } else if (compactTurnSupport.interpreterBridge) {
+    } else if (compactTurnSupport.usesInterpreterBridge()) {
         out << "    return compactStateInterpretedTurnBridge(game, levelState, scratch, context, input, options);\n"
             << "}\n\n";
     } else {
@@ -1778,34 +1778,29 @@ void emitCompactTurnBackend(
         << "    " << sourceHash << "ULL,\n"
         << "    " << cppStringLiteral(sourcePath) << ",\n"
         << "    specialized_compact_turn_source_" << sourceIndex << ",\n"
-        << "    {" << (compactTurnSupport.supported ? "true" : "false")
-        << ", " << cppStringLiteral(compactTurnSupport.fallbackReason) << "},\n"
-        << "    " << (compactTurnSupport.supported && !compactTurnSupport.interpreterBridge ? "true" : "false") << ",\n"
+        << "    {" << (compactTurnSupport.supported() ? "true" : "false")
+        << ", " << cppStringLiteral(compactTurnSupport.statusReason) << "},\n"
+        << "    " << (compactTurnSupport.nativeKernel() ? "true" : "false") << ",\n"
         << "};\n\n";
 }
 
 CompactTurnSupport compactNativeTurnSupportForGame(const Game& game) {
     (void)game;
-    CompactTurnSupport support;
-    support.fallbackReason = "native_compact_generator_rebuild";
-    support.nativeFallbackReason = support.fallbackReason;
-    return support;
+    return CompactTurnSupport{};
 }
 
 CompactTurnSupport compactTurnSupportForGame(const Game& game, const CompactCodegenOptions& options) {
     CompactTurnSupport support = compactNativeTurnSupportForGame(game);
-    support.nativeFallbackReason = support.fallbackReason;
+    support.nativeKernelStatusReason = support.statusReason;
     if (!options.interpreterMode) {
-        support.supported = true;
-        support.interpreterBridge = false;
-        support.fallbackReason = "compiler_mode";
-        support.nativeFallbackReason = "compiler_mode";
+        support.backendKind = CompactTurnBackendKind::NativeKernel;
+        support.statusReason = "native_kernel";
+        support.nativeKernelStatusReason = "native_kernel";
         return support;
     }
-    if (options.interpreterMode && !support.supported) {
-        support.supported = true;
-        support.interpreterBridge = true;
-        support.fallbackReason = "interpreter_bridge";
+    if (options.interpreterMode && !support.supported()) {
+        support.backendKind = CompactTurnBackendKind::InterpreterBridge;
+        support.statusReason = "interpreter_bridge";
     }
     return support;
 }

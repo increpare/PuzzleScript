@@ -14,11 +14,28 @@ struct CompactCodegenOptions {
     bool interpreterMode = false;
 };
 
+enum class CompactTurnBackendKind {
+    Unsupported,
+    NativeKernel,
+    InterpreterBridge,
+};
+
 struct CompactTurnSupport {
-    bool supported = false;
-    std::string fallbackReason = "interpreter_delegation";
-    bool interpreterBridge = false;
-    std::string nativeFallbackReason = "interpreter_delegation";
+    CompactTurnBackendKind backendKind = CompactTurnBackendKind::Unsupported;
+    std::string statusReason = "native_compact_generator_rebuild";
+    std::string nativeKernelStatusReason = "native_compact_generator_rebuild";
+
+    bool supported() const {
+        return backendKind != CompactTurnBackendKind::Unsupported;
+    }
+
+    bool nativeKernel() const {
+        return backendKind == CompactTurnBackendKind::NativeKernel;
+    }
+
+    bool usesInterpreterBridge() const {
+        return backendKind == CompactTurnBackendKind::InterpreterBridge;
+    }
 };
 
 CompactTurnSupport compactNativeTurnSupportForGame(const Game& game);
