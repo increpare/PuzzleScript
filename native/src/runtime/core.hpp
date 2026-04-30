@@ -624,6 +624,19 @@ void settlePendingAgain(FullState& state, RuntimeStepOptions options);
 TurnResult turnResult(FullState& state, ps_input input, RuntimeStepOptions options);
 std::unique_ptr<Error> benchmarkCloneHash(const FullState& state, uint32_t iterations, uint32_t threads, ps_benchmark_result& outResult);
 enum class RuntimeCounterId {
+    RulesVisited,
+    RulesSkippedByMask,
+    CandidateCellsTested,
+    PatternTests,
+    PatternMatches,
+    ReplacementsAttempted,
+    ReplacementsApplied,
+    RowScans,
+    EllipsisScans,
+    MaskRebuildCalls,
+    MaskRebuildDirtyCalls,
+    MaskRebuildRows,
+    MaskRebuildColumns,
     CompactTurnNativeCalls,
     CompactTurnBridgeCalls,
     CompactTurnSetupNs,

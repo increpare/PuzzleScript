@@ -563,6 +563,8 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                   << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
                   << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
                   << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n"
+                  << "    compact_turn_count_row_scans_" << suffix << "(static_cast<uint64_t>(primaryLimit));\n"
+                  << "    compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(primaryLimit) * static_cast<uint64_t>(secondaryLimit));\n"
                   << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
                   << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
                   << "        const int32_t x = horizontalScan ? secondary : primary;\n"
@@ -660,6 +662,8 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
             applyBody << "    {\n"
                       << "        std::vector<int32_t>& rowMatches = matches[" << rowIndex << "];\n"
                       << "        rowMatches.clear();\n"
+                      << "        compact_turn_count_row_scans_" << suffix << "(static_cast<uint64_t>(primaryLimit));\n"
+                      << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(primaryLimit) * static_cast<uint64_t>(secondaryLimit));\n"
                       << "        for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
                       << "        for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
                       << "            const int32_t x = horizontalScan ? secondary : primary;\n"
@@ -848,6 +852,8 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
         if (rule.ellipsisCount[rowIndex] == 0) {
             collectBody << "    std::vector<int32_t> positions;\n"
                         << "    positions.reserve(" << row.size() << ");\n"
+                        << "    compact_turn_count_row_scans_" << suffix << "(static_cast<uint64_t>(primaryLimit));\n"
+                        << "    compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(primaryLimit) * static_cast<uint64_t>(secondaryLimit));\n"
                         << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
                         << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
                         << "        const int32_t x = horizontalScan ? secondary : primary;\n"
@@ -888,6 +894,8 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
             }
             collectBody << "    std::vector<int32_t> positions;\n"
                         << "    positions.reserve(" << concreteCount << ");\n"
+                        << "    compact_turn_count_row_scans_" << suffix << "(static_cast<uint64_t>(primaryLimit));\n"
+                        << "    compact_turn_count_ellipsis_scans_" << suffix << "(static_cast<uint64_t>(primaryLimit) * static_cast<uint64_t>(secondaryLimit));\n"
                         << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
                         << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
                         << "        const int32_t x = horizontalScan ? secondary : primary;\n"
@@ -1289,7 +1297,8 @@ void emitCompactRulegroupFunctions(
                 << "    std::vector<Candidate> candidates;\n";
             for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
                 const std::string rulePrefix = compactRulePrefix(suffix, phase, groupIndex, ruleIndex);
-                out << "    if (" << rulePrefix << "_collect_matches(dimensions, levelState, scratch, groupMatches[" << ruleIndex << "])) {\n"
+                out << "    compact_turn_count_rules_visited_" << suffix << "();\n"
+                    << "    if (" << rulePrefix << "_collect_matches(dimensions, levelState, scratch, groupMatches[" << ruleIndex << "])) {\n"
                     << "        bool hasMatchTuple = !groupMatches[" << ruleIndex << "].empty();\n"
                     << "        for (const auto& rowMatches : groupMatches[" << ruleIndex << "]) {\n"
                     << "            if (rowMatches.empty()) {\n"
@@ -1355,7 +1364,8 @@ void emitCompactRulegroupFunctions(
                 << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix
                 << "& commands, bool& madeChangeThisLoop, int32_t& consecutiveFailures) {\n";
             for (size_t ruleIndex = firstRuleIndex; ruleIndex < lastRuleIndex; ++ruleIndex) {
-                out << "    if (" << ruleNames[ruleIndex].applyName
+                out << "    compact_turn_count_rules_visited_" << suffix << "();\n"
+                    << "    if (" << ruleNames[ruleIndex].applyName
                     << "(dimensions, levelState, scratch, commands)) {\n"
                     << "        madeChangeThisLoop = true;\n"
                     << "        consecutiveFailures = 0;\n"
@@ -1456,6 +1466,7 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "        addRuntimeCounter(id, nowNs - profileMarkNs);\n"
         << "        profileMarkNs = nowNs;\n"
         << "    };\n"
+        << "    CompactTurnRuntimeCounterScope_" << suffix << " runtimeCounterScope(profileCompactTurn);\n"
         << "    ps_step_result result{};\n"
         << "    if (!compact_turn_prepare_state_" << suffix << "(dimensions, levelState, scratch)) {\n"
         << "        addProfileNs(RuntimeCounterId::CompactTurnSetupNs);\n"
@@ -1665,6 +1676,43 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "constexpr bool compact_turn_requires_player_movement_" << suffix << " = "
         << (game.metadata.values.find("require_player_movement") != game.metadata.values.end() ? "true" : "false") << ";\n"
         << "constexpr int32_t compact_turn_win_condition_count_" << suffix << " = " << game.winConditions.size() << ";\n\n";
+
+    out << "struct CompactTurnRuntimeCounters_" << suffix << " {\n"
+        << "    uint64_t rulesVisited = 0;\n"
+        << "    uint64_t candidateCellsTested = 0;\n"
+        << "    uint64_t replacementsAttempted = 0;\n"
+        << "    uint64_t replacementsApplied = 0;\n"
+        << "    uint64_t rowScans = 0;\n"
+        << "    uint64_t ellipsisScans = 0;\n"
+        << "    void flush() const {\n"
+        << "        addRuntimeCounter(RuntimeCounterId::RulesVisited, rulesVisited);\n"
+        << "        addRuntimeCounter(RuntimeCounterId::CandidateCellsTested, candidateCellsTested);\n"
+        << "        addRuntimeCounter(RuntimeCounterId::ReplacementsAttempted, replacementsAttempted);\n"
+        << "        addRuntimeCounter(RuntimeCounterId::ReplacementsApplied, replacementsApplied);\n"
+        << "        addRuntimeCounter(RuntimeCounterId::RowScans, rowScans);\n"
+        << "        addRuntimeCounter(RuntimeCounterId::EllipsisScans, ellipsisScans);\n"
+        << "    }\n"
+        << "};\n"
+        << "thread_local CompactTurnRuntimeCounters_" << suffix << "* compact_turn_runtime_counters_" << suffix << " = nullptr;\n"
+        << "struct CompactTurnRuntimeCounterScope_" << suffix << " {\n"
+        << "    CompactTurnRuntimeCounters_" << suffix << " counters;\n"
+        << "    CompactTurnRuntimeCounters_" << suffix << "* previous = nullptr;\n"
+        << "    bool active = false;\n"
+        << "    explicit CompactTurnRuntimeCounterScope_" << suffix << "(bool enabled)\n"
+        << "        : previous(compact_turn_runtime_counters_" << suffix << "), active(enabled) {\n"
+        << "        compact_turn_runtime_counters_" << suffix << " = active ? &counters : nullptr;\n"
+        << "    }\n"
+        << "    ~CompactTurnRuntimeCounterScope_" << suffix << "() {\n"
+        << "        compact_turn_runtime_counters_" << suffix << " = previous;\n"
+        << "        if (active) counters.flush();\n"
+        << "    }\n"
+        << "};\n"
+        << "inline void compact_turn_count_rules_visited_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->rulesVisited += amount; }\n"
+        << "inline void compact_turn_count_candidate_cells_tested_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->candidateCellsTested += amount; }\n"
+        << "inline void compact_turn_count_replacements_attempted_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->replacementsAttempted += amount; }\n"
+        << "inline void compact_turn_count_replacements_applied_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->replacementsApplied += amount; }\n"
+        << "inline void compact_turn_count_row_scans_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->rowScans += amount; }\n"
+        << "inline void compact_turn_count_ellipsis_scans_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->ellipsisScans += amount; }\n\n";
 
     const std::vector<MaskWord> playerMask = compiledMaskWords(game, game.playerMask, game.wordCount);
     emitMaskArray(out, "compact_turn_player_mask_" + suffix, playerMask);
@@ -2042,6 +2090,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    const int32_t* randomDirLayers,\n"
         << "    size_t randomDirLayerCount\n"
         << ") {\n"
+        << "    compact_turn_count_replacements_attempted_" << suffix << "();\n"
         << "    bool changed = false;\n"
         << "    bool rigidChange = false;\n"
         << "    MaskWord objectsClear[compact_turn_object_stride_" << suffix << "] = {};\n"
@@ -2119,6 +2168,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "        }\n"
         << "    }\n"
         << "    changed = changed || rigidChange;\n"
+        << "    if (changed) compact_turn_count_replacements_applied_" << suffix << "();\n"
         << "    if (changed) scratch.objectCellIndexDirty = true;\n"
         << "    return changed;\n"
         << "}\n\n";

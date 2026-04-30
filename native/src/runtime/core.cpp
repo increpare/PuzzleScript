@@ -5704,6 +5704,19 @@ uint64_t runtimeCounterNowNs() {
 
 void addRuntimeCounter(RuntimeCounterId id, uint64_t amount) {
     switch (id) {
+        case RuntimeCounterId::RulesVisited: addCounter(gRuntimeCounters.rulesVisited, amount); break;
+        case RuntimeCounterId::RulesSkippedByMask: addCounter(gRuntimeCounters.rulesSkippedByMask, amount); break;
+        case RuntimeCounterId::CandidateCellsTested: addCounter(gRuntimeCounters.candidateCellsTested, amount); break;
+        case RuntimeCounterId::PatternTests: addCounter(gRuntimeCounters.patternTests, amount); break;
+        case RuntimeCounterId::PatternMatches: addCounter(gRuntimeCounters.patternMatches, amount); break;
+        case RuntimeCounterId::ReplacementsAttempted: addCounter(gRuntimeCounters.replacementsAttempted, amount); break;
+        case RuntimeCounterId::ReplacementsApplied: addCounter(gRuntimeCounters.replacementsApplied, amount); break;
+        case RuntimeCounterId::RowScans: addCounter(gRuntimeCounters.rowScans, amount); break;
+        case RuntimeCounterId::EllipsisScans: addCounter(gRuntimeCounters.ellipsisScans, amount); break;
+        case RuntimeCounterId::MaskRebuildCalls: addCounter(gRuntimeCounters.maskRebuildCalls, amount); break;
+        case RuntimeCounterId::MaskRebuildDirtyCalls: addCounter(gRuntimeCounters.maskRebuildDirtyCalls, amount); break;
+        case RuntimeCounterId::MaskRebuildRows: addCounter(gRuntimeCounters.maskRebuildRows, amount); break;
+        case RuntimeCounterId::MaskRebuildColumns: addCounter(gRuntimeCounters.maskRebuildColumns, amount); break;
         case RuntimeCounterId::CompactTurnNativeCalls: addCounter(gRuntimeCounters.compactTurnNativeCalls, amount); break;
         case RuntimeCounterId::CompactTurnBridgeCalls: addCounter(gRuntimeCounters.compactTurnBridgeCalls, amount); break;
         case RuntimeCounterId::CompactTurnSetupNs: addCounter(gRuntimeCounters.compactTurnSetupNs, amount); break;
