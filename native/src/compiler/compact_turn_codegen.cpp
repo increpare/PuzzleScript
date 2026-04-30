@@ -142,6 +142,23 @@ private:
     std::map<std::vector<MaskWord>, std::string> names_;
 };
 
+class CompactFunctionInterner {
+public:
+    std::string emitDefinition(std::ostream& out, const std::string& preferredName, const std::string& signatureAndBody) {
+        auto existing = names_.find(signatureAndBody);
+        if (existing != names_.end()) {
+            return existing->second;
+        }
+
+        names_.emplace(signatureAndBody, preferredName);
+        out << "bool " << preferredName << signatureAndBody << "\n";
+        return preferredName;
+    }
+
+private:
+    std::map<std::string, std::string> names_;
+};
+
 std::string compactMaskName(
     const CompactMaskConstantEmitter& masks,
     const Game& game,
@@ -420,6 +437,7 @@ void emitCompactRuleFunction(
     std::ostream& out,
     const Game& game,
     const CompactMaskConstantEmitter& masks,
+    CompactFunctionInterner& functions,
     const Rule& rule,
     std::string_view suffix,
     std::string_view phase,
@@ -470,72 +488,82 @@ void emitCompactRuleFunction(
     }
 
     const bool inlineSingleRowHelpers = !groupIsRandom && rule.patterns.size() == 1;
+    std::vector<std::string> rowMatchNames(rule.patterns.size());
+    std::vector<std::string> rowApplyNames(rule.patterns.size());
+    std::vector<std::string> rowCollectNames(rule.patterns.size());
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
         const std::vector<Pattern>& row = rule.patterns[rowIndex];
         const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
         if (!inlineSingleRowHelpers) {
-            out << "bool " << rowPrefix << "_match_still_matches(const PersistentLevelState& levelState, const Scratch& scratch, const std::vector<int32_t>& match) {\n"
-                << "    size_t positionIndex = 0;\n";
+            std::ostringstream body;
+            body << "(const PersistentLevelState& levelState, const Scratch& scratch, const std::vector<int32_t>& match) {\n"
+                 << "    size_t positionIndex = 0;\n";
             for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
                 if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
                     continue;
                 }
-                out << "    if (positionIndex >= match.size() || !"
-                    << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]")
-                    << ") return false;\n"
-                    << "    ++positionIndex;\n";
+                body << "    if (positionIndex >= match.size() || !"
+                     << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]")
+                     << ") return false;\n"
+                     << "    ++positionIndex;\n";
             }
-            out << "    return positionIndex == match.size();\n"
-                << "}\n\n";
+            body << "    return positionIndex == match.size();\n"
+                 << "}\n";
+            rowMatchNames[rowIndex] = functions.emitDefinition(out, rowPrefix + "_match_still_matches", body.str());
+            out << "\n";
         }
 
         if (!inlineSingleRowHelpers) {
-            out << "bool " << rowPrefix << "_apply_replacements(PersistentLevelState& levelState, Scratch& scratch, const std::vector<int32_t>& match) {\n"
-                << "    bool changed = false;\n"
-                << "    size_t positionIndex = 0;\n";
+            std::ostringstream body;
+            body << "(PersistentLevelState& levelState, Scratch& scratch, const std::vector<int32_t>& match) {\n"
+                 << "    bool changed = false;\n"
+                 << "    size_t positionIndex = 0;\n";
             for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
                 if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
                     continue;
                 }
-                out << "    if (positionIndex >= match.size()) return changed;\n";
+                body << "    if (positionIndex >= match.size()) return changed;\n";
                 if (row[patternIndex].replacement.has_value()) {
-                    out << "    changed = "
-                        << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]", std::to_string(rigidGroupIndex))
-                        << " || changed;\n";
+                    body << "    changed = "
+                         << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]", std::to_string(rigidGroupIndex))
+                         << " || changed;\n";
                 }
-                out << "    ++positionIndex;\n";
+                body << "    ++positionIndex;\n";
             }
-            out << "    return changed;\n"
-                << "}\n\n";
+            body << "    return changed;\n"
+                 << "}\n";
+            rowApplyNames[rowIndex] = functions.emitDefinition(out, rowPrefix + "_apply_replacements", body.str());
+            out << "\n";
         }
 
-        out << "bool " << rowPrefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<int32_t>>& rowMatches) {\n"
-            << "    rowMatches.clear();\n"
-            << "    const int32_t tileCount = compact_turn_tile_count_" << suffix << "(dimensions);\n"
-            << "    if (tileCount <= 0) return false;\n"
-            << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
-            << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
-            << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
+        std::ostringstream collectBody;
+        collectBody << "(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<int32_t>>& rowMatches) {\n"
+                    << "    rowMatches.clear();\n"
+                    << "    const int32_t tileCount = compact_turn_tile_count_" << suffix << "(dimensions);\n"
+                    << "    if (tileCount <= 0) return false;\n"
+                    << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
+                    << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
+                    << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
         if (rule.ellipsisCount[rowIndex] == 0) {
-            out << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
-                << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
-                << "        const int32_t x = horizontalScan ? secondary : primary;\n"
-                << "        const int32_t y = horizontalScan ? primary : secondary;\n"
-                << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
-                << "        std::vector<int32_t> positions;\n"
-                << "        bool matched = true;\n";
+            collectBody << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
+                        << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
+                        << "        const int32_t x = horizontalScan ? secondary : primary;\n"
+                        << "        const int32_t y = horizontalScan ? primary : secondary;\n"
+                        << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
+                        << "        std::vector<int32_t> positions;\n"
+                        << "        bool matched = true;\n";
             for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-                out << "        int32_t tile_" << patternIndex << " = 0;\n"
-                    << "        if (!compact_turn_cell_at_direction_" << suffix
-                    << "(dimensions, startIndex, " << rule.direction << ", " << patternIndex << ", tile_" << patternIndex << ")) matched = false;\n"
-                    << "        if (matched && !"
-                    << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "tile_" + std::to_string(patternIndex))
-                    << ") matched = false;\n"
-                    << "        if (matched) positions.push_back(tile_" << patternIndex << ");\n";
+                collectBody << "        int32_t tile_" << patternIndex << " = 0;\n"
+                            << "        if (!compact_turn_cell_at_direction_" << suffix
+                            << "(dimensions, startIndex, " << rule.direction << ", " << patternIndex << ", tile_" << patternIndex << ")) matched = false;\n"
+                            << "        if (matched && !"
+                            << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "tile_" + std::to_string(patternIndex))
+                            << ") matched = false;\n"
+                            << "        if (matched) positions.push_back(tile_" << patternIndex << ");\n";
             }
-            out << "        if (matched) rowMatches.push_back(positions);\n"
-                << "    }\n"
-                << "    }\n";
+            collectBody << "        if (matched) rowMatches.push_back(positions);\n"
+                        << "    }\n"
+                        << "    }\n";
         } else {
             int32_t concreteCount = 0;
             std::vector<int32_t> concreteSuffix(row.size() + 1, 0);
@@ -548,57 +576,59 @@ void emitCompactRuleFunction(
                     ++concreteCount;
                 }
             }
-            out << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
-                << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
-                << "        const int32_t x = horizontalScan ? secondary : primary;\n"
-                << "        const int32_t y = horizontalScan ? primary : secondary;\n"
-                << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
-                << "        const int32_t available = compact_turn_available_at_direction_" << suffix
-                << "(dimensions, startIndex, " << rule.direction << ");\n"
-                << "        if (available < " << concreteCount << ") continue;\n"
-                << "        std::vector<int32_t> positions;\n"
-                << "        auto search = [&](auto&& self, size_t patternIndex, int32_t offset) -> void {\n"
-                << "            if (patternIndex >= " << row.size() << ") {\n"
-                << "                rowMatches.push_back(positions);\n"
-                << "                return;\n"
-                << "            }\n"
-                << "            switch (patternIndex) {\n";
+            collectBody << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
+                        << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
+                        << "        const int32_t x = horizontalScan ? secondary : primary;\n"
+                        << "        const int32_t y = horizontalScan ? primary : secondary;\n"
+                        << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
+                        << "        const int32_t available = compact_turn_available_at_direction_" << suffix
+                        << "(dimensions, startIndex, " << rule.direction << ");\n"
+                        << "        if (available < " << concreteCount << ") continue;\n"
+                        << "        std::vector<int32_t> positions;\n"
+                        << "        auto search = [&](auto&& self, size_t patternIndex, int32_t offset) -> void {\n"
+                        << "            if (patternIndex >= " << row.size() << ") {\n"
+                        << "                rowMatches.push_back(positions);\n"
+                        << "                return;\n"
+                        << "            }\n"
+                        << "            switch (patternIndex) {\n";
             for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-                out << "                case " << patternIndex << ":\n";
+                collectBody << "                case " << patternIndex << ":\n";
                 if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
-                    out << "                {\n"
-                        << "                    const int32_t maxSkip = available - offset - " << concreteSuffix[patternIndex + 1] << ";\n"
-                        << "                    for (int32_t skip = 0; skip <= maxSkip; ++skip) {\n"
-                        << "                        self(self, patternIndex + 1, offset + skip);\n"
-                        << "                    }\n"
-                        << "                    return;\n"
-                        << "                }\n";
+                    collectBody << "                {\n"
+                                << "                    const int32_t maxSkip = available - offset - " << concreteSuffix[patternIndex + 1] << ";\n"
+                                << "                    for (int32_t skip = 0; skip <= maxSkip; ++skip) {\n"
+                                << "                        self(self, patternIndex + 1, offset + skip);\n"
+                                << "                    }\n"
+                                << "                    return;\n"
+                                << "                }\n";
                 } else {
-                    out << "                {\n"
-                        << "                    if (offset >= available) return;\n"
-                        << "                    int32_t tileIndex = 0;\n"
-                        << "                    if (!compact_turn_cell_at_direction_" << suffix
-                        << "(dimensions, startIndex, " << rule.direction << ", offset, tileIndex)) return;\n"
-                        << "                    if (!"
-                        << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "tileIndex")
-                        << ") return;\n"
-                        << "                    positions.push_back(tileIndex);\n"
-                        << "                    self(self, patternIndex + 1, offset + 1);\n"
-                        << "                    positions.pop_back();\n"
-                        << "                    return;\n"
-                        << "                }\n";
+                    collectBody << "                {\n"
+                                << "                    if (offset >= available) return;\n"
+                                << "                    int32_t tileIndex = 0;\n"
+                                << "                    if (!compact_turn_cell_at_direction_" << suffix
+                                << "(dimensions, startIndex, " << rule.direction << ", offset, tileIndex)) return;\n"
+                                << "                    if (!"
+                                << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "tileIndex")
+                                << ") return;\n"
+                                << "                    positions.push_back(tileIndex);\n"
+                                << "                    self(self, patternIndex + 1, offset + 1);\n"
+                                << "                    positions.pop_back();\n"
+                                << "                    return;\n"
+                                << "                }\n";
                 }
             }
-            out << "                default:\n"
-                << "                    return;\n"
-                << "            }\n"
-                << "        };\n"
-                << "        search(search, 0, 0);\n"
-                << "    }\n"
-                << "    }\n";
+            collectBody << "                default:\n"
+                        << "                    return;\n"
+                        << "            }\n"
+                        << "        };\n"
+                        << "        search(search, 0, 0);\n"
+                        << "    }\n"
+                        << "    }\n";
         }
-        out << "    return !rowMatches.empty();\n"
-            << "}\n\n";
+        collectBody << "    return !rowMatches.empty();\n"
+                    << "}\n";
+        rowCollectNames[rowIndex] = functions.emitDefinition(out, rowPrefix + "_collect_matches", collectBody.str());
+        out << "\n";
     }
     if (!rule.commands.empty()) {
         emitCompactRuleCommandFunction(out, rule, prefix, suffix);
@@ -609,17 +639,15 @@ void emitCompactRuleFunction(
             << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
             << "    matches.assign(rowCount, std::vector<std::vector<int32_t>>{});\n";
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-            out << "    if (!" << rowPrefix << "_collect_matches(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
+            out << "    if (!" << rowCollectNames[rowIndex] << "(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
         }
         out << "    return true;\n"
             << "}\n\n";
 
         out << "bool " << prefix << "_tuple_still_matches(const PersistentLevelState& levelState, const Scratch& scratch, const std::vector<std::vector<std::vector<int32_t>>>& matches, const std::vector<size_t>& tupleIndex) {\n";
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-            out << "    if (!" << rowPrefix
-                << "_match_still_matches(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) return false;\n";
+            out << "    if (!" << rowMatchNames[rowIndex]
+                << "(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) return false;\n";
         }
         out << "    return true;\n"
             << "}\n\n";
@@ -627,9 +655,8 @@ void emitCompactRuleFunction(
         out << "bool " << prefix << "_apply_tuple(PersistentLevelState& levelState, Scratch& scratch, const std::vector<std::vector<std::vector<int32_t>>>& matches, const std::vector<size_t>& tupleIndex) {\n"
             << "    bool changed = false;\n";
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-            out << "    changed = " << rowPrefix
-                << "_apply_replacements(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
+            out << "    changed = " << rowApplyNames[rowIndex]
+                << "(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
         }
         out << "    return changed;\n"
             << "}\n\n";
@@ -643,8 +670,7 @@ void emitCompactRuleFunction(
     } else {
         out << "    matches.assign(rowCount, std::vector<std::vector<int32_t>>{});\n";
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-            out << "    if (!" << rowPrefix << "_collect_matches(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
+            out << "    if (!" << rowCollectNames[rowIndex] << "(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
         }
     }
     emitCompactRuleCommandQueue(out, rule, prefix);
@@ -698,9 +724,8 @@ void emitCompactRuleFunction(
         out << "            stillMatches = " << prefix << "_tuple_still_matches(levelState, scratch, matches, tupleIndex);\n";
     } else {
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-            out << "            if (!" << rowPrefix
-                << "_match_still_matches(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) stillMatches = false;\n";
+            out << "            if (!" << rowMatchNames[rowIndex]
+                << "(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) stillMatches = false;\n";
         }
     }
     out << "        }\n"
@@ -709,9 +734,8 @@ void emitCompactRuleFunction(
         out << "            changed = " << prefix << "_apply_tuple(levelState, scratch, matches, tupleIndex) || changed;\n";
     } else {
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-            out << "            changed = " << rowPrefix
-                << "_apply_replacements(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
+            out << "            changed = " << rowApplyNames[rowIndex]
+                << "(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
         }
     }
     out << "        }\n"
@@ -733,6 +757,7 @@ void emitCompactRulegroupFunctions(
     std::ostream& out,
     const Game& game,
     const CompactMaskConstantEmitter& masks,
+    CompactFunctionInterner& functions,
     const std::vector<std::vector<Rule>>& groups,
     const LoopPointTable& loopPoint,
     std::string_view suffix,
@@ -742,7 +767,7 @@ void emitCompactRulegroupFunctions(
         const std::vector<Rule>& group = groups[groupIndex];
         const bool groupIsRandom = !group.empty() && group[0].isRandom;
         for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-            emitCompactRuleFunction(out, game, masks, group[ruleIndex], suffix, phase, groupIndex, ruleIndex, groupIsRandom);
+            emitCompactRuleFunction(out, game, masks, functions, group[ruleIndex], suffix, phase, groupIndex, ruleIndex, groupIsRandom);
         }
 
         const std::string groupPrefix = compactGroupPrefix(suffix, phase, groupIndex);
@@ -1802,8 +1827,9 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    return outcome;\n"
         << "}\n\n";
 
-    emitCompactRulegroupFunctions(out, game, earlyMasks, game.rules, game.loopPoint, suffix, "early");
-    emitCompactRulegroupFunctions(out, game, lateMasks, game.lateRules, game.lateLoopPoint, suffix, "late");
+    CompactFunctionInterner functions;
+    emitCompactRulegroupFunctions(out, game, earlyMasks, functions, game.rules, game.loopPoint, suffix, "early");
+    emitCompactRulegroupFunctions(out, game, lateMasks, functions, game.lateRules, game.lateLoopPoint, suffix, "late");
 }
 
 } // namespace

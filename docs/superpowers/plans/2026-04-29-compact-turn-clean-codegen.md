@@ -935,6 +935,22 @@ One-row deterministic row-helper cleanup, 2026-04-30:
   Case 403 still passes compact oracle replay; generated source dropped to
   29,386,948 bytes / 498,712 lines.
 
+Generated row-helper interning, 2026-04-30:
+  Compact row match/apply/collect helpers are now interned by emitted function
+  body, so duplicated lowered row semantics share one generated helper instead
+  of emitting the same scan/replacement body under many rule-local names. This
+  is a codegen infrastructure cleanup, not a game-shape recognizer.
+  Focused giant-case results:
+  - case 223 `vertebrae`: 57,369,593 bytes / 980,324 lines to
+    52,547,375 bytes / 917,205 lines.
+  - case 213 `gallery: season finale`: 37,791,520 bytes / 656,218 lines to
+    25,604,333 bytes / 474,405 lines.
+  - case 403 `Crate Assembler`: 29,386,948 bytes / 498,712 lines to
+    18,467,682 bytes / 329,116 lines.
+  Full generated `testdata.js` corpus dropped from 467,843,800 bytes /
+  8,166,556 lines to 383,808,060 bytes / 6,975,910 lines. Full compiler-mode
+  simulation guard still passes 469/469 with no compact oracle failures.
+
 Full-corpus post-cleanup guard, 2026-04-30:
   `make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4`
   passes after the generated-source reductions with
