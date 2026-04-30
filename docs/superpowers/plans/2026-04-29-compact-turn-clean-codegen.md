@@ -531,7 +531,7 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 203/469 known passing.
+Selected compiler-mode testdata progress: 223/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -690,6 +690,16 @@ Sixth frontier expansion update, 2026-04-30:
     transition-heavy probes, aggregate win-condition variants, many-object and
     Unicode parsing fixtures, double-ellipsis magnetism, and broader late-rule
     coverage.
+
+Seventh frontier expansion update, 2026-04-30:
+  ranked-frontier replay:
+    cases: 77 246 278 262 179 392 393 25 347 294 219 228 275 394 395 303 232 113 286 193
+    result: 20/20 pass
+  added coverage:
+    Multi-level romance and gallery fixtures, no-rule/menu-like execution,
+    slide/pull and scale mechanics, double-ellipsis stress cases, level-change
+    recording, late-rule synonym handling, and additional push-heavy puzzle
+    games.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
