@@ -360,7 +360,7 @@ Acceptance:
 - [x] Apply late rulegroups through the same deterministic one-row rulegroup
   emitter used for early rules.
 - [x] Handle `require_player_movement` cancellation for compiler-mode turns.
-- [ ] Audit restart/reset/cancel terminal treatment through the solver-specific
+- [x] Audit restart/reset/cancel terminal treatment through the solver-specific
   compact path.
 - [x] Handle `again` policy.
 - [x] Thread deterministic RNG for random rule-group selection.
@@ -886,6 +886,13 @@ Full-corpus compiler-mode simulation update, 2026-04-30:
     `make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4`
     passes with `cpp_simulation_tests_direct passed=469 failed=0 total=469`
     and `compact_turn_oracle_failures=0`.
+
+Solver compact compiler-mode audit, 2026-04-30:
+  The solver treats compact restart edges as terminal and does not store the
+  child state. Compact win/transition handling is compatible with the solver's
+  solved check because compiler-mode transitions also report `won`.
+  `make compact_turn_codegen_bringup COMPILED_RULES_BUILD_JOBS=4` reports
+  attempts=18 hits=18 fallbacks=0 with no compact oracle failures.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
