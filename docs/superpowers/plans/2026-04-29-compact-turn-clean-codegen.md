@@ -875,6 +875,16 @@ Compiler-mode coverage tooling update, 2026-04-30:
     `native_compact_kernels: 452/452 (100.0%)` and
     `interpreter_bridge_backends: 0/452 (0.0%)`.
 
+Full-corpus compiler-mode simulation update, 2026-04-30:
+  full-corpus guard:
+    Added `make compact_turn_codegen_simulation_tests`, which compiles
+    `testdata.js` once as a sharded compiler-mode compact backend and then
+    runs the full simulation corpus through that generated binary.
+  guard:
+    `make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4`
+    passes with `cpp_simulation_tests_direct passed=469 failed=0 total=469`
+    and `compact_turn_oracle_failures=0`.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile

@@ -21,7 +21,7 @@
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_perf_report solver_focus_compact_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_turn_codegen_coverage compact_turn_codegen_bringup compact_turn_codegen_frontier compact_turn_codegen_testdata_one compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
-	compact_turn_codegen_selected_tests \
+	compact_turn_codegen_selected_tests compact_turn_codegen_simulation_tests \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
 	parser_corpus_errormessage_bundle parser_corpus_testdata_bundle clean clean-native \
@@ -323,6 +323,8 @@ help:
 	@echo "                                     Build/run one testdata.js case in compact compiler mode"
 	@echo "  make compact_turn_codegen_selected_tests"
 	@echo "                                     Re-run selected known-passing compiler-mode testdata cases"
+	@echo "  make compact_turn_codegen_simulation_tests"
+	@echo "                                     Run full testdata.js corpus in compact compiler mode"
 	@echo "  make generator_smoke_tests         Run native generator smoke tests"
 	@echo "  make generator_benchmark           Run fixed-seed generator preset benchmark"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
@@ -622,6 +624,20 @@ compact_turn_codegen_selected_tests:
 		count=$$((count + 1)); \
 	done; \
 	echo "compact_turn_codegen_selected_tests passed=$$count"
+
+compact_turn_codegen_simulation_tests: build
+	@set -e; \
+	$(COMPILED_RULES_BOOTSTRAP_CPP); \
+	hash=$$(shasum -a 256 src/tests/resources/testdata.js | awk '{print $$1}'); \
+	out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/testdata-compact-codegen-$$hash"; \
+	build_dir="$(COMPILED_RULES_BUILD_ROOT)/testdata-compact-codegen-$$hash"; \
+	out_cpp_dir="$$out_dir/sources"; \
+	sources_file="$$out_dir/sources.txt"; \
+	mkdir -p "$$out_dir"; \
+	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/resources/testdata.js,testdata_compact_codegen_$$hash,--compact-turn-only --compact-turn-mode=compiler,$(COMPACT_TURN_TESTDATA_MAX_ROWS)); \
+	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
+	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_cpp; \
+	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0 --compact-turn-oracle --require-compact-turn-oracle-checks
 
 compact_tick_simulation_tests: compact_turn_simulation_tests
 
