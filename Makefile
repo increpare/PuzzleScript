@@ -20,7 +20,7 @@
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_perf_report solver_focus_compact_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
-	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_turn_codegen_coverage compact_turn_codegen_bringup compact_turn_codegen_frontier compact_turn_codegen_testdata_one compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
+	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_turn_codegen_coverage compact_turn_codegen_bringup compact_turn_codegen_solver_parity compact_turn_codegen_frontier compact_turn_codegen_testdata_one compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
 	compact_turn_codegen_selected_tests compact_turn_codegen_simulation_tests \
 	rule_plan_parity_tests \
 	profile_simulation_tests profile_simulation_tests_32 basic_test_suite_cpp basic_test_suite_js \
@@ -153,6 +153,7 @@ COMPACT_TURN_CODEGEN_BRINGUP_CORPUS ?= src/tests/solver_smoke_tests
 COMPACT_TURN_CODEGEN_TESTDATA_CASE ?= 1
 COMPACT_TURN_CODEGEN_FRONTIER_LIMIT ?= 40
 COMPACT_TURN_CODEGEN_FRONTIER_AFTER ?= 0
+COMPACT_TURN_SIMULATION_ARGS ?= --jobs auto --progress-every 0
 COMPACT_TURN_CODEGEN_SELECTED_CASES ?= 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243 244 245 246 247 248 249 250 251 252 253 254 255 256 257 258 259 260 261 262 263 264 265 266 267 268 269 270 271 272 273 274 275 276 277 278 279 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 295 296 297 298 299 300 301 302 303 304 305 306 307 308 309 310 311 312 313 314 315 316 317 318 319 320 321 322 323 324 325 326 327 328 329 330 331 332 333 334 335 336 337 338 339 340 341 342 343 344 345 346 347 348 349 350 351 352 353 354 355 356 357 358 359 360 361 362 363 364 365 366 367 368 369 370 371 372 373 374 375 376 377 378 379 380 381 382 383 384 385 386 387 388 389 390 391 392 393 394 395 396 397 398 399 400 401 402 403 404 405 406 407 408 409 410 411 412 413 414 415 416 417 418 419 420 421 422 423 424 425 426 427 428 429 430 431 432 433 434 435 436 437 438 439 440 441 442 443 444 445 446 447 448 449 450 451 452 453 454 455 456 457 458 459 460 461 462 463 464 465 466 467 468 469
 COMPILED_RULES_LTO ?= false
 COMPILED_RULES_LINK_DEDUP ?= false
@@ -319,6 +320,8 @@ help:
 	@echo "  make compact_turn_coverage         Report native-vs-bridge compact turn coverage"
 	@echo "  make compact_turn_codegen_coverage Report compiler-mode compact turn coverage"
 	@echo "  make compact_turn_codegen_bringup  Build compiler-mode compact smoke and require oracle parity"
+	@echo "  make compact_turn_codegen_solver_parity"
+	@echo "                                      Run solver compact parity with compiler-mode compact turns"
 	@echo "  make compact_turn_codegen_testdata_one"
 	@echo "                                     Build/run one testdata.js case in compact compiler mode"
 	@echo "  make compact_turn_codegen_selected_tests"
@@ -597,6 +600,20 @@ compact_turn_codegen_bringup: build
 	"$$build_dir/native/puzzlescript_solver" "$(COMPACT_TURN_CODEGEN_BRINGUP_CORPUS)" --timeout-ms 1000 --jobs 1 --strategy bfs --no-solutions --quiet --json --compact-turn-oracle > "$$out_dir/bringup.json"; \
 	$(NODE) -e 'const fs=require("fs"); const path=process.argv[1]; const j=JSON.parse(fs.readFileSync(path,"utf8")); const t=j.totals; const unhandled=t.compact_turn_unhandled ?? t.compact_turn_fallbacks; const fail=m=>{ throw new Error(m); }; if (t.levels !== 7 || t.solved !== 5 || t.errors !== 0) fail("unexpected smoke baseline"); if (!(t.compact_turn_native_attempts > 0)) fail("expected native compact attempts"); if (t.compact_turn_native_hits !== t.compact_turn_native_attempts) fail("expected every compiler-mode native compact attempt to hit"); if (unhandled !== 0) fail("expected no compiler-mode compact unhandled attempts"); if (t.compact_turn_oracle_failures !== 0) fail("expected compact oracle parity"); console.log("compact_turn_codegen_bringup observed compiler-mode attempts="+t.compact_turn_native_attempts+" hits="+t.compact_turn_native_hits+" unhandled="+unhandled);' "$$out_dir/bringup.json"
 
+compact_turn_codegen_solver_parity: build
+	@set -e; \
+	$(COMPILED_RULES_BOOTSTRAP_CPP); \
+	hash=$$(find "$(SOLVER_COMPACT_PARITY_CORPUS)" -type f -name '*.txt' -print0 | sort -z | xargs -0 shasum -a 256 | shasum -a 256 | awk '{print $$1}'); \
+	out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/compact-codegen-solver-parity-$$hash"; \
+	build_dir="$(COMPILED_RULES_BUILD_ROOT)/compact-codegen-solver-parity-$$hash"; \
+	out_cpp_dir="$$out_dir/sources"; \
+	sources_file="$$out_dir/sources.txt"; \
+	mkdir -p "$$out_dir"; \
+	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,$(SOLVER_COMPACT_PARITY_CORPUS),compact_codegen_solver_parity_$$hash,--compact-turn-only --compact-turn-mode=compiler); \
+	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
+	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_solver; \
+	$(NODE) src/tests/run_solver_compact_parity.js "$$build_dir/native/puzzlescript_solver" "$(SOLVER_COMPACT_PARITY_CORPUS)" --timeout-ms $(SOLVER_COMPACT_PARITY_TIMEOUT_MS) --strategy $(SOLVER_COMPACT_PARITY_STRATEGY) $(SOLVER_COMPACT_PARITY_GAME_ARG) $(SOLVER_COMPACT_PARITY_LEVEL_ARG) $(SOLVER_COMPACT_PARITY_MAX_GAMES_ARG) --compact-turn-oracle --require-compact-oracle-checks --require-compact-handled
+
 compact_turn_codegen_frontier:
 	$(NODE) scripts/list_compact_codegen_frontier.js src/tests/resources/testdata.js --limit $(COMPACT_TURN_CODEGEN_FRONTIER_LIMIT) --after $(COMPACT_TURN_CODEGEN_FRONTIER_AFTER)
 
@@ -637,7 +654,7 @@ compact_turn_codegen_simulation_tests: build
 	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/resources/testdata.js,testdata_compact_codegen_$$hash,--compact-turn-only --compact-turn-mode=compiler,$(COMPACT_TURN_TESTDATA_MAX_ROWS)); \
 	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_cpp; \
-	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0 --compact-turn-oracle --require-compact-turn-oracle-checks
+	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js $(COMPACT_TURN_SIMULATION_ARGS) --compact-turn-oracle --require-compact-turn-oracle-checks
 
 compact_tick_simulation_tests: compact_turn_simulation_tests
 
@@ -653,7 +670,7 @@ compact_turn_simulation_tests: build
 	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/resources/testdata.js,testdata_compact_$$hash,--compact-turn-only,$(COMPACT_TURN_TESTDATA_MAX_ROWS)); \
 	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_cpp; \
-	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js --jobs auto --progress-every 0 --compact-turn-oracle --require-compact-turn-oracle-checks
+	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js $(COMPACT_TURN_SIMULATION_ARGS) --compact-turn-oracle --require-compact-turn-oracle-checks
 
 compact_tick_coverage: compact_turn_coverage
 

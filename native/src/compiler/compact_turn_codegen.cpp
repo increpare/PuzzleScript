@@ -944,7 +944,7 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "        return {true, result};\n"
         << "    }\n"
         << "    const bool won = commands.hasWin || compact_turn_evaluate_win_" << suffix << "(dimensions, levelState);\n"
-        << "    const bool transitioned = won && currentLevelIndex < compact_turn_level_count_" << suffix << " - 1;\n"
+        << "    const bool transitioned = won;\n"
         << "    // 8. evaluate win conditions\n"
         << "    // 9. canonicalize and return result\n"
         << "    result.changed = seededInput || ruleChanged || moved || lateRuleChanged || modified || transitioned || commands.any;\n"
@@ -1030,7 +1030,6 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "constexpr int32_t compact_turn_movement_stride_" << suffix << " = " << game.strideMovement << ";\n"
         << "constexpr int32_t compact_turn_object_count_" << suffix << " = " << game.objectCount << ";\n"
         << "constexpr int32_t compact_turn_layer_count_" << suffix << " = " << game.layerCount << ";\n"
-        << "constexpr int32_t compact_turn_level_count_" << suffix << " = " << game.levels.size() << ";\n"
         << "constexpr bool compact_turn_has_rigid_" << suffix << " = " << (game.rigid ? "true" : "false") << ";\n"
         << "constexpr bool compact_turn_has_player_mask_" << suffix << " = " << (game.playerMask != kNullMaskOffset ? "true" : "false") << ";\n"
         << "constexpr bool compact_turn_player_mask_aggregate_" << suffix << " = " << (game.playerMaskAggregate ? "true" : "false") << ";\n"
@@ -1761,6 +1760,7 @@ void emitCompactTurnBackend(
             << "}\n\n";
     } else {
         out << "    (void)game;\n"
+            << "    addRuntimeCounter(RuntimeCounterId::CompactTurnNativeCalls);\n"
             << "    return specialized_compact_turn_core_" << sourceIndex << "(context.dimensions, context.currentLevelIndex, levelState, scratch, input, options);\n"
             << "}\n\n";
     }

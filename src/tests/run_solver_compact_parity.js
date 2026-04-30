@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 function usage() {
-    console.error('Usage: node src/tests/run_solver_compact_parity.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--strategy NAME] [--game NAME] [--level N] [--max-games N] [--compact-turn-oracle] [--require-compact-oracle-checks]');
+    console.error('Usage: node src/tests/run_solver_compact_parity.js <puzzlescript_solver> <solver_tests_dir> [--timeout-ms N] [--strategy NAME] [--game NAME] [--level N] [--max-games N] [--compact-turn-oracle] [--require-compact-oracle-checks] [--require-compact-handled]');
     process.exit(1);
 }
 
@@ -24,6 +24,7 @@ let targetLevel = null;
 let maxGames = null;
 let compactTurnOracle = false;
 let requireCompactOracleChecks = false;
+let requireCompactHandled = false;
 
 function parsePositiveInt(value, label) {
     const parsed = Number.parseInt(value, 10);
@@ -57,6 +58,8 @@ for (let index = 2; index < args.length; index++) {
         compactTurnOracle = true;
     } else if (arg === '--require-compact-oracle-checks') {
         requireCompactOracleChecks = true;
+    } else if (arg === '--require-compact-handled') {
+        requireCompactHandled = true;
     } else {
         usage();
     }
@@ -241,6 +244,9 @@ let totalLevels = 0;
 let compactTimeoutRegressions = 0;
 let compactOracleChecks = 0;
 let compactOracleFailures = 0;
+let compactAttempts = 0;
+let compactHits = 0;
+let compactUnhandled = 0;
 for (let index = 0; index < selectedGames.length; index++) {
     const gameFile = selectedGames[index];
     const gameName = path.relative(corpusPath, gameFile);
@@ -249,6 +255,9 @@ for (let index = 0; index < selectedGames.length; index++) {
     const compact = runSolver(gameName, true);
     compactOracleChecks += total(compact, 'compact_turn_oracle_checks', 'compact_tick_oracle_checks');
     compactOracleFailures += total(compact, 'compact_turn_oracle_failures', 'compact_tick_oracle_failures');
+    compactAttempts += total(compact, 'compact_turn_attempts');
+    compactHits += total(compact, 'compact_turn_hits');
+    compactUnhandled += total(compact, 'compact_turn_unhandled', 'compact_turn_fallbacks');
     if (total(compact, 'compact_turn_oracle_failures', 'compact_tick_oracle_failures') !== 0) {
         throw new Error(`compact turn oracle failures=${total(compact, 'compact_turn_oracle_failures', 'compact_tick_oracle_failures')} game=${gameName}`);
     }
@@ -288,10 +297,17 @@ for (let index = 0; index < selectedGames.length; index++) {
 if (requireCompactOracleChecks && compactOracleChecks === 0) {
     throw new Error('compact turn oracle checks were required but no generated compact turn was checked');
 }
+if (requireCompactHandled && compactAttempts === 0) {
+    throw new Error('compact handled checks were required but no compact turn was attempted');
+}
+if (requireCompactHandled && compactUnhandled !== 0) {
+    throw new Error(`compact handled checks were required but compact_turn_unhandled=${compactUnhandled}`);
+}
 process.stdout.write(
     `solver_compact_parity passed games=${selectedGames.length}/${eligibleGames.length}`
     + ` levels=${totalLevels} random_excluded=${randomExcluded.length}`
     + ` compact_timeout_regressions=${compactTimeoutRegressions}`
+    + ` compact_turn_attempts=${compactAttempts} compact_turn_hits=${compactHits} compact_turn_unhandled=${compactUnhandled}`
     + (compactTurnOracle ? ` compact_turn_oracle_checks=${compactOracleChecks} compact_turn_oracle_failures=${compactOracleFailures}` : '')
     + ` strategy=${strategy} timeout_ms=${timeoutMs}\n`
 );
