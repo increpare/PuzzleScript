@@ -849,6 +849,21 @@ Twentieth frontier expansion update, 2026-04-30:
     Guard: `make compact_turn_codegen_selected_tests COMPILED_RULES_BUILD_JOBS=4`
     passes with `passed=466`.
 
+Twenty-first frontier expansion update, 2026-04-30:
+  compile-size fix:
+    Per-pattern generated `_matches` / `_apply` functions were replaced with
+    source-local generic pattern matcher/applier helpers. Row/rule code now
+    passes deduplicated mask constants into those helpers, preserving generic
+    compiler semantics while cutting emitted function volume.
+  end-queue replay:
+    passing cases: 213 223 403
+  promoted coverage:
+    All `testdata.js` simulation cases are now in the selected executable
+    target: 469/469. Individual held-out probes passed with compact oracle
+    parity before promotion.
+    Guard: `make compact_turn_codegen_selected_tests COMPILED_RULES_BUILD_JOBS=4`
+    passes with `passed=469`.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
