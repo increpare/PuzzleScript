@@ -85,23 +85,38 @@ void emitMaskArray(
     out << "};\n";
 }
 
+std::string compactMaskArenaName(std::string_view suffix, std::string_view phase) {
+    return "ctm_" + std::string(suffix) + "_" + (phase == "late" ? "l" : "e");
+}
+
 class CompactMaskConstantEmitter {
 public:
-    CompactMaskConstantEmitter(std::ostream& out, std::string_view suffix, std::string_view phase)
-        : out_(out)
-        , suffix_(suffix)
-        , phase_(phase) {}
+    CompactMaskConstantEmitter(std::string_view suffix, std::string_view phase)
+        : arenaName_(compactMaskArenaName(suffix, phase)) {}
 
-    const std::string& emitName(const std::vector<MaskWord>& words) {
-        return canonicalName(words);
+    void emitName(const std::vector<MaskWord>& words) {
+        (void)canonicalName(words);
     }
 
-    const std::string& name(const std::vector<MaskWord>& words) const {
+    std::string name(const std::vector<MaskWord>& words) const {
         const auto existing = names_.find(words);
         if (existing == names_.end()) {
             throw std::logic_error("compact mask constant was not emitted before use");
         }
         return existing->second;
+    }
+
+    void emitDefinitions(std::ostream& out) const {
+        if (arena_.empty()) {
+            return;
+        }
+        out << "constexpr MaskWord " << arenaName_ << "[] = {";
+        for (size_t word = 0; word < arena_.size(); ++word) {
+            if (word > 0) out << ", ";
+            if (word > 0 && word % 8 == 0) out << "\n    ";
+            out << compiledMaskWordLiteral(arena_[word]);
+        }
+        out << "};\n";
     }
 
 private:
@@ -111,16 +126,15 @@ private:
             return existing->second;
         }
 
-        std::string name = "compact_turn_mask_data_" + std::string(suffix_) + "_" + std::string(phase_) + "_" + std::to_string(nextIndex_++);
-        emitMaskArray(out_, name, words);
+        const size_t offset = arena_.size();
+        arena_.insert(arena_.end(), words.begin(), words.end());
+        std::string name = arenaName_ + "+" + std::to_string(offset);
         auto inserted = names_.emplace(words, std::move(name));
         return inserted.first->second;
     }
 
-    std::ostream& out_;
-    std::string_view suffix_;
-    std::string_view phase_;
-    size_t nextIndex_ = 0;
+    std::string arenaName_;
+    std::vector<MaskWord> arena_;
     std::map<std::vector<MaskWord>, std::string> names_;
 };
 
@@ -1084,10 +1098,14 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
     if (!game.winConditions.empty()) {
         out << "\n";
     }
-    CompactMaskConstantEmitter earlyMasks(out, suffix, "early");
-    CompactMaskConstantEmitter lateMasks(out, suffix, "late");
-    emitCompactRuleMaskData(out, game, suffix, "early", game.rules, earlyMasks);
-    emitCompactRuleMaskData(out, game, suffix, "late", game.lateRules, lateMasks);
+    CompactMaskConstantEmitter earlyMasks(suffix, "early");
+    CompactMaskConstantEmitter lateMasks(suffix, "late");
+    std::ostringstream ruleAuxiliaryData;
+    emitCompactRuleMaskData(ruleAuxiliaryData, game, suffix, "early", game.rules, earlyMasks);
+    emitCompactRuleMaskData(ruleAuxiliaryData, game, suffix, "late", game.lateRules, lateMasks);
+    earlyMasks.emitDefinitions(out);
+    lateMasks.emitDefinitions(out);
+    out << ruleAuxiliaryData.str();
     if (hasAnyRulegroups(game.rules) || hasAnyRulegroups(game.lateRules)) {
         out << "\n";
     }

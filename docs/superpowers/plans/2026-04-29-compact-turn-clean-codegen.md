@@ -901,6 +901,12 @@ Generated-source cleanup, 2026-04-30:
   cleanup; its generated source is about 50.1 MB, so larger wins still need to
   come from reducing emitted rule bodies rather than polishing constants.
 
+Generated mask arena cleanup, 2026-04-30:
+  Per-phase rule masks now emit as one constexpr mask arena plus pointer
+  offsets instead of one named array per unique mask. Case 403 still compiles
+  and passes compact oracle replay; generated source dropped to about 43 MB /
+  784,204 lines.
+
 Runtime/reporting cleanup, 2026-04-30:
   Renamed runtime generated-backend support metadata from fallback-specific
   naming to neutral `statusReason`, and added solver JSON/profile aliases for
