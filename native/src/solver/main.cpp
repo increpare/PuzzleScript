@@ -973,18 +973,19 @@ bool compactMatchesFilter(
     return aggregate && sawFilterBit;
 }
 
-std::vector<int32_t> compactMatchingDistanceField(
+void compactMatchingDistanceField(
     const PersistentLevelState& state,
     const Game& game,
     int32_t width,
     int32_t height,
     const puzzlescript::MaskWord* filter,
-    bool aggregate
+    bool aggregate,
+    std::vector<int32_t>& distances
 ) {
     const int32_t tileCount = width * height;
-    std::vector<int32_t> distances(static_cast<size_t>(tileCount), std::numeric_limits<int32_t>::max());
+    distances.assign(static_cast<size_t>(tileCount), std::numeric_limits<int32_t>::max());
     if (filter == nullptr) {
-        return distances;
+        return;
     }
 
     for (int32_t tile = 0; tile < tileCount; ++tile) {
@@ -1015,14 +1016,14 @@ std::vector<int32_t> compactMatchingDistanceField(
             if (y + 1 < height) relax(tile, x * height + (y + 1));
         }
     }
-    return distances;
 }
 
 int32_t compactHeuristicScore(
     const PersistentLevelState& state,
     const Game& game,
     int32_t width,
-    int32_t height
+    int32_t height,
+    puzzlescript::search::HeuristicScratch& scratch
 ) {
     if (game.winConditions.empty()) {
         return 0;
@@ -1036,7 +1037,7 @@ int32_t compactHeuristicScore(
         if (filter1 == nullptr || filter2 == nullptr) {
             continue;
         }
-        const std::vector<int32_t> filter2Distances = compactMatchingDistanceField(state, game, width, height, filter2, condition.aggr2);
+        compactMatchingDistanceField(state, game, width, height, filter2, condition.aggr2, scratch.distanceField);
         if (condition.quantifier == 1) {
             for (int32_t tile = 0; tile < tileCount; ++tile) {
                 if (!compactMatchesFilter(state, game, filter1, condition.aggr1, tile)) {
@@ -1045,7 +1046,7 @@ int32_t compactHeuristicScore(
                 if (compactMatchesFilter(state, game, filter2, condition.aggr2, tile)) {
                     continue;
                 }
-                score += 10 + puzzlescript::search::distanceOrFallback(filter2Distances[static_cast<size_t>(tile)]);
+                score += 10 + puzzlescript::search::distanceOrFallback(scratch.distanceField[static_cast<size_t>(tile)]);
             }
         } else if (condition.quantifier == 0) {
             bool passed = false;
@@ -1058,7 +1059,7 @@ int32_t compactHeuristicScore(
                     passed = true;
                     break;
                 }
-                best = std::min(best, puzzlescript::search::distanceOrFallback(filter2Distances[static_cast<size_t>(tile)]));
+                best = std::min(best, puzzlescript::search::distanceOrFallback(scratch.distanceField[static_cast<size_t>(tile)]));
             }
             score += passed ? 0 : best;
         } else if (condition.quantifier == -1) {
@@ -1075,24 +1076,25 @@ int32_t compactHeuristicScore(
         const puzzlescript::MaskWord* playerMask = puzzlescript::search::maskPtr(game, game.playerMask);
         bool hasPlayer = false;
         int32_t best = puzzlescript::search::kNoMatchingDistance;
-        std::vector<std::vector<int32_t>> conditionDistances;
-        conditionDistances.reserve(game.winConditions.size());
-        for (const auto& condition : game.winConditions) {
-            conditionDistances.push_back(compactMatchingDistanceField(
+        scratch.conditionDistances.resize(game.winConditions.size());
+        for (size_t index = 0; index < game.winConditions.size(); ++index) {
+            const auto& condition = game.winConditions[index];
+            compactMatchingDistanceField(
                 state,
                 game,
                 width,
                 height,
                 puzzlescript::search::maskPtr(game, condition.filter1),
-                condition.aggr1
-            ));
+                condition.aggr1,
+                scratch.conditionDistances[index]
+            );
         }
         for (int32_t player = 0; player < tileCount; ++player) {
             if (!compactMatchesFilter(state, game, playerMask, game.playerMaskAggregate, player)) {
                 continue;
             }
             hasPlayer = true;
-            for (const auto& distances : conditionDistances) {
+            for (const auto& distances : scratch.conditionDistances) {
                 best = std::min(best, puzzlescript::search::distanceOrFallback(distances[static_cast<size_t>(player)]));
             }
         }
@@ -1349,7 +1351,7 @@ Result runSearch(
     if (mode != SearchMode::Bfs) {
         ScopedTimer timer(result.timing.heuristicNs);
         initialHeuristic = compactNodeStorage
-            ? compactHeuristicScore(initialState, *game, searchWidth, searchHeight)
+            ? compactHeuristicScore(initialState, *game, searchWidth, searchHeight, heuristicScratch)
             : heuristicScore(*initial, heuristicScratch);
     }
     {
@@ -1482,7 +1484,7 @@ Result runSearch(
                 if (mode != SearchMode::Bfs) {
                     ScopedTimer timer(result.timing.heuristicNs);
                     childHeuristic = compactNodeStorage
-                        ? compactHeuristicScore(childState, *game, searchWidth, searchHeight)
+                        ? compactHeuristicScore(childState, *game, searchWidth, searchHeight, heuristicScratch)
                         : heuristicScore(*edge.child, heuristicScratch);
                 }
                 std::unique_ptr<FullState> ownedChild;
@@ -1509,7 +1511,7 @@ Result runSearch(
                 if (mode != SearchMode::Bfs) {
                     ScopedTimer timer(result.timing.heuristicNs);
                     childHeuristic = compactNodeStorage
-                        ? compactHeuristicScore(childState, *game, searchWidth, searchHeight)
+                        ? compactHeuristicScore(childState, *game, searchWidth, searchHeight, heuristicScratch)
                         : heuristicScore(*edge.child, heuristicScratch);
                 }
                 childIndex = static_cast<uint32_t>(nodes.size());

@@ -1081,6 +1081,26 @@ Compact-turn-only line-budget fix, 2026-04-30:
   `elapsed_ms=304.0->254.0`, `step_ms=162.9->102.8`, with median generated
   early-rule time `32.059ms`.
 
+Solver heuristic scratch reuse, 2026-04-30:
+  The compact solver win-condition heuristic now reuses the existing
+  `HeuristicScratch` distance-field buffers instead of allocating fresh vectors
+  on each state evaluation. This keeps the compact solver path aligned with
+  the interpreter heuristic's allocation discipline. A fresh
+  `make solver_focus_compact_codegen_perf_report SOLVER_FOCUS_RUNS=1` run
+  reports all 50 focus targets on native compact kernels with
+  `elapsed_ms=303.0->257.0`, `step_ms=162.3->106.3`, median setup time
+  `17.745ms`, median early-rule time `32.360ms`, and median heuristic time
+  `8.4ms->11.6ms`.
+
+Rejected anchored-row scan experiment, 2026-04-30:
+  An object-cell-index anchored row-scan prototype was measured and backed out
+  rather than committed. Even after collapsing the generated scanner into a
+  shared helper, the `paint everything everywhere` probe grew from roughly
+  122k generated lines to 158k, and the focus benchmark moved step time in the
+  wrong direction on the dense-scan regressions. Do not revive this path unless
+  it can be proven as a generic scratch index with clear net wins and no
+  source-size tax.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
