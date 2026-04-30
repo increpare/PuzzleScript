@@ -18,6 +18,22 @@ simulation corpus (`469/469`) with zero compact-oracle failures. The active
 work has moved from semantic bring-up to solver integration, generated-source
 scale, and runtime performance against the solver focus benchmark.
 
+Post-board-migration baseline on 2026-04-30:
+
+- Solver focus comparison uses the same 50 targets for interpreted and compiled
+  compact modes; both solve 50/50.
+- Compiled compact median elapsed is `193 ms` vs interpreted `258 ms`
+  (`0.748x`, 25.2% faster).
+- Median step time is `111.6 ms` vs interpreted `170.2 ms` (`0.656x`, 34.4%
+  faster); median clone time is `1.4 ms` vs `16.6 ms` (`0.084x`).
+- Native compact turn coverage is 50/50 focus targets with no bridge,
+  fallback, or unsupported compact turns.
+- The current speed goal (`<=0.500x` elapsed) is not met. Slowest step targets
+  include `the_saga_of_the_candy_scroll.txt#58`, `Vexatious Match 3.txt#2`,
+  and `paint everything everywhere.txt` levels; the next performance work
+  should inspect generated native compact phase timings and mask rebuild work
+  on those targets.
+
 ## Summary
 
 The previous compact turn prototype drifted into shape-specific helpers such as simple push, push chain, target clear, and movement-only variants. That direction is too complex and too brittle: it encourages recognizing individual game families instead of compiling PuzzleScript.
@@ -116,6 +132,10 @@ Cleanup order:
    warehouse.
 
 This phase is now the #1 priority. New compact codegen should not build on duplicated infrastructure.
+
+Progress: item 2 is complete for board authority. `Scratch::interpreterBoard`
+and scratch-to-persistent sync helpers have been removed from `native/src`; the
+persistent board remains cell-major.
 
 ## Turn Core Boundary
 

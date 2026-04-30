@@ -3,15 +3,18 @@
 ## Summary
 
 Move the native interpreter to use `PersistentLevelState::board.objects` as the
-authoritative cell-major board. `Scratch::interpreterBoard` should stop being
-the interpreter's live board authority and either become a temporary migration
-mirror or disappear once call sites are converted.
+authoritative cell-major board. `Scratch::interpreterBoard` has been removed;
+the interpreter, compact compiler, solver, C API, and oracle paths now share the
+same persistent board representation.
 
-This is the next architectural cleanup before deeper compiler optimization. It
-should make interpreter, compact compiler, solver, C API, and oracle paths agree
-on one persistent board representation, reducing sync/materialization work and
-making future benchmarks compare interpreter dispatch against generated code
-rather than different state layouts.
+This cleanup makes future benchmarks compare interpreter dispatch against
+generated code rather than different state layouts.
+
+## Status
+
+Completed on 2026-04-30. The remaining work has moved back to compact-turn
+compiler performance, tracked in
+`docs/superpowers/plans/2026-04-29-compact-turn-clean-codegen.md`.
 
 ## Key Changes
 
@@ -24,12 +27,8 @@ rather than different state layouts.
     masks, replacement scratch, and dirty flags in `Scratch`.
 
 - Replace sync-style APIs with board-authority APIs.
-  - `setInterpreterBoardObjectsFromCellMajor` should become a compatibility
-    loader that writes `session.levelState.board.objects`.
-  - `copyInterpreterBoardObjectsAsCellMajor` should read
-    `session.levelState.board.objects`.
-  - `syncPersistentLevelStateFromScratch` and `syncPersistentBoardFromScratch`
-    should become no-ops or be deleted once all callers no longer need them.
+  - Level load/materialization helpers now name the persistent board directly.
+  - The scratch-to-persistent sync helpers were deleted.
 
 - Migrate solver and compact bridge plumbing.
   - `persistentLevelStateFromFullState` should copy from
@@ -38,10 +37,8 @@ rather than different state layouts.
     board by assigning `session.levelState.board.objects`.
   - Compact bridge copy-back should no longer copy from interpreter scratch.
 
-- Remove `Scratch::interpreterBoard` after the migration is complete.
-  - During the transition, it may remain only as a compatibility mirror for
-    unconverted call sites.
-  - The final state should have exactly one persistent board authority:
+- Removed `Scratch::interpreterBoard`.
+  - The final state has exactly one persistent board authority:
     `PersistentLevelState::board.objects`.
 
 ## Implementation Order
@@ -67,6 +64,12 @@ rather than different state layouts.
 - 2026-04-30: Removed `Scratch::interpreterBoard` and the no-op scratch-to-
   persistent sync API. Level load/materialization helpers now name the
   persistent board directly.
+- 2026-04-30: Reran the solver focus comparison after the migration:
+  interpreted median elapsed `258 ms`; compiled compact median elapsed
+  `193 ms` (`0.748x`, 25.2% faster). Median step time improved from
+  `170.2 ms` to `111.6 ms`; clone time improved from `16.6 ms` to `1.4 ms`.
+  Compact compiler mode used native compact turns on all 50 focus targets
+  (`compact_turn_native=50`, bridge/fallback/unsupported all zero).
 
 ## Test Plan
 
