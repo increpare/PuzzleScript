@@ -531,7 +531,7 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 283/469 known passing.
+Selected compiler-mode testdata progress: 313/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -728,6 +728,18 @@ Tenth frontier expansion update, 2026-04-30:
     More gallery-sized games, late-rule-heavy Sokoban variants, unlimited
     rigidbody and parallel-player fixtures, larger path/auto-hurdle games, and
     generated-rule-count pressure up to 115 lowered rules.
+
+Eleventh frontier expansion update, 2026-04-30:
+  ranked-frontier replay:
+    cases: 312 71 268 210 18 360 54 168 175 334 92 205 103 174 50 344 68 352 244 253
+    result: 20/20 pass
+  old-failure bookkeeping replay:
+    cases: 31 32 57 62 85 87 88 89 90 188
+    result: 10/10 pass
+  added coverage:
+    More gallery and input-heavy games, larger late-rule sets, many-level
+    fixtures, 10-layer/50-object pressure, and the previously fixed
+    `again`/movement mismatch cases now live in the selected executable target.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
