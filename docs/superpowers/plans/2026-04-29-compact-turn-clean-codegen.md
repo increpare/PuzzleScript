@@ -967,6 +967,20 @@ Generated rule-apply interning, 2026-04-30:
   6,975,910 lines to 365,412,548 bytes / 6,768,295 lines. Full compiler-mode
   simulation guard still passes 469/469 with no compact oracle failures.
 
+Generated command-queue interning, 2026-04-30:
+  Compact command queue helpers now go through the same function interner as
+  match/apply helpers, with canonical helper names threaded into deterministic
+  and random rule dispatch. This removes duplicated command-output plumbing
+  without changing command semantics.
+  Focused giant-case results:
+  - case 223 `vertebrae`: 47,814,855 bytes / 856,731 lines to
+    47,055,143 bytes / 831,204 lines.
+  - case 403 `Crate Assembler`: 6,598,468 bytes / 147,132 lines to
+    6,580,389 bytes / 146,534 lines.
+  Full generated `testdata.js` corpus dropped from 365,412,548 bytes /
+  6,768,295 lines to 360,577,475 bytes / 6,604,937 lines. Full compiler-mode
+  simulation guard still passes 469/469 with no compact oracle failures.
+
 Full-corpus post-cleanup guard, 2026-04-30:
   `make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4`
   passes after the generated-source reductions with

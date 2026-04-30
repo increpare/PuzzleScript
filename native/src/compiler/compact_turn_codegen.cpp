@@ -145,13 +145,18 @@ private:
 class CompactFunctionInterner {
 public:
     std::string emitDefinition(std::ostream& out, const std::string& preferredName, const std::string& signatureAndBody) {
-        auto existing = names_.find(signatureAndBody);
+        return emitDefinition(out, "bool", preferredName, signatureAndBody);
+    }
+
+    std::string emitDefinition(std::ostream& out, std::string_view returnType, const std::string& preferredName, const std::string& signatureAndBody) {
+        const std::string key = std::string{returnType} + "\n" + signatureAndBody;
+        auto existing = names_.find(key);
         if (existing != names_.end()) {
             return existing->second;
         }
 
-        names_.emplace(signatureAndBody, preferredName);
-        out << "bool " << preferredName << signatureAndBody << "\n";
+        names_.emplace(key, preferredName);
+        out << returnType << " " << preferredName << signatureAndBody << "\n";
         return preferredName;
     }
 
@@ -356,27 +361,27 @@ std::string compactPatternApplyCall(
 
 void emitCompactRuleCommandQueue(
     std::ostream& out,
-    const Rule& rule,
-    const std::string& prefix
+    std::string_view commandQueueName
 ) {
-    if (rule.commands.empty()) {
+    if (commandQueueName.empty()) {
         return;
     }
-    out << "    " << prefix << "_queue_commands(commands);\n";
+    out << "    " << commandQueueName << "(commands);\n";
 }
 
-void emitCompactRuleCommandFunction(
+std::string emitCompactRuleCommandFunction(
     std::ostream& out,
+    CompactFunctionInterner& functions,
     const Rule& rule,
     const std::string& prefix,
     std::string_view suffix
 ) {
-    out << "void " << prefix << "_queue_commands(CompactTurnCommands_" << suffix << "& commands) {\n";
     if (rule.commands.empty()) {
-        out << "    (void)commands;\n"
-            << "}\n\n";
-        return;
+        return {};
     }
+
+    std::ostringstream body;
+    body << "(CompactTurnCommands_" << suffix << "& commands) {\n";
     const bool currentRuleCancel = std::any_of(rule.commands.begin(), rule.commands.end(), [](const RuleCommand& command) {
         return command.name == "cancel";
     });
@@ -384,56 +389,68 @@ void emitCompactRuleCommandFunction(
         return command.name == "restart";
     });
 
-    out << "    if (commands.hasCancel) {\n"
-        << "        return;\n"
-        << "    }\n";
+    body << "    if (commands.hasCancel) {\n"
+         << "        return;\n"
+         << "    }\n";
     if (!currentRuleCancel) {
-        out << "    if (commands.hasRestart) {\n"
-            << "        return;\n"
-            << "    }\n";
+        body << "    if (commands.hasRestart) {\n"
+             << "        return;\n"
+             << "    }\n";
     }
     if (currentRuleCancel || currentRuleRestart) {
-        out << "    commands = CompactTurnCommands_" << suffix << "{};\n";
+        body << "    commands = CompactTurnCommands_" << suffix << "{};\n";
     }
-    out << "    commands.any = true;\n";
+    body << "    commands.any = true;\n";
     for (const RuleCommand& command : rule.commands) {
         if (command.name == "again") {
-            out << "    if (!commands.hasAgain) ++commands.commandCount;\n"
-                << "    commands.hasAgain = true;\n";
+            body << "    if (!commands.hasAgain) ++commands.commandCount;\n"
+                 << "    commands.hasAgain = true;\n";
         } else if (command.name == "cancel") {
-            out << "    if (!commands.hasCancel) ++commands.commandCount;\n"
-                << "    commands.hasCancel = true;\n";
+            body << "    if (!commands.hasCancel) ++commands.commandCount;\n"
+                 << "    commands.hasCancel = true;\n";
         } else if (command.name == "checkpoint") {
-            out << "    if (!commands.hasCheckpoint) ++commands.commandCount;\n"
-                << "    commands.hasCheckpoint = true;\n";
+            body << "    if (!commands.hasCheckpoint) ++commands.commandCount;\n"
+                 << "    commands.hasCheckpoint = true;\n";
         } else if (command.name == "restart") {
-            out << "    if (!commands.hasRestart) ++commands.commandCount;\n"
-                << "    commands.hasRestart = true;\n";
+            body << "    if (!commands.hasRestart) ++commands.commandCount;\n"
+                 << "    commands.hasRestart = true;\n";
         } else if (command.name == "win") {
-            out << "    if (!commands.hasWin) ++commands.commandCount;\n"
-                << "    commands.hasWin = true;\n";
+            body << "    if (!commands.hasWin) ++commands.commandCount;\n"
+                 << "    commands.hasWin = true;\n";
         } else if (command.name == "message") {
             if (command.argument.has_value()) {
-                out << "    if (!commands.hasMessage) {\n"
-                    << "        ++commands.commandCount;\n"
-                    << "        commands.hasMessage = true;\n"
-                    << "        commands.messageText = " << cppStringLiteral(*command.argument) << ";\n"
-                    << "    }\n";
+                body << "    if (!commands.hasMessage) {\n"
+                     << "        ++commands.commandCount;\n"
+                     << "        commands.hasMessage = true;\n"
+                     << "        commands.messageText = " << cppStringLiteral(*command.argument) << ";\n"
+                     << "    }\n";
             } else {
-                out << "    if (!commands.hasMessage) ++commands.commandCount;\n"
-                    << "    commands.hasMessage = true;\n";
+                body << "    if (!commands.hasMessage) ++commands.commandCount;\n"
+                     << "    commands.hasMessage = true;\n";
             }
         } else if (command.name.rfind("sfx", 0) == 0) {
-            out << "    ++commands.commandCount;\n"
-                << "    // Sound effects are command output only; board/search state is unaffected.\n";
+            body << "    ++commands.commandCount;\n"
+                 << "    // Sound effects are command output only; board/search state is unaffected.\n";
         } else {
-            out << "    static_assert(false, \"compact turn compiler command queue emitted unsupported command\");\n";
+            body << "    static_assert(false, \"compact turn compiler command queue emitted unsupported command\");\n";
         }
     }
-    out << "}\n\n";
+    body << "}\n";
+    const std::string commandQueueName = functions.emitDefinition(out, "void", prefix + "_queue_commands", body.str());
+    out << "\n";
+    return commandQueueName;
 }
 
-std::string emitCompactRuleFunction(
+struct CompactRuleGeneratedNames {
+    std::string applyName;
+    std::string commandQueueName;
+};
+
+CompactRuleGeneratedNames makeCompactRuleGeneratedNames(std::string applyName, std::string commandQueueName = {}) {
+    return CompactRuleGeneratedNames{std::move(applyName), std::move(commandQueueName)};
+}
+
+CompactRuleGeneratedNames emitCompactRuleFunction(
     std::ostream& out,
     const Game& game,
     const CompactMaskConstantEmitter& masks,
@@ -484,7 +501,7 @@ std::string emitCompactRuleFunction(
             << "    static_assert(false, " << cppStringLiteral(reason) << ");\n"
             << "    return false;\n"
             << "}\n\n";
-        return prefix + "_apply";
+        return makeCompactRuleGeneratedNames(prefix + "_apply", prefix + "_queue_commands");
     }
 
     const bool inlineSingleRowHelpers = !groupIsRandom && rule.patterns.size() == 1;
@@ -630,9 +647,7 @@ std::string emitCompactRuleFunction(
         rowCollectNames[rowIndex] = functions.emitDefinition(out, rowPrefix + "_collect_matches", collectBody.str());
         out << "\n";
     }
-    if (!rule.commands.empty()) {
-        emitCompactRuleCommandFunction(out, rule, prefix, suffix);
-    }
+    const std::string commandQueueName = emitCompactRuleCommandFunction(out, functions, rule, prefix, suffix);
 
     if (groupIsRandom) {
         out << "bool " << prefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<std::vector<int32_t>>>& matches) {\n"
@@ -674,7 +689,7 @@ std::string emitCompactRuleFunction(
             applyBody << "    if (!" << rowCollectNames[rowIndex] << "(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
         }
     }
-    emitCompactRuleCommandQueue(applyBody, rule, prefix);
+    emitCompactRuleCommandQueue(applyBody, commandQueueName);
     if (!groupIsRandom && rule.patterns.size() == 1) {
         const size_t rowIndex = 0;
         const std::vector<Pattern>& row = rule.patterns[rowIndex];
@@ -715,7 +730,7 @@ std::string emitCompactRuleFunction(
                   << "}\n";
         const std::string applyName = functions.emitDefinition(out, prefix + "_apply", applyBody.str());
         out << "\n";
-        return applyName;
+        return makeCompactRuleGeneratedNames(applyName, commandQueueName);
     }
     applyBody << "    std::vector<size_t> tupleIndex(rowCount, 0);\n"
               << "    bool firstTuple = true;\n"
@@ -756,7 +771,7 @@ std::string emitCompactRuleFunction(
               << "}\n";
     const std::string applyName = functions.emitDefinition(out, prefix + "_apply", applyBody.str());
     out << "\n";
-    return applyName;
+    return makeCompactRuleGeneratedNames(applyName, commandQueueName);
 }
 
 void emitCompactRulegroupFunctions(
@@ -772,9 +787,9 @@ void emitCompactRulegroupFunctions(
     for (size_t groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
         const std::vector<Rule>& group = groups[groupIndex];
         const bool groupIsRandom = !group.empty() && group[0].isRandom;
-        std::vector<std::string> ruleApplyNames(group.size());
+        std::vector<CompactRuleGeneratedNames> ruleNames(group.size());
         for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-            ruleApplyNames[ruleIndex] = emitCompactRuleFunction(out, game, masks, functions, group[ruleIndex], suffix, phase, groupIndex, ruleIndex, groupIsRandom);
+            ruleNames[ruleIndex] = emitCompactRuleFunction(out, game, masks, functions, group[ruleIndex], suffix, phase, groupIndex, ruleIndex, groupIsRandom);
         }
 
         const std::string groupPrefix = compactGroupPrefix(suffix, phase, groupIndex);
@@ -842,7 +857,7 @@ void emitCompactRulegroupFunctions(
                 out << "        case " << ruleIndex << ":\n"
                     << (group[ruleIndex].commands.empty()
                         ? std::string{}
-                        : "            " + rulePrefix + "_queue_commands(commands);\n")
+                        : "            " + ruleNames[ruleIndex].commandQueueName + "(commands);\n")
                     << "            return " << rulePrefix << "_apply_tuple(levelState, scratch, groupMatches[" << ruleIndex << "], chosen.tupleIndex);\n";
             }
             out << "        default:\n"
@@ -874,7 +889,7 @@ void emitCompactRulegroupFunctions(
                 << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix
                 << "& commands, bool& madeChangeThisLoop, int32_t& consecutiveFailures) {\n";
             for (size_t ruleIndex = firstRuleIndex; ruleIndex < lastRuleIndex; ++ruleIndex) {
-                out << "    if (" << ruleApplyNames[ruleIndex]
+                out << "    if (" << ruleNames[ruleIndex].applyName
                     << "(dimensions, levelState, scratch, commands)) {\n"
                     << "        madeChangeThisLoop = true;\n"
                     << "        consecutiveFailures = 0;\n"
