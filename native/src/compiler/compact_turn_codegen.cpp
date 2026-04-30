@@ -643,6 +643,18 @@ void emitCompactRuleFunction(
         }
     }
     emitCompactRuleCommandQueue(out, rule, prefix);
+    if (!groupIsRandom && rule.patterns.size() == 1) {
+        const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, 0);
+        out << "    bool changed = false;\n"
+            << "    for (size_t matchIndex = 0; matchIndex < matches[0].size(); ++matchIndex) {\n"
+            << "        if (matchIndex == 0 || " << rowPrefix << "_match_still_matches(levelState, scratch, matches[0][matchIndex])) {\n"
+            << "            changed = " << rowPrefix << "_apply_replacements(levelState, scratch, matches[0][matchIndex]) || changed;\n"
+            << "        }\n"
+            << "    }\n"
+            << "    return changed;\n"
+            << "}\n\n";
+        return;
+    }
     out << "    std::vector<size_t> tupleIndex(rowCount, 0);\n"
         << "    bool firstTuple = true;\n"
         << "    bool changed = false;\n"

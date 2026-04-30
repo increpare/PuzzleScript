@@ -920,6 +920,13 @@ Deterministic rule wrapper cleanup, 2026-04-30:
   selection needs them. Case 403 still passes compact oracle replay; generated
   source dropped to about 34 MB / 653,032 lines.
 
+One-row deterministic apply cleanup, 2026-04-30:
+  One-row deterministic rules now iterate their single match row directly
+  instead of emitting the generic multi-row tuple-index loop. This preserves
+  the first-match/no-recheck behavior and the subsequent still-match checks.
+  Case 403 still passes compact oracle replay; generated source dropped to
+  about 30 MB / 537,292 lines.
+
 Runtime/reporting cleanup, 2026-04-30:
   Renamed runtime generated-backend support metadata from fallback-specific
   naming to neutral `statusReason`, and added solver JSON/profile aliases for
