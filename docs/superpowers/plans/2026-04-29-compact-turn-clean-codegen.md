@@ -1118,7 +1118,14 @@ Current next frontier:
   `testdata.js` compiler-mode correctness is green both per-case and as a
   combined generated corpus. The solver focus benchmark now shows the compiled
   compact pipeline winning overall median elapsed time, but not yet at the
-  long-term 0.5x goal. The immediate worklist is:
+  long-term 0.5x goal.
+
+  The next architectural cleanup is to move the interpreter onto the same
+  cell-major `PersistentLevelState::board.objects` authority as compiler-mode
+  compact turns. See
+  `docs/superpowers/plans/2026-04-30-compact-interpreter-board-migration.md`.
+
+  After that migration, the immediate compiler/search optimization worklist is:
   1. Reduce `compact_turn_setup_ms`, currently dominated by rebuilding
      scratch row/column/board masks from arbitrary solver materializations.
   2. Optimize dense generated row scans now that all solver-focus targets are
