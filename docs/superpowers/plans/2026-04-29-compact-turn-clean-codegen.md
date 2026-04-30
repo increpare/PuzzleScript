@@ -1011,6 +1011,17 @@ Solver compact compiler profiling, 2026-04-30:
   canonicalization bucket so the report does not double-count their inner
   phases.
 
+Compact compiler optimization pass, 2026-04-30:
+  Simple non-random, single-row compact rules now store matched start tiles in
+  `Scratch::singleRowMatchScratch` instead of building nested match vectors.
+  On `make solver_focus_compact_codegen_perf_report SOLVER_FOCUS_RUNS=1`, the
+  all-target median moved from the earlier compiler-mode compact profile of
+  roughly `314ms -> 500ms` to `304ms -> 325ms`. The native compact subset is
+  now printed explicitly; the fresh run reports `targets=45`,
+  `elapsed_ms=298.0->321.0`, `step_ms=157.3->228.2`, and median generated
+  compact early-rule time `135.497ms`. This is still slower than the
+  interpreter, but the first measured bottleneck was cut substantially.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile

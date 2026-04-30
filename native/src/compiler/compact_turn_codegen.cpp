@@ -505,6 +505,77 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
     }
 
     const bool inlineSingleRowHelpers = !groupIsRandom && rule.patterns.size() == 1;
+    const bool inlineSingleRowStartMatches = inlineSingleRowHelpers
+        && !rule.ellipsisCount.empty()
+        && rule.ellipsisCount[0] == 0;
+    if (inlineSingleRowStartMatches) {
+        const size_t rowIndex = 0;
+        const std::vector<Pattern>& row = rule.patterns[rowIndex];
+        const std::string commandQueueName = emitCompactRuleCommandFunction(out, functions, rule, prefix, suffix);
+
+        std::ostringstream applyBody;
+        applyBody << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
+                  << "    std::vector<int32_t>& matches = scratch.singleRowMatchScratch;\n"
+                  << "    matches.clear();\n"
+                  << "    const int32_t tileCount = compact_turn_tile_count_" << suffix << "(dimensions);\n"
+                  << "    if (tileCount <= 0) return false;\n"
+                  << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
+                  << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
+                  << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n"
+                  << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
+                  << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
+                  << "        const int32_t x = horizontalScan ? secondary : primary;\n"
+                  << "        const int32_t y = horizontalScan ? primary : secondary;\n"
+                  << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
+                  << "        bool matched = true;\n";
+        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+            applyBody << "        int32_t tile_" << patternIndex << " = 0;\n"
+                      << "        if (!compact_turn_cell_at_direction_" << suffix
+                      << "(dimensions, startIndex, " << rule.direction << ", " << patternIndex << ", tile_" << patternIndex << ")) matched = false;\n"
+                      << "        if (matched && !"
+                      << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "tile_" + std::to_string(patternIndex))
+                      << ") matched = false;\n";
+        }
+        applyBody << "        if (matched) matches.push_back(startIndex);\n"
+                  << "    }\n"
+                  << "    }\n"
+                  << "    if (matches.empty()) return false;\n";
+        emitCompactRuleCommandQueue(applyBody, commandQueueName);
+        applyBody << "    bool changed = false;\n"
+                  << "    for (size_t matchIndex = 0; matchIndex < matches.size(); ++matchIndex) {\n"
+                  << "        const int32_t startIndex = matches[matchIndex];\n"
+                  << "        bool stillMatches = true;\n"
+                  << "        if (matchIndex != 0) {\n";
+        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+            applyBody << "            int32_t tile_" << patternIndex << " = 0;\n"
+                      << "            if (!compact_turn_cell_at_direction_" << suffix
+                      << "(dimensions, startIndex, " << rule.direction << ", " << patternIndex << ", tile_" << patternIndex << ")) stillMatches = false;\n"
+                      << "            if (stillMatches && !"
+                      << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "tile_" + std::to_string(patternIndex))
+                      << ") stillMatches = false;\n";
+        }
+        applyBody << "        }\n"
+                  << "        if (stillMatches) {\n";
+        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+            if (!row[patternIndex].replacement.has_value()) {
+                continue;
+            }
+            applyBody << "            int32_t applyTile_" << patternIndex << " = 0;\n"
+                      << "            if (!compact_turn_cell_at_direction_" << suffix
+                      << "(dimensions, startIndex, " << rule.direction << ", " << patternIndex << ", applyTile_" << patternIndex << ")) continue;\n"
+                      << "            changed = "
+                      << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "applyTile_" + std::to_string(patternIndex), std::to_string(rigidGroupIndex))
+                      << " || changed;\n";
+        }
+        applyBody << "        }\n"
+                  << "    }\n"
+                  << "    return changed;\n"
+                  << "}\n";
+        const std::string applyName = functions.emitDefinition(out, prefix + "_apply", applyBody.str());
+        out << "\n";
+        return makeCompactRuleGeneratedNames(applyName, commandQueueName);
+    }
+
     std::vector<std::string> rowMatchNames(rule.patterns.size());
     std::vector<std::string> rowApplyNames(rule.patterns.size());
     std::vector<std::string> rowCollectNames(rule.patterns.size());

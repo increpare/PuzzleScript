@@ -137,6 +137,14 @@ function countersMedian(summary, key) {
     return values[Math.floor(values.length / 2)];
 }
 
+function median(values) {
+    const finite = values.filter((value) => Number.isFinite(value)).sort((a, b) => a - b);
+    if (finite.length === 0) {
+        return null;
+    }
+    return finite[Math.floor(finite.length / 2)];
+}
+
 function benchmarkCountersMedian(benchmark, key) {
     const values = [];
     for (const target of benchmark.targets || []) {
@@ -669,11 +677,54 @@ function printGraphOverheadTable(label, rows) {
     }
 }
 
+function rowMetricMedian(rows, side, key) {
+    return median(rows.map((row) => metricMedian(row[side], key)));
+}
+
+function rowCounterMedian(rows, side, key) {
+    return median(rows.map((row) => countersMedian(row[side], key)));
+}
+
+function rowStatusCounts(rows, side) {
+    const counts = {};
+    for (const row of rows) {
+        for (const [status, count] of Object.entries(row[side].status_counts || {})) {
+            counts[status] = (counts[status] || 0) + count;
+        }
+    }
+    return counts;
+}
+
+function printNativeCompactSubsetSummary(rows) {
+    const subset = rows.filter((row) => row.compactTurnNativeHits !== null && row.compactTurnNativeHits > 0);
+    if (subset.length === 0) {
+        return;
+    }
+    const interpretedElapsed = rowMetricMedian(subset, 'interpreted', 'elapsed_ms');
+    const compiledElapsed = rowMetricMedian(subset, 'compiled', 'elapsed_ms');
+    const interpretedStep = rowMetricMedian(subset, 'interpreted', 'step_ms');
+    const compiledStep = rowMetricMedian(subset, 'compiled', 'step_ms');
+    const compiledEarlyRules = rowCounterMedian(subset, 'compiled', 'compact_turn_early_rules_ns');
+    process.stdout.write(
+        `  native_compact_subset: targets=${subset.length}` +
+        ` status=${JSON.stringify(rowStatusCounts(subset, 'compiled'))}` +
+        ` elapsed_ms=${formatNumber(interpretedElapsed)}->${formatNumber(compiledElapsed)}` +
+        ` (${formatDelta(compiledElapsed, interpretedElapsed)})` +
+        ` step_ms=${formatNumber(interpretedStep)}->${formatNumber(compiledStep)}` +
+        ` (${formatDelta(compiledStep, interpretedStep)})` +
+        ` compiled_early_rules_ms=${formatNumber(compiledEarlyRules === null ? null : compiledEarlyRules / 1e6, 3)}` +
+        `\n`
+    );
+}
+
+const comparisonRows = targetRows();
+
 process.stdout.write('solver_focus_compare\n');
 process.stdout.write(`  targets: interpreted=${interpreted.target_count} compiled=${compiled.target_count} same=${sameTargets ? 'yes' : 'no'}\n`);
 process.stdout.write(`  runs_per_target: interpreted=${interpreted.runs_per_target} compiled=${compiled.runs_per_target}\n`);
 process.stdout.write(`  solver_extra_args: interpreted=${formatArgs(interpreted.solver_extra_args)} compiled=${formatArgs(compiled.solver_extra_args)}\n`);
 process.stdout.write(`  status: interpreted=${JSON.stringify(interpretedStatus)} compiled=${JSON.stringify(compiledStatus)}\n`);
+printNativeCompactSubsetSummary(comparisonRows);
 process.stdout.write(
     `  median_wall_ms: interpreted=${formatNumber(interpreted.median.wall_ms)}` +
     ` compiled=${formatNumber(compiled.median.wall_ms)}` +
@@ -737,7 +788,7 @@ if (options.goalRatio !== null) {
 }
 
 if (options.detail) {
-    const rows = targetRows();
+    const rows = comparisonRows;
     printWorkMismatchSummary(rows);
     printCompiledUsageSummary(rows);
     const bySlowest = rows.slice().sort((a, b) => (b.elapsedRatio || 0) - (a.elapsedRatio || 0));
