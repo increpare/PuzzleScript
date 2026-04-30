@@ -907,6 +907,12 @@ Generated mask arena cleanup, 2026-04-30:
   and passes compact oracle replay; generated source dropped to about 43 MB /
   784,204 lines.
 
+Generated symbol-name cleanup, 2026-04-30:
+  Generated-internal compact rule/row/group helper names now use short
+  source-local prefixes while preserving the public backend ABI names. Case 403
+  still passes compact oracle replay; generated source dropped again to about
+  41 MB / 42,784,588 bytes.
+
 Runtime/reporting cleanup, 2026-04-30:
   Renamed runtime generated-backend support metadata from fallback-specific
   naming to neutral `statusReason`, and added solver JSON/profile aliases for

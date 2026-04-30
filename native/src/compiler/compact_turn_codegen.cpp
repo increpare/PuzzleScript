@@ -89,6 +89,10 @@ std::string compactMaskArenaName(std::string_view suffix, std::string_view phase
     return "ctm_" + std::string(suffix) + "_" + (phase == "late" ? "l" : "e");
 }
 
+std::string compactPhaseTag(std::string_view phase) {
+    return phase == "late" ? "l" : "e";
+}
+
 class CompactMaskConstantEmitter {
 public:
     CompactMaskConstantEmitter(std::string_view suffix, std::string_view phase)
@@ -155,8 +159,8 @@ std::string compactPatternPrefix(
     size_t rowIndex,
     size_t patternIndex
 ) {
-    return "compact_turn_rule_" + std::string(suffix)
-        + "_" + std::string(phase)
+    return "ctp_" + std::string(suffix)
+        + "_" + compactPhaseTag(phase)
         + "_" + std::to_string(groupIndex)
         + "_" + std::to_string(ruleIndex)
         + "_" + std::to_string(rowIndex)
@@ -169,8 +173,8 @@ std::string compactRulePrefix(
     size_t groupIndex,
     size_t ruleIndex
 ) {
-    return "compact_turn_rule_" + std::string(suffix)
-        + "_" + std::string(phase)
+    return "ctr_" + std::string(suffix)
+        + "_" + compactPhaseTag(phase)
         + "_" + std::to_string(groupIndex)
         + "_" + std::to_string(ruleIndex);
 }
@@ -183,7 +187,7 @@ std::string compactRowPrefix(
     size_t rowIndex
 ) {
     return compactRulePrefix(suffix, phase, groupIndex, ruleIndex)
-        + "_row_" + std::to_string(rowIndex);
+        + "_r_" + std::to_string(rowIndex);
 }
 
 std::string compactGroupPrefix(
@@ -191,8 +195,8 @@ std::string compactGroupPrefix(
     std::string_view phase,
     size_t groupIndex
 ) {
-    return "compact_turn_group_" + std::string(suffix)
-        + "_" + std::string(phase)
+    return "ctg_" + std::string(suffix)
+        + "_" + compactPhaseTag(phase)
         + "_" + std::to_string(groupIndex);
 }
 
