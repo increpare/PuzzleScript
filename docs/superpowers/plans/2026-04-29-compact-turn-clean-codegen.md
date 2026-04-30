@@ -806,6 +806,19 @@ Seventeenth frontier expansion update, 2026-04-30:
     300, 306, and 402 are borderline by generated-rule count and should be
     probed separately.
 
+Eighteenth frontier expansion update, 2026-04-30:
+  unselected-gap replay:
+    cases: 331 333 337 340 342 343 348 351 353 355 358 359 400 401 404 405 406 407 408 411 469
+    result: 21/21 pass
+  promoted coverage:
+    21 cases added to the selected executable target; selected coverage is now
+    454/469. `make compact_turn_codegen_selected_tests
+    COMPILED_RULES_BUILD_JOBS=4` passes with `passed=454`. The remaining
+    non-parked probes are cases 300, 306, and 402.
+  held out for compile-pressure queue:
+    cases 155, 164, 181, 189, 213, 223, 230, 242, 249, 324, 325, and 403
+    stay out of the selected target until the end queue.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
