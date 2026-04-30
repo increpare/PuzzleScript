@@ -51,9 +51,9 @@ std::string safeCppIdentifier(std::string_view value) {
 
 std::string compiledMaskWordLiteral(MaskWord word) {
     std::ostringstream out;
-    out << "static_cast<MaskWord>(static_cast<MaskWordUnsigned>("
+    out << "static_cast<MaskWord>("
         << static_cast<MaskWordUnsigned>(word)
-        << "ULL))";
+        << "ULL)";
     return out.str();
 }
 

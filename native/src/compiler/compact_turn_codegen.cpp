@@ -1049,15 +1049,6 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
     out << "};\n";
     out << "constexpr int32_t compact_turn_rigid_group_index_to_group_index_count_" << suffix << " = "
         << game.rigidGroupIndexToGroupIndex.size() << ";\n";
-    out << "constexpr int32_t compact_turn_group_number_to_rigid_group_index_" << suffix << "[] = {";
-    for (size_t index = 0; index < game.groupNumberToRigidGroupIndex.size(); ++index) {
-        if (index > 0) out << ", ";
-        out << game.groupNumberToRigidGroupIndex[index];
-    }
-    out << "};\n";
-    out << "constexpr int32_t compact_turn_group_number_to_rigid_group_index_count_" << suffix << " = "
-        << game.groupNumberToRigidGroupIndex.size() << ";\n\n";
-
     out << "constexpr int32_t compact_turn_object_layer_" << suffix << "[] = {";
     const int32_t emittedObjectLayerCount = std::max(game.objectCount, 1);
     for (int32_t objectId = 0; objectId < emittedObjectLayerCount; ++objectId) {
