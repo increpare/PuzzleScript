@@ -469,40 +469,45 @@ void emitCompactRuleFunction(
         return;
     }
 
+    const bool inlineSingleRowHelpers = !groupIsRandom && rule.patterns.size() == 1;
     for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
         const std::vector<Pattern>& row = rule.patterns[rowIndex];
         const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-        out << "bool " << rowPrefix << "_match_still_matches(const PersistentLevelState& levelState, const Scratch& scratch, const std::vector<int32_t>& match) {\n"
-            << "    size_t positionIndex = 0;\n";
-        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-            if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
-                continue;
+        if (!inlineSingleRowHelpers) {
+            out << "bool " << rowPrefix << "_match_still_matches(const PersistentLevelState& levelState, const Scratch& scratch, const std::vector<int32_t>& match) {\n"
+                << "    size_t positionIndex = 0;\n";
+            for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+                if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
+                    continue;
+                }
+                out << "    if (positionIndex >= match.size() || !"
+                    << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]")
+                    << ") return false;\n"
+                    << "    ++positionIndex;\n";
             }
-            out << "    if (positionIndex >= match.size() || !"
-                << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]")
-                << ") return false;\n"
-                << "    ++positionIndex;\n";
+            out << "    return positionIndex == match.size();\n"
+                << "}\n\n";
         }
-        out << "    return positionIndex == match.size();\n"
-            << "}\n\n";
 
-        out << "bool " << rowPrefix << "_apply_replacements(PersistentLevelState& levelState, Scratch& scratch, const std::vector<int32_t>& match) {\n"
-            << "    bool changed = false;\n"
-            << "    size_t positionIndex = 0;\n";
-        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-            if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
-                continue;
+        if (!inlineSingleRowHelpers) {
+            out << "bool " << rowPrefix << "_apply_replacements(PersistentLevelState& levelState, Scratch& scratch, const std::vector<int32_t>& match) {\n"
+                << "    bool changed = false;\n"
+                << "    size_t positionIndex = 0;\n";
+            for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+                if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
+                    continue;
+                }
+                out << "    if (positionIndex >= match.size()) return changed;\n";
+                if (row[patternIndex].replacement.has_value()) {
+                    out << "    changed = "
+                        << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]", std::to_string(rigidGroupIndex))
+                        << " || changed;\n";
+                }
+                out << "    ++positionIndex;\n";
             }
-            out << "    if (positionIndex >= match.size()) return changed;\n";
-            if (row[patternIndex].replacement.has_value()) {
-                out << "    changed = "
-                    << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]", std::to_string(rigidGroupIndex))
-                    << " || changed;\n";
-            }
-            out << "    ++positionIndex;\n";
+            out << "    return changed;\n"
+                << "}\n\n";
         }
-        out << "    return changed;\n"
-            << "}\n\n";
 
         out << "bool " << rowPrefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<int32_t>>& rowMatches) {\n"
             << "    rowMatches.clear();\n"
@@ -644,13 +649,41 @@ void emitCompactRuleFunction(
     }
     emitCompactRuleCommandQueue(out, rule, prefix);
     if (!groupIsRandom && rule.patterns.size() == 1) {
-        const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, 0);
+        const size_t rowIndex = 0;
+        const std::vector<Pattern>& row = rule.patterns[rowIndex];
         out << "    bool changed = false;\n"
             << "    for (size_t matchIndex = 0; matchIndex < matches[0].size(); ++matchIndex) {\n"
-            << "        if (matchIndex == 0 || " << rowPrefix << "_match_still_matches(levelState, scratch, matches[0][matchIndex])) {\n"
-            << "            changed = " << rowPrefix << "_apply_replacements(levelState, scratch, matches[0][matchIndex]) || changed;\n"
+            << "        const std::vector<int32_t>& match = matches[0][matchIndex];\n"
+            << "        bool stillMatches = true;\n"
+            << "        if (matchIndex != 0) {\n"
+            << "            size_t positionIndex = 0;\n";
+        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+            if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
+                continue;
+            }
+            out << "            if (positionIndex >= match.size() || !"
+                << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]")
+                << ") stillMatches = false;\n"
+                << "            ++positionIndex;\n";
+        }
+        out << "            stillMatches = stillMatches && positionIndex == match.size();\n"
             << "        }\n"
-            << "    }\n"
+            << "        if (stillMatches) {\n"
+            << "            size_t positionIndex = 0;\n";
+        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+            if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
+                continue;
+            }
+            out << "            if (positionIndex >= match.size()) break;\n";
+            if (row[patternIndex].replacement.has_value()) {
+                out << "            changed = "
+                    << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]", std::to_string(rigidGroupIndex))
+                    << " || changed;\n";
+            }
+            out << "            ++positionIndex;\n";
+        }
+        out << "        }\n"
+            << "        }\n"
             << "    return changed;\n"
             << "}\n\n";
         return;

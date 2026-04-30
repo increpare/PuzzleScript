@@ -927,6 +927,14 @@ One-row deterministic apply cleanup, 2026-04-30:
   Case 403 still passes compact oracle replay; generated source dropped to
   about 30 MB / 537,292 lines.
 
+One-row deterministic row-helper cleanup, 2026-04-30:
+  One-row deterministic rules now inline row still-match and replacement
+  application code into the rule apply function instead of emitting separate
+  row helper functions. Random groups and multi-row deterministic rules still
+  keep row helpers where candidate selection or tuple assembly needs them.
+  Case 403 still passes compact oracle replay; generated source dropped to
+  29,386,948 bytes / 498,712 lines.
+
 Full-corpus post-cleanup guard, 2026-04-30:
   `make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4`
   passes after the generated-source reductions with
