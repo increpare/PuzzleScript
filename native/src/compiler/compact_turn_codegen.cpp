@@ -605,7 +605,12 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                   << "    matches.reserve(static_cast<size_t>(tileCount));\n"
                   << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
                   << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
-                  << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n"
+                  << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
+        if (rowMask.hasAnyRequiredMask) {
+            applyBody << "    if (!compact_turn_board_has_required_masks_" << suffix
+                      << "(scratch, " << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) return false;\n";
+        }
+        applyBody
                   << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
                   << "        compact_turn_count_row_scans_" << suffix << "();\n";
         if (rowMask.hasAnyRequiredMask) {
@@ -710,7 +715,12 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
             const CompactRowMaskInfo rowMask = compactRowMaskInfo(game, masks, rule, rowIndex);
             applyBody << "    {\n"
                       << "        std::vector<int32_t>& rowMatches = matches[" << rowIndex << "];\n"
-                      << "        rowMatches.clear();\n"
+                      << "        rowMatches.clear();\n";
+            if (rowMask.hasAnyRequiredMask) {
+                applyBody << "        if (!compact_turn_board_has_required_masks_" << suffix
+                          << "(scratch, " << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) return false;\n";
+            }
+            applyBody
                       << "        for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
                       << "        compact_turn_count_row_scans_" << suffix << "();\n";
             if (rowMask.hasAnyRequiredMask) {
@@ -904,6 +914,10 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                     << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
                     << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
                     << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
+        if (rowMask.hasAnyRequiredMask) {
+            collectBody << "    if (!compact_turn_board_has_required_masks_" << suffix
+                        << "(scratch, " << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) return false;\n";
+        }
         if (rule.ellipsisCount[rowIndex] == 0) {
             collectBody << "    std::vector<int32_t> positions;\n"
                         << "    positions.reserve(" << row.size() << ");\n"
@@ -2031,6 +2045,20 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    std::fill(scratch.rowMovementMasks.begin(), scratch.rowMovementMasks.end(), 0);\n"
         << "    std::fill(scratch.columnMovementMasks.begin(), scratch.columnMovementMasks.end(), 0);\n"
         << "    std::fill(scratch.boardMovementMask.begin(), scratch.boardMovementMask.end(), 0);\n"
+        << "}\n\n";
+
+    out << "bool compact_turn_board_has_required_masks_" << suffix << "(\n"
+        << "    const Scratch& scratch,\n"
+        << "    const MaskWord* requiredObjects,\n"
+        << "    const MaskWord* requiredMovements\n"
+        << ") {\n"
+        << "    for (int32_t word = 0; word < compact_turn_object_stride_" << suffix << "; ++word) {\n"
+        << "        if ((scratch.boardMask[static_cast<size_t>(word)] & requiredObjects[word]) != requiredObjects[word]) return false;\n"
+        << "    }\n"
+        << "    for (int32_t word = 0; word < compact_turn_movement_stride_" << suffix << "; ++word) {\n"
+        << "        if ((scratch.boardMovementMask[static_cast<size_t>(word)] & requiredMovements[word]) != requiredMovements[word]) return false;\n"
+        << "    }\n"
+        << "    return true;\n"
         << "}\n\n";
 
     out << "bool compact_turn_line_has_required_masks_" << suffix << "(\n"
