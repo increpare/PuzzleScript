@@ -779,6 +779,20 @@ Fifteenth frontier expansion update, 2026-04-30:
     case 213 passed, but compiles 5024 lowered rules, so it stays out of the
     selected target until the end queue.
 
+Sixteenth frontier expansion update, 2026-04-30:
+  unselected-gap replay:
+    passing cases: 218 220 222 224 226 233 234 235 236 237 239 240 241 248 250 254 255 256 259 279 280 281 282
+    compile-pressure cases: 223 230 242 249
+  promoted coverage:
+    23 cases added to the selected executable target; selected coverage is now
+    413/469. `make compact_turn_codegen_selected_tests
+    COMPILED_RULES_BUILD_JOBS=4` passes with `passed=413`.
+  held out for compile-pressure queue:
+    case 223 emitted 14246 lowered rules; case 230 emitted 3758; case 242
+    stalled in source compile despite 1164 lowered rules; case 249 stalled in
+    source compile with 343 generated groups. Keep all four out of the selected
+    target until the end queue.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
