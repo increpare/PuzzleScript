@@ -559,6 +559,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                   << "    matches.clear();\n"
                   << "    const int32_t tileCount = compact_turn_tile_count_" << suffix << "(dimensions);\n"
                   << "    if (tileCount <= 0) return false;\n"
+                  << "    matches.reserve(static_cast<size_t>(tileCount));\n"
                   << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
                   << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
                   << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n"
