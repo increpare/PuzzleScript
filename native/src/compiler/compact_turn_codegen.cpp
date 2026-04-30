@@ -1193,48 +1193,6 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
         }
     }
     emitCompactRuleCommandQueue(applyBody, commandQueueName);
-    if (!groupIsRandom && rule.patterns.size() == 1) {
-        const size_t rowIndex = 0;
-        const std::vector<Pattern>& row = rule.patterns[rowIndex];
-        applyBody << "    bool changed = false;\n"
-                  << "    for (size_t matchIndex = 0; matchIndex < matches[0].size(); ++matchIndex) {\n"
-                  << "        const std::vector<int32_t>& match = matches[0][matchIndex];\n"
-                  << "        bool stillMatches = true;\n"
-                  << "        if (matchIndex != 0) {\n"
-                  << "            size_t positionIndex = 0;\n";
-        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-            if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
-                continue;
-            }
-            applyBody << "            if (positionIndex >= match.size() || !"
-                      << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]")
-                      << ") stillMatches = false;\n"
-                      << "            ++positionIndex;\n";
-        }
-        applyBody << "            stillMatches = stillMatches && positionIndex == match.size();\n"
-                  << "        }\n"
-                  << "        if (stillMatches) {\n"
-                  << "            size_t positionIndex = 0;\n";
-        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-            if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
-                continue;
-            }
-            applyBody << "            if (positionIndex >= match.size()) break;\n";
-            if (row[patternIndex].replacement.has_value()) {
-                applyBody << "            changed = "
-                          << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]", std::to_string(rigidGroupIndex))
-                          << " || changed;\n";
-            }
-            applyBody << "            ++positionIndex;\n";
-        }
-        applyBody << "        }\n"
-                  << "        }\n"
-                  << "    return changed;\n"
-                  << "}\n";
-        const std::string applyName = functions.emitDefinition(out, prefix + "_apply", applyBody.str());
-        out << "\n";
-        return makeCompactRuleGeneratedNames(applyName, commandQueueName);
-    }
     applyBody << "    std::vector<size_t> tupleIndex(rowCount, 0);\n"
               << "    bool firstTuple = true;\n"
               << "    bool changed = false;\n"
