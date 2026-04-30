@@ -49,6 +49,23 @@ inline void appendStateKeyValue(StateKey& key, uint64_t value) {
     key.hi *= 0x9e3779b185ebca87ULL;
 }
 
+inline void appendStateKeyBytes(StateKey& key, const uint8_t* bytes, size_t size) {
+    uint64_t packed = 0;
+    uint32_t shift = 0;
+    for (size_t index = 0; index < size; ++index) {
+        packed |= static_cast<uint64_t>(bytes[index]) << shift;
+        shift += 8;
+        if (shift == 64) {
+            appendStateKeyValue(key, packed);
+            packed = 0;
+            shift = 0;
+        }
+    }
+    if (shift != 0) {
+        appendStateKeyValue(key, packed);
+    }
+}
+
 template <typename ProjectWord>
 inline StateKey fullStateKey(const FullState& session, bool includeRandomState, ProjectWord projectWord) {
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
@@ -62,20 +79,7 @@ inline StateKey fullStateKey(const FullState& session, bool includeRandomState, 
         appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.levelState.rng.i)));
         appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.levelState.rng.j)));
         appendStateKeyValue(key, session.levelState.rng.valid ? 1 : 0);
-        uint64_t packed = 0;
-        uint32_t shift = 0;
-        for (const uint8_t byte : session.levelState.rng.s) {
-            packed |= static_cast<uint64_t>(byte) << shift;
-            shift += 8;
-            if (shift == 64) {
-                appendStateKeyValue(key, packed);
-                packed = 0;
-                shift = 0;
-            }
-        }
-        if (shift != 0) {
-            appendStateKeyValue(key, packed);
-        }
+        appendStateKeyBytes(key, session.levelState.rng.s.data(), session.levelState.rng.s.size());
     }
 
     const auto& objects = session.scratch.interpreterBoard.objects;

@@ -1092,6 +1092,15 @@ Solver heuristic scratch reuse, 2026-04-30:
   `17.745ms`, median early-rule time `32.360ms`, and median heuristic time
   `8.4ms->11.6ms`.
 
+Solver key hashing cleanup, 2026-04-30:
+  Solver state-key construction now packs RNG byte state into 64-bit words via
+  a shared `appendStateKeyBytes` helper instead of mixing one byte at a time in
+  the compact path. This also removes the duplicated byte-packing loop from the
+  full-state key helper. A fresh one-run focus report shows the hash bucket no
+  longer favoring the interpreter path (`hash_ms=32.8->31.2`) and the compiled
+  compact median at `elapsed_ms=262.0->194.0`; treat the elapsed number as a
+  noisy one-run benchmark, but the key-building cleanup is structurally better.
+
 Rejected anchored-row scan experiment, 2026-04-30:
   An object-cell-index anchored row-scan prototype was measured and backed out
   rather than committed. Even after collapsing the generated scanner into a

@@ -596,9 +596,7 @@ StateKey persistentLevelStateKey(const PersistentLevelState& state, Timing& timi
     for (puzzlescript::MaskWord word : state.board.objects) {
         puzzlescript::search::appendStateKeyValue(key, static_cast<MaskWordUnsigned>(word));
     }
-    for (uint8_t byte : state.rng.s) {
-        puzzlescript::search::appendStateKeyValue(key, byte);
-    }
+    puzzlescript::search::appendStateKeyBytes(key, state.rng.s.data(), state.rng.s.size());
     puzzlescript::search::appendStateKeyValue(key, state.rng.i);
     puzzlescript::search::appendStateKeyValue(key, state.rng.j);
     puzzlescript::search::appendStateKeyValue(key, state.rng.valid);
