@@ -913,6 +913,13 @@ Generated symbol-name cleanup, 2026-04-30:
   still passes compact oracle replay; generated source dropped again to about
   41 MB / 42,784,588 bytes.
 
+Deterministic rule wrapper cleanup, 2026-04-30:
+  Deterministic rule `_apply` functions now inline rule-level collect,
+  still-match, and apply-tuple forwarding instead of emitting separate wrapper
+  functions. Random groups still emit tuple helpers because random candidate
+  selection needs them. Case 403 still passes compact oracle replay; generated
+  source dropped to about 34 MB / 653,032 lines.
+
 Runtime/reporting cleanup, 2026-04-30:
   Renamed runtime generated-backend support metadata from fallback-specific
   naming to neutral `statusReason`, and added solver JSON/profile aliases for

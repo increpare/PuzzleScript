@@ -424,7 +424,8 @@ void emitCompactRuleFunction(
     std::string_view suffix,
     std::string_view phase,
     size_t groupIndex,
-    size_t ruleIndex
+    size_t ruleIndex,
+    bool groupIsRandom
 ) {
     const std::string prefix = compactRulePrefix(suffix, phase, groupIndex, ruleIndex);
     const int32_t rigidGroupIndex = (rule.rigid
@@ -598,39 +599,49 @@ void emitCompactRuleFunction(
         emitCompactRuleCommandFunction(out, rule, prefix, suffix);
     }
 
-    out << "bool " << prefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<std::vector<int32_t>>>& matches) {\n"
-        << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
-        << "    matches.assign(rowCount, std::vector<std::vector<int32_t>>{});\n";
-    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-        const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-        out << "    if (!" << rowPrefix << "_collect_matches(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
-    }
-    out << "    return true;\n"
-        << "}\n\n";
+    if (groupIsRandom) {
+        out << "bool " << prefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<std::vector<int32_t>>>& matches) {\n"
+            << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
+            << "    matches.assign(rowCount, std::vector<std::vector<int32_t>>{});\n";
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
+            out << "    if (!" << rowPrefix << "_collect_matches(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
+        }
+        out << "    return true;\n"
+            << "}\n\n";
 
-    out << "bool " << prefix << "_tuple_still_matches(const PersistentLevelState& levelState, const Scratch& scratch, const std::vector<std::vector<std::vector<int32_t>>>& matches, const std::vector<size_t>& tupleIndex) {\n";
-    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-        const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-        out << "    if (!" << rowPrefix
-            << "_match_still_matches(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) return false;\n";
-    }
-    out << "    return true;\n"
-        << "}\n\n";
+        out << "bool " << prefix << "_tuple_still_matches(const PersistentLevelState& levelState, const Scratch& scratch, const std::vector<std::vector<std::vector<int32_t>>>& matches, const std::vector<size_t>& tupleIndex) {\n";
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
+            out << "    if (!" << rowPrefix
+                << "_match_still_matches(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) return false;\n";
+        }
+        out << "    return true;\n"
+            << "}\n\n";
 
-    out << "bool " << prefix << "_apply_tuple(PersistentLevelState& levelState, Scratch& scratch, const std::vector<std::vector<std::vector<int32_t>>>& matches, const std::vector<size_t>& tupleIndex) {\n"
-        << "    bool changed = false;\n";
-    for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-        const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
-        out << "    changed = " << rowPrefix
-            << "_apply_replacements(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
+        out << "bool " << prefix << "_apply_tuple(PersistentLevelState& levelState, Scratch& scratch, const std::vector<std::vector<std::vector<int32_t>>>& matches, const std::vector<size_t>& tupleIndex) {\n"
+            << "    bool changed = false;\n";
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
+            out << "    changed = " << rowPrefix
+                << "_apply_replacements(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
+        }
+        out << "    return changed;\n"
+            << "}\n\n";
     }
-    out << "    return changed;\n"
-        << "}\n\n";
 
     out << "bool " << prefix << "_apply(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
         << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
-        << "    std::vector<std::vector<std::vector<int32_t>>> matches;\n"
-        << "    if (!" << prefix << "_collect_matches(dimensions, levelState, scratch, matches)) return false;\n";
+        << "    std::vector<std::vector<std::vector<int32_t>>> matches;\n";
+    if (groupIsRandom) {
+        out << "    if (!" << prefix << "_collect_matches(dimensions, levelState, scratch, matches)) return false;\n";
+    } else {
+        out << "    matches.assign(rowCount, std::vector<std::vector<int32_t>>{});\n";
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
+            out << "    if (!" << rowPrefix << "_collect_matches(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
+        }
+    }
     emitCompactRuleCommandQueue(out, rule, prefix);
     out << "    std::vector<size_t> tupleIndex(rowCount, 0);\n"
         << "    bool firstTuple = true;\n"
@@ -638,10 +649,26 @@ void emitCompactRuleFunction(
         << "    while (true) {\n"
         << "        bool stillMatches = true;\n"
         << "        if (!firstTuple) {\n";
-    out << "            stillMatches = " << prefix << "_tuple_still_matches(levelState, scratch, matches, tupleIndex);\n";
+    if (groupIsRandom) {
+        out << "            stillMatches = " << prefix << "_tuple_still_matches(levelState, scratch, matches, tupleIndex);\n";
+    } else {
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
+            out << "            if (!" << rowPrefix
+                << "_match_still_matches(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) stillMatches = false;\n";
+        }
+    }
     out << "        }\n"
         << "        if (stillMatches) {\n";
-    out << "            changed = " << prefix << "_apply_tuple(levelState, scratch, matches, tupleIndex) || changed;\n";
+    if (groupIsRandom) {
+        out << "            changed = " << prefix << "_apply_tuple(levelState, scratch, matches, tupleIndex) || changed;\n";
+    } else {
+        for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
+            const std::string rowPrefix = compactRowPrefix(suffix, phase, groupIndex, ruleIndex, rowIndex);
+            out << "            changed = " << rowPrefix
+                << "_apply_replacements(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
+        }
+    }
     out << "        }\n"
         << "        firstTuple = false;\n"
         << "        size_t rowToIncrement = 0;\n"
@@ -668,12 +695,13 @@ void emitCompactRulegroupFunctions(
 ) {
     for (size_t groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
         const std::vector<Rule>& group = groups[groupIndex];
+        const bool groupIsRandom = !group.empty() && group[0].isRandom;
         for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-            emitCompactRuleFunction(out, game, masks, group[ruleIndex], suffix, phase, groupIndex, ruleIndex);
+            emitCompactRuleFunction(out, game, masks, group[ruleIndex], suffix, phase, groupIndex, ruleIndex, groupIsRandom);
         }
 
         const std::string groupPrefix = compactGroupPrefix(suffix, phase, groupIndex);
-        if (!group.empty() && !group[0].isRandom) {
+        if (!group.empty() && !groupIsRandom) {
             const size_t chunkCount = (group.size() + kCompactRulegroupApplyChunkSize - 1) / kCompactRulegroupApplyChunkSize;
             for (size_t chunkIndex = 0; chunkIndex < chunkCount; ++chunkIndex) {
                 out << "bool " << groupPrefix << "_apply_chunk_" << chunkIndex
@@ -694,7 +722,7 @@ void emitCompactRulegroupFunctions(
             continue;
         }
         out << "    if (bannedGroups != nullptr && " << groupIndex << " < bannedGroups->size() && (*bannedGroups)[" << groupIndex << "]) return false;\n";
-        if (group[0].isRandom) {
+        if (groupIsRandom) {
             out << "    struct Candidate {\n"
                 << "        size_t ruleIndex = 0;\n"
                 << "        std::vector<size_t> tupleIndex;\n"
