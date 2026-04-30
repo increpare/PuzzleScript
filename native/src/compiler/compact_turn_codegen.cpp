@@ -328,6 +328,46 @@ std::string compactPatternMatchesCall(
     return call.str();
 }
 
+void emitCompactFixedTileAtDirection(
+    std::ostream& out,
+    std::string_view indent,
+    std::string_view suffix,
+    std::string_view tileName,
+    std::string_view originExpr,
+    int32_t direction,
+    int32_t distance,
+    std::string_view invalidStatement
+) {
+    out << indent << "int32_t " << tileName << " = " << originExpr << ";\n";
+    if (distance == 0 || direction == 16) {
+        return;
+    }
+
+    switch (direction) {
+        case 1:
+            out << indent << "if ((" << originExpr << " % dimensions.height) < " << distance << ") " << invalidStatement << "\n"
+                << indent << tileName << " = " << originExpr << " - " << distance << ";\n";
+            return;
+        case 2:
+            out << indent << "if ((" << originExpr << " % dimensions.height) + " << distance << " >= dimensions.height) " << invalidStatement << "\n"
+                << indent << tileName << " = " << originExpr << " + " << distance << ";\n";
+            return;
+        case 4:
+            out << indent << "if ((" << originExpr << " / dimensions.height) < " << distance << ") " << invalidStatement << "\n"
+                << indent << tileName << " = " << originExpr << " - " << distance << " * dimensions.height;\n";
+            return;
+        case 8:
+            out << indent << "if ((" << originExpr << " / dimensions.height) + " << distance << " >= dimensions.width) " << invalidStatement << "\n"
+                << indent << tileName << " = " << originExpr << " + " << distance << " * dimensions.height;\n";
+            return;
+        default:
+            out << indent << "if (!compact_turn_cell_at_direction_" << suffix
+                << "(dimensions, " << originExpr << ", " << direction << ", " << distance << ", " << tileName << ")) "
+                << invalidStatement << "\n";
+            return;
+    }
+}
+
 std::string compactPatternApplyCall(
     const Game& game,
     const CompactMaskConstantEmitter& masks,
@@ -529,10 +569,17 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                   << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
                   << "        bool matched = true;\n";
         for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-            applyBody << "        int32_t tile_" << patternIndex << " = 0;\n"
-                      << "        if (!compact_turn_cell_at_direction_" << suffix
-                      << "(dimensions, startIndex, " << rule.direction << ", " << patternIndex << ", tile_" << patternIndex << ")) matched = false;\n"
-                      << "        if (matched && !"
+            emitCompactFixedTileAtDirection(
+                applyBody,
+                "        ",
+                suffix,
+                "tile_" + std::to_string(patternIndex),
+                "startIndex",
+                rule.direction,
+                static_cast<int32_t>(patternIndex),
+                "matched = false;"
+            );
+            applyBody << "        if (matched && !"
                       << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "tile_" + std::to_string(patternIndex))
                       << ") matched = false;\n";
         }
@@ -547,10 +594,17 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                   << "        bool stillMatches = true;\n"
                   << "        if (matchIndex != 0) {\n";
         for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-            applyBody << "            int32_t tile_" << patternIndex << " = 0;\n"
-                      << "            if (!compact_turn_cell_at_direction_" << suffix
-                      << "(dimensions, startIndex, " << rule.direction << ", " << patternIndex << ", tile_" << patternIndex << ")) stillMatches = false;\n"
-                      << "            if (stillMatches && !"
+            emitCompactFixedTileAtDirection(
+                applyBody,
+                "            ",
+                suffix,
+                "tile_" + std::to_string(patternIndex),
+                "startIndex",
+                rule.direction,
+                static_cast<int32_t>(patternIndex),
+                "stillMatches = false;"
+            );
+            applyBody << "            if (stillMatches && !"
                       << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "tile_" + std::to_string(patternIndex))
                       << ") stillMatches = false;\n";
         }
@@ -560,10 +614,17 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
             if (!row[patternIndex].replacement.has_value()) {
                 continue;
             }
-            applyBody << "            int32_t applyTile_" << patternIndex << " = 0;\n"
-                      << "            if (!compact_turn_cell_at_direction_" << suffix
-                      << "(dimensions, startIndex, " << rule.direction << ", " << patternIndex << ", applyTile_" << patternIndex << ")) continue;\n"
-                      << "            changed = "
+            emitCompactFixedTileAtDirection(
+                applyBody,
+                "            ",
+                suffix,
+                "applyTile_" + std::to_string(patternIndex),
+                "startIndex",
+                rule.direction,
+                static_cast<int32_t>(patternIndex),
+                "continue;"
+            );
+            applyBody << "            changed = "
                       << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "applyTile_" + std::to_string(patternIndex), std::to_string(rigidGroupIndex))
                       << " || changed;\n";
         }
@@ -641,10 +702,17 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                         << "        std::vector<int32_t> positions;\n"
                         << "        bool matched = true;\n";
             for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
-                collectBody << "        int32_t tile_" << patternIndex << " = 0;\n"
-                            << "        if (!compact_turn_cell_at_direction_" << suffix
-                            << "(dimensions, startIndex, " << rule.direction << ", " << patternIndex << ", tile_" << patternIndex << ")) matched = false;\n"
-                            << "        if (matched && !"
+                emitCompactFixedTileAtDirection(
+                    collectBody,
+                    "        ",
+                    suffix,
+                    "tile_" + std::to_string(patternIndex),
+                    "startIndex",
+                    rule.direction,
+                    static_cast<int32_t>(patternIndex),
+                    "matched = false;"
+                );
+                collectBody << "        if (matched && !"
                             << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "tile_" + std::to_string(patternIndex))
                             << ") matched = false;\n"
                             << "        if (matched) positions.push_back(tile_" << patternIndex << ");\n";

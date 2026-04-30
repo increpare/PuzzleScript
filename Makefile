@@ -97,7 +97,7 @@ SOLVER_FOCUS_SOLVER_ARG_ARGS = $(foreach arg,$(SOLVER_FOCUS_SOLVER_ARGS),--solve
 SOLVER_FOCUS_COMPILED_RULES_ARGS ?=
 SOLVER_FOCUS_COMPACT_SOLVER_ARGS ?= --compact-node-storage
 SOLVER_FOCUS_COMPACT_SOLVER_ARG_ARGS = $(foreach arg,$(SOLVER_FOCUS_COMPACT_SOLVER_ARGS),--solver-arg "$(arg)")
-SOLVER_FOCUS_COMPACT_CODEGEN_RULES_ARGS ?= --compact-turn-mode=compiler
+SOLVER_FOCUS_COMPACT_CODEGEN_RULES_ARGS ?= --compact-turn-only --compact-turn-mode=compiler
 # Compile-probe timeout only affects mining (solver_focus_mine). Default is
 # disabled so `make solver_focus_mine` always yields a usable focus set.
 # Set this to a non-zero value (e.g. 60) if you want mining to exclude targets
