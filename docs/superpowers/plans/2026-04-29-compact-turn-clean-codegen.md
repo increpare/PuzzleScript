@@ -864,6 +864,17 @@ Twenty-first frontier expansion update, 2026-04-30:
     Guard: `make compact_turn_codegen_selected_tests COMPILED_RULES_BUILD_JOBS=4`
     passes with `passed=469`.
 
+Compiler-mode coverage tooling update, 2026-04-30:
+  coverage signal:
+    The default `compact_turn_coverage` target still reports the interpreter
+    bridge-oriented compact path. Added `make compact_turn_codegen_coverage`
+    for compiler-mode coverage, using `--compact-turn-mode=compiler` and
+    asserting zero interpreter bridge backends.
+  guard:
+    `make compact_turn_codegen_coverage` reports
+    `native_compact_kernels: 452/452 (100.0%)` and
+    `interpreter_bridge_backends: 0/452 (0.0%)`.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
