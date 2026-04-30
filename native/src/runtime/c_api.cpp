@@ -65,7 +65,7 @@ CompactOracleState compactOracleStateFromFullState(const FullState& session) {
     CompactOracleState state;
     state.randomState = session.levelState.rng;
     state.movementWords = session.scratch.liveMovements;
-    state.objects = session.scratch.interpreterBoard.objects;
+    state.objects = session.levelState.board.objects;
     return state;
 }
 

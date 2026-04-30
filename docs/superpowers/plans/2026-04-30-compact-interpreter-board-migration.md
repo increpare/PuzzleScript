@@ -59,6 +59,14 @@ rather than different state layouts.
 5. Rerun solver focus benchmarks comparing interpreter-on-compact-board against
    compiled compact kernels.
 
+## Progress
+
+- 2026-04-30: Retargeted the low-level runtime/search/solver board helpers so
+  live object reads, writes, snapshots, restart/checkpoint storage, compact
+  oracle export, and solver keys use `PersistentLevelState::board.objects`.
+  `Scratch::interpreterBoard.objects` remains only as a compatibility mirror
+  maintained by the legacy loader/clear helpers.
+
 ## Test Plan
 
 Run after each conversion slice:

@@ -82,7 +82,7 @@ inline StateKey fullStateKey(const FullState& session, bool includeRandomState, 
         appendStateKeyBytes(key, session.levelState.rng.s.data(), session.levelState.rng.s.size());
     }
 
-    const auto& objects = session.scratch.interpreterBoard.objects;
+    const auto& objects = session.levelState.board.objects;
     for (size_t index = 0; index < objects.size(); ++index) {
         appendStateKeyValue(key, static_cast<uint64_t>(static_cast<MaskWordUnsigned>(projectWord(index, objects[index]))));
     }
@@ -123,7 +123,7 @@ inline const MaskWord* maskPtr(const Game& game, MaskOffset offset) {
 }
 
 inline const MaskWord* cellObjects(const FullState& session, int32_t tileIndex) {
-    return session.scratch.interpreterBoard.objects.data() + static_cast<size_t>(tileIndex * session.game->strideObject);
+    return session.levelState.board.objects.data() + static_cast<size_t>(tileIndex * session.game->strideObject);
 }
 
 inline bool anyBits(const MaskWord* lhs, uint32_t lhsCount, const MaskWord* rhs, uint32_t rhsCount) {

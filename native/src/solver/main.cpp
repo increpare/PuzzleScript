@@ -586,7 +586,7 @@ PersistentLevelState persistentLevelStateFromFullState(const FullState& session)
     state.rng.i = session.levelState.rng.i;
     state.rng.j = session.levelState.rng.j;
     state.rng.valid = session.levelState.rng.valid;
-    state.board.objects = session.scratch.interpreterBoard.objects;
+    state.board.objects = session.levelState.board.objects;
     return state;
 }
 
@@ -645,7 +645,7 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
 void prepareSolverChildFullStateFromParent(FullState& child, const FullState& parent) {
     child.game = parent.game;
     child.meta = parent.meta;
-    child.scratch.interpreterBoard.objects = parent.scratch.interpreterBoard.objects;
+    child.levelState.board.objects = parent.levelState.board.objects;
 
     child.scratch.liveMovements.assign(parent.scratch.liveMovements.size(), 0);
     child.scratch.rigidGroupIndexMasks.assign(parent.scratch.rigidGroupIndexMasks.size(), 0);
@@ -657,15 +657,14 @@ void prepareSolverChildFullStateFromParent(FullState& child, const FullState& pa
     child.meta.suppressRuleMessages = parent.meta.suppressRuleMessages;
     child.levelState.rng = parent.levelState.rng;
     child.scratch.backend = parent.scratch.backend;
-    puzzlescript::syncPersistentLevelStateFromScratch(child);
     markMaterializedFullStateDirty(child);
 }
 
 // Allocate a Node-owned FullState that captures `source`'s post-step state
 // without copying its scratch/mask/undo buffers. Implemented in terms of
-// prepareSolverChildFullStateFromParent: that helper copies only interpreterBoard
-// + meta + RNG and re-sizes (zero-fill) the small movement/rigid masks. The
-// resulting FullState has empty replacement/ellipsis scratch and undo stack;
+// prepareSolverChildFullStateFromParent: that helper copies only persistent
+// board + meta + RNG and re-sizes (zero-fill) the small movement/rigid masks.
+// The resulting FullState has empty replacement/ellipsis scratch and undo stack;
 // when a future expansion uses it as `parentSession`, only those few fields
 // are read, so this thin layout is sufficient — and is what F1 buys us over
 // the previous `std::make_unique<FullState>(parentSession)` deep clone.

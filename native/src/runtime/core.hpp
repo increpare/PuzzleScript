@@ -402,8 +402,8 @@ struct GameInformation {
 using Game = GameInformation;
 
 struct Scratch {
-    // Legacy interpreter cell-major board. Per-tile writes go through
-    // setCellObjects / setCellObjectsFromWords.
+    // Temporary compatibility mirror for legacy interpreter board plumbing.
+    // Authoritative object storage lives in PersistentLevelState::board.objects.
     InterpreterBoardScratch interpreterBoard;
     MaskVector liveMovements;
     MaskVector rowMasks;

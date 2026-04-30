@@ -102,7 +102,7 @@ void materializeCompactBridgeState(
 }
 
 void copyCompactBridgeStateBack(const FullState& session, PersistentLevelState& levelState, Scratch& scratch) {
-    levelState.board.objects = session.scratch.interpreterBoard.objects;
+    levelState.board.objects = session.levelState.board.objects;
     levelState.rng = session.levelState.rng;
     scratch.liveMovements = session.scratch.liveMovements;
 }
