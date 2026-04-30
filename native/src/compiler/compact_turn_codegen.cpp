@@ -70,6 +70,22 @@ bool hasAnyRulegroups(const std::vector<std::vector<Rule>>& groups) {
     });
 }
 
+bool hasRuleCommand(const Game& game, std::string_view commandName) {
+    auto hasCommandInGroups = [&](const std::vector<std::vector<Rule>>& groups) {
+        for (const std::vector<Rule>& group : groups) {
+            for (const Rule& rule : group) {
+                for (const RuleCommand& command : rule.commands) {
+                    if (command.name == commandName) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    };
+    return hasCommandInGroups(game.rules) || hasCommandInGroups(game.lateRules);
+}
+
 constexpr size_t kCompactRulegroupApplyChunkSize = 64;
 
 bool anyMaskWordSet(const std::vector<MaskWord>& words) {
@@ -1552,7 +1568,11 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "        return {false, result};\n"
         << "    }\n"
         << "    const int32_t directionMask = compact_turn_input_direction_" << suffix << "(input);\n"
-        << "    const std::vector<MaskWord> turnStartObjects = levelState.board.objects;\n"
+        << "    const bool needsTurnStartSnapshot = probeOnly || compact_turn_needs_turn_start_snapshot_" << suffix << ";\n"
+        << "    std::vector<MaskWord> turnStartObjects;\n"
+        << "    if (needsTurnStartSnapshot) {\n"
+        << "        turnStartObjects = levelState.board.objects;\n"
+        << "    }\n"
         << "    const RandomState turnStartRng = levelState.rng;\n"
         << "    std::vector<MaskWord> turnStartMovements;\n"
         << "    std::vector<MaskWord> turnStartRigidGroupIndexMasks;\n"
@@ -1580,7 +1600,7 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "    int32_t rigidLoopCount = 0;\n"
         << "    while (true) {\n"
         << "        commands = CompactTurnCommands_" << suffix << "{};\n"
-        << "        if (rigidLoopCount > 0) {\n"
+        << "        if (rigidLoopCount > 0 && needsTurnStartSnapshot) {\n"
         << "            levelState.board.objects = turnStartObjects;\n"
         << "            levelState.rng = turnStartRng;\n"
         << "        }\n"
@@ -1606,7 +1626,9 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "        break;\n"
         << "    }\n"
         << "    const bool lateRuleChanged = compact_turn_apply_late_rules_" << suffix << "(dimensions, levelState, scratch, commands, nullptr);\n"
-        << "    const bool modified = levelState.board.objects != turnStartObjects;\n"
+        << "    const bool modified = needsTurnStartSnapshot\n"
+        << "        ? levelState.board.objects != turnStartObjects\n"
+        << "        : (ruleChanged || moved || lateRuleChanged);\n"
         << "    addProfileNs(RuntimeCounterId::CompactTurnLateRulesNs);\n"
         << "    // 6. apply late rulegroups\n"
         << "    // 7. process commands and again policy\n"
@@ -1758,6 +1780,14 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "constexpr bool compact_turn_player_mask_aggregate_" << suffix << " = " << (game.playerMaskAggregate ? "true" : "false") << ";\n"
         << "constexpr bool compact_turn_requires_player_movement_" << suffix << " = "
         << (game.metadata.values.find("require_player_movement") != game.metadata.values.end() ? "true" : "false") << ";\n"
+        << "constexpr bool compact_turn_has_again_command_" << suffix << " = " << (hasRuleCommand(game, "again") ? "true" : "false") << ";\n"
+        << "constexpr bool compact_turn_has_cancel_command_" << suffix << " = " << (hasRuleCommand(game, "cancel") ? "true" : "false") << ";\n"
+        << "constexpr bool compact_turn_has_restart_command_" << suffix << " = " << (hasRuleCommand(game, "restart") ? "true" : "false") << ";\n"
+        << "constexpr bool compact_turn_needs_turn_start_snapshot_" << suffix << " = compact_turn_has_rigid_" << suffix
+        << " || compact_turn_requires_player_movement_" << suffix
+        << " || compact_turn_has_again_command_" << suffix
+        << " || compact_turn_has_cancel_command_" << suffix
+        << " || compact_turn_has_restart_command_" << suffix << ";\n"
         << "constexpr int32_t compact_turn_win_condition_count_" << suffix << " = " << game.winConditions.size() << ";\n\n";
 
     out << "struct CompactTurnRuntimeCounters_" << suffix << " {\n"

@@ -1022,6 +1022,18 @@ Compact compiler optimization pass, 2026-04-30:
   compact early-rule time `135.497ms`. This is still slower than the
   interpreter, but the first measured bottleneck was cut substantially.
 
+Compact rule scan prefilter pass, 2026-04-30:
+  Generated compact rules now emit row/column/board mask prefilters backed by
+  `Scratch` mask caches, and generated turns avoid copying the start board
+  unless rollback/probe semantics need it (`rigid`, `cancel`, `restart`,
+  `require_player_movement`, or `again`). On
+  `make solver_focus_compact_codegen_perf_report SOLVER_FOCUS_RUNS=1`, the
+  latest all-target median is `elapsed_ms=304.0->250.0`, `step_ms=159.9->105.0`;
+  the native compact subset is `elapsed_ms=298.0->240.0`,
+  `step_ms=152.6->101.6`, with median generated early-rule time `25.011ms`.
+  Full compiler-mode simulation still passes 469/469 with zero compact oracle
+  failures.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
