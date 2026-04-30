@@ -793,6 +793,19 @@ Sixteenth frontier expansion update, 2026-04-30:
     source compile with 343 generated groups. Keep all four out of the selected
     target until the end queue.
 
+Seventeenth frontier expansion update, 2026-04-30:
+  unselected-gap replay:
+    cases: 283 284 288 289 290 291 292 298 299 301 302 307 308 311 313 314 316 319 328 329
+    result: 20/20 pass
+  promoted coverage:
+    20 cases added to the selected executable target; selected coverage is now
+    433/469. `make compact_turn_codegen_selected_tests
+    COMPILED_RULES_BUILD_JOBS=4` passes with `passed=433`.
+  held out for compile-pressure queue:
+    preflight marks cases 324, 325, and 403 as end-queue candidates. Cases
+    300, 306, and 402 are borderline by generated-rule count and should be
+    probed separately.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
