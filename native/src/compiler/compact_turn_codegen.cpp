@@ -845,12 +845,14 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                     << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
                     << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
         if (rule.ellipsisCount[rowIndex] == 0) {
-            collectBody << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
+            collectBody << "    std::vector<int32_t> positions;\n"
+                        << "    positions.reserve(" << row.size() << ");\n"
+                        << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
                         << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
                         << "        const int32_t x = horizontalScan ? secondary : primary;\n"
                         << "        const int32_t y = horizontalScan ? primary : secondary;\n"
                         << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
-                        << "        std::vector<int32_t> positions;\n"
+                        << "        positions.clear();\n"
                         << "        bool matched = true;\n";
             for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
                 emitCompactFixedTileAtDirection(
@@ -883,7 +885,9 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                     ++concreteCount;
                 }
             }
-            collectBody << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
+            collectBody << "    std::vector<int32_t> positions;\n"
+                        << "    positions.reserve(" << concreteCount << ");\n"
+                        << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
                         << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
                         << "        const int32_t x = horizontalScan ? secondary : primary;\n"
                         << "        const int32_t y = horizontalScan ? primary : secondary;\n"
@@ -891,7 +895,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                         << "        const int32_t available = compact_turn_available_at_direction_" << suffix
                         << "(dimensions, startIndex, " << rule.direction << ");\n"
                         << "        if (available < " << concreteCount << ") continue;\n"
-                        << "        std::vector<int32_t> positions;\n"
+                        << "        positions.clear();\n"
                         << "        auto search = [&](auto&& self, size_t patternIndex, int32_t offset) -> void {\n"
                         << "            if (patternIndex >= " << row.size() << ") {\n"
                         << "                rowMatches.push_back(positions);\n"
