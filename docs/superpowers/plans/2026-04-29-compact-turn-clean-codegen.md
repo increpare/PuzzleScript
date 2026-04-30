@@ -218,8 +218,8 @@ The CLI should choose interpreter mode or compiler mode at a coarse level only.
 - [x] Split compiler mode into an ABI wrapper plus an inner turn-core function
   with the planned `LevelDimensions` / `PersistentLevelState` / `Scratch`
   boundary.
-- [ ] Replace the skeleton TODO phases with generated code, one phase at a
-  time.
+- [x] Replace the original skeleton TODO phases with generated semantic code
+  for the full `testdata.js` simulation corpus.
 
 Generated structure:
 
@@ -334,8 +334,9 @@ Acceptance:
   `Scratch::liveMovements`.
 - [x] Resolve movement for collision layers whose 5-bit movement field spans
   two mask words.
-- [ ] Handle blocked movement side effects and rigid/cancel interactions.
-- [ ] Return handled compiler-mode transitions once win/terminal semantics are
+- [x] Handle blocked movement side effects and rigid/cancel interactions for
+  the `testdata.js` simulation corpus.
+- [x] Return handled compiler-mode transitions once win/terminal semantics are
   available.
 
 Features:
@@ -359,8 +360,9 @@ Acceptance:
 - [x] Apply late rulegroups through the same deterministic one-row rulegroup
   emitter used for early rules.
 - [x] Handle `require_player_movement` cancellation for compiler-mode turns.
-- [ ] Handle restart/reset/cancel terminal treatment for solver.
-- [ ] Handle `again` policy.
+- [ ] Audit restart/reset/cancel terminal treatment through the solver-specific
+  compact path.
+- [x] Handle `again` policy.
 - [x] Thread deterministic RNG for random rule-group selection.
 - [x] Queue simple output commands (`message`, `again`) for compiler-mode
   result parity.
@@ -388,10 +390,9 @@ Recently added compiler coverage:
 
 Remaining coverage:
 
-- loop points
-- commands
-- sfx/message/checkpoint effects
-- aggregate masks and properties where current lowering exposes them
+- solver-specific terminal/event treatment beyond simulation replay
+- performance and generated-source size work after full-corpus correctness
+- C API/runtime reporting cleanup now that compiler mode is a real path
 
 Each feature should be implemented in the generic semantic emitters, not in a game-shape side path.
 
@@ -531,7 +532,8 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 390/469 known passing.
+Historical selected compiler-mode checkpoint before later frontier expansion:
+390/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -889,18 +891,11 @@ Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
 
-Additional ranked-frontier command probe:
-  case 93, "again + message combo": passes
-  added coverage: simple `message` and `again` command queueing
-
-Known next unsupported ranked-frontier feature:
-  run `make compact_turn_codegen_frontier` and probe the next smallest
-  unrecorded case
-
-Known ranked-frontier unsupported feature:
-  The current failures are real compact-vs-interpreter state mismatches, not
-  feature-filter misses. Case 189 also shows generated C++ size/compile-time
-  pressure for very large rule sets.
+Current next frontier:
+  `testdata.js` compiler-mode correctness is green both per-case and as a
+  combined generated corpus. The next plan step should move from simulation
+  coverage to solver integration, runtime/C API reporting cleanup, and
+  generated-source compile-time reduction.
 ```
 
 Recommended progress report:
@@ -919,6 +914,8 @@ Useful gates:
 git diff --check
 make build
 make compact_turn_coverage
+make compact_turn_codegen_coverage
+make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4
 make compact_turn_oracle_smoke
 make compact_turn_simulation_tests
 ```

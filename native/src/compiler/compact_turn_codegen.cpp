@@ -64,11 +64,6 @@ bool isCompactRuleSupported(const Rule& rule) {
     return compactRuleUnsupportedReason(rule).empty();
 }
 
-bool canCompactCompilerHandleTurn(const Game& game) {
-    (void)game;
-    return true;
-}
-
 bool hasAnyRulegroups(const std::vector<std::vector<Rule>>& groups) {
     return std::any_of(groups.begin(), groups.end(), [](const std::vector<Rule>& group) {
         return !group.empty();
@@ -847,9 +842,6 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "    if (!compact_turn_prepare_state_" << suffix << "(dimensions, levelState, scratch)) {\n"
         << "        return {false, result};\n"
         << "    }\n"
-        << "    if (!compact_turn_can_handle_turn_" << suffix << "()) {\n"
-        << "        return {false, result};\n"
-        << "    }\n"
         << "    const int32_t directionMask = compact_turn_input_direction_" << suffix << "(input);\n"
         << "    const std::vector<MaskWord> turnStartObjects = levelState.board.objects;\n"
         << "    const RandomState turnStartRng = levelState.rng;\n"
@@ -1138,10 +1130,6 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "        output += compact_turn_next_random_byte_" << suffix << "(state);\n"
         << "    }\n"
         << "    return output / 72057594037927935.0;\n"
-        << "}\n\n";
-
-    out << "bool compact_turn_can_handle_turn_" << suffix << "() {\n"
-        << "    return " << (canCompactCompilerHandleTurn(game) ? "true" : "false") << ";\n"
         << "}\n\n";
 
     out << "int32_t compact_turn_tile_count_" << suffix << "(LevelDimensions dimensions) {\n"
