@@ -4,7 +4,7 @@
 
 ## Status
 
-This is the active compact-turn implementation plan as of 2026-04-29. It
+This is the active compact-turn implementation plan as of 2026-04-30. It
 supersedes the earlier shape-specific compact-turn prototype notes in
 `native/src/compiler/IMPLEMENTATION_CHECKLIST.md`.
 
@@ -12,6 +12,11 @@ The runtime ontology has also settled since the first compact-state experiments:
 `PersistentLevelState` owns a cell-major persistent board plus RNG. The only
 object-major structure that should remain in the normal turn path is the
 derived `Scratch::objectCellBits` / `Scratch::objectCellCounts` rule-scan index.
+
+Current state: compiler-mode compact turns pass the full `testdata.js`
+simulation corpus (`469/469`) with zero compact-oracle failures. The active
+work has moved from semantic bring-up to solver integration, generated-source
+scale, and runtime performance against the solver focus benchmark.
 
 ## Summary
 
@@ -388,13 +393,21 @@ Recently added compiler coverage:
 - rigid rule retry for unresolved movement
 - random replacements
 
-Remaining coverage:
+Remaining work after full-corpus correctness:
 
-- solver-specific terminal/event treatment beyond simulation replay
-- performance and generated-source size work after full-corpus correctness
-- C API/runtime reporting cleanup now that compiler mode is a real path
+- solver focus performance: reduce compact turn setup/mask-cache rebuild cost,
+  then remeasure against the interpreter baseline on like-for-like targets
+- generated-source scale: keep reducing giant generated sources and raise or
+  remove the solver focus line-budget misses without returning to shape
+  recognizers
+- solver graph overhead: investigate hash/heuristic costs now that clone and
+  turn execution have moved sharply in the right direction
+- benchmark/reporting polish: keep compiler-mode metrics separate from
+  interpreter-bridge coverage, and report native/not-attached buckets without
+  reviving feature fallback language
 
-Each feature should be implemented in the generic semantic emitters, not in a game-shape side path.
+Any future semantic feature should be implemented in the generic semantic
+emitters, not in a game-shape side path.
 
 ## CLI / Harness Controls
 
@@ -407,17 +420,26 @@ Suggested names:
 --compact-turn-mode=compiler
 ```
 
-Default can remain interpreter mode until compiler mode has substantial corpus coverage.
+Default can remain interpreter mode for stable runtime behavior until the
+compiler-mode solver benchmarks are consistently better and the remaining
+line-budget misses are resolved.
 
-Compiler-focused targets should force compiler mode and expect failures early in development:
+Compiler-focused targets force compiler mode. Earlier in bring-up they were
+allowed to expose failures; now the full-corpus and selected targets are
+regression guards:
 
 ```text
 make compact_turn_codegen_bringup
 make compact_turn_codegen_testdata_one COMPACT_TURN_CODEGEN_TESTDATA_CASE=...
 make compact_turn_codegen_selected_tests
+make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4
+make solver_focus_compact_codegen_perf_report SOLVER_FOCUS_RUNS=1
 ```
 
-The existing oracle/simulation targets can keep using interpreter mode unless explicitly testing compiler mode.
+The existing oracle/simulation targets can keep using interpreter mode unless
+explicitly testing compiler mode. Compiler-mode coverage and benchmark targets
+should remain named separately so bridge/interpreter metrics do not get mixed
+with native compiler metrics.
 
 ## Test Strategy
 
@@ -1040,9 +1062,18 @@ Executable selected-pass target:
 
 Current next frontier:
   `testdata.js` compiler-mode correctness is green both per-case and as a
-  combined generated corpus. The next plan step should move from simulation
-  coverage to solver integration, runtime/C API reporting cleanup, and
-  generated-source compile-time reduction.
+  combined generated corpus. The solver focus benchmark now shows the compiled
+  compact pipeline winning overall median elapsed time, but not yet at the
+  long-term 0.5x goal. The immediate worklist is:
+  1. Reduce `compact_turn_setup_ms`, currently dominated by rebuilding
+     scratch row/column/board masks from arbitrary solver materializations.
+  2. Remove or shrink the remaining solver focus line-budget misses
+     (`compact_turn_not_attached=5`) without per-game recognizers.
+  3. Investigate graph-side costs that became more visible after clone/turn
+     improvements, especially hash and heuristic time on compact node storage.
+  4. Keep the benchmark suite oriented around like-for-like comparisons:
+     interpreter solver baseline vs compiler-mode compact solver on the same
+     focus targets, with native/not-attached buckets called out explicitly.
 ```
 
 Recommended progress report:
@@ -1063,6 +1094,7 @@ make build
 make compact_turn_coverage
 make compact_turn_codegen_coverage
 make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4
+make solver_focus_compact_codegen_perf_report SOLVER_FOCUS_RUNS=1
 make compact_turn_oracle_smoke
 make compact_turn_simulation_tests
 ```
