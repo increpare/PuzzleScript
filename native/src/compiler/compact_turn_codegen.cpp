@@ -939,6 +939,54 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
     }
     const std::string commandQueueName = emitCompactRuleCommandFunction(out, functions, rule, prefix, suffix);
 
+    if (!groupIsRandom && rule.patterns.size() == 1) {
+        const size_t rowIndex = 0;
+        const std::vector<Pattern>& row = rule.patterns[rowIndex];
+        std::ostringstream applyBody;
+        applyBody << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
+                  << "    std::vector<std::vector<int32_t>> matches;\n"
+                  << "    if (!" << rowCollectNames[rowIndex] << "(dimensions, levelState, scratch, matches)) return false;\n";
+        emitCompactRuleCommandQueue(applyBody, commandQueueName);
+        applyBody << "    bool changed = false;\n"
+                  << "    for (size_t matchIndex = 0; matchIndex < matches.size(); ++matchIndex) {\n"
+                  << "        const std::vector<int32_t>& match = matches[matchIndex];\n"
+                  << "        bool stillMatches = true;\n"
+                  << "        if (matchIndex != 0) {\n"
+                  << "            size_t positionIndex = 0;\n";
+        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+            if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
+                continue;
+            }
+            applyBody << "            if (positionIndex >= match.size() || !"
+                      << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]")
+                      << ") stillMatches = false;\n"
+                      << "            ++positionIndex;\n";
+        }
+        applyBody << "            stillMatches = stillMatches && positionIndex == match.size();\n"
+                  << "        }\n"
+                  << "        if (stillMatches) {\n"
+                  << "            size_t positionIndex = 0;\n";
+        for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
+            if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
+                continue;
+            }
+            applyBody << "            if (positionIndex >= match.size()) break;\n";
+            if (row[patternIndex].replacement.has_value()) {
+                applyBody << "            changed = "
+                          << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]", std::to_string(rigidGroupIndex))
+                          << " || changed;\n";
+            }
+            applyBody << "            ++positionIndex;\n";
+        }
+        applyBody << "        }\n"
+                  << "    }\n"
+                  << "    return changed;\n"
+                  << "}\n";
+        const std::string applyName = functions.emitDefinition(out, prefix + "_apply", applyBody.str());
+        out << "\n";
+        return makeCompactRuleGeneratedNames(applyName, commandQueueName);
+    }
+
     if (!groupIsRandom && rule.patterns.size() > 1) {
         std::ostringstream applyBody;
         applyBody << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
