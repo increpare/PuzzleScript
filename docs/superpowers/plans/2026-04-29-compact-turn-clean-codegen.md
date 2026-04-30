@@ -531,7 +531,7 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 223/469 known passing.
+Selected compiler-mode testdata progress: 243/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -700,6 +700,16 @@ Seventh frontier expansion update, 2026-04-30:
     slide/pull and scale mechanics, double-ellipsis stress cases, level-change
     recording, late-rule synonym handling, and additional push-heavy puzzle
     games.
+
+Eighth frontier expansion update, 2026-04-30:
+  ranked-frontier replay:
+    cases: 330 335 104 272 56 377 296 115 349 252 274 80 98 293 109 332 339 341 267 318
+    result: 20/20 pass
+  added coverage:
+    More object/layer stress fixtures, 2048-style rule expansion, one-player
+    unlimited rigidbody coverage, rasteriser/push puzzle variants, gallery
+    games with heavier late-rule use, and generated-rule-count pressure up to
+    hundreds of lowered rules.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
