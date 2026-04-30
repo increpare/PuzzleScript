@@ -5490,6 +5490,7 @@ std::vector<CodegenSource> selectCompiledRuleSourcesForEmission(
     const CompactCodegenOptions& compactOptions,
     std::optional<uint64_t> maxCompiledRulesPerSource,
     std::optional<uint64_t> maxGeneratedLinesPerSource,
+    bool compactTurnOnly,
     uint64_t& skippedSources,
     uint64_t& skippedCompiledRules,
     uint64_t& skippedGeneratedLineSources,
@@ -5524,7 +5525,8 @@ std::vector<CodegenSource> selectCompiledRuleSourcesForEmission(
                 false,
                 "compiled_rules_line_budget_probe_backend",
                 "compiled_rules_line_budget_probe_tick_backend",
-                "compiled_rules_line_budget_probe_specialized_compact_turn_backend"
+                "compiled_rules_line_budget_probe_specialized_compact_turn_backend",
+                compactTurnOnly
             );
             const uint64_t generatedLines = static_cast<uint64_t>(
                 std::count(generated.begin(), generated.end(), '\n') + 1
@@ -5674,6 +5676,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
         compactOptions,
         maxCompiledRulesPerSource,
         maxGeneratedLinesPerSource,
+        compactTurnOnly,
         skippedSources,
         skippedCompiledRules,
         skippedGeneratedLineSources,

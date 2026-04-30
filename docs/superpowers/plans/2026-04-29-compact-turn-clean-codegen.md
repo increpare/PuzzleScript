@@ -1069,6 +1069,18 @@ Selective compact mask-cache preparation, 2026-04-30:
   `25.150ms`. Full compiler-mode simulation still passes 469/469 with zero
   compact oracle failures.
 
+Compact-turn-only line-budget fix, 2026-04-30:
+  The generated-line budget probe now honors `--compact-turn-only`. Before
+  this, solver-focus compact compiler builds could skip sources by measuring
+  full rulegroup-plus-compact output even though the actual binary only emits
+  compact turn kernels. The focus corpus now emits all 34 input sources under
+  the 200k-line/source budget, and
+  `make solver_focus_compact_codegen_perf_report SOLVER_FOCUS_RUNS=1` reports
+  `compiled_usage: compact_turn_native=50` with no not-attached bucket. The
+  latest like-for-like benchmark is all-target native compact:
+  `elapsed_ms=304.0->254.0`, `step_ms=162.9->102.8`, with median generated
+  early-rule time `32.059ms`.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
@@ -1080,8 +1092,10 @@ Current next frontier:
   long-term 0.5x goal. The immediate worklist is:
   1. Reduce `compact_turn_setup_ms`, currently dominated by rebuilding
      scratch row/column/board masks from arbitrary solver materializations.
-  2. Remove or shrink the remaining solver focus line-budget misses
-     (`compact_turn_not_attached=5`) without per-game recognizers.
+  2. Optimize dense generated row scans now that all solver-focus targets are
+     attached to compiler-mode compact kernels. The current slowest step
+     regressions are `paint everything everywhere`, `Vexatious Match 3`,
+     `the_saga_of_the_candy_scroll`, and `karamell`.
   3. Investigate graph-side costs that became more visible after clone/turn
      improvements, especially hash and heuristic time on compact node storage.
   4. Keep the benchmark suite oriented around like-for-like comparisons:
