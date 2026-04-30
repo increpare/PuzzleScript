@@ -1056,6 +1056,19 @@ Compact rule scan prefilter pass, 2026-04-30:
   Full compiler-mode simulation still passes 469/469 with zero compact oracle
   failures.
 
+Selective compact mask-cache preparation, 2026-04-30:
+  Generated compact sources now compute which scratch mask-cache families their
+  emitted rules can actually read, then prepare only those object/movement
+  row/column/board caches. Dirty flags stay conservative for any later
+  interpreter boundary, but compiler-mode turns no longer rebuild unused mask
+  families up front. On
+  `make solver_focus_compact_codegen_perf_report SOLVER_FOCUS_RUNS=1`, the
+  all-target median is `elapsed_ms=304.0->254.0`, `step_ms=160.7->102.1`;
+  the native compact subset is `elapsed_ms=298.0->243.0`,
+  `step_ms=153.1->97.6`, with median setup time `17.835ms` and early-rule time
+  `25.150ms`. Full compiler-mode simulation still passes 469/469 with zero
+  compact oracle failures.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
