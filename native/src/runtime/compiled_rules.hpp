@@ -29,9 +29,9 @@ struct SpecializedFullTurnOutcome {
     ps_step_result result{};
 };
 
-struct SpecializedFullTurnSupportInfo {
+struct SpecializedTurnSupportInfo {
     bool wholeTurnSupported = false;
-    const char* wholeTurnFallbackReason = nullptr;
+    const char* statusReason = nullptr;
 };
 
 struct SpecializedRulegroupsForInterpretedTurnOutcome {
@@ -47,7 +47,7 @@ struct SpecializedFullTurnBackend {
     const char* name = nullptr;
     SpecializedFullTurnStepFn step = nullptr;
     SpecializedFullTurnTickFn tick = nullptr;
-    SpecializedFullTurnSupportInfo support{};
+    SpecializedTurnSupportInfo support{};
 };
 
 struct SpecializedCompactTurnOutcome {
@@ -73,7 +73,7 @@ struct SpecializedCompactTurnBackend {
     uint64_t sourceHash = 0;
     const char* name = nullptr;
     SpecializedCompactTurnFn step = nullptr;
-    SpecializedFullTurnSupportInfo support{};
+    SpecializedTurnSupportInfo support{};
     bool nativeKernel = false;
 };
 

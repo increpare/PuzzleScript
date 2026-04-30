@@ -901,6 +901,13 @@ Generated-source cleanup, 2026-04-30:
   cleanup; its generated source is about 50.1 MB, so larger wins still need to
   come from reducing emitted rule bodies rather than polishing constants.
 
+Runtime/reporting cleanup, 2026-04-30:
+  Renamed runtime generated-backend support metadata from fallback-specific
+  naming to neutral `statusReason`, and added solver JSON/profile aliases for
+  `compact_turn_unhandled` while keeping `compact_turn_fallbacks` for existing
+  scripts. `make compact_turn_codegen_bringup COMPILED_RULES_BUILD_JOBS=4`
+  now reports `unhandled=0`.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile

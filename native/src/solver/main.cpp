@@ -1834,6 +1834,7 @@ void printJsonResult(const Result& result, std::ostream& out) {
     out << ",\"compact_turn_native_hits\":" << result.compactTurnNativeHits;
     out << ",\"compact_turn_bridge_attempts\":" << result.compactTurnBridgeAttempts;
     out << ",\"compact_turn_bridge_hits\":" << result.compactTurnBridgeHits;
+    out << ",\"compact_turn_unhandled\":" << result.compactTurnFallbacks;
     out << ",\"compact_turn_fallbacks\":" << result.compactTurnFallbacks;
     out << ",\"compact_turn_unsupported\":" << result.compactTurnUnsupported;
     out << ",\"compact_turn_oracle_checks\":" << result.compactTurnOracleChecks;
@@ -1948,6 +1949,7 @@ void printJson(const std::vector<Result>& results) {
     std::cout << ",\"compact_turn_native_hits\":" << compactTurnNativeHits;
     std::cout << ",\"compact_turn_bridge_attempts\":" << compactTurnBridgeAttempts;
     std::cout << ",\"compact_turn_bridge_hits\":" << compactTurnBridgeHits;
+    std::cout << ",\"compact_turn_unhandled\":" << compactTurnFallbacks;
     std::cout << ",\"compact_turn_fallbacks\":" << compactTurnFallbacks;
     std::cout << ",\"compact_turn_unsupported\":" << compactTurnUnsupported;
     std::cout << ",\"compact_turn_oracle_checks\":" << compactTurnOracleChecks;
@@ -2261,6 +2263,7 @@ int main(int argc, char** argv) {
                       << " compact_turn_native_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnNativeHits; })
                       << " compact_turn_bridge_attempts=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnBridgeAttempts; })
                       << " compact_turn_bridge_hits=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnBridgeHits; })
+                      << " compact_turn_unhandled=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnFallbacks; })
                       << " compact_turn_fallbacks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnFallbacks; })
                       << " compact_turn_unsupported=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnUnsupported; })
                       << " compact_turn_oracle_checks=" << std::accumulate(results.begin(), results.end(), uint64_t{0}, [](uint64_t total, const Result& result) { return total + result.compactTurnOracleChecks; })
