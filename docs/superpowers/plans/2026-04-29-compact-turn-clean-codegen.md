@@ -531,7 +531,7 @@ Additional ranked-frontier probes:
   case 419, "Levels can not contain glyphs that resemble section names #976": passes
   case 421, "Missing/Skipping Rules? Objects disappear for no reason? #1046": passes
 
-Selected compiler-mode testdata progress: 353/469 known passing.
+Selected compiler-mode testdata progress: 371/469 known passing.
 
 Full-prefix compiler-mode sweep, 2026-04-29:
   command:
@@ -756,6 +756,17 @@ Thirteenth frontier expansion update, 2026-04-30:
   added coverage:
     Early dense rule fixtures, late-group-heavy games, and a generated-rule-count
     pressure case with 501 lowered rules.
+
+Fourteenth frontier expansion update, 2026-04-30:
+  unselected-gap replay:
+    cases: 101 102 106 117 156 157 158 161 162 164 165 166 170 171 172 176 177 178 180 181
+    result: 20/20 pass
+  promoted coverage:
+    18/20 added to the selected executable target, including several dense
+    generated-rule fixtures up to 1123 lowered rules.
+  held out for compile-pressure queue:
+    cases 164 and 181 passed, but compile 3611 and 4961 lowered rules
+    respectively, so they stay out of the selected target until the end queue.
 
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
