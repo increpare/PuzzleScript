@@ -200,6 +200,7 @@ function targetRows() {
         const specializedRulegroupsAttached = sampleBoolean(compiledTarget, 'specialized_rulegroups_attached')
             ?? sampleBoolean(compiledTarget, 'compiled_rules_attached');
         const fullTurnAttached = sampleBooleanAny(compiledTarget, ['specialized_full_turn_attached', 'compiled_tick_attached']);
+        const compactTurnAttached = sampleBoolean(compiledTarget, 'specialized_compact_turn_attached');
         const interpretedFrontier = metricSum(target, ['frontier_pop_ms', 'frontier_push_ms']);
         const compiledFrontier = metricSum(compiledTarget, ['frontier_pop_ms', 'frontier_push_ms']);
         const interpretedVisited = metricSum(target, ['visited_lookup_ms', 'visited_insert_ms']);
@@ -244,10 +245,19 @@ function targetRows() {
             fullTurnHits,
             compactTurnNativeHits,
             compactTurnBridgeHits,
-            bucket: compiledUsageBucket(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits),
-            reason: compiledUsageReason(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits, specializedRulegroupsAttached, fullTurnAttached),
+            bucket: compiledUsageBucket(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits, compactTurnAttached),
+            reason: compiledUsageReason(
+                fullTurnHits,
+                compiledRuleHits,
+                compactTurnNativeHits,
+                compactTurnBridgeHits,
+                compactTurnAttached,
+                specializedRulegroupsAttached,
+                fullTurnAttached
+            ),
             specializedRulegroupsAttached,
             fullTurnAttached,
+            compactTurnAttached,
             candidateCells: countersMedian(compiledTarget, 'candidate_cells_tested'),
             rowScans: countersMedian(compiledTarget, 'row_scans'),
             patternTests: countersMedian(compiledTarget, 'pattern_tests'),
@@ -259,12 +269,15 @@ function targetRows() {
     }).filter(Boolean);
 }
 
-function compiledUsageBucket(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits) {
+function compiledUsageBucket(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits, compactTurnAttached) {
     if (compactTurnNativeHits !== null && compactTurnNativeHits > 0) {
         return 'compact_turn_native';
     }
     if (compactTurnBridgeHits !== null && compactTurnBridgeHits > 0) {
         return 'compact_turn_bridge';
+    }
+    if (compactTurnAttached === false) {
+        return 'compact_turn_not_attached';
     }
     if (fullTurnHits === null || compiledRuleHits === null) {
         return 'no_counters';
@@ -281,12 +294,23 @@ function compiledUsageBucket(fullTurnHits, compiledRuleHits, compactTurnNativeHi
     return 'unknown';
 }
 
-function compiledUsageReason(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits, specializedRulegroupsAttached, fullTurnAttached) {
+function compiledUsageReason(
+    fullTurnHits,
+    compiledRuleHits,
+    compactTurnNativeHits,
+    compactTurnBridgeHits,
+    compactTurnAttached,
+    specializedRulegroupsAttached,
+    fullTurnAttached
+) {
     if (compactTurnNativeHits !== null && compactTurnNativeHits > 0) {
         return 'compact_turn_native_hit';
     }
     if (compactTurnBridgeHits !== null && compactTurnBridgeHits > 0) {
         return 'compact_turn_bridge_hit';
+    }
+    if (compactTurnAttached === false) {
+        return 'specialized_compact_turn_backend_not_attached';
     }
     if (fullTurnHits === null || compiledRuleHits === null) {
         return 'runtime_counters_missing';
@@ -313,7 +337,16 @@ function printCompiledUsageSummary(rows) {
         counts.set(row.bucket, (counts.get(row.bucket) || 0) + 1);
         reasons.set(row.reason, (reasons.get(row.reason) || 0) + 1);
     }
-    const labels = ['compact_turn_native', 'compact_turn_bridge', 'specialized_rulegroups', 'full_turn_no_rulegroups', 'no_full_turn_no_rulegroups', 'no_counters', 'unknown'];
+    const labels = [
+        'compact_turn_native',
+        'compact_turn_bridge',
+        'compact_turn_not_attached',
+        'specialized_rulegroups',
+        'full_turn_no_rulegroups',
+        'no_full_turn_no_rulegroups',
+        'no_counters',
+        'unknown',
+    ];
     const parts = labels
         .filter((label) => counts.has(label))
         .map((label) => `${label}=${counts.get(label)}`);
