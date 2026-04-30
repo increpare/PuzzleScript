@@ -834,6 +834,21 @@ Nineteenth frontier expansion update, 2026-04-30:
     queue is now 155, 164, 181, 189, 213, 223, 230, 242, 249, 300, 324, 325,
     and 403.
 
+Twentieth frontier expansion update, 2026-04-30:
+  compile-pressure fix:
+    Large non-random generated rule groups now split their group-apply dispatch
+    into fixed-size helper chunks. This preserves the same consecutive-failure
+    and loop semantics, but avoids producing a single massive group function.
+  end-queue replay:
+    passing cases: 155 164 181 189 230 242 249 300 324 325
+    still held out: 213 223 403
+  promoted coverage:
+    10 cases added to the selected executable target; selected coverage is now
+    466/469. The remaining cases need another compile-size pass rather than a
+    semantics/fallback change.
+    Guard: `make compact_turn_codegen_selected_tests COMPILED_RULES_BUILD_JOBS=4`
+    passes with `passed=466`.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile

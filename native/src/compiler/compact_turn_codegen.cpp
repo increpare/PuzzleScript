@@ -74,6 +74,8 @@ bool hasAnyRulegroups(const std::vector<std::vector<Rule>>& groups) {
     });
 }
 
+constexpr size_t kCompactRulegroupApplyChunkSize = 64;
+
 void emitMaskArray(
     std::ostream& out,
     const std::string& name,
@@ -733,6 +735,15 @@ void emitCompactRulegroupFunctions(
         }
 
         const std::string groupPrefix = compactGroupPrefix(suffix, phase, groupIndex);
+        if (!group.empty() && !group[0].isRandom) {
+            const size_t chunkCount = (group.size() + kCompactRulegroupApplyChunkSize - 1) / kCompactRulegroupApplyChunkSize;
+            for (size_t chunkIndex = 0; chunkIndex < chunkCount; ++chunkIndex) {
+                out << "bool " << groupPrefix << "_apply_chunk_" << chunkIndex
+                    << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix
+                    << "& commands, bool& madeChangeThisLoop, int32_t& consecutiveFailures);\n";
+            }
+            out << "\n";
+        }
         out << "bool " << groupPrefix << "_apply(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands, std::vector<bool>* bannedGroups) {\n";
         if (group.empty()) {
             out << "    (void)dimensions;\n"
@@ -801,20 +812,35 @@ void emitCompactRulegroupFunctions(
             << "    while (madeChangeThisLoop && loopCount++ < 200) {\n"
             << "        madeChangeThisLoop = false;\n"
             << "        int32_t consecutiveFailures = 0;\n";
-        for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-            out << "        if (" << compactRulePrefix(suffix, phase, groupIndex, ruleIndex)
-                << "_apply(dimensions, levelState, scratch, commands)) {\n"
-                << "            madeChangeThisLoop = true;\n"
-                << "            consecutiveFailures = 0;\n"
-                << "        } else {\n"
-                << "            ++consecutiveFailures;\n"
-                << "            if (consecutiveFailures == " << group.size() << ") break;\n"
-                << "        }\n";
+        const size_t chunkCount = (group.size() + kCompactRulegroupApplyChunkSize - 1) / kCompactRulegroupApplyChunkSize;
+        for (size_t chunkIndex = 0; chunkIndex < chunkCount; ++chunkIndex) {
+            out << "        if (" << groupPrefix << "_apply_chunk_" << chunkIndex
+                << "(dimensions, levelState, scratch, commands, madeChangeThisLoop, consecutiveFailures)) break;\n";
         }
         out << "        hasChanges = hasChanges || madeChangeThisLoop;\n"
             << "    }\n"
             << "    return hasChanges;\n"
             << "}\n\n";
+
+        for (size_t chunkIndex = 0; chunkIndex < chunkCount; ++chunkIndex) {
+            const size_t firstRuleIndex = chunkIndex * kCompactRulegroupApplyChunkSize;
+            const size_t lastRuleIndex = std::min(group.size(), firstRuleIndex + kCompactRulegroupApplyChunkSize);
+            out << "bool " << groupPrefix << "_apply_chunk_" << chunkIndex
+                << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix
+                << "& commands, bool& madeChangeThisLoop, int32_t& consecutiveFailures) {\n";
+            for (size_t ruleIndex = firstRuleIndex; ruleIndex < lastRuleIndex; ++ruleIndex) {
+                out << "    if (" << compactRulePrefix(suffix, phase, groupIndex, ruleIndex)
+                    << "_apply(dimensions, levelState, scratch, commands)) {\n"
+                    << "        madeChangeThisLoop = true;\n"
+                    << "        consecutiveFailures = 0;\n"
+                    << "    } else {\n"
+                    << "        ++consecutiveFailures;\n"
+                    << "        if (consecutiveFailures == " << group.size() << ") return true;\n"
+                    << "    }\n";
+            }
+            out << "    return false;\n"
+                << "}\n\n";
+        }
     }
 
     out << "int32_t compact_turn_lookup_" << phase << "_loop_point_" << suffix << "(int32_t index) {\n"
