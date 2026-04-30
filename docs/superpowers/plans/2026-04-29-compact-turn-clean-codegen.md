@@ -819,6 +819,21 @@ Eighteenth frontier expansion update, 2026-04-30:
     cases 155, 164, 181, 189, 213, 223, 230, 242, 249, 324, 325, and 403
     stay out of the selected target until the end queue.
 
+Nineteenth frontier expansion update, 2026-04-30:
+  borderline probe replay:
+    cases: 300 306 402
+    result: 2/3 promoted
+  promoted coverage:
+    cases 306 and 402 passed in compiler mode and were added to the selected
+    executable target; selected coverage is now 456/469. `make
+    compact_turn_codegen_selected_tests COMPILED_RULES_BUILD_JOBS=4` passes
+    with `passed=456`.
+  held out for compile-pressure queue:
+    case 300 emitted 1899 lowered rules but stalled in generated-source compile
+    past the iteration budget, so it joins the end queue. The compile-pressure
+    queue is now 155, 164, 181, 189, 213, 223, 230, 242, 249, 300, 324, 325,
+    and 403.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
