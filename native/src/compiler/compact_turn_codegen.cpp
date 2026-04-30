@@ -433,7 +433,7 @@ void emitCompactRuleCommandFunction(
     out << "}\n\n";
 }
 
-void emitCompactRuleFunction(
+std::string emitCompactRuleFunction(
     std::ostream& out,
     const Game& game,
     const CompactMaskConstantEmitter& masks,
@@ -484,7 +484,7 @@ void emitCompactRuleFunction(
             << "    static_assert(false, " << cppStringLiteral(reason) << ");\n"
             << "    return false;\n"
             << "}\n\n";
-        return;
+        return prefix + "_apply";
     }
 
     const bool inlineSingleRowHelpers = !groupIsRandom && rule.patterns.size() == 1;
@@ -662,95 +662,101 @@ void emitCompactRuleFunction(
             << "}\n\n";
     }
 
-    out << "bool " << prefix << "_apply(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
-        << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
-        << "    std::vector<std::vector<std::vector<int32_t>>> matches;\n";
+    std::ostringstream applyBody;
+    applyBody << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
+              << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
+              << "    std::vector<std::vector<std::vector<int32_t>>> matches;\n";
     if (groupIsRandom) {
-        out << "    if (!" << prefix << "_collect_matches(dimensions, levelState, scratch, matches)) return false;\n";
+        applyBody << "    if (!" << prefix << "_collect_matches(dimensions, levelState, scratch, matches)) return false;\n";
     } else {
-        out << "    matches.assign(rowCount, std::vector<std::vector<int32_t>>{});\n";
+        applyBody << "    matches.assign(rowCount, std::vector<std::vector<int32_t>>{});\n";
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            out << "    if (!" << rowCollectNames[rowIndex] << "(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
+            applyBody << "    if (!" << rowCollectNames[rowIndex] << "(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
         }
     }
-    emitCompactRuleCommandQueue(out, rule, prefix);
+    emitCompactRuleCommandQueue(applyBody, rule, prefix);
     if (!groupIsRandom && rule.patterns.size() == 1) {
         const size_t rowIndex = 0;
         const std::vector<Pattern>& row = rule.patterns[rowIndex];
-        out << "    bool changed = false;\n"
-            << "    for (size_t matchIndex = 0; matchIndex < matches[0].size(); ++matchIndex) {\n"
-            << "        const std::vector<int32_t>& match = matches[0][matchIndex];\n"
-            << "        bool stillMatches = true;\n"
-            << "        if (matchIndex != 0) {\n"
-            << "            size_t positionIndex = 0;\n";
+        applyBody << "    bool changed = false;\n"
+                  << "    for (size_t matchIndex = 0; matchIndex < matches[0].size(); ++matchIndex) {\n"
+                  << "        const std::vector<int32_t>& match = matches[0][matchIndex];\n"
+                  << "        bool stillMatches = true;\n"
+                  << "        if (matchIndex != 0) {\n"
+                  << "            size_t positionIndex = 0;\n";
         for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
             if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
                 continue;
             }
-            out << "            if (positionIndex >= match.size() || !"
-                << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]")
-                << ") stillMatches = false;\n"
-                << "            ++positionIndex;\n";
+            applyBody << "            if (positionIndex >= match.size() || !"
+                      << compactPatternMatchesCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]")
+                      << ") stillMatches = false;\n"
+                      << "            ++positionIndex;\n";
         }
-        out << "            stillMatches = stillMatches && positionIndex == match.size();\n"
-            << "        }\n"
-            << "        if (stillMatches) {\n"
-            << "            size_t positionIndex = 0;\n";
+        applyBody << "            stillMatches = stillMatches && positionIndex == match.size();\n"
+                  << "        }\n"
+                  << "        if (stillMatches) {\n"
+                  << "            size_t positionIndex = 0;\n";
         for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
             if (row[patternIndex].kind == Pattern::Kind::Ellipsis) {
                 continue;
             }
-            out << "            if (positionIndex >= match.size()) break;\n";
+            applyBody << "            if (positionIndex >= match.size()) break;\n";
             if (row[patternIndex].replacement.has_value()) {
-                out << "            changed = "
-                    << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]", std::to_string(rigidGroupIndex))
-                    << " || changed;\n";
+                applyBody << "            changed = "
+                          << compactPatternApplyCall(game, masks, row[patternIndex], suffix, phase, groupIndex, ruleIndex, rowIndex, patternIndex, "match[positionIndex]", std::to_string(rigidGroupIndex))
+                          << " || changed;\n";
             }
-            out << "            ++positionIndex;\n";
+            applyBody << "            ++positionIndex;\n";
         }
-        out << "        }\n"
-            << "        }\n"
-            << "    return changed;\n"
-            << "}\n\n";
-        return;
+        applyBody << "        }\n"
+                  << "        }\n"
+                  << "    return changed;\n"
+                  << "}\n";
+        const std::string applyName = functions.emitDefinition(out, prefix + "_apply", applyBody.str());
+        out << "\n";
+        return applyName;
     }
-    out << "    std::vector<size_t> tupleIndex(rowCount, 0);\n"
-        << "    bool firstTuple = true;\n"
-        << "    bool changed = false;\n"
-        << "    while (true) {\n"
-        << "        bool stillMatches = true;\n"
-        << "        if (!firstTuple) {\n";
+    applyBody << "    std::vector<size_t> tupleIndex(rowCount, 0);\n"
+              << "    bool firstTuple = true;\n"
+              << "    bool changed = false;\n"
+              << "    while (true) {\n"
+              << "        bool stillMatches = true;\n"
+              << "        if (!firstTuple) {\n";
     if (groupIsRandom) {
-        out << "            stillMatches = " << prefix << "_tuple_still_matches(levelState, scratch, matches, tupleIndex);\n";
+        applyBody << "            stillMatches = " << prefix << "_tuple_still_matches(levelState, scratch, matches, tupleIndex);\n";
     } else {
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            out << "            if (!" << rowMatchNames[rowIndex]
-                << "(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) stillMatches = false;\n";
+            applyBody << "            if (!" << rowMatchNames[rowIndex]
+                      << "(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]])) stillMatches = false;\n";
         }
     }
-    out << "        }\n"
-        << "        if (stillMatches) {\n";
+    applyBody << "        }\n"
+              << "        if (stillMatches) {\n";
     if (groupIsRandom) {
-        out << "            changed = " << prefix << "_apply_tuple(levelState, scratch, matches, tupleIndex) || changed;\n";
+        applyBody << "            changed = " << prefix << "_apply_tuple(levelState, scratch, matches, tupleIndex) || changed;\n";
     } else {
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
-            out << "            changed = " << rowApplyNames[rowIndex]
-                << "(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
+            applyBody << "            changed = " << rowApplyNames[rowIndex]
+                      << "(levelState, scratch, matches[" << rowIndex << "][tupleIndex[" << rowIndex << "]]) || changed;\n";
         }
     }
-    out << "        }\n"
-        << "        firstTuple = false;\n"
-        << "        size_t rowToIncrement = 0;\n"
-        << "        while (rowToIncrement < rowCount) {\n"
-        << "            ++tupleIndex[rowToIncrement];\n"
-        << "            if (tupleIndex[rowToIncrement] < matches[rowToIncrement].size()) break;\n"
-        << "            tupleIndex[rowToIncrement] = 0;\n"
-        << "            ++rowToIncrement;\n"
-        << "        }\n"
-        << "        if (rowToIncrement == rowCount) break;\n"
-        << "    }\n"
-        << "    return changed;\n"
-        << "}\n\n";
+    applyBody << "        }\n"
+              << "        firstTuple = false;\n"
+              << "        size_t rowToIncrement = 0;\n"
+              << "        while (rowToIncrement < rowCount) {\n"
+              << "            ++tupleIndex[rowToIncrement];\n"
+              << "            if (tupleIndex[rowToIncrement] < matches[rowToIncrement].size()) break;\n"
+              << "            tupleIndex[rowToIncrement] = 0;\n"
+              << "            ++rowToIncrement;\n"
+              << "        }\n"
+              << "        if (rowToIncrement == rowCount) break;\n"
+              << "    }\n"
+              << "    return changed;\n"
+              << "}\n";
+    const std::string applyName = functions.emitDefinition(out, prefix + "_apply", applyBody.str());
+    out << "\n";
+    return applyName;
 }
 
 void emitCompactRulegroupFunctions(
@@ -766,8 +772,9 @@ void emitCompactRulegroupFunctions(
     for (size_t groupIndex = 0; groupIndex < groups.size(); ++groupIndex) {
         const std::vector<Rule>& group = groups[groupIndex];
         const bool groupIsRandom = !group.empty() && group[0].isRandom;
+        std::vector<std::string> ruleApplyNames(group.size());
         for (size_t ruleIndex = 0; ruleIndex < group.size(); ++ruleIndex) {
-            emitCompactRuleFunction(out, game, masks, functions, group[ruleIndex], suffix, phase, groupIndex, ruleIndex, groupIsRandom);
+            ruleApplyNames[ruleIndex] = emitCompactRuleFunction(out, game, masks, functions, group[ruleIndex], suffix, phase, groupIndex, ruleIndex, groupIsRandom);
         }
 
         const std::string groupPrefix = compactGroupPrefix(suffix, phase, groupIndex);
@@ -867,8 +874,8 @@ void emitCompactRulegroupFunctions(
                 << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix
                 << "& commands, bool& madeChangeThisLoop, int32_t& consecutiveFailures) {\n";
             for (size_t ruleIndex = firstRuleIndex; ruleIndex < lastRuleIndex; ++ruleIndex) {
-                out << "    if (" << compactRulePrefix(suffix, phase, groupIndex, ruleIndex)
-                    << "_apply(dimensions, levelState, scratch, commands)) {\n"
+                out << "    if (" << ruleApplyNames[ruleIndex]
+                    << "(dimensions, levelState, scratch, commands)) {\n"
                     << "        madeChangeThisLoop = true;\n"
                     << "        consecutiveFailures = 0;\n"
                     << "    } else {\n"

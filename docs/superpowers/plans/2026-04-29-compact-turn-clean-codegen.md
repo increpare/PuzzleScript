@@ -951,6 +951,22 @@ Generated row-helper interning, 2026-04-30:
   8,166,556 lines to 383,808,060 bytes / 6,975,910 lines. Full compiler-mode
   simulation guard still passes 469/469 with no compact oracle failures.
 
+Generated rule-apply interning, 2026-04-30:
+  Compact rule `_apply` helpers are now interned by emitted function body after
+  row-helper names have been canonicalized, so identical deterministic dispatch
+  bodies share one generated helper. This is another generic codegen-size pass,
+  not a feature/fallback gate.
+  Focused giant-case results:
+  - case 223 `vertebrae`: 52,547,375 bytes / 917,205 lines to
+    47,814,855 bytes / 856,731 lines.
+  - case 213 `gallery: season finale`: 25,604,333 bytes / 474,405 lines to
+    25,092,133 bytes / 470,189 lines.
+  - case 403 `Crate Assembler`: 18,467,682 bytes / 329,116 lines to
+    6,598,468 bytes / 147,132 lines.
+  Full generated `testdata.js` corpus dropped from 383,808,060 bytes /
+  6,975,910 lines to 365,412,548 bytes / 6,768,295 lines. Full compiler-mode
+  simulation guard still passes 469/469 with no compact oracle failures.
+
 Full-corpus post-cleanup guard, 2026-04-30:
   `make compact_turn_codegen_simulation_tests COMPILED_RULES_BUILD_JOBS=4`
   passes after the generated-source reductions with
