@@ -273,6 +273,8 @@ function targetRows() {
             maskRebuildDirtyCalls: countersMedian(compiledTarget, 'mask_rebuild_dirty_calls'),
             maskRebuildRows: countersMedian(compiledTarget, 'mask_rebuild_rows'),
             maskRebuildColumns: countersMedian(compiledTarget, 'mask_rebuild_columns'),
+            againProbeCalls: countersMedian(compiledTarget, 'compact_turn_again_probe_calls'),
+            againProbeNs: countersMedian(compiledTarget, 'compact_turn_again_probe_ns'),
         };
     }).filter(Boolean);
 }
@@ -517,6 +519,8 @@ function printCompactTurnRuntimeCounters() {
     printRuntimeCounterMedian('compact_turn_late_rules_ms', 'compact_turn_late_rules_ns', 3, 1e6);
     printRuntimeCounterMedian('compact_turn_win_ms', 'compact_turn_win_ns', 3, 1e6);
     printRuntimeCounterMedian('compact_turn_canonicalize_ms', 'compact_turn_canonicalize_ns', 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_again_probe_calls', 'compact_turn_again_probe_calls', 0);
+    printRuntimeCounterMedian('compact_turn_again_probe_ms', 'compact_turn_again_probe_ns', 3, 1e6);
     printRuntimeCounterMedianSum('compact_turn_native_phase_ms', [
         'compact_turn_setup_ns',
         'compact_turn_early_rules_ns',
@@ -524,6 +528,7 @@ function printCompactTurnRuntimeCounters() {
         'compact_turn_late_rules_ns',
         'compact_turn_win_ns',
         'compact_turn_canonicalize_ns',
+        'compact_turn_again_probe_ns',
     ], 3, 1e6);
     printRuntimeCounterMedian('compact_turn_bridge_create_ms', 'compact_turn_bridge_create_ns', 3, 1e6);
     printRuntimeCounterMedian('compact_turn_bridge_materialize_ms', 'compact_turn_bridge_materialize_ns', 3, 1e6);
@@ -619,6 +624,31 @@ function printMaskRebuildTable(rows) {
             ` rows=${row.rowScans === null ? 'n/a' : row.rowScans}` +
             ` cells=${row.candidateCells === null ? 'n/a' : row.candidateCells}` +
             ` pattern_tests=${row.patternTests === null ? 'n/a' : row.patternTests}` +
+            ` ${row.key}` +
+            `\n`
+        );
+    }
+}
+
+function printAgainProbeTable(rows) {
+    const hotRows = rows
+        .filter((row) => Number.isFinite(row.againProbeNs) && row.againProbeNs > 0)
+        .sort((a, b) => b.againProbeNs - a.againProbeNs)
+        .slice(0, 10);
+    if (hotRows.length === 0) {
+        process.stdout.write('  top_again_probe_targets: n/a\n');
+        return;
+    }
+    process.stdout.write('  top_again_probe_targets:\n');
+    for (const row of hotRows) {
+        process.stdout.write(
+            `    again_probe_ms=${formatNumber(row.againProbeNs / 1e6, 1)}` +
+            ` calls=${row.againProbeCalls === null ? 'n/a' : formatNumber(row.againProbeCalls, 0)}` +
+            ` elapsed=${formatNumber(row.compiled.median.elapsed_ms, 1)}ms` +
+            ` step=${formatNumber(metricMedian(row.compiled, 'step_ms'), 1)}ms` +
+            ` early_rules_ms=${formatNumber((countersMedian(row.compiled, 'compact_turn_early_rules_ns') || 0) / 1e6, 1)}` +
+            ` rows=${row.rowScans === null ? 'n/a' : row.rowScans}` +
+            ` cells=${row.candidateCells === null ? 'n/a' : row.candidateCells}` +
             ` ${row.key}` +
             `\n`
         );
@@ -803,6 +833,7 @@ if (options.detail) {
     printStepTimeTable('fastest_step_targets:', byStepFastest);
     printGraphOverheadTable('slowest_graph_overhead_targets:', byGraphSlowest);
     printGraphOverheadTable('largest_compiled_graph_overhead_targets:', byGraphLargest);
+    printAgainProbeTable(rows);
     printMaskRebuildTable(rows);
 }
 

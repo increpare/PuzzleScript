@@ -131,6 +131,8 @@ typedef struct ps_runtime_counters {
     uint64_t compact_turn_late_rules_ns;
     uint64_t compact_turn_win_ns;
     uint64_t compact_turn_canonicalize_ns;
+    uint64_t compact_turn_again_probe_calls;
+    uint64_t compact_turn_again_probe_ns;
     uint64_t compact_turn_bridge_create_ns;
     uint64_t compact_turn_bridge_materialize_ns;
     uint64_t compact_turn_bridge_turn_ns;

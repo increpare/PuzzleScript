@@ -1130,6 +1130,28 @@ Rejected anchored-row scan experiment, 2026-04-30:
   it can be proven as a generic scratch index with clear net wins and no
   source-size tax.
 
+Again-probe telemetry, 2026-04-30:
+  A Drain-mode shortcut that blindly scheduled `again` ticks without probing
+  was measured and rejected. It made the focus benchmark faster, but full
+  compact codegen simulation parity dropped to `447/469`: no-change `again`
+  probes are semantic and must be rolled back rather than committed as real
+  ticks. The committed follow-up splits `compact_turn_again_probe_calls` and
+  `compact_turn_again_probe_ns` out of the runtime counters and benchmark
+  detail report so this work is visible without mislabeling it as canonicalize
+  time.
+
+  One-run focus result after instrumentation:
+  - Interpreted vs compiler-mode compact: `elapsed_ms=265.0->194.0`
+    (`0.732x`), `step_ms=167.7->113.7` (`0.678x`).
+  - Median `again_probe_ms` is zero because many focus targets never schedule
+    `again`, but the detailed table now surfaces the real hotspots:
+    `paint everything everywhere.txt#29` spends `198.1ms` in probes,
+    `#11` spends `183.1ms`, `#25` spends `178.0ms`, and `#27` spends
+    `171.6ms`.
+  - Next safe optimization here is not "skip probes"; it is to reduce the cost
+    of executing a semantically rollbackable tick, or to make generated rule
+    scanning cheaper inside both normal turns and probes.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile

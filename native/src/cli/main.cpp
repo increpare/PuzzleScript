@@ -2723,6 +2723,8 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " compact_turn_late_rules_ns=" << counters.compact_turn_late_rules_ns
                   << " compact_turn_win_ns=" << counters.compact_turn_win_ns
                   << " compact_turn_canonicalize_ns=" << counters.compact_turn_canonicalize_ns
+                  << " compact_turn_again_probe_calls=" << counters.compact_turn_again_probe_calls
+                  << " compact_turn_again_probe_ns=" << counters.compact_turn_again_probe_ns
                   << " compact_turn_bridge_create_ns=" << counters.compact_turn_bridge_create_ns
                   << " compact_turn_bridge_materialize_ns=" << counters.compact_turn_bridge_materialize_ns
                   << " compact_turn_bridge_turn_ns=" << counters.compact_turn_bridge_turn_ns

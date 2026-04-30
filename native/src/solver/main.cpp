@@ -2251,6 +2251,8 @@ int main(int argc, char** argv) {
                       << " compact_turn_late_rules_ns=" << runtimeCounters.compact_turn_late_rules_ns
                       << " compact_turn_win_ns=" << runtimeCounters.compact_turn_win_ns
                       << " compact_turn_canonicalize_ns=" << runtimeCounters.compact_turn_canonicalize_ns
+                      << " compact_turn_again_probe_calls=" << runtimeCounters.compact_turn_again_probe_calls
+                      << " compact_turn_again_probe_ns=" << runtimeCounters.compact_turn_again_probe_ns
                       << " compact_turn_bridge_create_ns=" << runtimeCounters.compact_turn_bridge_create_ns
                       << " compact_turn_bridge_materialize_ns=" << runtimeCounters.compact_turn_bridge_materialize_ns
                       << " compact_turn_bridge_turn_ns=" << runtimeCounters.compact_turn_bridge_turn_ns

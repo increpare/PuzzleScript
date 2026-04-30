@@ -631,6 +631,8 @@ enum class RuntimeCounterId {
     CompactTurnLateRulesNs,
     CompactTurnWinNs,
     CompactTurnCanonicalizeNs,
+    CompactTurnAgainProbeCalls,
+    CompactTurnAgainProbeNs,
     CompactTurnBridgeCreateNs,
     CompactTurnBridgeMaterializeNs,
     CompactTurnBridgeTurnNs,

@@ -101,6 +101,8 @@ struct RuntimeCounterStorage {
     std::atomic<uint64_t> compactTurnLateRulesNs{0};
     std::atomic<uint64_t> compactTurnWinNs{0};
     std::atomic<uint64_t> compactTurnCanonicalizeNs{0};
+    std::atomic<uint64_t> compactTurnAgainProbeCalls{0};
+    std::atomic<uint64_t> compactTurnAgainProbeNs{0};
     std::atomic<uint64_t> compactTurnBridgeCreateNs{0};
     std::atomic<uint64_t> compactTurnBridgeMaterializeNs{0};
     std::atomic<uint64_t> compactTurnBridgeTurnNs{0};
@@ -5704,6 +5706,8 @@ void addRuntimeCounter(RuntimeCounterId id, uint64_t amount) {
         case RuntimeCounterId::CompactTurnLateRulesNs: addCounter(gRuntimeCounters.compactTurnLateRulesNs, amount); break;
         case RuntimeCounterId::CompactTurnWinNs: addCounter(gRuntimeCounters.compactTurnWinNs, amount); break;
         case RuntimeCounterId::CompactTurnCanonicalizeNs: addCounter(gRuntimeCounters.compactTurnCanonicalizeNs, amount); break;
+        case RuntimeCounterId::CompactTurnAgainProbeCalls: addCounter(gRuntimeCounters.compactTurnAgainProbeCalls, amount); break;
+        case RuntimeCounterId::CompactTurnAgainProbeNs: addCounter(gRuntimeCounters.compactTurnAgainProbeNs, amount); break;
         case RuntimeCounterId::CompactTurnBridgeCreateNs: addCounter(gRuntimeCounters.compactTurnBridgeCreateNs, amount); break;
         case RuntimeCounterId::CompactTurnBridgeMaterializeNs: addCounter(gRuntimeCounters.compactTurnBridgeMaterializeNs, amount); break;
         case RuntimeCounterId::CompactTurnBridgeTurnNs: addCounter(gRuntimeCounters.compactTurnBridgeTurnNs, amount); break;
@@ -5739,6 +5743,8 @@ void resetRuntimeCounters() {
     gRuntimeCounters.compactTurnLateRulesNs.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compactTurnWinNs.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compactTurnCanonicalizeNs.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnAgainProbeCalls.store(0, std::memory_order_relaxed);
+    gRuntimeCounters.compactTurnAgainProbeNs.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compactTurnBridgeCreateNs.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compactTurnBridgeMaterializeNs.store(0, std::memory_order_relaxed);
     gRuntimeCounters.compactTurnBridgeTurnNs.store(0, std::memory_order_relaxed);
@@ -5780,6 +5786,8 @@ ps_runtime_counters snapshotRuntimeCounters() {
     counters.compact_turn_late_rules_ns = gRuntimeCounters.compactTurnLateRulesNs.load(std::memory_order_relaxed);
     counters.compact_turn_win_ns = gRuntimeCounters.compactTurnWinNs.load(std::memory_order_relaxed);
     counters.compact_turn_canonicalize_ns = gRuntimeCounters.compactTurnCanonicalizeNs.load(std::memory_order_relaxed);
+    counters.compact_turn_again_probe_calls = gRuntimeCounters.compactTurnAgainProbeCalls.load(std::memory_order_relaxed);
+    counters.compact_turn_again_probe_ns = gRuntimeCounters.compactTurnAgainProbeNs.load(std::memory_order_relaxed);
     counters.compact_turn_bridge_create_ns = gRuntimeCounters.compactTurnBridgeCreateNs.load(std::memory_order_relaxed);
     counters.compact_turn_bridge_materialize_ns = gRuntimeCounters.compactTurnBridgeMaterializeNs.load(std::memory_order_relaxed);
     counters.compact_turn_bridge_turn_ns = gRuntimeCounters.compactTurnBridgeTurnNs.load(std::memory_order_relaxed);
