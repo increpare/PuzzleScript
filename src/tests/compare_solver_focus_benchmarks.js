@@ -137,6 +137,23 @@ function countersMedian(summary, key) {
     return values[Math.floor(values.length / 2)];
 }
 
+function benchmarkCountersMedian(benchmark, key) {
+    const values = [];
+    for (const target of benchmark.targets || []) {
+        for (const sample of target.samples || []) {
+            const value = sample.runtime_counters && sample.runtime_counters[key];
+            if (Number.isFinite(value)) {
+                values.push(value);
+            }
+        }
+    }
+    if (values.length === 0) {
+        return null;
+    }
+    values.sort((a, b) => a - b);
+    return values[Math.floor(values.length / 2)];
+}
+
 function countersMedianAny(summary, keys) {
     for (const key of keys) {
         const value = countersMedian(summary, key);
@@ -178,6 +195,8 @@ function targetRows() {
         const compiledRuleHits = countersMedian(compiledTarget, 'specialized_rulegroup_hits')
             ?? countersMedian(compiledTarget, 'compiled_rule_group_hits');
         const fullTurnHits = countersMedianAny(compiledTarget, ['specialized_full_turn_hits', 'compiled_tick_hits']);
+        const compactTurnNativeHits = metricMedian(compiledTarget, 'compact_turn_native_hits');
+        const compactTurnBridgeHits = metricMedian(compiledTarget, 'compact_turn_bridge_hits');
         const specializedRulegroupsAttached = sampleBoolean(compiledTarget, 'specialized_rulegroups_attached')
             ?? sampleBoolean(compiledTarget, 'compiled_rules_attached');
         const fullTurnAttached = sampleBooleanAny(compiledTarget, ['specialized_full_turn_attached', 'compiled_tick_attached']);
@@ -223,8 +242,10 @@ function targetRows() {
             compiledGraph,
             compiledRuleHits,
             fullTurnHits,
-            bucket: compiledUsageBucket(fullTurnHits, compiledRuleHits),
-            reason: compiledUsageReason(fullTurnHits, compiledRuleHits, specializedRulegroupsAttached, fullTurnAttached),
+            compactTurnNativeHits,
+            compactTurnBridgeHits,
+            bucket: compiledUsageBucket(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits),
+            reason: compiledUsageReason(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits, specializedRulegroupsAttached, fullTurnAttached),
             specializedRulegroupsAttached,
             fullTurnAttached,
             candidateCells: countersMedian(compiledTarget, 'candidate_cells_tested'),
@@ -238,7 +259,13 @@ function targetRows() {
     }).filter(Boolean);
 }
 
-function compiledUsageBucket(fullTurnHits, compiledRuleHits) {
+function compiledUsageBucket(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits) {
+    if (compactTurnNativeHits !== null && compactTurnNativeHits > 0) {
+        return 'compact_turn_native';
+    }
+    if (compactTurnBridgeHits !== null && compactTurnBridgeHits > 0) {
+        return 'compact_turn_bridge';
+    }
     if (fullTurnHits === null || compiledRuleHits === null) {
         return 'no_counters';
     }
@@ -254,7 +281,13 @@ function compiledUsageBucket(fullTurnHits, compiledRuleHits) {
     return 'unknown';
 }
 
-function compiledUsageReason(fullTurnHits, compiledRuleHits, specializedRulegroupsAttached, fullTurnAttached) {
+function compiledUsageReason(fullTurnHits, compiledRuleHits, compactTurnNativeHits, compactTurnBridgeHits, specializedRulegroupsAttached, fullTurnAttached) {
+    if (compactTurnNativeHits !== null && compactTurnNativeHits > 0) {
+        return 'compact_turn_native_hit';
+    }
+    if (compactTurnBridgeHits !== null && compactTurnBridgeHits > 0) {
+        return 'compact_turn_bridge_hit';
+    }
     if (fullTurnHits === null || compiledRuleHits === null) {
         return 'runtime_counters_missing';
     }
@@ -280,7 +313,7 @@ function printCompiledUsageSummary(rows) {
         counts.set(row.bucket, (counts.get(row.bucket) || 0) + 1);
         reasons.set(row.reason, (reasons.get(row.reason) || 0) + 1);
     }
-    const labels = ['specialized_rulegroups', 'full_turn_no_rulegroups', 'no_full_turn_no_rulegroups', 'no_counters', 'unknown'];
+    const labels = ['compact_turn_native', 'compact_turn_bridge', 'specialized_rulegroups', 'full_turn_no_rulegroups', 'no_full_turn_no_rulegroups', 'no_counters', 'unknown'];
     const parts = labels
         .filter((label) => counts.has(label))
         .map((label) => `${label}=${counts.get(label)}`);
@@ -310,6 +343,8 @@ function printTargetTable(label, rows) {
             ` ${row.key}` +
             ` hits=${row.compiledRuleHits === null ? 'n/a' : row.compiledRuleHits}` +
             ` full_turn=${row.fullTurnHits === null ? 'n/a' : row.fullTurnHits}` +
+            ` compact_native=${row.compactTurnNativeHits === null ? 'n/a' : row.compactTurnNativeHits}` +
+            ` compact_bridge=${row.compactTurnBridgeHits === null ? 'n/a' : row.compactTurnBridgeHits}` +
             ` rows=${row.rowScans === null ? 'n/a' : row.rowScans}` +
             ` cells=${row.candidateCells === null ? 'n/a' : row.candidateCells}` +
             ` pattern_tests=${row.patternTests === null ? 'n/a' : row.patternTests}` +
@@ -391,6 +426,76 @@ function printCompactTurnSummary() {
     }
 }
 
+function printRuntimeCounterMedian(label, key, digits = 1, scale = 1) {
+    const interpretedValue = benchmarkCountersMedian(interpreted, key);
+    const compiledValue = benchmarkCountersMedian(compiled, key);
+    if (interpretedValue === null && compiledValue === null) {
+        return;
+    }
+    const interpretedScaled = interpretedValue === null ? null : interpretedValue / scale;
+    const compiledScaled = compiledValue === null ? null : compiledValue / scale;
+    process.stdout.write(
+        `  median_runtime_${label}: interpreted=${formatNumber(interpretedScaled, digits)}` +
+        ` compiled=${formatNumber(compiledScaled, digits)}` +
+        ` compiled/interpreted=${formatDelta(compiledScaled, interpretedScaled)}\n`
+    );
+}
+
+function runtimeCounterMedianSum(benchmark, keys, scale = 1) {
+    let total = 0;
+    let seen = false;
+    for (const key of keys) {
+        const value = benchmarkCountersMedian(benchmark, key);
+        if (value !== null) {
+            total += value / scale;
+            seen = true;
+        }
+    }
+    return seen ? total : null;
+}
+
+function printRuntimeCounterMedianSum(label, keys, digits = 1, scale = 1) {
+    const interpretedValue = runtimeCounterMedianSum(interpreted, keys, scale);
+    const compiledValue = runtimeCounterMedianSum(compiled, keys, scale);
+    if (interpretedValue === null && compiledValue === null) {
+        return;
+    }
+    process.stdout.write(
+        `  median_runtime_${label}: interpreted=${formatNumber(interpretedValue, digits)}` +
+        ` compiled=${formatNumber(compiledValue, digits)}` +
+        ` compiled/interpreted=${formatDelta(compiledValue, interpretedValue)}\n`
+    );
+}
+
+function printCompactTurnRuntimeCounters() {
+    printRuntimeCounterMedian('compact_turn_native_calls', 'compact_turn_native_calls', 0);
+    printRuntimeCounterMedian('compact_turn_bridge_calls', 'compact_turn_bridge_calls', 0);
+    printRuntimeCounterMedian('compact_turn_setup_ms', 'compact_turn_setup_ns', 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_early_rules_ms', 'compact_turn_early_rules_ns', 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_movement_ms', 'compact_turn_movement_ns', 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_late_rules_ms', 'compact_turn_late_rules_ns', 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_win_ms', 'compact_turn_win_ns', 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_canonicalize_ms', 'compact_turn_canonicalize_ns', 3, 1e6);
+    printRuntimeCounterMedianSum('compact_turn_native_phase_ms', [
+        'compact_turn_setup_ns',
+        'compact_turn_early_rules_ns',
+        'compact_turn_movement_ns',
+        'compact_turn_late_rules_ns',
+        'compact_turn_win_ns',
+        'compact_turn_canonicalize_ns',
+    ], 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_bridge_create_ms', 'compact_turn_bridge_create_ns', 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_bridge_materialize_ms', 'compact_turn_bridge_materialize_ns', 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_bridge_turn_ms', 'compact_turn_bridge_turn_ns', 3, 1e6);
+    printRuntimeCounterMedian('compact_turn_bridge_copyback_ms', 'compact_turn_bridge_copyback_ns', 3, 1e6);
+    printRuntimeCounterMedianSum('compact_turn_bridge_phase_ms', [
+        'compact_turn_bridge_create_ns',
+        'compact_turn_bridge_materialize_ns',
+        'compact_turn_bridge_turn_ns',
+        'compact_turn_bridge_copyback_ns',
+    ], 3, 1e6);
+}
+
 function printGraphSplit() {
     const split = [
         ['step', ['step_ms']],
@@ -465,6 +570,8 @@ function printMaskRebuildTable(rows) {
             ` reason=${row.reason}` +
             ` full_turn=${row.fullTurnHits === null ? 'n/a' : row.fullTurnHits}` +
             ` hits=${row.compiledRuleHits === null ? 'n/a' : row.compiledRuleHits}` +
+            ` compact_native=${row.compactTurnNativeHits === null ? 'n/a' : row.compactTurnNativeHits}` +
+            ` compact_bridge=${row.compactTurnBridgeHits === null ? 'n/a' : row.compactTurnBridgeHits}` +
             ` dirty=${row.maskRebuildDirtyCalls === null ? 'n/a' : row.maskRebuildDirtyCalls}` +
             ` rebuild_rows=${row.maskRebuildRows === null ? 'n/a' : row.maskRebuildRows}` +
             ` rebuild_columns=${row.maskRebuildColumns === null ? 'n/a' : row.maskRebuildColumns}` +
@@ -568,6 +675,7 @@ printMedianMetric('compact_turn_bridge_hits', 'compact_turn_bridge_hits');
 printMedianMetric('compact_turn_fallbacks', 'compact_turn_fallbacks');
 printMedianMetric('compact_turn_unsupported', 'compact_turn_unsupported');
 printCompactTurnSummary();
+printCompactTurnRuntimeCounters();
 printMedianMetricSum('frontier_ms', ['frontier_pop_ms', 'frontier_push_ms']);
 printMedianMetric('node_store_ms', 'node_store_ms');
 printMedianMetric('heuristic_ms', 'heuristic_ms');

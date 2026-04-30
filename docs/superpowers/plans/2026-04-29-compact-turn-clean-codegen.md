@@ -994,6 +994,23 @@ Runtime/reporting cleanup, 2026-04-30:
   scripts. `make compact_turn_codegen_bringup COMPILED_RULES_BUILD_JOBS=4`
   now reports `unhandled=0`.
 
+Solver compact compiler profiling, 2026-04-30:
+  Added explicit solver focus targets for compiler-mode compact turns:
+  `make solver_focus_compact_codegen_compare` and
+  `make solver_focus_compact_codegen_perf_report`. These build the specialized
+  solver with `--compact-turn-mode=compiler` and run the solver with
+  `--compact-node-storage`, so the comparison is interpreter solver versus the
+  generated compact turn pipeline rather than the compact interpreter bridge.
+  The benchmark comparison report now prints compact-turn native/bridge hit
+  buckets plus runtime phase counters for setup, early rules, movement, late
+  rules, win, canonicalize, and bridge materialization/copyback. A smoke
+  profile against `src/tests/solver_smoke_tests` confirmed
+  `compact_turn_native=1`, `bridge=0`, and `compact_turn_native_hit`.
+  Generated compiler-mode compact turns now feed those native phase counters
+  directly; probe turns used by `again` are charged to the caller's
+  canonicalization bucket so the report does not double-count their inner
+  phases.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
