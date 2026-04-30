@@ -314,10 +314,6 @@ struct PersistentLevelState {
     RandomState rng;
 };
 
-struct InterpreterBoardScratch {
-    MaskVector objects;
-};
-
 struct GameMetadata {
     std::vector<std::string> pairs;
     std::map<std::string, std::string> values;
@@ -402,9 +398,6 @@ struct GameInformation {
 using Game = GameInformation;
 
 struct Scratch {
-    // Temporary compatibility mirror for legacy interpreter board plumbing.
-    // Authoritative object storage lives in PersistentLevelState::board.objects.
-    InterpreterBoardScratch interpreterBoard;
     MaskVector liveMovements;
     MaskVector rowMasks;
     MaskVector columnMasks;
@@ -506,15 +499,8 @@ void transposeCellMajorToObjectMajor(
     std::vector<MaskWordUnsigned>& objectCellBits,
     std::vector<uint32_t>* objectCellCounts = nullptr);
 
-void setInterpreterBoardObjectsFromCellMajor(FullState& session, const MaskVector& objects);
-void clearInterpreterBoardObjects(FullState& session);
-MaskVector copyInterpreterBoardObjectsAsCellMajor(const FullState& session);
-
-/// Updates persistent board occupancy from the interpreter scratch board.
-void syncPersistentBoardFromScratch(FullState& session);
-
-/// Updates persistent within-level state from scratch after interpreter execution.
-void syncPersistentLevelStateFromScratch(FullState& session);
+void setPersistentBoardObjectsFromCellMajor(FullState& session, const MaskVector& objects);
+void clearPersistentBoardObjects(FullState& session);
 
 struct CompileResult {
     LoadedGame loadedGame;

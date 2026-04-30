@@ -4066,10 +4066,10 @@ void pushUndoSnapshot(FullState& session) {
 
 void restoreRestartTarget(FullState& session) {
     if (!session.meta.restart.objects.empty()) {
-        setInterpreterBoardObjectsFromCellMajor(session, session.meta.restart.objects);
+        setPersistentBoardObjectsFromCellMajor(session, session.meta.restart.objects);
         session.meta.oldFlickscreenDat = session.meta.restart.oldFlickscreenDat;
     } else {
-        setInterpreterBoardObjectsFromCellMajor(session, session.meta.level.objects);
+        setPersistentBoardObjectsFromCellMajor(session, session.meta.level.objects);
     }
     session.scratch.liveMovements.assign(static_cast<size_t>(currentLevelWidth(session) * currentLevelHeight(session) * session.game->strideMovement), 0);
     session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
@@ -4212,7 +4212,7 @@ void resetToPrepared(FullState& session) {
         && session.meta.level.width > 0 && session.meta.level.height > 0) {
         session.meta.levelDimensions = LevelDimensions{session.meta.level.width, session.meta.level.height};
     }
-    setInterpreterBoardObjectsFromCellMajor(session, session.meta.level.objects);
+    setPersistentBoardObjectsFromCellMajor(session, session.meta.level.objects);
     session.scratch.liveMovements.assign(static_cast<size_t>(currentLevelWidth(session) * currentLevelHeight(session) * session.game->strideMovement), 0);
     session.scratch.rigidGroupIndexMasks.assign(session.scratch.liveMovements.size(), 0);
     session.scratch.rigidMovementAppliedMasks.assign(session.scratch.liveMovements.size(), 0);
@@ -4232,7 +4232,6 @@ void resetToPrepared(FullState& session) {
     } else {
         seedRandomState(session.levelState.rng, session.meta.loadedLevelSeed);
     }
-    syncPersistentLevelStateFromScratch(session);
     rebuildMasks(session);
 }
 
@@ -4324,26 +4323,12 @@ void transposeCellMajorToObjectMajor(
     }
 }
 
-void setInterpreterBoardObjectsFromCellMajor(FullState& session, const MaskVector& objects) {
+void setPersistentBoardObjectsFromCellMajor(FullState& session, const MaskVector& objects) {
     session.levelState.board.objects = objects;
-    session.scratch.interpreterBoard.objects = objects;
 }
 
-void clearInterpreterBoardObjects(FullState& session) {
+void clearPersistentBoardObjects(FullState& session) {
     session.levelState.board.objects.clear();
-    session.scratch.interpreterBoard.objects.clear();
-}
-
-MaskVector copyInterpreterBoardObjectsAsCellMajor(const FullState& session) {
-    return session.levelState.board.objects;
-}
-
-void syncPersistentBoardFromScratch(FullState& session) {
-    (void)session;
-}
-
-void syncPersistentLevelStateFromScratch(FullState& session) {
-    syncPersistentBoardFromScratch(session);
 }
 
 const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset) {
@@ -5339,7 +5324,6 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
     result.ui_audio_event_count = out.uiAudio.size();
     result.ui_audio_events = out.uiAudio.empty() ? nullptr : out.uiAudio.data();
     rebuildMasks(session);
-    syncPersistentLevelStateFromScratch(session);
     return out;
 }
 
@@ -5557,7 +5541,6 @@ ps_step_result turnOnce(FullState& session, ps_input input, RuntimeStepOptions o
         const SpecializedFullTurnOutcome outcome = session.game->specializedFullTurn->step(session, input, options);
         if (outcome.handled) {
             addCounter(gRuntimeCounters.specializedFullTurnHits);
-            syncPersistentLevelStateFromScratch(session);
             gThreadTurnResult = TurnResult{};
             gThreadTurnResult.core = outcome.result;
             return outcome.result;
@@ -5620,7 +5603,6 @@ ps_step_result tick(FullState& session, RuntimeStepOptions options) {
         const SpecializedFullTurnOutcome outcome = session.game->specializedFullTurn->tick(session, options);
         if (outcome.handled) {
             addCounter(gRuntimeCounters.specializedFullTurnHits);
-            syncPersistentLevelStateFromScratch(session);
             return outcome.result;
         }
         addCounter(gRuntimeCounters.specializedFullTurnFallbacks);

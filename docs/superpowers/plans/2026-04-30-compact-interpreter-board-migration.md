@@ -64,8 +64,9 @@ rather than different state layouts.
 - 2026-04-30: Retargeted the low-level runtime/search/solver board helpers so
   live object reads, writes, snapshots, restart/checkpoint storage, compact
   oracle export, and solver keys use `PersistentLevelState::board.objects`.
-  `Scratch::interpreterBoard.objects` remains only as a compatibility mirror
-  maintained by the legacy loader/clear helpers.
+- 2026-04-30: Removed `Scratch::interpreterBoard` and the no-op scratch-to-
+  persistent sync API. Level load/materialization helpers now name the
+  persistent board directly.
 
 ## Test Plan
 

@@ -81,7 +81,7 @@ void materializeCompactBridgeState(
     session.meta.level.height = dimensions.height;
     session.meta.levelDimensions = dimensions;
     const int32_t tileCount = dimensions.width * dimensions.height;
-    setInterpreterBoardObjectsFromCellMajor(session, levelState.board.objects);
+    setPersistentBoardObjectsFromCellMajor(session, levelState.board.objects);
     const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * std::max(game.strideMovement, 0));
     session.scratch.liveMovements.assign(movementWordCount, 0);
     if (scratch.liveMovements.size() == movementWordCount) {
@@ -96,7 +96,6 @@ void materializeCompactBridgeState(
     if (levelState.rng.s.size() == session.levelState.rng.s.size()) {
         session.levelState.rng = levelState.rng;
     }
-    syncPersistentLevelStateFromScratch(session);
     markCompactBridgeFullStateDirty(session);
     compiledRuleRebuildMasks(session);
 }

@@ -624,9 +624,9 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
     session.meta = base.meta;
     const int32_t tileCount = currentLevelWidth(session) * currentLevelHeight(session);
     if (session.game != nullptr) {
-        puzzlescript::setInterpreterBoardObjectsFromCellMajor(session, state.board.objects);
+        puzzlescript::setPersistentBoardObjectsFromCellMajor(session, state.board.objects);
     } else {
-        puzzlescript::clearInterpreterBoardObjects(session);
+        puzzlescript::clearPersistentBoardObjects(session);
     }
     const size_t movementWordCount = static_cast<size_t>(std::max(tileCount, 0) * (session.game ? session.game->strideMovement : 0));
     session.scratch.liveMovements.assign(movementWordCount, 0);
@@ -638,7 +638,6 @@ void materializePersistentLevelStateIntoFullState(const PersistentLevelState& st
     session.levelState.rng.i = state.rng.i;
     session.levelState.rng.j = state.rng.j;
     session.levelState.rng.valid = state.rng.valid;
-    puzzlescript::syncPersistentLevelStateFromScratch(session);
     markMaterializedFullStateDirty(session);
 }
 
