@@ -2656,7 +2656,7 @@ let sfxCreateMask = null;
 let sfxDestroyMask = null;
 
 /* returns a bool indicating if anything changed */
-function processInput(dir, dontDoWin, dontModify) {
+function processInput(dir, dontDoWin, dontModify, skipAgainProbe) {
 	againing = false;
 
 	let bak = backupLevel();
@@ -2813,7 +2813,7 @@ function processInput(dir, dontDoWin, dontModify) {
 	}
 
 	// Factorized command-queue processing
-	let modified = processCommandQueue(bak, dontModify, dontDoWin, inputindex);
+	let modified = processCommandQueue(bak, dontModify, dontDoWin, inputindex, skipAgainProbe);
 
 	if (verbose_logging) {
 		consoleCacheDump();
@@ -2846,7 +2846,7 @@ function playSounds(seedsToPlay_CantMove, seedsToPlay_CanMove, sfx_CreationMasks
 	}
 }
 
-function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
+function processCommandQueue(bak, dontModify, dontDoWin, inputDir, skipAgainProbe) {
 	// Process CANCEL command
 	const cancelIndex = level.commandQueue.indexOf('cancel');
 	if (cancelIndex >= 0) {
@@ -2950,24 +2950,32 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 		let againIndex = level.commandQueue.indexOf('again');
 		if (againIndex >= 0 && modified) {
 			let r = level.commandQueueSourceRules[againIndex];
-			let oldVerboseLogging = verbose_logging;
-			let oldMessageText = messagetext;
-			verbose_logging = false;
-			if (processInput(-1, true, true)) {
-				verbose_logging = oldVerboseLogging;
+			if (skipAgainProbe) {
 				if (verbose_logging) {
 					consolePrintFromRule('AGAIN command executed, with changes detected - will execute another turn.', r);
 				}
 				againing = true;
 				timer = 0;
 			} else {
-				verbose_logging = oldVerboseLogging;
-				if (verbose_logging) {
-					consolePrintFromRule("AGAIN command not executed, it wouldn't make any changes.", r);
+				let oldVerboseLogging = verbose_logging;
+				let oldMessageText = messagetext;
+				verbose_logging = false;
+				if (processInput(-1, true, true)) {
+					verbose_logging = oldVerboseLogging;
+					if (verbose_logging) {
+						consolePrintFromRule('AGAIN command executed, with changes detected - will execute another turn.', r);
+					}
+					againing = true;
+					timer = 0;
+				} else {
+					verbose_logging = oldVerboseLogging;
+					if (verbose_logging) {
+						consolePrintFromRule("AGAIN command not executed, it wouldn't make any changes.", r);
+					}
 				}
+				verbose_logging = oldVerboseLogging;
+				messagetext = oldMessageText;
 			}
-			verbose_logging = oldVerboseLogging;
-			messagetext = oldMessageText;
 		}
 	}
 

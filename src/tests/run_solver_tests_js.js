@@ -600,7 +600,7 @@ function hashCurrentState() {
 function settleAgain() {
     for (let pass = 0; pass < 500 && againing; pass++) {
         againing = false;
-        processInput(-1);
+        processInput(-1, undefined, undefined, true);
     }
 }
 
@@ -618,7 +618,7 @@ function stepSolverAction(action) {
         }
         changed = true;
     } else {
-        changed = Boolean(processInput(action.input));
+        changed = Boolean(processInput(action.input, undefined, undefined, true));
     }
     settleAgain();
     const solved = changed && (curlevel !== beforeLevel || (!beforeTitle && titleScreen));
