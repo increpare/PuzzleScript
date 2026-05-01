@@ -11,9 +11,9 @@ const ROOT = path.resolve(__dirname, '..');
 const RUNTIMES = ['js', 'native_interpreter', 'hybrid', 'compiled'];
 const RUNTIME_LABELS = {
   js: 'JS',
-  native_interpreter: 'Native Interpreter',
-  hybrid: 'Hybrid',
-  compiled: 'Compiled',
+  native_interpreter: 'C++ Interpreter',
+  hybrid: 'C++ Hybrid',
+  compiled: 'C++ Compiled',
 };
 
 function parseArgs(argv) {
@@ -85,7 +85,7 @@ function usage(exitCode) {
     '  --quick                    Use one repeat and smaller generator sample count',
     '  --profile                  Run optional native profiler artifact collection',
     '  --runs N                   Timing repeats for comparable suites',
-    '  --solver-timeout-ms N      Solver timeout for JS baseline and focus runs',
+    '  --solver-timeout-ms N      Native/C++ solver focus timeout',
     '  --generator-samples N      Generator samples per preset',
     '  --generator-runs N         Generator runs per preset',
     '  --jobs N|auto              Comparable benchmark jobs (default: 1)',
@@ -271,6 +271,19 @@ function ratioVsJs(jsMs, runtimeMs) {
   return jsMs / runtimeMs;
 }
 
+function targetHasStatus(target, status) {
+  return Boolean(target && target.status_counts && target.status_counts[status] > 0);
+}
+
+function isComparableSolverTarget(target) {
+  return Boolean(
+    target &&
+    target.median &&
+    Number.isFinite(target.median.elapsed_ms) &&
+    !targetHasStatus(target, 'timeout')
+  );
+}
+
 function msFromNs(value) {
   return Number.isFinite(value) ? value / 1e6 : null;
 }
@@ -296,6 +309,10 @@ function formatMs(value) {
     return `${(value / 1000).toFixed(2)}s`;
   }
   return `${value.toFixed(1)}ms`;
+}
+
+function formatTimeout(value) {
+  return Number.isFinite(value) ? `${value}ms` : 'no limit';
 }
 
 function formatSpeedup(value) {
@@ -345,6 +362,7 @@ function collectInputs(options) {
     optional_profile: options.profile,
     runs: options.runs,
     solver_timeout_ms: options.solverTimeoutMs,
+    solver_js_timeout_ms: null,
     jobs: options.jobs,
     generator_samples: options.generatorSamples,
     generator_runs: options.generatorRuns,
@@ -592,10 +610,16 @@ function summarizeJsSolverTargets(targetSamples, runs) {
       compile_ms: median(row.samples.map((sample) => sample.compile_ms)),
       load_ms: median(row.samples.map((sample) => sample.load_ms)),
       clone_ms: median(row.samples.map((sample) => sample.clone_ms)),
+      snapshot_ms: median(row.samples.map((sample) => sample.snapshot_ms)),
       step_ms: median(row.samples.map((sample) => sample.step_ms)),
+      heuristic_ms: median(row.samples.map((sample) => sample.heuristic_ms)),
       hash_ms: median(row.samples.map((sample) => sample.hash_ms)),
       queue_ms: median(row.samples.map((sample) => sample.queue_ms)),
       reconstruct_ms: median(row.samples.map((sample) => sample.reconstruct_ms)),
+      strategy: row.samples[0] && row.samples[0].strategy,
+      heuristic: row.samples[0] && row.samples[0].heuristic,
+      hash_mode: row.samples[0] && row.samples[0].hash_mode,
+      snapshot_mode: row.samples[0] && row.samples[0].snapshot_mode,
     },
   }));
 
@@ -636,8 +660,11 @@ function runJsSolverBaseline(context, options, manifestTargets) {
         [
           'src/tests/run_solver_tests_js.js',
           'src/tests/solver_tests',
-          '--timeout-ms',
-          String(options.solverTimeoutMs),
+          '--no-timeout',
+          '--strategy',
+          'portfolio',
+          '--portfolio-bfs-ms',
+          String(Math.max(1, Math.floor(options.solverTimeoutMs / 6))),
           '--no-solutions',
           '--quiet',
           '--json',
@@ -646,7 +673,7 @@ function runJsSolverBaseline(context, options, manifestTargets) {
           '--level',
           String(target.level),
         ],
-        { suite: 'solver', timeoutMs: Math.max(60_000, options.solverTimeoutMs * 20) }
+        { suite: 'solver' }
       );
       if (run.status === 0) {
         try {
@@ -705,7 +732,9 @@ function summarizeNativeSolverBenchmark(runtime, json) {
     'compile_ms',
     'load_ms',
     'clone_ms',
+    'snapshot_ms',
     'step_ms',
+    'heuristic_ms',
     'hash_ms',
     'queue_ms',
     'frontier_pop_ms',
@@ -760,7 +789,8 @@ function buildSolverFocusRows(suite) {
     const [game, levelText] = key.split('#');
     const row = { key, game, level: Number(levelText), runtimes: {}, speedups_vs_js: {} };
     const jsTarget = findRuntimeTarget(suite.runtimes.js, key);
-    const jsElapsed = jsTarget && jsTarget.median && jsTarget.median.elapsed_ms;
+    const jsComparable = isComparableSolverTarget(jsTarget);
+    const jsElapsed = jsComparable && jsTarget.median && jsTarget.median.elapsed_ms;
     for (const runtime of RUNTIMES) {
       const target = findRuntimeTarget(suite.runtimes[runtime], key);
       if (!target) {
@@ -768,7 +798,9 @@ function buildSolverFocusRows(suite) {
       }
       row.runtimes[runtime] = target;
       const elapsed = target.median && target.median.elapsed_ms;
-      row.speedups_vs_js[runtime] = runtime === 'js' ? 1 : ratioVsJs(jsElapsed, elapsed);
+      row.speedups_vs_js[runtime] = runtime === 'js'
+        ? (jsComparable ? 1 : null)
+        : (isComparableSolverTarget(target) ? ratioVsJs(jsElapsed, elapsed) : null);
     }
     rows.push(row);
   }
@@ -793,6 +825,16 @@ function runSolverSuite(context, options) {
   const manifest = manifestPath ? readJsonIfExists(manifestPath) : null;
   const allManifestTargets = manifest && Array.isArray(manifest.targets) ? manifest.targets : [];
   const manifestTargets = options.quick ? allManifestTargets.slice(0, Math.min(5, allManifestTargets.length)) : allManifestTargets;
+  suite.scope = {
+    js_baseline: 'selected solver focus levels only',
+    native_baseline: 'selected solver focus levels only',
+    js_strategy: 'portfolio: native-timeout/6 BFS slice, then weighted A*',
+    js_heuristic: 'winconditions',
+    target_count: manifestTargets.length,
+    original_target_count: allManifestTargets.length,
+    quick_subset: options.quick,
+    js_solver_timeout_ms: null,
+  };
   const reportManifestPath = path.join(context.artifactsDir, 'solver_focus_manifest_used.json');
   if (manifest) {
     writeJson(reportManifestPath, {
@@ -838,14 +880,23 @@ function runSolverSuite(context, options) {
 
   finalizeSpeedups(suite);
   suite.focus_rows = buildSolverFocusRows(suite);
-  suite.biggest_wins = rankedSolverRows(suite.focus_rows, 'compiled', true).slice(0, 15);
-  suite.worst_underperformers = rankedSolverRows(suite.focus_rows, 'compiled', false).slice(0, 15);
+  suite.biggest_wins = rankedSolverRows(suite.focus_rows, 'compiled', true, { minSpeedup: 1 }).slice(0, 15);
+  suite.worst_underperformers = rankedSolverRows(suite.focus_rows, 'compiled', false, { maxSpeedup: 1 }).slice(0, 15);
+  const jsTimeoutCount = suite.focus_rows.filter((row) => targetHasStatus(row.runtimes.js, 'timeout')).length;
+  if (jsTimeoutCount > 0) {
+    context.warnings.push({
+      suite: 'solver',
+      message: `Omitted ${jsTimeoutCount} compiled focus row(s) from exact win/underperformer rankings because the JS baseline timed out unexpectedly.`,
+    });
+  }
   return suite;
 }
 
-function rankedSolverRows(rows, runtime, descending) {
+function rankedSolverRows(rows, runtime, descending, options = {}) {
   return rows
     .filter((row) => Number.isFinite(row.speedups_vs_js[runtime]))
+    .filter((row) => !Number.isFinite(options.minSpeedup) || row.speedups_vs_js[runtime] > options.minSpeedup)
+    .filter((row) => !Number.isFinite(options.maxSpeedup) || row.speedups_vs_js[runtime] < options.maxSpeedup)
     .map((row) => {
       const target = row.runtimes[runtime] || {};
       return {
@@ -1071,7 +1122,7 @@ function renderMarkdown(report, latestDir, runDir) {
   lines.push('');
   lines.push(`Generated: ${report.metadata.generated_at}`);
   lines.push(`Git: ${report.metadata.git_short_sha}${report.metadata.dirty ? ' (dirty)' : ''}`);
-  lines.push(`Mode: ${report.inputs.quick ? 'quick' : 'normal'}, runs=${report.inputs.runs}, jobs=${report.inputs.jobs}`);
+  lines.push(`Mode: ${report.inputs.quick ? 'quick' : 'normal'}, runs=${report.inputs.runs}, jobs=${report.inputs.jobs}, solver_timeout=${formatTimeout(report.inputs.solver_timeout_ms)}, js_solver_timeout=${formatTimeout(report.inputs.solver_js_timeout_ms)}`);
   lines.push('');
   lines.push('## Speedups vs JS');
   lines.push('');
@@ -1095,6 +1146,12 @@ function renderMarkdown(report, latestDir, runDir) {
   lines.push('');
   lines.push('## Solver Focus Highlights');
   lines.push('');
+  if (report.suites.solver && report.suites.solver.scope) {
+    const scope = report.suites.solver.scope;
+    const subset = scope.quick_subset ? ` quick subset of ${scope.original_target_count}` : '';
+    lines.push(`Scope: JS/native solver benchmarks run selected focus levels only (${scope.target_count}${subset}); JS solver timeout=${formatTimeout(scope.js_solver_timeout_ms)}; JS strategy=${scope.js_strategy || 'n/a'}.`);
+    lines.push('');
+  }
   appendRuntimeList(lines, report.suites.solver);
   if ((report.suites.solver.biggest_wins || []).length > 0) {
     lines.push('');
@@ -1290,6 +1347,9 @@ function renderHtml(report) {
     .speed-bad { color: var(--red); }
     .speed-neutral { color: var(--muted); }
     .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+    .table-wrap.compact { overflow-x: hidden; }
+    .table-wrap.compact table { min-width: 0; table-layout: fixed; }
+    .table-wrap.compact th, .table-wrap.compact td { overflow-wrap: anywhere; }
     table { width: 100%; border-collapse: collapse; min-width: 760px; }
     th, td { padding: 8px 10px; border-bottom: 1px solid #edf0f5; text-align: left; vertical-align: top; }
     th { position: sticky; top: 0; z-index: 1; background: #f1f4f9; color: #303a48; cursor: pointer; font-weight: 650; }
@@ -1304,6 +1364,28 @@ function renderHtml(report) {
       background: var(--panel);
     }
     .bars { display: grid; gap: 8px; }
+    .legend {
+      display: flex;
+      gap: 10px 14px;
+      flex-wrap: wrap;
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+    .swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      flex: 0 0 auto;
+    }
+    .swatch.compile { background: #2563eb; }
+    .swatch.replay { background: #0f8a5f; }
+    .swatch.session { background: #b7791f; }
+    .swatch.load { background: #6d5bd0; }
+    .swatch.serialize { background: #b42318; }
+    .swatch.other { background: #718096; }
     .bar-row {
       display: grid;
       grid-template-columns: minmax(120px, 190px) 1fr minmax(70px, auto);
@@ -1347,7 +1429,7 @@ function renderHtml(report) {
   <script>
     const report = window.REPORT;
     const runtimes = ['js', 'native_interpreter', 'hybrid', 'compiled'];
-    const labels = { js: 'JS', native_interpreter: 'Native Interpreter', hybrid: 'Hybrid', compiled: 'Compiled' };
+    const labels = { js: 'JS', native_interpreter: 'C++ Interpreter', hybrid: 'C++ Hybrid', compiled: 'C++ Compiled' };
     const views = [
       ['overview', 'Overview'],
       ['simulation', 'Simulation'],
@@ -1360,8 +1442,9 @@ function renderHtml(report) {
     const fmtNum = value => Number.isFinite(value) ? (Math.abs(value) >= 1000000 ? (value / 1000000).toFixed(1) + 'm' : Math.abs(value) >= 1000 ? (value / 1000).toFixed(1) + 'k' : value.toFixed(value % 1 ? 1 : 0)) : 'n/a';
     const fmtSpeed = value => Number.isFinite(value) ? value.toFixed(2) + 'x' : 'n/a';
     const fmtPct = value => Number.isFinite(value) ? (value * 100).toFixed(1) + '%' : 'n/a';
+    const fmtTimeout = value => Number.isFinite(value) ? value + 'ms' : 'no limit';
     const speedClass = value => !Number.isFinite(value) ? 'speed-neutral' : value >= 1 ? 'speed-good' : 'speed-bad';
-    document.getElementById('meta').textContent = \`\${report.metadata.generated_at} | \${report.metadata.git_short_sha || 'unknown'}\${report.metadata.dirty ? ' dirty' : ''} | runs=\${report.inputs.runs} | jobs=\${report.inputs.jobs}\`;
+    document.getElementById('meta').textContent = \`\${report.metadata.generated_at} | \${report.metadata.git_short_sha || 'unknown'}\${report.metadata.dirty ? ' dirty' : ''} | runs=\${report.inputs.runs} | jobs=\${report.inputs.jobs} | solver=\${fmtTimeout(report.inputs.solver_timeout_ms)} | js solver=\${fmtTimeout(report.inputs.solver_js_timeout_ms)}\`;
 
     const tabs = document.getElementById('tabs');
     const app = document.getElementById('app');
@@ -1406,13 +1489,23 @@ function renderHtml(report) {
     }
 
     function renderBars(rows) {
-      const max = Math.max(1, ...rows.map(row => Number.isFinite(row.speedup_vs_js) ? row.speedup_vs_js : 0));
+      const max = Math.max(1, ...rows.map(row => Number.isFinite(row.median_ms) ? row.median_ms : 0));
       return \`<div class="bars">\${rows.map(row => \`
-        <div class="bar-row">
+        <div class="bar-row" title="\${row.label}: \${fmtMs(row.median_ms)} (\${fmtSpeed(row.speedup_vs_js)} vs JS)">
           <div>\${row.label}</div>
-          <div class="bar-track"><div class="bar-fill \${row.runtime}" style="width:\${Math.max(1, ((row.speedup_vs_js || 0) / max) * 100)}%"></div></div>
-          <strong class="\${speedClass(row.speedup_vs_js)}">\${fmtSpeed(row.speedup_vs_js)}</strong>
+          <div class="bar-track"><div class="bar-fill \${row.runtime}" style="width:\${Math.max(1, ((row.median_ms || 0) / max) * 100)}%"></div></div>
+          <strong class="\${speedClass(row.speedup_vs_js)}">\${fmtMs(row.median_ms)} (\${fmtSpeed(row.speedup_vs_js)})</strong>
         </div>\`).join('')}</div>\`;
+    }
+
+    function timingLegend() {
+      return \`<div class="legend" aria-label="Timing breakdown legend">
+        <span class="legend-item"><span class="swatch compile"></span>Compile</span>
+        <span class="legend-item"><span class="swatch session"></span>Session</span>
+        <span class="legend-item"><span class="swatch load"></span>Load / parse</span>
+        <span class="legend-item"><span class="swatch replay"></span>Replay / input</span>
+        <span class="legend-item"><span class="swatch serialize"></span>Serialize</span>
+      </div>\`;
     }
 
     function renderStackedTiming(suite) {
@@ -1422,17 +1515,18 @@ function renderHtml(report) {
         return { runtime, label: labels[runtime], timing: timing || {} };
       }).filter(row => Object.keys(row.timing).length > 0);
       if (rows.length === 0) return '<div class="empty">n/a</div>';
-      return \`<div class="bars">\${rows.map(row => {
+      return timingLegend() + \`<div class="bars">\${rows.map(row => {
         const t = row.timing;
         const parts = [
-          ['compile', t.source_compile_ms || 0],
-          ['session', t.session_create_ms || 0],
-          ['load', (t.level_load_ms || 0) + (t.testdata_parse_ms || 0)],
-          ['replay', t.replay_ms || t.process_input_ms || 0],
-          ['serialize', t.serialize_ms || 0],
+          ['compile', 'Compile', t.source_compile_ms || 0],
+          ['session', 'Session', t.session_create_ms || 0],
+          ['load', 'Load / parse', (t.level_load_ms || 0) + (t.testdata_parse_ms || 0)],
+          ['replay', 'Replay / input', t.replay_ms || t.process_input_ms || 0],
+          ['serialize', 'Serialize', t.serialize_ms || 0],
         ];
-        const total = parts.reduce((acc, item) => acc + item[1], 0) || row.timing.wall_ms || 1;
-        return \`<div class="bar-row"><div>\${row.label}</div><div class="stack">\${parts.map(([name, value]) => \`<div class="seg \${name}" title="\${name}: \${fmtMs(value)}" style="width:\${Math.max(0, value / total * 100)}%"></div>\`).join('')}</div><span>\${fmtMs(total)}</span></div>\`;
+        const total = parts.reduce((acc, item) => acc + item[2], 0) || row.timing.wall_ms || 1;
+        const title = parts.map(([, label, value]) => \`\${label}: \${fmtMs(value)}\`).join(' | ');
+        return \`<div class="bar-row" title="\${row.label} timing: \${title}"><div>\${row.label}</div><div class="stack" title="\${title}">\${parts.map(([name, label, value]) => \`<div class="seg \${name}" title="\${label}: \${fmtMs(value)}" aria-label="\${label}: \${fmtMs(value)}" style="width:\${Math.max(0, value / total * 100)}%"></div>\`).join('')}</div><span>\${fmtMs(total)}</span></div>\`;
       }).join('')}</div>\`;
     }
 
@@ -1441,17 +1535,30 @@ function renderHtml(report) {
       return report.warnings.map(w => \`<div class="warn"><strong>\${w.suite || 'general'}</strong>: \${escapeHtml(w.message)}\${w.log ? ' <code>' + escapeHtml(w.log) + '</code>' : ''}</div>\`).join('');
     }
 
+    function renderRunScope() {
+      const solver = report.suites.solver && report.suites.solver.scope;
+      const solverScope = solver
+        ? \`Selected focus levels only (\${solver.target_count}\${solver.quick_subset ? ' quick subset of ' + solver.original_target_count : ''}); JS solver timeout: \${fmtTimeout(solver.js_solver_timeout_ms)}\`
+        : 'n/a';
+      return renderTable([
+        { area: 'Simulation', scope: 'Simulation corpus' },
+        { area: 'Solver', scope: solverScope },
+        { area: 'Generation', scope: 'Native generator presets' },
+      ], [['area', 'Area'], ['scope', 'Scope']], false, true);
+    }
+
     function renderOverview() {
       const rows = report.overview.speedups || [];
       document.getElementById('view-overview').innerHTML = \`
         <div class="grid">
           \${panel('Runtime Speedups', renderSpeedTable(rows))}
+          \${panel('Run Scope', renderRunScope())}
           \${panel('Warnings', renderWarnings())}
         </div>
         <div class="grid">
-          \${panel('Slowest Workloads', renderTable((report.overview.slowest_workloads || []).slice(0, 12), [['suite', 'Suite'], ['label', 'Runtime'], ['median_ms', 'Median', fmtMs]]))}
-          \${panel('Biggest Compiled Wins', renderTable(report.overview.biggest_wins || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'Compiled', fmtMs]]))}
-          \${panel('Worst Compiled Underperformers', renderTable(report.overview.worst_underperformers || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'Compiled', fmtMs]]))}
+          \${panel('Slowest Workloads', renderTable((report.overview.slowest_workloads || []).slice(0, 12), [['suite', 'Suite'], ['label', 'Runtime'], ['median_ms', 'Median', fmtMs]], false, true))}
+          \${panel('Biggest C++ Compiled Wins', renderTable(report.overview.biggest_wins || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'C++ Compiled', fmtMs]], false, true))}
+          \${panel('Worst C++ Compiled Underperformers', renderTable(report.overview.worst_underperformers || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'C++ Compiled', fmtMs]], false, true))}
         </div>\`;
     }
 
@@ -1489,12 +1596,26 @@ function renderHtml(report) {
           \${panel('Focus Speedups vs JS', renderBars(rows))}
           \${panel('Timing Totals', renderSolverTiming(suite))}
         </div>
+        \${panel('Solver Scope', renderSolverScope(suite))}
         \${panel('Focus Scatter', renderScatter(suite.focus_rows || []))}
         \${panel('Focus Targets', renderFocusTable(suite.focus_rows || []))}
         <div class="grid">
-          \${panel('Largest Compiled Wins', renderTable(suite.biggest_wins || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'Compiled', fmtMs], ['generated', 'Generated', fmtNum]]))}
-          \${panel('Compiled Underperformers', renderTable(suite.worst_underperformers || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'Compiled', fmtMs], ['generated', 'Generated', fmtNum]]))}
+          \${panel('Largest C++ Compiled Wins', renderTable(suite.biggest_wins || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'C++ Compiled', fmtMs], ['generated', 'Generated', fmtNum]], false, true))}
+          \${panel('C++ Compiled Underperformers', renderTable(suite.worst_underperformers || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'C++ Compiled', fmtMs], ['generated', 'Generated', fmtNum]], false, true))}
         </div>\`;
+    }
+
+    function renderSolverScope(suite) {
+      const scope = suite.scope;
+      if (!scope) return '<div class="empty">n/a</div>';
+      const rows = [
+        { key: 'JS baseline', value: \`Selected focus levels only; timeout \${fmtTimeout(scope.js_solver_timeout_ms)}\` },
+        { key: 'JS strategy', value: scope.js_strategy || 'n/a' },
+        { key: 'JS heuristic', value: scope.js_heuristic || 'n/a' },
+        { key: 'Native/hybrid/compiled', value: 'Selected focus levels only' },
+        { key: 'Targets', value: \`\${scope.target_count}\${scope.quick_subset ? ' quick subset of ' + scope.original_target_count : ''}\` },
+      ];
+      return renderTable(rows, [['key', 'Item'], ['value', 'Value']], false, true);
     }
 
     function renderSolverTiming(suite) {
@@ -1507,12 +1628,14 @@ function renderHtml(report) {
         runtime: row.label,
         step: row.timing.step_ms,
         clone: row.timing.clone_ms,
+        snapshot: row.timing.snapshot_ms,
         hash: row.timing.hash_ms,
+        heuristic: row.timing.heuristic_ms,
         frontier: (row.timing.frontier_pop_ms || 0) + (row.timing.frontier_push_ms || 0),
         visited: (row.timing.visited_lookup_ms || 0) + (row.timing.visited_insert_ms || 0),
         heuristic: row.timing.heuristic_ms,
         unattributed: row.timing.unattributed_ms,
-      })), [['runtime', 'Runtime'], ['step', 'Step', fmtMs], ['clone', 'Clone', fmtMs], ['hash', 'Hash', fmtMs], ['frontier', 'Frontier', fmtMs], ['visited', 'Visited', fmtMs], ['heuristic', 'Heuristic', fmtMs], ['unattributed', 'Unattributed', fmtMs]]);
+      })), [['runtime', 'Runtime'], ['step', 'Step', fmtMs], ['clone', 'Restore', fmtMs], ['snapshot', 'Snapshot', fmtMs], ['hash', 'Hash', fmtMs], ['heuristic', 'Heuristic', fmtMs], ['frontier', 'Frontier', fmtMs], ['visited', 'Visited', fmtMs], ['unattributed', 'Unattributed', fmtMs]]);
     }
 
     function renderScatter(rows) {
@@ -1532,7 +1655,7 @@ function renderHtml(report) {
         <line x1="\${pad}" y1="\${h-pad}" x2="\${pad}" y2="\${pad}" stroke="#303a48"/>
         \${points.map(p => \`<circle cx="\${x(p.js).toFixed(1)}" cy="\${y(p.compiled).toFixed(1)}" r="4" fill="\${p.speedup >= 1 ? '#0f8a5f' : '#b42318'}"><title>\${escapeHtml(p.key)} JS=\${fmtMs(p.js)} compiled=\${fmtMs(p.compiled)} speedup=\${fmtSpeed(p.speedup)}</title></circle>\`).join('')}
         <text x="\${w/2}" y="\${h-6}" text-anchor="middle" fill="#5e6875">JS elapsed</text>
-        <text x="12" y="\${h/2}" text-anchor="middle" transform="rotate(-90 12 \${h/2})" fill="#5e6875">Compiled elapsed</text>
+        <text x="12" y="\${h/2}" text-anchor="middle" transform="rotate(-90 12 \${h/2})" fill="#5e6875">C++ compiled elapsed</text>
       </svg></div>\`;
     }
 
@@ -1550,7 +1673,7 @@ function renderHtml(report) {
         duplicates: row.runtimes.compiled && row.runtimes.compiled.median && row.runtimes.compiled.median.duplicates,
         max_frontier: row.runtimes.compiled && row.runtimes.compiled.median && row.runtimes.compiled.median.max_frontier,
       }));
-      return renderTable(mapped, [['key', 'Target'], ['js_ms', 'JS', fmtMs], ['native_ms', 'Native', fmtMs], ['hybrid_ms', 'Hybrid', fmtMs], ['compiled_ms', 'Compiled', fmtMs], ['compiled_speedup', 'Compiled Speedup', fmtSpeed], ['generated', 'Generated', fmtNum], ['expanded', 'Expanded', fmtNum], ['unique_states', 'Unique', fmtNum], ['duplicates', 'Duplicates', fmtNum], ['max_frontier', 'Max Frontier', fmtNum]], true);
+      return renderTable(mapped, [['key', 'Target'], ['js_ms', 'JS', fmtMs], ['native_ms', 'C++ Interpreter', fmtMs], ['hybrid_ms', 'C++ Hybrid', fmtMs], ['compiled_ms', 'C++ Compiled', fmtMs], ['compiled_speedup', 'C++ Compiled Speedup', fmtSpeed], ['generated', 'Generated', fmtNum], ['expanded', 'Expanded', fmtNum], ['unique_states', 'Unique', fmtNum], ['duplicates', 'Duplicates', fmtNum], ['max_frontier', 'Max Frontier', fmtNum]], true);
     }
 
     function renderGeneration() {
@@ -1602,7 +1725,7 @@ function renderHtml(report) {
         \${panel('Profiler Artifacts', suite.artifacts && suite.artifacts.length ? renderTable(suite.artifacts, [['label', 'Artifact'], ['path', 'Path']]) : '<div class="empty">Optional profiler was not run.</div>')}\`;
     }
 
-    function renderTable(rows, columns, filterable = false) {
+    function renderTable(rows, columns, filterable = false, compact = false) {
       rows = rows || [];
       if (rows.length === 0) return '<div class="empty">n/a</div>';
       const id = 'tbl-' + Math.random().toString(36).slice(2);
@@ -1613,7 +1736,7 @@ function renderHtml(report) {
         const html = formatter ? formatter(raw) : escapeHtml(raw === undefined || raw === null ? 'n/a' : raw);
         return \`<td data-key="\${key}" data-sort="\${escapeHtml(raw === undefined || raw === null ? '' : raw)}">\${html}</td>\`;
       }).join('')}</tr>\`).join('');
-      return \`\${toolbar}<div class="table-wrap"><table id="\${id}"><thead><tr>\${head}</tr></thead><tbody>\${body}</tbody></table></div>\`;
+      return \`\${toolbar}<div class="table-wrap\${compact ? ' compact' : ''}"><table id="\${id}"><thead><tr>\${head}</tr></thead><tbody>\${body}</tbody></table></div>\`;
     }
 
     window.sortTable = function(id, key) {
