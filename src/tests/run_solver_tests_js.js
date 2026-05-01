@@ -7,6 +7,7 @@ const path = require('path');
 
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
 
+const DEFAULT_STRATEGY = 'weighted-astar';
 const DIRECTION_ACTIONS = [
     { token: 'right', input: 3 },
     { token: 'up', input: 0 },
@@ -27,7 +28,7 @@ function parseArgs(argv) {
         corpusPath: null,
         solutionsDir: path.resolve('build/solver-solutions/js'),
         timeoutMs: 5000,
-        strategy: 'portfolio',
+        strategy: DEFAULT_STRATEGY,
         astarWeight: 2,
         portfolioBfsMs: null,
         progressEvery: 25,
@@ -762,7 +763,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
     const searchStarted = Date.now();
     const deadline = Number.isFinite(timeoutMs) ? searchStarted + timeoutMs : Infinity;
     const initialSnapshot = createSolverLevelSpecialization().capture();
-    const strategy = options.strategy || 'portfolio';
+    const strategy = options.strategy || DEFAULT_STRATEGY;
 
     const runMode = (mode, modeDeadline) => {
         const modeResult = createSolverResult(game, levelIndex, timeoutMs, compileMs);
@@ -829,6 +830,9 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                     modeResult.status = 'solved';
                     return modeResult;
                 }
+                if (!stepResult.changed) {
+                    continue;
+                }
 
                 const hashStart2 = performance.now();
                 const key = solverOps.hash();
@@ -873,9 +877,10 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
     };
 
     if (strategy === 'portfolio') {
-        const bfsDuration = Number.isFinite(timeoutMs)
-            ? Math.max(1, Math.floor(timeoutMs / 6))
-            : Math.max(0, options.portfolioBfsMs || 0);
+        const configuredBfsMs = Number.isFinite(options.portfolioBfsMs) ? options.portfolioBfsMs : null;
+        const bfsDuration = configuredBfsMs !== null
+            ? Math.max(0, Number.isFinite(timeoutMs) ? Math.min(configuredBfsMs, timeoutMs) : configuredBfsMs)
+            : (Number.isFinite(timeoutMs) ? Math.max(1, Math.floor(timeoutMs / 6)) : 0);
         const bfsDeadline = Math.min(searchStarted + bfsDuration, deadline);
         const bfs = bfsDuration > 0 ? runMode('bfs', bfsDeadline) : createSolverResult(game, levelIndex, timeoutMs, compileMs);
         mergeSearchResultTotals(result, bfs);

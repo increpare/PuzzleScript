@@ -541,21 +541,6 @@ function runSimulationSuite(context, options) {
       context.warnings.push({ suite: 'simulation', message: `JS simulation profile JSON parse failed: ${error.message}`, log: js.stdout_log });
     }
   }
-  const jsInstrumented = runCommand(
-    context,
-    'simulation-js-instrumented',
-    'node',
-    ['src/tests/run_tests_node.js', '--profile', '--profile-runs', '1', '--profile-json', '--sim-only', '--breakdown'],
-    { suite: 'simulation' }
-  );
-  if (jsInstrumented.status === 0 && suite.runtimes.js) {
-    try {
-      mergeSimulationInstrumentation(suite.runtimes.js, parseJsSimulation(JSON.parse(jsInstrumented.stdout)));
-    } catch (error) {
-      context.warnings.push({ suite: 'simulation', message: `JS simulation instrumentation JSON parse failed: ${error.message}`, log: jsInstrumented.stdout_log });
-    }
-  }
-
   const benchArgs = ['--jobs', String(options.jobs), '--progress-every', '0', '--repeat', String(options.runs), '--quiet', '--top-slow-cases', '10'];
   const instrumentedBenchArgs = ['--jobs', String(options.jobs), '--progress-every', '0', '--profile-timers', '--repeat', '1', '--quiet', '--top-slow-cases', '10'];
   const nativeSummary = path.join(context.artifactsDir, 'simulation_native_interpreter.json');
@@ -568,17 +553,6 @@ function runSimulationSuite(context, options) {
   );
   if (native.status === 0 && readJsonIfExists(nativeSummary)) {
     suite.runtimes.native_interpreter = parseNativeSimulation('native_interpreter', readJsonIfExists(nativeSummary));
-  }
-  const nativeInstrumentedSummary = path.join(context.artifactsDir, 'simulation_native_interpreter_instrumented.json');
-  const nativeInstrumented = runCommand(
-    context,
-    'simulation-native-interpreter-instrumented',
-    'build/native/puzzlescript_cpp',
-    ['test', 'simulation-corpus', 'src/tests/resources/testdata.js', ...instrumentedBenchArgs, '--json-summary-out', nativeInstrumentedSummary],
-    { suite: 'simulation' }
-  );
-  if (nativeInstrumented.status === 0 && suite.runtimes.native_interpreter && readJsonIfExists(nativeInstrumentedSummary)) {
-    mergeSimulationInstrumentation(suite.runtimes.native_interpreter, parseNativeSimulation('native_interpreter', readJsonIfExists(nativeInstrumentedSummary)));
   }
 
   const hybridSummary = path.join(context.artifactsDir, 'simulation_hybrid.json');
@@ -597,22 +571,6 @@ function runSimulationSuite(context, options) {
   if (hybrid.status === 0 && readJsonIfExists(hybridSummary)) {
     suite.runtimes.hybrid = parseNativeSimulation('hybrid', readJsonIfExists(hybridSummary));
   }
-  const hybridInstrumentedSummary = path.join(context.artifactsDir, 'simulation_hybrid_instrumented.json');
-  const hybridInstrumented = runCommand(
-    context,
-    'simulation-hybrid-instrumented',
-    'make',
-    [
-      '--no-print-directory',
-      'simulation_corpus_compiled_rulegroups_benchmark',
-      'COMPILED_RULES_OPT_LEVEL=3',
-      `SIMULATION_CORPUS_BENCH_ARGS=--jobs ${options.jobs} --progress-every 0 --profile-timers --repeat 1 --quiet --top-slow-cases 10 --json-summary-out ${hybridInstrumentedSummary}`,
-    ],
-    { suite: 'simulation' }
-  );
-  if (hybridInstrumented.status === 0 && suite.runtimes.hybrid && readJsonIfExists(hybridInstrumentedSummary)) {
-    mergeSimulationInstrumentation(suite.runtimes.hybrid, parseNativeSimulation('hybrid', readJsonIfExists(hybridInstrumentedSummary)));
-  }
 
   const compiledSummary = path.join(context.artifactsDir, 'simulation_compiled.json');
   const compiled = runCommand(
@@ -629,6 +587,48 @@ function runSimulationSuite(context, options) {
   );
   if (compiled.status === 0 && readJsonIfExists(compiledSummary)) {
     suite.runtimes.compiled = parseNativeSimulation('compiled', readJsonIfExists(compiledSummary));
+  }
+
+  const jsInstrumented = runCommand(
+    context,
+    'simulation-js-instrumented',
+    'node',
+    ['src/tests/run_tests_node.js', '--profile', '--profile-runs', '1', '--profile-json', '--sim-only', '--breakdown'],
+    { suite: 'simulation' }
+  );
+  if (jsInstrumented.status === 0 && suite.runtimes.js) {
+    try {
+      mergeSimulationInstrumentation(suite.runtimes.js, parseJsSimulation(JSON.parse(jsInstrumented.stdout)));
+    } catch (error) {
+      context.warnings.push({ suite: 'simulation', message: `JS simulation instrumentation JSON parse failed: ${error.message}`, log: jsInstrumented.stdout_log });
+    }
+  }
+  const nativeInstrumentedSummary = path.join(context.artifactsDir, 'simulation_native_interpreter_instrumented.json');
+  const nativeInstrumented = runCommand(
+    context,
+    'simulation-native-interpreter-instrumented',
+    'build/native/puzzlescript_cpp',
+    ['test', 'simulation-corpus', 'src/tests/resources/testdata.js', ...instrumentedBenchArgs, '--json-summary-out', nativeInstrumentedSummary],
+    { suite: 'simulation' }
+  );
+  if (nativeInstrumented.status === 0 && suite.runtimes.native_interpreter && readJsonIfExists(nativeInstrumentedSummary)) {
+    mergeSimulationInstrumentation(suite.runtimes.native_interpreter, parseNativeSimulation('native_interpreter', readJsonIfExists(nativeInstrumentedSummary)));
+  }
+  const hybridInstrumentedSummary = path.join(context.artifactsDir, 'simulation_hybrid_instrumented.json');
+  const hybridInstrumented = runCommand(
+    context,
+    'simulation-hybrid-instrumented',
+    'make',
+    [
+      '--no-print-directory',
+      'simulation_corpus_compiled_rulegroups_benchmark',
+      'COMPILED_RULES_OPT_LEVEL=3',
+      `SIMULATION_CORPUS_BENCH_ARGS=--jobs ${options.jobs} --progress-every 0 --profile-timers --repeat 1 --quiet --top-slow-cases 10 --json-summary-out ${hybridInstrumentedSummary}`,
+    ],
+    { suite: 'simulation' }
+  );
+  if (hybridInstrumented.status === 0 && suite.runtimes.hybrid && readJsonIfExists(hybridInstrumentedSummary)) {
+    mergeSimulationInstrumentation(suite.runtimes.hybrid, parseNativeSimulation('hybrid', readJsonIfExists(hybridInstrumentedSummary)));
   }
   const compiledInstrumentedSummary = path.join(context.artifactsDir, 'simulation_compiled_instrumented.json');
   const compiledInstrumented = runCommand(
@@ -1474,10 +1474,11 @@ function renderHtml(report) {
     .speed-neutral { color: var(--muted); }
     .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
     .table-wrap.compact { overflow-x: auto; }
-    .table-wrap.compact table { min-width: 0; table-layout: auto; }
-    .table-wrap.compact th, .table-wrap.compact td { overflow-wrap: anywhere; }
-    .table-wrap.compact .num { white-space: nowrap; text-align: right; }
-    .table-wrap.compact .target { min-width: 14rem; }
+    .table-wrap.compact table { min-width: max-content; table-layout: auto; }
+    .table-wrap.compact th { white-space: nowrap; }
+    .table-wrap.compact td { overflow-wrap: normal; }
+    .table-wrap.compact .num { white-space: nowrap; text-align: right; min-width: 4.5rem; }
+    .table-wrap.compact .target { min-width: 16rem; max-width: 26rem; overflow-wrap: anywhere; }
     .wide-grid {
       grid-template-columns: minmax(min(100%, 340px), 0.85fr) minmax(min(100%, 520px), 1.35fr);
     }
@@ -1546,6 +1547,9 @@ function renderHtml(report) {
     .warn { border-left: 4px solid var(--amber); padding: 8px 10px; background: #fff8e6; margin-bottom: 8px; border-radius: 4px; }
     .empty { color: var(--muted); padding: 18px; }
     code { background: #eef2f8; padding: 1px 4px; border-radius: 4px; }
+    @media (max-width: 900px) {
+      .grid, .chart-grid, .wide-grid { grid-template-columns: 1fr; }
+    }
     @media (max-width: 760px) {
       .wrap { padding: 14px; }
       .bar-row, .bar-row.timing-row { grid-template-columns: 1fr; gap: 4px; min-width: 0; }
