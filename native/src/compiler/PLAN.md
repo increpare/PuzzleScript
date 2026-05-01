@@ -183,6 +183,14 @@ reported `row_scans=318425380` and `candidate_cells_tested=2380022380`,
 far above the interpreter path. That makes rule matcher candidate selection the
 next optimization target.
 
+Follow-up on 2026-05-01: compiled compact setup now reuses clean object mask
+caches instead of rescanning the persistent board every generated turn. A
+repeat-1 compiled-compact corpus run still passed 469/469 and reported
+`compact_turn_setup_ns=4387765`, with total replay essentially neutral
+(`replay_ms=1965`). The solver focus run remains the better optimization
+signal for this phase: interpreted vs compiler-mode compact reported
+`elapsed_ms=261.0->194.0` and `step_ms=171.9->113.7`.
+
 For a faster local signal while working on generated scanning, use:
 
 ```sh

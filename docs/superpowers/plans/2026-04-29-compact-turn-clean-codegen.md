@@ -1121,6 +1121,19 @@ Solver key hashing cleanup, 2026-04-30:
   compact median at `elapsed_ms=262.0->194.0`; treat the elapsed number as a
   noisy one-run benchmark, but the key-building cleanup is structurally better.
 
+Compact object-mask setup reuse, 2026-05-01:
+  Generated compact turn setup now reuses clean `Scratch` object row/column/board
+  masks instead of clearing and rescanning the persistent board every turn.
+  Movement masks are still reset per turn because live movement state is
+  ephemeral, but object masks can safely carry across turns when their specific
+  dirty flags say they are clean. Full compiled-compact simulation still passes
+  `469/469` with zero unhandled compiled turns. A repeat-1 full-corpus run
+  reported `replay_ms=1965` and `compact_turn_setup_ns=4387765`; this is
+  roughly neutral on total corpus replay time but removes most setup bucket
+  pressure. A one-run solver focus report remained favorable:
+  `elapsed_ms=261.0->194.0` (`0.743x`), `step_ms=171.9->113.7` (`0.661x`),
+  native compact `50/50`, bridge `0`.
+
 Rejected anchored-row scan experiment, 2026-04-30:
   An object-cell-index anchored row-scan prototype was measured and backed out
   rather than committed. Even after collapsing the generated scanner into a
