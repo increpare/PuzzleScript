@@ -68,6 +68,7 @@ struct ExecuteTurnOptions {
     bool ignoreRestartCommand = false;
     bool ignoreWin = false;
     bool dontModify = false;
+    bool probeAgain = true;
     bool* observedModification = nullptr;
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules = nullptr;
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules = nullptr;
@@ -5273,10 +5274,15 @@ TurnResult executeTurn(FullState& session, int32_t directionMask, ExecuteTurnOpt
     bool againWouldChange = false;
     bool againWouldModify = false;
     if (!won && hasAgain && modified) {
-        const auto audioBeforeAgainProbe = out.audio;
-        againWouldChange = wouldAgainChange(session, &againWouldModify, options.emitAudio);
-        if (options.emitAudio) {
-            out.audio = audioBeforeAgainProbe;
+        if (options.probeAgain) {
+            const auto audioBeforeAgainProbe = out.audio;
+            againWouldChange = wouldAgainChange(session, &againWouldModify, options.emitAudio);
+            if (options.emitAudio) {
+                out.audio = audioBeforeAgainProbe;
+            }
+        } else {
+            againWouldChange = true;
+            againWouldModify = true;
         }
     }
     if (ruleDebugEnabled()) {
@@ -5414,6 +5420,7 @@ ps_step_result interpretedTurnOnceWithSpecializedRulegroups(
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
         .solverMode = options.solverMode,
+        .probeAgain = options.againPolicy != AgainPolicy::Drain,
         .applyEarlyRules = applyEarlyRules,
         .applyLateRules = applyLateRules,
     });
@@ -5427,12 +5434,14 @@ ps_step_result interpretedTurnWithSpecializedRulegroups(
     SpecializedRulegroupsForInterpretedTurnFn applyEarlyRules,
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 ) {
-    RuntimeStepOptions yieldOptions = options;
-    yieldOptions.againPolicy = AgainPolicy::Yield;
+    RuntimeStepOptions singleTurnOptions = options;
+    if (options.againPolicy != AgainPolicy::Drain) {
+        singleTurnOptions.againPolicy = AgainPolicy::Yield;
+    }
     ps_step_result result = interpretedTurnOnceWithSpecializedRulegroups(
         session,
         input,
-        yieldOptions,
+        singleTurnOptions,
         applyEarlyRules,
         applyLateRules
     );
@@ -5445,7 +5454,7 @@ ps_step_result interpretedTurnWithSpecializedRulegroups(
         const ps_step_result tickResult = interpretedTurnOnceWithSpecializedRulegroups(
             session,
             PS_INPUT_TICK,
-            yieldOptions,
+            singleTurnOptions,
             applyEarlyRules,
             applyLateRules
         );
@@ -5465,6 +5474,7 @@ ps_step_result interpretedTickWithSpecializedRulegroups(
         .recordRestartUndo = options.playableUndo,
         .emitAudio = options.emitAudio,
         .solverMode = options.solverMode,
+        .probeAgain = options.againPolicy != AgainPolicy::Drain,
         .applyEarlyRules = applyEarlyRules,
         .applyLateRules = applyLateRules,
     });
@@ -5640,6 +5650,12 @@ ps_step_result turnOnce(FullState& session, ps_input input, RuntimeStepOptions o
 }
 
 TurnResult turnResult(FullState& session, ps_input input, RuntimeStepOptions options) {
+    if (options.againPolicy == AgainPolicy::Drain && input != PS_INPUT_TICK) {
+        const ps_step_result drainedCore = turnOnce(session, input, options);
+        TurnResult acc = gThreadTurnResult;
+        acc.core = drainedCore;
+        return acc;
+    }
     RuntimeStepOptions yieldOptions = options;
     yieldOptions.againPolicy = AgainPolicy::Yield;
     (void)turnOnce(session, input, yieldOptions);
