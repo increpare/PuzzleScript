@@ -2131,6 +2131,26 @@ function generateTuples(lists) {
 	return tuples;
 }
 
+function applyTwoRowTuples(rule, level, matches, delta) {
+	const row0 = matches[0];
+	const row1 = matches[1];
+	const tuple = [null, null];
+	let tupleIndex = 0;
+	let result = false;
+
+	for (let row1Index = 0; row1Index < row1.length; row1Index++) {
+		tuple[1] = row1[row1Index];
+		for (let row0Index = 0; row0Index < row0.length; row0Index++) {
+			tuple[0] = row0[row0Index];
+			let success = rule.applyAt(level, tuple, tupleIndex > 0, delta);
+			result = success || result;
+			tupleIndex++;
+		}
+	}
+
+	return result;
+}
+
 Rule.prototype.findMatches = function () {
 	if (!this.ruleMask.bitsSetInArray(level.mapCellContents.data))
 		return [];
@@ -2346,6 +2366,8 @@ Rule.prototype.tryApply = function (level) {
 				let success = this.applyAt(level, tuple, shouldCheck, delta);
 				result = success || result;
 			}
+		} else if (this.rulePlanMetadata.row_count === 2) {
+			result = applyTwoRowTuples(this, level, matches, delta);
 		} else {
 			let tuples = generateTuples(matches);
 			for (let tupleIndex = 0; tupleIndex < tuples.length; tupleIndex++) {
@@ -2457,10 +2479,25 @@ function applyRandomRuleGroup(level, ruleGroup) {
 		let rule = ruleGroup[ruleIndex];
 		let ruleMatches = rule.findMatches(level);
 		if (ruleMatches.length > 0) {
-			let tuples = generateTuples(ruleMatches);
-			for (let j = 0; j < tuples.length; j++) {
-				let tuple = tuples[j];
-				matches.push([ruleIndex, tuple]);
+			if (ruleMatches.length === 1) {
+				const rowMatches = ruleMatches[0];
+				for (let j = 0; j < rowMatches.length; j++) {
+					matches.push([ruleIndex, [rowMatches[j]]]);
+				}
+			} else if (ruleMatches.length === 2) {
+				const row0 = ruleMatches[0];
+				const row1 = ruleMatches[1];
+				for (let row1Index = 0; row1Index < row1.length; row1Index++) {
+					for (let row0Index = 0; row0Index < row0.length; row0Index++) {
+						matches.push([ruleIndex, [row0[row0Index], row1[row1Index]]]);
+					}
+				}
+			} else {
+				let tuples = generateTuples(ruleMatches);
+				for (let j = 0; j < tuples.length; j++) {
+					let tuple = tuples[j];
+					matches.push([ruleIndex, tuple]);
+				}
 			}
 		}
 	}
