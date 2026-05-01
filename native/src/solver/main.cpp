@@ -37,9 +37,9 @@ using TimePoint = Clock::time_point;
 using puzzlescript::FullState;
 using puzzlescript::Game;
 using puzzlescript::LevelDimensions;
+using puzzlescript::MaskWord;
 using puzzlescript::MaskWordUnsigned;
 using puzzlescript::PersistentLevelState;
-using puzzlescript::kMaskWordBits;
 using StateKey = puzzlescript::search::StateKey;
 using StateKeyHash = puzzlescript::search::StateKeyHash;
 using SearchMode = puzzlescript::search::SearchMode;
@@ -572,14 +572,6 @@ Options parseArgs(int argc, char** argv) {
     return options;
 }
 
-uint32_t compactWordTrailingZeros(MaskWordUnsigned value) {
-    if constexpr (sizeof(MaskWordUnsigned) <= sizeof(unsigned int)) {
-        return static_cast<uint32_t>(__builtin_ctz(static_cast<unsigned int>(value)));
-    } else {
-        return static_cast<uint32_t>(__builtin_ctzll(static_cast<unsigned long long>(value)));
-    }
-}
-
 PersistentLevelState persistentLevelStateFromFullState(const FullState& session) {
     PersistentLevelState state;
     state.rng.s = session.levelState.rng.s;
@@ -928,17 +920,6 @@ int32_t heuristicScore(FullState& session, puzzlescript::search::HeuristicScratc
     return puzzlescript::search::winConditionHeuristicScore(session, options, scratch);
 }
 
-bool compactObjectPresent(
-    const PersistentLevelState& state,
-    const Game& game,
-    int32_t objectId,
-    int32_t tileIndex
-) {
-    const size_t word = static_cast<size_t>(tileIndex * game.strideObject + puzzlescript::maskWordIndex(static_cast<uint32_t>(objectId)));
-    return word < state.board.objects.size()
-        && (state.board.objects[word] & puzzlescript::maskBit(static_cast<uint32_t>(objectId))) != 0;
-}
-
 bool compactMatchesFilter(
     const PersistentLevelState& state,
     const Game& game,
@@ -949,24 +930,28 @@ bool compactMatchesFilter(
     if (filter == nullptr) {
         return false;
     }
+    const size_t offset = static_cast<size_t>(tileIndex) * static_cast<size_t>(game.strideObject);
+    if (offset + static_cast<size_t>(game.wordCount) > state.board.objects.size()) {
+        return false;
+    }
+    const MaskWord* cell = state.board.objects.data() + offset;
     bool sawFilterBit = false;
-    for (int32_t word = 0; word < game.wordCount; ++word) {
-        MaskWordUnsigned bits = static_cast<MaskWordUnsigned>(filter[static_cast<size_t>(word)]);
-        while (bits != 0) {
-            sawFilterBit = true;
-            const uint32_t bit = compactWordTrailingZeros(bits);
-            const int32_t objectId = word * static_cast<int32_t>(kMaskWordBits) + static_cast<int32_t>(bit);
-            const bool present = compactObjectPresent(state, game, objectId, tileIndex);
-            if (aggregate && !present) {
+    if (aggregate) {
+        for (int32_t word = 0; word < game.wordCount; ++word) {
+            const MaskWord required = filter[static_cast<size_t>(word)];
+            sawFilterBit = sawFilterBit || required != 0;
+            if ((cell[static_cast<size_t>(word)] & required) != required) {
                 return false;
             }
-            if (!aggregate && present) {
-                return true;
-            }
-            bits &= bits - 1;
+        }
+        return sawFilterBit;
+    }
+    for (int32_t word = 0; word < game.wordCount; ++word) {
+        if ((cell[static_cast<size_t>(word)] & filter[static_cast<size_t>(word)]) != 0) {
+            return true;
         }
     }
-    return aggregate && sawFilterBit;
+    return false;
 }
 
 void compactMatchingDistanceField(

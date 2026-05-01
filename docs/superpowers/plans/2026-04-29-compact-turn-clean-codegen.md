@@ -1205,6 +1205,24 @@ Rejected one-cell immediate-apply row scan, 2026-05-01:
   mutation churns scratch/dirty bookkeeping and gives the optimizer a less
   friendly loop even when the semantic case looks simple.
 
+Compact heuristic direct mask matching, 2026-05-01:
+  The compact solver heuristic now tests win-condition filters directly against
+  the cell-major board words instead of iterating each object bit and calling a
+  per-object presence helper. This matches the normal cell-major helper shape
+  and removes a small duplicate ontology from the solver.
+
+  50-target compiler-mode compact solver focus comparison, `SOLVER_FOCUS_RUNS=3`:
+  - Median `heuristic_ms`: `11.60 ms -> 8.91 ms` (`0.883x` median ratio).
+  - Median elapsed stayed effectively flat/noisy: `192 ms -> 193 ms`.
+  - Median step time moved `112.083 ms -> 115.652 ms`; this is likely run noise
+    or search-shape variance rather than a turn-core effect.
+  - Per-target elapsed movement: 16 improved, 25 regressed, 9 unchanged.
+
+  Conclusion: keep this as a cleanup plus targeted heuristic-bucket win, not as
+  an overall solver elapsed win. The next graph-side target is still hash time,
+  especially on `constellationz`, where `hash_ms` remains larger than the
+  improved heuristic bucket.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
