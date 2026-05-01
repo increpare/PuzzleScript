@@ -91,6 +91,7 @@ enum class CompiledRuleCommandKind {
 
 uint64_t compiledRulesHashSource(std::string_view source);
 void attachLinkedCompiledRules(Game& game, std::string_view source);
+void attachLinkedCompiledRules(Game& game, uint64_t sourceHash);
 
 const MaskWord* compiledRuleMaskPtr(const Game& game, MaskOffset offset);
 SpecializedCompactTurnOutcome compactStateInterpretedTurnBridge(

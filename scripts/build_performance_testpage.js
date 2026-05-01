@@ -451,21 +451,69 @@ function parseJsSimulation(json) {
   });
 }
 
+function mergeSimulationInstrumentation(summary, instrumentation) {
+  if (!summary || !instrumentation) {
+    return summary;
+  }
+  summary.instrumentation = {
+    median_ms: instrumentation.median_ms,
+    average_ms: instrumentation.average_ms,
+    aggregate_wall_ms: instrumentation.aggregate_wall_ms,
+    repeat_count: instrumentation.repeat_count,
+    timing_breakdown_ms: instrumentation.timing_breakdown_ms || {},
+    status_summary: instrumentation.status_summary,
+  };
+  if (instrumentation.runtime_counters) {
+    summary.runtime_counters = instrumentation.runtime_counters;
+    summary.instrumentation.runtime_counters = instrumentation.runtime_counters;
+  }
+  if (instrumentation.compact) {
+    summary.compact = instrumentation.compact;
+    summary.instrumentation.compact = instrumentation.compact;
+  }
+  if (Object.keys(summary.timing_breakdown_ms || {}).length === 0
+      && Object.keys(instrumentation.timing_breakdown_ms || {}).length > 0) {
+    summary.timing_breakdown_ms = instrumentation.timing_breakdown_ms;
+  }
+  return summary;
+}
+
+function perRepeat(value, repeats) {
+  return Number.isFinite(value) ? value / Math.max(1, repeats || 1) : value;
+}
+
+function normalizeNativeSlowCases(slowCases, repeats) {
+  const scale = Math.max(1, repeats || 1);
+  return (slowCases || []).map(row => ({
+    ...row,
+    total_ms: perRepeat(row.total_ms, scale),
+    source_compile_ms: perRepeat(row.source_compile_ms, scale),
+    replay_ms: perRepeat(row.replay_ms, scale),
+    session_create_ms: perRepeat(row.session_create_ms, scale),
+    level_load_ms: perRepeat(row.level_load_ms, scale),
+    serialize_ms: perRepeat(row.serialize_ms, scale),
+  }));
+}
+
 function parseNativeSimulation(runtime, json) {
   const summary = json.status_summary || {};
   const profile = json.profile || {};
-  const slowCases = json.slow_cases || [];
+  const repeats = Math.max(1, summary.repeats || 1);
+  const slowCases = normalizeNativeSlowCases(json.slow_cases || [], repeats);
   const timingBreakdown = profile ? {
-    testdata_parse_ms: profile.testdata_parse_ms,
-    source_compile_ms: profile.source_compile_ms,
-    session_create_ms: profile.session_create_ms,
-    level_load_ms: profile.level_load_ms,
-    replay_ms: profile.replay_ms,
+    testdata_parse_ms: perRepeat(profile.testdata_parse_ms, repeats),
+    source_compile_ms: Number.isFinite(profile.source_compile_median_ms) ? profile.source_compile_median_ms : perRepeat(profile.source_compile_ms, repeats),
+    session_create_ms: perRepeat(profile.session_create_ms, repeats),
+    level_load_ms: perRepeat(profile.level_load_ms, repeats),
+    replay_ms: Number.isFinite(profile.replay_median_ms) ? profile.replay_median_ms : perRepeat(profile.replay_ms, repeats),
     replay_avg_ms: profile.replay_avg_ms,
     replay_median_ms: profile.replay_median_ms,
-    serialize_ms: profile.serialize_ms,
+    serialize_ms: perRepeat(profile.serialize_ms, repeats),
   } : {};
-  return buildRuntimeSummary(runtime, profile && Number.isFinite(profile.wall_ms) ? profile.wall_ms : summary.elapsed_ms, {
+  const aggregateWallMs = profile && Number.isFinite(profile.wall_ms) ? profile.wall_ms : summary.elapsed_ms;
+  return buildRuntimeSummary(runtime, perRepeat(aggregateWallMs, repeats), {
+    aggregate_wall_ms: aggregateWallMs,
+    repeat_count: repeats,
     status_summary: summary,
     timing_breakdown_ms: timingBreakdown,
     runtime_counters: { ...(json.runtime_counters || {}), ...(json.compact || {}) },
@@ -479,10 +527,13 @@ function runSimulationSuite(context, options) {
   const suite = {
     runtimes: {},
     slow_cases: [],
-    notes: [],
+    notes: [
+      'Headline simulation timings use clean runs without hot-loop runtime counters.',
+      'Runtime counters come from separate one-repeat instrumentation runs.',
+    ],
   };
-  const repeatArgs = ['--profile', '--profile-runs', String(options.runs), '--profile-json', '--sim-only', '--breakdown'];
-  const js = runCommand(context, 'simulation-js', 'node', ['src/tests/run_tests_node.js', ...repeatArgs], { suite: 'simulation' });
+  const jsTimingArgs = ['--profile', '--profile-runs', String(options.runs), '--profile-json', '--sim-only'];
+  const js = runCommand(context, 'simulation-js', 'node', ['src/tests/run_tests_node.js', ...jsTimingArgs], { suite: 'simulation' });
   if (js.status === 0) {
     try {
       suite.runtimes.js = parseJsSimulation(JSON.parse(js.stdout));
@@ -490,8 +541,23 @@ function runSimulationSuite(context, options) {
       context.warnings.push({ suite: 'simulation', message: `JS simulation profile JSON parse failed: ${error.message}`, log: js.stdout_log });
     }
   }
+  const jsInstrumented = runCommand(
+    context,
+    'simulation-js-instrumented',
+    'node',
+    ['src/tests/run_tests_node.js', '--profile', '--profile-runs', '1', '--profile-json', '--sim-only', '--breakdown'],
+    { suite: 'simulation' }
+  );
+  if (jsInstrumented.status === 0 && suite.runtimes.js) {
+    try {
+      mergeSimulationInstrumentation(suite.runtimes.js, parseJsSimulation(JSON.parse(jsInstrumented.stdout)));
+    } catch (error) {
+      context.warnings.push({ suite: 'simulation', message: `JS simulation instrumentation JSON parse failed: ${error.message}`, log: jsInstrumented.stdout_log });
+    }
+  }
 
-  const benchArgs = ['--jobs', String(options.jobs), '--progress-every', '0', '--profile-timers', '--repeat', String(options.runs), '--quiet', '--top-slow-cases', '10'];
+  const benchArgs = ['--jobs', String(options.jobs), '--progress-every', '0', '--repeat', String(options.runs), '--quiet', '--top-slow-cases', '10'];
+  const instrumentedBenchArgs = ['--jobs', String(options.jobs), '--progress-every', '0', '--profile-timers', '--repeat', '1', '--quiet', '--top-slow-cases', '10'];
   const nativeSummary = path.join(context.artifactsDir, 'simulation_native_interpreter.json');
   const native = runCommand(
     context,
@@ -503,6 +569,17 @@ function runSimulationSuite(context, options) {
   if (native.status === 0 && readJsonIfExists(nativeSummary)) {
     suite.runtimes.native_interpreter = parseNativeSimulation('native_interpreter', readJsonIfExists(nativeSummary));
   }
+  const nativeInstrumentedSummary = path.join(context.artifactsDir, 'simulation_native_interpreter_instrumented.json');
+  const nativeInstrumented = runCommand(
+    context,
+    'simulation-native-interpreter-instrumented',
+    'build/native/puzzlescript_cpp',
+    ['test', 'simulation-corpus', 'src/tests/resources/testdata.js', ...instrumentedBenchArgs, '--json-summary-out', nativeInstrumentedSummary],
+    { suite: 'simulation' }
+  );
+  if (nativeInstrumented.status === 0 && suite.runtimes.native_interpreter && readJsonIfExists(nativeInstrumentedSummary)) {
+    mergeSimulationInstrumentation(suite.runtimes.native_interpreter, parseNativeSimulation('native_interpreter', readJsonIfExists(nativeInstrumentedSummary)));
+  }
 
   const hybridSummary = path.join(context.artifactsDir, 'simulation_hybrid.json');
   const hybrid = runCommand(
@@ -513,12 +590,28 @@ function runSimulationSuite(context, options) {
       '--no-print-directory',
       'simulation_corpus_compiled_rulegroups_benchmark',
       'COMPILED_RULES_OPT_LEVEL=3',
-      `SIMULATION_CORPUS_BENCH_ARGS=--jobs ${options.jobs} --progress-every 0 --profile-timers --repeat ${options.runs} --quiet --top-slow-cases 10 --json-summary-out ${hybridSummary}`,
+      `SIMULATION_CORPUS_BENCH_ARGS=--jobs ${options.jobs} --progress-every 0 --repeat ${options.runs} --quiet --top-slow-cases 10 --json-summary-out ${hybridSummary}`,
     ],
     { suite: 'simulation' }
   );
   if (hybrid.status === 0 && readJsonIfExists(hybridSummary)) {
     suite.runtimes.hybrid = parseNativeSimulation('hybrid', readJsonIfExists(hybridSummary));
+  }
+  const hybridInstrumentedSummary = path.join(context.artifactsDir, 'simulation_hybrid_instrumented.json');
+  const hybridInstrumented = runCommand(
+    context,
+    'simulation-hybrid-instrumented',
+    'make',
+    [
+      '--no-print-directory',
+      'simulation_corpus_compiled_rulegroups_benchmark',
+      'COMPILED_RULES_OPT_LEVEL=3',
+      `SIMULATION_CORPUS_BENCH_ARGS=--jobs ${options.jobs} --progress-every 0 --profile-timers --repeat 1 --quiet --top-slow-cases 10 --json-summary-out ${hybridInstrumentedSummary}`,
+    ],
+    { suite: 'simulation' }
+  );
+  if (hybridInstrumented.status === 0 && suite.runtimes.hybrid && readJsonIfExists(hybridInstrumentedSummary)) {
+    mergeSimulationInstrumentation(suite.runtimes.hybrid, parseNativeSimulation('hybrid', readJsonIfExists(hybridInstrumentedSummary)));
   }
 
   const compiledSummary = path.join(context.artifactsDir, 'simulation_compiled.json');
@@ -530,17 +623,33 @@ function runSimulationSuite(context, options) {
       '--no-print-directory',
       'simulation_corpus_compiled_compact_benchmark',
       'COMPILED_RULES_OPT_LEVEL=3',
-      `SIMULATION_CORPUS_BENCH_ARGS=--jobs ${options.jobs} --progress-every 0 --profile-timers --repeat ${options.runs} --quiet --top-slow-cases 10 --json-summary-out ${compiledSummary}`,
+      `SIMULATION_CORPUS_BENCH_ARGS=--jobs ${options.jobs} --progress-every 0 --repeat ${options.runs} --quiet --top-slow-cases 10 --json-summary-out ${compiledSummary}`,
     ],
     { suite: 'simulation' }
   );
   if (compiled.status === 0 && readJsonIfExists(compiledSummary)) {
     suite.runtimes.compiled = parseNativeSimulation('compiled', readJsonIfExists(compiledSummary));
   }
+  const compiledInstrumentedSummary = path.join(context.artifactsDir, 'simulation_compiled_instrumented.json');
+  const compiledInstrumented = runCommand(
+    context,
+    'simulation-compiled-instrumented',
+    'make',
+    [
+      '--no-print-directory',
+      'simulation_corpus_compiled_compact_benchmark',
+      'COMPILED_RULES_OPT_LEVEL=3',
+      `SIMULATION_CORPUS_BENCH_ARGS=--jobs ${options.jobs} --progress-every 0 --profile-timers --repeat 1 --quiet --top-slow-cases 10 --json-summary-out ${compiledInstrumentedSummary}`,
+    ],
+    { suite: 'simulation' }
+  );
+  if (compiledInstrumented.status === 0 && suite.runtimes.compiled && readJsonIfExists(compiledInstrumentedSummary)) {
+    mergeSimulationInstrumentation(suite.runtimes.compiled, parseNativeSimulation('compiled', readJsonIfExists(compiledInstrumentedSummary)));
+  }
 
   finalizeSpeedups(suite);
   suite.slowest_cases = collectSlowSimulationCases(suite);
-  suite.timer_profiles = Object.fromEntries(Object.entries(suite.runtimes).map(([key, value]) => [key, value.timing_breakdown_ms || {}]));
+  suite.timer_profiles = Object.fromEntries(Object.entries(suite.runtimes).map(([key, value]) => [key, value.instrumentation && value.instrumentation.timing_breakdown_ms || value.timing_breakdown_ms || {}]));
   return suite;
 }
 
@@ -980,6 +1089,20 @@ function summarizeCoverageObject(json) {
     rulegroups,
     full_turn: fullTurn,
     compact_turn: compact,
+    sources: Array.isArray(json.sources) ? json.sources.map(source => ({
+      index: source.index,
+      path: source.path,
+      early_groups: source.early_groups,
+      late_groups: source.late_groups,
+      compiled_groups: source.compiled_groups,
+      early_rules: source.early_rules,
+      late_rules: source.late_rules,
+      compiled_rules: source.compiled_rules,
+      misses: source.misses || {},
+      full_turn_reason: source.specialized_full_turn && source.specialized_full_turn.whole_turn_fallback_reason,
+      compact_mode: source.compact_turn && source.compact_turn.mode,
+      compact_native_reason: source.compact_turn && source.compact_turn.native_kernel_status_reason,
+    })) : [],
     aggregate,
   };
 }
@@ -1186,7 +1309,7 @@ function renderMarkdown(report, latestDir, runDir) {
   lines.push('');
   lines.push('## Profiling Highlights');
   lines.push('');
-  lines.push(report.suites.profiling.optional_profile_enabled ? '- Optional profiler was enabled.' : '- Optional profiler was not enabled; timer profiles are included from benchmark runs.');
+  lines.push(report.suites.profiling.optional_profile_enabled ? '- Optional profiler was enabled.' : '- Optional profiler was not enabled; timer profiles and counters are included from separate instrumentation runs where available.');
   for (const artifact of report.suites.profiling.artifacts || []) {
     lines.push(`- ${artifact.label}: ${artifact.path}`);
   }
@@ -1326,6 +1449,9 @@ function renderHtml(report) {
       gap: 14px;
       margin-bottom: 14px;
     }
+    .chart-grid {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 430px), 1fr));
+    }
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -1347,9 +1473,14 @@ function renderHtml(report) {
     .speed-bad { color: var(--red); }
     .speed-neutral { color: var(--muted); }
     .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
-    .table-wrap.compact { overflow-x: hidden; }
-    .table-wrap.compact table { min-width: 0; table-layout: fixed; }
+    .table-wrap.compact { overflow-x: auto; }
+    .table-wrap.compact table { min-width: 0; table-layout: auto; }
     .table-wrap.compact th, .table-wrap.compact td { overflow-wrap: anywhere; }
+    .table-wrap.compact .num { white-space: nowrap; text-align: right; }
+    .table-wrap.compact .target { min-width: 14rem; }
+    .wide-grid {
+      grid-template-columns: minmax(min(100%, 340px), 0.85fr) minmax(min(100%, 520px), 1.35fr);
+    }
     table { width: 100%; border-collapse: collapse; min-width: 760px; }
     th, td { padding: 8px 10px; border-bottom: 1px solid #edf0f5; text-align: left; vertical-align: top; }
     th { position: sticky; top: 0; z-index: 1; background: #f1f4f9; color: #303a48; cursor: pointer; font-weight: 650; }
@@ -1388,15 +1519,21 @@ function renderHtml(report) {
     .swatch.other { background: #718096; }
     .bar-row {
       display: grid;
-      grid-template-columns: minmax(120px, 190px) 1fr minmax(70px, auto);
+      grid-template-columns: minmax(110px, max-content) minmax(120px, 1fr) max-content;
       gap: 10px;
       align-items: center;
+      min-width: 0;
+    }
+    .bar-row.timing-row {
+      grid-template-columns: minmax(110px, max-content) minmax(120px, 1fr) max-content;
     }
     .bar-track { height: 18px; background: #edf1f6; border-radius: 4px; overflow: hidden; }
     .bar-fill { height: 100%; background: var(--blue); min-width: 1px; }
     .bar-fill.hybrid { background: var(--violet); }
     .bar-fill.compiled { background: var(--green); }
     .bar-fill.native_interpreter { background: var(--amber); }
+    .bar-row strong { text-align: right; white-space: nowrap; }
+    .bar-row > span { text-align: right; white-space: nowrap; }
     .stack { display: flex; height: 20px; overflow: hidden; border-radius: 4px; background: #edf1f6; }
     .seg { height: 100%; min-width: 1px; }
     .seg.compile { background: #2563eb; }
@@ -1411,7 +1548,7 @@ function renderHtml(report) {
     code { background: #eef2f8; padding: 1px 4px; border-radius: 4px; }
     @media (max-width: 760px) {
       .wrap { padding: 14px; }
-      .bar-row { grid-template-columns: 1fr; gap: 4px; }
+      .bar-row, .bar-row.timing-row { grid-template-columns: 1fr; gap: 4px; min-width: 0; }
       table { min-width: 680px; }
     }
   </style>
@@ -1444,6 +1581,7 @@ function renderHtml(report) {
     const fmtPct = value => Number.isFinite(value) ? (value * 100).toFixed(1) + '%' : 'n/a';
     const fmtTimeout = value => Number.isFinite(value) ? value + 'ms' : 'no limit';
     const speedClass = value => !Number.isFinite(value) ? 'speed-neutral' : value >= 1 ? 'speed-good' : 'speed-bad';
+    const fmtCountPct = value => value && Number.isFinite(value.count) && Number.isFinite(value.total) && value.total > 0 ? \`\${fmtNum(value.count)} / \${fmtNum(value.total)} (\${fmtPct(value.count / value.total)})\` : 'n/a';
     document.getElementById('meta').textContent = \`\${report.metadata.generated_at} | \${report.metadata.git_short_sha || 'unknown'}\${report.metadata.dirty ? ' dirty' : ''} | runs=\${report.inputs.runs} | jobs=\${report.inputs.jobs} | solver=\${fmtTimeout(report.inputs.solver_timeout_ms)} | js solver=\${fmtTimeout(report.inputs.solver_js_timeout_ms)}\`;
 
     const tabs = document.getElementById('tabs');
@@ -1479,13 +1617,13 @@ function renderHtml(report) {
       }).filter(row => row.median_ms !== undefined || row.runtime === 'js');
     }
 
-    function renderSpeedTable(rows) {
+    function renderSpeedTable(rows, compact = false) {
       return renderTable(rows, [
         ['suite', 'Suite'],
         ['label', 'Runtime'],
         ['median_ms', 'Median', fmtMs],
         ['speedup_vs_js', 'Speedup vs JS', value => \`<span class="\${speedClass(value)}">\${fmtSpeed(value)}</span>\`],
-      ]);
+      ], false, compact);
     }
 
     function renderBars(rows) {
@@ -1526,7 +1664,7 @@ function renderHtml(report) {
         ];
         const total = parts.reduce((acc, item) => acc + item[2], 0) || row.timing.wall_ms || 1;
         const title = parts.map(([, label, value]) => \`\${label}: \${fmtMs(value)}\`).join(' | ');
-        return \`<div class="bar-row" title="\${row.label} timing: \${title}"><div>\${row.label}</div><div class="stack" title="\${title}">\${parts.map(([name, label, value]) => \`<div class="seg \${name}" title="\${label}: \${fmtMs(value)}" aria-label="\${label}: \${fmtMs(value)}" style="width:\${Math.max(0, value / total * 100)}%"></div>\`).join('')}</div><span>\${fmtMs(total)}</span></div>\`;
+        return \`<div class="bar-row timing-row" title="\${row.label} timing: \${title}"><div>\${row.label}</div><div class="stack" title="\${title}">\${parts.map(([name, label, value]) => \`<div class="seg \${name}" title="\${label}: \${fmtMs(value)}" aria-label="\${label}: \${fmtMs(value)}" style="width:\${Math.max(0, value / total * 100)}%"></div>\`).join('')}</div><span>\${fmtMs(total)}</span></div>\`;
       }).join('')}</div>\`;
     }
 
@@ -1549,50 +1687,71 @@ function renderHtml(report) {
 
     function renderOverview() {
       const rows = report.overview.speedups || [];
+      const biggestWins = report.overview.biggest_wins || [];
+      const underperformers = report.overview.worst_underperformers || [];
+      const winColumns = [
+        ['key', 'Target', null, 'target'],
+        ['speedup_vs_js', 'Speedup', fmtSpeed, 'num'],
+        ['js_elapsed_ms', 'JS', fmtMs, 'num'],
+        ['runtime_elapsed_ms', 'C++ Compiled', fmtMs, 'num'],
+      ];
       document.getElementById('view-overview').innerHTML = \`
         <div class="grid">
-          \${panel('Runtime Speedups', renderSpeedTable(rows))}
+          \${panel('Runtime Speedups', renderSpeedTable(rows, true))}
           \${panel('Run Scope', renderRunScope())}
           \${panel('Warnings', renderWarnings())}
         </div>
-        <div class="grid">
+        <div class="grid wide-grid">
           \${panel('Slowest Workloads', renderTable((report.overview.slowest_workloads || []).slice(0, 12), [['suite', 'Suite'], ['label', 'Runtime'], ['median_ms', 'Median', fmtMs]], false, true))}
-          \${panel('Biggest C++ Compiled Wins', renderTable(report.overview.biggest_wins || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'C++ Compiled', fmtMs]], false, true))}
-          \${panel('Worst C++ Compiled Underperformers', renderTable(report.overview.worst_underperformers || [], [['key', 'Target'], ['speedup_vs_js', 'Speedup', fmtSpeed], ['js_elapsed_ms', 'JS', fmtMs], ['runtime_elapsed_ms', 'C++ Compiled', fmtMs]], false, true))}
+          \${panel('Biggest C++ Compiled Wins', renderTable(biggestWins, winColumns, false, true))}
         </div>\`;
+      if (underperformers.length > 0) {
+        document.getElementById('view-overview').innerHTML += panel('Worst C++ Compiled Underperformers', renderTable(underperformers, winColumns, false, true));
+      }
     }
 
     function renderSimulation() {
       const suite = report.suites.simulation || {};
       const rows = speedupRows('simulation', suite);
       document.getElementById('view-simulation').innerHTML = \`
-        <div class="grid">
+        <div class="grid chart-grid">
           \${panel('Speedups vs JS', renderBars(rows))}
           \${panel('Timing Breakdown', renderStackedTiming(suite))}
         </div>
+        \${panel('Measurement Notes', renderSimulationNotes(suite))}
         \${panel('Runtime Summary', renderSpeedTable(rows))}
         \${panel('Slowest Cases', renderTable(suite.slowest_cases || [], [['runtime', 'Runtime'], ['index', 'Case'], ['name', 'Name'], ['total_ms', 'Total', fmtMs], ['source_compile_ms', 'Compile', fmtMs], ['replay_ms', 'Replay', fmtMs]]))}
-        \${panel('Runtime Counters', renderCounterTables(suite))}\`;
+        \${renderCounterPanels(suite)}\`;
     }
 
-    function renderCounterTables(suite) {
+    function renderSimulationNotes(suite) {
+      const rows = (suite.notes || []).map(note => ({ note }));
+      return rows.length ? renderTable(rows, [['note', 'Note']], false, true) : '<div class="empty">n/a</div>';
+    }
+
+    function renderCounterPanels(suite) {
       if (!suite || !suite.runtimes) return '<div class="empty">n/a</div>';
-      const rows = [];
+      const panels = [];
       for (const runtime of runtimes) {
         const counters = suite.runtimes[runtime] && suite.runtimes[runtime].runtime_counters;
         if (!counters) continue;
+        const rows = [];
         for (const [key, value] of Object.entries(counters)) {
-          if (Number.isFinite(value) && value !== 0) rows.push({ runtime: labels[runtime], counter: key, value });
+          if (Number.isFinite(value) && value !== 0) rows.push({ counter: key, value });
+        }
+        if (rows.length > 0) {
+          panels.push(panel(\`\${labels[runtime]} Counters\`, renderTable(rows, [['counter', 'Counter'], ['value', 'Value', fmtNum]], false, true)));
         }
       }
-      return renderTable(rows, [['runtime', 'Runtime'], ['counter', 'Counter'], ['value', 'Value', fmtNum]]);
+      if (panels.length === 0) return panel('Runtime Counters', '<div class="empty">n/a</div>');
+      return \`<div class="grid">\${panels.join('')}</div>\`;
     }
 
     function renderSolver() {
       const suite = report.suites.solver || {};
       const rows = speedupRows('solver', suite);
       document.getElementById('view-solver').innerHTML = \`
-        <div class="grid">
+        <div class="grid chart-grid">
           \${panel('Focus Speedups vs JS', renderBars(rows))}
           \${panel('Timing Totals', renderSolverTiming(suite))}
         </div>
@@ -1693,25 +1852,92 @@ function renderHtml(report) {
         })), [['preset', 'Preset'], ['samples_per_second', 'Samples/s', fmtNum], ['valid_per_second', 'Valid/s', fmtNum], ['solve_rate', 'Solve Rate', fmtPct], ['dedupe_rate', 'Dedupe Rate', fmtPct], ['top_score', 'Top Score', fmtNum], ['top_solution_length', 'Top Solution', fmtNum], ['solver_expanded', 'Solver Expanded', fmtNum], ['solver_generated', 'Solver Generated', fmtNum]]))}\`;
     }
 
-    function renderCoverage() {
-      const suite = report.suites.coverage || {};
-      const rows = Object.entries(suite).map(([name, cov]) => {
-        const compact = cov && cov.compact_turn;
-        const full = cov && cov.full_turn;
+    function compactReason(reason) {
+      return reason ? String(reason).replaceAll('_', ' ') : 'n/a';
+    }
+
+    function countObjectRows(coverageName, area, counts, total) {
+      return Object.entries(counts || {})
+        .filter(([, count]) => Number.isFinite(count) && count > 0)
+        .map(([reason, count]) => ({
+          coverage: coverageName,
+          area,
+          reason: compactReason(reason),
+          count,
+          share: Number.isFinite(total) && total > 0 ? count / total : null,
+        }));
+    }
+
+    function coverageMetricRows(suite) {
+      return Object.entries(suite || {}).map(([name, cov]) => {
         const rg = cov && cov.rulegroups;
+        const full = cov && cov.full_turn;
+        const compact = cov && cov.compact_turn;
+        const groupTotal = rg && (rg.early_groups || 0) + (rg.late_groups || 0);
+        const ruleTotal = rg && (rg.early_rules || 0) + (rg.late_rules || 0);
         return {
           name,
           sources: cov && cov.source_count,
           max_rows: cov && cov.max_rows,
-          rulegroups: rg && (rg.fully_compiled ?? rg.whole_turn_supported ?? rg.backend_codegen_available),
-          full_turn: full && full.whole_turn_supported,
-          full_turn_codegen: full && full.backend_codegen_available,
-          compact_callable: compact && compact.whole_turn_supported,
-          compact_native: compact && compact.native_kernel_supported,
-          compact_bridge: compact && compact.interpreter_bridge_supported,
+          groups: rg && { count: rg.compiled_groups, total: groupTotal },
+          rules: rg && { count: rg.compiled_rules, total: ruleTotal },
+          missed_groups: rg && Number.isFinite(groupTotal) ? groupTotal - (rg.compiled_groups || 0) : null,
+          missed_rules: rg && Number.isFinite(ruleTotal) ? ruleTotal - (rg.compiled_rules || 0) : null,
+          early_loops: full && { count: full.early_rule_loops_generated, total: full.sources },
+          late_loops: full && { count: full.late_rule_loops_generated, total: full.sources },
+          compact_native: compact && { count: compact.native_kernel_supported, total: compact.sources },
+          compact_bridge: compact && { count: compact.interpreter_bridge_supported, total: compact.sources },
         };
       });
-      document.getElementById('view-coverage').innerHTML = panel('Coverage Summary', renderTable(rows, [['name', 'Coverage'], ['sources', 'Sources', fmtNum], ['max_rows', 'Max Rows', fmtNum], ['rulegroups', 'Rulegroups', fmtNum], ['full_turn', 'Full Turn', fmtNum], ['full_turn_codegen', 'Full Turn Codegen', fmtNum], ['compact_callable', 'Compact Callable', fmtNum], ['compact_native', 'Compact Native', fmtNum], ['compact_bridge', 'Compact Bridge', fmtNum]]));
+    }
+
+    function coverageReasonRows(suite) {
+      const rows = [];
+      for (const [name, cov] of Object.entries(suite || {})) {
+        if (!cov) continue;
+        const rg = cov.rulegroups || {};
+        const full = cov.full_turn || {};
+        const compact = cov.compact_turn || {};
+        rows.push(...countObjectRows(name, 'Rulegroup misses', rg.misses, Object.values(rg.misses || {}).reduce((sum, count) => sum + count, 0)));
+        rows.push(...countObjectRows(name, 'Full-turn fallback', full.whole_turn_fallback_reason_counts, full.sources));
+        rows.push(...countObjectRows(name, 'Full-turn commands', full.command_status_counts, full.sources));
+        rows.push(...countObjectRows(name, 'Compact status', compact.whole_turn_status_reason_counts, compact.sources));
+        rows.push(...countObjectRows(name, 'Compact native fallback', compact.native_kernel_status_reason_counts, compact.sources));
+      }
+      return rows.sort((a, b) => b.count - a.count);
+    }
+
+    function coverageSourceRows(suite) {
+      const rows = [];
+      for (const [coverage, cov] of Object.entries(suite || {})) {
+        for (const source of (cov && cov.sources) || []) {
+          const groups = (source.early_groups || 0) + (source.late_groups || 0);
+          const rules = (source.early_rules || 0) + (source.late_rules || 0);
+          const missedGroups = groups - (source.compiled_groups || 0);
+          const missedRules = rules - (source.compiled_rules || 0);
+          if (missedGroups <= 0 && missedRules <= 0) continue;
+          rows.push({
+            coverage,
+            source: source.path,
+            groups: { count: source.compiled_groups, total: groups },
+            rules: { count: source.compiled_rules, total: rules },
+            missed_groups: missedGroups,
+            missed_rules: missedRules,
+            misses: Object.entries(source.misses || {}).map(([reason, count]) => \`\${compactReason(reason)}: \${fmtNum(count)}\`).join(', ') || 'n/a',
+            full_turn_reason: compactReason(source.full_turn_reason),
+            compact_mode: compactReason(source.compact_mode),
+          });
+        }
+      }
+      return rows.sort((a, b) => (b.missed_groups - a.missed_groups) || (b.missed_rules - a.missed_rules)).slice(0, 25);
+    }
+
+    function renderCoverage() {
+      const suite = report.suites.coverage || {};
+      document.getElementById('view-coverage').innerHTML = \`
+        \${panel('Coverage Rates', renderTable(coverageMetricRows(suite), [['name', 'Coverage'], ['sources', 'Sources', fmtNum], ['max_rows', 'Max Rows', fmtNum], ['groups', 'Compiled Groups', fmtCountPct], ['rules', 'Compiled Rules', fmtCountPct], ['missed_groups', 'Missed Groups', fmtNum], ['missed_rules', 'Missed Rules', fmtNum], ['early_loops', 'Early Loops', fmtCountPct], ['late_loops', 'Late Loops', fmtCountPct], ['compact_native', 'Compact Native', fmtCountPct], ['compact_bridge', 'Compact Bridge', fmtCountPct]], false, true))}
+        \${panel('Coverage Reasons', renderTable(coverageReasonRows(suite), [['coverage', 'Coverage'], ['area', 'Area'], ['reason', 'Reason'], ['count', 'Count', fmtNum], ['share', 'Share', fmtPct]], false, true))}
+        \${panel('Rulegroup Miss Sources', renderTable(coverageSourceRows(suite), [['coverage', 'Coverage'], ['source', 'Source'], ['groups', 'Groups', fmtCountPct], ['rules', 'Rules', fmtCountPct], ['missed_groups', 'Missed Groups', fmtNum], ['missed_rules', 'Missed Rules', fmtNum], ['misses', 'Misses'], ['full_turn_reason', 'Full Turn'], ['compact_mode', 'Compact']], true))}\`;
     }
 
     function renderProfiling() {
@@ -1730,11 +1956,11 @@ function renderHtml(report) {
       if (rows.length === 0) return '<div class="empty">n/a</div>';
       const id = 'tbl-' + Math.random().toString(36).slice(2);
       const toolbar = filterable ? \`<div class="toolbar"><input type="search" placeholder="Filter rows" oninput="filterTable('\${id}', this.value)"></div>\` : '';
-      const head = columns.map(([key, title]) => \`<th onclick="sortTable('\${id}', '\${key}')">\${title}</th>\`).join('');
-      const body = rows.map(row => \`<tr>\${columns.map(([key, , formatter]) => {
+      const head = columns.map(([key, title, , className]) => \`<th class="\${className || ''}" onclick="sortTable('\${id}', '\${key}')">\${title}</th>\`).join('');
+      const body = rows.map(row => \`<tr>\${columns.map(([key, , formatter, className]) => {
         const raw = row[key];
         const html = formatter ? formatter(raw) : escapeHtml(raw === undefined || raw === null ? 'n/a' : raw);
-        return \`<td data-key="\${key}" data-sort="\${escapeHtml(raw === undefined || raw === null ? '' : raw)}">\${html}</td>\`;
+        return \`<td class="\${className || ''}" data-key="\${key}" data-sort="\${escapeHtml(raw === undefined || raw === null ? '' : raw)}">\${html}</td>\`;
       }).join('')}</tr>\`).join('');
       return \`\${toolbar}<div class="table-wrap\${compact ? ' compact' : ''}"><table id="\${id}"><thead><tr>\${head}</tr></thead><tbody>\${body}</tbody></table></div>\`;
     }

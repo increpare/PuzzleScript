@@ -4579,6 +4579,14 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, LoadedGame& o
     try {
         json::Value root = json::parse(jsonText);
         const auto& rootObject = root.asObject();
+        std::optional<uint64_t> sourceHash;
+        if (const auto it = rootObject.find("source_hash"); it != rootObject.end()) {
+            if (it->second.isString()) {
+                sourceHash = static_cast<uint64_t>(std::stoull(it->second.asString()));
+            } else if (it->second.isInteger()) {
+                sourceHash = static_cast<uint64_t>(it->second.asInteger());
+            }
+        }
         const auto& gameValue = requireField(rootObject, "game");
         const auto& gameObject = gameValue.asObject();
 
@@ -4745,6 +4753,9 @@ std::unique_ptr<Error> loadGameFromJson(std::string_view jsonText, LoadedGame& o
             } catch (const std::exception& error) {
                 throw json::ParseError("Failed parsing prepared_session: " + std::string(error.what()));
             }
+        }
+        if (sourceHash.has_value()) {
+            attachLinkedCompiledRules(*game, *sourceHash);
         }
         outGame.information = std::move(game);
         return nullptr;

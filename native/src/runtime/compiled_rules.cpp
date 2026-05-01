@@ -43,6 +43,10 @@ uint64_t compiledRulesHashSource(std::string_view source) {
 
 void attachLinkedCompiledRules(Game& game, std::string_view source) {
     const uint64_t sourceHash = compiledRulesHashSource(source);
+    attachLinkedCompiledRules(game, sourceHash);
+}
+
+void attachLinkedCompiledRules(Game& game, uint64_t sourceHash) {
     game.specializedRulegroups = ps_specialized_rulegroups_find_backend(sourceHash);
     if (game.specializedRulegroups == nullptr) {
         game.specializedRulegroups = ps_compiled_rules_find_backend(sourceHash);

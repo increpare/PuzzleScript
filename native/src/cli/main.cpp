@@ -729,6 +729,10 @@ bool loadGameFromSourceText(const std::string& sourceText, ps_game** outGame) {
     return true;
 }
 
+bool loadGameFromRuntimeIrCacheText(const std::string& irText, ps_game** outGame) {
+    return loadGameFromJsonText(irText, outGame);
+}
+
 bool loadGameFromSourceFile(const std::filesystem::path& path, ps_game** outGame) {
     return loadGameFromSourceText(readFile(path) + "\n", outGame);
 }
@@ -2092,11 +2096,13 @@ struct SimulationCorpusOptions {
     std::optional<size_t> caseIndex;
     std::optional<std::string> caseNameFilter;
     std::optional<std::filesystem::path> jsonSummaryOut;
+    std::optional<std::filesystem::path> runtimeIrCachePath;
     bool profileTimers = false;
     bool jsonSummary = false;
     bool quiet = false;
     bool compactTurnOracle = false;
     bool requireCompactTurnOracleChecks = false;
+    bool compileEachCheck = false;
     SimulationTurnExecutor turnExecutor = SimulationTurnExecutor::Interpreter;
 };
 
@@ -2296,6 +2302,10 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
         } else if (arg == "--json-summary-out" && index + 1 < argc) {
             options.jsonSummary = true;
             options.jsonSummaryOut = argv[++index];
+        } else if ((arg == "--runtime-ir-cache" || arg == "--compiled-runtime-ir-cache") && index + 1 < argc) {
+            options.runtimeIrCachePath = argv[++index];
+        } else if (arg == "--no-compile-cache" || arg == "--compile-each-check") {
+            options.compileEachCheck = true;
         } else if (arg == "--top-slow-cases" && index + 1 < argc) {
             options.topSlowCases = static_cast<size_t>(std::stoull(argv[++index]));
         } else if (arg == "--case-index" && index + 1 < argc) {
@@ -2330,6 +2340,9 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
         } else {
             throw std::runtime_error("Unsupported simulation-testdata argument: " + arg);
         }
+    }
+    if (options.runtimeIrCachePath.has_value() && options.turnExecutor != SimulationTurnExecutor::CompiledCompact) {
+        throw std::runtime_error("--runtime-ir-cache is only valid with --turn-executor=compiled-compact");
     }
     return options;
 }
@@ -2404,7 +2417,42 @@ std::vector<SimulationCorpusCase> parseSimulationCorpusCases(const puzzlescript:
     return cases;
 }
 
-SimulationCompileCache compileSimulationCorpusGames(const std::vector<SimulationCorpusCase>& cases, size_t jobs) {
+using RuntimeIrCache = std::unordered_map<uint64_t, std::string>;
+
+RuntimeIrCache loadRuntimeIrCache(const std::filesystem::path& path) {
+    RuntimeIrCache cache;
+    const auto root = puzzlescript::json::parse(readFile(path));
+    const auto& rootObject = root.asObject();
+    const auto* sourcesValue = root.find("sources");
+    if (sourcesValue == nullptr || !sourcesValue->isArray()) {
+        throw std::runtime_error("runtime IR cache missing sources array: " + path.string());
+    }
+    for (const auto& entryValue : sourcesValue->asArray()) {
+        const auto& entry = entryValue.asObject();
+        const auto hashIt = entry.find("source_hash");
+        const auto irIt = entry.find("runtime_ir_json");
+        if (hashIt == entry.end() || irIt == entry.end() || !irIt->second.isString()) {
+            throw std::runtime_error("runtime IR cache entry missing source_hash/runtime_ir_json: " + path.string());
+        }
+        uint64_t sourceHash = 0;
+        if (hashIt->second.isString()) {
+            sourceHash = static_cast<uint64_t>(std::stoull(hashIt->second.asString()));
+        } else if (hashIt->second.isInteger()) {
+            sourceHash = static_cast<uint64_t>(hashIt->second.asInteger());
+        } else {
+            throw std::runtime_error("runtime IR cache entry has non-numeric source_hash: " + path.string());
+        }
+        cache[sourceHash] = irIt->second.asString();
+    }
+    (void)rootObject;
+    return cache;
+}
+
+SimulationCompileCache compileSimulationCorpusGames(
+    const std::vector<SimulationCorpusCase>& cases,
+    size_t jobs,
+    const RuntimeIrCache* runtimeIrCache = nullptr
+) {
     SimulationCompileCache cache;
     cache.games.resize(cases.size());
     cache.errors.resize(cases.size());
@@ -2443,9 +2491,14 @@ SimulationCompileCache compileSimulationCorpusGames(const std::vector<Simulation
 
                 const auto phaseStart = std::chrono::steady_clock::now();
                 ps_game* rawGame = nullptr;
-                if (!loadGameFromSourceText(uniqueSources[uniqueIndex], &rawGame)) {
+                const uint64_t sourceHash = puzzlescript::compiledRulesHashSource(uniqueSources[uniqueIndex]);
+                const auto cachedIr = runtimeIrCache == nullptr ? RuntimeIrCache::const_iterator{} : runtimeIrCache->find(sourceHash);
+                const bool hasCachedIr = runtimeIrCache != nullptr && cachedIr != runtimeIrCache->end();
+                if (hasCachedIr
+                    ? !loadGameFromRuntimeIrCacheText(cachedIr->second, &rawGame)
+                    : !loadGameFromSourceText(uniqueSources[uniqueIndex], &rawGame)) {
                     uniqueCompileUs[uniqueIndex] = elapsedMicrosSince(phaseStart);
-                    uniqueErrors[uniqueIndex] = uniqueNames[uniqueIndex] + ": failed to compile source";
+                    uniqueErrors[uniqueIndex] = uniqueNames[uniqueIndex] + (hasCachedIr ? ": failed to load runtime IR cache entry" : ": failed to compile source");
                     continue;
                 }
                 uniqueCompileUs[uniqueIndex] = elapsedMicrosSince(phaseStart);
@@ -2565,6 +2618,26 @@ SimulationCaseResult runSimulationCorpusCase(
     return result;
 }
 
+SimulationCaseResult compileAndRunSimulationCorpusCase(
+    const SimulationCorpusCase& testCase,
+    const SimulationCorpusOptions& options
+) {
+    SimulationCaseResult result;
+    ps_game* rawGame = nullptr;
+    const auto phaseStart = std::chrono::steady_clock::now();
+    if (!loadGameFromSourceText(testCase.source, &rawGame)) {
+        result.timing.sourceCompileUs = elapsedMicrosSince(phaseStart);
+        result.error = testCase.name + ": failed to compile source";
+        return result;
+    }
+    result.timing.sourceCompileUs = elapsedMicrosSince(phaseStart);
+    std::unique_ptr<ps_game, decltype(&ps_free_game)> game(rawGame, ps_free_game);
+
+    SimulationCaseResult runResult = runSimulationCorpusCase(testCase, game.get(), options);
+    runResult.timing.sourceCompileUs = result.timing.sourceCompileUs;
+    return runResult;
+}
+
 SimulationTimingTotals sumSimulationTimings(
     const std::vector<SimulationCaseResult>& results,
     int64_t testdataParseUs
@@ -2604,11 +2677,12 @@ std::vector<SimulationCaseTimingSummary> collectSimulationCaseTimingSummaries(
         const size_t caseIndex = checkIndex % cases.size();
         const auto& timing = results[checkIndex].timing;
         auto& slow = slowCases[caseIndex];
+        slow.sourceCompileUs += timing.sourceCompileUs;
         slow.sessionCreateUs += timing.sessionCreateUs;
         slow.levelLoadUs += timing.levelLoadUs;
         slow.replayUs += timing.replayUs;
         slow.serializeUs += timing.serializeUs;
-        slow.totalUs += timing.sessionCreateUs + timing.levelLoadUs + timing.replayUs + timing.serializeUs;
+        slow.totalUs += timing.sourceCompileUs + timing.sessionCreateUs + timing.levelLoadUs + timing.replayUs + timing.serializeUs;
     }
     std::sort(slowCases.begin(), slowCases.end(), [](const SimulationCaseTimingSummary& lhs, const SimulationCaseTimingSummary& rhs) {
         if (lhs.totalUs != rhs.totalUs) {
@@ -2903,7 +2977,21 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
     const std::vector<SimulationCorpusCase> allCases = parseSimulationCorpusCases(root);
     const std::vector<SimulationCorpusCase> cases = filterSimulationCorpusCases(allCases, options);
     const int64_t testdataParseUs = elapsedMicrosSince(parseStartedAt);
-    const SimulationCompileCache compileCache = compileSimulationCorpusGames(cases, options.jobs);
+    std::optional<RuntimeIrCache> runtimeIrCache;
+    if (options.runtimeIrCachePath.has_value()) {
+        runtimeIrCache = loadRuntimeIrCache(*options.runtimeIrCachePath);
+    }
+    SimulationCompileCache compileCache;
+    compileCache.games.resize(cases.size());
+    compileCache.errors.resize(cases.size());
+    compileCache.compileUs.resize(cases.size(), 0);
+    if (!options.compileEachCheck) {
+        compileCache = compileSimulationCorpusGames(
+            cases,
+            options.jobs,
+            runtimeIrCache.has_value() ? &*runtimeIrCache : nullptr
+        );
+    }
     const size_t totalChecks = cases.size() * options.repeat;
     std::vector<SimulationCaseResult> results(totalChecks);
     size_t passed = 0;
@@ -2918,7 +3006,9 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
         for (size_t checkIndex = 0; checkIndex < totalChecks; ++checkIndex) {
             const size_t caseIndex = checkIndex % cases.size();
             const SimulationCorpusCase& testCase = cases[caseIndex];
-            if (!compileCache.errors[caseIndex].empty()) {
+            if (options.compileEachCheck) {
+                results[checkIndex] = compileAndRunSimulationCorpusCase(testCase, options);
+            } else if (!compileCache.errors[caseIndex].empty()) {
                 results[checkIndex].error = compileCache.errors[caseIndex];
             } else {
                 results[checkIndex] = runSimulationCorpusCase(
@@ -2956,7 +3046,9 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                     }
                     const size_t caseIndex = checkIndex % cases.size();
                     const SimulationCorpusCase& testCase = cases[caseIndex];
-                    if (!compileCache.errors[caseIndex].empty()) {
+                    if (options.compileEachCheck) {
+                        results[checkIndex] = compileAndRunSimulationCorpusCase(testCase, options);
+                    } else if (!compileCache.errors[caseIndex].empty()) {
                         results[checkIndex].error = compileCache.errors[caseIndex];
                     } else {
                         results[checkIndex] = runSimulationCorpusCase(
@@ -2982,6 +3074,17 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                         std::cerr << "\n";
                     }
                 }
+            }
+        }
+    }
+
+    if (options.compileEachCheck) {
+        compileCache.gamesLoaded = 0;
+        compileCache.gamesReused = 0;
+        for (const auto& result : results) {
+            if (result.timing.sourceCompileUs > 0
+                && result.error.find("failed to compile source") == std::string::npos) {
+                ++compileCache.gamesLoaded;
             }
         }
     }
@@ -3021,14 +3124,17 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
     if (options.repeat > 0 && !cases.empty()) {
         replayUsByRepeat.assign(options.repeat, 0);
         sourceCompileUsByRepeat.assign(options.repeat, 0);
-        const int64_t amortizedSourceCompileUs = compileCache.totalCompileUs
-            / static_cast<int64_t>(std::max<size_t>(options.repeat, 1));
-        std::fill(sourceCompileUsByRepeat.begin(), sourceCompileUsByRepeat.end(), amortizedSourceCompileUs);
+        if (!options.compileEachCheck) {
+            const int64_t amortizedSourceCompileUs = compileCache.totalCompileUs
+                / static_cast<int64_t>(std::max<size_t>(options.repeat, 1));
+            std::fill(sourceCompileUsByRepeat.begin(), sourceCompileUsByRepeat.end(), amortizedSourceCompileUs);
+        }
         for (size_t checkIndex = 0; checkIndex < totalChecks; ++checkIndex) {
             const size_t repeatIndex = checkIndex / cases.size();
             if (repeatIndex >= options.repeat) {
                 continue;
             }
+            sourceCompileUsByRepeat[repeatIndex] += results[checkIndex].timing.sourceCompileUs;
             replayUsByRepeat[repeatIndex] += results[checkIndex].timing.replayUs;
         }
     }
@@ -3861,13 +3967,24 @@ void appendRulePlanJson(std::ostream& out, const puzzlescript::Game& game) {
     out << "}";
 }
 
-std::string serializeRuntimeGameDebugJson(const puzzlescript::LoadedGame& loadedGame) {
+struct RuntimeGameJsonOptions {
+    bool includeRules = true;
+    std::optional<uint64_t> sourceHash;
+};
+
+std::string serializeRuntimeGameDebugJson(
+    const puzzlescript::LoadedGame& loadedGame,
+    RuntimeGameJsonOptions options = {}
+) {
     const puzzlescript::Game& game = *loadedGame.information;
     const puzzlescript::MetaGameState& initialMetaGameState = loadedGame.initialMetaGameState;
     std::ostringstream out;
     // Emit JSON that is loadable by puzzlescript::loadGameFromJson.
     out << "{\n";
     out << "  \"schema_version\": " << game.schemaVersion << ",\n";
+    if (options.sourceHash.has_value()) {
+        out << "  \"source_hash\": " << jsonStringLiteral(std::to_string(*options.sourceHash)) << ",\n";
+    }
     out << "  \"document\": {\"command\":[\"loadLevel\",0],\"error_count\":0,\"errors\":[],\"input_file\":\"\",\"random_seed\":\"\"},\n";
     out << "  \"game\": {\n";
     out << "    \"strides\": {\"object\": " << game.strideObject << ", \"movement\": " << game.strideMovement
@@ -4048,9 +4165,26 @@ std::string serializeRuntimeGameDebugJson(const puzzlescript::LoadedGame& loaded
         }
         out << "]";
     };
-    out << "    \"rules\": "; appendRules(game.rules); out << ",\n";
-    out << "    \"late_rules\": "; appendRules(game.lateRules); out << ",\n";
-    out << "    \"rule_plan_v1\": "; appendRulePlanJson(out, game); out << ",\n";
+    if (options.includeRules) {
+        out << "    \"rules\": "; appendRules(game.rules); out << ",\n";
+        out << "    \"late_rules\": "; appendRules(game.lateRules); out << ",\n";
+        out << "    \"rule_plan_v1\": "; appendRulePlanJson(out, game); out << ",\n";
+    }
+    out << "    \"winconditions\": [";
+    for (size_t conditionIndex = 0; conditionIndex < game.winConditions.size(); ++conditionIndex) {
+        if (conditionIndex != 0) out << ",";
+        const auto& condition = game.winConditions[conditionIndex];
+        out << "{\"quantifier\":" << condition.quantifier
+            << ",\"filter1\":";
+        appendJsonMask(out, game, condition.filter1, game.wordCount);
+        out << ",\"filter2\":";
+        appendJsonMask(out, game, condition.filter2, game.wordCount);
+        out << ",\"line_number\":" << condition.lineNumber
+            << ",\"aggr1\":" << (condition.aggr1 ? "true" : "false")
+            << ",\"aggr2\":" << (condition.aggr2 ? "true" : "false")
+            << "}";
+    }
+    out << "],\n";
     out << "    \"sfx_events\": {";
     {
         bool first = true;
@@ -5348,6 +5482,37 @@ std::vector<CodegenSource> collectCompiledRuleSources(
     return sources;
 }
 
+std::string generateRuntimeIrCacheJson(const std::vector<CodegenSource>& sources, bool includeRules) {
+    std::ostringstream out;
+    out << "{\n"
+        << "  \"schema_version\": 1,\n"
+        << "  \"kind\": \"runtime_ir_cache\",\n"
+        << "  \"include_rules\": " << (includeRules ? "true" : "false") << ",\n"
+        << "  \"sources\": [\n";
+    for (size_t index = 0; index < sources.size(); ++index) {
+        const auto& source = sources[index];
+        puzzlescript::LoadedGame loadedGame;
+        loadedGame.information = source.game;
+        const std::string runtimeIr = serializeRuntimeGameDebugJson(
+            loadedGame,
+            RuntimeGameJsonOptions{includeRules, source.hash}
+        );
+        out << "    {"
+            << "\"index\":" << index
+            << ",\"path\":" << jsonStringLiteral(source.path.string())
+            << ",\"source_hash\":" << jsonStringLiteral(std::to_string(source.hash))
+            << ",\"runtime_ir_json\":" << jsonStringLiteral(runtimeIr)
+            << "}";
+        if (index + 1 < sources.size()) {
+            out << ",";
+        }
+        out << "\n";
+    }
+    out << "  ]\n"
+        << "}\n";
+    return out.str();
+}
+
 std::string generateCompiledRulesCpp(
     const std::vector<CodegenSource>& sources,
     std::string_view symbol,
@@ -5955,6 +6120,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
     std::optional<std::filesystem::path> emitCpp;
     std::optional<std::filesystem::path> emitCppDir;
     std::optional<std::filesystem::path> emitSourcesList;
+    std::optional<std::filesystem::path> emitRuntimeIrCache;
     std::optional<std::filesystem::path> coverageJson;
     std::optional<uint64_t> maxCompiledRulesPerSource;
     std::optional<uint64_t> maxGeneratedLinesPerSource;
@@ -5965,6 +6131,7 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
     CompactCodegenOptions compactOptions{true};
     bool statsOnly = false;
     bool compactTurnOnly = false;
+    bool runtimeIrCacheOmitRules = false;
     for (int index = 0; index < argc; ++index) {
         const std::string arg = argv[index];
         if (arg == "--emit-cpp") {
@@ -5982,6 +6149,11 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
                 throw std::runtime_error("--emit-sources-list requires a path");
             }
             emitSourcesList = std::filesystem::path(argv[index]);
+        } else if (arg == "--emit-runtime-ir-cache") {
+            if (++index >= argc) {
+                throw std::runtime_error("--emit-runtime-ir-cache requires a path");
+            }
+            emitRuntimeIrCache = std::filesystem::path(argv[index]);
         } else if (arg == "--coverage-json") {
             if (++index >= argc) {
                 throw std::runtime_error("--coverage-json requires a path");
@@ -5996,6 +6168,8 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
             statsOnly = true;
         } else if (arg == "--compact-turn-only" || arg == "--compact-tick-only") {
             compactTurnOnly = true;
+        } else if (arg == "--runtime-ir-cache-omit-rules") {
+            runtimeIrCacheOmitRules = true;
         } else if (arg == "--case-index") {
             if (++index >= argc) {
                 throw std::runtime_error("--case-index requires a positive integer");
@@ -6091,6 +6265,12 @@ int compileRulesCommand(const std::string& sourcePath, int argc, char** argv) {
         skippedGeneratedLines
     );
     const CompiledRulesCoverage coverage = measureCompiledRulesCoverage(sources, options);
+    if (emitRuntimeIrCache.has_value()) {
+        writeFileIfChanged(
+            *emitRuntimeIrCache,
+            generateRuntimeIrCacheJson(sources, !runtimeIrCacheOmitRules)
+        );
+    }
     if (coverageJson.has_value()) {
         writeFileIfChanged(
             *coverageJson,
@@ -6604,7 +6784,7 @@ void printCompileRulesHelp() {
         << "Usage: puzzlescript_cpp specialize-rulegroups game.txt --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
         << "       puzzlescript_cpp compile-rules game.txt --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp out.cpp [--symbol name] [--max-rows N]\n"
-        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--symbol name] [--max-rows N] [--compact-turn-only] [--compact-turn-mode interpreter|compiler] [--case-index N] [--case-name text] [--max-compiled-rules-per-source N] [--max-generated-lines-per-source N]\n"
+        << "       puzzlescript_cpp compile-rules path/to/corpus-dir --emit-cpp-dir out-dir --emit-sources-list out.txt [--emit-runtime-ir-cache out.json] [--runtime-ir-cache-omit-rules] [--symbol name] [--max-rows N] [--compact-turn-only] [--compact-turn-mode interpreter|compiler] [--case-index N] [--case-name text] [--max-compiled-rules-per-source N] [--max-generated-lines-per-source N]\n"
         << "       puzzlescript_cpp compile-rules path/to/corpus --stats-only [--max-rows N] [--coverage-json out.json] [--compact-turn-mode interpreter|compiler]\n\n"
         << "Emits C++ specialized rulegroup kernels for conservative deterministic rulegroups.\n"
         << "compile-rules remains as the compatibility command name used by existing build scripts.\n"
@@ -6613,7 +6793,7 @@ void printCompileRulesHelp() {
         << "--stats-only to print coverage and miss buckets without writing generated code. --coverage-json writes per-source coverage. --max-rows defaults to 1;\n"
         << "higher values enable experimental deterministic multi-row kernels. --compact-turn-mode defaults to interpreter; compiler mode emits the native compact compiler skeleton without bridge fallback.\n"
         << "--compact-turn-only emits compact turn backends and registry stubs without generated rule kernels, useful for compact oracle coverage builds.\n"
-        << "--compact-tick-only remains as a compatibility alias. --max-compiled-rules-per-source and --max-generated-lines-per-source skip oversized sharded sources so the runtime can fall back for those games.\n\n"
+        << "--compact-tick-only remains as a compatibility alias. --emit-runtime-ir-cache writes loadable runtime metadata keyed by source hash. --runtime-ir-cache-omit-rules is experimental and only valid when callers do not need load-level rule execution. --max-compiled-rules-per-source and --max-generated-lines-per-source skip oversized sharded sources so the runtime can fall back for those games.\n\n"
         << "Examples:\n"
         << "  puzzlescript_cpp specialize-rulegroups src/demo/sokoban_basic.txt --emit-cpp build/compiled-rules/sokoban.cpp --symbol sokoban\n"
         << "  puzzlescript_cpp compile-rules src/tests/solver_tests --emit-cpp-dir build/compiled-rules/solver-tests --emit-sources-list build/compiled-rules/solver-tests.txt\n"
@@ -6624,7 +6804,7 @@ void printCompileRulesHelp() {
 void printTestHelp() {
     std::cout
         << "Usage: puzzlescript_cpp test js-parity generated-js-parity-data.json [options]\n"
-        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--json-summary|--json-summary-out path] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--compact-turn-oracle] [--require-compact-turn-oracle-checks] [--quiet]\n"
+        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--json-summary|--json-summary-out path] [--runtime-ir-cache path] [--no-compile-cache] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--compact-turn-oracle] [--require-compact-turn-oracle-checks] [--quiet]\n"
         << "       puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js [--progress-every N]\n"
         << "       puzzlescript_cpp test diagnostics parser-corpus.bundle.ndjson\n\n"
         << "simulation-corpus and diagnostics-corpus read the original testdata.js and\n"
@@ -6633,6 +6813,8 @@ void printTestHelp() {
         << "from the original JavaScript implementation for deeper runtime trace checks.\n\n"
         << "simulation-corpus profiling reports source compile/load/replay/serialize timings\n"
         << "plus runtime counters for rule scans, pattern tests, replacements, mask rebuilds, and specialized dispatch.\n\n"
+        << "--no-compile-cache compiles from source for every measured check, which keeps pure interpreter\n"
+        << "benchmarking honest when compiler cost is part of the runtime pipeline.\n\n"
         << "With --compact-turn-oracle, simulation-corpus checks linked generated compact turn\n"
         << "entrypoints against the interpreter before replaying each ordinary input. --compact-tick-oracle remains as a compatibility alias.\n\n"
         << "With --turn-executor=compiled-compact, simulation-corpus uses linked generated compact turn\n"
@@ -6650,7 +6832,7 @@ void printTestHelp() {
 
 void printProfileHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --profile-timers [--json-summary|--json-summary-out path] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--quiet]\n"
+        << "Usage: puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --profile-timers [--json-summary|--json-summary-out path] [--runtime-ir-cache path] [--no-compile-cache] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--quiet]\n"
         << "       puzzlescript_cpp profile-simulations generated-js-parity-data.json [--repeat N] [--profile-timers] [--quiet]\n\n"
         << "The direct simulation-corpus profiler is the current performance north star: it\n"
         << "parses testdata.js directly, compiles games natively, replays inputs, and splits\n"
