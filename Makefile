@@ -16,7 +16,7 @@
 .DEFAULT_GOAL := help
 
 .PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
-	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests simulation_corpus_interpreter_benchmark simulation_corpus_compiled_rulegroups_benchmark simulation_corpus_compiled_compact_benchmark simulation_corpus_perf_report \
+	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests simulation_corpus_interpreter_benchmark simulation_corpus_compiled_rulegroups_benchmark simulation_corpus_compiled_compact_benchmark simulation_corpus_perf_report simulation_corpus_perf_report_quick \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_compact_codegen_compare solver_focus_perf_report solver_focus_compact_perf_report solver_focus_compact_codegen_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
@@ -961,6 +961,9 @@ simulation_corpus_perf_report:
 	echo ""; \
 	echo "simulation_corpus_perf_report: compiled-compact-primary"; \
 	$(MAKE) --no-print-directory simulation_corpus_compiled_compact_benchmark COMPILED_RULES_OPT_LEVEL=3
+
+simulation_corpus_perf_report_quick:
+	@$(MAKE) --no-print-directory simulation_corpus_perf_report SIMULATION_CORPUS_BENCH_ARGS="--jobs 1 --progress-every 0 --profile-timers --repeat 1 --quiet"
 
 compiled_rules_simulation_suite_coverage:
 	@set -e; \

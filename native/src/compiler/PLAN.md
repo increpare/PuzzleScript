@@ -50,8 +50,9 @@ specialization defaults to `SOLVER_FOCUS_COMPILED_RULES_MAX_ROWS=99`, while the
 global specialized-rulegroup default remains conservative.
 
 Generated sources also export compact whole-turn backends. Compiler-mode
-compact turns now pass the full `testdata.js` simulation corpus through the
-compact oracle path: 469/469 cases pass, with zero compact-oracle failures.
+compact turns now pass the full `testdata.js` simulation corpus both through
+the compact oracle path and as the primary replay executor: 469/469 cases pass,
+with zero compact-oracle failures and zero compact-primary unhandled turns.
 
 The runtime state model has converged on one authoritative board:
 `PersistentLevelState::board.objects`, a packed cell-major object-mask grid.
@@ -60,10 +61,10 @@ C API reads, restart/checkpoint, and oracle export all use that same persistent
 board. `Scratch::objectCellBits` / `Scratch::objectCellCounts` remain derived
 rule-scan indexes, not another persistent board representation.
 
-The remaining benchmark gap is that simulation-corpus compact execution is
-currently exposed as oracle validation: it runs generated compact code and then
-compares against interpreted execution. That is useful for correctness, but it
-is not a clean compact-primary runtime benchmark.
+The main remaining gap is performance. Compact-primary replay is now a clean
+benchmark path, but it is still slower than the interpreter on the full
+simulation corpus. The first profile points at generated rule scanning rather
+than bridge/setup overhead.
 
 ## Terms
 
@@ -105,7 +106,7 @@ workflow while the backend grows more capable. As the generated path gets more
 complete, solver/generator calls should pay less dynamic lookup cost and do less
 work through generic runtime tables.
 
-The next runtime harness step is a compact-primary execution mode for
+The runtime harness now has a compact-primary execution mode for
 simulation/replay, so benchmarks can compare:
 
 ```text
@@ -144,10 +145,49 @@ compiled whole-turn executor over canonical board
    Once the generated path is faithful and fast, add a compact ABI suitable for
    solver/generator hot loops and eventually embedded targets.
 
-7. Add a compact-primary simulation/replay harness.
-   The existing compact oracle remains a correctness guard. A separate primary
-   execution mode should mutate `GameSession::levelState` directly through the
-   generated whole-turn executor so simulation corpus timing is apples-to-apples.
+7. Add a compact-primary simulation/replay harness. Done.
+   The existing compact oracle remains a correctness guard. The primary
+   execution mode mutates `GameSession::levelState` directly through the
+   generated whole-turn executor, so simulation corpus timing is apples-to-apples.
+
+8. Reduce generated rule scanning cost.
+   Current compact-primary profiles show generated early/late rule matching as
+   the largest cost center. Improve the generated fixed-row matchers so they do
+   less whole-line/whole-board candidate scanning before adding more exotic
+   movement or layout work.
+
+## Current Benchmark Snapshot
+
+On 2026-05-01, `make simulation_corpus_perf_report` passed all three modes on
+the full `testdata.js` simulation corpus with `--repeat 10`:
+
+```text
+interpreter:              replay_ms=17812
+compiled rulegroups:      replay_ms=17828
+compiled compact primary: replay_ms=19755, compiled_compact_handled=186500, bridge=0
+```
+
+The compact-primary timing breakdown was:
+
+```text
+early_rules_ns=6249347646
+late_rules_ns=4722241203
+movement_ns=1792828885
+again_probe_ns=1445388462
+setup_ns=225526450
+canonicalize_ns=7062377
+```
+
+The important counter difference was candidate scanning: compact-primary
+reported `row_scans=318425380` and `candidate_cells_tested=2380022380`,
+far above the interpreter path. That makes rule matcher candidate selection the
+next optimization target.
+
+For a faster local signal while working on generated scanning, use:
+
+```sh
+make simulation_corpus_perf_report_quick
+```
 
 ## Correctness Strategy
 
