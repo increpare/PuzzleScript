@@ -236,6 +236,46 @@ function cloneLevelData(value) {
     };
 }
 
+function int32ArraysEqual(left, right) {
+    if (left === right) {
+        return true;
+    }
+    if (!left || !right || left.length !== right.length) {
+        return false;
+    }
+    for (let index = 0; index < left.length; index++) {
+        if ((left[index] | 0) !== (right[index] | 0)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function arraysEqual(left, right) {
+    if (left === right) {
+        return true;
+    }
+    if (!Array.isArray(left) || !Array.isArray(right) || left.length !== right.length) {
+        return false;
+    }
+    for (let index = 0; index < left.length; index++) {
+        if (left[index] !== right[index]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function randomStateEqual(left, right) {
+    if (left === right) {
+        return true;
+    }
+    if (!left || !right || left.i !== right.i || left.j !== right.j) {
+        return false;
+    }
+    return arraysEqual(left.s, right.s);
+}
+
 function zeroBitVecArray(values) {
     if (!Array.isArray(values)) {
         return;
@@ -247,33 +287,80 @@ function zeroBitVecArray(values) {
     }
 }
 
-function createObjectHasher(wordCount) {
+function createZobristStateHasher(usesRandom) {
     const lines = [
         '"use strict";',
-        'let h1 = 0x811c9dc5 | 0;',
-        'let h2 = 0x9e3779b9 | 0;',
-        'let v = flags | 0;',
-        'h1 = Math.imul(h1 ^ v, 16777619);',
-        'h2 = Math.imul(h2 + v, 1597334677);',
+        'let h1 = Math.imul((lo ^ flags) | 0, 16777619);',
+        'let h2 = Math.imul((hi + flags) | 0, 1597334677);',
     ];
-    for (let index = 0; index < wordCount; index++) {
-        lines.push(`v = objects[${index}] | 0;`);
-        lines.push('h1 = Math.imul(h1 ^ v, 16777619);');
-        lines.push('h2 = Math.imul(h2 ^ (v + 0x9e3779b9), 1597334677);');
+    if (usesRandom) {
+        lines.push('if (randomState) {');
+        lines.push('  h1 = Math.imul(h1 ^ (randomState.i | 0), 16777619);');
+        lines.push('  h2 = Math.imul(h2 ^ (randomState.j | 0), 1597334677);');
+        lines.push('  const s = randomState.s;');
+        lines.push('  for (let i = 0; i < s.length; i++) {');
+        lines.push('    const v = s[i] | 0;');
+        lines.push('    h1 = Math.imul(h1 ^ v, 16777619);');
+        lines.push('    h2 = Math.imul(h2 ^ (v + i), 1597334677);');
+        lines.push('  }');
+        lines.push('}');
     }
-    lines.push('if (randomState) {');
-    lines.push('  h1 = Math.imul(h1 ^ (randomState.i | 0), 16777619);');
-    lines.push('  h2 = Math.imul(h2 ^ (randomState.j | 0), 1597334677);');
-    lines.push('  const s = randomState.s;');
-    lines.push('  for (let i = 0; i < s.length; i++) {');
-    lines.push('    v = s[i] | 0;');
-    lines.push('    h1 = Math.imul(h1 ^ v, 16777619);');
-    lines.push('    h2 = Math.imul(h2 ^ (v + i), 1597334677);');
-    lines.push('  }');
-    lines.push('}');
     lines.push('return (h1 >>> 0).toString(36) + ":" + (h2 >>> 0).toString(36);');
-    lines.push('//# sourceURL=puzzlescript/generated/solverObjectHasher.js');
-    return new Function('objects', 'flags', 'randomState', lines.join('\n'));
+    lines.push('//# sourceURL=puzzlescript/generated/solverZobristHasher.js');
+    return new Function('lo', 'hi', 'flags', 'randomState', lines.join('\n'));
+}
+
+function nextZobristSeed(seed) {
+    seed = (seed + 0x9e3779b9) | 0;
+    let value = seed;
+    value = Math.imul(value ^ (value >>> 16), 0x85ebca6b);
+    value = Math.imul(value ^ (value >>> 13), 0xc2b2ae35);
+    return {
+        seed,
+        value: (value ^ (value >>> 16)) | 0,
+    };
+}
+
+const ZOBRIST_TABLE_CACHE = new Map();
+
+function createZobristTables(wordCount) {
+    const cached = ZOBRIST_TABLE_CACHE.get(wordCount);
+    if (cached) {
+        return cached;
+    }
+    const tableLength = wordCount * 32;
+    const lo = new Int32Array(tableLength);
+    const hi = new Int32Array(tableLength);
+    let seed = Math.imul(wordCount + 1, 0x45d9f3b) | 0;
+    for (let index = 0; index < tableLength; index++) {
+        let next = nextZobristSeed(seed);
+        seed = next.seed;
+        lo[index] = next.value;
+        next = nextZobristSeed(seed);
+        seed = next.seed;
+        hi[index] = next.value;
+    }
+    const tables = { lo, hi };
+    ZOBRIST_TABLE_CACHE.set(wordCount, tables);
+    return tables;
+}
+
+function computeZobristBoardHash(objects, tableLo, tableHi) {
+    let lo = 0;
+    let hi = 0;
+    for (let wordIndex = 0; wordIndex < objects.length; wordIndex++) {
+        let bits = objects[wordIndex] >>> 0;
+        const tableOffset = wordIndex * 32;
+        while (bits !== 0) {
+            const lowBit = bits & -bits;
+            const bit = 31 - Math.clz32(lowBit);
+            const tableIndex = tableOffset + bit;
+            lo ^= tableLo[tableIndex];
+            hi ^= tableHi[tableIndex];
+            bits = (bits ^ lowBit) >>> 0;
+        }
+    }
+    return { lo: lo | 0, hi: hi | 0 };
 }
 
 function ruleGroupsUseRandom(groups) {
@@ -332,12 +419,80 @@ function createSolverLevelSpecialization() {
     const movementWordCount = level && level.movements ? level.movements.length : 0;
     const width = level && level.width;
     const height = level && level.height;
-    const hasher = createObjectHasher(objectWordCount);
     const ruleGroups = [...(state.rules || []), ...(state.lateRules || [])];
     const usesRandom = ruleGroupsUseRandom(ruleGroups);
     const usesCheckpoint = ruleGroupsUseCommand(ruleGroups, 'checkpoint');
+    const zobristHasher = createZobristStateHasher(usesRandom);
+    const zobristTables = createZobristTables(objectWordCount);
+    const zobristTableId = zobristTables;
     const heuristicDistances = new Array(level.n_tiles);
     const conditionDistances = [];
+    const verifyZobrist = process.env.PUZZLESCRIPT_VERIFY_ZOBRIST === '1';
+
+    function installZobristHash() {
+        if (!level || !level.objects || level.objects.length !== objectWordCount) {
+            return;
+        }
+        level.solverZobristTableLo = zobristTables.lo;
+        level.solverZobristTableHi = zobristTables.hi;
+        level.solverZobristTableId = zobristTableId;
+        level.solverZobristUpdateCell = updateZobristCell;
+        level.solverZobristRecompute = recomputeZobrist;
+        recomputeZobrist();
+    }
+
+    function recomputeZobrist() {
+        const hash = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+        level.solverZobristLo = hash.lo;
+        level.solverZobristHi = hash.hi;
+    }
+
+    function updateZobristCell(tileIndex, vec) {
+        let lo = level.solverZobristLo | 0;
+        let hi = level.solverZobristHi | 0;
+        const offset = tileIndex * STRIDE_OBJ;
+        if (verifyZobrist) {
+            const expectedStart = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            if (lo !== expectedStart.lo || hi !== expectedStart.hi) {
+                throw new Error(`Incremental Zobrist hash already drifted before tile ${tileIndex}: ${lo}:${hi} !== ${expectedStart.lo}:${expectedStart.hi}`);
+            }
+        }
+        for (let word = 0; word < STRIDE_OBJ; word++) {
+            const oldWord = level.objects[offset + word] | 0;
+            const newWord = vec.data[word] | 0;
+            let changed = (oldWord ^ newWord) >>> 0;
+            const tableOffset = (offset + word) * 32;
+            while (changed !== 0) {
+                const lowBit = changed & -changed;
+                const bit = 31 - Math.clz32(lowBit);
+                const tableIndex = tableOffset + bit;
+                lo ^= zobristTables.lo[tableIndex];
+                hi ^= zobristTables.hi[tableIndex];
+                changed = (changed ^ lowBit) >>> 0;
+            }
+        }
+        level.solverZobristLo = lo | 0;
+        level.solverZobristHi = hi | 0;
+        if (verifyZobrist) {
+            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            // updateZobristCell runs before the caller writes vec into level.objects, so
+            // compare against the board with this one cell patched in.
+            const oldWords = [];
+            for (let word = 0; word < STRIDE_OBJ; word++) {
+                oldWords[word] = level.objects[offset + word];
+                level.objects[offset + word] = vec.data[word];
+            }
+            const patched = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            for (let word = 0; word < STRIDE_OBJ; word++) {
+                level.objects[offset + word] = oldWords[word];
+            }
+            if ((level.solverZobristLo | 0) !== patched.lo || (level.solverZobristHi | 0) !== patched.hi) {
+                throw new Error(`Incremental Zobrist update drifted at tile ${tileIndex}: ${level.solverZobristLo}:${level.solverZobristHi} !== ${patched.lo}:${patched.hi}; old board ${expected.lo}:${expected.hi}`);
+            }
+        }
+    }
+
+    installZobristHash();
 
     function matchesMask(mask, aggregate, tileIndex) {
         if (!mask || !mask.data) {
@@ -474,7 +629,18 @@ function createSolverLevelSpecialization() {
         if (!level || !level.objects || level.objects.length !== objectWordCount || level.width !== width || level.height !== height || textMode) {
             return hashCurrentState();
         }
-        return hasher(level.objects, flagsForHash(), usesRandom && RandomGen && RandomGen._state);
+        if (verifyZobrist) {
+            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            if ((level.solverZobristLo | 0) !== expected.lo || (level.solverZobristHi | 0) !== expected.hi) {
+                throw new Error(`Incremental Zobrist hash drifted: ${level.solverZobristLo}:${level.solverZobristHi} !== ${expected.lo}:${expected.hi}`);
+            }
+        }
+        return zobristHasher(
+            level.solverZobristLo | 0,
+            level.solverZobristHi | 0,
+            flagsForHash(),
+            usesRandom && RandomGen && RandomGen._state
+        );
     }
 
     function capture() {
@@ -496,6 +662,9 @@ function createSolverLevelSpecialization() {
             againing,
             loadedLevelSeed,
             hasUsedCheckpoint,
+            zobristTableId,
+            zobristLo: level.solverZobristLo | 0,
+            zobristHi: level.solverZobristHi | 0,
         };
     }
 
@@ -528,6 +697,12 @@ function createSolverLevelSpecialization() {
             return;
         }
         level.objects.set(snapshot.objects);
+        if (snapshot.zobristTableId === zobristTableId) {
+            level.solverZobristLo = snapshot.zobristLo | 0;
+            level.solverZobristHi = snapshot.zobristHi | 0;
+        } else {
+            recomputeZobrist();
+        }
         if (level.movements && level.movements.length === movementWordCount) {
             level.movements.fill(0);
         }
@@ -564,12 +739,31 @@ function createSolverLevelSpecialization() {
         level.commandQueueSourceRules = [];
     }
 
+    function matchesSnapshot(snapshot) {
+        return level &&
+            level.objects &&
+            level.objects.length === objectWordCount &&
+            level.width === width &&
+            level.height === height &&
+            int32ArraysEqual(level.objects, snapshot.objects) &&
+            (!usesRandom || randomStateEqual(RandomGen && RandomGen._state, snapshot.random && snapshot.random.state)) &&
+            curlevel === snapshot.curlevel &&
+            titleScreen === snapshot.titleScreen &&
+            textMode === snapshot.textMode &&
+            titleMode === snapshot.titleMode &&
+            titleSelection === snapshot.titleSelection &&
+            (!textMode || messagetext === snapshot.messagetext) &&
+            winning === snapshot.winning &&
+            againing === snapshot.againing;
+    }
+
     return {
         capture,
         restore,
         hash,
+        matchesSnapshot,
         heuristic,
-        hashMode: usesRandom ? 'specialized_numeric_with_rng' : 'specialized_numeric',
+        hashMode: usesRandom ? 'incremental_zobrist_with_rng' : 'incremental_zobrist',
         snapshotMode: usesCheckpoint ? 'specialized_typed_array_checkpoint' : 'specialized_typed_array_no_undo',
     };
 }
@@ -682,6 +876,60 @@ class MinHeap {
     }
 }
 
+class VisitedStateBuckets {
+    constructor(nodes, solverOps) {
+        this.nodes = nodes;
+        this.solverOps = solverOps;
+        this.buckets = new Map();
+        this.size = 0;
+        this.collisions = 0;
+    }
+
+    addInitial(key, nodeIndex) {
+        this.buckets.set(key, { depth: 0, index: nodeIndex });
+        this.size = 1;
+    }
+
+    find(key, depth) {
+        const bucket = this.buckets.get(key);
+        if (bucket === undefined) {
+            return { duplicate: false, entry: null, collided: false };
+        }
+        const entries = Array.isArray(bucket) ? bucket : [bucket];
+        for (const entry of entries) {
+            if (!this.solverOps.matchesSnapshot(this.nodes[entry.index].snapshot)) {
+                continue;
+            }
+            if (entry.depth <= depth) {
+                return { duplicate: true, entry, collided: false };
+            }
+            return { duplicate: false, entry, collided: false };
+        }
+        return { duplicate: false, entry: null, collided: true };
+    }
+
+    record(key, depth, nodeIndex, existingEntry, collided) {
+        if (existingEntry) {
+            existingEntry.depth = depth;
+            existingEntry.index = nodeIndex;
+            return;
+        }
+        const entry = { depth, index: nodeIndex };
+        const bucket = this.buckets.get(key);
+        if (bucket === undefined) {
+            this.buckets.set(key, entry);
+        } else if (Array.isArray(bucket)) {
+            bucket.push(entry);
+        } else {
+            this.buckets.set(key, [bucket, entry]);
+        }
+        this.size++;
+        if (collided) {
+            this.collisions++;
+        }
+    }
+}
+
 function reconstruct(nodes, index, finalToken) {
     const reversed = [finalToken];
     let cursor = index;
@@ -707,6 +955,7 @@ function createSolverResult(game, levelIndex, timeoutMs, compileMs) {
         generated: 0,
         unique_states: 0,
         duplicates: 0,
+        hash_collisions: 0,
         max_frontier: 0,
         timeout_ms: timeoutMs,
         compile_ms: compileMs,
@@ -730,6 +979,7 @@ function mergeSearchResultTotals(target, source) {
         'expanded',
         'generated',
         'duplicates',
+        'hash_collisions',
         'clone_ms',
         'snapshot_ms',
         'step_ms',
@@ -752,6 +1002,7 @@ function mergeSearchResultTotals(target, source) {
 
 function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
     const result = createSolverResult(game, levelIndex, timeoutMs, compileMs);
+    const useHashBuckets = process.env.PUZZLESCRIPT_DISABLE_HASH_BUCKETS !== '1';
     const seed = `solver:${game}:${levelIndex}`;
     const loadStart = performance.now();
     loadLevelFromState(state, levelIndex, seed);
@@ -780,11 +1031,17 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
         const initialSnapshotStart = performance.now();
         const nodes = [{ snapshot: solverOps.capture(), parent: -1, input: null, depth: 0 }];
         modeResult.snapshot_ms += performance.now() - initialSnapshotStart;
-        const bestDepth = new Map();
+        const visited = useHashBuckets ? new VisitedStateBuckets(nodes, solverOps) : null;
+        const bestDepth = useHashBuckets ? null : new Map();
         const hashStart = performance.now();
-        bestDepth.set(solverOps.hash(), 0);
+        const initialHash = solverOps.hash();
+        if (useHashBuckets) {
+            visited.addInitial(initialHash, 0);
+        } else {
+            bestDepth.set(initialHash, 0);
+        }
         modeResult.hash_ms += performance.now() - hashStart;
-        modeResult.unique_states = 1;
+        modeResult.unique_states = useHashBuckets ? visited.size : bestDepth.size;
         const frontier = new MinHeap();
         let initialHeuristic = 0;
         if (mode !== 'bfs') {
@@ -839,12 +1096,20 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                 const key = solverOps.hash();
                 modeResult.hash_ms += performance.now() - hashStart2;
                 const childDepth = node.depth + 1;
-                if (bestDepth.has(key) && bestDepth.get(key) <= childDepth) {
-                    modeResult.duplicates++;
-                    continue;
+                let visitedMatch = null;
+                if (useHashBuckets) {
+                    visitedMatch = visited.find(key, childDepth);
+                    if (visitedMatch.duplicate) {
+                        modeResult.duplicates++;
+                        continue;
+                    }
+                } else {
+                    if (bestDepth.has(key) && bestDepth.get(key) <= childDepth) {
+                        modeResult.duplicates++;
+                        continue;
+                    }
+                    bestDepth.set(key, childDepth);
                 }
-                bestDepth.set(key, childDepth);
-                modeResult.unique_states = bestDepth.size;
                 const snapshotStart = performance.now();
                 const snapshot = solverOps.capture();
                 modeResult.snapshot_ms += performance.now() - snapshotStart;
@@ -855,6 +1120,13 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                     depth: childDepth,
                 });
                 const childIndex = nodes.length - 1;
+                if (useHashBuckets) {
+                    visited.record(key, childDepth, childIndex, visitedMatch.entry, visitedMatch.collided);
+                    modeResult.unique_states = visited.size;
+                    modeResult.hash_collisions = visited.collisions;
+                } else {
+                    modeResult.unique_states = bestDepth.size;
+                }
                 let childHeuristic = 0;
                 if (mode !== 'bfs') {
                     const heuristicStart = performance.now();
@@ -896,6 +1168,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                 expanded: result.expanded,
                 generated: result.generated,
                 duplicates: result.duplicates,
+                hash_collisions: result.hash_collisions,
                 unique_states: Math.max(result.unique_states, weighted.unique_states || 0),
                 max_frontier: Math.max(result.max_frontier, weighted.max_frontier || 0),
                 clone_ms: result.clone_ms,
@@ -932,6 +1205,7 @@ function levelErrorResult(game, levelIndex, timeoutMs, compileMs, error) {
         generated: 0,
         unique_states: 0,
         duplicates: 0,
+        hash_collisions: 0,
         max_frontier: 0,
         timeout_ms: timeoutMs,
         compile_ms: compileMs,
@@ -971,6 +1245,7 @@ function runGame(root, file) {
             generated: 0,
             unique_states: 0,
             duplicates: 0,
+            hash_collisions: 0,
             max_frontier: 0,
             timeout_ms: 0,
             compile_ms: compileMs,
@@ -1213,6 +1488,7 @@ function totals(results) {
         errors: 0,
         expanded: 0,
         generated: 0,
+        hash_collisions: 0,
         compile_ms: 0,
         load_ms: 0,
         clone_ms: 0,
@@ -1231,6 +1507,7 @@ function totals(results) {
         out.errors += ['compile_error', 'level_error'].includes(result.status) ? 1 : 0;
         out.expanded += result.expanded;
         out.generated += result.generated;
+        out.hash_collisions += result.hash_collisions || 0;
         out.compile_ms += result.compile_ms || 0;
         out.load_ms += result.load_ms || 0;
         out.clone_ms += result.clone_ms || 0;

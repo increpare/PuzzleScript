@@ -362,6 +362,10 @@ function LEVEL_SET_CELL(level, index, vec, array_size) {
 	return result;
 }
 
+function LEVEL_UPDATE_CELL_HASH(level, index, vec) {
+	return `if (${level}.solverZobristUpdateCell) { ${level}.solverZobristUpdateCell(${index}, ${vec}); }\n`;
+}
+
 
 function IMPORT_COMPILE_TIME_ARRAY(runtime, compiletime, array_size) {
 	let result = "";
@@ -370,4 +374,3 @@ function IMPORT_COMPILE_TIME_ARRAY(runtime, compiletime, array_size) {
 	}
 	return result;
 }
-

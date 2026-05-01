@@ -1033,6 +1033,9 @@ function restoreLevel(lev) {
 	againing = false;
 	level.commandQueue = [];
 	level.commandQueueSourceRules = [];
+	if (level.solverZobristRecompute) {
+		level.solverZobristRecompute();
+	}
 }
 
 let zoomscreen = false;
@@ -1927,6 +1930,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		${UNROLL("destroyed &= ~curCellMask", OBJECT_SIZE)}
 		${UNROLL("sfxDestroyMask |= destroyed", OBJECT_SIZE)}
 
+		${LEVEL_UPDATE_CELL_HASH("level", "currentIndex", "curCellMask")}
 		${LEVEL_SET_CELL("level", "currentIndex", "curCellMask", OBJECT_SIZE)}
 		${LEVEL_SET_MOVEMENTS( "currentIndex", "curMovementMask", MOVEMENT_SIZE)}
 
@@ -2809,13 +2813,16 @@ function processInput(dir, dontDoWin, dontModify, skipAgainProbe) {
 				ts += bannedLineNumbers.map(ln => `<a onclick="jumpToLine(${ln});" href="javascript:void(0);">${ln}</a>`).join(", ");
 				consolePrint(`Rigid movement application failed in rule-Group starting from ${ts}, and will be disabled in resimulation. Rolling back...`);
 			}
-			level.objects = new Int32Array(startState.objects);
-			level.movements = new Int32Array(startState.movements);
-			level.rigidGroupIndexMask = startState.rigidGroupIndexMask.concat([]);
-			level.rigidMovementAppliedMask = startState.rigidMovementAppliedMask.concat([]);
-			level.commandQueue = startState.commandQueue.concat([]);
-			level.commandQueueSourceRules = startState.commandQueueSourceRules.concat([]);
-			sfxCreateMask.setZero();
+				level.objects = new Int32Array(startState.objects);
+				level.movements = new Int32Array(startState.movements);
+				level.rigidGroupIndexMask = startState.rigidGroupIndexMask.concat([]);
+				level.rigidMovementAppliedMask = startState.rigidMovementAppliedMask.concat([]);
+				level.commandQueue = startState.commandQueue.concat([]);
+				level.commandQueueSourceRules = startState.commandQueueSourceRules.concat([]);
+				if (level.solverZobristRecompute) {
+					level.solverZobristRecompute();
+				}
+				sfxCreateMask.setZero();
 			sfxDestroyMask.setZero();
 			seedsToPlay_CanMove = [];
 			//seedsToPlay_CantMove = []; 

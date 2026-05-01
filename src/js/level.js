@@ -29,6 +29,9 @@ Level.prototype.getCellInto = function (index, targetarray) {
 }
 
 Level.prototype.setCell = function (index, vec) {
+	if (this.solverZobristUpdateCell) {
+		this.solverZobristUpdateCell(index, vec);
+	}
 	for (let i = 0; i < vec.data.length; ++i) {
 		this.objects[index * STRIDE_OBJ + i] = vec.data[i];
 	}
