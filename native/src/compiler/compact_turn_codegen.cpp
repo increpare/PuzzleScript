@@ -1706,7 +1706,7 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "        std::fill(scratch.liveMovements.begin(), scratch.liveMovements.end(), 0);\n"
         << "        compact_turn_clear_movement_masks_" << suffix << "(scratch);\n"
         << "        addProfileNs(RuntimeCounterId::CompactTurnCanonicalizeNs);\n"
-        << "        return {true, result};\n"
+        << "        return {true, result, false, commands.hasCheckpoint};\n"
         << "    }\n"
         << "    if (commands.hasCancel) {\n"
         << "        levelState.board.objects = turnStartObjects;\n"
@@ -1722,7 +1722,7 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "        }\n"
         << "        result.changed = commands.any;\n"
         << "        addProfileNs(RuntimeCounterId::CompactTurnCanonicalizeNs);\n"
-        << "        return {true, result};\n"
+        << "        return {true, result, false, commands.hasCheckpoint};\n"
         << "    }\n"
         << "    if (commands.hasRestart) {\n"
         << "        levelState.board.objects = turnStartObjects;\n"
@@ -1739,7 +1739,7 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "        result.changed = commands.any;\n"
         << "        result.restarted = true;\n"
         << "        addProfileNs(RuntimeCounterId::CompactTurnCanonicalizeNs);\n"
-        << "        return {true, result};\n"
+        << "        return {true, result, false, commands.hasCheckpoint};\n"
         << "    }\n"
         << "    const bool won = commands.hasWin || compact_turn_evaluate_win_" << suffix << "(dimensions, levelState);\n"
         << "    const bool transitioned = won;\n"
@@ -1782,7 +1782,7 @@ void emitCompactTurnCompilerSingleBody(std::ostream& out, std::string_view suffi
         << "        *outHasAgain = scheduleAgain;\n"
         << "    }\n"
         << "    addProfileNs(RuntimeCounterId::CompactTurnCanonicalizeNs);\n"
-        << "    return {true, result};\n";
+        << "    return {true, result, false, commands.hasCheckpoint};\n";
 }
 
 void emitCompactTurnCompilerDrainBody(std::ostream& out, std::string_view suffix) {
@@ -1797,6 +1797,7 @@ void emitCompactTurnCompilerDrainBody(std::ostream& out, std::string_view suffix
         << "        &hasAgain,\n"
         << "        false\n"
         << "    );\n"
+        << "    outcome.pendingAgain = hasAgain;\n"
         << "    if (!outcome.handled || options.againPolicy != AgainPolicy::Drain) {\n"
         << "        return outcome;\n"
         << "    }\n"
@@ -1824,11 +1825,14 @@ void emitCompactTurnCompilerDrainBody(std::ostream& out, std::string_view suffix
         << "        outcome.result.won = outcome.result.won || tickOutcome.result.won;\n"
         << "        outcome.result.restarted = outcome.result.restarted || tickOutcome.result.restarted;\n"
         << "        outcome.result.transitioned = outcome.result.transitioned || tickOutcome.result.transitioned;\n"
+        << "        outcome.hasCheckpoint = outcome.hasCheckpoint || tickOutcome.hasCheckpoint;\n"
         << "        hasAgain = tickHasAgain;\n"
+        << "        outcome.pendingAgain = hasAgain;\n"
         << "        if (!tickOutcome.result.changed) {\n"
         << "            break;\n"
         << "        }\n"
         << "    }\n"
+        << "    outcome.pendingAgain = false;\n"
         << "    return outcome;\n";
 }
 

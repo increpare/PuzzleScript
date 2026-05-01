@@ -302,11 +302,23 @@ std::vector<std::string> loadInputTokensFromJsonFile(const std::filesystem::path
 
 std::optional<ps_input> parseInputToken(const std::string& token);
 
+enum class SimulationTurnExecutor {
+    Interpreter,
+    CompiledCompact,
+};
+
 struct ReplayOracleStats {
     uint64_t compactTurnChecks = 0;
     uint64_t compactTurnHandled = 0;
     uint64_t compactTurnStateChecks = 0;
     uint64_t compactTurnFailures = 0;
+    std::string firstFailure;
+};
+
+struct ReplayExecutionStats {
+    uint64_t compiledCompactTurns = 0;
+    uint64_t compiledCompactHandled = 0;
+    uint64_t compiledCompactUnhandled = 0;
     std::string firstFailure;
 };
 
@@ -326,11 +338,38 @@ std::string compactTurnOracleMismatchSummary(const ps_compact_turn_oracle_info& 
     return out.str();
 }
 
+ps_step_result replayTurnWithExecutor(
+    ps_full_state* session,
+    ps_input input,
+    SimulationTurnExecutor executor,
+    ReplayExecutionStats* executionStats
+) {
+    if (executor == SimulationTurnExecutor::CompiledCompact) {
+        bool handled = false;
+        const ps_step_result result = ps_full_state_turn_compiled_compact(session, input, false, &handled);
+        if (executionStats != nullptr) {
+            ++executionStats->compiledCompactTurns;
+            if (handled) {
+                ++executionStats->compiledCompactHandled;
+            } else {
+                ++executionStats->compiledCompactUnhandled;
+            }
+        }
+        if (!handled && executionStats != nullptr && executionStats->firstFailure.empty()) {
+            executionStats->firstFailure = "compiled compact primary executor did not handle input";
+        }
+        return result;
+    }
+    return ps_full_state_turn(session, input);
+}
+
 bool replayInputTokens(
     ps_full_state* session,
     const std::vector<std::string>& tokens,
     std::vector<std::string>* outSounds,
-    ReplayOracleStats* oracleStats = nullptr
+    ReplayOracleStats* oracleStats = nullptr,
+    SimulationTurnExecutor executor = SimulationTurnExecutor::Interpreter,
+    ReplayExecutionStats* executionStats = nullptr
 ) {
     if (!session) {
         return false;
@@ -346,7 +385,10 @@ bool replayInputTokens(
         if (token == "restart") {
             (void)ps_full_state_restart(session);
             for (int againPass = 0; againPass < 500 && ps_full_state_pending_again(session); ++againPass) {
-                const ps_step_result stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
+                const ps_step_result stepResult = replayTurnWithExecutor(session, PS_INPUT_TICK, executor, executionStats);
+                if (executionStats != nullptr && !executionStats->firstFailure.empty()) {
+                    return false;
+                }
                 if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
                     for (size_t i = 0; i < stepResult.audio_event_count; ++i) {
                         const ps_audio_event& event = stepResult.audio_events[i];
@@ -394,10 +436,9 @@ bool replayInputTokens(
         }
 
         ps_step_result stepResult{};
-        if (*input == PS_INPUT_TICK) {
-            stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
-        } else {
-            stepResult = ps_full_state_turn(session, *input);
+        stepResult = replayTurnWithExecutor(session, *input, executor, executionStats);
+        if (executionStats != nullptr && !executionStats->firstFailure.empty()) {
+            return false;
         }
 
         if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
@@ -410,7 +451,10 @@ bool replayInputTokens(
         }
 
         for (int againPass = 0; againPass < 500 && ps_full_state_pending_again(session); ++againPass) {
-            stepResult = ps_full_state_turn(session, PS_INPUT_TICK);
+            stepResult = replayTurnWithExecutor(session, PS_INPUT_TICK, executor, executionStats);
+            if (executionStats != nullptr && !executionStats->firstFailure.empty()) {
+                return false;
+            }
             if (outSounds && stepResult.audio_event_count > 0 && stepResult.audio_events) {
                 for (size_t i = 0; i < stepResult.audio_event_count; ++i) {
                     const ps_audio_event& event = stepResult.audio_events[i];
@@ -2051,6 +2095,7 @@ struct SimulationCorpusOptions {
     bool quiet = false;
     bool compactTurnOracle = false;
     bool requireCompactTurnOracleChecks = false;
+    SimulationTurnExecutor turnExecutor = SimulationTurnExecutor::Interpreter;
 };
 
 struct SimulationCorpusCase {
@@ -2079,7 +2124,125 @@ struct SimulationCaseResult {
     uint64_t compactTurnOracleHandled = 0;
     uint64_t compactTurnOracleStateChecks = 0;
     uint64_t compactTurnOracleFailures = 0;
+    uint64_t compiledCompactTurns = 0;
+    uint64_t compiledCompactHandled = 0;
+    uint64_t compiledCompactUnhandled = 0;
 };
+
+std::string serializeFullStateForReplayDiff(ps_full_state* session) {
+    ps_full_state_status_info status{};
+    ps_full_state_status(session, &status);
+    char* serializedRaw = ps_full_state_serialize_test_string(session);
+    const std::string serialized = serializedRaw ? serializedRaw : "";
+    ps_string_free(serializedRaw);
+
+    std::ostringstream out;
+    out << "mode=" << static_cast<int>(status.mode)
+        << " level=" << status.current_level_index
+        << " target=";
+    if (status.has_current_level_target) {
+        out << status.current_level_target;
+    } else {
+        out << "none";
+    }
+    out << " pending_again=" << (ps_full_state_pending_again(session) ? 1 : 0)
+        << " can_undo=" << (status.can_undo ? 1 : 0)
+        << "\n"
+        << serialized;
+    return out.str();
+}
+
+bool drainReplayAgainForExecutor(
+    ps_full_state* session,
+    SimulationTurnExecutor executor,
+    ReplayExecutionStats* executionStats
+) {
+    for (int againPass = 0; againPass < 500 && ps_full_state_pending_again(session); ++againPass) {
+        (void)replayTurnWithExecutor(session, PS_INPUT_TICK, executor, executionStats);
+        if (executionStats != nullptr && !executionStats->firstFailure.empty()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::string findCompiledCompactReplayDivergence(const SimulationCorpusCase& testCase, ps_game* game) {
+    ps_error* error = nullptr;
+    ps_full_state* rawInterpreter = nullptr;
+    ps_full_state* rawCompiled = nullptr;
+    if (!sessionCreateForGame(game, testCase.seed, &rawInterpreter, &error)) {
+        const std::string message = error ? ps_error_message(error) : "unknown session creation error";
+        ps_free_error(error);
+        return "compiled compact replay diff setup failed for interpreter session: " + message;
+    }
+    std::unique_ptr<ps_full_state, decltype(&ps_full_state_destroy)> interpreter(rawInterpreter, ps_full_state_destroy);
+    if (!sessionCreateForGame(game, testCase.seed, &rawCompiled, &error)) {
+        const std::string message = error ? ps_error_message(error) : "unknown session creation error";
+        ps_free_error(error);
+        return "compiled compact replay diff setup failed for compiled session: " + message;
+    }
+    std::unique_ptr<ps_full_state, decltype(&ps_full_state_destroy)> compiled(rawCompiled, ps_full_state_destroy);
+    ps_full_state_set_unit_testing(interpreter.get(), true);
+    ps_full_state_set_unit_testing(compiled.get(), true);
+    if (!ps_full_state_load_level(interpreter.get(), testCase.targetLevel, &error)) {
+        const std::string message = error ? ps_error_message(error) : "unknown level load error";
+        ps_free_error(error);
+        return "compiled compact replay diff setup failed loading interpreter level: " + message;
+    }
+    if (!ps_full_state_load_level(compiled.get(), testCase.targetLevel, &error)) {
+        const std::string message = error ? ps_error_message(error) : "unknown level load error";
+        ps_free_error(error);
+        return "compiled compact replay diff setup failed loading compiled level: " + message;
+    }
+
+    auto reportMismatch = [&](size_t tokenIndex, const std::string& token) {
+        std::ostringstream stream;
+        stream << "first compiled compact replay divergence after token "
+               << (tokenIndex + 1) << "/" << testCase.inputs.size()
+               << " (" << token << ")\n"
+               << "interpreter:\n" << serializeFullStateForReplayDiff(interpreter.get()) << "\n"
+               << "compiled compact:\n" << serializeFullStateForReplayDiff(compiled.get());
+        return stream.str();
+    };
+
+    if (serializeFullStateForReplayDiff(interpreter.get()) != serializeFullStateForReplayDiff(compiled.get())) {
+        return reportMismatch(0, "initial");
+    }
+
+    ReplayExecutionStats executionStats;
+    for (size_t tokenIndex = 0; tokenIndex < testCase.inputs.size(); ++tokenIndex) {
+        const std::string& token = testCase.inputs[tokenIndex];
+        if (token == "undo") {
+            (void)ps_full_state_undo(interpreter.get());
+            (void)ps_full_state_undo(compiled.get());
+        } else if (token == "restart") {
+            (void)ps_full_state_restart(interpreter.get());
+            (void)ps_full_state_restart(compiled.get());
+            if (!drainReplayAgainForExecutor(interpreter.get(), SimulationTurnExecutor::Interpreter, nullptr)
+                || !drainReplayAgainForExecutor(compiled.get(), SimulationTurnExecutor::CompiledCompact, &executionStats)) {
+                return "compiled compact replay diff failed while draining restart again";
+            }
+        } else {
+            const auto input = parseInputToken(token);
+            if (!input.has_value()) {
+                return "compiled compact replay diff saw unsupported token: " + token;
+            }
+            (void)replayTurnWithExecutor(interpreter.get(), *input, SimulationTurnExecutor::Interpreter, nullptr);
+            (void)replayTurnWithExecutor(compiled.get(), *input, SimulationTurnExecutor::CompiledCompact, &executionStats);
+            if (!executionStats.firstFailure.empty()) {
+                return executionStats.firstFailure;
+            }
+            if (!drainReplayAgainForExecutor(interpreter.get(), SimulationTurnExecutor::Interpreter, nullptr)
+                || !drainReplayAgainForExecutor(compiled.get(), SimulationTurnExecutor::CompiledCompact, &executionStats)) {
+                return "compiled compact replay diff failed while draining again";
+            }
+        }
+        if (serializeFullStateForReplayDiff(interpreter.get()) != serializeFullStateForReplayDiff(compiled.get())) {
+            return reportMismatch(tokenIndex, token);
+        }
+    }
+    return "";
+}
 
 struct SimulationCompileCache {
     std::vector<std::shared_ptr<ps_game>> games;
@@ -2129,6 +2292,24 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
             options.compactTurnOracle = true;
         } else if (arg == "--require-compact-turn-oracle-checks" || arg == "--require-compact-tick-oracle-checks") {
             options.requireCompactTurnOracleChecks = true;
+        } else if ((arg == "--turn-executor" || arg == "--simulation-turn-executor") && index + 1 < argc) {
+            const std::string value = argv[++index];
+            if (value == "interpreter") {
+                options.turnExecutor = SimulationTurnExecutor::Interpreter;
+            } else if (value == "compiled-compact" || value == "compact-compiled" || value == "compiled") {
+                options.turnExecutor = SimulationTurnExecutor::CompiledCompact;
+            } else {
+                throw std::runtime_error("--turn-executor must be interpreter or compiled-compact");
+            }
+        } else if (arg.rfind("--turn-executor=", 0) == 0) {
+            const std::string value = arg.substr(std::string("--turn-executor=").size());
+            if (value == "interpreter") {
+                options.turnExecutor = SimulationTurnExecutor::Interpreter;
+            } else if (value == "compiled-compact" || value == "compact-compiled" || value == "compiled") {
+                options.turnExecutor = SimulationTurnExecutor::CompiledCompact;
+            } else {
+                throw std::runtime_error("--turn-executor must be interpreter or compiled-compact");
+            }
         } else {
             throw std::runtime_error("Unsupported simulation-testdata argument: " + arg);
         }
@@ -2280,7 +2461,7 @@ SimulationCompileCache compileSimulationCorpusGames(const std::vector<Simulation
 SimulationCaseResult runSimulationCorpusCase(
     const SimulationCorpusCase& testCase,
     ps_game* game,
-    bool compactTurnOracle
+    const SimulationCorpusOptions& options
 ) {
     SimulationCaseResult result;
     if (game == nullptr) {
@@ -2312,16 +2493,24 @@ SimulationCaseResult runSimulationCorpusCase(
 
     phaseStart = std::chrono::steady_clock::now();
     ReplayOracleStats oracleStats;
-    ReplayOracleStats* oracleStatsPtr = compactTurnOracle ? &oracleStats : nullptr;
-    if (!replayInputTokens(session.get(), testCase.inputs, nullptr, oracleStatsPtr)) {
+    ReplayOracleStats* oracleStatsPtr = options.compactTurnOracle ? &oracleStats : nullptr;
+    ReplayExecutionStats executionStats;
+    ReplayExecutionStats* executionStatsPtr = options.turnExecutor == SimulationTurnExecutor::CompiledCompact ? &executionStats : nullptr;
+    if (!replayInputTokens(session.get(), testCase.inputs, nullptr, oracleStatsPtr, options.turnExecutor, executionStatsPtr)) {
         result.timing.replayUs = elapsedMicrosSince(phaseStart);
         result.compactTurnOracleChecks = oracleStats.compactTurnChecks;
         result.compactTurnOracleHandled = oracleStats.compactTurnHandled;
         result.compactTurnOracleStateChecks = oracleStats.compactTurnStateChecks;
         result.compactTurnOracleFailures = oracleStats.compactTurnFailures;
+        result.compiledCompactTurns = executionStats.compiledCompactTurns;
+        result.compiledCompactHandled = executionStats.compiledCompactHandled;
+        result.compiledCompactUnhandled = executionStats.compiledCompactUnhandled;
         result.error = testCase.name + ": failed to replay inputs";
         if (!oracleStats.firstFailure.empty()) {
             result.error += "\n" + oracleStats.firstFailure;
+        }
+        if (!executionStats.firstFailure.empty()) {
+            result.error += "\n" + executionStats.firstFailure;
         }
         return result;
     }
@@ -2330,6 +2519,9 @@ SimulationCaseResult runSimulationCorpusCase(
     result.compactTurnOracleHandled = oracleStats.compactTurnHandled;
     result.compactTurnOracleStateChecks = oracleStats.compactTurnStateChecks;
     result.compactTurnOracleFailures = oracleStats.compactTurnFailures;
+    result.compiledCompactTurns = executionStats.compiledCompactTurns;
+    result.compiledCompactHandled = executionStats.compiledCompactHandled;
+    result.compiledCompactUnhandled = executionStats.compiledCompactUnhandled;
 
     phaseStart = std::chrono::steady_clock::now();
     char* serializedRaw = ps_full_state_serialize_test_string(session.get());
@@ -2342,6 +2534,12 @@ SimulationCaseResult runSimulationCorpusCase(
         stream << testCase.name << ": final serialized level mismatch\n"
                << "expected:\n" << testCase.expectedSerialized << "\n"
                << "actual:\n" << actualSerialized << "\n";
+        if (options.turnExecutor == SimulationTurnExecutor::CompiledCompact) {
+            const std::string divergence = findCompiledCompactReplayDivergence(testCase, game);
+            if (!divergence.empty()) {
+                stream << divergence << "\n";
+            }
+        }
         result.error = stream.str();
         return result;
     }
@@ -2564,7 +2762,7 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                 results[checkIndex] = runSimulationCorpusCase(
                     testCase,
                     compileCache.games[caseIndex].get(),
-                    options.compactTurnOracle
+                    options
                 );
             }
             if (results[checkIndex].passed) {
@@ -2602,7 +2800,7 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                         results[checkIndex] = runSimulationCorpusCase(
                             testCase,
                             compileCache.games[caseIndex].get(),
-                            options.compactTurnOracle
+                            options
                         );
                     }
                 }
@@ -2640,11 +2838,17 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
     uint64_t compactTurnOracleHandled = 0;
     uint64_t compactTurnOracleStateChecks = 0;
     uint64_t compactTurnOracleFailures = 0;
+    uint64_t compiledCompactTurns = 0;
+    uint64_t compiledCompactHandled = 0;
+    uint64_t compiledCompactUnhandled = 0;
     for (const auto& result : results) {
         compactTurnOracleChecks += result.compactTurnOracleChecks;
         compactTurnOracleHandled += result.compactTurnOracleHandled;
         compactTurnOracleStateChecks += result.compactTurnOracleStateChecks;
         compactTurnOracleFailures += result.compactTurnOracleFailures;
+        compiledCompactTurns += result.compiledCompactTurns;
+        compiledCompactHandled += result.compiledCompactHandled;
+        compiledCompactUnhandled += result.compiledCompactUnhandled;
     }
     if (options.requireCompactTurnOracleChecks && compactTurnOracleChecks == 0) {
         ++failed;
@@ -2675,6 +2879,14 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " compact_turn_oracle_handled=" << compactTurnOracleHandled
                   << " compact_turn_oracle_state_checks=" << compactTurnOracleStateChecks
                   << " compact_turn_oracle_failures=" << compactTurnOracleFailures;
+    }
+    if (options.turnExecutor == SimulationTurnExecutor::CompiledCompact || compiledCompactTurns > 0 || compiledCompactUnhandled > 0) {
+        std::cout << " turn_executor=compiled_compact"
+                  << " compiled_compact_turns=" << compiledCompactTurns
+                  << " compiled_compact_handled=" << compiledCompactHandled
+                  << " compiled_compact_unhandled=" << compiledCompactUnhandled;
+    } else {
+        std::cout << " turn_executor=interpreter";
     }
     std::cout << "\n";
     if (options.profileTimers) {
@@ -2715,6 +2927,10 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << " specialized_full_turn_attempts=" << counters.specialized_full_turn_attempts
                   << " specialized_full_turn_hits=" << counters.specialized_full_turn_hits
                   << " specialized_full_turn_fallbacks=" << counters.specialized_full_turn_fallbacks
+                  << " turn_executor=" << (options.turnExecutor == SimulationTurnExecutor::CompiledCompact ? "compiled_compact" : "interpreter")
+                  << " compiled_compact_turns=" << compiledCompactTurns
+                  << " compiled_compact_handled=" << compiledCompactHandled
+                  << " compiled_compact_unhandled=" << compiledCompactUnhandled
                   << " compact_turn_native_calls=" << counters.compact_turn_native_calls
                   << " compact_turn_bridge_calls=" << counters.compact_turn_bridge_calls
                   << " compact_turn_setup_ns=" << counters.compact_turn_setup_ns
@@ -6218,7 +6434,7 @@ void printCompileRulesHelp() {
 void printTestHelp() {
     std::cout
         << "Usage: puzzlescript_cpp test js-parity generated-js-parity-data.json [options]\n"
-        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--compact-turn-oracle] [--require-compact-turn-oracle-checks] [--quiet]\n"
+        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--compact-turn-oracle] [--require-compact-turn-oracle-checks] [--quiet]\n"
         << "       puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js [--progress-every N]\n"
         << "       puzzlescript_cpp test diagnostics parser-corpus.bundle.ndjson\n\n"
         << "simulation-corpus and diagnostics-corpus read the original testdata.js and\n"
@@ -6229,6 +6445,8 @@ void printTestHelp() {
         << "plus runtime counters for rule scans, pattern tests, replacements, mask rebuilds, and specialized dispatch.\n\n"
         << "With --compact-turn-oracle, simulation-corpus checks linked generated compact turn\n"
         << "entrypoints against the interpreter before replaying each ordinary input. --compact-tick-oracle remains as a compatibility alias.\n\n"
+        << "With --turn-executor=compiled-compact, simulation-corpus uses linked generated compact turn\n"
+        << "entrypoints as the primary replay executor. This is separate from oracle validation.\n\n"
         << "For optimization work, --top-slow-cases lists the slowest games by phase, and\n"
         << "--case-index/--case-name reruns one slow case with counters and repeats.\n\n"
         << "Usually use the Makefile wrappers:\n"
@@ -6242,7 +6460,7 @@ void printTestHelp() {
 
 void printProfileHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --profile-timers [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--quiet]\n"
+        << "Usage: puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --profile-timers [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--quiet]\n"
         << "       puzzlescript_cpp profile-simulations generated-js-parity-data.json [--repeat N] [--profile-timers] [--quiet]\n\n"
         << "The direct simulation-corpus profiler is the current performance north star: it\n"
         << "parses testdata.js directly, compiles games natively, replays inputs, and splits\n"

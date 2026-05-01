@@ -5485,6 +5485,90 @@ ps_step_result interpretedTurn(FullState& session, ps_input input, RuntimeStepOp
     return interpretedTurnWithSpecializedRulegroups(session, input, options, nullptr, nullptr);
 }
 
+ps_step_result compiledCompactPrimaryTurn(FullState& session, ps_input input, RuntimeStepOptions options, bool* outHandled) {
+    if (outHandled != nullptr) {
+        *outHandled = false;
+    }
+    if (options.solverMode) {
+        options.emitAudio = false;
+    }
+
+    // Message/title flow is session state, not rule execution. Keep it generic
+    // while generated compact kernels own level turns.
+    if (session.meta.textMode || session.meta.titleScreen) {
+        if (outHandled != nullptr) {
+            *outHandled = true;
+        }
+        RuntimeStepOptions flowOptions = options;
+        flowOptions.againPolicy = AgainPolicy::Drain;
+        return interpretedTurn(session, input, flowOptions);
+    }
+
+    const SpecializedCompactTurnBackend* backend = session.game ? session.game->specializedCompactTurn : nullptr;
+    if (backend == nullptr || backend->step == nullptr || !backend->support.wholeTurnSupported) {
+        return ps_step_result{};
+    }
+
+    const bool pushInputUndo = options.playableUndo && input != PS_INPUT_TICK;
+    if (pushInputUndo) {
+        pushUndoSnapshot(session);
+    }
+
+    RuntimeStepOptions compactOptions = options;
+    compactOptions.emitAudio = false;
+    SpecializedCompactTurnContext context{
+        LevelDimensions{currentLevelWidth(session), currentLevelHeight(session)},
+        session.meta.currentLevelIndex,
+    };
+    const SpecializedCompactTurnOutcome outcome = backend->step(
+        *session.game,
+        session.levelState,
+        session.scratch,
+        context,
+        input,
+        compactOptions
+    );
+    if (!outcome.handled) {
+        if (pushInputUndo) {
+            discardTopUndoSnapshot(session);
+        }
+        return ps_step_result{};
+    }
+    if (outHandled != nullptr) {
+        *outHandled = true;
+    }
+
+    ps_step_result result = outcome.result;
+    session.meta.pendingAgain = outcome.pendingAgain;
+
+    if (result.restarted) {
+        session.meta.pendingAgain = false;
+        if (!pushInputUndo && options.playableUndo) {
+            pushUndoSnapshot(session);
+        }
+        restoreRestartTarget(session);
+        runRulesOnLevelStart(session, RuntimeStepOptions{
+            .playableUndo = options.playableUndo,
+            .emitAudio = false,
+            .solverMode = options.solverMode,
+            .againPolicy = AgainPolicy::Drain,
+        });
+    } else if (result.won) {
+        session.meta.pendingAgain = false;
+        result.transitioned = advanceToNextLevel(session);
+    }
+    if (!options.solverMode && !result.won && outcome.hasCheckpoint) {
+        session.meta.restart.objects = session.levelState.board.objects;
+        session.meta.restart.oldFlickscreenDat = session.meta.oldFlickscreenDat;
+    }
+
+    markAllMasksDirty(session);
+    rebuildMasks(session);
+    gThreadTurnResult = TurnResult{};
+    gThreadTurnResult.core = result;
+    return result;
+}
+
 ps_step_result interpretedStepWithSpecializedRulegroups(
     FullState& session,
     ps_input input,

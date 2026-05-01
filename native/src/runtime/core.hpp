@@ -600,6 +600,7 @@ ps_step_result interpreterTickWithCompiledRuleGroups(
     SpecializedRulegroupsForInterpretedTurnFn applyLateRules
 );
 ps_step_result interpretedTurn(FullState& state, ps_input input, RuntimeStepOptions options);
+ps_step_result compiledCompactPrimaryTurn(FullState& state, ps_input input, RuntimeStepOptions options, bool* outHandled);
 
 // Public/runtime compatibility wrappers. New internal code should prefer turn().
 ps_step_result step(FullState& state, ps_input input, RuntimeStepOptions options);

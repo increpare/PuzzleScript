@@ -159,6 +159,15 @@ ps_step_result ps_full_state_turn(ps_full_state* state, ps_input input);
 // Solver/cosmetic suppression mode: disables non-solver-relevant outputs
 // (message/sfx) and ignores checkpoint.
 ps_step_result ps_full_state_turn_with_options(ps_full_state* state, ps_input input, bool solver_mode);
+// Runs a linked generated compact turn backend as the primary executor.
+// `out_handled` is false when no generated compact backend is attached or the
+// backend declines the current state/input. This is intended for benchmark and
+// validation harnesses while the primary generated executor stabilizes.
+ps_step_result ps_full_state_turn_compiled_compact(
+    ps_full_state* state,
+    ps_input input,
+    bool solver_mode,
+    bool* out_handled);
 bool ps_full_state_compact_turn_oracle_check(
     const ps_full_state* state,
     ps_input input,

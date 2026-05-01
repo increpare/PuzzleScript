@@ -236,6 +236,32 @@ ps_step_result ps_full_state_turn_with_options(ps_full_state* state, ps_input in
     return state->lastTurnResult.core;
 }
 
+ps_step_result ps_full_state_turn_compiled_compact(
+    ps_full_state* state,
+    ps_input input,
+    bool solver_mode,
+    bool* out_handled
+) {
+    if (out_handled) {
+        *out_handled = false;
+    }
+    if (!state) {
+        return ps_step_result{};
+    }
+    RuntimeStepOptions options{};
+    options.solverMode = solver_mode;
+    if (solver_mode) {
+        options.emitAudio = false;
+    }
+    bool handled = false;
+    state->lastTurnResult = puzzlescript::TurnResult{};
+    state->lastTurnResult.core = puzzlescript::compiledCompactPrimaryTurn(*state->impl, input, options, &handled);
+    if (out_handled) {
+        *out_handled = handled;
+    }
+    return state->lastTurnResult.core;
+}
+
 bool ps_full_state_create(const ps_game* game, ps_full_state** out_state, ps_error** out_error) {
     if (out_error) {
         *out_error = nullptr;

@@ -16,7 +16,7 @@
 .DEFAULT_GOAL := help
 
 .PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
-	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests \
+	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests simulation_corpus_interpreter_benchmark simulation_corpus_compiled_rulegroups_benchmark simulation_corpus_compiled_compact_benchmark simulation_corpus_perf_report \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_compact_codegen_compare solver_focus_perf_report solver_focus_compact_perf_report solver_focus_compact_codegen_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
@@ -316,7 +316,7 @@ help:
 	@echo "  make js_parity_tests               Run 32-bit C++ against the original JS test corpus"
 	@echo "  make rule_plan_parity_tests        Compare JS/native game.rule_plan_v1 for simulation games"
 	@echo "  make simulation_tests              Run JS sim tests, then mirrored C++ sim parity"
-	@echo "  make simulation_corpus_perf_report Benchmark interpreter vs compiled-rulegroups on testdata.js"
+	@echo "  make simulation_corpus_perf_report Benchmark interpreter vs compiled-rulegroups vs compiled compact on testdata.js"
 	@echo "  make compilation_tests             Run JS compiler tests, then mirrored C++ diagnostics"
 	@echo "  make profile_simulation_tests      Profile C++ simulation replay hot functions"
 	@echo "  make profile_simulation_tests_32   Profile the 32-bit-mask C++ simulation path"
@@ -932,13 +932,35 @@ simulation_corpus_compiled_rulegroups_benchmark: build
 	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_cpp; \
 	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js $(SIMULATION_CORPUS_BENCH_ARGS)
 
+simulation_corpus_compiled_compact_benchmark: build
+	@set -e; \
+	$(COMPILED_RULES_BOOTSTRAP_CPP); \
+	hash=$$({ shasum -a 256 src/tests/resources/testdata.js; \
+		printf '%s\n' "max_rows=$(COMPACT_TURN_TESTDATA_MAX_ROWS)"; \
+		printf '%s\n' "compact_turn_mode=compiler"; \
+		printf '%s\n' "turn_executor=compiled_compact"; \
+		printf '%s\n' "opt_level=$(COMPILED_RULES_OPT_LEVEL)"; \
+	} | shasum -a 256 | awk '{print $$1}'); \
+	out_dir="$(COMPILED_RULES_ARTIFACT_ROOT)/testdata-compact-primary-bench-$$hash"; \
+	build_dir="$(COMPILED_RULES_BUILD_ROOT)/testdata-compact-primary-bench-$$hash"; \
+	out_cpp_dir="$$out_dir/sources"; \
+	sources_file="$$out_dir/sources.txt"; \
+	mkdir -p "$$out_dir"; \
+	$(call COMPILED_RULES_EMIT_SHARDED,$$out_dir,src/tests/resources/testdata.js,testdata_compact_primary_bench_$$hash,--compact-turn-only --compact-turn-mode=compiler,$(COMPACT_TURN_TESTDATA_MAX_ROWS)); \
+	$(call COMPILED_RULES_CONFIGURE,$$build_dir,-DPS_COMPILED_RULES_SOURCE= -DPS_COMPILED_RULES_SOURCES_FILE="$$PWD/$$sources_file"); \
+	$(CMAKE) --build "$$build_dir" $(COMPILED_RULES_BUILD_PARALLEL_ARG) --target puzzlescript_cpp; \
+	"$$build_dir/native/puzzlescript_cpp" test simulation-corpus src/tests/resources/testdata.js $(SIMULATION_CORPUS_BENCH_ARGS) --turn-executor=compiled-compact
+
 simulation_corpus_perf_report:
 	@set -e; \
 	echo "simulation_corpus_perf_report: interpreter"; \
 	$(MAKE) --no-print-directory simulation_corpus_interpreter_benchmark; \
 	echo ""; \
 	echo "simulation_corpus_perf_report: compiled-rulegroups"; \
-	$(MAKE) --no-print-directory simulation_corpus_compiled_rulegroups_benchmark COMPILED_RULES_OPT_LEVEL=3
+	$(MAKE) --no-print-directory simulation_corpus_compiled_rulegroups_benchmark COMPILED_RULES_OPT_LEVEL=3; \
+	echo ""; \
+	echo "simulation_corpus_perf_report: compiled-compact-primary"; \
+	$(MAKE) --no-print-directory simulation_corpus_compiled_compact_benchmark COMPILED_RULES_OPT_LEVEL=3
 
 compiled_rules_simulation_suite_coverage:
 	@set -e; \

@@ -53,6 +53,8 @@ struct SpecializedFullTurnBackend {
 struct SpecializedCompactTurnOutcome {
     bool handled = false;
     ps_step_result result{};
+    bool pendingAgain = false;
+    bool hasCheckpoint = false;
 };
 
 struct SpecializedCompactTurnContext {
