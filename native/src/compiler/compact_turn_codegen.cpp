@@ -111,6 +111,13 @@ void addCompactSourceMaskNeedsForGroups(
             if (!isCompactRuleSupported(rule)) {
                 continue;
             }
+            if (anyMaskWordSet(compiledMaskWords(game, rule.ruleMask, game.wordCount))) {
+                needs.objectBoard = true;
+            }
+            if (rule.hasRuleMovementMask
+                && anyMaskWordSet(compiledMaskWords(game, rule.ruleMovementMask, game.movementWordCount))) {
+                needs.movementBoard = true;
+            }
             const bool horizontalScan = rule.direction > 2;
             for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
                 const MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
@@ -256,6 +263,24 @@ struct CompactRowMaskInfo {
     bool hasAnyRequiredMask = false;
 };
 
+CompactRowMaskInfo compactRuleMaskInfo(
+    const Game& game,
+    const CompactMaskConstantEmitter& masks,
+    const Rule& rule
+) {
+    const std::vector<MaskWord> objectWords = compiledMaskWords(game, rule.ruleMask, game.wordCount);
+    const std::vector<MaskWord> movementWords = compiledMaskWords(
+        game,
+        rule.hasRuleMovementMask ? rule.ruleMovementMask : kNullMaskOffset,
+        game.movementWordCount
+    );
+    return CompactRowMaskInfo{
+        masks.name(objectWords),
+        masks.name(movementWords),
+        anyMaskWordSet(objectWords) || anyMaskWordSet(movementWords)
+    };
+}
+
 CompactRowMaskInfo compactRowMaskInfo(
     const Game& game,
     const CompactMaskConstantEmitter& masks,
@@ -275,6 +300,22 @@ CompactRowMaskInfo compactRowMaskInfo(
         masks.name(movementWords),
         anyMaskWordSet(objectWords) || anyMaskWordSet(movementWords)
     };
+}
+
+void emitCompactRuleMaskPrecheck(
+    std::ostream& out,
+    std::string_view indent,
+    std::string_view suffix,
+    const CompactRowMaskInfo& ruleMask
+) {
+    if (!ruleMask.hasAnyRequiredMask) {
+        return;
+    }
+    out << indent << "if (!compact_turn_board_has_required_masks_" << suffix
+        << "(scratch, " << ruleMask.objectMaskName << ", " << ruleMask.movementMaskName << ")) {\n"
+        << indent << "    compact_turn_count_rules_skipped_by_mask_" << suffix << "();\n"
+        << indent << "    return false;\n"
+        << indent << "}\n";
 }
 
 void emitCompactFixedRowScanBounds(
@@ -372,6 +413,12 @@ void emitCompactRuleMaskData(
             if (!isCompactRuleSupported(rule)) {
                 continue;
             }
+            masks.emitName(compiledMaskWords(game, rule.ruleMask, game.wordCount));
+            masks.emitName(compiledMaskWords(
+                game,
+                rule.hasRuleMovementMask ? rule.ruleMovementMask : kNullMaskOffset,
+                game.movementWordCount
+            ));
             for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
                 const MaskOffset rowObjectOffset = rowIndex < rule.cellRowMasksCount
                     ? game.cellRowMaskOffsets[rule.cellRowMasksFirst + rowIndex]
@@ -688,6 +735,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
         return makeCompactRuleGeneratedNames(prefix + "_apply", prefix + "_queue_commands");
     }
 
+    const CompactRowMaskInfo ruleMask = compactRuleMaskInfo(game, masks, rule);
     const bool inlineSingleRowHelpers = !groupIsRandom && rule.patterns.size() == 1;
     const bool inlineSingleRowStartMatches = inlineSingleRowHelpers
         && !rule.ellipsisCount.empty()
@@ -708,6 +756,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                   << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
                   << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
                   << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
+        emitCompactRuleMaskPrecheck(applyBody, "    ", suffix, ruleMask);
         emitCompactFixedRowScanBounds(applyBody, rule, row.size(), "    ");
         if (rowMask.hasAnyRequiredMask) {
             applyBody << "    if (!compact_turn_board_has_required_masks_" << suffix
@@ -813,6 +862,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                   << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
                   << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
                   << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
+        emitCompactRuleMaskPrecheck(applyBody, "    ", suffix, ruleMask);
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
             const std::vector<Pattern>& row = rule.patterns[rowIndex];
             const CompactRowMaskInfo rowMask = compactRowMaskInfo(game, masks, rule, rowIndex);
@@ -1141,8 +1191,9 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
         const std::vector<Pattern>& row = rule.patterns[rowIndex];
         std::ostringstream applyBody;
         applyBody << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
-                  << "    std::vector<std::vector<int32_t>> matches;\n"
-                  << "    if (!" << rowCollectNames[rowIndex] << "(dimensions, levelState, scratch, matches)) return false;\n";
+                  << "    std::vector<std::vector<int32_t>> matches;\n";
+        emitCompactRuleMaskPrecheck(applyBody, "    ", suffix, ruleMask);
+        applyBody << "    if (!" << rowCollectNames[rowIndex] << "(dimensions, levelState, scratch, matches)) return false;\n";
         emitCompactRuleCommandQueue(applyBody, commandQueueName);
         applyBody << "    bool changed = false;\n"
                   << "    for (size_t matchIndex = 0; matchIndex < matches.size(); ++matchIndex) {\n"
@@ -1193,6 +1244,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                   << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
                   << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
                   << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
+        emitCompactRuleMaskPrecheck(applyBody, "    ", suffix, ruleMask);
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
             const std::vector<Pattern>& row = rule.patterns[rowIndex];
             if (rule.ellipsisCount[rowIndex] == 0) {
@@ -1351,8 +1403,9 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
 
     if (groupIsRandom) {
         out << "bool " << prefix << "_collect_matches(LevelDimensions dimensions, const PersistentLevelState& levelState, const Scratch& scratch, std::vector<std::vector<std::vector<int32_t>>>& matches) {\n"
-            << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
-            << "    matches.assign(rowCount, std::vector<std::vector<int32_t>>{});\n";
+            << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n";
+        emitCompactRuleMaskPrecheck(out, "    ", suffix, ruleMask);
+        out << "    matches.assign(rowCount, std::vector<std::vector<int32_t>>{});\n";
         for (size_t rowIndex = 0; rowIndex < rule.patterns.size(); ++rowIndex) {
             out << "    if (!" << rowCollectNames[rowIndex] << "(dimensions, levelState, scratch, matches[" << rowIndex << "])) return false;\n";
         }
@@ -1381,6 +1434,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
     applyBody << "(LevelDimensions dimensions, PersistentLevelState& levelState, Scratch& scratch, CompactTurnCommands_" << suffix << "& commands) {\n"
               << "    constexpr size_t rowCount = " << rule.patterns.size() << ";\n"
               << "    std::vector<std::vector<std::vector<int32_t>>> matches;\n";
+    emitCompactRuleMaskPrecheck(applyBody, "    ", suffix, ruleMask);
     if (groupIsRandom) {
         applyBody << "    if (!" << prefix << "_collect_matches(dimensions, levelState, scratch, matches)) return false;\n";
     } else {
@@ -1904,6 +1958,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
 
     out << "struct CompactTurnRuntimeCounters_" << suffix << " {\n"
         << "    uint64_t rulesVisited = 0;\n"
+        << "    uint64_t rulesSkippedByMask = 0;\n"
         << "    uint64_t candidateCellsTested = 0;\n"
         << "    uint64_t replacementsAttempted = 0;\n"
         << "    uint64_t replacementsApplied = 0;\n"
@@ -1911,6 +1966,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    uint64_t ellipsisScans = 0;\n"
         << "    void flush() const {\n"
         << "        addRuntimeCounter(RuntimeCounterId::RulesVisited, rulesVisited);\n"
+        << "        addRuntimeCounter(RuntimeCounterId::RulesSkippedByMask, rulesSkippedByMask);\n"
         << "        addRuntimeCounter(RuntimeCounterId::CandidateCellsTested, candidateCellsTested);\n"
         << "        addRuntimeCounter(RuntimeCounterId::ReplacementsAttempted, replacementsAttempted);\n"
         << "        addRuntimeCounter(RuntimeCounterId::ReplacementsApplied, replacementsApplied);\n"
@@ -1933,6 +1989,7 @@ void emitCompactTurnAccessLayer(std::ostream& out, const Game& game, size_t sour
         << "    }\n"
         << "};\n"
         << "inline void compact_turn_count_rules_visited_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->rulesVisited += amount; }\n"
+        << "inline void compact_turn_count_rules_skipped_by_mask_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->rulesSkippedByMask += amount; }\n"
         << "inline void compact_turn_count_candidate_cells_tested_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->candidateCellsTested += amount; }\n"
         << "inline void compact_turn_count_replacements_attempted_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->replacementsAttempted += amount; }\n"
         << "inline void compact_turn_count_replacements_applied_" << suffix << "(uint64_t amount = 1) { if (compact_turn_runtime_counters_" << suffix << " != nullptr) compact_turn_runtime_counters_" << suffix << "->replacementsApplied += amount; }\n"
