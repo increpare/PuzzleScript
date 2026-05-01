@@ -2091,7 +2091,9 @@ struct SimulationCorpusOptions {
     size_t topSlowCases = 0;
     std::optional<size_t> caseIndex;
     std::optional<std::string> caseNameFilter;
+    std::optional<std::filesystem::path> jsonSummaryOut;
     bool profileTimers = false;
+    bool jsonSummary = false;
     bool quiet = false;
     bool compactTurnOracle = false;
     bool requireCompactTurnOracleChecks = false;
@@ -2262,6 +2264,16 @@ struct SimulationTimingTotals {
     int64_t serializeUs = 0;
 };
 
+struct SimulationCaseTimingSummary {
+    size_t caseIndex = 0;
+    int64_t totalUs = 0;
+    int64_t sourceCompileUs = 0;
+    int64_t replayUs = 0;
+    int64_t sessionCreateUs = 0;
+    int64_t levelLoadUs = 0;
+    int64_t serializeUs = 0;
+};
+
 SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
     SimulationCorpusOptions options;
     for (int index = 0; index < argc; ++index) {
@@ -2279,6 +2291,11 @@ SimulationCorpusOptions parseSimulationCorpusOptions(int argc, char** argv) {
             }
         } else if (arg == "--profile-timers") {
             options.profileTimers = true;
+        } else if (arg == "--json-summary") {
+            options.jsonSummary = true;
+        } else if (arg == "--json-summary-out" && index + 1 < argc) {
+            options.jsonSummary = true;
+            options.jsonSummaryOut = argv[++index];
         } else if (arg == "--top-slow-cases" && index + 1 < argc) {
             options.topSlowCases = static_cast<size_t>(std::stoull(argv[++index]));
         } else if (arg == "--case-index" && index + 1 < argc) {
@@ -2570,6 +2587,151 @@ int64_t medianMicros(std::vector<int64_t> values) {
     }
     std::sort(values.begin(), values.end());
     return values[values.size() / 2];
+}
+
+std::vector<SimulationCaseTimingSummary> collectSimulationCaseTimingSummaries(
+    const std::vector<SimulationCorpusCase>& cases,
+    const SimulationCompileCache& compileCache,
+    const std::vector<SimulationCaseResult>& results
+) {
+    std::vector<SimulationCaseTimingSummary> slowCases(cases.size());
+    for (size_t caseIndex = 0; caseIndex < cases.size(); ++caseIndex) {
+        slowCases[caseIndex].caseIndex = caseIndex;
+        slowCases[caseIndex].sourceCompileUs = compileCache.compileUs[caseIndex];
+        slowCases[caseIndex].totalUs += compileCache.compileUs[caseIndex];
+    }
+    for (size_t checkIndex = 0; checkIndex < results.size(); ++checkIndex) {
+        const size_t caseIndex = checkIndex % cases.size();
+        const auto& timing = results[checkIndex].timing;
+        auto& slow = slowCases[caseIndex];
+        slow.sessionCreateUs += timing.sessionCreateUs;
+        slow.levelLoadUs += timing.levelLoadUs;
+        slow.replayUs += timing.replayUs;
+        slow.serializeUs += timing.serializeUs;
+        slow.totalUs += timing.sessionCreateUs + timing.levelLoadUs + timing.replayUs + timing.serializeUs;
+    }
+    std::sort(slowCases.begin(), slowCases.end(), [](const SimulationCaseTimingSummary& lhs, const SimulationCaseTimingSummary& rhs) {
+        if (lhs.totalUs != rhs.totalUs) {
+            return lhs.totalUs > rhs.totalUs;
+        }
+        return lhs.caseIndex < rhs.caseIndex;
+    });
+    return slowCases;
+}
+
+void writeSimulationJsonSummary(
+    std::ostream& out,
+    const std::vector<SimulationCorpusCase>& cases,
+    const SimulationCorpusOptions& options,
+    size_t passed,
+    size_t failed,
+    size_t totalChecks,
+    int64_t wallUs,
+    const SimulationCompileCache& compileCache,
+    const SimulationTimingTotals& reportedTimings,
+    const ps_runtime_counters& counters,
+    uint64_t compactTurnOracleChecks,
+    uint64_t compactTurnOracleHandled,
+    uint64_t compactTurnOracleStateChecks,
+    uint64_t compactTurnOracleFailures,
+    uint64_t compiledCompactTurns,
+    uint64_t compiledCompactHandled,
+    uint64_t compiledCompactUnhandled,
+    const std::vector<int64_t>& replayUsByRepeat,
+    const std::vector<int64_t>& sourceCompileUsByRepeat,
+    const std::vector<SimulationCaseTimingSummary>& slowCases
+) {
+    out << "{\n";
+    out << "  \"schema_version\": 1,\n";
+    out << "  \"kind\": \"simulation_corpus_summary\",\n";
+    out << "  \"status_summary\": {"
+        << "\"passed\":" << passed
+        << ",\"failed\":" << failed
+        << ",\"total\":" << totalChecks
+        << ",\"cases\":" << cases.size()
+        << ",\"repeats\":" << options.repeat
+        << ",\"jobs\":" << options.jobs
+        << ",\"elapsed_ms\":" << usToMs(wallUs)
+        << ",\"turn_executor\":" << jsonStringLiteral(options.turnExecutor == SimulationTurnExecutor::CompiledCompact ? "compiled_compact" : "interpreter")
+        << "},\n";
+    out << "  \"profile\": {"
+        << "\"wall_ms\":" << usToMs(wallUs)
+        << ",\"games_loaded\":" << compileCache.gamesLoaded
+        << ",\"games_reused\":" << compileCache.gamesReused
+        << ",\"testdata_parse_ms\":" << usToMs(reportedTimings.testdataParseUs)
+        << ",\"source_compile_ms\":" << usToMs(reportedTimings.sourceCompileUs)
+        << ",\"session_create_ms\":" << usToMs(reportedTimings.sessionCreateUs)
+        << ",\"level_load_ms\":" << usToMs(reportedTimings.levelLoadUs)
+        << ",\"replay_ms\":" << usToMs(reportedTimings.replayUs)
+        << ",\"replay_avg_ms\":" << usToMs(reportedTimings.replayUs / static_cast<int64_t>(std::max<size_t>(options.repeat, 1)))
+        << ",\"replay_median_ms\":" << usToMs(medianMicros(replayUsByRepeat))
+        << ",\"serialize_ms\":" << usToMs(reportedTimings.serializeUs)
+        << ",\"source_compile_avg_ms\":" << usToMs(reportedTimings.sourceCompileUs / static_cast<int64_t>(std::max<size_t>(options.repeat, 1)))
+        << ",\"source_compile_median_ms\":" << usToMs(medianMicros(sourceCompileUsByRepeat))
+        << "},\n";
+    out << "  \"runtime_counters\": {"
+        << "\"rules_visited\":" << counters.rules_visited
+        << ",\"rules_skipped_by_mask\":" << counters.rules_skipped_by_mask
+        << ",\"candidate_cells_tested\":" << counters.candidate_cells_tested
+        << ",\"pattern_tests\":" << counters.pattern_tests
+        << ",\"pattern_matches\":" << counters.pattern_matches
+        << ",\"replacements_attempted\":" << counters.replacements_attempted
+        << ",\"replacements_applied\":" << counters.replacements_applied
+        << ",\"row_scans\":" << counters.row_scans
+        << ",\"ellipsis_scans\":" << counters.ellipsis_scans
+        << ",\"mask_rebuild_calls\":" << counters.mask_rebuild_calls
+        << ",\"mask_rebuild_dirty_calls\":" << counters.mask_rebuild_dirty_calls
+        << ",\"mask_rebuild_rows\":" << counters.mask_rebuild_rows
+        << ",\"mask_rebuild_columns\":" << counters.mask_rebuild_columns
+        << ",\"specialized_rulegroup_attempts\":" << counters.specialized_rulegroup_attempts
+        << ",\"specialized_rulegroup_hits\":" << counters.specialized_rulegroup_hits
+        << ",\"specialized_rulegroup_fallbacks\":" << counters.specialized_rulegroup_fallbacks
+        << ",\"specialized_full_turn_attempts\":" << counters.specialized_full_turn_attempts
+        << ",\"specialized_full_turn_hits\":" << counters.specialized_full_turn_hits
+        << ",\"specialized_full_turn_fallbacks\":" << counters.specialized_full_turn_fallbacks
+        << ",\"compact_turn_native_calls\":" << counters.compact_turn_native_calls
+        << ",\"compact_turn_bridge_calls\":" << counters.compact_turn_bridge_calls
+        << ",\"compact_turn_setup_ns\":" << counters.compact_turn_setup_ns
+        << ",\"compact_turn_early_rules_ns\":" << counters.compact_turn_early_rules_ns
+        << ",\"compact_turn_movement_ns\":" << counters.compact_turn_movement_ns
+        << ",\"compact_turn_late_rules_ns\":" << counters.compact_turn_late_rules_ns
+        << ",\"compact_turn_win_ns\":" << counters.compact_turn_win_ns
+        << ",\"compact_turn_canonicalize_ns\":" << counters.compact_turn_canonicalize_ns
+        << ",\"compact_turn_again_probe_calls\":" << counters.compact_turn_again_probe_calls
+        << ",\"compact_turn_again_probe_ns\":" << counters.compact_turn_again_probe_ns
+        << ",\"compact_turn_bridge_create_ns\":" << counters.compact_turn_bridge_create_ns
+        << ",\"compact_turn_bridge_materialize_ns\":" << counters.compact_turn_bridge_materialize_ns
+        << ",\"compact_turn_bridge_turn_ns\":" << counters.compact_turn_bridge_turn_ns
+        << ",\"compact_turn_bridge_copyback_ns\":" << counters.compact_turn_bridge_copyback_ns
+        << "},\n";
+    out << "  \"compact\": {"
+        << "\"compact_turn_oracle_checks\":" << compactTurnOracleChecks
+        << ",\"compact_turn_oracle_handled\":" << compactTurnOracleHandled
+        << ",\"compact_turn_oracle_state_checks\":" << compactTurnOracleStateChecks
+        << ",\"compact_turn_oracle_failures\":" << compactTurnOracleFailures
+        << ",\"compiled_compact_turns\":" << compiledCompactTurns
+        << ",\"compiled_compact_handled\":" << compiledCompactHandled
+        << ",\"compiled_compact_unhandled\":" << compiledCompactUnhandled
+        << "},\n";
+    out << "  \"slow_cases\": [\n";
+    const size_t emitCount = std::min(options.topSlowCases, slowCases.size());
+    for (size_t rank = 0; rank < emitCount; ++rank) {
+        const auto& slow = slowCases[rank];
+        const auto& testCase = cases[slow.caseIndex];
+        out << "    {"
+            << "\"rank\":" << (rank + 1)
+            << ",\"index\":" << (testCase.index + 1)
+            << ",\"name\":" << jsonStringLiteral(testCase.name)
+            << ",\"total_ms\":" << usToMs(slow.totalUs)
+            << ",\"source_compile_ms\":" << usToMs(slow.sourceCompileUs)
+            << ",\"replay_ms\":" << usToMs(slow.replayUs)
+            << ",\"session_create_ms\":" << usToMs(slow.sessionCreateUs)
+            << ",\"level_load_ms\":" << usToMs(slow.levelLoadUs)
+            << ",\"serialize_ms\":" << usToMs(slow.serializeUs)
+            << "}" << (rank + 1 == emitCount ? "\n" : ",\n");
+    }
+    out << "  ]\n";
+    out << "}\n";
 }
 
 int runSourceCommand(const std::string& sourcePath, int argc, char** argv) {
@@ -2870,6 +3032,65 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
             replayUsByRepeat[repeatIndex] += results[checkIndex].timing.replayUs;
         }
     }
+    const std::vector<SimulationCaseTimingSummary> timingSummaries =
+        (options.topSlowCases > 0 || options.jsonSummary)
+        ? collectSimulationCaseTimingSummaries(cases, compileCache, results)
+        : std::vector<SimulationCaseTimingSummary>{};
+    if (options.jsonSummary) {
+        if (options.jsonSummaryOut.has_value()) {
+            std::ofstream jsonOut(*options.jsonSummaryOut);
+            if (!jsonOut) {
+                std::cerr << "failed to open --json-summary-out path: " << options.jsonSummaryOut->string() << "\n";
+                return 1;
+            }
+            writeSimulationJsonSummary(
+                jsonOut,
+                cases,
+                options,
+                passed,
+                failed,
+                totalChecks,
+                wallUs,
+                compileCache,
+                reportedTimings,
+                counters,
+                compactTurnOracleChecks,
+                compactTurnOracleHandled,
+                compactTurnOracleStateChecks,
+                compactTurnOracleFailures,
+                compiledCompactTurns,
+                compiledCompactHandled,
+                compiledCompactUnhandled,
+                replayUsByRepeat,
+                sourceCompileUsByRepeat,
+                timingSummaries
+            );
+        } else {
+            writeSimulationJsonSummary(
+                std::cout,
+                cases,
+                options,
+                passed,
+                failed,
+                totalChecks,
+                wallUs,
+                compileCache,
+                reportedTimings,
+                counters,
+                compactTurnOracleChecks,
+                compactTurnOracleHandled,
+                compactTurnOracleStateChecks,
+                compactTurnOracleFailures,
+                compiledCompactTurns,
+                compiledCompactHandled,
+                compiledCompactUnhandled,
+                replayUsByRepeat,
+                sourceCompileUsByRepeat,
+                timingSummaries
+            );
+            return failed == 0 ? 0 : 1;
+        }
+    }
     std::cout << "cpp_simulation_tests_direct passed=" << passed << " failed=" << failed
               << " total=" << totalChecks << " cases=" << cases.size()
               << " repeats=" << options.repeat << " jobs=" << options.jobs
@@ -2948,40 +3169,9 @@ int simulationTestdataCommand(const std::filesystem::path& testdataPath, int arg
                   << "\n";
     }
     if (options.topSlowCases > 0 && !cases.empty()) {
-        struct SlowCase {
-            size_t caseIndex = 0;
-            int64_t totalUs = 0;
-            int64_t sourceCompileUs = 0;
-            int64_t replayUs = 0;
-            int64_t sessionCreateUs = 0;
-            int64_t levelLoadUs = 0;
-            int64_t serializeUs = 0;
-        };
-        std::vector<SlowCase> slowCases(cases.size());
-        for (size_t caseIndex = 0; caseIndex < cases.size(); ++caseIndex) {
-            slowCases[caseIndex].caseIndex = caseIndex;
-            slowCases[caseIndex].sourceCompileUs = compileCache.compileUs[caseIndex];
-            slowCases[caseIndex].totalUs += compileCache.compileUs[caseIndex];
-        }
-        for (size_t checkIndex = 0; checkIndex < results.size(); ++checkIndex) {
-            const size_t caseIndex = checkIndex % cases.size();
-            const auto& timing = results[checkIndex].timing;
-            auto& slow = slowCases[caseIndex];
-            slow.sessionCreateUs += timing.sessionCreateUs;
-            slow.levelLoadUs += timing.levelLoadUs;
-            slow.replayUs += timing.replayUs;
-            slow.serializeUs += timing.serializeUs;
-            slow.totalUs += timing.sessionCreateUs + timing.levelLoadUs + timing.replayUs + timing.serializeUs;
-        }
-        std::sort(slowCases.begin(), slowCases.end(), [](const SlowCase& lhs, const SlowCase& rhs) {
-            if (lhs.totalUs != rhs.totalUs) {
-                return lhs.totalUs > rhs.totalUs;
-            }
-            return lhs.caseIndex < rhs.caseIndex;
-        });
-        const size_t emitCount = std::min(options.topSlowCases, slowCases.size());
+        const size_t emitCount = std::min(options.topSlowCases, timingSummaries.size());
         for (size_t rank = 0; rank < emitCount; ++rank) {
-            const auto& slow = slowCases[rank];
+            const auto& slow = timingSummaries[rank];
             const auto& testCase = cases[slow.caseIndex];
             std::cout << "cpp_simulation_slow_case"
                       << " rank=" << (rank + 1)
@@ -6434,7 +6624,7 @@ void printCompileRulesHelp() {
 void printTestHelp() {
     std::cout
         << "Usage: puzzlescript_cpp test js-parity generated-js-parity-data.json [options]\n"
-        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--compact-turn-oracle] [--require-compact-turn-oracle-checks] [--quiet]\n"
+        << "       puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js [--progress-every N] [--profile-timers] [--json-summary|--json-summary-out path] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--compact-turn-oracle] [--require-compact-turn-oracle-checks] [--quiet]\n"
         << "       puzzlescript_cpp test diagnostics-corpus src/tests/resources/errormessage_testdata.js [--progress-every N]\n"
         << "       puzzlescript_cpp test diagnostics parser-corpus.bundle.ndjson\n\n"
         << "simulation-corpus and diagnostics-corpus read the original testdata.js and\n"
@@ -6460,7 +6650,7 @@ void printTestHelp() {
 
 void printProfileHelp() {
     std::cout
-        << "Usage: puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --profile-timers [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--quiet]\n"
+        << "Usage: puzzlescript_cpp test simulation-corpus src/tests/resources/testdata.js --profile-timers [--json-summary|--json-summary-out path] [--repeat N] [--jobs N|auto] [--top-slow-cases N] [--case-index N] [--case-name text] [--turn-executor interpreter|compiled-compact] [--quiet]\n"
         << "       puzzlescript_cpp profile-simulations generated-js-parity-data.json [--repeat N] [--profile-timers] [--quiet]\n\n"
         << "The direct simulation-corpus profiler is the current performance north star: it\n"
         << "parses testdata.js directly, compiles games natively, replays inputs, and splits\n"

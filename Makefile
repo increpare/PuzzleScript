@@ -15,7 +15,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js \
+.PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js performance_testpage \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests simulation_corpus_interpreter_benchmark simulation_corpus_compiled_rulegroups_benchmark simulation_corpus_compiled_compact_benchmark simulation_corpus_perf_report simulation_corpus_perf_report_quick \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_compact_codegen_compare solver_focus_perf_report solver_focus_compact_perf_report solver_focus_compact_codegen_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
@@ -31,6 +31,9 @@ NODE ?= node
 CMAKE ?= cmake
 BUILD_DIR ?= build
 BUILD_DIR_32 ?= build-32
+PERFORMANCE_TESTPAGE_OUT ?= $(BUILD_DIR)/performance-testpage
+PERFORMANCE_TESTPAGE_QUICK ?= false
+PERFORMANCE_TESTPAGE_PROFILE ?= false
 PUZZLESCRIPT_CPP := $(BUILD_DIR)/native/puzzlescript_cpp
 PUZZLESCRIPT_CPP_32 := $(BUILD_DIR_32)/native/puzzlescript_cpp
 PUZZLESCRIPT_SOLVER := $(BUILD_DIR)/native/puzzlescript_solver
@@ -339,6 +342,9 @@ help:
 	@echo "                                     Run full testdata.js corpus in compact compiler mode"
 	@echo "  make generator_smoke_tests         Run native generator smoke tests"
 	@echo "  make generator_benchmark           Run fixed-seed generator preset benchmark"
+	@echo "  make performance_testpage          Build single-run HTML/JSON/MD performance report"
+	@echo "  make performance_testpage PERFORMANCE_TESTPAGE_QUICK=true"
+	@echo "                                     Build a shorter smoke-sized performance report"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
 	@echo "  make solver_focus_mine             Mine a small solver optimization focus group"
 	@echo "  make solver_focus_benchmark        Benchmark the current solver focus group"
@@ -964,6 +970,9 @@ simulation_corpus_perf_report:
 
 simulation_corpus_perf_report_quick:
 	@$(MAKE) --no-print-directory simulation_corpus_perf_report SIMULATION_CORPUS_BENCH_ARGS="--jobs 1 --progress-every 0 --profile-timers --repeat 1 --quiet"
+
+performance_testpage: build build_solver build_generator
+	$(NODE) scripts/build_performance_testpage.js --out "$(PERFORMANCE_TESTPAGE_OUT)" $(if $(filter true,$(PERFORMANCE_TESTPAGE_QUICK)),--quick,) $(if $(filter true,$(PERFORMANCE_TESTPAGE_PROFILE)),--profile,)
 
 compiled_rules_simulation_suite_coverage:
 	@set -e; \

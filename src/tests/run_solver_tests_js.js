@@ -26,6 +26,8 @@ function parseArgs(argv) {
         json: false,
         quiet: false,
         summaryOnly: false,
+        gameFilter: null,
+        levelFilter: null,
     };
     const args = argv.slice(2);
     for (let index = 0; index < args.length; index++) {
@@ -48,6 +50,10 @@ function parseArgs(argv) {
             options.progressEvery = Math.max(0, Number.parseInt(args[++index], 10));
         } else if (arg === '--progress-per-game') {
             options.progressPerGame = true;
+        } else if (arg === '--game') {
+            options.gameFilter = args[++index];
+        } else if (arg === '--level') {
+            options.levelFilter = Math.max(0, Number.parseInt(args[++index], 10));
         } else if (arg === '--help' || arg === '-h') {
             usage(0);
         } else if (options.corpusPath === null) {
@@ -63,7 +69,7 @@ function parseArgs(argv) {
 }
 
 function usage(exitCode) {
-    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--summary-only] [--quiet] [--json]\n';
+    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--summary-only] [--quiet] [--json]\n';
     (exitCode === 0 ? process.stdout : process.stderr).write(message);
     process.exit(exitCode);
 }
@@ -651,6 +657,9 @@ function runCorpus(options) {
             continue;
         }
         const name = gameName(options.corpusPath, file);
+        if (options.gameFilter !== null && name !== options.gameFilter) {
+            continue;
+        }
         const gameResultBegin = results.length;
         const gameStarted = Date.now();
         if (!options.quiet && !options.progressPerGame) {
@@ -670,6 +679,9 @@ function runCorpus(options) {
             process.stderr.write(`solver_progress game=${compiled.game} phase=levels count=${state.levels.length}\n`);
         }
         for (let levelIndex = 0; levelIndex < state.levels.length; levelIndex++) {
+            if (options.levelFilter !== null && levelIndex !== options.levelFilter) {
+                continue;
+            }
             if (!options.quiet && !options.progressPerGame) {
                 process.stderr.write(`solver_progress game=${compiled.game} level=${levelIndex} phase=start\n`);
             }

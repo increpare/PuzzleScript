@@ -43,7 +43,8 @@ function withoutOption(args, name) {
 if (process.argv.includes('--profile')) {
     const rawArgs = process.argv.slice(2);
     const runs = readNumericOption(rawArgs, '--profile-runs', 5);
-    const childArgs = withoutOption(rawArgs.filter(a => a !== '--profile'), '--profile-runs');
+    const profileJson = rawArgs.includes('--profile-json');
+    const childArgs = withoutOption(rawArgs.filter(a => a !== '--profile' && a !== '--profile-json'), '--profile-runs');
     const scriptPath = path.join(__dirname, 'run_tests_node.js');
     const times = [];
     const breakdowns = [];
@@ -75,6 +76,35 @@ if (process.argv.includes('--profile')) {
         const sorted = [...times].sort((a, b) => a - b);
         const avgMs = times.reduce((a, b) => a + b, 0) / times.length;
         const medianMs = sorted[Math.floor(sorted.length / 2)];
+        if (profileJson) {
+            const avg = key => breakdowns.length > 0
+                ? breakdowns.reduce((sum, b) => sum + b[key], 0) / breakdowns.length
+                : null;
+            const output = {
+                schema_version: 1,
+                mode: 'profile',
+                cold_process_runs: runs,
+                child_args: childArgs,
+                status: anyFailed ? 'failed' : 'ok',
+                samples_ms: times,
+                average_ms: avgMs,
+                median_ms: medianMs,
+                min_ms: sorted[0],
+                max_ms: sorted[sorted.length - 1],
+                breakdown_avg_ms: breakdowns.length > 0 ? {
+                    compile_ms: avg('compileMs'),
+                    process_input_ms: avg('processInputMs'),
+                    undo_ms: avg('undoMs'),
+                    restart_ms: avg('restartMs'),
+                    compile_count: breakdowns[0].compileCount,
+                    process_input_count: breakdowns[0].processInputCount,
+                    undo_count: breakdowns[0].undoCount,
+                    restart_count: breakdowns[0].restartCount,
+                } : null,
+            };
+            console.log(JSON.stringify(output, null, 2));
+            process.exit(anyFailed ? 1 : 0);
+        }
         console.log(`\n--- Profile (cold, ${runs} separate processes) ---`);
         console.log(`Runs: ${times.map(ms => (ms / 1000).toFixed(2)).join('s, ')}s`);
         console.log(`Average: ${(avgMs / 1000).toFixed(2)}s`);
