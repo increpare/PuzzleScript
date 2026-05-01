@@ -1222,6 +1222,19 @@ function generatedFunctionSource(label, body) {
 	return body + "\n//# sourceURL=puzzlescript/generated/" + label + ".js";
 }
 
+function LEVEL_MOVEMENT_WORD(index, array_size, word) {
+	const base = array_size === 1 ? index : index + "*" + array_size;
+	return "level.movements[" + base + (word === 0 ? "" : "+" + word) + "]";
+}
+
+function MOVEMENT_WORDS_EQUAL(prefix, vec, array_size) {
+	let result = "(true";
+	for (let i = 0; i < array_size; i++) {
+		result += `&&(${prefix}${i} === ${vec}.data[${i}])`;
+	}
+	return result + ")";
+}
+
 let CACHE_MOVEENTITIESATINDEX = {}
 function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 	
@@ -1860,10 +1873,12 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			curCellMask.data[${i}] = (oldCellMask.data[${i}] & (~objectsClear.data[${i}])) | objectsSet.data[${i}];
 		`)}
 
-		const oldMovementMask = level.getMovements(currentIndex);
 		const curMovementMask = _m3;
 		${FOR(0, MOVEMENT_SIZE, i => `
-			curMovementMask.data[${i}] = (oldMovementMask.data[${i}] & (~movementsClear.data[${i}])) | movementsSet.data[${i}]
+			const oldMovement${i} = ${LEVEL_MOVEMENT_WORD("currentIndex", MOVEMENT_SIZE, i)};
+		`)}
+		${FOR(0, MOVEMENT_SIZE, i => `
+			curMovementMask.data[${i}] = (oldMovement${i} & (~movementsClear.data[${i}])) | movementsSet.data[${i}]
 		`)}
 
 
@@ -1891,7 +1906,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		`)}
 		
 		if (${EQUALS("oldCellMask", "curCellMask", OBJECT_SIZE)} 
-			&& ${EQUALS("oldMovementMask", "curMovementMask", MOVEMENT_SIZE)} 
+			&& ${MOVEMENT_WORDS_EQUAL("oldMovement", "curMovementMask", MOVEMENT_SIZE)} 
 			&& !rigidchange) { 
 			//nothing changed
 			return false;
@@ -2635,8 +2650,8 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE,state) {
 	
 		//Search for any rigidly-caused movements remaining
 		for (let i=0;i<level.n_tiles;i++) {
-			let cellMask = level.getCellInto(i,_o6);
-			let movementMask = level.getMovements(i);
+			const movementMask = _m1;
+			${LEVEL_GET_MOVEMENTS_INTO("i", "movementMask", MOVEMENT_SIZE)}
 			if (${IS_NONZERO("movementMask", MOVEMENT_SIZE)}) {
 
 				${IF_LAZY(state.rigid,()=>`
@@ -2665,20 +2680,23 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE,state) {
 				}`)}
 
 
-				for (let j=0;j<state.sfx_MovementFailureMasks.length;j++) {
-					let o = state.sfx_MovementFailureMasks[j];
-					let objectMask = o.objectMask;
-		
-					if (${ANY_BITS_IN_COMMON("cellMask", "objectMask", OBJECT_SIZE)} 
-					&& ${ANY_BITS_IN_COMMON("o.directionMask","movementMask", MOVEMENT_SIZE)} 
-					&& seedsToPlay_CantMove.indexOf(o.seed)===-1) {
-						seedsToPlay_CantMove.push(o.seed);
+				${IF_LAZY(state.sfx_MovementFailureMasks.length > 0, () => `
+					const cellMask = level.getCellInto(i,_o6);
+					for (let j=0;j<state.sfx_MovementFailureMasks.length;j++) {
+						let o = state.sfx_MovementFailureMasks[j];
+						let objectMask = o.objectMask;
+			
+						if (${ANY_BITS_IN_COMMON("cellMask", "objectMask", OBJECT_SIZE)} 
+						&& ${ANY_BITS_IN_COMMON("o.directionMask","movementMask", MOVEMENT_SIZE)} 
+						&& seedsToPlay_CantMove.indexOf(o.seed)===-1) {
+							seedsToPlay_CantMove.push(o.seed);
+						}
 					}
-				}
-			}
+				`)}
 
-			for (let j=0;j<STRIDE_MOV;j++) {
-				level.movements[j+i*STRIDE_MOV]=0;
+				${FOR(0, MOVEMENT_SIZE, j => `
+					${LEVEL_MOVEMENT_WORD("i", MOVEMENT_SIZE, j)}=0;
+				`)}
 			}
 
 			${IF(state.rigid)}
