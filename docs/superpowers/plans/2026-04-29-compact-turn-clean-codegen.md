@@ -1162,12 +1162,13 @@ Current next frontier:
   compact pipeline winning overall median elapsed time, but not yet at the
   long-term 0.5x goal.
 
-  The next architectural cleanup is to move the interpreter onto the same
-  cell-major `PersistentLevelState::board.objects` authority as compiler-mode
-  compact turns. See
+  The interpreter board migration is complete: interpreter execution,
+  compiler-mode compact turns, solver storage, C API reads, and oracle export
+  now share the same cell-major `PersistentLevelState::board.objects`
+  authority. See
   `docs/superpowers/plans/2026-04-30-compact-interpreter-board-migration.md`.
 
-  After that migration, the immediate compiler/search optimization worklist is:
+  The immediate compiler/search optimization worklist is:
   1. Reduce `compact_turn_setup_ms`, currently dominated by rebuilding
      scratch row/column/board masks from arbitrary solver materializations.
   2. Optimize dense generated row scans now that all solver-focus targets are
@@ -1179,6 +1180,10 @@ Current next frontier:
   4. Keep the benchmark suite oriented around like-for-like comparisons:
      interpreter solver baseline vs compiler-mode compact solver on the same
      focus targets, with native/not-attached buckets called out explicitly.
+  5. Add a compact-primary simulation/replay harness. The existing
+     compact-oracle simulation target is a correctness guard, not a fair
+     end-to-end runtime benchmark because it runs generated compact code beside
+     interpreted execution.
 ```
 
 Recommended progress report:
