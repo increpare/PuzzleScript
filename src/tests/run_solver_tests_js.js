@@ -7,13 +7,20 @@ const path = require('path');
 
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
 
-const ACTIONS = [
-    { token: 'up', input: 0 },
-    { token: 'left', input: 1 },
-    { token: 'down', input: 2 },
+const DIRECTION_ACTIONS = [
     { token: 'right', input: 3 },
-    { token: 'action', input: 4 },
+    { token: 'up', input: 0 },
+    { token: 'down', input: 2 },
+    { token: 'left', input: 1 },
 ];
+const ACTIONS_WITH_ACTION = DIRECTION_ACTIONS.concat([{ token: 'action', input: 4 }]);
+
+function solverActionsForGame() {
+    if (state && state.metadata && Object.prototype.hasOwnProperty.call(state.metadata, 'noaction')) {
+        return DIRECTION_ACTIONS;
+    }
+    return ACTIONS_WITH_ACTION;
+}
 
 function parseArgs(argv) {
     const options = {
@@ -786,6 +793,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
         frontier.push({ priority: priorityForMode(mode, 0, initialHeuristic, options.astarWeight || 2), tie: 0, index: 0 });
         modeResult.max_frontier = 1;
         let tie = 1;
+        const actions = solverActionsForGame();
 
         while (frontier.length > 0) {
             if (Date.now() >= modeDeadline) {
@@ -798,7 +806,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
             const node = nodes[entry.index];
             modeResult.expanded++;
 
-            for (const action of ACTIONS) {
+            for (const action of actions) {
                 if (Date.now() >= modeDeadline) {
                     modeResult.status = 'timeout';
                     break;
