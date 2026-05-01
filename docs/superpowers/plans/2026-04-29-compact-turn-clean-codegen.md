@@ -1165,6 +1165,46 @@ Again-probe telemetry, 2026-04-30:
     of executing a semantically rollbackable tick, or to make generated rule
     scanning cheaper inside both normal turns and probes.
 
+Drain-mode again probe shortcut, 2026-05-01:
+  Commit `559c4c50` skips speculative `again` probes only when the solver is
+  already draining turns. This is distinct from the rejected no-probe semantic
+  shortcut above: it does not change yield-mode simulation behavior.
+
+  Strict before/after solver focus comparison against parent `e52cba4d`, using
+  the same 50-target manifest and `SOLVER_FOCUS_RUNS=3`:
+  - Parent median compiler-mode compact elapsed: `193 ms`.
+  - `559c4c50` median compiler-mode compact elapsed: `192 ms`.
+  - Median ratio: `0.995x`; suite-wide median benefit is essentially flat.
+  - Per-target movement: 30 improved, 12 regressed, 8 unchanged.
+  - Summed per-target median `compact_turn_again_probe_ns` dropped from about
+    `1150 ms` to `0 ms`.
+  - Largest wins were the `paint everything everywhere` focus levels:
+    `#29` `426 ms -> 266 ms`, `#11` `403 ms -> 243 ms`,
+    `#25` `383 ms -> 230 ms`, and `#27` `372 ms -> 235 ms`.
+
+  Conclusion: this earns its place as a targeted solver optimization for
+  `again`-heavy drain-mode searches, but it should not be described as a broad
+  solver-suite speedup. Keep future performance work to the same standard:
+  measured counters plus like-for-like timing, and back out complexity when the
+  timing does not justify it.
+
+Rejected one-cell immediate-apply row scan, 2026-05-01:
+  Tried a generic generated fast path for deterministic one-cell, no-ellipsis
+  rules that applied replacements while scanning instead of collecting matches
+  into `singleRowMatchScratch` and replaying them afterward.
+
+  Correctness was fine: full compact-codegen simulation stayed at `469/469`
+  with `compact_turn_oracle_failures=0`. Performance did not earn its keep on
+  the 50-target solver-focus comparison against the saved pre-change JSON:
+  - Median compiler-mode compact elapsed regressed from `192 ms` to `199 ms`.
+  - Median step time regressed from `112.083 ms` to `127.787 ms`.
+  - Per-target movement: 12 improved, 31 regressed, 7 unchanged.
+
+  Conclusion: do not keep this shape. Batching matches before replacement is
+  still the better default for generated row rules, likely because immediate
+  mutation churns scratch/dirty bookkeeping and gives the optimizer a less
+  friendly loop even when the semantic case looks simple.
+
 Executable selected-pass target:
   make compact_turn_codegen_selected_tests
   cases: COMPACT_TURN_CODEGEN_SELECTED_CASES in Makefile
@@ -1182,18 +1222,21 @@ Current next frontier:
   `docs/superpowers/plans/2026-04-30-compact-interpreter-board-migration.md`.
 
   The immediate compiler/search optimization worklist is:
-  1. Reduce `compact_turn_setup_ms`, currently dominated by rebuilding
-     scratch row/column/board masks from arbitrary solver materializations.
+  1. Profile the current compiler-mode compact solver focus run before each
+     optimization pass, then keep only changes that improve like-for-like
+     timings or eliminate a measured hotspot.
   2. Optimize dense generated row scans now that all solver-focus targets are
      attached to compiler-mode compact kernels. The current slowest step
      regressions are `paint everything everywhere`, `Vexatious Match 3`,
      `the_saga_of_the_candy_scroll`, and `karamell`.
-  3. Investigate graph-side costs that became more visible after clone/turn
+  3. Re-check `compact_turn_setup_ms` after object-mask setup reuse; it is
+     still visible, but no longer the only obvious turn-core target.
+  4. Investigate graph-side costs that became more visible after clone/turn
      improvements, especially hash and heuristic time on compact node storage.
-  4. Keep the benchmark suite oriented around like-for-like comparisons:
+  5. Keep the benchmark suite oriented around like-for-like comparisons:
      interpreter solver baseline vs compiler-mode compact solver on the same
      focus targets, with native/not-attached buckets called out explicitly.
-  5. Add a compact-primary simulation/replay harness. The existing
+  6. Add a compact-primary simulation/replay harness. The existing
      compact-oracle simulation target is a correctness guard, not a fair
      end-to-end runtime benchmark because it runs generated compact code beside
      interpreted execution.
