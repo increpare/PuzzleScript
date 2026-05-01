@@ -771,10 +771,11 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                       << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) continue;\n";
         }
         applyBody << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(secondarySpan));\n"
-                  << "    for (int32_t secondary = secondaryStart; secondary < secondaryEnd; ++secondary) {\n"
-                  << "        const int32_t x = horizontalScan ? secondary : primary;\n"
-                  << "        const int32_t y = horizontalScan ? primary : secondary;\n"
-                  << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
+                  << "        const int32_t scanStep = horizontalScan ? dimensions.height : 1;\n"
+                  << "        int32_t startIndex = horizontalScan\n"
+                  << "            ? secondaryStart * dimensions.height + primary\n"
+                  << "            : primary * dimensions.height + secondaryStart;\n"
+                  << "    for (int32_t secondary = secondaryStart; secondary < secondaryEnd; ++secondary, startIndex += scanStep) {\n"
                   << "        bool matched = true;\n";
         for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
             emitCompactFixedTileAtDirection(
@@ -883,10 +884,11 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                           << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) continue;\n";
             }
             applyBody << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(secondarySpan));\n"
-                      << "        for (int32_t secondary = secondaryStart; secondary < secondaryEnd; ++secondary) {\n"
-                      << "            const int32_t x = horizontalScan ? secondary : primary;\n"
-                      << "            const int32_t y = horizontalScan ? primary : secondary;\n"
-                      << "            const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
+                      << "            const int32_t scanStep = horizontalScan ? dimensions.height : 1;\n"
+                      << "            int32_t startIndex = horizontalScan\n"
+                      << "                ? secondaryStart * dimensions.height + primary\n"
+                      << "                : primary * dimensions.height + secondaryStart;\n"
+                      << "        for (int32_t secondary = secondaryStart; secondary < secondaryEnd; ++secondary, startIndex += scanStep) {\n"
                       << "            bool matched = true;\n";
             for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
                 emitCompactFixedTileAtDirection(
@@ -1084,10 +1086,11 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                             << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) continue;\n";
             }
             collectBody << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(secondarySpan));\n"
-                        << "    for (int32_t secondary = secondaryStart; secondary < secondaryEnd; ++secondary) {\n"
-                        << "        const int32_t x = horizontalScan ? secondary : primary;\n"
-                        << "        const int32_t y = horizontalScan ? primary : secondary;\n"
-                        << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
+                        << "        const int32_t scanStep = horizontalScan ? dimensions.height : 1;\n"
+                        << "        int32_t startIndex = horizontalScan\n"
+                        << "            ? secondaryStart * dimensions.height + primary\n"
+                        << "            : primary * dimensions.height + secondaryStart;\n"
+                        << "    for (int32_t secondary = secondaryStart; secondary < secondaryEnd; ++secondary, startIndex += scanStep) {\n"
                         << "        positions.clear();\n"
                         << "        bool matched = true;\n";
             for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
@@ -1131,10 +1134,9 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                             << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) continue;\n";
             }
             collectBody << "        compact_turn_count_ellipsis_scans_" << suffix << "(static_cast<uint64_t>(secondaryLimit));\n"
-                        << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
-                        << "        const int32_t x = horizontalScan ? secondary : primary;\n"
-                        << "        const int32_t y = horizontalScan ? primary : secondary;\n"
-                        << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
+                        << "        const int32_t scanStep = horizontalScan ? dimensions.height : 1;\n"
+                        << "        int32_t startIndex = horizontalScan ? primary : primary * dimensions.height;\n"
+                        << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary, startIndex += scanStep) {\n"
                         << "        const int32_t available = compact_turn_available_at_direction_" << suffix
                         << "(dimensions, startIndex, " << rule.direction << ");\n"
                         << "        if (available < " << concreteCount << ") continue;\n"
@@ -1250,10 +1252,9 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
             if (rule.ellipsisCount[rowIndex] == 0) {
                 applyBody << "    std::vector<int32_t> matches_" << rowIndex << ";\n"
                           << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
-                          << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
-                          << "        const int32_t x = horizontalScan ? secondary : primary;\n"
-                          << "        const int32_t y = horizontalScan ? primary : secondary;\n"
-                          << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
+                          << "        const int32_t scanStep = horizontalScan ? dimensions.height : 1;\n"
+                          << "        int32_t startIndex = horizontalScan ? primary : primary * dimensions.height;\n"
+                          << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary, startIndex += scanStep) {\n"
                           << "        bool matched = true;\n";
                 for (size_t patternIndex = 0; patternIndex < row.size(); ++patternIndex) {
                     emitCompactFixedTileAtDirection(

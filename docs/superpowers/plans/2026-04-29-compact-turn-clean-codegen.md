@@ -68,6 +68,12 @@ Solver hash optimization on 2026-05-01:
 - The generated helper micro-optimizations tried immediately before this
   (`compact_turn_layer_bits` one-word fast path and direct scan-index
   emission) did not improve the focus benchmark, so they were backed out.
+- Generated row scans now carry `startIndex` by stride instead of recomputing
+  `x`, `y`, and `compact_turn_tile_index` for every candidate cell. On the same
+  50-target compiled compact solver focus benchmark, median elapsed improved
+  from `214 ms` to `202 ms` (`0.944x`, 5.6% faster), with native compact
+  coverage still 50/50 and the full compact-codegen simulation corpus still
+  passing 469/469.
 
 ## Summary
 
