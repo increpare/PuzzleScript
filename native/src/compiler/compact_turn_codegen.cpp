@@ -277,6 +277,37 @@ CompactRowMaskInfo compactRowMaskInfo(
     };
 }
 
+void emitCompactFixedRowScanBounds(
+    std::ostream& out,
+    const Rule& rule,
+    size_t rowLength,
+    std::string_view indent
+) {
+    const int32_t trailingCells = rowLength > 0 ? static_cast<int32_t>(rowLength - 1) : 0;
+    int32_t secondaryStart = 0;
+    int32_t secondaryEndTrim = 0;
+    switch (rule.direction) {
+        case 1:
+            secondaryStart = trailingCells;
+            break;
+        case 2:
+            secondaryEndTrim = trailingCells;
+            break;
+        case 4:
+            secondaryStart = trailingCells;
+            break;
+        case 8:
+            secondaryEndTrim = trailingCells;
+            break;
+        default:
+            break;
+    }
+    out << indent << "const int32_t secondaryStart = " << secondaryStart << ";\n"
+        << indent << "const int32_t secondaryEnd = secondaryLimit - " << secondaryEndTrim << ";\n"
+        << indent << "if (secondaryStart >= secondaryEnd) return false;\n"
+        << indent << "const int32_t secondarySpan = secondaryEnd - secondaryStart;\n";
+}
+
 std::string compactPatternPrefix(
     std::string_view suffix,
     std::string_view phase,
@@ -677,6 +708,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                   << "    constexpr bool horizontalScan = " << (rule.direction > 2 ? "true" : "false") << ";\n"
                   << "    const int32_t primaryLimit = horizontalScan ? dimensions.height : dimensions.width;\n"
                   << "    const int32_t secondaryLimit = horizontalScan ? dimensions.width : dimensions.height;\n";
+        emitCompactFixedRowScanBounds(applyBody, rule, row.size(), "    ");
         if (rowMask.hasAnyRequiredMask) {
             applyBody << "    if (!compact_turn_board_has_required_masks_" << suffix
                       << "(scratch, " << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) return false;\n";
@@ -689,8 +721,8 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                       << "(dimensions, levelState, scratch, horizontalScan, primary, "
                       << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) continue;\n";
         }
-        applyBody << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(secondaryLimit));\n"
-                  << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
+        applyBody << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(secondarySpan));\n"
+                  << "    for (int32_t secondary = secondaryStart; secondary < secondaryEnd; ++secondary) {\n"
                   << "        const int32_t x = horizontalScan ? secondary : primary;\n"
                   << "        const int32_t y = horizontalScan ? primary : secondary;\n"
                   << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
@@ -787,6 +819,7 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
             applyBody << "    {\n"
                       << "        std::vector<int32_t>& rowMatches = matches[" << rowIndex << "];\n"
                       << "        rowMatches.clear();\n";
+            emitCompactFixedRowScanBounds(applyBody, rule, row.size(), "        ");
             if (rowMask.hasAnyRequiredMask) {
                 applyBody << "        if (!compact_turn_board_has_required_masks_" << suffix
                           << "(scratch, " << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) return false;\n";
@@ -799,8 +832,8 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
                           << "(dimensions, levelState, scratch, horizontalScan, primary, "
                           << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) continue;\n";
             }
-            applyBody << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(secondaryLimit));\n"
-                      << "        for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
+            applyBody << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(secondarySpan));\n"
+                      << "        for (int32_t secondary = secondaryStart; secondary < secondaryEnd; ++secondary) {\n"
                       << "            const int32_t x = horizontalScan ? secondary : primary;\n"
                       << "            const int32_t y = horizontalScan ? primary : secondary;\n"
                       << "            const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
@@ -991,16 +1024,17 @@ CompactRuleGeneratedNames emitCompactRuleFunction(
         }
         if (rule.ellipsisCount[rowIndex] == 0) {
             collectBody << "    std::vector<int32_t> positions;\n"
-                        << "    positions.reserve(" << row.size() << ");\n"
-                        << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
+                        << "    positions.reserve(" << row.size() << ");\n";
+            emitCompactFixedRowScanBounds(collectBody, rule, row.size(), "    ");
+            collectBody << "    for (int32_t primary = 0; primary < primaryLimit; ++primary) {\n"
                         << "        compact_turn_count_row_scans_" << suffix << "();\n";
             if (rowMask.hasAnyRequiredMask) {
                 collectBody << "        if (!compact_turn_line_has_required_masks_" << suffix
                             << "(dimensions, levelState, scratch, horizontalScan, primary, "
                             << rowMask.objectMaskName << ", " << rowMask.movementMaskName << ")) continue;\n";
             }
-            collectBody << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(secondaryLimit));\n"
-                        << "    for (int32_t secondary = 0; secondary < secondaryLimit; ++secondary) {\n"
+            collectBody << "        compact_turn_count_candidate_cells_tested_" << suffix << "(static_cast<uint64_t>(secondarySpan));\n"
+                        << "    for (int32_t secondary = secondaryStart; secondary < secondaryEnd; ++secondary) {\n"
                         << "        const int32_t x = horizontalScan ? secondary : primary;\n"
                         << "        const int32_t y = horizontalScan ? primary : secondary;\n"
                         << "        const int32_t startIndex = compact_turn_tile_index_" << suffix << "(dimensions, x, y);\n"
