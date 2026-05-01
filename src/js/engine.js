@@ -2135,7 +2135,8 @@ Rule.prototype.findMatches = function () {
 	if (!this.ruleMask.bitsSetInArray(level.mapCellContents.data))
 		return [];
 
-	const d = level.delta_index(this.direction)
+	const direction = this.direction;
+	const delta = (((direction >> 3) & 1) - ((direction >> 2) & 1)) * level.height + ((direction >> 1) & 1) - (direction & 1);
 
 	let matches = [];
 	const cellRowMasks = this.cellRowMasks;
@@ -2145,9 +2146,9 @@ Rule.prototype.findMatches = function () {
 		const matchFunction = this.cellRowMatches[cellRowIndex];
 		let match;
 		if (this.ellipsisCount[cellRowIndex] === 0) {
-			match = state.matchCellRow(level, this.direction, matchFunction, cellRow, cellRowMasks[cellRowIndex], cellRowMasks_Movements[cellRowIndex], d);
+			match = state.matchCellRow(level, this.direction, matchFunction, cellRow, cellRowMasks[cellRowIndex], cellRowMasks_Movements[cellRowIndex], delta);
 		} else { // ellipsiscount===1/2
-			match = state.matchCellRowWildCard(this.direction, matchFunction, cellRow, cellRowMasks[cellRowIndex], cellRowMasks_Movements[cellRowIndex], d, this.ellipsisCount[cellRowIndex]);
+			match = state.matchCellRowWildCard(this.direction, matchFunction, cellRow, cellRowMasks[cellRowIndex], cellRowMasks_Movements[cellRowIndex], delta, this.ellipsisCount[cellRowIndex]);
 		}
 		if (match.length === 0) {
 			return [];
@@ -2325,7 +2326,8 @@ Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE,
 };
 
 Rule.prototype.tryApply = function (level) {
-	const delta = level.delta_index(this.direction);
+	const direction = this.direction;
+	const delta = (((direction >> 3) & 1) - ((direction >> 2) & 1)) * level.height + ((direction >> 1) & 1) - (direction & 1);
 
 	//get all cellrow matches
 	let matches = this.findMatches(level);
@@ -2472,7 +2474,8 @@ function applyRandomRuleGroup(level, ruleGroup) {
 	let rule = ruleGroup[ruleIndex];
 	let tuple = match[1];
 	let check = false;
-	const delta = level.delta_index(rule.direction)
+	const direction = rule.direction;
+	const delta = (((direction >> 3) & 1) - ((direction >> 2) & 1)) * level.height + ((direction >> 1) & 1) - (direction & 1);
 	let modified = rule.applyAt(level, tuple, check, delta);
 
 	rule.queueCommands();
@@ -3189,7 +3192,8 @@ Rule.prototype.generateFindMatchesFunction = function () {
 
 	// Initial mask check
 	fn += `if (${NOT_BITS_SET_IN_ARRAY("this.ruleMask", "level.mapCellContents.data", STRIDE_OBJ)}) return [];\n`;
-	fn += 'const d = level.delta_index(this.direction);\n';
+	fn += 'const direction = this.direction;\n';
+	fn += 'const d = (((direction >> 3) & 1) - ((direction >> 2) & 1)) * level.height + ((direction >> 1) & 1) - (direction & 1);\n';
 	fn += 'const matches = [];\n';
 
 	// Unroll the pattern matching loop

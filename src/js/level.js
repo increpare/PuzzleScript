@@ -11,11 +11,6 @@ function Level(lineNumber, width, height, layerCount, objects) {
 	this.commandQueueSourceRules = [];
 }
 
-Level.prototype.delta_index = function (direction) {
-	const [dx, dy] = dirMasksDelta[direction]
-	return dx * this.height + dy
-}
-
 Level.prototype.clone = function () {
 	let clone = new Level(this.lineNumber, this.width, this.height, this.layerCount, null);
 	clone.objects = new Int32Array(this.objects);
