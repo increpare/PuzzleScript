@@ -54,6 +54,17 @@ Solver Clang instrumentation profile on 2026-05-01:
   Next optimization work should reduce repeated helper traffic in generated
   row/pattern scans before adding new semantic features.
 
+Solver hash optimization on 2026-05-01:
+
+- Replaced the solver-local persistent-state key builder with a word-oriented
+  rolling hash for the cell-major board and RNG bytes. On the 50-target
+  compiled compact solver focus benchmark, median elapsed improved from
+  `267 ms` to `214 ms` (`0.801x`, 19.9% faster), and median `hash_ms` dropped
+  from `38.9 ms` to `9.4 ms`.
+- The generated helper micro-optimizations tried immediately before this
+  (`compact_turn_layer_bits` one-word fast path and direct scan-index
+  emission) did not improve the focus benchmark, so they were backed out.
+
 ## Summary
 
 The previous compact turn prototype drifted into shape-specific helpers such as simple push, push chain, target clear, and movement-only variants. That direction is too complex and too brittle: it encourages recognizing individual game families instead of compiling PuzzleScript.

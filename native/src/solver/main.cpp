@@ -591,16 +591,42 @@ PersistentLevelState persistentLevelStateFromFullState(const FullState& session)
     return state;
 }
 
+uint64_t rotateLeft64(uint64_t value, uint32_t shift) {
+    return (value << shift) | (value >> (64U - shift));
+}
+
+void appendPersistentStateKeyWord(StateKey& key, uint64_t value) {
+    key.lo ^= value;
+    key.lo *= 0x100000001b3ULL;
+    key.hi ^= rotateLeft64(value + 0x9e3779b97f4a7c15ULL + key.lo, 27);
+    key.hi *= 0x9e3779b185ebca87ULL;
+}
+
 StateKey persistentLevelStateKey(const PersistentLevelState& state, Timing& timing) {
     ScopedTimer timer(timing.hashNs);
     StateKey key{1469598103934665603ull, 7809847782465536322ull};
+    appendPersistentStateKeyWord(key, static_cast<uint64_t>(state.board.objects.size()));
     for (puzzlescript::MaskWord word : state.board.objects) {
-        puzzlescript::search::appendStateKeyValue(key, static_cast<MaskWordUnsigned>(word));
+        appendPersistentStateKeyWord(key, static_cast<MaskWordUnsigned>(word));
     }
-    puzzlescript::search::appendStateKeyBytes(key, state.rng.s.data(), state.rng.s.size());
-    puzzlescript::search::appendStateKeyValue(key, state.rng.i);
-    puzzlescript::search::appendStateKeyValue(key, state.rng.j);
-    puzzlescript::search::appendStateKeyValue(key, state.rng.valid);
+    appendPersistentStateKeyWord(key, static_cast<uint64_t>(state.rng.s.size()));
+    uint64_t packedRandom = 0;
+    uint32_t randomShift = 0;
+    for (uint8_t byte : state.rng.s) {
+        packedRandom |= static_cast<uint64_t>(byte) << randomShift;
+        randomShift += 8;
+        if (randomShift == 64) {
+            appendPersistentStateKeyWord(key, packedRandom);
+            packedRandom = 0;
+            randomShift = 0;
+        }
+    }
+    if (randomShift != 0) {
+        appendPersistentStateKeyWord(key, packedRandom);
+    }
+    appendPersistentStateKeyWord(key, state.rng.i);
+    appendPersistentStateKeyWord(key, state.rng.j);
+    appendPersistentStateKeyWord(key, state.rng.valid ? 1 : 0);
     return key;
 }
 
