@@ -272,6 +272,7 @@ function createObjectHasher(wordCount) {
     lines.push('  }');
     lines.push('}');
     lines.push('return (h1 >>> 0).toString(36) + ":" + (h2 >>> 0).toString(36);');
+    lines.push('//# sourceURL=puzzlescript/generated/solverObjectHasher.js');
     return new Function('objects', 'flags', 'randomState', lines.join('\n'));
 }
 
