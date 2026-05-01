@@ -1218,6 +1218,10 @@ function getLayersOfMask(cellMask) {
 	return layers;
 }
 
+function generatedFunctionSource(label, body) {
+	return body + "\n//# sourceURL=puzzlescript/generated/" + label + ".js";
+}
+
 let CACHE_MOVEENTITIESATINDEX = {}
 function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 	
@@ -1245,7 +1249,7 @@ function generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_MOVEENTITIESATINDEX) {
 		return CACHE_MOVEENTITIESATINDEX[fn];
 	}
-	return CACHE_MOVEENTITIESATINDEX[fn] = new Function("level", "positionIndex", "entityMask", "dirMask", fn);
+	return CACHE_MOVEENTITIESATINDEX[fn] = new Function("level", "positionIndex", "entityMask", "dirMask", generatedFunctionSource("moveEntitiesAtIndex", fn));
 }
 
 
@@ -1287,7 +1291,7 @@ function generate_calculateRowColMasks(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_CALCULATEROWCOLMASKS) {
 		return CACHE_CALCULATEROWCOLMASKS[fn];
 	}
-	return CACHE_CALCULATEROWCOLMASKS[fn] = new Function("level", fn);
+	return CACHE_CALCULATEROWCOLMASKS[fn] = new Function("level", generatedFunctionSource("calculateRowColMasks", fn));
 }
 
 function startMovement(dir) {
@@ -1411,7 +1415,7 @@ function generate_repositionEntitiesAtCell(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_REPOSITIONENTITIESATCELL) {
 		return CACHE_REPOSITIONENTITIESATCELL[fn];
 	}
-	return CACHE_REPOSITIONENTITIESATCELL[fn] = new Function("level", "positionIndex", fn);
+	return CACHE_REPOSITIONENTITIESATCELL[fn] = new Function("level", "positionIndex", generatedFunctionSource("repositionEntitiesAtCell", fn));
 }
 
 let ellipsisPattern = ['ellipsis'];
@@ -1524,7 +1528,7 @@ Rule.prototype.generateCellRowMatchesFunction = function (cellRow, ellipsisCount
 		if (fn in CACHE_RULE_CELLROWMATCHESFUNCTION) {
 			return CACHE_RULE_CELLROWMATCHESFUNCTION[fn];
 		}
-		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow", "i", 'd', 'objects', 'movements', fn);
+		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow", "i", 'd', 'objects', 'movements', generatedFunctionSource("cellRowMatches", fn));
 	} else if (ellipsisCount === 1) {
 		let cr_l = cellRow.length;
 
@@ -1554,7 +1558,7 @@ if(cellRow[0].matches(i, objects, movements)`;
 		if (fn in CACHE_RULE_CELLROWMATCHESFUNCTION) {
 			return CACHE_RULE_CELLROWMATCHESFUNCTION[fn];
 		}
-		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow", "i", "kmax", "kmin", 'd', "objects", "movements", fn);
+		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow", "i", "kmax", "kmin", 'd', "objects", "movements", generatedFunctionSource("cellRowMatchesEllipsis1", fn));
 	} else { //ellipsisCount===2
 		let cr_l = cellRow.length;
 
@@ -1608,7 +1612,7 @@ return result;`;
 		if (fn in CACHE_RULE_CELLROWMATCHESFUNCTION) {
 			return CACHE_RULE_CELLROWMATCHESFUNCTION[fn];
 		}
-		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow", "i", "kmax", "kmin", "k1max", "k1min", "k2max", "k2min", 'd', "objects", "movements", fn);
+		return CACHE_RULE_CELLROWMATCHESFUNCTION[fn] = new Function("cellRow", "i", "kmax", "kmin", "k1max", "k1min", "k2max", "k2min", 'd', "objects", "movements", generatedFunctionSource("cellRowMatchesEllipsis2", fn));
 	}
 }
 
@@ -1745,7 +1749,7 @@ CellPattern.prototype.generateMatchFunction = function() {
     
     fn += `return ${this.generateMatchString()};`;
 
-    const result = new Function("i", "objects", "movements", fn);
+    const result = new Function("i", "objects", "movements", generatedFunctionSource("cellPatternMatch", fn));
     CACHE_CELLPATTERN_MATCHFUNCTION.set(str_key, result);
     return result;
 }
@@ -1920,7 +1924,7 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		return true;	
 	`
 
-	return CACHE_CELLPATTERN_REPLACEFUNCTION[key] = new Function("level", "rule", "currentIndex", fn);
+	return CACHE_CELLPATTERN_REPLACEFUNCTION[key] = new Function("level", "rule", "currentIndex", generatedFunctionSource("cellPatternReplace", fn));
 }
 
 
@@ -2005,7 +2009,7 @@ function generateMatchCellRow(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_MATCHCELLROW) {
 		return CACHE_MATCHCELLROW[fn];
 	}
-	return CACHE_MATCHCELLROW[fn] = new Function("level", "direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", fn);
+	return CACHE_MATCHCELLROW[fn] = new Function("level", "direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", generatedFunctionSource("matchCellRow", fn));
 }
 
 let CACHE_MATCHCELLROWWILDCARD = {}
@@ -2109,7 +2113,7 @@ function generateMatchCellRowWildCard(OBJECT_SIZE, MOVEMENT_SIZE) {
 	if (fn in CACHE_MATCHCELLROWWILDCARD) {
 		return CACHE_MATCHCELLROWWILDCARD[fn];
 	}
-	return CACHE_MATCHCELLROWWILDCARD[fn] = new Function("direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", "wildcardCount", fn);
+	return CACHE_MATCHCELLROWWILDCARD[fn] = new Function("direction", "cellRowMatch", "cellRow", "cellRowMask", "cellRowMask_Movements", "d", "wildcardCount", generatedFunctionSource("matchCellRowWildCard", fn));
 }
 
 function generateTuples(lists) {
@@ -2342,7 +2346,7 @@ Rule.prototype.generateApplyAt = function (patterns, ellipsisCount, OBJECT_SIZE,
 	if (fn in CACHE_RULE_APPLYAT) {
 		return CACHE_RULE_APPLYAT[fn];
 	}
-	return CACHE_RULE_APPLYAT[fn] = new Function("level", "tuple", "check", "delta", fn);
+	return CACHE_RULE_APPLYAT[fn] = new Function("level", "tuple", "check", "delta", generatedFunctionSource("ruleApplyAt", fn));
 };
 
 Rule.prototype.tryApply = function (level) {
@@ -2689,7 +2693,7 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE,state) {
 	if (fn in CACHE_RESOLVEMOVEMENTS) {
 		return CACHE_RESOLVEMOVEMENTS[fn];
 	}
-	return CACHE_RESOLVEMOVEMENTS[fn] = new Function("level", "bannedGroup", fn);
+	return CACHE_RESOLVEMOVEMENTS[fn] = new Function("level", "bannedGroup", generatedFunctionSource("resolveMovements", fn));
 }
 
 let sfxCreateMask = null;
@@ -3262,5 +3266,5 @@ Rule.prototype.generateFindMatchesFunction = function () {
 	if (fn in CACHE_RULE_FINDMATCHES) {
 		return CACHE_RULE_FINDMATCHES[fn];
 	}
-	return CACHE_RULE_FINDMATCHES[fn] = new Function('level', fn);
+	return CACHE_RULE_FINDMATCHES[fn] = new Function('level', generatedFunctionSource("ruleFindMatches", fn));
 }
