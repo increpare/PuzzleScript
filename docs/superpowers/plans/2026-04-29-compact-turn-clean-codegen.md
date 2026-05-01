@@ -34,6 +34,26 @@ Post-board-migration baseline on 2026-04-30:
   should inspect generated native compact phase timings and mask rebuild work
   on those targets.
 
+Solver Clang instrumentation profile on 2026-05-01:
+
+- Built a solver-focus binary with `-fprofile-instr-generate
+  -fcoverage-mapping`, LTO disabled, and the 50-target compiled compact source
+  set linked in.
+- Profiled the solver focus manifest with compact node storage. Clean
+  instrumented median elapsed was `540 ms`; enabling runtime compact counters
+  raised that to `568 ms`, so counter-enabled profiles are useful for
+  diagnostics but should not drive performance decisions.
+- `--timing none` was parsed but ignored; `ScopedTimer` still ran roughly
+  24M times per focus pass. After wiring the flag through, the same
+  instrumented focus run dropped to `516 ms`.
+- Remaining hot count clusters are solver hashing
+  (`mix64` / `appendStateKeyValue`) and generated compact helpers
+  (`compact_turn_layer_bits`, `compact_turn_cell_objects`,
+  `compact_turn_cell_movements`, `compact_turn_pattern_matches`,
+  `compact_turn_line_has_required_masks`, and `compact_turn_tile_index`).
+  Next optimization work should reduce repeated helper traffic in generated
+  row/pattern scans before adding new semantic features.
+
 ## Summary
 
 The previous compact turn prototype drifted into shape-specific helpers such as simple push, push chain, target clear, and movement-only variants. That direction is too complex and too brittle: it encourages recognizing individual game families instead of compiling PuzzleScript.

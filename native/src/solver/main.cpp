@@ -58,16 +58,25 @@ enum class TimingMode {
     Detailed,
 };
 
+std::atomic_bool gSolverTimingEnabled{true};
+
 struct ScopedTimer {
     explicit ScopedTimer(int64_t& target)
-        : target(target), start(Clock::now()) {}
+        : target(target), enabled(gSolverTimingEnabled.load(std::memory_order_relaxed)) {
+        if (enabled) {
+            start = Clock::now();
+        }
+    }
 
     ~ScopedTimer() {
-        target += std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - start).count();
+        if (enabled) {
+            target += std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now() - start).count();
+        }
     }
 
     int64_t& target;
-    TimePoint start;
+    bool enabled = false;
+    TimePoint start{};
 };
 
 struct Options {
@@ -2060,6 +2069,8 @@ void printHumanSummary(const std::vector<Result>& results, const Options& option
 }
 
 std::vector<Result> runCorpus(const Options& options) {
+    gSolverTimingEnabled.store(options.timingMode != TimingMode::None, std::memory_order_relaxed);
+
     std::vector<Result> results;
     std::vector<CompiledGame> compiledGames;
     std::vector<WorkItem> workItems;
