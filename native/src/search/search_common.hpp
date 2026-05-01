@@ -41,11 +41,14 @@ inline uint64_t mix64(uint64_t value) {
     return value;
 }
 
+inline uint64_t rotateLeft64(uint64_t value, uint32_t shift) {
+    return (value << shift) | (value >> (64U - shift));
+}
+
 inline void appendStateKeyValue(StateKey& key, uint64_t value) {
-    const uint64_t mixed = mix64(value + 0x9e3779b97f4a7c15ULL + key.lo);
-    key.lo ^= mixed;
+    key.lo ^= value;
     key.lo *= 0x100000001b3ULL;
-    key.hi ^= mix64(mixed + key.hi);
+    key.hi ^= rotateLeft64(value + 0x9e3779b97f4a7c15ULL + key.lo, 27);
     key.hi *= 0x9e3779b185ebca87ULL;
 }
 
@@ -76,6 +79,7 @@ inline StateKey fullStateKey(const FullState& session, bool includeRandomState, 
     appendStateKeyValue(key, session.meta.pendingAgain ? 1 : 0);
 
     if (includeRandomState) {
+        appendStateKeyValue(key, static_cast<uint64_t>(session.levelState.rng.s.size()));
         appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.levelState.rng.i)));
         appendStateKeyValue(key, static_cast<uint64_t>(static_cast<uint32_t>(session.levelState.rng.j)));
         appendStateKeyValue(key, session.levelState.rng.valid ? 1 : 0);
@@ -83,6 +87,7 @@ inline StateKey fullStateKey(const FullState& session, bool includeRandomState, 
     }
 
     const auto& objects = session.levelState.board.objects;
+    appendStateKeyValue(key, static_cast<uint64_t>(objects.size()));
     for (size_t index = 0; index < objects.size(); ++index) {
         appendStateKeyValue(key, static_cast<uint64_t>(static_cast<MaskWordUnsigned>(projectWord(index, objects[index]))));
     }

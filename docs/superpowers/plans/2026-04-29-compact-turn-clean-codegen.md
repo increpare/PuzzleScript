@@ -61,6 +61,10 @@ Solver hash optimization on 2026-05-01:
   compiled compact solver focus benchmark, median elapsed improved from
   `267 ms` to `214 ms` (`0.801x`, 19.9% faster), and median `hash_ms` dropped
   from `38.9 ms` to `9.4 ms`.
+- Follow-up: moved the same word-oriented key appender into the shared
+  `search_common.hpp` full-session key path so interpreter-backed generator and
+  search helpers use the faster key builder too. The solver now calls the
+  shared appender instead of carrying a private duplicate.
 - The generated helper micro-optimizations tried immediately before this
   (`compact_turn_layer_bits` one-word fast path and direct scan-index
   emission) did not improve the focus benchmark, so they were backed out.
