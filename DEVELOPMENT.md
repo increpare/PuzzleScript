@@ -60,3 +60,29 @@ Recorded play session data (for play session tests - testdata.js):
 ```
 
 If you're at the title screen you won't get the second bit.  The recorded play session records all the input from when the level was loaded up until the moment of generation.  Yeah anyway just paste whichever bit you want as an entry in  `./src/tests/resources/testdata.js` or `./src/tests/resources/errormessage_testdata.js` and you're away.
+
+## Performance testpage
+
+For a single-run performance overview, use:
+
+```
+make performance_testpage
+```
+
+This writes the current report to `./build/performance-testpage/latest/` and also keeps a timestamped copy under `./build/performance-testpage/runs/<timestamp>-<shortsha>/`.  The main artifacts are:
+
+* `report.json` - the canonical machine-readable data.
+* `index.html` - a self-contained interactive report.
+* `summary.md` - a compact Markdown digest.
+
+Useful options:
+
+```
+make performance_testpage PERFORMANCE_TESTPAGE_QUICK=true
+make performance_testpage PERFORMANCE_TESTPAGE_OUT=build/performance-testpage-smoke
+make performance_testpage PERFORMANCE_TESTPAGE_PROFILE=true
+```
+
+The report uses the JavaScript runtime as the baseline, so JS is always shown as `1.00x`; native interpreter, hybrid, and compiled timings are shown relative to that.  Solver rows are selected focus levels from the focus manifest, not the whole solver corpus.  The JavaScript solver uses the same broad portfolio shape as the native solver - a short BFS slice followed by weighted A* with the win-condition heuristic - and does not apply a JavaScript solver timeout.
+
+The testpage intentionally does not compute historical comparisons.  Timestamped runs are kept so they can be inspected manually when the report shape and benchmark inputs are still comparable.
