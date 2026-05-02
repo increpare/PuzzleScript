@@ -1261,6 +1261,14 @@ function assertOneMoveActionNoopReplay() {
     );
 }
 
+function assertCastleClosetActionNoopRejected() {
+    const analysis = analyzeSource(solverTestSource('castlecloset.txt'), { sourcePath: 'castlecloset.txt' });
+    const actionNoop = analysis.facts.movement_action.find(item => item.id === 'action_noop');
+    assert.strictEqual(analysis.ps_tagged.game.tags.has_action_rules, true, 'castlecloset should contain action rules');
+    assert.strictEqual(actionNoop.status, 'rejected', 'castlecloset direct-Player action rules should not be action-noop');
+    assert.ok(actionNoop.blockers.includes('reads_action'));
+}
+
 function assertPushRulegroupFlowReplay() {
     const source = solverTestSource('push.txt');
     const analysis = analyzeSource(source, { sourcePath: 'push.txt' });
@@ -1294,6 +1302,7 @@ assertAtlasTransientReplay();
 assertOneMoveStaticReplay();
 assertOneMoveCountInvariantReplay();
 assertOneMoveActionNoopReplay();
+assertCastleClosetActionNoopRejected();
 assertPushRulegroupFlowReplay();
 
 console.log('ps_static_analysis_node: ok');
