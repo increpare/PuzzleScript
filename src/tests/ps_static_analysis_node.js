@@ -1185,6 +1185,15 @@ const againMark = againTaint.facts.transient_boundary.find(item => item.id === '
 assert.strictEqual(againMark.status, 'rejected');
 assert.ok(againMark.blockers.includes('has_again_taint'));
 
+const SIBLING_AGAIN_TAINT_GAME = TRANSIENT_GAME.replace(
+    '[ Player ] -> [ Player Mark ]',
+    '[ Player no Mark ] -> [ Player Mark ]\n+ [ Player Mark ] -> [ Player Mark ] again'
+);
+const siblingAgainTaint = analyzeSource(SIBLING_AGAIN_TAINT_GAME, { sourcePath: 'sibling_again_taint.txt' });
+const siblingAgainMark = siblingAgainTaint.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(siblingAgainMark.status, 'rejected', 'same-group again should taint transient creators');
+assert.ok(siblingAgainMark.blockers.includes('has_again_taint'));
+
 const RIGID_TRANSIENT_GAME = TRANSIENT_GAME.replace('[ Player ] -> [ Player Mark ]', 'rigid [ Player ] -> [ Player Mark ]');
 const rigidTransient = analyzeSource(RIGID_TRANSIENT_GAME, { sourcePath: 'rigid_transient.txt' });
 const rigidMark = rigidTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
