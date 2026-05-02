@@ -880,6 +880,10 @@ function levelSolverStateSnapshot() {
     };
 }
 
+function splitPlusContinuationRules(source) {
+    return source.replace(/^(\s*)\+\s+/gm, '$1');
+}
+
 function rewriteRuntimeObjects(objects, turnIndex) {
     const ids = objects.map(runtimeObjectId);
     for (let cellIndex = 0; cellIndex < level.n_tiles; cellIndex++) {
@@ -976,6 +980,18 @@ function assertActionNoopAfterReplay(source, inputs, options = {}) {
             assert.strictEqual(winning, true, 'known replay should solve while action is noop');
         }
     }, { levelIndex: options.levelIndex || 0 });
+}
+
+function replayRuntimeSnapshot(source, inputs, options = {}) {
+    let snapshot;
+    withRuntimeSource(source, () => {
+        processRuntimeInputs(inputs);
+        snapshot = {
+            winning,
+            solver_state: levelSolverStateSnapshot(),
+        };
+    }, { levelIndex: options.levelIndex || 0 });
+    return snapshot;
 }
 
 function assertStaticObjectsUnchangedAfterReplay(source, inputs) {
@@ -1306,6 +1322,67 @@ function assertPushRulegroupFlowReplay() {
     }, { levelIndex: 1 });
 }
 
+function assertSplittableRulegroupTransformReplay() {
+    const source = `
+title Splittable Rulegroup Runtime
+========
+OBJECTS
+========
+Background
+black
+Pusher
+white
+Pushable
+orange
+Goal
+green
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Pusher
+C = Pushable
+G = Goal
+Player = Pusher
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Goal
+Pusher
+Pushable
+=====
+RULES
+=====
+down [ Pushable | up Pusher ] -> [ up Pushable | up Pusher ]
++ down [ down Pusher | Pushable ] -> [ down Pusher | down Pushable ]
++ right [ Pushable | left Pusher ] -> [ left Pushable | left Pusher ]
++ right [ right Pusher | Pushable ] -> [ right Pusher | right Pushable ]
+=============
+WINCONDITIONS
+=============
+All Pushable on Goal
+======
+LEVELS
+======
+PCG
+`;
+    const analysis = analyzeSource(source, { sourcePath: 'splittable_rulegroup_runtime.txt' });
+    const splitFlow = analysis.facts.rulegroup_flow.find(item => item.status === 'candidate');
+    assert.ok(splitFlow, 'runtime pusher fixture should expose a split candidate');
+    assert.deepStrictEqual(splitFlow.value.components.map(component => component.length), [1, 1, 1, 1]);
+    assert.deepStrictEqual(splitFlow.value.interaction_edges, []);
+
+    const solution = inputsForTokens(['right']);
+    const originalSnapshot = replayRuntimeSnapshot(source, solution);
+    const splitSnapshot = replayRuntimeSnapshot(splitPlusContinuationRules(source), solution);
+    assert.strictEqual(originalSnapshot.winning, true, 'original plus-group fixture should solve');
+    assert.deepStrictEqual(splitSnapshot, originalSnapshot, 'split plus-group fixture should replay identically');
+}
+
 assertStaticObjectsUnchangedAfterReplay(
     STATIC_OBJECT_GAME
         .replace('[ > PlayerObject ] -> [ > PlayerObject ]', '[ action PlayerObject ] -> win')
@@ -1324,5 +1401,6 @@ assertCratesMoveCountInvariantReplay();
 assertOneMoveActionNoopReplay();
 assertCastleClosetActionNoopRejected();
 assertPushRulegroupFlowReplay();
+assertSplittableRulegroupTransformReplay();
 
 console.log('ps_static_analysis_node: ok');
