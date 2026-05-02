@@ -800,6 +800,60 @@ assert.deepStrictEqual(randomdirMovementPairsFact.value, [
     '2:up',
 ]);
 
+const MOVING_REQUIREMENT_PAIRS_GAME = `
+title Moving Requirement Pairs
+========
+OBJECTS
+========
+Background
+black
+Player
+white
+Crate
+orange
+Goal
+green
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Player
+C = Crate
+G = Goal
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Player
+Crate
+Goal
+=====
+RULES
+=====
+[ action Player ] -> [ right Crate ]
+[ moving Crate ] -> [ right Goal ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+PCG
+`;
+const movingRequirementPairs = analyzeSource(MOVING_REQUIREMENT_PAIRS_GAME, { sourcePath: 'moving_requirement_pairs.txt' });
+const movingRequirementPairsFact = movingRequirementPairs.facts.movement_action.find(item => item.id === 'movement_pairs');
+assert.deepStrictEqual(movingRequirementPairsFact.value, [
+    '1:action',
+    '2:moving',
+    '2:right',
+    '3:moving',
+    '3:right',
+]);
+
 const DIRECT_PLAYER_ACTION_GAME = `
 title Direct Player Action
 ========
