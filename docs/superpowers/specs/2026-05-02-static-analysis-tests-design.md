@@ -140,12 +140,16 @@ Notes:
 
 ### `command_only` [current]
 
-Description: the rule queues commands and has no object or movement effect.
+Description: the rule queues commands and has no object or movement effect. The RHS may be absent, or may repeat the matched cell contents without changing objects or movements.
 
 Static tests:
 - `[ A ] -> sfx0` is command-only.
+- `[ A ] -> [ A ] sfx0` is command-only.
+- `[ right A ] -> [ right A ] sfx0` is command-only.
 - `[ A ] -> checkpoint` is command-only and still solver-state active.
 - `[ A ] -> [ B ] sfx0` is not command-only.
+- `[ A ] -> [ right A ] sfx0` is not command-only.
+- `[ right A ] -> [ A ] sfx0` is not command-only.
 
 Runtime/metamorphic tests:
 - None.
