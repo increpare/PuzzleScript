@@ -940,6 +940,15 @@ const randomSplittableFlow = firstFlowFact(randomSplittableGroup);
 assert.strictEqual(randomSplittableFlow.status, 'rejected', 'random groups should not be split candidates');
 assert.ok(randomSplittableFlow.blockers.includes('random_rule_group'));
 
+const SEMANTIC_SPLITTABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]',
+    '[ Alpha ] -> [ Alpha MarkerX ] checkpoint'
+);
+const semanticSplittableGroup = analyzeSource(SEMANTIC_SPLITTABLE_GROUP_GAME, { sourcePath: 'semantic_splittable_group.txt' });
+const semanticSplittableFlow = firstFlowFact(semanticSplittableGroup);
+assert.strictEqual(semanticSplittableFlow.status, 'rejected', 'semantic commands should block split candidates');
+assert.ok(semanticSplittableFlow.blockers.includes('semantic_command'));
+
 const PUSHER_STYLE_GROUP_GAME = `
 title Pusher Style Rule Group
 ========
