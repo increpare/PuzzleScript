@@ -259,8 +259,7 @@ function tagRule(rule) {
         || rule.summary.rhs_absent.length > 0
         || rule.summary.rhs_random_objects.length > 0);
     const writesMovement = hasReplacement
-        && (rule.summary.rhs_movement.length > 0
-        || movementTermSignature(rule.summary.lhs_terms) !== movementTermSignature(rule.summary.rhs_terms));
+        && movementTermSignature(rule.summary.lhs_terms) !== movementTermSignature(rule.summary.rhs_terms);
     const hasSemanticCommand = rule.summary.semantic_commands.length > 0;
 
     rule.tags.command_only = commandNames.length > 0 && !objectMutating && !writesMovement;

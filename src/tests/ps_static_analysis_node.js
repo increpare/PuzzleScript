@@ -211,6 +211,8 @@ RULES
 =====
 [ Alpha ] -> sfx0
 [ Alpha ] -> checkpoint
+[ Alpha ] -> [ Alpha ] sfx0
+[ right Alpha ] -> [ right Alpha ] sfx0
 =============
 WINCONDITIONS
 =============
@@ -223,11 +225,15 @@ a
 
 const commandReport = analyzeSource(COMMAND_GAME, { sourcePath: 'commands.txt' });
 const commandRules = commandReport.ps_tagged.rule_sections[0].groups.flatMap(group => group.rules);
-assert.strictEqual(commandRules.length, 2, 'command-only rules should remain present');
+assert.strictEqual(commandRules.length, 4, 'command-only rules should remain present');
 assert.strictEqual(commandRules[0].tags.inert_command_only, true, 'sfx-only rule is inert for solver state');
 assert.strictEqual(commandRules[0].tags.solver_state_active, false, 'sfx-only rule is not solver-state active');
 assert.strictEqual(commandRules[1].tags.command_only, true, 'checkpoint-only rule is command-only');
 assert.strictEqual(commandRules[1].tags.solver_state_active, true, 'checkpoint is semantic/metagame-active');
+assert.strictEqual(commandRules[2].tags.inert_command_only, true, 'unchanged RHS plus sfx is inert-command-only');
+assert.strictEqual(commandRules[2].tags.solver_state_active, false);
+assert.strictEqual(commandRules[3].tags.inert_command_only, true, 'unchanged movement RHS plus sfx is inert-command-only');
+assert.strictEqual(commandRules[3].tags.solver_state_active, false);
 
 const MERGEABLE_GAME = `
 title Mergeable
