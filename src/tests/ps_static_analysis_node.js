@@ -1256,6 +1256,19 @@ function assertOneMoveCountInvariantReplay() {
     );
 }
 
+function assertCratesMoveCountInvariantReplay() {
+    assertCountInvariantsPreservedAfterReplay(
+        solverTestSource('Crates move when you move.txt'),
+        inputsForTokens(['up', 'up', 'up', 'left', 'down', 'right', 'right', 'down', 'down']),
+        {
+            sourcePath: 'Crates move when you move.txt',
+            levelIndex: 1,
+            expectedObjects: ['Background', 'Target', 'Player', 'Wall', 'Crate'],
+            expectWinning: true,
+        }
+    );
+}
+
 function assertOneMoveActionNoopReplay() {
     assertActionNoopAfterReplay(
         solverTestSource('one_move.txt'),
@@ -1307,6 +1320,7 @@ assertLimerickMergeabilityReplay();
 assertAtlasTransientReplay();
 assertOneMoveStaticReplay();
 assertOneMoveCountInvariantReplay();
+assertCratesMoveCountInvariantReplay();
 assertOneMoveActionNoopReplay();
 assertCastleClosetActionNoopRejected();
 assertPushRulegroupFlowReplay();
