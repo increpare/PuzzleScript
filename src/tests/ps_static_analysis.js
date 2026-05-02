@@ -86,13 +86,18 @@ function buildCollisionLayers(state) {
 }
 
 function buildWinconditions(state) {
-    return Array.from(state.winconditions, (condition, index) => ({
-        id: `win_${index}`,
-        quantifier: condition[0],
-        subjects: objectNamesFromMask(state, condition[1]),
-        targets: condition[2] ? objectNamesFromMask(state, condition[2]) : [],
-        tags: {},
-    }));
+    const objectCount = Object.keys(state.objects).length;
+    return Array.from(state.winconditions, (condition, index) => {
+        const targetNames = condition[2] ? objectInternalNamesFromMask(state, condition[2]) : [];
+        const plainCondition = targetNames.length === objectCount;
+        return {
+            id: `win_${index}`,
+            quantifier: condition[0],
+            subjects: objectNamesFromMask(state, condition[1]),
+            targets: plainCondition ? [] : targetNames.map(name => displayName(state, name)),
+            tags: { plain: plainCondition },
+        };
+    });
 }
 
 function buildLevels(state) {
@@ -630,12 +635,57 @@ function deriveCountLayerInvariantFacts(psTagged) {
     return results;
 }
 
+function rulesInSection(psTagged, sectionName) {
+    const section = psTagged.rule_sections.find(item => item.name === sectionName);
+    return section ? section.groups.flatMap(group => group.rules.map(rule => ({ group, rule }))) : [];
+}
+
+function earlySettersForObject(psTagged, objectName) {
+    return rulesInSection(psTagged, 'early')
+        .filter(entry => entry.rule.tags.solver_state_active)
+        .filter(entry => entry.rule.summary.rhs_terms.some(term => term.kind === 'present' && termMentionsObject(term, objectName)));
+}
+
+function lateClearersForObject(psTagged, objectName) {
+    return rulesInSection(psTagged, 'late')
+        .filter(entry => entry.rule.tags.solver_state_active)
+        .filter(entry => entry.rule.summary.rhs_terms.some(term => term.kind === 'absent' && termMentionsObject(term, objectName)));
+}
+
+function objectInWincondition(psTagged, objectName) {
+    return psTagged.winconditions.some(win => win.subjects.includes(objectName) || win.targets.includes(objectName));
+}
+
+function deriveTransientBoundaryFacts(psTagged) {
+    const results = [];
+    for (const object of psTagged.objects) {
+        const setters = earlySettersForObject(psTagged, object.name);
+        const clearers = lateClearersForObject(psTagged, object.name);
+        const blockers = [];
+        if (setters.length === 0) blockers.push('not_created_in_early_rules');
+        if (clearers.length === 0) blockers.push('no_late_cleanup_clear');
+        if (!object.tags.present_in_no_levels) blockers.push('present_in_some_initial_levels');
+        if (objectInWincondition(psTagged, object.name)) blockers.push('appears_in_wincondition');
+        if (setters.some(entry => entry.group.tags.has_again || entry.rule.tags.has_again)) blockers.push('has_again_taint');
+        if (setters.some(entry => entry.rule.rigid) || clearers.some(entry => entry.rule.rigid)) blockers.push('rigid_rule');
+        const status = blockers.length === 0 ? 'proved' : 'rejected';
+        results.push(fact('transient_boundary', `object_${object.name}_end_turn_transient`, status, {
+            subjects: { objects: [object.name] },
+            tags: { single_turn_only: true },
+            proof: status === 'proved' ? ['created_in_early_rules', 'cleared_in_late_rules', 'absent_from_initial_levels_and_winconditions'] : [],
+            blockers,
+            evidence: setters.concat(clearers).map(entry => entry.rule.id),
+        }));
+    }
+    return results;
+}
+
 function deriveFacts(psTagged) {
     return {
         mergeability: deriveMergeabilityFacts(psTagged),
         movement_action: deriveMovementActionFacts(psTagged),
         count_layer_invariants: deriveCountLayerInvariantFacts(psTagged),
-        transient_boundary: [],
+        transient_boundary: deriveTransientBoundaryFacts(psTagged),
     };
 }
 

@@ -323,4 +323,56 @@ const goalCount = spawnReport.facts.count_layer_invariants.find(item => item.id 
 assert.strictEqual(goalCount.status, 'rejected');
 assert.ok(goalCount.blockers.includes('object_written_by_solver_active_rule'));
 
+const TRANSIENT_GAME = `
+title Transient
+========
+OBJECTS
+========
+Background
+black
+Player
+white
+Mark
+red
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Player
+M = Mark
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Player
+Mark
+=====
+RULES
+=====
+[ Player ] -> [ Player Mark ]
+late [ Mark ] -> [ no Mark ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+P
+`;
+
+const transient = analyzeSource(TRANSIENT_GAME, { sourcePath: 'transient.txt' });
+const markTransient = transient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(markTransient.status, 'proved');
+assert.strictEqual(markTransient.tags.single_turn_only, true);
+
+const AGAIN_TAINT_GAME = TRANSIENT_GAME.replace('[ Player ] -> [ Player Mark ]', '[ Player ] -> [ Player Mark ] again');
+const againTaint = analyzeSource(AGAIN_TAINT_GAME, { sourcePath: 'again_taint.txt' });
+const againMark = againTaint.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(againMark.status, 'rejected');
+assert.ok(againMark.blockers.includes('has_again_taint'));
+
 console.log('ps_static_analysis_node: ok');
