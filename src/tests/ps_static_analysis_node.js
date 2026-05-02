@@ -1047,6 +1047,12 @@ const againMark = againTaint.facts.transient_boundary.find(item => item.id === '
 assert.strictEqual(againMark.status, 'rejected');
 assert.ok(againMark.blockers.includes('has_again_taint'));
 
+const RIGID_TRANSIENT_GAME = TRANSIENT_GAME.replace('[ Player ] -> [ Player Mark ]', 'rigid [ Player ] -> [ Player Mark ]');
+const rigidTransient = analyzeSource(RIGID_TRANSIENT_GAME, { sourcePath: 'rigid_transient.txt' });
+const rigidMark = rigidTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(rigidMark.status, 'rejected', 'rigid transient creators should not produce proved transient facts');
+assert.ok(rigidMark.blockers.includes('rigid_rule'));
+
 const LATE_CHAIN_TRANSIENT_GAME = `
 title Late Chain Transient
 ========
