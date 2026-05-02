@@ -157,6 +157,53 @@ assert.strictEqual(levelPresenceObjects.get('Never').present_in_all_levels, fals
 assert.strictEqual(levelPresenceObjects.get('Never').present_in_some_levels, false);
 assert.strictEqual(levelPresenceObjects.get('Never').present_in_no_levels, true);
 
+const WINCONDITION_SHAPE_GAME = `
+title Wincondition Shape
+========
+OBJECTS
+========
+Background
+black
+Alpha
+white
+Goal
+yellow
+${'======='}
+LEGEND
+${'======='}
+. = Background
+a = Alpha
+g = Goal
+Player = Alpha
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Alpha
+Goal
+=====
+RULES
+=====
+=============
+WINCONDITIONS
+=============
+Some Alpha
+All Alpha on Goal
+======
+LEVELS
+======
+ag
+`;
+
+const winconditionShape = analyzeSource(WINCONDITION_SHAPE_GAME, { sourcePath: 'wincondition_shape.txt' });
+assert.strictEqual(winconditionShape.ps_tagged.winconditions[0].tags.plain, true);
+assert.deepStrictEqual(winconditionShape.ps_tagged.winconditions[0].targets, []);
+assert.strictEqual(winconditionShape.ps_tagged.winconditions[1].tags.plain, false);
+assert.deepStrictEqual(winconditionShape.ps_tagged.winconditions[1].targets, ['Goal']);
+
 const RULE_SHAPE_GAME = `
 title Rule Shape
 
