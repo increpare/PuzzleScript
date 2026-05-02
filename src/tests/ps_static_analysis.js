@@ -17,6 +17,10 @@ function uniqueSorted(values) {
     );
 }
 
+function uniqueInOrder(values) {
+    return Array.from(new Set(values));
+}
+
 function displayName(state, name) {
     return (state.original_case_names && state.original_case_names[name]) || name;
 }
@@ -77,12 +81,15 @@ function buildProperties(state) {
 }
 
 function buildCollisionLayers(state) {
-    return Array.from(state.collisionLayers, (objects, id) => ({
-        id,
-        objects: Array.from(objects, name => displayName(state, name)),
-        canonical_objects: Array.from(objects),
-        tags: {},
-    }));
+    return Array.from(state.collisionLayers, (objects, id) => {
+        const canonicalObjects = uniqueInOrder(Array.from(objects));
+        return {
+            id,
+            objects: canonicalObjects.map(name => displayName(state, name)),
+            canonical_objects: canonicalObjects,
+            tags: {},
+        };
+    });
 }
 
 function buildWinconditions(state) {

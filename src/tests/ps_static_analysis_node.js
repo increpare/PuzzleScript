@@ -296,6 +296,18 @@ const directWinFact = directWin.facts.mergeability.find(item => item.subjects.ob
 assert.strictEqual(directWinFact.status, 'rejected');
 assert.ok(directWinFact.blockers.includes('different_win_roles'));
 
+const DUPLICATE_LAYER_GAME = MERGEABLE_GAME.replace('BodyH, BodyV, Goal', 'BodyH, BodyH, BodyV, Goal');
+const duplicateLayer = analyzeSource(DUPLICATE_LAYER_GAME, { sourcePath: 'duplicate_layer.txt' });
+assert.deepStrictEqual(
+    duplicateLayer.ps_tagged.collision_layers[1].objects,
+    ['BodyH', 'BodyV', 'Goal'],
+    'collision layer summaries should deduplicate object names'
+);
+assert.ok(
+    duplicateLayer.facts.mergeability.every(item => item.subjects.objects[0] !== item.subjects.objects[1]),
+    'mergeability should not emit self-merge facts'
+);
+
 const AUTO_TICK_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Goal ] -> [ Hero ]');
 const autoTick = analyzeSource(AUTO_TICK_GAME, { sourcePath: 'auto_tick.txt' });
 const autoAction = autoTick.facts.movement_action.find(item => item.id === 'action_noop');
