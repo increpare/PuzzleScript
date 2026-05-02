@@ -73,6 +73,7 @@ assert.ok(report.facts.mergeability, 'report should include mergeability facts')
 assert.ok(report.facts.movement_action, 'report should include movement_action facts');
 assert.ok(report.facts.count_layer_invariants, 'report should include count_layer_invariants facts');
 assert.ok(report.facts.transient_boundary, 'report should include transient_boundary facts');
+assert.ok(report.facts.rulegroup_flow, 'report should include rulegroup_flow facts');
 assert.deepStrictEqual(
     report.ps_tagged.objects.map(object => object.name).sort(),
     ['Background', 'Goal', 'Hero'],
@@ -334,6 +335,156 @@ assert.strictEqual(stationaryTick.ps_tagged.game.tags.has_autonomous_tick_rules,
 assert.strictEqual(stationaryTickFact.status, 'rejected');
 assert.ok(stationaryTickFact.blockers.includes('autonomous_solver_active_rule'));
 assert.ok(stationaryTickFact.blockers.includes('action_may_create_directional_movement'));
+
+function firstFlowFact(reportToCheck) {
+    return reportToCheck.facts.rulegroup_flow.find(item => item.subjects.groups[0] === 'early_group_0');
+}
+
+const SPLITTABLE_GROUP_GAME = `
+title Splittable Rule Group
+========
+OBJECTS
+========
+Background
+black
+Player
+white
+Alpha
+red
+Beta
+blue
+MarkerX
+green
+MarkerY
+yellow
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Player
+a = Alpha
+b = Beta
+x = MarkerX
+y = MarkerY
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Player
+Alpha
+Beta
+MarkerX
+MarkerY
+=====
+RULES
+=====
+[ Alpha ] -> [ Alpha MarkerX ]
++ [ Beta ] -> [ Beta MarkerY ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+Pab
+`;
+
+const splittableGroup = analyzeSource(SPLITTABLE_GROUP_GAME, { sourcePath: 'splittable_group.txt' });
+const splittableFlow = firstFlowFact(splittableGroup);
+assert.strictEqual(splittableFlow.status, 'candidate', 'independent plus-group rules should be split candidates');
+assert.deepStrictEqual(splittableFlow.value.components.map(component => component.length), [1, 1]);
+assert.deepStrictEqual(splittableFlow.value.interaction_edges, []);
+assert.deepStrictEqual(Object.values(splittableFlow.value.rerun_masks), [[], []]);
+
+const BACKWARD_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
+    '[ MarkerX ] -> [ MarkerX MarkerY ]\n+ [ Alpha ] -> [ Alpha MarkerX ]'
+);
+const backwardEnableGroup = analyzeSource(BACKWARD_ENABLE_GROUP_GAME, { sourcePath: 'backward_enable_group.txt' });
+const backwardFlow = firstFlowFact(backwardEnableGroup);
+assert.strictEqual(backwardFlow.status, 'rejected', 'backward enabling interaction should keep the group connected');
+assert.deepStrictEqual(backwardFlow.value.interaction_edges.map(edge => [edge.from, edge.to, edge.reasons]), [
+    ['early_group_0_rule_1', 'early_group_0_rule_0', ['object_presence']],
+]);
+assert.deepStrictEqual(backwardFlow.value.rerun_masks.early_group_0_rule_1, ['early_group_0_rule_0']);
+
+const FORWARD_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ MarkerX ] -> [ MarkerX MarkerY ]'
+);
+const forwardEnableGroup = analyzeSource(FORWARD_ENABLE_GROUP_GAME, { sourcePath: 'forward_enable_group.txt' });
+const forwardFlow = firstFlowFact(forwardEnableGroup);
+assert.deepStrictEqual(forwardFlow.value.interaction_edges.map(edge => [edge.from, edge.to, edge.reasons]), [
+    ['early_group_0_rule_0', 'early_group_0_rule_1', ['object_presence']],
+]);
+assert.deepStrictEqual(forwardFlow.value.rerun_masks.early_group_0_rule_0, [], 'forward interactions do not require next-iteration reruns');
+
+const AGGREGATE_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    'y = MarkerY',
+    'y = MarkerY\nThing = MarkerX or MarkerY'
+).replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
+    '[ Thing ] -> [ Thing Player ]\n+ [ Alpha ] -> [ Alpha MarkerX ]'
+);
+const aggregateEnableGroup = analyzeSource(AGGREGATE_ENABLE_GROUP_GAME, { sourcePath: 'aggregate_enable_group.txt' });
+const aggregateFlow = firstFlowFact(aggregateEnableGroup);
+assert.ok(
+    Object.values(aggregateFlow.value.rerun_masks).some(mask => mask.includes('early_group_0_rule_0')),
+    'object-set aggregate reads should be expanded for rerun masks'
+);
+
+const PUSHER_STYLE_GROUP_GAME = `
+title Pusher Style Rule Group
+========
+OBJECTS
+========
+Background
+black
+Pusher
+white
+Pushable
+orange
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Pusher
+C = Pushable
+Player = Pusher
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Pusher
+Pushable
+=====
+RULES
+=====
+down [ Pushable | up Pusher ] -> [ up Pushable | up Pusher ]
++ down [ down Pusher | Pushable ] -> [ down Pusher | down Pushable ]
++ right [ Pushable | left Pusher ] -> [ left Pushable | left Pusher ]
++ right [ right Pusher | Pushable ] -> [ right Pusher | right Pushable ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+PC
+`;
+const pusherStyleGroup = analyzeSource(PUSHER_STYLE_GROUP_GAME, { sourcePath: 'pusher_style_group.txt' });
+const pusherFlow = firstFlowFact(pusherStyleGroup);
+assert.strictEqual(pusherFlow.status, 'candidate', 'pusher-style movement rules should not be blocked by shared layer writes');
+assert.deepStrictEqual(pusherFlow.value.components.map(component => component.length), [1, 1, 1, 1]);
+assert.deepStrictEqual(Object.values(pusherFlow.value.rerun_masks), [[], [], [], []]);
 
 const countFacts = report.facts.count_layer_invariants;
 assert.ok(countFacts.some(item => item.id === 'object_Hero_count_preserved'), 'Hero count fact should exist');

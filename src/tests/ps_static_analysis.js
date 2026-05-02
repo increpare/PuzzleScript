@@ -446,6 +446,7 @@ function emptyFacts() {
         movement_action: [],
         count_layer_invariants: [],
         transient_boundary: [],
+        rulegroup_flow: [],
     };
 }
 
@@ -827,12 +828,231 @@ function deriveTransientBoundaryFacts(psTagged) {
     return results;
 }
 
+function addValues(target, values) {
+    for (const value of values) target.add(value);
+}
+
+function termObjects(term) {
+    return term.expanded_objects || [];
+}
+
+function movementExpansions(movement) {
+    if (movement === 'randomdir') return CARDINAL_MOVEMENTS.concat(['moving', 'randomdir']);
+    if (CARDINAL_MOVEMENTS.includes(movement)) return [movement, 'moving'];
+    return [movement];
+}
+
+function ruleFlowReads(rule) {
+    const objectPresent = new Set();
+    const objectAbsent = new Set();
+    const movement = [];
+    for (const term of rule.summary.lhs_terms) {
+        if (term.kind === 'present') {
+            addValues(objectPresent, termObjects(term));
+            if (term.movement !== null) {
+                for (const objectName of termObjects(term)) {
+                    movement.push({ object: objectName, movement: term.movement });
+                }
+            }
+        } else if (term.kind === 'absent') {
+            addValues(objectAbsent, termObjects(term));
+        }
+    }
+    return { object_present: objectPresent, object_absent: objectAbsent, movement };
+}
+
+function movementTermKeys(terms) {
+    const keys = new Set();
+    for (const term of terms) {
+        if (term.kind !== 'present' || term.movement === null) continue;
+        for (const objectName of termObjects(term)) {
+            keys.add(`${objectName}:${term.movement}`);
+        }
+    }
+    return keys;
+}
+
+function presentObjectSet(terms) {
+    const objects = new Set();
+    for (const term of terms) {
+        if (term.kind === 'present' || term.kind === 'random_object') {
+            addValues(objects, termObjects(term));
+        }
+    }
+    return objects;
+}
+
+function layerObjectsForObject(psTagged, objectName) {
+    const layer = layerForObject(psTagged, objectName);
+    const collisionLayer = psTagged.collision_layers.find(item => item.id === layer);
+    return collisionLayer ? collisionLayer.objects : [];
+}
+
+function ruleFlowWrites(psTagged, rule) {
+    const objectPresent = new Set();
+    const objectAbsent = new Set();
+    const movement = [];
+    const lhsPresent = presentObjectSet(rule.summary.lhs_terms.filter(term => term.kind === 'present'));
+    const rhsPresent = presentObjectSet(rule.summary.rhs_terms);
+
+    if (rule.tags.object_mutating) {
+        for (const term of rule.summary.rhs_terms) {
+            if (term.kind === 'present' || term.kind === 'random_object') {
+                const writtenObjects = termObjects(term).filter(objectName =>
+                    term.kind === 'random_object' || !lhsPresent.has(objectName)
+                );
+                addValues(objectPresent, writtenObjects);
+                for (const objectName of writtenObjects) {
+                    for (const sibling of layerObjectsForObject(psTagged, objectName)) {
+                        if (sibling !== objectName && !rhsPresent.has(sibling)) {
+                            objectAbsent.add(sibling);
+                        }
+                    }
+                }
+            } else if (term.kind === 'absent') {
+                addValues(objectAbsent, termObjects(term));
+            }
+        }
+        for (const objectName of lhsPresent) {
+            if (!rhsPresent.has(objectName)) {
+                objectAbsent.add(objectName);
+            }
+        }
+    }
+
+    if (rule.tags.writes_movement) {
+        const lhsMovementKeys = movementTermKeys(rule.summary.lhs_terms);
+        const rhsMovementKeys = movementTermKeys(rule.summary.rhs_terms);
+        for (const term of rule.summary.rhs_terms) {
+            if (term.kind !== 'present' || term.movement === null) continue;
+            for (const objectName of termObjects(term)) {
+                if (lhsMovementKeys.has(`${objectName}:${term.movement}`)) continue;
+                for (const movementName of movementExpansions(term.movement)) {
+                    movement.push({ object: objectName, movement: movementName });
+                }
+            }
+        }
+        for (const key of lhsMovementKeys) {
+            if (rhsMovementKeys.has(key)) continue;
+            const objectName = key.slice(0, key.lastIndexOf(':'));
+            if (rhsPresent.has(objectName)) {
+                movement.push({ object: objectName, movement: 'stationary' });
+            }
+        }
+    }
+
+    return { object_present: objectPresent, object_absent: objectAbsent, movement };
+}
+
+function movementWriteMayEnableRead(write, read) {
+    if (write.object !== read.object) return false;
+    if (write.movement === read.movement) return true;
+    if (read.movement === 'moving' || read.movement === 'randomdir' || read.movement === 'orthogonal') {
+        return CARDINAL_MOVEMENTS.includes(write.movement) || write.movement === 'moving' || write.movement === 'randomdir';
+    }
+    return false;
+}
+
+function ruleMayEnableRule(writes, reads) {
+    const reasons = [];
+    if (Array.from(writes.object_present).some(objectName => reads.object_present.has(objectName))) {
+        reasons.push('object_presence');
+    }
+    if (Array.from(writes.object_absent).some(objectName => reads.object_absent.has(objectName))) {
+        reasons.push('object_absence');
+    }
+    if (writes.movement.some(write => reads.movement.some(read => movementWriteMayEnableRead(write, read)))) {
+        reasons.push('movement');
+    }
+    return reasons;
+}
+
+function connectedComponents(ruleIds, edges) {
+    const parent = new Map(ruleIds.map(id => [id, id]));
+    function find(id) {
+        const current = parent.get(id);
+        if (current === id) return id;
+        const root = find(current);
+        parent.set(id, root);
+        return root;
+    }
+    function union(left, right) {
+        const leftRoot = find(left);
+        const rightRoot = find(right);
+        if (leftRoot !== rightRoot) parent.set(rightRoot, leftRoot);
+    }
+    for (const edge of edges) {
+        union(edge.from, edge.to);
+    }
+    const components = new Map();
+    for (const id of ruleIds) {
+        const root = find(id);
+        if (!components.has(root)) components.set(root, []);
+        components.get(root).push(id);
+    }
+    return Array.from(components.values()).sort((left, right) =>
+        ruleIds.indexOf(left[0]) - ruleIds.indexOf(right[0])
+    );
+}
+
+function deriveRulegroupFlowFacts(psTagged) {
+    const results = [];
+    for (const section of psTagged.rule_sections) {
+        for (const group of section.groups) {
+            if (group.rules.length <= 1) continue;
+            const ruleIds = group.rules.map(rule => rule.id);
+            const readsByRule = new Map(group.rules.map(rule => [rule.id, ruleFlowReads(rule)]));
+            const writesByRule = new Map(group.rules.map(rule => [rule.id, ruleFlowWrites(psTagged, rule)]));
+            const interactionEdges = [];
+            const rerunMasks = Object.fromEntries(ruleIds.map(id => [id, []]));
+            for (let fromIndex = 0; fromIndex < group.rules.length; fromIndex++) {
+                const fromRule = group.rules[fromIndex];
+                const writes = writesByRule.get(fromRule.id);
+                for (let toIndex = 0; toIndex < group.rules.length; toIndex++) {
+                    const toRule = group.rules[toIndex];
+                    const reasons = ruleMayEnableRule(writes, readsByRule.get(toRule.id));
+                    if (reasons.length === 0) continue;
+                    interactionEdges.push({ from: fromRule.id, to: toRule.id, reasons });
+                    if (toIndex <= fromIndex) {
+                        rerunMasks[fromRule.id].push(toRule.id);
+                    }
+                }
+            }
+            for (const ruleId of ruleIds) {
+                rerunMasks[ruleId] = uniqueSorted(rerunMasks[ruleId]);
+            }
+            const components = connectedComponents(ruleIds, interactionEdges);
+            const blockers = [];
+            if (components.length <= 1) blockers.push('single_component');
+            if (group.random) blockers.push('random_rule_group');
+            if (group.rules.some(rule => rule.rigid)) blockers.push('rigid_rule');
+            if (group.rules.some(rule => rule.summary.semantic_commands.length > 0)) blockers.push('semantic_command');
+            const status = blockers.length === 0 ? 'candidate' : 'rejected';
+            results.push(fact('rulegroup_flow', `${group.id}_flow`, status, {
+                subjects: { groups: [group.id] },
+                value: {
+                    rule_ids: ruleIds,
+                    interaction_edges: interactionEdges,
+                    rerun_masks: rerunMasks,
+                    components,
+                    split_candidate: status === 'candidate',
+                },
+                proof: status === 'candidate' ? ['multiple_independent_rule_components'] : [],
+                blockers,
+                evidence: ruleIds,
+            }));
+        }
+    }
+    return results;
+}
+
 function deriveFacts(psTagged) {
     return {
         mergeability: deriveMergeabilityFacts(psTagged),
         movement_action: deriveMovementActionFacts(psTagged),
         count_layer_invariants: deriveCountLayerInvariantFacts(psTagged),
         transient_boundary: deriveTransientBoundaryFacts(psTagged),
+        rulegroup_flow: deriveRulegroupFlowFacts(psTagged),
     };
 }
 

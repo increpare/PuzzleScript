@@ -720,6 +720,26 @@ Runtime/metamorphic tests:
 Notes:
 - Solver output equality is optional and stricter than the core claim.
 
+### `rulegroup_flow` [current]
+
+Description: rule-group flow facts summarize which rules can make other rules newly match, which earlier/self rules may need rerunning on the next group iteration, and whether the group has independent components that are candidates for later subdivision.
+
+Static tests:
+- Prove split candidates for plus-groups whose rules write objects/movements that no other component reads.
+- Report full interaction edges when one rule writes object presence that another rule reads.
+- Compute order-sensitive rerun masks: forward interactions do not require next-iteration reruns, but backward/self interactions do.
+- Expand properties, synonyms, and object-set aggregates when comparing writes to reads.
+- Do not reject pusher-style movement groups merely because rules write objects on the same collision layer.
+- Reject split candidates for single-component groups, random groups, rigid rules, and groups with semantic commands.
+
+Runtime/metamorphic tests:
+- Future optimizer test: split candidate groups into suggested components, replay known solutions, and assert the same solution still wins.
+
+Notes:
+- Current output is advisory. It detects candidates and rerun masks, but does not rewrite rule groups.
+- The rerun mask is intentionally asymmetric: for triggered rule `i`, only rules `j <= i` are included because later rules still run in the current scan.
+- Single-rule groups are omitted from this fact family.
+
 ### `count_layer_invariants.object_*_count_preserved` [current]
 
 Description: object count is preserved because no solver-active rule may affect the object.
