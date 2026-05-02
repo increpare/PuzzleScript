@@ -375,4 +375,25 @@ const againMark = againTaint.facts.transient_boundary.find(item => item.id === '
 assert.strictEqual(againMark.status, 'rejected');
 assert.ok(againMark.blockers.includes('has_again_taint'));
 
+const noTagged = analyzeSource(SIMPLE_GAME, { sourcePath: 'simple.txt', includePsTagged: false });
+assert.strictEqual(noTagged.ps_tagged, undefined, 'includePsTagged=false should remove ps_tagged');
+
+const onlyMerge = analyzeSource(SIMPLE_GAME, { sourcePath: 'simple.txt', familyFilter: 'mergeability' });
+assert.deepStrictEqual(Object.keys(onlyMerge.facts), ['mergeability'], 'familyFilter should keep one family');
+
+function assertProvedFactsHaveProof(reportToCheck) {
+    for (const familyFacts of Object.values(reportToCheck.facts)) {
+        for (const item of familyFacts) {
+            if (item.status === 'proved') {
+                assert.ok(Array.isArray(item.proof) && item.proof.length > 0, `${item.id} should have proof`);
+                assert.ok(Array.isArray(item.evidence), `${item.id} should have evidence array`);
+            }
+        }
+    }
+}
+
+assertProvedFactsHaveProof(report);
+assertProvedFactsHaveProof(mergeable);
+assertProvedFactsHaveProof(transient);
+
 console.log('ps_static_analysis_node: ok');

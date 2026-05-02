@@ -696,10 +696,23 @@ function filterFacts(facts, familyFilter) {
 
 function analyzeSource(source, options = {}) {
     const sourcePath = options.sourcePath || '<memory>';
-    const compiled = compileSemanticSource(source, {
-        includeWinConditions: true,
-        throwOnError: false,
-    });
+    let compiled;
+    try {
+        compiled = compileSemanticSource(source, {
+            includeWinConditions: true,
+            throwOnError: false,
+        });
+    } catch (error) {
+        return {
+            schema: SCHEMA,
+            source: { path: sourcePath },
+            status: 'compile_error',
+            errors: [error && error.message ? error.message : String(error)],
+            ps_tagged: null,
+            facts: emptyFacts(),
+            summary: { proved: 0, candidate: 0, rejected: 0 },
+        };
+    }
 
     if (compiled.errorCount > 0 || compiled.state === null || compiled.state.invalid) {
         return {
@@ -735,8 +748,33 @@ function analyzeFile(filePath, options = {}) {
     return analyzeSource(source, Object.assign({}, options, { sourcePath: filePath }));
 }
 
+function discoverInputFiles(inputs) {
+    const files = [];
+    for (const input of inputs) {
+        const stat = fs.statSync(input);
+        if (stat.isDirectory()) {
+            for (const entry of fs.readdirSync(input).sort()) {
+                const fullPath = path.join(input, entry);
+                if (fs.statSync(fullPath).isFile() && fullPath.endsWith('.txt')) {
+                    files.push(fullPath);
+                }
+            }
+        } else {
+            files.push(input);
+        }
+    }
+    return files;
+}
+
+function analyzePaths(inputs, options = {}) {
+    return discoverInputFiles(inputs)
+        .filter(filePath => !options.gameFilter || filePath.toLowerCase().includes(options.gameFilter.toLowerCase()))
+        .map(filePath => analyzeFile(filePath, options));
+}
+
 module.exports = {
     SCHEMA,
     analyzeFile,
+    analyzePaths,
     analyzeSource,
 };
