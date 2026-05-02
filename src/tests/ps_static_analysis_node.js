@@ -700,6 +700,16 @@ assert.strictEqual(rigidRule.ps_tagged.game.tags.has_rigid, true, 'rigid rules s
 assert.strictEqual(rigidRuleIr.rigid, true);
 assert.strictEqual(rigidRuleIr.tags.rigid_active, true, 'solver-active rigid rules should receive rigid_active');
 
+const RIGID_ACTION_GAME = DIRECT_PLAYER_ACTION_GAME.replace(
+    '[ action Player ] -> [ right Player ]',
+    'rigid [ action Player ] -> [ right Player ]'
+);
+const rigidAction = analyzeSource(RIGID_ACTION_GAME, { sourcePath: 'rigid_action.txt' });
+const rigidActionFact = rigidAction.facts.movement_action.find(item => item.id === 'action_noop');
+assert.strictEqual(rigidActionFact.status, 'rejected');
+assert.ok(rigidActionFact.blockers.includes('rigid_rule'), 'reachable rigid rules should reject action_noop');
+assert.ok(rigidActionFact.blockers.includes('reads_action'));
+
 function firstFlowFact(reportToCheck) {
     return reportToCheck.facts.rulegroup_flow.find(item => item.subjects.groups[0] === 'early_group_0');
 }
