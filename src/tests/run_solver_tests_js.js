@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
+const { analyzeSource } = require('./ps_static_analysis');
 
 const DEFAULT_STRATEGY = 'weighted-astar';
 const DEFAULT_SOLVER_HEURISTIC = 'winconditions';
@@ -77,6 +78,7 @@ function parseArgs(argv) {
         summaryOnly: false,
         gameFilter: null,
         levelFilter: null,
+        solverStaticHash: false,
     };
     const args = argv.slice(2);
     for (let index = 0; index < args.length; index++) {
@@ -119,6 +121,8 @@ function parseArgs(argv) {
             options.gameFilter = args[++index];
         } else if (arg === '--level') {
             options.levelFilter = Math.max(0, Number.parseInt(args[++index], 10));
+        } else if (arg === '--solver-static-hash') {
+            options.solverStaticHash = true;
         } else if (arg === '--help' || arg === '-h') {
             usage(0);
         } else if (options.corpusPath === null) {
@@ -134,7 +138,7 @@ function parseArgs(argv) {
 }
 
 function usage(exitCode) {
-    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--summary-only] [--quiet] [--json]\n';
+    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--solver-static-hash] [--summary-only] [--quiet] [--json]\n';
     (exitCode === 0 ? process.stdout : process.stderr).write(message);
     process.exit(exitCode);
 }
@@ -388,11 +392,14 @@ function createZobristTables(wordCount) {
     return tables;
 }
 
-function computeZobristBoardHash(objects, tableLo, tableHi) {
+function computeZobristBoardHash(objects, tableLo, tableHi, ignoredObjectWords = null) {
     let lo = 0;
     let hi = 0;
     for (let wordIndex = 0; wordIndex < objects.length; wordIndex++) {
         let bits = objects[wordIndex] >>> 0;
+        if (ignoredObjectWords) {
+            bits = (bits & ~(ignoredObjectWords[wordIndex % ignoredObjectWords.length] | 0)) >>> 0;
+        }
         const tableOffset = wordIndex * 32;
         while (bits !== 0) {
             const lowBit = bits & -bits;
@@ -404,6 +411,28 @@ function computeZobristBoardHash(objects, tableLo, tableHi) {
         }
     }
     return { lo: lo | 0, hi: hi | 0 };
+}
+
+function createStaticHashObjectWords(report) {
+    const words = new Int32Array(STRIDE_OBJ);
+    if (!report || report.status !== 'ok' || !report.ps_tagged || !Array.isArray(report.ps_tagged.objects)) {
+        return { words, count: 0 };
+    }
+    let count = 0;
+    for (const taggedObject of report.ps_tagged.objects) {
+        if (!taggedObject.tags || taggedObject.tags.static !== true) {
+            continue;
+        }
+        const canonicalName = taggedObject.canonical_name || (taggedObject.name && taggedObject.name.toLowerCase());
+        const runtimeObject = (canonicalName && state.objects && state.objects[canonicalName])
+            || (taggedObject.name && state.objects && state.objects[taggedObject.name]);
+        if (!runtimeObject || !Number.isInteger(runtimeObject.id)) {
+            continue;
+        }
+        words[runtimeObject.id >> 5] |= 1 << (runtimeObject.id & 31);
+        count++;
+    }
+    return { words, count };
 }
 
 function ruleGroupsUseRandom(groups) {
@@ -482,6 +511,10 @@ function createSolverLevelSpecialization(options = {}) {
     const zobristHasher = createZobristStateHasher(usesRandom);
     const zobristTables = createZobristTables(objectWordCount);
     const zobristTableId = zobristTables;
+    const staticHash = options.solverStaticHash
+        ? createStaticHashObjectWords(options.staticAnalysisReport)
+        : { words: null, count: 0 };
+    const ignoredHashObjectWords = staticHash.count > 0 ? staticHash.words : null;
     const heuristicDistances = new Array(level.n_tiles);
     const obstacleDistances = new Array(level.n_tiles);
     const obstacleQueue = new Array(level.n_tiles);
@@ -515,7 +548,7 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     function recomputeZobrist() {
-        const hash = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+        const hash = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
         level.solverZobristLo = hash.lo;
         level.solverZobristHi = hash.hi;
     }
@@ -525,7 +558,7 @@ function createSolverLevelSpecialization(options = {}) {
         let hi = level.solverZobristHi | 0;
         const offset = tileIndex * STRIDE_OBJ;
         if (verifyZobrist) {
-            const expectedStart = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            const expectedStart = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
             if (lo !== expectedStart.lo || hi !== expectedStart.hi) {
                 throw new Error(`Incremental Zobrist hash already drifted before tile ${tileIndex}: ${lo}:${hi} !== ${expectedStart.lo}:${expectedStart.hi}`);
             }
@@ -534,6 +567,9 @@ function createSolverLevelSpecialization(options = {}) {
             const oldWord = level.objects[offset + word] | 0;
             const newWord = vec.data[word] | 0;
             let changed = (oldWord ^ newWord) >>> 0;
+            if (ignoredHashObjectWords) {
+                changed = (changed & ~(ignoredHashObjectWords[word] | 0)) >>> 0;
+            }
             const tableOffset = (offset + word) * 32;
             while (changed !== 0) {
                 const lowBit = changed & -changed;
@@ -547,7 +583,7 @@ function createSolverLevelSpecialization(options = {}) {
         level.solverZobristLo = lo | 0;
         level.solverZobristHi = hi | 0;
         if (verifyZobrist) {
-            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
             // updateZobristCell runs before the caller writes vec into level.objects, so
             // compare against the board with this one cell patched in.
             const oldWords = [];
@@ -555,7 +591,7 @@ function createSolverLevelSpecialization(options = {}) {
                 oldWords[word] = level.objects[offset + word];
                 level.objects[offset + word] = vec.data[word];
             }
-            const patched = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            const patched = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
             for (let word = 0; word < STRIDE_OBJ; word++) {
                 level.objects[offset + word] = oldWords[word];
             }
@@ -2005,7 +2041,7 @@ function createSolverLevelSpecialization(options = {}) {
             return hashCurrentState();
         }
         if (verifyZobrist) {
-            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
             if ((level.solverZobristLo | 0) !== expected.lo || (level.solverZobristHi | 0) !== expected.hi) {
                 throw new Error(`Incremental Zobrist hash drifted: ${level.solverZobristLo}:${level.solverZobristHi} !== ${expected.lo}:${expected.hi}`);
             }
@@ -2137,7 +2173,7 @@ function createSolverLevelSpecialization(options = {}) {
         matchesSnapshot,
         heuristic,
         heuristicName,
-        hashMode: usesRandom ? 'incremental_zobrist_with_rng' : 'incremental_zobrist',
+        hashMode: `${usesRandom ? 'incremental_zobrist_with_rng' : 'incremental_zobrist'}${ignoredHashObjectWords ? `_static${staticHash.count}` : ''}`,
         snapshotMode: usesCheckpoint ? 'specialized_typed_array_checkpoint' : 'specialized_typed_array_no_undo',
     };
 }
@@ -2333,6 +2369,7 @@ function createSolverResult(game, levelIndex, timeoutMs, compileMs) {
         max_frontier: 0,
         timeout_ms: timeoutMs,
         compile_ms: compileMs,
+        static_analysis_ms: 0,
         load_ms: 0,
         clone_ms: 0,
         snapshot_ms: 0,
@@ -2359,6 +2396,7 @@ function mergeSearchResultTotals(target, source) {
         'step_ms',
         'heuristic_ms',
         'hash_ms',
+        'static_analysis_ms',
         'queue_ms',
         'reconstruct_ms',
     ]) {
@@ -2747,6 +2785,7 @@ function levelErrorResult(game, levelIndex, timeoutMs, compileMs, error) {
         max_frontier: 0,
         timeout_ms: timeoutMs,
         compile_ms: compileMs,
+        static_analysis_ms: 0,
         load_ms: 0,
         clone_ms: 0,
         snapshot_ms: 0,
@@ -2758,11 +2797,22 @@ function levelErrorResult(game, levelIndex, timeoutMs, compileMs, error) {
     };
 }
 
-function runGame(root, file) {
+function runGame(root, file, options = {}) {
     const game = gameName(root, file);
     let source = fs.readFileSync(file, 'utf8');
     if (!source.endsWith('\n')) {
         source += '\n';
+    }
+
+    let staticAnalysisReport = null;
+    let staticAnalysisMs = 0;
+    if (options.solverStaticHash) {
+        const staticAnalysisStart = performance.now();
+        staticAnalysisReport = analyzeSource(source, {
+            sourcePath: game,
+            familyFilter: 'count_layer_invariants',
+        });
+        staticAnalysisMs = performance.now() - staticAnalysisStart;
     }
 
     const compileStart = performance.now();
@@ -2787,6 +2837,7 @@ function runGame(root, file) {
             max_frontier: 0,
             timeout_ms: 0,
             compile_ms: compileMs,
+            static_analysis_ms: staticAnalysisMs,
             load_ms: 0,
             clone_ms: 0,
             step_ms: 0,
@@ -2795,7 +2846,7 @@ function runGame(root, file) {
             reconstruct_ms: 0,
         }];
     }
-    return { game, compileMs, source };
+    return { game, compileMs, source, staticAnalysisReport, staticAnalysisMs };
 }
 
 function trimLine(line) {
@@ -2969,7 +3020,7 @@ function runCorpus(options) {
         if (!options.quiet && !options.progressPerGame) {
             process.stderr.write(`solver_progress game=${name} phase=compile\n`);
         }
-        const compiled = runGame(options.corpusPath, file);
+        const compiled = runGame(options.corpusPath, file, options);
         if (Array.isArray(compiled)) {
             results.push(...compiled);
             if (!options.quiet && options.progressPerGame) {
@@ -2994,7 +3045,11 @@ function runCorpus(options) {
                 if (typeof resetParserErrorState === 'function') {
                     resetParserErrorState();
                 }
-                result = solveLevel(compiled.game, levelIndex, options.timeoutMs, compiled.compileMs, options);
+                result = solveLevel(compiled.game, levelIndex, options.timeoutMs, compiled.compileMs, {
+                    ...options,
+                    staticAnalysisReport: compiled.staticAnalysisReport,
+                });
+                result.static_analysis_ms = compiled.staticAnalysisMs || 0;
             } catch (error) {
                 if (typeof resetParserErrorState === 'function') {
                     resetParserErrorState();
@@ -3028,6 +3083,7 @@ function totals(results) {
         generated: 0,
         hash_collisions: 0,
         compile_ms: 0,
+        static_analysis_ms: 0,
         load_ms: 0,
         clone_ms: 0,
         snapshot_ms: 0,
@@ -3047,6 +3103,7 @@ function totals(results) {
         out.generated += result.generated;
         out.hash_collisions += result.hash_collisions || 0;
         out.compile_ms += result.compile_ms || 0;
+        out.static_analysis_ms += result.static_analysis_ms || 0;
         out.load_ms += result.load_ms || 0;
         out.clone_ms += result.clone_ms || 0;
         out.snapshot_ms += result.snapshot_ms || 0;
