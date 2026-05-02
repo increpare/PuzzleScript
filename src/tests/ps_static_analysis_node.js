@@ -1433,6 +1433,14 @@ const noCreatorMark = noCreatorTransient.facts.transient_boundary.find(item => i
 assert.strictEqual(noCreatorMark.status, 'rejected');
 assert.ok(noCreatorMark.blockers.includes('not_created_before_end_cleanup'));
 
+const CREATOR_AFTER_CLEANUP_TRANSIENT_GAME = TRANSIENT_GAME
+    .replace('[ Player ] -> [ Player Mark ]\n', '')
+    .replace('late [ Mark ] -> [ no Mark ]', 'late [ Mark ] -> [ no Mark ]\nlate [ Player ] -> [ Player Mark ]');
+const creatorAfterCleanupTransient = analyzeSource(CREATOR_AFTER_CLEANUP_TRANSIENT_GAME, { sourcePath: 'creator_after_cleanup_transient.txt' });
+const creatorAfterCleanupMark = creatorAfterCleanupTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(creatorAfterCleanupMark.status, 'rejected', 'late creators after cleanup should not prove end-turn transience');
+assert.ok(creatorAfterCleanupMark.blockers.includes('creator_not_followed_by_late_cleanup'));
+
 const AGAIN_PRESERVE_TRANSIENT_GAME = TRANSIENT_GAME.replace(
     '[ Player ] -> [ Player Mark ]',
     '[ Player no Mark ] -> [ Player Mark ]\n[ Player Mark ] -> [ Player Mark ] again'
