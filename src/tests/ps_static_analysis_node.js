@@ -99,6 +99,64 @@ assert.deepStrictEqual(
 );
 assert.ok(report.ps_tagged.winconditions.length > 0, 'ps_tagged should expose win conditions');
 
+const LEVEL_PRESENCE_GAME = `
+title Level Presence
+========
+OBJECTS
+========
+Background
+black
+Always
+white
+Sometimes
+yellow
+Never
+red
+${'======='}
+LEGEND
+${'======='}
+. = Background
+A = Always
+S = Sometimes
+Player = Always
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Always
+Sometimes
+Never
+=====
+RULES
+=====
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+message ignored for aggregate presence
+A..
+
+A.S
+`;
+
+const levelPresence = analyzeSource(LEVEL_PRESENCE_GAME, { sourcePath: 'level_presence.txt' });
+const levelPresenceObjects = new Map(levelPresence.ps_tagged.objects.map(object => [object.name, object.tags]));
+assert.strictEqual(levelPresenceObjects.get('Always').present_in_all_levels, true);
+assert.strictEqual(levelPresenceObjects.get('Always').present_in_some_levels, false);
+assert.strictEqual(levelPresenceObjects.get('Always').present_in_no_levels, false);
+assert.strictEqual(levelPresenceObjects.get('Sometimes').present_in_all_levels, false);
+assert.strictEqual(levelPresenceObjects.get('Sometimes').present_in_some_levels, true);
+assert.strictEqual(levelPresenceObjects.get('Sometimes').present_in_no_levels, false);
+assert.strictEqual(levelPresenceObjects.get('Never').present_in_all_levels, false);
+assert.strictEqual(levelPresenceObjects.get('Never').present_in_some_levels, false);
+assert.strictEqual(levelPresenceObjects.get('Never').present_in_no_levels, true);
+
 const RULE_SHAPE_GAME = `
 title Rule Shape
 
