@@ -552,6 +552,62 @@ assert.strictEqual(mergeFact.status, 'candidate');
 assert.ok(mergeFact.proof.includes('same_collision_layer'));
 assert.ok(mergeFact.proof.includes('observed_only_through_shared_sets'));
 
+const RHS_SPAWN_MERGEABLE_GAME = `
+title RHS Spawn Mergeable
+========
+OBJECTS
+========
+Background
+black
+SpawnerH
+red
+SpawnerV
+blue
+BodyH
+white
+BodyV
+gray
+Goal
+yellow
+${'======='}
+LEGEND
+${'======='}
+. = Background
+h = SpawnerH
+v = SpawnerV
+g = Goal
+Body = BodyH or BodyV
+Player = SpawnerH
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+SpawnerH, SpawnerV
+BodyH, BodyV, Goal
+=====
+RULES
+=====
+[ SpawnerH ] -> [ SpawnerH BodyH ]
+[ SpawnerV ] -> [ SpawnerV BodyV ]
+=============
+WINCONDITIONS
+=============
+Some Body on Goal
+======
+LEVELS
+======
+hvg
+`;
+const rhsSpawnMergeable = analyzeSource(RHS_SPAWN_MERGEABLE_GAME, { sourcePath: 'rhs_spawn_mergeable.txt' });
+const rhsSpawnMergeFact = rhsSpawnMergeable.facts.mergeability.find(item =>
+    item.subjects.objects.join(',') === 'BodyH,BodyV'
+);
+assert.strictEqual(rhsSpawnMergeFact.status, 'candidate', 'RHS-only direct spawning should not distinguish merge candidates');
+assert.ok(rhsSpawnMergeFact.proof.includes('observed_only_through_shared_sets'));
+
 const DIRECT_READ_GAME = MERGEABLE_GAME.replace('[ Body ] -> [ Body ]', '[ BodyH ] -> [ BodyH ]');
 const directRead = analyzeSource(DIRECT_READ_GAME, { sourcePath: 'direct_read.txt' });
 const directReadFact = directRead.facts.mergeability.find(item => item.subjects.objects.join(',') === 'BodyH,BodyV');
