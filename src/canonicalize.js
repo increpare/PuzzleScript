@@ -1034,6 +1034,17 @@ function canonicalizeSource(source, mode = 'structural') {
     return canonicalizeState(parsed.state, options);
 }
 
+function compileSemanticSource(source, options = {}) {
+    const includeWinConditions = options.includeWinConditions !== false;
+    const throwOnError = options.throwOnError !== false;
+    const compiled = getRuntime().compileSemantic(source, includeWinConditions);
+    if (throwOnError && (compiled.errorCount > 0 || compiled.state === null || compiled.state.invalid)) {
+        const message = compiled.errorStrings.join('\n');
+        throw new Error(`Unable to compile PuzzleScript source.\n${message}`);
+    }
+    return compiled;
+}
+
 function stableStringify(value) {
     return JSON.stringify(value, null, 2);
 }
@@ -1060,6 +1071,7 @@ module.exports = {
     buildComparisonHashes,
     canonicalizeFile,
     canonicalizeSource,
+    compileSemanticSource,
     hashCanonical,
     stableStringify,
 };
