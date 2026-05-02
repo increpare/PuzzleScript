@@ -665,6 +665,14 @@ const directNegationFact = directNegation.facts.mergeability.find(item => item.s
 assert.strictEqual(directNegationFact.status, 'rejected');
 assert.ok(directNegationFact.blockers.includes('individual_lhs_read'));
 
+const DIRECT_MOVEMENT_READ_GAME = MERGEABLE_GAME.replace('[ > Body ] -> [ > Body ]', '[ right BodyH ] -> [ right BodyH ]');
+const directMovementRead = analyzeSource(DIRECT_MOVEMENT_READ_GAME, { sourcePath: 'direct_movement_read.txt' });
+const directMovementReadFact = directMovementRead.facts.mergeability.find(item =>
+    item.subjects.objects.join(',') === 'BodyH,BodyV'
+);
+assert.strictEqual(directMovementReadFact.status, 'rejected');
+assert.ok(directMovementReadFact.blockers.includes('individual_lhs_read'));
+
 const PARTIAL_PROPERTY_GAME = MERGEABLE_GAME
     .replace('Body = BodyH or BodyV', 'Body = BodyH or BodyV\nPartialBody = BodyH or Goal')
     .replace('[ Body ] -> [ Body ]', '[ PartialBody ] -> [ PartialBody ]');
@@ -680,6 +688,12 @@ const directWin = analyzeSource(DIRECT_WIN_GAME, { sourcePath: 'direct_win.txt' 
 const directWinFact = directWin.facts.mergeability.find(item => item.subjects.objects.join(',') === 'BodyH,BodyV');
 assert.strictEqual(directWinFact.status, 'rejected');
 assert.ok(directWinFact.blockers.includes('different_win_roles'));
+
+const DIRECT_TARGET_WIN_GAME = MERGEABLE_GAME.replace('Some Body on Goal', 'Some Goal on BodyH');
+const directTargetWin = analyzeSource(DIRECT_TARGET_WIN_GAME, { sourcePath: 'direct_target_win.txt' });
+const directTargetWinFact = directTargetWin.facts.mergeability.find(item => item.subjects.objects.join(',') === 'BodyH,BodyV');
+assert.strictEqual(directTargetWinFact.status, 'rejected');
+assert.ok(directTargetWinFact.blockers.includes('different_win_roles'));
 
 const DUPLICATE_LAYER_GAME = MERGEABLE_GAME.replace('BodyH, BodyV, Goal', 'BodyH, BodyH, BodyV, Goal');
 const duplicateLayer = analyzeSource(DUPLICATE_LAYER_GAME, { sourcePath: 'duplicate_layer.txt' });
