@@ -91,6 +91,17 @@ assert.deepStrictEqual(
     ['Hero'],
     'ps_tagged should expose legend synonym members'
 );
+assert.deepStrictEqual(
+    report.ps_tagged.properties.find(property => property.name === 'avatar'),
+    {
+        name: 'avatar',
+        canonical_name: 'avatar',
+        kind: 'synonym',
+        members: ['Hero'],
+        tags: {},
+    },
+    'ps_tagged should distinguish one-object synonyms from properties'
+);
 assert.strictEqual(report.ps_tagged.levels.length, 1, 'ps_tagged should summarize levels');
 assert.deepStrictEqual(
     report.ps_tagged.objects.find(object => object.name === 'Hero').tags.present_in_all_levels,
@@ -564,6 +575,17 @@ h.g
 `;
 
 const mergeable = analyzeSource(MERGEABLE_GAME, { sourcePath: 'mergeable.txt' });
+assert.deepStrictEqual(
+    mergeable.ps_tagged.properties.find(property => property.name === 'body'),
+    {
+        name: 'body',
+        canonical_name: 'body',
+        kind: 'property',
+        members: ['BodyH', 'BodyV'],
+        tags: {},
+    },
+    'ps_tagged should distinguish multi-object properties from synonyms'
+);
 const mergeFact = mergeable.facts.mergeability.find(item => item.subjects.objects.join(',') === 'BodyH,BodyV');
 assert.ok(mergeFact, 'BodyH/BodyV should produce a mergeability fact');
 assert.strictEqual(mergeFact.status, 'candidate');
