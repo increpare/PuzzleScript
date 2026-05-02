@@ -1233,8 +1233,11 @@ const STATIC_AGGREGATE_WRITE_GAME = STATIC_OBJECT_GAME.replace(
 const staticAggregateWrite = analyzeSource(STATIC_AGGREGATE_WRITE_GAME, { sourcePath: 'static_aggregate_write.txt' });
 const aggregateWriteWall = staticAggregateWrite.ps_tagged.objects.find(object => object.name === 'Wall');
 const aggregateWriteWallFact = staticAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+const aggregateWriteWallCount = staticAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_count_preserved');
 assert.strictEqual(aggregateWriteWall.tags.static, false, 'aggregate deletion mentioning wall should reject wall static');
+assert.strictEqual(aggregateWriteWall.tags.count_invariant, false, 'aggregate deletion mentioning wall should reject wall count preservation');
 assert.ok(aggregateWriteWallFact.blockers.includes('object_written_by_solver_active_rule'));
+assert.ok(aggregateWriteWallCount.blockers.includes('object_written_by_solver_active_rule'));
 
 const STATIC_AND_AGGREGATE_WRITE_GAME = STATIC_OBJECT_GAME
     .replace('Solid = Wall or Crate', 'Solid = Wall or Crate\nPair = Wall and Mark')
@@ -1242,8 +1245,11 @@ const STATIC_AND_AGGREGATE_WRITE_GAME = STATIC_OBJECT_GAME
 const staticAndAggregateWrite = analyzeSource(STATIC_AND_AGGREGATE_WRITE_GAME, { sourcePath: 'static_and_aggregate_write.txt' });
 const andAggregateWriteWall = staticAndAggregateWrite.ps_tagged.objects.find(object => object.name === 'Wall');
 const andAggregateWriteWallFact = staticAndAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+const andAggregateWriteWallCount = staticAndAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_count_preserved');
 assert.strictEqual(andAggregateWriteWall.tags.static, false, 'and-aggregate deletion mentioning wall should reject wall static');
+assert.strictEqual(andAggregateWriteWall.tags.count_invariant, false, 'and-aggregate deletion mentioning wall should reject wall count preservation');
 assert.ok(andAggregateWriteWallFact.blockers.includes('object_written_by_solver_active_rule'));
+assert.ok(andAggregateWriteWallCount.blockers.includes('object_written_by_solver_active_rule'));
 
 const STATIC_AGGREGATE_MOVEMENT_GAME = STATIC_OBJECT_GAME.replace(
     '[ > PlayerObject ] -> [ > PlayerObject ]',
