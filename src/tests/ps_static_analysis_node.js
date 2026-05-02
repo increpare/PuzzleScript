@@ -916,6 +916,12 @@ assert.strictEqual(stationaryTickFact.status, 'rejected');
 assert.ok(stationaryTickFact.blockers.includes('autonomous_solver_active_rule'));
 assert.ok(stationaryTickFact.blockers.includes('action_may_create_directional_movement'));
 
+const MOVING_GATED_TICK_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ moving Goal ] -> [ randomDir Goal ]');
+const movingGatedTick = analyzeSource(MOVING_GATED_TICK_GAME, { sourcePath: 'moving_gated_tick.txt' });
+const movingGatedTickFact = movingGatedTick.facts.movement_action.find(item => item.id === 'action_noop');
+assert.strictEqual(movingGatedTick.ps_tagged.game.tags.has_autonomous_tick_rules, false, 'moving-gated rules are not autonomous ticks');
+assert.ok(!movingGatedTickFact.blockers.includes('autonomous_solver_active_rule'));
+
 const RANDOM_RULE_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', 'random [ Hero ] -> [ Hero ]');
 const randomRule = analyzeSource(RANDOM_RULE_GAME, { sourcePath: 'random_rule.txt' });
 const randomRuleIr = randomRule.ps_tagged.rule_sections[0].groups[0].rules[0];
