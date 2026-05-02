@@ -937,6 +937,34 @@ assert.deepStrictEqual(movementFlow.value.interaction_edges.map(edge => [edge.fr
 assert.deepStrictEqual(movementFlow.value.rerun_masks.early_group_0_rule_1, ['early_group_0_rule_0']);
 assert.deepStrictEqual(movementFlow.value.components.map(component => component.length), [2, 1]);
 
+function assertSingleBackwardMovementInteraction(flow) {
+    assert.strictEqual(flow.value.interaction_edges.length, 1);
+    const edge = flow.value.interaction_edges[0];
+    assert.deepStrictEqual(edge.reasons, ['movement']);
+    const ruleIndex = ruleId => Number(ruleId.match(/_rule_(\d+)$/)[1]);
+    assert.ok(ruleIndex(edge.to) < ruleIndex(edge.from), 'movement edge should target an earlier rule');
+    assert.ok(flow.value.rerun_masks[edge.from].includes(edge.to), 'backward movement edge should add a rerun mask entry');
+    assert.ok(flow.value.components.some(component =>
+        component.includes(edge.from) && component.includes(edge.to)
+    ), 'interacting rules should share a connected component');
+}
+
+const MOVING_READ_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
+    '[ moving Alpha ] -> [ Alpha MarkerX ]\n+ [ Alpha ] -> [ right Alpha ]\n+ [ Beta ] -> [ Beta MarkerY ]'
+);
+const movingReadGroup = analyzeSource(MOVING_READ_GROUP_GAME, { sourcePath: 'moving_read_group.txt' });
+const movingReadFlow = firstFlowFact(movingReadGroup);
+assertSingleBackwardMovementInteraction(movingReadFlow);
+
+const RANDOMDIR_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
+    '[ left Alpha ] -> [ Alpha MarkerX ]\n+ [ Alpha ] -> [ randomDir Alpha ]\n+ [ Beta ] -> [ Beta MarkerY ]'
+);
+const randomdirEnableGroup = analyzeSource(RANDOMDIR_ENABLE_GROUP_GAME, { sourcePath: 'randomdir_enable_group.txt' });
+const randomdirFlow = firstFlowFact(randomdirEnableGroup);
+assertSingleBackwardMovementInteraction(randomdirFlow);
+
 const ABSENCE_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
     '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
     '[ no MarkerX Alpha ] -> [ no MarkerX Alpha MarkerY ]\n+ [ MarkerX ] -> []'
