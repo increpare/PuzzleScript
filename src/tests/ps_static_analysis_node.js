@@ -1023,6 +1023,20 @@ assert.ok(
     'object-set aggregate reads should be expanded for rerun masks'
 );
 
+const AND_AGGREGATE_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    'y = MarkerY',
+    'y = MarkerY\nPair = MarkerX and MarkerY'
+).replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
+    '[ Pair ] -> [ Pair Player ]\n+ [ Alpha ] -> [ Alpha MarkerX ]'
+);
+const andAggregateEnableGroup = analyzeSource(AND_AGGREGATE_ENABLE_GROUP_GAME, { sourcePath: 'and_aggregate_enable_group.txt' });
+const andAggregateFlow = firstFlowFact(andAggregateEnableGroup);
+assert.ok(
+    Object.values(andAggregateFlow.value.rerun_masks).some(mask => mask.includes('early_group_0_rule_0')),
+    'and-aggregate reads should be expanded for rerun masks'
+);
+
 const RIGID_SPLITTABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
     '[ Alpha ] -> [ Alpha MarkerX ]',
     'rigid [ Alpha ] -> [ Alpha MarkerX ]'
