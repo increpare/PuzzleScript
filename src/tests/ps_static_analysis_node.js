@@ -456,6 +456,11 @@ RULES
 =====
 [ Alpha ] -> sfx0
 [ Alpha ] -> checkpoint
+[ Alpha ] -> cancel
+[ Alpha ] -> restart
+[ Alpha ] -> win
+[ Alpha ] -> again
+[ Alpha ] -> message hello there
 [ Alpha ] -> [ Alpha ] sfx0
 [ right Alpha ] -> [ right Alpha ] sfx0
 =============
@@ -470,15 +475,29 @@ a
 
 const commandReport = analyzeSource(COMMAND_GAME, { sourcePath: 'commands.txt' });
 const commandRules = commandReport.ps_tagged.rule_sections[0].groups.flatMap(group => group.rules);
-assert.strictEqual(commandRules.length, 4, 'command-only rules should remain present');
+assert.strictEqual(commandRules.length, 9, 'command-only rules should remain present');
 assert.strictEqual(commandRules[0].tags.inert_command_only, true, 'sfx-only rule is inert for solver state');
 assert.strictEqual(commandRules[0].tags.solver_state_active, false, 'sfx-only rule is not solver-state active');
 assert.strictEqual(commandRules[1].tags.command_only, true, 'checkpoint-only rule is command-only');
 assert.strictEqual(commandRules[1].tags.solver_state_active, true, 'checkpoint is semantic/metagame-active');
-assert.strictEqual(commandRules[2].tags.inert_command_only, true, 'unchanged RHS plus sfx is inert-command-only');
-assert.strictEqual(commandRules[2].tags.solver_state_active, false);
-assert.strictEqual(commandRules[3].tags.inert_command_only, true, 'unchanged movement RHS plus sfx is inert-command-only');
-assert.strictEqual(commandRules[3].tags.solver_state_active, false);
+assert.deepStrictEqual(
+    commandRules.slice(1, 6).map(rule => rule.summary.semantic_commands),
+    [['checkpoint'], ['cancel'], ['restart'], ['win'], ['again']],
+    'semantic commands should be separated from inert command noise'
+);
+for (const rule of commandRules.slice(1, 6)) {
+    assert.strictEqual(rule.tags.command_only, true);
+    assert.strictEqual(rule.tags.inert_command_only, false);
+    assert.strictEqual(rule.tags.solver_state_active, true);
+}
+assert.strictEqual(commandRules[5].tags.has_again, true, 'again should be tracked separately on command-only rules');
+assert.deepStrictEqual(commandRules[6].summary.inert_commands, ['message']);
+assert.strictEqual(commandRules[6].tags.inert_command_only, true, 'message-only rule is inert for solver state');
+assert.strictEqual(commandRules[6].tags.solver_state_active, false);
+assert.strictEqual(commandRules[7].tags.inert_command_only, true, 'unchanged RHS plus sfx is inert-command-only');
+assert.strictEqual(commandRules[7].tags.solver_state_active, false);
+assert.strictEqual(commandRules[8].tags.inert_command_only, true, 'unchanged movement RHS plus sfx is inert-command-only');
+assert.strictEqual(commandRules[8].tags.solver_state_active, false);
 
 const MERGEABLE_GAME = `
 title Mergeable
