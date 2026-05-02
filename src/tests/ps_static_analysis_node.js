@@ -1171,6 +1171,30 @@ const emptyClearTransient = analyzeSource(EMPTY_CLEAR_TRANSIENT_GAME, { sourcePa
 const emptyClearMark = emptyClearTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
 assert.strictEqual(emptyClearMark.status, 'proved', 'empty RHS cleanup should count as an end-turn clear');
 
+const PRESENT_TRANSIENT_GAME = TRANSIENT_GAME.replace('P\n', 'PM\n');
+const presentTransient = analyzeSource(PRESENT_TRANSIENT_GAME, { sourcePath: 'present_transient.txt' });
+const presentMark = presentTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(presentMark.status, 'rejected', 'initially present objects should not be proved end-turn transient');
+assert.ok(presentMark.blockers.includes('present_in_some_initial_levels'));
+
+const WINCONDITION_TRANSIENT_GAME = TRANSIENT_GAME.replace('Some Player', 'Some Mark');
+const winconditionTransient = analyzeSource(WINCONDITION_TRANSIENT_GAME, { sourcePath: 'wincondition_transient.txt' });
+const winconditionMark = winconditionTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(winconditionMark.status, 'rejected', 'win-condition objects should not be proved end-turn transient');
+assert.ok(winconditionMark.blockers.includes('appears_in_wincondition'));
+
+const NO_CLEANUP_TRANSIENT_GAME = TRANSIENT_GAME.replace('late [ Mark ] -> [ no Mark ]\n', '');
+const noCleanupTransient = analyzeSource(NO_CLEANUP_TRANSIENT_GAME, { sourcePath: 'no_cleanup_transient.txt' });
+const noCleanupMark = noCleanupTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(noCleanupMark.status, 'rejected');
+assert.ok(noCleanupMark.blockers.includes('no_late_cleanup_clear'));
+
+const NO_CREATOR_TRANSIENT_GAME = TRANSIENT_GAME.replace('[ Player ] -> [ Player Mark ]\n', '');
+const noCreatorTransient = analyzeSource(NO_CREATOR_TRANSIENT_GAME, { sourcePath: 'no_creator_transient.txt' });
+const noCreatorMark = noCreatorTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(noCreatorMark.status, 'rejected');
+assert.ok(noCreatorMark.blockers.includes('not_created_before_end_cleanup'));
+
 const AGAIN_PRESERVE_TRANSIENT_GAME = TRANSIENT_GAME.replace(
     '[ Player ] -> [ Player Mark ]',
     '[ Player no Mark ] -> [ Player Mark ]\n[ Player Mark ] -> [ Player Mark ] again'
