@@ -492,6 +492,7 @@ RULES
 [ Alpha ] -> message hello there
 [ Alpha ] -> [ Alpha ] sfx0
 [ right Alpha ] -> [ right Alpha ] sfx0
+[ no Alpha ] -> [ no Alpha ] sfx0
 =============
 WINCONDITIONS
 =============
@@ -504,7 +505,7 @@ a
 
 const commandReport = analyzeSource(COMMAND_GAME, { sourcePath: 'commands.txt' });
 const commandRules = commandReport.ps_tagged.rule_sections[0].groups.flatMap(group => group.rules);
-assert.strictEqual(commandRules.length, 9, 'command-only rules should remain present');
+assert.strictEqual(commandRules.length, 10, 'command-only rules should remain present');
 assert.strictEqual(commandRules[0].tags.inert_command_only, true, 'sfx-only rule is inert for solver state');
 assert.strictEqual(commandRules[0].tags.solver_state_active, false, 'sfx-only rule is not solver-state active');
 assert.strictEqual(commandRules[1].tags.command_only, true, 'checkpoint-only rule is command-only');
@@ -527,6 +528,10 @@ assert.strictEqual(commandRules[7].tags.inert_command_only, true, 'unchanged RHS
 assert.strictEqual(commandRules[7].tags.solver_state_active, false);
 assert.strictEqual(commandRules[8].tags.inert_command_only, true, 'unchanged movement RHS plus sfx is inert-command-only');
 assert.strictEqual(commandRules[8].tags.solver_state_active, false);
+assert.strictEqual(commandRules[9].tags.object_mutating, false, 'unchanged negated RHS does not mutate objects');
+assert.strictEqual(commandRules[9].tags.command_only, true);
+assert.strictEqual(commandRules[9].tags.inert_command_only, true, 'unchanged negated RHS plus sfx is inert-command-only');
+assert.strictEqual(commandRules[9].tags.solver_state_active, false);
 
 const MERGEABLE_GAME = `
 title Mergeable
