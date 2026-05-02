@@ -352,6 +352,82 @@ assert.deepStrictEqual(loopLate.groups.map(group => group.rules.map(rule => rule
     ['late_group_0_rule_0'],
 ]);
 
+const GROUP_TAGS_GAME = `
+title Group Tags
+========
+OBJECTS
+========
+Background
+black
+Alpha
+white
+Beta
+blue
+Gamma
+green
+${'======='}
+LEGEND
+${'======='}
+. = Background
+a = Alpha
+b = Beta
+g = Gamma
+Player = Alpha
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Alpha
+Beta
+Gamma
+=====
+RULES
+=====
+[ Alpha ] -> sfx0
++ [ Beta ] -> [ Beta ] sfx1
+[ Alpha ] -> [ right Alpha ]
++ [ Beta ] -> [ left Beta ]
+[ Alpha ] -> [ Alpha Gamma ]
++ [ Beta ] -> [ Beta ] again
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+ab
+`;
+
+const groupTags = analyzeSource(GROUP_TAGS_GAME, { sourcePath: 'group_tags.txt' });
+const groupTagGroups = groupTags.ps_tagged.rule_sections.find(section => section.name === 'early').groups;
+assert.deepStrictEqual(groupTagGroups.map(group => group.tags), [
+    {
+        has_again: false,
+        object_mutating: false,
+        movement_only: false,
+        command_only: true,
+        solver_state_active: false,
+    },
+    {
+        has_again: false,
+        object_mutating: false,
+        movement_only: true,
+        command_only: false,
+        solver_state_active: true,
+    },
+    {
+        has_again: true,
+        object_mutating: true,
+        movement_only: false,
+        command_only: false,
+        solver_state_active: true,
+    },
+]);
+
 const COMMAND_GAME = `
 title Command Tags
 ========
