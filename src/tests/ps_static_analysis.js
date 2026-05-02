@@ -777,4 +777,5 @@ module.exports = {
     analyzeFile,
     analyzePaths,
     analyzeSource,
+    discoverInputFiles,
 };

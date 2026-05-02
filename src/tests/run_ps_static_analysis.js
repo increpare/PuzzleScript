@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { analyzePaths } = require('./ps_static_analysis');
+const { analyzeFile, discoverInputFiles } = require('./ps_static_analysis');
 
 function usage() {
     console.error([
@@ -43,17 +43,36 @@ for (let index = 0; index < args.length; index++) {
     }
 }
 
-const reports = analyzePaths(inputs, options);
-const output = {
-    schema: 'ps-static-analysis-batch-v1',
-    generated_at: new Date().toISOString(),
-    source_count: reports.length,
-    reports,
-};
+const files = discoverInputFiles(inputs)
+    .filter(filePath => !options.gameFilter || filePath.toLowerCase().includes(options.gameFilter.toLowerCase()));
 
-const json = `${JSON.stringify(output, null, 2)}\n`;
+function writeIndentedJson(write, value, indent) {
+    const prefix = ' '.repeat(indent);
+    const json = JSON.stringify(value, null, 2).split('\n').map(line => `${prefix}${line}`).join('\n');
+    write(json);
+}
+
+function writeBatch(write) {
+    write('{\n');
+    write('  "schema": "ps-static-analysis-batch-v1",\n');
+    write(`  "generated_at": ${JSON.stringify(new Date().toISOString())},\n`);
+    write(`  "source_count": ${files.length},\n`);
+    write('  "reports": [\n');
+    files.forEach((filePath, index) => {
+        if (index > 0) write(',\n');
+        writeIndentedJson(write, analyzeFile(filePath, options), 4);
+    });
+    write('\n  ]\n');
+    write('}\n');
+}
+
 if (outPath) {
-    fs.writeFileSync(outPath, json);
+    const fd = fs.openSync(outPath, 'w');
+    try {
+        writeBatch(chunk => fs.writeSync(fd, chunk));
+    } finally {
+        fs.closeSync(fd);
+    }
 } else {
-    process.stdout.write(json);
+    writeBatch(chunk => process.stdout.write(chunk));
 }
