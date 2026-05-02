@@ -620,6 +620,16 @@ const directNegationFact = directNegation.facts.mergeability.find(item => item.s
 assert.strictEqual(directNegationFact.status, 'rejected');
 assert.ok(directNegationFact.blockers.includes('individual_lhs_read'));
 
+const PARTIAL_PROPERTY_GAME = MERGEABLE_GAME
+    .replace('Body = BodyH or BodyV', 'Body = BodyH or BodyV\nPartialBody = BodyH or Goal')
+    .replace('[ Body ] -> [ Body ]', '[ PartialBody ] -> [ PartialBody ]');
+const partialProperty = analyzeSource(PARTIAL_PROPERTY_GAME, { sourcePath: 'partial_property.txt' });
+const partialPropertyFact = partialProperty.facts.mergeability.find(item =>
+    item.subjects.objects.join(',') === 'BodyH,BodyV'
+);
+assert.strictEqual(partialPropertyFact.status, 'rejected');
+assert.ok(partialPropertyFact.blockers.includes('partial_property_observation'));
+
 const DIRECT_WIN_GAME = MERGEABLE_GAME.replace('Some Body on Goal', 'Some BodyH on Goal');
 const directWin = analyzeSource(DIRECT_WIN_GAME, { sourcePath: 'direct_win.txt' });
 const directWinFact = directWin.facts.mergeability.find(item => item.subjects.objects.join(',') === 'BodyH,BodyV');
