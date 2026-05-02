@@ -288,6 +288,70 @@ assert.deepStrictEqual(shapeRule.rhs[0][1], [
     { kind: 'present', ref: { type: 'object', name: 'Gamma', canonical_name: 'gamma' }, movement: 'right', expanded_objects: ['Gamma'] },
 ]);
 
+const LOOP_HIERARCHY_GAME = `
+title Loop Hierarchy
+========
+OBJECTS
+========
+Background
+black
+Player
+white
+Marker
+red
+Goal
+yellow
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Player
+M = Marker
+G = Goal
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Player
+Marker
+Goal
+=====
+RULES
+=====
+[ Player ] -> [ Player ]
+startLoop
+[ Player ] -> [ Player Marker ]
++ [ Goal ] -> [ Goal Marker ]
+[ Marker ] -> [ Marker ]
+endLoop
+late [ Marker ] -> [ Marker ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+PG
+`;
+
+const loopHierarchy = analyzeSource(LOOP_HIERARCHY_GAME, { sourcePath: 'loop_hierarchy.txt' });
+const loopEarly = loopHierarchy.ps_tagged.rule_sections.find(section => section.name === 'early');
+const loopLate = loopHierarchy.ps_tagged.rule_sections.find(section => section.name === 'late');
+assert.deepStrictEqual(loopEarly.loops.map(loop => loop.group_ids), [['early_group_1', 'early_group_2']]);
+assert.deepStrictEqual(loopLate.loops, [], 'late section should not inherit empty early-loop summaries');
+assert.deepStrictEqual(loopEarly.groups.map(group => group.rules.map(rule => rule.id)), [
+    ['early_group_0_rule_0'],
+    ['early_group_1_rule_0', 'early_group_1_rule_1'],
+    ['early_group_2_rule_0'],
+]);
+assert.deepStrictEqual(loopLate.groups.map(group => group.rules.map(rule => rule.id)), [
+    ['late_group_0_rule_0'],
+]);
+
 const COMMAND_GAME = `
 title Command Tags
 ========

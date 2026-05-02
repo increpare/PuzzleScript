@@ -311,14 +311,17 @@ function buildLoopSummaries(state, groups) {
         const line = loop[0];
         const bracket = loop[1];
         if (bracket === 1) {
-            stack.push({ id: `loop_${loops.length}`, start_line: line, end_line: null });
+            stack.push({ start_line: line, end_line: null });
         } else if (bracket === -1 && stack.length > 0) {
             const active = stack.pop();
             active.end_line = line;
             active.group_ids = groups
                 .filter(group => group.source_line_min > active.start_line && group.source_line_max < active.end_line)
                 .map(group => group.id);
-            loops.push(active);
+            if (active.group_ids.length > 0) {
+                active.id = `loop_${loops.length}`;
+                loops.push(active);
+            }
         }
     }
     return loops;
