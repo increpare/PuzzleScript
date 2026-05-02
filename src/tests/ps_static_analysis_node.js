@@ -581,6 +581,56 @@ const actionMovementFact = actionMovement.facts.movement_action.find(item => ite
 assert.strictEqual(actionMovementFact.status, 'rejected');
 assert.ok(actionMovementFact.blockers.includes('action_may_create_directional_movement'));
 
+const MOVEMENT_PAIRS_GAME = `
+title Movement Pairs
+========
+OBJECTS
+========
+Background
+black
+Player
+white
+Crate
+orange
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Player
+C = Crate
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Player
+Crate
+=====
+RULES
+=====
+[ action Player ] -> [ right Player ]
+[ right Player | Crate ] -> [ right Player | right Crate ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+PC
+`;
+const movementPairs = analyzeSource(MOVEMENT_PAIRS_GAME, { sourcePath: 'movement_pairs.txt' });
+const movementPairsFact = movementPairs.facts.movement_action.find(item => item.id === 'movement_pairs');
+assert.deepStrictEqual(movementPairsFact.value, [
+    '1:action',
+    '1:moving',
+    '1:right',
+    '2:moving',
+    '2:right',
+]);
+
 const DIRECT_PLAYER_ACTION_GAME = `
 title Direct Player Action
 ========
