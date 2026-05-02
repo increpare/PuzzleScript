@@ -1117,6 +1117,14 @@ const countFacts = report.facts.count_layer_invariants;
 assert.ok(countFacts.some(item => item.id === 'object_Hero_count_preserved'), 'Hero count fact should exist');
 assert.ok(countFacts.some(item => item.id === 'layer_0_static'), 'Background layer static fact should exist');
 
+const randomGoalCount = randomObject.facts.count_layer_invariants.find(item => item.id === 'object_Goal_count_preserved');
+const randomHeroCount = randomObject.facts.count_layer_invariants.find(item => item.id === 'object_Hero_count_preserved');
+const randomGoalTags = randomObject.ps_tagged.objects.find(object => object.name === 'Goal').tags;
+assert.strictEqual(randomGoalCount.status, 'rejected', 'random RHS object writes should reject target count preservation');
+assert.strictEqual(randomHeroCount.status, 'rejected', 'random same-layer writes should reject sibling count preservation');
+assert.ok(randomGoalCount.blockers.includes('object_written_by_solver_active_rule'));
+assert.strictEqual(randomGoalTags.count_invariant, false);
+
 const SPAWN_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Hero ] -> [ Hero Goal ]');
 const spawnReport = analyzeSource(SPAWN_GAME, { sourcePath: 'spawn.txt' });
 const goalCount = spawnReport.facts.count_layer_invariants.find(item => item.id === 'object_Goal_count_preserved');
