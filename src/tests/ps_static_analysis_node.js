@@ -1091,6 +1091,52 @@ function assertAtlasTransientReplay() {
     }, { levelIndex: 4 });
 }
 
+function assertOneMoveStaticReplay() {
+    const source = solverTestSource('one_move.txt');
+    const analysis = analyzeSource(source, { sourcePath: 'one_move.txt' });
+    const backgroundLayer = analysis.ps_tagged.collision_layers.find(layer => layer.objects.includes('Background'));
+    const targetLayer = analysis.ps_tagged.collision_layers.find(layer => layer.objects.includes('Target'));
+    const playerLayer = analysis.ps_tagged.collision_layers.find(layer => layer.objects.includes('Player'));
+    assert.strictEqual(backgroundLayer.tags.static, true, 'one_move background layer should be static');
+    assert.strictEqual(targetLayer.tags.static, true, 'one_move target layer should be static');
+    assert.strictEqual(playerLayer.tags.static, false, 'one_move player layer should not be static');
+
+    withRuntimeSource(source, () => {
+        const staticLayerIds = [backgroundLayer.id, targetLayer.id];
+        const beforeLayers = new Map(staticLayerIds.map(layerId => [layerId, layerOccupancySnapshot(layerId)]));
+        const beforeObjects = new Map(['Background', 'Target'].map(objectName => [
+            objectName,
+            objectOccupancySnapshot(objectName),
+        ]));
+        processRuntimeInputs(inputsForTokens(['right']));
+        assert.strictEqual(winning, true, 'one_move known solution should solve');
+        for (const layerId of staticLayerIds) {
+            assert.deepStrictEqual(layerOccupancySnapshot(layerId), beforeLayers.get(layerId));
+        }
+        for (const objectName of ['Background', 'Target']) {
+            assert.deepStrictEqual(objectOccupancySnapshot(objectName), beforeObjects.get(objectName));
+        }
+    });
+}
+
+function assertPushRulegroupFlowReplay() {
+    const source = solverTestSource('push.txt');
+    const analysis = analyzeSource(source, { sourcePath: 'push.txt' });
+    const splitFlow = analysis.facts.rulegroup_flow.find(item =>
+        item.status === 'candidate'
+        && item.subjects.groups[0] === 'early_group_1'
+    );
+    assert.ok(splitFlow, 'push should expose the pusher-style split candidate group');
+    assert.deepStrictEqual(splitFlow.value.components.map(component => component.length), [1, 1, 1, 1]);
+    assert.deepStrictEqual(splitFlow.value.interaction_edges, []);
+    assert.deepStrictEqual(Object.values(splitFlow.value.rerun_masks), [[], [], [], []]);
+
+    withRuntimeSource(source, () => {
+        processRuntimeInputs(inputsForTokens(['up', 'up', 'right', 'up']));
+        assert.strictEqual(winning, true, 'push level 1 solution should solve while rulegroup-flow facts are present');
+    }, { levelIndex: 1 });
+}
+
 assertStaticObjectsUnchangedAfterReplay(
     STATIC_OBJECT_GAME
         .replace('[ > PlayerObject ] -> [ > PlayerObject ]', '[ action PlayerObject ] -> win')
@@ -1103,5 +1149,7 @@ assertTransientObjectsAbsentAfterReplay();
 assertStaticLayersUnchangedAfterReplay(STATIC_OBJECT_GAME.replace('Some Player', ''), [3, 1, 3]);
 assertLimerickMergeabilityReplay();
 assertAtlasTransientReplay();
+assertOneMoveStaticReplay();
+assertPushRulegroupFlowReplay();
 
 console.log('ps_static_analysis_node: ok');
