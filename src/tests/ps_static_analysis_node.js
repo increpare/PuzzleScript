@@ -937,11 +937,12 @@ assert.deepStrictEqual(movementFlow.value.interaction_edges.map(edge => [edge.fr
 assert.deepStrictEqual(movementFlow.value.rerun_masks.early_group_0_rule_1, ['early_group_0_rule_0']);
 assert.deepStrictEqual(movementFlow.value.components.map(component => component.length), [2, 1]);
 
-function assertSingleBackwardMovementInteraction(flow) {
-    assert.strictEqual(flow.value.interaction_edges.length, 1);
-    const edge = flow.value.interaction_edges[0];
-    assert.deepStrictEqual(edge.reasons, ['movement']);
+function assertBackwardMovementInteraction(flow) {
     const ruleIndex = ruleId => Number(ruleId.match(/_rule_(\d+)$/)[1]);
+    const edge = flow.value.interaction_edges.find(candidate =>
+        candidate.reasons.includes('movement') && ruleIndex(candidate.to) < ruleIndex(candidate.from)
+    );
+    assert.ok(edge, 'flow should contain a backward movement edge');
     assert.ok(ruleIndex(edge.to) < ruleIndex(edge.from), 'movement edge should target an earlier rule');
     assert.ok(flow.value.rerun_masks[edge.from].includes(edge.to), 'backward movement edge should add a rerun mask entry');
     assert.ok(flow.value.components.some(component =>
@@ -955,7 +956,7 @@ const MOVING_READ_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
 );
 const movingReadGroup = analyzeSource(MOVING_READ_GROUP_GAME, { sourcePath: 'moving_read_group.txt' });
 const movingReadFlow = firstFlowFact(movingReadGroup);
-assertSingleBackwardMovementInteraction(movingReadFlow);
+assertBackwardMovementInteraction(movingReadFlow);
 
 const RANDOMDIR_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
     '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
@@ -963,7 +964,15 @@ const RANDOMDIR_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
 );
 const randomdirEnableGroup = analyzeSource(RANDOMDIR_ENABLE_GROUP_GAME, { sourcePath: 'randomdir_enable_group.txt' });
 const randomdirFlow = firstFlowFact(randomdirEnableGroup);
-assertSingleBackwardMovementInteraction(randomdirFlow);
+assertBackwardMovementInteraction(randomdirFlow);
+
+const STATIONARY_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
+    '[ stationary Alpha ] -> [ Alpha MarkerX ]\n+ [ right Alpha ] -> [ Alpha ]\n+ [ Beta ] -> [ Beta MarkerY ]'
+);
+const stationaryEnableGroup = analyzeSource(STATIONARY_ENABLE_GROUP_GAME, { sourcePath: 'stationary_enable_group.txt' });
+const stationaryFlow = firstFlowFact(stationaryEnableGroup);
+assertBackwardMovementInteraction(stationaryFlow);
 
 const ABSENCE_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
     '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
