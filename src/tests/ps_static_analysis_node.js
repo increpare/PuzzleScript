@@ -666,6 +666,20 @@ const actionMovementFact = actionMovement.facts.movement_action.find(item => ite
 assert.strictEqual(actionMovementFact.status, 'rejected');
 assert.ok(actionMovementFact.blockers.includes('action_may_create_directional_movement'));
 
+const MOVEMENT_CLEAR_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ right Hero ] -> [ Hero ]');
+const movementClear = analyzeSource(MOVEMENT_CLEAR_GAME, { sourcePath: 'movement_clear.txt' });
+const movementClearRule = movementClear.ps_tagged.rule_sections[0].groups[0].rules[0];
+assert.strictEqual(movementClearRule.tags.writes_movement, true, 'clearing movement should count as writing movement');
+assert.strictEqual(movementClearRule.tags.movement_only, true);
+assert.strictEqual(movementClearRule.tags.object_mutating, false);
+
+const RANDOMDIR_MOVEMENT_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Hero ] -> [ randomDir Hero ]');
+const randomdirMovement = analyzeSource(RANDOMDIR_MOVEMENT_GAME, { sourcePath: 'randomdir_movement.txt' });
+const randomdirMovementRule = randomdirMovement.ps_tagged.rule_sections[0].groups[0].rules[0];
+assert.strictEqual(randomdirMovementRule.tags.writes_movement, true, 'randomDir should count as writing movement');
+assert.strictEqual(randomdirMovementRule.tags.movement_only, true);
+assert.strictEqual(randomdirMovementRule.summary.rhs_movement[0].movement, 'randomdir');
+
 const MOVEMENT_PAIRS_GAME = `
 title Movement Pairs
 ========
