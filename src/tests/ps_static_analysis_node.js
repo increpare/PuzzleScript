@@ -811,6 +811,24 @@ assert.ok(
     'object-set aggregate reads should be expanded for rerun masks'
 );
 
+const RIGID_SPLITTABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]',
+    'rigid [ Alpha ] -> [ Alpha MarkerX ]'
+);
+const rigidSplittableGroup = analyzeSource(RIGID_SPLITTABLE_GROUP_GAME, { sourcePath: 'rigid_splittable_group.txt' });
+const rigidSplittableFlow = firstFlowFact(rigidSplittableGroup);
+assert.strictEqual(rigidSplittableFlow.status, 'rejected', 'rigid groups should not be split candidates');
+assert.ok(rigidSplittableFlow.blockers.includes('rigid_rule'));
+
+const RANDOM_SPLITTABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]',
+    'random [ Alpha ] -> [ Alpha MarkerX ]'
+);
+const randomSplittableGroup = analyzeSource(RANDOM_SPLITTABLE_GROUP_GAME, { sourcePath: 'random_splittable_group.txt' });
+const randomSplittableFlow = firstFlowFact(randomSplittableGroup);
+assert.strictEqual(randomSplittableFlow.status, 'rejected', 'random groups should not be split candidates');
+assert.ok(randomSplittableFlow.blockers.includes('random_rule_group'));
+
 const PUSHER_STYLE_GROUP_GAME = `
 title Pusher Style Rule Group
 ========
