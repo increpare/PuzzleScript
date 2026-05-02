@@ -381,6 +381,11 @@ assert.strictEqual(noTagged.ps_tagged, undefined, 'includePsTagged=false should 
 const onlyMerge = analyzeSource(SIMPLE_GAME, { sourcePath: 'simple.txt', familyFilter: 'mergeability' });
 assert.deepStrictEqual(Object.keys(onlyMerge.facts), ['mergeability'], 'familyFilter should keep one family');
 
+const TOO_MANY_ERRORS_GAME = SIMPLE_GAME.replace('P.G\n...', Array.from({ length: 110 }, () => 'Z').join('\n'));
+const tooManyErrors = analyzeSource(TOO_MANY_ERRORS_GAME, { sourcePath: 'too_many_errors.txt' });
+assert.strictEqual(tooManyErrors.status, 'compile_error');
+assert.ok(tooManyErrors.errors.length > 1, 'too many errors should preserve partial diagnostics');
+
 function assertProvedFactsHaveProof(reportToCheck) {
     for (const familyFacts of Object.values(reportToCheck.facts)) {
         for (const item of familyFacts) {

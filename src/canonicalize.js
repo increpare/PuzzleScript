@@ -197,6 +197,18 @@ globalThis.__ps_exports = {
                 errorCount: errorCount,
                 errorStrings: errorStrings.slice()
             };
+        } catch (error) {
+            const message = error && error.message ? error.message : String(error);
+            const errors = errorStrings.slice();
+            if (errors.indexOf(message) < 0) {
+                errors.push(message);
+            }
+            return {
+                state: null,
+                errorCount: errorCount > 0 ? errorCount : errors.length,
+                errorStrings: errors,
+                thrown: true
+            };
         } finally {
             compiling = false;
         }
