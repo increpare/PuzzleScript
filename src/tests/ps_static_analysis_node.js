@@ -1059,6 +1059,13 @@ const STATIONARY_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
 const stationaryEnableGroup = analyzeSource(STATIONARY_ENABLE_GROUP_GAME, { sourcePath: 'stationary_enable_group.txt' });
 const stationaryFlow = firstFlowFact(stationaryEnableGroup);
 assertBackwardMovementInteraction(stationaryFlow);
+const stationarySelfEdge = stationaryFlow.value.interaction_edges.find(edge => edge.from === edge.to);
+assert.ok(stationarySelfEdge, 'self-enabling movement rules should report a self interaction');
+assert.deepStrictEqual(stationarySelfEdge.reasons, ['movement']);
+assert.ok(
+    stationaryFlow.value.rerun_masks[stationarySelfEdge.from].includes(stationarySelfEdge.to),
+    'self interactions should add the rule to its own rerun mask'
+);
 
 const ABSENCE_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
     '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
