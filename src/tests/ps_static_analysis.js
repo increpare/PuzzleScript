@@ -9,6 +9,7 @@ const { compileSemanticSource } = require('../canonicalize');
 const SCHEMA = 'ps-static-analysis-v1';
 const INERT_COMMANDS = new Set(['message', 'sfx0', 'sfx1', 'sfx2', 'sfx3', 'sfx4', 'sfx5', 'sfx6', 'sfx7', 'sfx8', 'sfx9', 'sfx10']);
 const SEMANTIC_COMMANDS = new Set(['cancel', 'again', 'restart', 'win', 'checkpoint']);
+const DIRECTIONAL_MOVEMENTS = new Set(['up', 'down', 'left', 'right', 'moving', 'randomdir']);
 
 function uniqueSorted(values) {
     return Array.from(new Set(values)).sort((left, right) =>
@@ -522,10 +523,78 @@ function deriveMergeabilityFacts(psTagged) {
     return results;
 }
 
+function layerForObject(psTagged, objectName) {
+    const object = psTagged.objects.find(item => item.name === objectName);
+    return object ? object.layer : null;
+}
+
+function playerLayers(psTagged) {
+    const player = psTagged.properties.find(item => item.canonical_name === 'player' || item.name.toLowerCase() === 'player');
+    if (!player) return [];
+    return uniqueSorted(player.members.map(objectName => String(layerForObject(psTagged, objectName))).filter(layer => layer !== 'null'));
+}
+
+function movementPairsFromTerms(psTagged, terms) {
+    const pairs = [];
+    for (const term of terms) {
+        if (term.kind !== 'present' || term.movement === null) continue;
+        for (const objectName of term.expanded_objects || []) {
+            const layer = layerForObject(psTagged, objectName);
+            if (layer !== null) pairs.push(`${layer}:${term.movement}`);
+        }
+    }
+    return pairs;
+}
+
+function ruleMovementRequirementsReachable(psTagged, rule, possibleMovements) {
+    const requirements = movementPairsFromTerms(psTagged, rule.summary.lhs_terms);
+    if (requirements.length === 0) return true;
+    return requirements.every(pair => possibleMovements.has(pair));
+}
+
+function deriveMovementActionFacts(psTagged) {
+    const activeRules = allRuleEntries(psTagged).map(entry => entry.rule).filter(rule => rule.tags.solver_state_active);
+    const possibleMovements = new Set(playerLayers(psTagged).map(layer => `${layer}:action`));
+    const blockers = [];
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const rule of activeRules) {
+            if (!ruleMovementRequirementsReachable(psTagged, rule, possibleMovements)) continue;
+            if (rule.tags.reads_action) blockers.push('reads_action');
+            if (rule.tags.has_again) blockers.push('queues_again');
+            if (rule.rigid) blockers.push('rigid_rule');
+            if (rule.summary.lhs_movement.length === 0) blockers.push('autonomous_solver_active_rule');
+            if (rule.tags.object_mutating) blockers.push('action_may_mutate_objects');
+            for (const pair of movementPairsFromTerms(psTagged, rule.summary.rhs_terms)) {
+                const movement = pair.split(':')[1];
+                if (DIRECTIONAL_MOVEMENTS.has(movement)) blockers.push('action_may_create_directional_movement');
+                if (!possibleMovements.has(pair)) {
+                    possibleMovements.add(pair);
+                    changed = true;
+                }
+            }
+        }
+    }
+    const uniqueBlockers = uniqueSorted(blockers);
+    return [
+        fact('movement_action', 'movement_pairs', 'proved', {
+            value: Array.from(possibleMovements).sort(),
+            proof: ['conservative_movement_reachability_fixpoint'],
+        }),
+        fact('movement_action', 'action_noop', uniqueBlockers.length === 0 ? 'proved' : 'rejected', {
+            value: uniqueBlockers.length === 0,
+            blockers: uniqueBlockers,
+            proof: uniqueBlockers.length === 0 ? ['no_reachable_action_effects'] : [],
+            evidence: activeRules.map(rule => rule.id),
+        }),
+    ];
+}
+
 function deriveFacts(psTagged) {
     return {
         mergeability: deriveMergeabilityFacts(psTagged),
-        movement_action: [],
+        movement_action: deriveMovementActionFacts(psTagged),
         count_layer_invariants: [],
         transient_boundary: [],
     };

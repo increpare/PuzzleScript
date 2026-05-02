@@ -295,4 +295,22 @@ const directWinFact = directWin.facts.mergeability.find(item => item.subjects.ob
 assert.strictEqual(directWinFact.status, 'rejected');
 assert.ok(directWinFact.blockers.includes('different_win_roles'));
 
+const AUTO_TICK_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Goal ] -> [ Hero ]');
+const autoTick = analyzeSource(AUTO_TICK_GAME, { sourcePath: 'auto_tick.txt' });
+const autoAction = autoTick.facts.movement_action.find(item => item.id === 'action_noop');
+assert.strictEqual(autoAction.status, 'rejected');
+assert.ok(autoAction.blockers.includes('autonomous_solver_active_rule'));
+
+const ACTION_RULE_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ action Player ] -> [ Player Goal ]');
+const actionRule = analyzeSource(ACTION_RULE_GAME, { sourcePath: 'action_rule.txt' });
+const actionRuleFact = actionRule.facts.movement_action.find(item => item.id === 'action_noop');
+assert.strictEqual(actionRuleFact.status, 'rejected');
+assert.ok(actionRuleFact.blockers.includes('reads_action'));
+
+const ACTION_MOVEMENT_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ action Player ] -> [ > Player ]');
+const actionMovement = analyzeSource(ACTION_MOVEMENT_GAME, { sourcePath: 'action_movement.txt' });
+const actionMovementFact = actionMovement.facts.movement_action.find(item => item.id === 'action_noop');
+assert.strictEqual(actionMovementFact.status, 'rejected');
+assert.ok(actionMovementFact.blockers.includes('action_may_create_directional_movement'));
+
 console.log('ps_static_analysis_node: ok');
