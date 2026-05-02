@@ -591,11 +591,50 @@ function deriveMovementActionFacts(psTagged) {
     ];
 }
 
+function termMentionsObject(term, objectName) {
+    return (term.expanded_objects || []).includes(objectName);
+}
+
+function ruleWritesObject(rule, objectName) {
+    if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return false;
+    return rule.summary.rhs_terms.some(term => termMentionsObject(term, objectName));
+}
+
+function deriveCountLayerInvariantFacts(psTagged) {
+    const activeRules = allRuleEntries(psTagged).map(entry => entry.rule).filter(rule => rule.tags.solver_state_active);
+    const results = [];
+    for (const object of psTagged.objects) {
+        const writers = activeRules.filter(rule => ruleWritesObject(rule, object.name));
+        object.tags.may_be_created = writers.length > 0;
+        object.tags.may_be_destroyed = writers.length > 0;
+        object.tags.count_invariant = writers.length === 0;
+        results.push(fact('count_layer_invariants', `object_${object.name}_count_preserved`, writers.length === 0 ? 'proved' : 'rejected', {
+            subjects: { objects: [object.name] },
+            proof: writers.length === 0 ? ['no_solver_active_rule_writes_object'] : [],
+            blockers: writers.length === 0 ? [] : ['object_written_by_solver_active_rule'],
+            evidence: writers.map(rule => rule.id),
+        }));
+    }
+    for (const layer of psTagged.collision_layers) {
+        const layerWriterIds = uniqueSorted(layer.objects.flatMap(objectName =>
+            activeRules.filter(rule => ruleWritesObject(rule, objectName)).map(rule => rule.id)
+        ));
+        layer.tags.static = layerWriterIds.length === 0;
+        results.push(fact('count_layer_invariants', `layer_${layer.id}_static`, layerWriterIds.length === 0 ? 'proved' : 'candidate', {
+            subjects: { layers: [layer.id] },
+            proof: layerWriterIds.length === 0 ? ['no_solver_active_rule_writes_layer_objects'] : [],
+            blockers: layerWriterIds.length === 0 ? [] : ['layer_objects_may_change'],
+            evidence: layerWriterIds,
+        }));
+    }
+    return results;
+}
+
 function deriveFacts(psTagged) {
     return {
         mergeability: deriveMergeabilityFacts(psTagged),
         movement_action: deriveMovementActionFacts(psTagged),
-        count_layer_invariants: [],
+        count_layer_invariants: deriveCountLayerInvariantFacts(psTagged),
         transient_boundary: [],
     };
 }

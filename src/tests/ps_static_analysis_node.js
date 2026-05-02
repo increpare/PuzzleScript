@@ -313,4 +313,14 @@ const actionMovementFact = actionMovement.facts.movement_action.find(item => ite
 assert.strictEqual(actionMovementFact.status, 'rejected');
 assert.ok(actionMovementFact.blockers.includes('action_may_create_directional_movement'));
 
+const countFacts = report.facts.count_layer_invariants;
+assert.ok(countFacts.some(item => item.id === 'object_Hero_count_preserved'), 'Hero count fact should exist');
+assert.ok(countFacts.some(item => item.id === 'layer_0_static'), 'Background layer static fact should exist');
+
+const SPAWN_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Hero ] -> [ Hero Goal ]');
+const spawnReport = analyzeSource(SPAWN_GAME, { sourcePath: 'spawn.txt' });
+const goalCount = spawnReport.facts.count_layer_invariants.find(item => item.id === 'object_Goal_count_preserved');
+assert.strictEqual(goalCount.status, 'rejected');
+assert.ok(goalCount.blockers.includes('object_written_by_solver_active_rule'));
+
 console.log('ps_static_analysis_node: ok');
