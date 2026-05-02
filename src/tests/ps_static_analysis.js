@@ -367,6 +367,39 @@ function tagGame(psTagged) {
     psTagged.game.tags.has_autonomous_tick_rules = rules.some(rule => rule.tags.solver_state_active && rule.summary.lhs_movement.length === 0);
 }
 
+function membersForRef(psTagged, ref) {
+    if (ref.type === 'object') return [ref.name];
+    if (ref.type === 'object_set') return ref.objects.slice();
+    if (ref.type === 'property' || ref.type === 'synonym' || ref.type === 'unknown') {
+        const property = psTagged.properties.find(item => item.name === ref.name || item.canonical_name === ref.canonical_name);
+        return property ? property.members.slice() : [ref.name];
+    }
+    return [];
+}
+
+function refForObjectName(psTagged, objectName) {
+    const object = psTagged.objects.find(item => item.name === objectName);
+    if (!object) return { type: 'object', name: objectName };
+    return { type: 'object', name: object.name, canonical_name: object.canonical_name };
+}
+
+function normalizeTermRefs(psTagged) {
+    for (const { rule } of allRuleEntries(psTagged)) {
+        for (const term of rule.summary.lhs_terms.concat(rule.summary.rhs_terms)) {
+            const members = membersForRef(psTagged, term.ref);
+            if (members.length === 1 && psTagged.objects.some(object => object.name === members[0])) {
+                term.expanded_objects = members;
+                term.ref = refForObjectName(psTagged, members[0]);
+            } else if (members.length > 1) {
+                term.expanded_objects = uniqueSorted(members);
+                term.ref = { type: 'object_set', objects: uniqueSorted(members), source: term.ref.name || term.ref.type };
+            } else {
+                term.expanded_objects = [];
+            }
+        }
+    }
+}
+
 function buildPsTagged(state, options = {}) {
     const psTagged = {
         game: {
@@ -383,6 +416,7 @@ function buildPsTagged(state, options = {}) {
     };
     tagObjectLevelPresence(psTagged);
     tagGame(psTagged);
+    normalizeTermRefs(psTagged);
     return psTagged;
 }
 
@@ -393,6 +427,113 @@ function emptyFacts() {
         count_layer_invariants: [],
         transient_boundary: [],
     };
+}
+
+function fact(family, id, status, fields) {
+    return Object.assign({
+        family,
+        id,
+        status,
+        subjects: {},
+        tags: {},
+        proof: [],
+        blockers: [],
+        evidence: [],
+    }, fields);
+}
+
+function sameArray(left, right) {
+    return JSON.stringify(left) === JSON.stringify(right);
+}
+
+function winRoleForObject(psTagged, objectName) {
+    return psTagged.winconditions.map(win => ({
+        id: win.id,
+        in_subjects: win.subjects.includes(objectName),
+        in_targets: win.targets.includes(objectName),
+    }));
+}
+
+function directObservationsForObjects(psTagged, objects) {
+    const observations = [];
+    for (const { rule } of allRuleEntries(psTagged)) {
+        if (rule.tags.inert_command_only) continue;
+        for (const row of rule.lhs) {
+            for (const cell of row) {
+                const directTerms = cell.filter(term =>
+                    term.ref.type === 'object' && objects.includes(term.ref.name)
+                );
+                if (directTerms.length === 0) continue;
+                const observedObjects = uniqueSorted(directTerms.map(term => term.ref.name));
+                const sameObservation = new Set(directTerms.map(term => `${term.kind}:${term.movement}`)).size === 1;
+                if (sameArray(observedObjects, objects) && sameObservation) continue;
+                observations.push(...directTerms.map(term => ({
+                    rule_id: rule.id,
+                    source_line: rule.source_line,
+                    kind: term.kind,
+                    movement: term.movement,
+                    object: term.ref.name,
+                })));
+            }
+        }
+    }
+    return observations;
+}
+
+function groupObservationIsShared(psTagged, objects) {
+    for (const { rule } of allRuleEntries(psTagged)) {
+        if (rule.tags.inert_command_only) continue;
+        for (const term of rule.summary.lhs_terms) {
+            if (term.ref.type !== 'object_set') continue;
+            const overlap = objects.filter(objectName => term.expanded_objects.includes(objectName));
+            if (overlap.length > 0 && overlap.length !== objects.length) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function deriveMergeabilityFacts(psTagged) {
+    const results = [];
+    for (const layer of psTagged.collision_layers) {
+        if (layer.objects.length < 2) continue;
+        for (let left = 0; left < layer.objects.length; left++) {
+            for (let right = left + 1; right < layer.objects.length; right++) {
+                const objects = [layer.objects[left], layer.objects[right]].sort();
+                const blockers = [];
+                const directObservations = directObservationsForObjects(psTagged, objects);
+                if (directObservations.length > 0) blockers.push('individual_lhs_read');
+                if (!sameArray(winRoleForObject(psTagged, objects[0]), winRoleForObject(psTagged, objects[1]))) {
+                    blockers.push('different_win_roles');
+                }
+                if (!groupObservationIsShared(psTagged, objects)) {
+                    blockers.push('partial_property_observation');
+                }
+                results.push(fact('mergeability', `merge_${objects.join('_')}`, blockers.length === 0 ? 'candidate' : 'rejected', {
+                    subjects: { objects },
+                    proof: blockers.length === 0 ? ['same_collision_layer', 'observed_only_through_shared_sets', 'same_win_roles'] : ['same_collision_layer'],
+                    blockers,
+                    evidence: directObservations.map(item => item.rule_id).concat(`layer_${layer.id}`),
+                }));
+            }
+        }
+    }
+    return results;
+}
+
+function deriveFacts(psTagged) {
+    return {
+        mergeability: deriveMergeabilityFacts(psTagged),
+        movement_action: [],
+        count_layer_invariants: [],
+        transient_boundary: [],
+    };
+}
+
+function filterFacts(facts, familyFilter) {
+    if (!familyFilter) return facts;
+    return { [familyFilter]: facts[familyFilter] || [] };
 }
 
 function analyzeSource(source, options = {}) {
@@ -420,7 +561,7 @@ function analyzeSource(source, options = {}) {
         source: { path: sourcePath },
         status: 'ok',
         ps_tagged: psTagged,
-        facts: emptyFacts(),
+        facts: filterFacts(deriveFacts(psTagged), options.familyFilter),
         summary: { proved: 0, candidate: 0, rejected: 0 },
     };
 

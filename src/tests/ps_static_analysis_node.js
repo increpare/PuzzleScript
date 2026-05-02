@@ -164,18 +164,18 @@ assert.strictEqual(late.groups.length, 1, 'late section should contain one group
 const shapeRule = early.groups[0].rules[0];
 assert.strictEqual(shapeRule.direction, 'right');
 assert.deepStrictEqual(shapeRule.lhs[0][0], [
-    { kind: 'present', ref: { type: 'object', name: 'Alpha', canonical_name: 'alpha' }, movement: null },
+    { kind: 'present', ref: { type: 'object', name: 'Alpha', canonical_name: 'alpha' }, movement: null, expanded_objects: ['Alpha'] },
 ]);
 assert.deepStrictEqual(shapeRule.lhs[0][1], [
-    { kind: 'present', ref: { type: 'object', name: 'Beta', canonical_name: 'beta' }, movement: 'right' },
-    { kind: 'absent', ref: { type: 'object', name: 'Gamma', canonical_name: 'gamma' }, movement: null },
+    { kind: 'present', ref: { type: 'object', name: 'Beta', canonical_name: 'beta' }, movement: 'right', expanded_objects: ['Beta'] },
+    { kind: 'absent', ref: { type: 'object', name: 'Gamma', canonical_name: 'gamma' }, movement: null, expanded_objects: ['Gamma'] },
 ]);
 assert.deepStrictEqual(shapeRule.rhs[0][0], [
-    { kind: 'present', ref: { type: 'object', name: 'Alpha', canonical_name: 'alpha' }, movement: 'up' },
+    { kind: 'present', ref: { type: 'object', name: 'Alpha', canonical_name: 'alpha' }, movement: 'up', expanded_objects: ['Alpha'] },
 ]);
 assert.deepStrictEqual(shapeRule.rhs[0][1], [
-    { kind: 'present', ref: { type: 'object', name: 'Beta', canonical_name: 'beta' }, movement: null },
-    { kind: 'present', ref: { type: 'object', name: 'Gamma', canonical_name: 'gamma' }, movement: 'right' },
+    { kind: 'present', ref: { type: 'object', name: 'Beta', canonical_name: 'beta' }, movement: null, expanded_objects: ['Beta'] },
+    { kind: 'present', ref: { type: 'object', name: 'Gamma', canonical_name: 'gamma' }, movement: 'right', expanded_objects: ['Gamma'] },
 ]);
 
 const COMMAND_GAME = `
@@ -223,5 +223,76 @@ assert.strictEqual(commandRules[0].tags.inert_command_only, true, 'sfx-only rule
 assert.strictEqual(commandRules[0].tags.solver_state_active, false, 'sfx-only rule is not solver-state active');
 assert.strictEqual(commandRules[1].tags.command_only, true, 'checkpoint-only rule is command-only');
 assert.strictEqual(commandRules[1].tags.solver_state_active, true, 'checkpoint is semantic/metagame-active');
+
+const MERGEABLE_GAME = `
+title Mergeable
+========
+OBJECTS
+========
+Background
+black
+BodyH
+white
+BodyV
+white
+Goal
+yellow
+${'======='}
+LEGEND
+${'======='}
+. = Background
+h = BodyH
+v = BodyV
+g = Goal
+Player = BodyH or BodyV
+Body = BodyH or BodyV
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+BodyH, BodyV, Goal
+=====
+RULES
+=====
+[ Body ] -> [ Body ]
+[ no Body ] -> [ no Body ]
+[ > Body ] -> [ > Body ]
+=============
+WINCONDITIONS
+=============
+Some Body on Goal
+======
+LEVELS
+======
+h.g
+`;
+
+const mergeable = analyzeSource(MERGEABLE_GAME, { sourcePath: 'mergeable.txt' });
+const mergeFact = mergeable.facts.mergeability.find(item => item.subjects.objects.join(',') === 'BodyH,BodyV');
+assert.ok(mergeFact, 'BodyH/BodyV should produce a mergeability fact');
+assert.strictEqual(mergeFact.status, 'candidate');
+assert.ok(mergeFact.proof.includes('same_collision_layer'));
+assert.ok(mergeFact.proof.includes('observed_only_through_shared_sets'));
+
+const DIRECT_READ_GAME = MERGEABLE_GAME.replace('[ Body ] -> [ Body ]', '[ BodyH ] -> [ BodyH ]');
+const directRead = analyzeSource(DIRECT_READ_GAME, { sourcePath: 'direct_read.txt' });
+const directReadFact = directRead.facts.mergeability.find(item => item.subjects.objects.join(',') === 'BodyH,BodyV');
+assert.strictEqual(directReadFact.status, 'rejected');
+assert.ok(directReadFact.blockers.includes('individual_lhs_read'));
+
+const DIRECT_NEGATION_GAME = MERGEABLE_GAME.replace('[ no Body ] -> [ no Body ]', '[ no BodyH ] -> [ no BodyH ]');
+const directNegation = analyzeSource(DIRECT_NEGATION_GAME, { sourcePath: 'direct_negation.txt' });
+const directNegationFact = directNegation.facts.mergeability.find(item => item.subjects.objects.join(',') === 'BodyH,BodyV');
+assert.strictEqual(directNegationFact.status, 'rejected');
+assert.ok(directNegationFact.blockers.includes('individual_lhs_read'));
+
+const DIRECT_WIN_GAME = MERGEABLE_GAME.replace('Some Body on Goal', 'Some BodyH on Goal');
+const directWin = analyzeSource(DIRECT_WIN_GAME, { sourcePath: 'direct_win.txt' });
+const directWinFact = directWin.facts.mergeability.find(item => item.subjects.objects.join(',') === 'BodyH,BodyV');
+assert.strictEqual(directWinFact.status, 'rejected');
+assert.ok(directWinFact.blockers.includes('different_win_roles'));
 
 console.log('ps_static_analysis_node: ok');
