@@ -4,6 +4,8 @@
 
 Add tests for every static-analyzer output claim. The test plan is organized by analyzer output surface rather than by test style, so it can be used as an implementation checklist.
 
+Current implementation note: static and runtime/metamorphic checks live in `src/tests/ps_static_analysis_node.js`, with explorer smoke coverage in `src/tests/static_analysis_explorer_node.js`. The default entrypoint is `make static_analysis_tests`.
+
 Each tag or fact entry uses this format:
 
 ```md
@@ -146,6 +148,7 @@ Static tests:
 - `[ A ] -> sfx0` is command-only.
 - `[ A ] -> [ A ] sfx0` is command-only.
 - `[ right A ] -> [ right A ] sfx0` is command-only.
+- `[ no A ] -> [ no A ] sfx0` is command-only.
 - `[ A ] -> checkpoint` is command-only and still solver-state active.
 - `[ A ] -> [ B ] sfx0` is not command-only.
 - `[ A ] -> [ right A ] sfx0` is not command-only.
@@ -668,6 +671,7 @@ Static tests:
 - Reject direct movement read: `[ right BodyH ]`.
 - Reject partial property observation.
 - Reject win distinction: `Some BodyH` versus `Some Body`.
+- Reject target-side win distinction: `Some Goal on BodyH` versus no target role for `BodyV`.
 - Assert duplicate collision-layer entries do not emit self-merge facts.
 
 Runtime/metamorphic tests:
@@ -734,6 +738,7 @@ Static tests:
 
 Runtime/metamorphic tests:
 - Future optimizer test: split candidate groups into suggested components, replay known solutions, and assert the same solution still wins.
+- Current replay guard: remove plus-continuation markers in a synthetic split-candidate pusher group and assert the replayed state is identical.
 
 Notes:
 - Current output is advisory. It detects candidates and rerun masks, but does not rewrite rule groups.
@@ -842,7 +847,7 @@ Notes:
 
 ## Runtime/Metamorphic Harness
 
-### `analyzer_fact_loader` [planned]
+### `analyzer_fact_loader` [current]
 
 Description: helper that compiles source or reads a path, runs `analyzeSource`, and exposes current facts by family/status.
 
@@ -854,9 +859,10 @@ Runtime/metamorphic tests:
 - Used by all replay checks.
 
 Notes:
+- Implemented in `src/tests/ps_static_analysis_node.js` via `analyzeSource` and `familyFilter`.
 - Planned tags should not be treated as missing failures.
 
-### `replay_engine` [planned]
+### `replay_engine` [current]
 
 Description: helper that compiles and loads a level, applies inputs, drains `again`, captures/restores state, reads/writes object masks, and compares boundary states.
 
@@ -866,7 +872,7 @@ Static tests:
 Runtime/metamorphic tests:
 - Synthetic one-move game verifies replay-to-win.
 - Synthetic action-noop game verifies clone/apply-action/drain/compare.
-- Synthetic mutation game verifies state comparison fails when expected.
+- Runtime helpers cover action-noop, static object/layer, count-invariant, transient, mergeability, and split-rulegroup checks.
 
 Notes:
 - The full-turn boundary is after one input and its `again` drain; perturbations occur before the next input.
@@ -885,7 +891,7 @@ Runtime/metamorphic tests:
 Notes:
 - Seed format: `game path + level index + fact id + variant index`.
 
-### `mergeability_perturbation` [planned]
+### `mergeability_perturbation` [current]
 
 Description: replace objects within a mergeability class at turn boundaries while preserving collision-layer validity.
 
@@ -898,8 +904,9 @@ Runtime/metamorphic tests:
 
 Notes:
 - Perturbation happens in live state, not by rewriting source.
+- Current deterministic choice is based on cell and turn rather than a configurable seed.
 
-### `action_noop_comparison` [planned]
+### `action_noop_comparison` [current]
 
 Description: compare boundary state before and after action input for proved `action_noop` games.
 
@@ -916,7 +923,7 @@ Runtime/metamorphic tests:
 Notes:
 - Injected `noaction` replay is a second check, not the only oracle.
 
-### `count_invariant_check` [planned]
+### `count_invariant_check` [current]
 
 Description: count proved non-transient objects after each replayed turn.
 
@@ -930,7 +937,7 @@ Runtime/metamorphic tests:
 Notes:
 - Exclude proved transients.
 
-### `layer_static_check` [planned]
+### `layer_static_check` [current]
 
 Description: compare exact layer occupancy to the initial layer snapshot after each replayed turn.
 
@@ -943,7 +950,7 @@ Runtime/metamorphic tests:
 Notes:
 - Does not remove layers.
 
-### `transient_absence_check` [planned]
+### `transient_absence_check` [current]
 
 Description: assert proved transient objects are absent after each full turn plus `again` drain.
 
@@ -966,21 +973,46 @@ Notes:
 
 If a real-game solution is expensive to find, the test may store a known compact solution string rather than solving every run. The replay harness should still be able to ask the solver for a solution when desired.
 
+## First Optimizer Consumer
+
+### `--solver-static-hash` [current experimental]
+
+Description: optional JS solver mode consuming proved `object.tags.static` facts and omitting those object bits from the incremental Zobrist board key.
+
+Static tests:
+- None beyond object `static` fact tests above.
+
+Runtime/metamorphic tests:
+- Run JS solver targets with `PUZZLESCRIPT_VERIFY_ZOBRIST=1 --solver-static-hash`.
+- Assert solved levels still solve and reported `hash_mode` includes `staticN`.
+- Rely on visited-state buckets comparing full snapshots, so false positives degrade to extra bucket collisions rather than unsound identity.
+
+Notes:
+- Default-off. First consumer of proved facts, not a new analyzer fact.
+- Current implementation analyzes once per game and reuses the static mask for each level.
+
 ## Test Commands
 
-Fast default node test:
+Fast default test:
 
 ```sh
-node src/tests/ps_static_analysis_metamorphic_node.js --fast
+make static_analysis_tests
 ```
 
-Optional slower corpus target:
+Underlying node tests:
 
 ```sh
-node src/tests/ps_static_analysis_metamorphic_node.js --corpus src/demo src/tests/solver_tests --seed static-analysis
+node src/tests/ps_static_analysis_node.js
+node src/tests/static_analysis_explorer_node.js
 ```
 
-The fast test should be suitable for `npm run test:node` once stable. The corpus mode should not be part of the default suite until runtime is predictable.
+Optional flagged solver-hash smoke:
+
+```sh
+PUZZLESCRIPT_VERIFY_ZOBRIST=1 node src/tests/run_solver_tests_js.js src/tests/solver_tests --game one_move.txt --level 0 --timeout-ms 1000 --no-solutions --quiet --json --solver-static-hash
+```
+
+Broader corpus-style runs should remain optional until runtime is predictable.
 
 ## Non-Goals
 
