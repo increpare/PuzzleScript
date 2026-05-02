@@ -405,11 +405,66 @@ const emptyClearTransient = analyzeSource(EMPTY_CLEAR_TRANSIENT_GAME, { sourcePa
 const emptyClearMark = emptyClearTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
 assert.strictEqual(emptyClearMark.status, 'proved', 'empty RHS cleanup should count as an end-turn clear');
 
+const AGAIN_PRESERVE_TRANSIENT_GAME = TRANSIENT_GAME.replace(
+    '[ Player ] -> [ Player Mark ]',
+    '[ Player no Mark ] -> [ Player Mark ]\n[ Player Mark ] -> [ Player Mark ] again'
+);
+const againPreserveTransient = analyzeSource(AGAIN_PRESERVE_TRANSIENT_GAME, { sourcePath: 'again_preserve_transient.txt' });
+const againPreserveMark = againPreserveTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(againPreserveMark.status, 'proved', 'rules that only preserve a transient object should not count as creators');
+
 const AGAIN_TAINT_GAME = TRANSIENT_GAME.replace('[ Player ] -> [ Player Mark ]', '[ Player ] -> [ Player Mark ] again');
 const againTaint = analyzeSource(AGAIN_TAINT_GAME, { sourcePath: 'again_taint.txt' });
 const againMark = againTaint.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
 assert.strictEqual(againMark.status, 'rejected');
 assert.ok(againMark.blockers.includes('has_again_taint'));
+
+const LATE_CHAIN_TRANSIENT_GAME = `
+title Late Chain Transient
+========
+OBJECTS
+========
+Background
+black
+Player
+white
+Door
+red
+Mark
+pink
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Player
+D = Door
+M = Mark
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Player
+Door, Mark
+=====
+RULES
+=====
+late [ Door ] -> [ Mark ]
+late [ Mark ] -> [ Door ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+PD
+`;
+const lateChainTransient = analyzeSource(LATE_CHAIN_TRANSIENT_GAME, { sourcePath: 'late_chain_transient.txt' });
+const lateChainMark = lateChainTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(lateChainMark.status, 'proved', 'late-created objects cleared by a later late rule should be end-turn transient');
 
 const noTagged = analyzeSource(SIMPLE_GAME, { sourcePath: 'simple.txt', includePsTagged: false });
 assert.strictEqual(noTagged.ps_tagged, undefined, 'includePsTagged=false should remove ps_tagged');

@@ -695,13 +695,28 @@ function deriveCountLayerInvariantFacts(psTagged) {
 
 function rulesInSection(psTagged, sectionName) {
     const section = psTagged.rule_sections.find(item => item.name === sectionName);
-    return section ? section.groups.flatMap(group => group.rules.map(rule => ({ group, rule }))) : [];
+    return section ? section.groups.flatMap(group => group.rules.map(rule => ({ section, group, rule }))) : [];
 }
 
-function earlySettersForObject(psTagged, objectName) {
-    return rulesInSection(psTagged, 'early')
-        .filter(entry => entry.rule.tags.solver_state_active)
-        .filter(entry => entry.rule.summary.rhs_terms.some(term => term.kind === 'present' && termMentionsObject(term, objectName)));
+function ruleHasPositiveLhsObject(rule, objectName) {
+    return rule.summary.lhs_terms.some(term => term.kind === 'present' && termMentionsObject(term, objectName));
+}
+
+function rulePresentsObjectOnRhs(rule, objectName) {
+    return rule.summary.rhs_terms.some(term =>
+        (term.kind === 'present' || term.kind === 'random_object') && termMentionsObject(term, objectName)
+    );
+}
+
+function ruleCreatesObject(rule, objectName) {
+    return rule.tags.solver_state_active
+        && rule.tags.object_mutating
+        && rulePresentsObjectOnRhs(rule, objectName)
+        && !ruleHasPositiveLhsObject(rule, objectName);
+}
+
+function creatorsForObject(psTagged, objectName) {
+    return allRuleEntries(psTagged).filter(entry => ruleCreatesObject(entry.rule, objectName));
 }
 
 function lateClearersForObject(psTagged, objectName) {
@@ -720,6 +735,16 @@ function ruleUnconditionallyClearsObject(rule, objectName) {
     return !rule.summary.rhs_terms.some(term => term.kind === 'present' && termMentionsObject(term, objectName));
 }
 
+function ruleEntryBefore(left, right) {
+    if (left.section.name === 'early' && right.section.name === 'late') return true;
+    if (left.section.name === right.section.name) return left.group.group_index < right.group.group_index;
+    return false;
+}
+
+function allCreatorsHaveLaterClearer(creators, clearers) {
+    return creators.every(creator => clearers.some(clearer => ruleEntryBefore(creator, clearer)));
+}
+
 function objectInWincondition(psTagged, objectName) {
     return psTagged.winconditions.some(win => win.subjects.includes(objectName) || win.targets.includes(objectName));
 }
@@ -727,22 +752,25 @@ function objectInWincondition(psTagged, objectName) {
 function deriveTransientBoundaryFacts(psTagged) {
     const results = [];
     for (const object of psTagged.objects) {
-        const setters = earlySettersForObject(psTagged, object.name);
+        const creators = creatorsForObject(psTagged, object.name);
         const clearers = lateClearersForObject(psTagged, object.name);
         const blockers = [];
-        if (setters.length === 0) blockers.push('not_created_in_early_rules');
+        if (creators.length === 0) blockers.push('not_created_before_end_cleanup');
         if (clearers.length === 0) blockers.push('no_late_cleanup_clear');
+        if (creators.length > 0 && clearers.length > 0 && !allCreatorsHaveLaterClearer(creators, clearers)) {
+            blockers.push('creator_not_followed_by_late_cleanup');
+        }
         if (!object.tags.present_in_no_levels) blockers.push('present_in_some_initial_levels');
         if (objectInWincondition(psTagged, object.name)) blockers.push('appears_in_wincondition');
-        if (setters.some(entry => entry.group.tags.has_again || entry.rule.tags.has_again)) blockers.push('has_again_taint');
-        if (setters.some(entry => entry.rule.rigid) || clearers.some(entry => entry.rule.rigid)) blockers.push('rigid_rule');
+        if (creators.some(entry => entry.group.tags.has_again || entry.rule.tags.has_again)) blockers.push('has_again_taint');
+        if (creators.some(entry => entry.rule.rigid) || clearers.some(entry => entry.rule.rigid)) blockers.push('rigid_rule');
         const status = blockers.length === 0 ? 'proved' : 'rejected';
         results.push(fact('transient_boundary', `object_${object.name}_end_turn_transient`, status, {
             subjects: { objects: [object.name] },
             tags: { single_turn_only: true },
-            proof: status === 'proved' ? ['created_in_early_rules', 'cleared_in_late_rules', 'absent_from_initial_levels_and_winconditions'] : [],
+            proof: status === 'proved' ? ['created_before_late_cleanup', 'cleared_in_late_rules', 'absent_from_initial_levels_and_winconditions'] : [],
             blockers,
-            evidence: setters.concat(clearers).map(entry => entry.rule.id),
+            evidence: creators.concat(clearers).map(entry => entry.rule.id),
         }));
     }
     return results;
