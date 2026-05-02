@@ -442,6 +442,27 @@ assert.strictEqual(stationaryTickFact.status, 'rejected');
 assert.ok(stationaryTickFact.blockers.includes('autonomous_solver_active_rule'));
 assert.ok(stationaryTickFact.blockers.includes('action_may_create_directional_movement'));
 
+const RANDOM_RULE_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', 'random [ Hero ] -> [ Hero ]');
+const randomRule = analyzeSource(RANDOM_RULE_GAME, { sourcePath: 'random_rule.txt' });
+const randomRuleIr = randomRule.ps_tagged.rule_sections[0].groups[0].rules[0];
+assert.strictEqual(randomRule.ps_tagged.game.tags.has_random, true, 'random rules should tag the game as random');
+assert.strictEqual(randomRuleIr.random_rule, true, 'random source rule should be preserved in rule IR');
+assert.strictEqual(randomRuleIr.tags.solver_state_active, false, 'unchanged random rule has no solver-state effect');
+
+const RANDOM_OBJECT_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Hero ] -> [ random Goal ]');
+const randomObject = analyzeSource(RANDOM_OBJECT_GAME, { sourcePath: 'random_object.txt' });
+const randomObjectRule = randomObject.ps_tagged.rule_sections[0].groups[0].rules[0];
+assert.strictEqual(randomObject.ps_tagged.game.tags.has_random, true, 'random RHS objects should tag the game as random');
+assert.strictEqual(randomObjectRule.summary.rhs_random_objects.length, 1);
+assert.strictEqual(randomObjectRule.tags.object_mutating, true, 'random RHS object writes are object-mutating');
+
+const RIGID_RULE_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', 'rigid [ > Hero | Goal ] -> [ > Hero | > Goal ]');
+const rigidRule = analyzeSource(RIGID_RULE_GAME, { sourcePath: 'rigid_rule.txt' });
+const rigidRuleIr = rigidRule.ps_tagged.rule_sections[0].groups[0].rules[0];
+assert.strictEqual(rigidRule.ps_tagged.game.tags.has_rigid, true, 'rigid rules should tag the game as rigid');
+assert.strictEqual(rigidRuleIr.rigid, true);
+assert.strictEqual(rigidRuleIr.tags.rigid_active, true, 'solver-active rigid rules should receive rigid_active');
+
 function firstFlowFact(reportToCheck) {
     return reportToCheck.facts.rulegroup_flow.find(item => item.subjects.groups[0] === 'early_group_0');
 }
