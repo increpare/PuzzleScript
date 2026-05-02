@@ -7,6 +7,8 @@ const path = require('path');
 const { compileSemanticSource } = require('../canonicalize');
 
 const SCHEMA = 'ps-static-analysis-v1';
+const INERT_COMMANDS = new Set(['message', 'sfx0', 'sfx1', 'sfx2', 'sfx3', 'sfx4', 'sfx5', 'sfx6', 'sfx7', 'sfx8', 'sfx9', 'sfx10']);
+const SEMANTIC_COMMANDS = new Set(['cancel', 'again', 'restart', 'win', 'checkpoint']);
 
 function uniqueSorted(values) {
     return Array.from(new Set(values)).sort((left, right) =>
@@ -128,6 +130,243 @@ function tagObjectLevelPresence(psTagged) {
     }
 }
 
+function directionName(direction) {
+    if (typeof direction === 'string') return direction;
+    if (direction === 1) return 'up';
+    if (direction === 2) return 'down';
+    if (direction === 4) return 'left';
+    if (direction === 8) return 'right';
+    if (direction === 15) return 'orthogonal';
+    if (direction === 16) return 'action';
+    return String(direction);
+}
+
+function refForName(state, name) {
+    if (state.objects[name]) {
+        return { type: 'object', name: displayName(state, name), canonical_name: name };
+    }
+    if (state.propertiesDict && state.propertiesDict[name]) {
+        return {
+            type: 'property',
+            name: displayName(state, name),
+            canonical_name: name,
+            members: uniqueSorted(Array.from(state.propertiesDict[name], member => displayName(state, member))),
+        };
+    }
+    if (state.synonymsDict && state.synonymsDict[name]) {
+        return {
+            type: 'synonym',
+            name: displayName(state, name),
+            canonical_name: name,
+            members: [displayName(state, state.synonymsDict[name])],
+        };
+    }
+    return { type: 'unknown', name };
+}
+
+function termFromPair(state, direction, name) {
+    if (direction === '...' && name === '...') {
+        return { kind: 'present', ref: { type: 'ellipsis' }, movement: null };
+    }
+    if (direction === 'no') {
+        return { kind: 'absent', ref: refForName(state, name), movement: null };
+    }
+    if (direction === 'random') {
+        return { kind: 'random_object', ref: refForName(state, name), movement: null };
+    }
+    if (direction === '') {
+        return { kind: 'present', ref: refForName(state, name), movement: null };
+    }
+    return { kind: 'present', ref: refForName(state, name), movement: directionName(direction) };
+}
+
+function termsFromCell(state, cell) {
+    const terms = [];
+    for (let index = 0; index < cell.length; index += 2) {
+        terms.push(termFromPair(state, cell[index], cell[index + 1]));
+    }
+    return terms;
+}
+
+function termsFromSide(state, side) {
+    return Array.from(side || [], row =>
+        Array.from(row, cell => termsFromCell(state, cell))
+    );
+}
+
+function flattenTerms(side) {
+    return side.flat(2);
+}
+
+function summarizeRule(rule) {
+    const lhsTerms = flattenTerms(rule.lhs);
+    const rhsTerms = flattenTerms(rule.rhs);
+    return {
+        lhs_terms: lhsTerms,
+        rhs_terms: rhsTerms,
+        lhs_present: lhsTerms.filter(term => term.kind === 'present'),
+        lhs_absent: lhsTerms.filter(term => term.kind === 'absent'),
+        lhs_movement: lhsTerms.filter(term => term.movement !== null),
+        rhs_present: rhsTerms.filter(term => term.kind === 'present'),
+        rhs_absent: rhsTerms.filter(term => term.kind === 'absent'),
+        rhs_random_objects: rhsTerms.filter(term => term.kind === 'random_object'),
+        rhs_movement: rhsTerms.filter(term => term.movement !== null),
+        semantic_commands: rule.commands.map(command => command[0]).filter(command => SEMANTIC_COMMANDS.has(command)),
+        inert_commands: rule.commands.map(command => command[0]).filter(command => INERT_COMMANDS.has(command)),
+    };
+}
+
+function objectTermSignature(terms) {
+    return JSON.stringify(terms
+        .filter(term => term.kind === 'present')
+        .map(term => JSON.stringify(term.ref))
+        .sort());
+}
+
+function movementTermSignature(terms) {
+    return JSON.stringify(terms
+        .filter(term => term.kind === 'present' && term.movement !== null)
+        .map(term => `${JSON.stringify(term.ref)}:${term.movement}`)
+        .sort());
+}
+
+function tagRule(rule) {
+    rule.summary = summarizeRule(rule);
+    const commandNames = rule.commands.map(command => command[0]);
+    const hasOnlyInertCommands = commandNames.length > 0
+        && commandNames.every(command => INERT_COMMANDS.has(command));
+    const hasReplacement = rule.rhs.length > 0;
+    const objectMutating = hasReplacement
+        && (objectTermSignature(rule.summary.lhs_terms) !== objectTermSignature(rule.summary.rhs_terms)
+        || rule.summary.rhs_absent.length > 0
+        || rule.summary.rhs_random_objects.length > 0);
+    const writesMovement = hasReplacement
+        && (rule.summary.rhs_movement.length > 0
+        || movementTermSignature(rule.summary.lhs_terms) !== movementTermSignature(rule.summary.rhs_terms));
+    const hasSemanticCommand = rule.summary.semantic_commands.length > 0;
+
+    rule.tags.command_only = commandNames.length > 0 && !objectMutating && !writesMovement;
+    rule.tags.inert_command_only = hasOnlyInertCommands && rule.tags.command_only;
+    rule.tags.object_mutating = objectMutating;
+    rule.tags.writes_movement = writesMovement;
+    rule.tags.movement_only = writesMovement && !objectMutating && !hasSemanticCommand;
+    rule.tags.reads_action = rule.summary.lhs_movement.some(term => term.movement === 'action');
+    rule.tags.has_again = rule.summary.semantic_commands.includes('again');
+    const hasNonInertEffect = objectMutating || writesMovement || hasSemanticCommand;
+    rule.tags.solver_state_active = !rule.tags.inert_command_only && hasNonInertEffect;
+    if (rule.rigid && hasNonInertEffect) {
+        rule.tags.rigid_active = true;
+    }
+}
+
+function buildRuleSections(state) {
+    const rules = Array.from(state.rules || []);
+    return [
+        buildRuleSection(state, 'early', rules.filter(rule => !rule.late)),
+        buildRuleSection(state, 'late', rules.filter(rule => rule.late)),
+    ];
+}
+
+function buildRuleSection(state, name, rules) {
+    const groupNumbers = [];
+    const groupMap = new Map();
+    for (const rule of rules) {
+        if (!groupMap.has(rule.groupNumber)) {
+            groupMap.set(rule.groupNumber, []);
+            groupNumbers.push(rule.groupNumber);
+        }
+        groupMap.get(rule.groupNumber).push(rule);
+    }
+    const groups = groupNumbers.map((groupNumber, index) =>
+        buildRuleGroup(state, name, index, groupNumber, groupMap.get(groupNumber))
+    );
+    return {
+        name,
+        loops: buildLoopSummaries(state, groups),
+        groups,
+    };
+}
+
+function buildLoopSummaries(state, groups) {
+    const loops = [];
+    const stack = [];
+    for (const loop of Array.from(state.loops || [])) {
+        const line = loop[0];
+        const bracket = loop[1];
+        if (bracket === 1) {
+            stack.push({ id: `loop_${loops.length}`, start_line: line, end_line: null });
+        } else if (bracket === -1 && stack.length > 0) {
+            const active = stack.pop();
+            active.end_line = line;
+            active.group_ids = groups
+                .filter(group => group.source_line_min > active.start_line && group.source_line_max < active.end_line)
+                .map(group => group.id);
+            loops.push(active);
+        }
+    }
+    return loops;
+}
+
+function buildRuleGroup(state, sectionName, groupIndex, groupNumber, sourceRules) {
+    const rules = sourceRules.map((rule, ruleIndex) => buildRuleIr(state, sectionName, groupIndex, rule, ruleIndex));
+    const group = {
+        id: `${sectionName}_group_${groupIndex}`,
+        group_index: groupIndex,
+        group_number: groupNumber,
+        source_line_min: Math.min(...sourceRules.map(rule => rule.lineNumber)),
+        source_line_max: Math.max(...sourceRules.map(rule => rule.lineNumber)),
+        random: sourceRules.some(rule => rule.randomRule),
+        tags: {},
+        rules,
+    };
+    for (const rule of rules) {
+        tagRule(rule);
+    }
+    tagGroup(group);
+    return group;
+}
+
+function buildRuleIr(state, sectionName, groupIndex, rule, ruleIndex) {
+    return {
+        id: `${sectionName}_group_${groupIndex}_rule_${ruleIndex}`,
+        source_line: rule.lineNumber,
+        direction: directionName(rule.direction),
+        late: !!rule.late || sectionName === 'late',
+        rigid: !!rule.rigid,
+        random_rule: !!rule.randomRule,
+        tags: {},
+        commands: Array.from(rule.commands || [], command => Array.from(command)),
+        lhs: termsFromSide(state, rule.lhs),
+        rhs: termsFromSide(state, rule.rhs),
+        summary: {},
+    };
+}
+
+function tagGroup(group) {
+    group.tags.has_again = group.rules.some(rule => rule.tags.has_again);
+    group.tags.object_mutating = group.rules.some(rule => rule.tags.object_mutating);
+    group.tags.movement_only = group.rules.some(rule => rule.tags.movement_only) && !group.tags.object_mutating;
+    group.tags.command_only = group.rules.every(rule => rule.tags.command_only);
+    group.tags.solver_state_active = group.rules.some(rule => rule.tags.solver_state_active);
+}
+
+function allRuleEntries(psTagged) {
+    return psTagged.rule_sections.flatMap(section =>
+        section.groups.flatMap(group =>
+            group.rules.map(rule => ({ section, group, rule }))
+        )
+    );
+}
+
+function tagGame(psTagged) {
+    const rules = allRuleEntries(psTagged).map(entry => entry.rule);
+    psTagged.game.tags.has_again = rules.some(rule => rule.tags.has_again);
+    psTagged.game.tags.has_random = rules.some(rule => rule.random_rule || rule.summary.rhs_random_objects.length > 0);
+    psTagged.game.tags.has_rigid = rules.some(rule => rule.rigid);
+    psTagged.game.tags.has_action_rules = rules.some(rule => rule.tags.reads_action);
+    psTagged.game.tags.has_autonomous_tick_rules = rules.some(rule => rule.tags.solver_state_active && rule.summary.lhs_movement.length === 0);
+}
+
 function buildPsTagged(state, options = {}) {
     const psTagged = {
         game: {
@@ -140,9 +379,10 @@ function buildPsTagged(state, options = {}) {
         collision_layers: buildCollisionLayers(state),
         winconditions: buildWinconditions(state),
         levels: buildLevels(state),
-        rule_sections: [],
+        rule_sections: buildRuleSections(state),
     };
     tagObjectLevelPresence(psTagged);
+    tagGame(psTagged);
     return psTagged;
 }
 
