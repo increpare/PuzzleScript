@@ -1214,6 +1214,15 @@ const aggregateWriteWallFact = staticAggregateWrite.facts.count_layer_invariants
 assert.strictEqual(aggregateWriteWall.tags.static, false, 'aggregate deletion mentioning wall should reject wall static');
 assert.ok(aggregateWriteWallFact.blockers.includes('object_written_by_solver_active_rule'));
 
+const STATIC_AND_AGGREGATE_WRITE_GAME = STATIC_OBJECT_GAME
+    .replace('Solid = Wall or Crate', 'Solid = Wall or Crate\nPair = Wall and Mark')
+    .replace('[ > PlayerObject ] -> [ > PlayerObject ]', '[ Pair ] -> []');
+const staticAndAggregateWrite = analyzeSource(STATIC_AND_AGGREGATE_WRITE_GAME, { sourcePath: 'static_and_aggregate_write.txt' });
+const andAggregateWriteWall = staticAndAggregateWrite.ps_tagged.objects.find(object => object.name === 'Wall');
+const andAggregateWriteWallFact = staticAndAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+assert.strictEqual(andAggregateWriteWall.tags.static, false, 'and-aggregate deletion mentioning wall should reject wall static');
+assert.ok(andAggregateWriteWallFact.blockers.includes('object_written_by_solver_active_rule'));
+
 const STATIC_AGGREGATE_MOVEMENT_GAME = STATIC_OBJECT_GAME.replace(
     '[ > PlayerObject ] -> [ > PlayerObject ]',
     '[ Solid ] -> [ right Solid ]'
@@ -1224,6 +1233,16 @@ const aggregateMovementWallFact = staticAggregateMovement.facts.count_layer_inva
 assert.strictEqual(aggregateMovementWall.tags.count_invariant, true, 'aggregate movement preserves wall count');
 assert.strictEqual(aggregateMovementWall.tags.static, false, 'aggregate movement mentioning wall should reject wall static');
 assert.ok(aggregateMovementWallFact.blockers.includes('object_may_receive_movement'));
+
+const STATIC_AND_AGGREGATE_MOVEMENT_GAME = STATIC_OBJECT_GAME
+    .replace('Solid = Wall or Crate', 'Solid = Wall or Crate\nPair = Wall and Mark')
+    .replace('[ > PlayerObject ] -> [ > PlayerObject ]', '[ Pair ] -> [ right Pair ]');
+const staticAndAggregateMovement = analyzeSource(STATIC_AND_AGGREGATE_MOVEMENT_GAME, { sourcePath: 'static_and_aggregate_movement.txt' });
+const andAggregateMovementWall = staticAndAggregateMovement.ps_tagged.objects.find(object => object.name === 'Wall');
+const andAggregateMovementWallFact = staticAndAggregateMovement.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+assert.strictEqual(andAggregateMovementWall.tags.count_invariant, true, 'and-aggregate movement preserves wall count');
+assert.strictEqual(andAggregateMovementWall.tags.static, false, 'and-aggregate movement mentioning wall should reject wall static');
+assert.ok(andAggregateMovementWallFact.blockers.includes('object_may_receive_movement'));
 
 const TRANSIENT_GAME = `
 title Transient
