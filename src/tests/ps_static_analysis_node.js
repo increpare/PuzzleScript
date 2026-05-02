@@ -731,18 +731,29 @@ assert.ok(countFacts.some(item => item.id === 'layer_0_static'), 'Background lay
 const SPAWN_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Hero ] -> [ Hero Goal ]');
 const spawnReport = analyzeSource(SPAWN_GAME, { sourcePath: 'spawn.txt' });
 const goalCount = spawnReport.facts.count_layer_invariants.find(item => item.id === 'object_Goal_count_preserved');
+const spawnedGoalTags = spawnReport.ps_tagged.objects.find(object => object.name === 'Goal').tags;
 assert.strictEqual(goalCount.status, 'rejected');
 assert.ok(goalCount.blockers.includes('object_written_by_solver_active_rule'));
+assert.strictEqual(spawnedGoalTags.may_be_created, true);
+assert.strictEqual(spawnedGoalTags.may_be_destroyed, true, 'object write tags are currently conservative both-way churn tags');
+assert.strictEqual(spawnedGoalTags.count_invariant, false);
 
 const DESTROY_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Hero ] -> []');
 const destroyReport = analyzeSource(DESTROY_GAME, { sourcePath: 'destroy.txt' });
 const heroDestroyCount = destroyReport.facts.count_layer_invariants.find(item => item.id === 'object_Hero_count_preserved');
+const destroyedHeroTags = destroyReport.ps_tagged.objects.find(object => object.name === 'Hero').tags;
 assert.strictEqual(heroDestroyCount.status, 'rejected', 'deleting an object to an empty RHS should reject count preservation');
+assert.strictEqual(destroyedHeroTags.may_be_created, true, 'object write tags are currently conservative both-way churn tags');
+assert.strictEqual(destroyedHeroTags.may_be_destroyed, true);
+assert.strictEqual(destroyedHeroTags.count_invariant, false);
 
 const LAYER_OVERWRITE_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ no Goal ] -> [ Goal ]');
 const layerOverwriteReport = analyzeSource(LAYER_OVERWRITE_GAME, { sourcePath: 'layer_overwrite.txt' });
 const heroOverwriteCount = layerOverwriteReport.facts.count_layer_invariants.find(item => item.id === 'object_Hero_count_preserved');
+const overwrittenHeroTags = layerOverwriteReport.ps_tagged.objects.find(object => object.name === 'Hero').tags;
 assert.strictEqual(heroOverwriteCount.status, 'rejected', 'writing one object in a collision layer can remove siblings');
+assert.strictEqual(overwrittenHeroTags.may_be_created, true, 'same-layer writes can overwrite siblings');
+assert.strictEqual(overwrittenHeroTags.may_be_destroyed, true);
 
 const STATIC_OBJECT_GAME = `
 title Static Object
