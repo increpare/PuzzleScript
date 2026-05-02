@@ -10,6 +10,7 @@ const SCHEMA = 'ps-static-analysis-v1';
 const INERT_COMMANDS = new Set(['message', 'sfx0', 'sfx1', 'sfx2', 'sfx3', 'sfx4', 'sfx5', 'sfx6', 'sfx7', 'sfx8', 'sfx9', 'sfx10']);
 const SEMANTIC_COMMANDS = new Set(['cancel', 'again', 'restart', 'win', 'checkpoint']);
 const DIRECTIONAL_MOVEMENTS = new Set(['up', 'down', 'left', 'right', 'moving', 'randomdir']);
+const CARDINAL_MOVEMENTS = ['up', 'down', 'left', 'right'];
 
 function uniqueSorted(values) {
     return Array.from(new Set(values)).sort((left, right) =>
@@ -211,6 +212,10 @@ function flattenTerms(side) {
     return side.flat(2);
 }
 
+function termHasInputMovementRequirement(term) {
+    return term.movement !== null && term.movement !== 'stationary';
+}
+
 function summarizeRule(rule) {
     const lhsTerms = flattenTerms(rule.lhs);
     const rhsTerms = flattenTerms(rule.rhs);
@@ -377,7 +382,9 @@ function tagGame(psTagged) {
     psTagged.game.tags.has_random = rules.some(rule => rule.random_rule || rule.summary.rhs_random_objects.length > 0);
     psTagged.game.tags.has_rigid = rules.some(rule => rule.rigid);
     psTagged.game.tags.has_action_rules = rules.some(rule => rule.tags.reads_action);
-    psTagged.game.tags.has_autonomous_tick_rules = rules.some(rule => rule.tags.solver_state_active && rule.summary.lhs_movement.length === 0);
+    psTagged.game.tags.has_autonomous_tick_rules = rules.some(rule =>
+        rule.tags.solver_state_active && !rule.summary.lhs_movement.some(termHasInputMovementRequirement)
+    );
 }
 
 function membersForRef(psTagged, ref) {
@@ -546,22 +553,53 @@ function playerLayers(psTagged) {
     return uniqueSorted(player.members.map(objectName => String(layerForObject(psTagged, objectName))).filter(layer => layer !== 'null'));
 }
 
-function movementPairsFromTerms(psTagged, terms) {
-    const pairs = [];
+function movementRequirementsFromTerms(psTagged, terms) {
+    const requirements = [];
     for (const term of terms) {
-        if (term.kind !== 'present' || term.movement === null) continue;
+        if (term.kind !== 'present' || !termHasInputMovementRequirement(term)) continue;
         for (const objectName of term.expanded_objects || []) {
             const layer = layerForObject(psTagged, objectName);
-            if (layer !== null) pairs.push(`${layer}:${term.movement}`);
+            if (layer !== null) requirements.push({ layer: String(layer), movement: term.movement });
+        }
+    }
+    return requirements;
+}
+
+function movementEffectsFromTerms(psTagged, terms) {
+    const pairs = [];
+    for (const term of terms) {
+        if (term.kind !== 'present' || term.movement === null || term.movement === 'stationary') continue;
+        for (const objectName of term.expanded_objects || []) {
+            const layer = layerForObject(psTagged, objectName);
+            if (layer === null) continue;
+            const layerName = String(layer);
+            if (term.movement === 'randomdir') {
+                for (const movement of CARDINAL_MOVEMENTS) pairs.push(`${layerName}:${movement}`);
+                pairs.push(`${layerName}:moving`);
+            } else if (CARDINAL_MOVEMENTS.includes(term.movement)) {
+                pairs.push(`${layerName}:${term.movement}`);
+                pairs.push(`${layerName}:moving`);
+            } else {
+                pairs.push(`${layerName}:${term.movement}`);
+            }
         }
     }
     return pairs;
 }
 
+function movementRequirementReachable(requirement, possibleMovements) {
+    if (requirement.movement === 'moving' || requirement.movement === 'randomdir' || requirement.movement === 'orthogonal') {
+        return CARDINAL_MOVEMENTS.some(movement => possibleMovements.has(`${requirement.layer}:${movement}`))
+            || possibleMovements.has(`${requirement.layer}:moving`)
+            || possibleMovements.has(`${requirement.layer}:randomdir`);
+    }
+    return possibleMovements.has(`${requirement.layer}:${requirement.movement}`);
+}
+
 function ruleMovementRequirementsReachable(psTagged, rule, possibleMovements) {
-    const requirements = movementPairsFromTerms(psTagged, rule.summary.lhs_terms);
+    const requirements = movementRequirementsFromTerms(psTagged, rule.summary.lhs_terms);
     if (requirements.length === 0) return true;
-    return requirements.every(pair => possibleMovements.has(pair));
+    return requirements.every(requirement => movementRequirementReachable(requirement, possibleMovements));
 }
 
 function deriveMovementActionFacts(psTagged) {
@@ -576,9 +614,9 @@ function deriveMovementActionFacts(psTagged) {
             if (rule.tags.reads_action) blockers.push('reads_action');
             if (rule.tags.has_again) blockers.push('queues_again');
             if (rule.rigid) blockers.push('rigid_rule');
-            if (rule.summary.lhs_movement.length === 0) blockers.push('autonomous_solver_active_rule');
+            if (!rule.summary.lhs_movement.some(termHasInputMovementRequirement)) blockers.push('autonomous_solver_active_rule');
             if (rule.tags.object_mutating) blockers.push('action_may_mutate_objects');
-            for (const pair of movementPairsFromTerms(psTagged, rule.summary.rhs_terms)) {
+            for (const pair of movementEffectsFromTerms(psTagged, rule.summary.rhs_terms)) {
                 const movement = pair.split(':')[1];
                 if (DIRECTIONAL_MOVEMENTS.has(movement)) blockers.push('action_may_create_directional_movement');
                 if (!possibleMovements.has(pair)) {

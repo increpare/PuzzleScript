@@ -326,6 +326,14 @@ const actionMovementFact = actionMovement.facts.movement_action.find(item => ite
 assert.strictEqual(actionMovementFact.status, 'rejected');
 assert.ok(actionMovementFact.blockers.includes('action_may_create_directional_movement'));
 
+const STATIONARY_TICK_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ stationary Goal ] -> [ randomDir Goal ]');
+const stationaryTick = analyzeSource(STATIONARY_TICK_GAME, { sourcePath: 'stationary_tick.txt' });
+const stationaryTickFact = stationaryTick.facts.movement_action.find(item => item.id === 'action_noop');
+assert.strictEqual(stationaryTick.ps_tagged.game.tags.has_autonomous_tick_rules, true);
+assert.strictEqual(stationaryTickFact.status, 'rejected');
+assert.ok(stationaryTickFact.blockers.includes('autonomous_solver_active_rule'));
+assert.ok(stationaryTickFact.blockers.includes('action_may_create_directional_movement'));
+
 const countFacts = report.facts.count_layer_invariants;
 assert.ok(countFacts.some(item => item.id === 'object_Hero_count_preserved'), 'Hero count fact should exist');
 assert.ok(countFacts.some(item => item.id === 'layer_0_static'), 'Background layer static fact should exist');
