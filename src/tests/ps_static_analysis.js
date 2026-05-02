@@ -600,16 +600,29 @@ function termMentionsObject(term, objectName) {
     return (term.expanded_objects || []).includes(objectName);
 }
 
-function ruleWritesObject(rule, objectName) {
+function ruleMentionsObject(rule, objectName) {
+    return rule.summary.lhs_terms.concat(rule.summary.rhs_terms).some(term => termMentionsObject(term, objectName));
+}
+
+function ruleWritesCollisionLayerObject(psTagged, rule, objectName) {
+    const layer = layerForObject(psTagged, objectName);
+    if (layer === null) return false;
+    return rule.summary.rhs_terms.some(term =>
+        (term.kind === 'present' || term.kind === 'random_object')
+        && (term.expanded_objects || []).some(termObject => layerForObject(psTagged, termObject) === layer)
+    );
+}
+
+function ruleMayAffectObject(psTagged, rule, objectName) {
     if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return false;
-    return rule.summary.rhs_terms.some(term => termMentionsObject(term, objectName));
+    return ruleMentionsObject(rule, objectName) || ruleWritesCollisionLayerObject(psTagged, rule, objectName);
 }
 
 function deriveCountLayerInvariantFacts(psTagged) {
     const activeRules = allRuleEntries(psTagged).map(entry => entry.rule).filter(rule => rule.tags.solver_state_active);
     const results = [];
     for (const object of psTagged.objects) {
-        const writers = activeRules.filter(rule => ruleWritesObject(rule, object.name));
+        const writers = activeRules.filter(rule => ruleMayAffectObject(psTagged, rule, object.name));
         object.tags.may_be_created = writers.length > 0;
         object.tags.may_be_destroyed = writers.length > 0;
         object.tags.count_invariant = writers.length === 0;
@@ -622,7 +635,7 @@ function deriveCountLayerInvariantFacts(psTagged) {
     }
     for (const layer of psTagged.collision_layers) {
         const layerWriterIds = uniqueSorted(layer.objects.flatMap(objectName =>
-            activeRules.filter(rule => ruleWritesObject(rule, objectName)).map(rule => rule.id)
+            activeRules.filter(rule => ruleMayAffectObject(psTagged, rule, objectName)).map(rule => rule.id)
         ));
         layer.tags.static = layerWriterIds.length === 0;
         results.push(fact('count_layer_invariants', `layer_${layer.id}_static`, layerWriterIds.length === 0 ? 'proved' : 'candidate', {
@@ -649,7 +662,17 @@ function earlySettersForObject(psTagged, objectName) {
 function lateClearersForObject(psTagged, objectName) {
     return rulesInSection(psTagged, 'late')
         .filter(entry => entry.rule.tags.solver_state_active)
-        .filter(entry => entry.rule.summary.rhs_terms.some(term => term.kind === 'absent' && termMentionsObject(term, objectName)));
+        .filter(entry => ruleUnconditionallyClearsObject(entry.rule, objectName));
+}
+
+function ruleUnconditionallyClearsObject(rule, objectName) {
+    const lhsTerms = rule.summary.lhs_terms;
+    if (lhsTerms.length !== 1) return false;
+    const lhsTerm = lhsTerms[0];
+    if (lhsTerm.kind !== 'present' || lhsTerm.movement !== null || !termMentionsObject(lhsTerm, objectName)) {
+        return false;
+    }
+    return !rule.summary.rhs_terms.some(term => term.kind === 'present' && termMentionsObject(term, objectName));
 }
 
 function objectInWincondition(psTagged, objectName) {
@@ -694,6 +717,18 @@ function filterFacts(facts, familyFilter) {
     return { [familyFilter]: facts[familyFilter] || [] };
 }
 
+function summarizeFacts(facts) {
+    const summary = { proved: 0, candidate: 0, rejected: 0 };
+    for (const familyFacts of Object.values(facts)) {
+        for (const item of familyFacts) {
+            if (Object.prototype.hasOwnProperty.call(summary, item.status)) {
+                summary[item.status]++;
+            }
+        }
+    }
+    return summary;
+}
+
 function analyzeSource(source, options = {}) {
     const sourcePath = options.sourcePath || '<memory>';
     let compiled;
@@ -727,13 +762,14 @@ function analyzeSource(source, options = {}) {
     }
 
     const psTagged = buildPsTagged(compiled.state, { sourcePath });
+    const facts = filterFacts(deriveFacts(psTagged), options.familyFilter);
     const report = {
         schema: SCHEMA,
         source: { path: sourcePath },
         status: 'ok',
         ps_tagged: psTagged,
-        facts: filterFacts(deriveFacts(psTagged), options.familyFilter),
-        summary: { proved: 0, candidate: 0, rejected: 0 },
+        facts,
+        summary: summarizeFacts(facts),
     };
 
     if (options.includePsTagged === false) {

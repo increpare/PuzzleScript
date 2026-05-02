@@ -66,6 +66,7 @@ const report = analyzeSource(SIMPLE_GAME, { sourcePath: 'simple.txt' });
 assert.strictEqual(report.schema, 'ps-static-analysis-v1');
 assert.strictEqual(report.status, 'ok');
 assert.strictEqual(report.source.path, 'simple.txt');
+assert.ok(report.summary.proved > 0, 'summary should count proved facts');
 assert.ok(report.ps_tagged, 'report should include ps_tagged by default');
 assert.ok(report.facts.mergeability, 'report should include mergeability facts');
 assert.ok(report.facts.movement_action, 'report should include movement_action facts');
@@ -323,6 +324,16 @@ const goalCount = spawnReport.facts.count_layer_invariants.find(item => item.id 
 assert.strictEqual(goalCount.status, 'rejected');
 assert.ok(goalCount.blockers.includes('object_written_by_solver_active_rule'));
 
+const DESTROY_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Hero ] -> []');
+const destroyReport = analyzeSource(DESTROY_GAME, { sourcePath: 'destroy.txt' });
+const heroDestroyCount = destroyReport.facts.count_layer_invariants.find(item => item.id === 'object_Hero_count_preserved');
+assert.strictEqual(heroDestroyCount.status, 'rejected', 'deleting an object to an empty RHS should reject count preservation');
+
+const LAYER_OVERWRITE_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ no Goal ] -> [ Goal ]');
+const layerOverwriteReport = analyzeSource(LAYER_OVERWRITE_GAME, { sourcePath: 'layer_overwrite.txt' });
+const heroOverwriteCount = layerOverwriteReport.facts.count_layer_invariants.find(item => item.id === 'object_Hero_count_preserved');
+assert.strictEqual(heroOverwriteCount.status, 'rejected', 'writing one object in a collision layer can remove siblings');
+
 const TRANSIENT_GAME = `
 title Transient
 ========
@@ -368,6 +379,11 @@ const transient = analyzeSource(TRANSIENT_GAME, { sourcePath: 'transient.txt' })
 const markTransient = transient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
 assert.strictEqual(markTransient.status, 'proved');
 assert.strictEqual(markTransient.tags.single_turn_only, true);
+
+const EMPTY_CLEAR_TRANSIENT_GAME = TRANSIENT_GAME.replace('late [ Mark ] -> [ no Mark ]', 'late [ Mark ] -> []');
+const emptyClearTransient = analyzeSource(EMPTY_CLEAR_TRANSIENT_GAME, { sourcePath: 'empty_clear_transient.txt' });
+const emptyClearMark = emptyClearTransient.facts.transient_boundary.find(item => item.id === 'object_Mark_end_turn_transient');
+assert.strictEqual(emptyClearMark.status, 'proved', 'empty RHS cleanup should count as an end-turn clear');
 
 const AGAIN_TAINT_GAME = TRANSIENT_GAME.replace('[ Player ] -> [ Player Mark ]', '[ Player ] -> [ Player Mark ] again');
 const againTaint = analyzeSource(AGAIN_TAINT_GAME, { sourcePath: 'again_taint.txt' });
