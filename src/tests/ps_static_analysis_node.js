@@ -287,6 +287,11 @@ assert.deepStrictEqual(shapeRule.rhs[0][1], [
     { kind: 'present', ref: { type: 'object', name: 'Beta', canonical_name: 'beta' }, movement: null, expanded_objects: ['Beta'] },
     { kind: 'present', ref: { type: 'object', name: 'Gamma', canonical_name: 'gamma' }, movement: 'right', expanded_objects: ['Gamma'] },
 ]);
+const lateClearShapeRule = late.groups[0].rules[0];
+assert.deepStrictEqual(lateClearShapeRule.rhs[0][0], [
+    { kind: 'absent', ref: { type: 'object', name: 'Gamma', canonical_name: 'gamma' }, movement: null, expanded_objects: ['Gamma'] },
+]);
+assert.strictEqual(lateClearShapeRule.tags.object_mutating, true, 'RHS exclusion terms should be object-mutating');
 
 const LOOP_HIERARCHY_GAME = `
 title Loop Hierarchy
