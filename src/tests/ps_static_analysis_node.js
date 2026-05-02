@@ -558,10 +558,13 @@ const staticObject = analyzeSource(STATIC_OBJECT_GAME, { sourcePath: 'static_obj
 const staticWall = staticObject.ps_tagged.objects.find(object => object.name === 'Wall');
 const staticPlayer = staticObject.ps_tagged.objects.find(object => object.name === 'PlayerObject');
 const staticWallFact = staticObject.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+const staticPlayerLayerFact = staticObject.facts.count_layer_invariants.find(item => item.id === 'layer_1_static');
 assert.strictEqual(staticWall.tags.static, true, 'unwritten, unmoved wall should be tagged static');
 assert.strictEqual(staticWallFact.status, 'proved', 'unwritten, unmoved wall should have a proved static fact');
 assert.strictEqual(staticPlayer.tags.count_invariant, true, 'player object count can be invariant');
 assert.strictEqual(staticPlayer.tags.static, false, 'player object is not static because input applies movement');
+assert.strictEqual(staticPlayerLayerFact.status, 'candidate', 'a layer containing a moving player is not proved static');
+assert.ok(staticPlayerLayerFact.blockers.includes('layer_contains_nonstatic_object'));
 
 const STATIC_LAYER_CREATE_GAME = STATIC_OBJECT_GAME.replace(
     '[ > PlayerObject ] -> [ > PlayerObject ]',
@@ -766,6 +769,76 @@ function drainAgainRuntime() {
     }
 }
 
+function compileRuntimeSource(source, seed = 'static-analysis-runtime') {
+    ensurePuzzleScriptRuntime();
+    if (typeof resetParserErrorState === 'function') {
+        resetParserErrorState();
+    }
+    compile(['loadLevel', 0], `${source}\n`, seed);
+    assert.strictEqual(errorCount, 0, errorStrings.map(stripHTMLTags).join('\n'));
+    drainAgainRuntime();
+}
+
+function withRuntimeSource(source, callback) {
+    ensurePuzzleScriptRuntime();
+    const previousUnitTesting = unitTesting;
+    const previousLazyFunctionGeneration = lazyFunctionGeneration;
+    unitTesting = false;
+    lazyFunctionGeneration = false;
+    try {
+        compileRuntimeSource(source);
+        callback();
+    } finally {
+        unitTesting = previousUnitTesting;
+        lazyFunctionGeneration = previousLazyFunctionGeneration;
+    }
+}
+
+function processRuntimeInputs(inputs, afterTurn) {
+    inputs.forEach((input, index) => {
+        if (afterTurn) afterTurn(index, 'before');
+        processInput(input);
+        drainAgainRuntime();
+        if (afterTurn) afterTurn(index, 'after');
+    });
+}
+
+function runtimeObjectId(displayName) {
+    return state.objects[engineObjectName(displayName)].id;
+}
+
+function runtimeObjectCount(displayName) {
+    return objectOccupancySnapshot(displayName).reduce((sum, present) => sum + present, 0);
+}
+
+function rewriteRuntimeObjects(objects, turnIndex) {
+    const ids = objects.map(runtimeObjectId);
+    for (let cellIndex = 0; cellIndex < level.n_tiles; cellIndex++) {
+        const cell = level.getCell(cellIndex);
+        const hasGroupObject = ids.some(id => cell.get(id));
+        if (!hasGroupObject) continue;
+        for (const id of ids) {
+            cell.ibitclear(id);
+        }
+        cell.ibitset(ids[(cellIndex + turnIndex) % ids.length]);
+        level.setCell(cellIndex, cell);
+    }
+    state.calculateRowColMasks(level);
+}
+
+function layerOccupancySnapshot(layerId) {
+    const objectNames = Array.from(state.collisionLayers[layerId] || []);
+    const snapshots = [];
+    for (let cellIndex = 0; cellIndex < level.n_tiles; cellIndex++) {
+        const cell = level.getCell(cellIndex);
+        snapshots.push(objectNames
+            .filter(objectName => cell.get(state.objects[objectName].id))
+            .sort()
+            .join('|'));
+    }
+    return snapshots;
+}
+
 function assertStaticObjectsUnchangedAfterReplay(source, inputs) {
     const analysis = analyzeSource(source, { sourcePath: 'static_runtime.txt' });
     const staticObjects = analysis.ps_tagged.objects
@@ -800,11 +873,152 @@ function assertStaticObjectsUnchangedAfterReplay(source, inputs) {
     }
 }
 
+function assertMergeabilitySwapsPreserveReplay() {
+    const source = `
+title Mergeability Runtime
+========
+OBJECTS
+========
+background
+black
+player
+white
+bodyh
+red
+bodyv
+blue
+goal
+green
+${'======='}
+LEGEND
+${'======='}
+. = background
+P = player
+h = bodyh
+v = bodyv
+G = goal
+body = bodyh or bodyv
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+background
+goal
+player
+bodyh, bodyv
+=====
+RULES
+=====
+[ > player | body ] -> [ > player | > body ]
+=============
+WINCONDITIONS
+=============
+all goal on body
+======
+LEVELS
+======
+P.hG
+`;
+    const analysis = analyzeSource(source, { sourcePath: 'mergeability_runtime.txt' });
+    const mergeFact = analysis.facts.mergeability.find(item => item.subjects.objects.join(',') === 'bodyh,bodyv');
+    assert.ok(mergeFact, 'runtime merge fixture should emit bodyh/bodyv merge fact');
+    assert.strictEqual(mergeFact.status, 'candidate');
+
+    withRuntimeSource(source, () => {
+        processRuntimeInputs([3, 3], turnIndex => {
+            rewriteRuntimeObjects(['bodyh', 'bodyv'], turnIndex);
+        });
+        assert.strictEqual(winning, true, 'known solution should survive deterministic merge-family rewrites');
+        assert.strictEqual(runtimeObjectCount('bodyh') + runtimeObjectCount('bodyv'), 1);
+    });
+}
+
+function assertTransientObjectsAbsentAfterReplay() {
+    const source = `
+title Transient Runtime
+========
+OBJECTS
+========
+background
+black
+player
+white
+spark
+yellow
+${'======='}
+LEGEND
+${'======='}
+. = background
+P = player
+S = spark
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+background
+spark
+player
+=====
+RULES
+=====
+[ > player ] -> [ > player spark ]
+late [ spark ] -> []
+=============
+WINCONDITIONS
+=============
+======
+LEVELS
+======
+P..
+`;
+    const analysis = analyzeSource(source, { sourcePath: 'transient_runtime.txt' });
+    const sparkTransient = analysis.facts.transient_boundary.find(item => item.id === 'object_spark_end_turn_transient');
+    assert.ok(sparkTransient, 'runtime transient fixture should emit spark transient fact');
+    assert.strictEqual(sparkTransient.status, 'proved');
+
+    withRuntimeSource(source, () => {
+        assert.strictEqual(runtimeObjectCount('spark'), 0);
+        processRuntimeInputs([3, 3], () => {
+            assert.strictEqual(runtimeObjectCount('spark'), 0, 'transient object should be absent at turn boundaries');
+        });
+        assert.strictEqual(runtimeObjectCount('spark'), 0);
+    });
+}
+
+function assertStaticLayersUnchangedAfterReplay(source, inputs) {
+    const analysis = analyzeSource(source, { sourcePath: 'static_layer_runtime.txt' });
+    const staticLayerIds = analysis.ps_tagged.collision_layers
+        .filter(layer => layer.tags.static)
+        .map(layer => layer.id);
+    assert.ok(staticLayerIds.length > 0, 'runtime fixture should prove at least one layer static');
+    assert.ok(!staticLayerIds.includes(1), 'moving player layer should not be proved static');
+
+    withRuntimeSource(source, () => {
+        const before = new Map(staticLayerIds.map(layerId => [layerId, layerOccupancySnapshot(layerId)]));
+        processRuntimeInputs(inputs);
+        for (const layerId of staticLayerIds) {
+            assert.deepStrictEqual(
+                layerOccupancySnapshot(layerId),
+                before.get(layerId),
+                `static layer ${layerId} occupancy should not change during known replay`
+            );
+        }
+    });
+}
+
 assertStaticObjectsUnchangedAfterReplay(
     STATIC_OBJECT_GAME
         .replace('[ > PlayerObject ] -> [ > PlayerObject ]', '[ action PlayerObject ] -> win')
         .replace('Some Player', 'No PlayerObject'),
     [4]
 );
+
+assertMergeabilitySwapsPreserveReplay();
+assertTransientObjectsAbsentAfterReplay();
+assertStaticLayersUnchangedAfterReplay(STATIC_OBJECT_GAME.replace('Some Player', ''), [3, 1, 3]);
 
 console.log('ps_static_analysis_node: ok');

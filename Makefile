@@ -15,7 +15,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js performance_testpage \
+.PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js static_analysis_tests simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js performance_testpage \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests simulation_corpus_interpreter_benchmark simulation_corpus_compiled_rulegroups_benchmark simulation_corpus_compiled_compact_benchmark simulation_corpus_perf_report simulation_corpus_perf_report_quick \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
 	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_compact_codegen_compare solver_focus_perf_report solver_focus_compact_perf_report solver_focus_compact_codegen_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
@@ -373,6 +373,7 @@ help:
 	@echo "  make compilation_tests_cpp         Run C++ diagnostics corpus directly (64-bit masks)"
 	@echo "  make compilation_tests_cpp_32      Run C++ diagnostics corpus with JS-style 32-bit masks"
 	@echo "  make tests_js                      Run the original JavaScript test suite"
+	@echo "  make static_analysis_tests         Run static analyzer unit and runtime claim tests"
 	@echo "  make solver_tests_cpp              Run standalone native solver corpus"
 	@echo "  make solver_tests_cpp SPECIALIZE=true"
 	@echo "                                     Run standalone native solver corpus with compiled rules"
@@ -537,6 +538,10 @@ ctest: build build_solver build_generator
 
 tests_js:
 	$(NODE) src/tests/run_tests_node.js
+
+static_analysis_tests:
+	$(NODE) src/tests/ps_static_analysis_node.js
+	$(NODE) src/tests/static_analysis_explorer_node.js
 
 simulation_tests_js:
 	$(NODE) src/tests/run_tests_node.js --sim-only

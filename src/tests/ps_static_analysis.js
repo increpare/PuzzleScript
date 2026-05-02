@@ -734,12 +734,19 @@ function deriveCountLayerInvariantFacts(psTagged) {
         const layerWriterIds = uniqueSorted(layer.objects.flatMap(objectName =>
             activeRules.filter(rule => ruleMayAffectObject(psTagged, rule, objectName)).map(rule => rule.id)
         ));
-        layer.tags.static = layerWriterIds.length === 0;
-        results.push(fact('count_layer_invariants', `layer_${layer.id}_static`, layerWriterIds.length === 0 ? 'proved' : 'candidate', {
+        const nonStaticObjects = uniqueSorted(layer.objects.filter(objectName => {
+            const object = psTagged.objects.find(item => item.name === objectName);
+            return !object || !object.tags.static;
+        }));
+        const layerBlockers = [];
+        if (layerWriterIds.length > 0) layerBlockers.push('layer_objects_may_change');
+        if (nonStaticObjects.length > 0) layerBlockers.push('layer_contains_nonstatic_object');
+        layer.tags.static = layerBlockers.length === 0;
+        results.push(fact('count_layer_invariants', `layer_${layer.id}_static`, layerBlockers.length === 0 ? 'proved' : 'candidate', {
             subjects: { layers: [layer.id] },
-            proof: layerWriterIds.length === 0 ? ['no_solver_active_rule_writes_layer_objects'] : [],
-            blockers: layerWriterIds.length === 0 ? [] : ['layer_objects_may_change'],
-            evidence: layerWriterIds,
+            proof: layerBlockers.length === 0 ? ['all_layer_objects_static'] : [],
+            blockers: layerBlockers,
+            evidence: uniqueSorted(layerWriterIds.concat(nonStaticObjects)),
         }));
     }
     return results;
