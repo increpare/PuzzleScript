@@ -27,9 +27,15 @@ const SOLVER_HEURISTICS = new Set([
     'all-on-obstacle',
     'all-on-player',
     'all-on-deadlock',
+    'some-on-rowcol-tiebreak',
+    'some-on-line-distance',
+    'some-on-clear-path',
     'some-on-min',
     'some-on-player',
     'some-on-obstacle',
+    'some-on-static-blockers',
+    'some-on-static-blockers-tiebreak',
+    'some-on-role-static',
     'no-on-count',
     'no-on-escape',
     'no-on-player',
@@ -482,6 +488,8 @@ function createSolverLevelSpecialization(options = {}) {
     const targetRowPresence = new Uint8Array(height || 0);
     const targetColPresence = new Uint8Array(width || 0);
     const conditionDistances = [];
+    const staticBlockerMasks = new Map();
+    const someOnRoleAnalyses = new Map();
     const allObjectsMask = state.objectMasks && state.objectMasks["\nall\n"];
     const playerAggregate = Array.isArray(state.playerMask) ? state.playerMask[0] : false;
     const playerMask = Array.isArray(state.playerMask) ? state.playerMask[1] : state.playerMask;
@@ -596,6 +604,270 @@ function createSolverLevelSpecialization(options = {}) {
         return true;
     }
 
+    function masksIntersect(left, right) {
+        if (!left || !right || !left.data || !right.data) {
+            return false;
+        }
+        const length = Math.min(left.data.length, right.data.length);
+        for (let word = 0; word < length; word++) {
+            if ((left.data[word] & right.data[word]) !== 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function maskHasBits(mask) {
+        return Boolean(mask && mask.data && !mask.iszero());
+    }
+
+    function cloneObjectMask(mask) {
+        const result = new BitVec(STRIDE_OBJ);
+        if (mask && mask.data) {
+            result.ior(mask);
+        }
+        return result;
+    }
+
+    function movementsHaveBits(mask) {
+        return Boolean(mask && mask.data && !mask.iszero());
+    }
+
+    function objectPresenceMask(cell) {
+        const mask = new BitVec(STRIDE_OBJ);
+        if (!cell || !cell.objectsPresent || !cell.objectsPresent.data) {
+            return mask;
+        }
+        mask.ior(cell.objectsPresent);
+        for (const anyMask of cell.anyObjectsPresent || []) {
+            mask.ior(anyMask);
+        }
+        return mask;
+    }
+
+    function movementMaskTouchesObjectMask(movementMask, objectMask) {
+        if (!movementMask || !movementMask.data || !objectMask || !objectMask.data) {
+            return false;
+        }
+        for (const objectName of state.idDict || []) {
+            const object = state.objects && state.objects[objectName];
+            if (!object || !objectMask.get(object.id)) {
+                continue;
+            }
+            if (movementMask.getshiftor(0x1f, 5 * object.layer) !== 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function cellChangesObjectMask(cell, objectMask) {
+        if (!cell || !cell.replacement || !objectMask || !objectMask.data) {
+            return false;
+        }
+        const present = objectPresenceMask(cell);
+        if (masksIntersect(cell.replacement.objectsSet, objectMask)) {
+            return true;
+        }
+        if (masksIntersect(present, objectMask) && masksIntersect(cell.replacement.objectsClear, objectMask)) {
+            return true;
+        }
+        return masksIntersect(present, objectMask) &&
+            (movementMaskTouchesObjectMask(cell.replacement.movementsSet, objectMask) ||
+                movementMaskTouchesObjectMask(cell.replacement.movementsClear, objectMask));
+    }
+
+    function foreignSetMask(cell, excludedMask) {
+        const mask = new BitVec(STRIDE_OBJ);
+        if (!cell || !cell.replacement || !cell.replacement.objectsSet) {
+            return mask;
+        }
+        mask.ior(cell.replacement.objectsSet);
+        mask.iclear(objectPresenceMask(cell));
+        mask.iclear(excludedMask);
+        return mask;
+    }
+
+    function rowObjectsSetMask(row) {
+        const mask = new BitVec(STRIDE_OBJ);
+        for (const cell of row) {
+            if (cell && cell.replacement && cell.replacement.objectsSet) {
+                mask.ior(cell.replacement.objectsSet);
+            }
+        }
+        return mask;
+    }
+
+    function cellChangesObjects(cell) {
+        return Boolean(cell && cell.replacement &&
+            ((!cell.replacement.objectsSet.iszero()) || (!cell.replacement.objectsClear.iszero())));
+    }
+
+    function iorIntersection(target, left, right) {
+        if (!left || !right || !left.data || !right.data) {
+            return;
+        }
+        const length = Math.min(target.data.length, left.data.length, right.data.length);
+        for (let word = 0; word < length; word++) {
+            target.data[word] |= left.data[word] & right.data[word];
+        }
+    }
+
+    function conditionStaticKey(condition) {
+        const parts = [condition[0], condition[4] ? 1 : 0, condition[5] ? 1 : 0];
+        for (let word = 0; word < STRIDE_OBJ; word++) {
+            parts.push(condition[1].data[word] | 0, condition[2].data[word] | 0);
+        }
+        return parts.join(':');
+    }
+
+    function actorMaskForCondition(condition) {
+        const actorMask = new BitVec(STRIDE_OBJ);
+        actorMask.ior(condition[1]);
+        if (playerMask && playerMask.data && masksIntersect(condition[1], playerMask)) {
+            actorMask.ior(playerMask);
+        }
+        return actorMask;
+    }
+
+    function isCancelRule(rule) {
+        return (rule.commands || []).some((command) => command && command[0] === 'cancel');
+    }
+
+    function inferStaticBlockerMask(condition) {
+        const key = conditionStaticKey(condition);
+        if (staticBlockerMasks.has(key)) {
+            return staticBlockerMasks.get(key);
+        }
+
+        const blockers = new BitVec(STRIDE_OBJ);
+        const consumed = new BitVec(STRIDE_OBJ);
+        const actorMask = actorMaskForCondition(condition);
+        const groups = [...(state.rules || []), ...(state.lateRules || [])];
+
+        for (const group of groups) {
+            for (const rule of group || []) {
+                const cancelRule = isCancelRule(rule);
+                for (const row of rule.patterns || []) {
+                    const rowSet = rowObjectsSetMask(row);
+                    for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
+                        const cell = row[cellIndex];
+                        if (!cell || !cell.objectsPresent) {
+                            continue;
+                        }
+                        const cellPresent = objectPresenceMask(cell);
+                        const actorCell = masksIntersect(cellPresent, actorMask);
+                        if (!actorCell) {
+                            continue;
+                        }
+                        const actorMoves = movementsHaveBits(cell.movementsPresent);
+                        const actorChanges = cellChangesObjects(cell);
+                        if (!actorMoves && !actorChanges && !cancelRule) {
+                            continue;
+                        }
+
+                        for (const neighborIndex of [cellIndex - 1, cellIndex + 1]) {
+                            if (neighborIndex < 0 || neighborIndex >= row.length) {
+                                continue;
+                            }
+                            const neighbor = row[neighborIndex];
+                            if (!neighbor || !neighbor.objectsPresent) {
+                                continue;
+                            }
+
+                            if ((actorMoves || actorChanges) && maskHasBits(neighbor.objectsMissing)) {
+                                blockers.ior(neighbor.objectsMissing);
+                            }
+
+                            const neighborPresent = objectPresenceMask(neighbor);
+                            if (neighbor.replacement && maskHasBits(neighborPresent)) {
+                                const cleared = new BitVec(STRIDE_OBJ);
+                                iorIntersection(cleared, neighborPresent, neighbor.replacement.objectsClear);
+                                cleared.iclear(rowSet);
+                                if (!cleared.iszero()) {
+                                    consumed.ior(cleared);
+                                }
+                            }
+
+                            if (!maskHasBits(neighborPresent)) {
+                                continue;
+                            }
+                            if (cancelRule) {
+                                blockers.ior(neighborPresent);
+                            } else if (actorChanges && !cellChangesObjects(neighbor)) {
+                                blockers.ior(neighborPresent);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        blockers.iclear(consumed);
+        blockers.iclear(condition[1]);
+        blockers.iclear(condition[2]);
+        if (playerMask && playerMask.data) {
+            blockers.iclear(playerMask);
+        }
+
+        const result = blockers.iszero() ? null : blockers;
+        staticBlockerMasks.set(key, result);
+        return result;
+    }
+
+    function inferSomeOnRoleAnalysis(condition) {
+        const key = conditionStaticKey(condition);
+        if (someOnRoleAnalyses.has(key)) {
+            return someOnRoleAnalyses.get(key);
+        }
+
+        const trailMask = new BitVec(STRIDE_OBJ);
+        const excludedTrailMask = cloneObjectMask(condition[1]);
+        excludedTrailMask.ior(condition[2]);
+        if (playerMask && playerMask.data) {
+            excludedTrailMask.ior(playerMask);
+        }
+        if (backgroundMask && backgroundMask.data) {
+            excludedTrailMask.ior(backgroundMask);
+        }
+
+        let sourceTrailRules = 0;
+        let targetChangedRules = 0;
+        for (const group of [...(state.rules || []), ...(state.lateRules || [])]) {
+            for (const rule of group || []) {
+                for (const row of rule.patterns || []) {
+                    for (const cell of row) {
+                        if (!cell || !cell.objectsPresent) {
+                            continue;
+                        }
+                        if (cellChangesObjectMask(cell, condition[2])) {
+                            targetChangedRules++;
+                        }
+                        const present = objectPresenceMask(cell);
+                        if (masksIntersect(present, condition[1]) && movementsHaveBits(cell.movementsPresent)) {
+                            const foreign = foreignSetMask(cell, excludedTrailMask);
+                            if (!foreign.iszero()) {
+                                sourceTrailRules++;
+                                trailMask.ior(foreign);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        const analysis = {
+            sourceIntersectsPlayer: Boolean(playerMask && playerMask.data && masksIntersect(condition[1], playerMask)),
+            targetIntersectsPlayer: Boolean(playerMask && playerMask.data && masksIntersect(condition[2], playerMask)),
+            targetChangedRules,
+            sourceTrailRules,
+            trailMask,
+            staticBlockerMask: inferStaticBlockerMask(condition),
+        };
+        someOnRoleAnalyses.set(key, analysis);
+        return analysis;
+    }
+
     function isPlainCondition(condition) {
         return Boolean(condition && allObjectsMask && masksEqual(condition[2], allObjectsMask));
     }
@@ -607,6 +879,11 @@ function createSolverLevelSpecialization(options = {}) {
     function singleAllOnCondition() {
         const condition = singleCondition();
         return condition && condition[0] === 1 && !isPlainCondition(condition) ? condition : null;
+    }
+
+    function singleSomeOnCondition() {
+        const condition = singleCondition();
+        return condition && condition[0] === 0 && !isPlainCondition(condition) ? condition : null;
     }
 
     function collectMatchingTiles(mask, aggregate) {
@@ -772,6 +1049,26 @@ function createSolverLevelSpecialization(options = {}) {
         return false;
     }
 
+    function cellHasStaticBlockingObject(tile, condition, blockerMask) {
+        const offset = tile * STRIDE_OBJ;
+        for (let word = 0; word < STRIDE_OBJ; word++) {
+            let allowed = 0;
+            if (condition && condition[1] && condition[1].data) {
+                allowed |= condition[1].data[word] | 0;
+            }
+            if (condition && condition[2] && condition[2].data) {
+                allowed |= condition[2].data[word] | 0;
+            }
+            if (playerMask && playerMask.data) {
+                allowed |= playerMask.data[word] | 0;
+            }
+            if ((level.objects[offset + word] & blockerMask.data[word] & ~allowed) !== 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function buildTargetLinePresence(condition) {
         targetRowPresence.fill(0);
         targetColPresence.fill(0);
@@ -879,6 +1176,58 @@ function createSolverLevelSpecialization(options = {}) {
             }
         }
         return penalty;
+    }
+
+    function someOnRowColPenalty(sources, condition) {
+        const targetCount = buildTargetLinePresence(condition);
+        if (targetCount === 0) {
+            return 16;
+        }
+        let best = 16;
+        for (const source of sources) {
+            if (matchesMask(condition[2], condition[5], source)) {
+                return 0;
+            }
+            best = Math.min(best, targetRowPresence[tileY(source)] !== 0 || targetColPresence[tileX(source)] !== 0 ? 0 : 1);
+        }
+        return best;
+    }
+
+    function someOnLineDistancePenalty(sources, condition) {
+        const targetCount = buildTargetLinePresence(condition);
+        if (targetCount === 0) {
+            return 16;
+        }
+        let best = 16;
+        for (const source of sources) {
+            if (matchesMask(condition[2], condition[5], source)) {
+                return 0;
+            }
+            best = Math.min(best, nearestTargetLineDistance(source, targetCount));
+        }
+        return best;
+    }
+
+    function someOnClearPathPenalty(sources, targets, condition) {
+        if (targets.length === 0) {
+            return 16;
+        }
+        let best = 16;
+        buildTargetLinePresence(condition);
+        for (const source of sources) {
+            if (matchesMask(condition[2], condition[5], source)) {
+                return 0;
+            }
+            const aligned = targetRowPresence[tileY(source)] !== 0 || targetColPresence[tileX(source)] !== 0;
+            if (!aligned) {
+                best = Math.min(best, 4);
+            } else if (hasClearAlignedTarget(source, targets, condition)) {
+                return 0;
+            } else {
+                best = Math.min(best, 2);
+            }
+        }
+        return best;
     }
 
     function plausibleTargetCount(targets, condition) {
@@ -998,7 +1347,7 @@ function createSolverLevelSpecialization(options = {}) {
         return penalty;
     }
 
-    function obstacleDistanceField(mask, aggregate, condition, distances) {
+    function obstacleDistanceField(mask, aggregate, condition, distances, blockerMask = null) {
         let head = 0;
         let tail = 0;
         for (let tile = 0; tile < level.n_tiles; tile++) {
@@ -1016,28 +1365,28 @@ function createSolverLevelSpecialization(options = {}) {
             const y = tile % level.height;
             if (x > 0) {
                 const next = (x - 1) * level.height + y;
-                if (distances[next] === Infinity && !cellHasBlockingObject(next, condition)) {
+                if (distances[next] === Infinity && !(blockerMask ? cellHasStaticBlockingObject(next, condition, blockerMask) : cellHasBlockingObject(next, condition))) {
                     distances[next] = nextDistance;
                     obstacleQueue[tail++] = next;
                 }
             }
             if (x + 1 < level.width) {
                 const next = (x + 1) * level.height + y;
-                if (distances[next] === Infinity && !cellHasBlockingObject(next, condition)) {
+                if (distances[next] === Infinity && !(blockerMask ? cellHasStaticBlockingObject(next, condition, blockerMask) : cellHasBlockingObject(next, condition))) {
                     distances[next] = nextDistance;
                     obstacleQueue[tail++] = next;
                 }
             }
             if (y > 0) {
                 const next = x * level.height + y - 1;
-                if (distances[next] === Infinity && !cellHasBlockingObject(next, condition)) {
+                if (distances[next] === Infinity && !(blockerMask ? cellHasStaticBlockingObject(next, condition, blockerMask) : cellHasBlockingObject(next, condition))) {
                     distances[next] = nextDistance;
                     obstacleQueue[tail++] = next;
                 }
             }
             if (y + 1 < level.height) {
                 const next = x * level.height + y + 1;
-                if (distances[next] === Infinity && !cellHasBlockingObject(next, condition)) {
+                if (distances[next] === Infinity && !(blockerMask ? cellHasStaticBlockingObject(next, condition, blockerMask) : cellHasBlockingObject(next, condition))) {
                     distances[next] = nextDistance;
                     obstacleQueue[tail++] = next;
                 }
@@ -1319,8 +1668,8 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     function someOnMinHeuristic() {
-        const condition = singleCondition();
-        if (!condition || condition[0] !== 0 || isPlainCondition(condition)) {
+        const condition = singleSomeOnCondition();
+        if (!condition) {
             return winconditionDistanceHeuristic();
         }
         const sources = collectMatchingTiles(condition[1], condition[4]);
@@ -1335,9 +1684,40 @@ function createSolverLevelSpecialization(options = {}) {
         return distanceOrFallback(best);
     }
 
+    function someOnRowColTiebreakHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleSomeOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const sources = collectMatchingTiles(condition[1], condition[4]);
+        return base + someOnRowColPenalty(sources, condition) / 1024;
+    }
+
+    function someOnLineDistanceHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleSomeOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const sources = collectMatchingTiles(condition[1], condition[4]);
+        return base + someOnLineDistancePenalty(sources, condition);
+    }
+
+    function someOnClearPathHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleSomeOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const sources = collectMatchingTiles(condition[1], condition[4]);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        return base + someOnClearPathPenalty(sources, targets, condition);
+    }
+
     function someOnPlayerHeuristic() {
-        const condition = singleCondition();
-        if (!condition || condition[0] !== 0 || isPlainCondition(condition)) {
+        const condition = singleSomeOnCondition();
+        if (!condition) {
             return winconditionDistanceHeuristic();
         }
         const sources = collectMatchingTiles(condition[1], condition[4]);
@@ -1361,8 +1741,8 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     function someOnObstacleHeuristic() {
-        const condition = singleCondition();
-        if (!condition || condition[0] !== 0 || isPlainCondition(condition)) {
+        const condition = singleSomeOnCondition();
+        if (!condition) {
             return winconditionDistanceHeuristic();
         }
         obstacleDistanceField(condition[2], condition[5], condition, obstacleDistances);
@@ -1374,6 +1754,68 @@ function createSolverLevelSpecialization(options = {}) {
             best = Math.min(best, obstacleDistances[source]);
         }
         return distanceOrFallback(best);
+    }
+
+    function someOnStaticBlockersHeuristic() {
+        const condition = singleSomeOnCondition();
+        if (!condition) {
+            return winconditionDistanceHeuristic();
+        }
+        const blockerMask = inferStaticBlockerMask(condition);
+        if (!blockerMask) {
+            return winconditionDistanceHeuristic();
+        }
+        obstacleDistanceField(condition[2], condition[5], condition, obstacleDistances, blockerMask);
+        let best = Infinity;
+        for (const source of collectMatchingTiles(condition[1], condition[4])) {
+            if (matchesMask(condition[2], condition[5], source)) {
+                return 0;
+            }
+            best = Math.min(best, obstacleDistances[source]);
+        }
+        return distanceOrFallback(best);
+    }
+
+    function someOnStaticBlockersTiebreakHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleSomeOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const blockerMask = inferStaticBlockerMask(condition);
+        if (!blockerMask) {
+            return base;
+        }
+        obstacleDistanceField(condition[2], condition[5], condition, obstacleDistances, blockerMask);
+        let best = Infinity;
+        for (const source of collectMatchingTiles(condition[1], condition[4])) {
+            if (matchesMask(condition[2], condition[5], source)) {
+                return 0;
+            }
+            best = Math.min(best, obstacleDistances[source]);
+        }
+        return base + Math.min(distanceOrFallback(best), 64) / 1024;
+    }
+
+    function someOnRoleStaticHeuristic() {
+        const condition = singleSomeOnCondition();
+        if (!condition) {
+            return winconditionDistanceHeuristic();
+        }
+        const analysis = inferSomeOnRoleAnalysis(condition);
+        if (!analysis.sourceIntersectsPlayer) {
+            return someOnMinHeuristic();
+        }
+        if (analysis.targetChangedRules > 0) {
+            return winconditionDistanceHeuristic();
+        }
+        if (analysis.sourceTrailRules > 0) {
+            return someOnStaticBlockersTiebreakHeuristic();
+        }
+        if (analysis.staticBlockerMask) {
+            return someOnStaticBlockersHeuristic();
+        }
+        return winconditionDistanceHeuristic();
     }
 
     function noOnCountHeuristic() {
@@ -1506,12 +1948,24 @@ function createSolverLevelSpecialization(options = {}) {
                 return allOnPlayerHeuristic();
             case 'all-on-deadlock':
                 return allOnDeadlockHeuristic();
+            case 'some-on-rowcol-tiebreak':
+                return someOnRowColTiebreakHeuristic();
+            case 'some-on-line-distance':
+                return someOnLineDistanceHeuristic();
+            case 'some-on-clear-path':
+                return someOnClearPathHeuristic();
             case 'some-on-min':
                 return someOnMinHeuristic();
             case 'some-on-player':
                 return someOnPlayerHeuristic();
             case 'some-on-obstacle':
                 return someOnObstacleHeuristic();
+            case 'some-on-static-blockers':
+                return someOnStaticBlockersHeuristic();
+            case 'some-on-static-blockers-tiebreak':
+                return someOnStaticBlockersTiebreakHeuristic();
+            case 'some-on-role-static':
+                return someOnRoleStaticHeuristic();
             case 'no-on-count':
                 return noOnCountHeuristic();
             case 'no-on-escape':
