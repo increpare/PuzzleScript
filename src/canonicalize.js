@@ -199,6 +199,9 @@ globalThis.__ps_exports = {
             };
         } catch (error) {
             const message = error && error.message ? error.message : String(error);
+            if (message !== "Too many errors/warnings; aborting compilation.") {
+                throw error;
+            }
             const errors = errorStrings.slice();
             if (errors.indexOf(message) < 0) {
                 errors.push(message);
