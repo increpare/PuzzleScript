@@ -147,6 +147,19 @@ A.S
 
 const levelPresence = analyzeSource(LEVEL_PRESENCE_GAME, { sourcePath: 'level_presence.txt' });
 const levelPresenceObjects = new Map(levelPresence.ps_tagged.objects.map(object => [object.name, object.tags]));
+assert.deepStrictEqual(levelPresence.ps_tagged.levels[0], {
+    index: 0,
+    kind: 'message',
+    objects_present: [],
+    layers_present: [],
+    tags: {},
+});
+assert.deepStrictEqual(levelPresence.ps_tagged.levels[1].objects_present, ['Always', 'Background']);
+assert.deepStrictEqual(levelPresence.ps_tagged.levels[1].layers_present, [0, 1]);
+assert.strictEqual(levelPresence.ps_tagged.levels[1].width, 3);
+assert.strictEqual(levelPresence.ps_tagged.levels[1].height, 1);
+assert.deepStrictEqual(levelPresence.ps_tagged.levels[2].objects_present, ['Always', 'Background', 'Sometimes']);
+assert.deepStrictEqual(levelPresence.ps_tagged.levels[2].layers_present, [0, 1, 2]);
 assert.strictEqual(levelPresenceObjects.get('Always').present_in_all_levels, true);
 assert.strictEqual(levelPresenceObjects.get('Always').present_in_some_levels, false);
 assert.strictEqual(levelPresenceObjects.get('Always').present_in_no_levels, false);
