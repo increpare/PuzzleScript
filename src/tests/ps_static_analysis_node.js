@@ -1096,8 +1096,12 @@ const STATIC_LAYER_CREATE_GAME = STATIC_OBJECT_GAME.replace(
 const staticLayerCreate = analyzeSource(STATIC_LAYER_CREATE_GAME, { sourcePath: 'static_layer_create.txt' });
 const layerCreateWall = staticLayerCreate.ps_tagged.objects.find(object => object.name === 'Wall');
 const layerCreateWallFact = staticLayerCreate.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+const layerCreateWallLayerFact = staticLayerCreate.facts.count_layer_invariants.find(item => item.id === 'layer_2_static');
 assert.strictEqual(layerCreateWall.tags.static, false, 'creating a sibling on the wall layer should reject wall static');
 assert.ok(layerCreateWallFact.blockers.includes('collision_layer_object_may_be_created'));
+assert.strictEqual(layerCreateWallLayerFact.status, 'candidate', 'layers with possible writes should not be proved static');
+assert.ok(layerCreateWallLayerFact.blockers.includes('layer_objects_may_change'));
+assert.ok(layerCreateWallLayerFact.blockers.includes('layer_contains_nonstatic_object'));
 
 const STATIC_AGGREGATE_WRITE_GAME = STATIC_OBJECT_GAME.replace(
     '[ > PlayerObject ] -> [ > PlayerObject ]',
