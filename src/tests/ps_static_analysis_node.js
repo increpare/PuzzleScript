@@ -728,6 +728,7 @@ assert.strictEqual(movementClearRule.tags.object_mutating, false);
 const RANDOMDIR_MOVEMENT_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Hero ] -> [ randomDir Hero ]');
 const randomdirMovement = analyzeSource(RANDOMDIR_MOVEMENT_GAME, { sourcePath: 'randomdir_movement.txt' });
 const randomdirMovementRule = randomdirMovement.ps_tagged.rule_sections[0].groups[0].rules[0];
+assert.strictEqual(randomdirMovement.ps_tagged.game.tags.has_random, false, 'randomDir movement is tracked separately from has_random');
 assert.strictEqual(randomdirMovementRule.tags.writes_movement, true, 'randomDir should count as writing movement');
 assert.strictEqual(randomdirMovementRule.tags.movement_only, true);
 assert.strictEqual(randomdirMovementRule.summary.rhs_movement[0].movement, 'randomdir');
