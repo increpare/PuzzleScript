@@ -932,6 +932,18 @@ assert.deepStrictEqual(movementFlow.value.interaction_edges.map(edge => [edge.fr
 assert.deepStrictEqual(movementFlow.value.rerun_masks.early_group_0_rule_1, ['early_group_0_rule_0']);
 assert.deepStrictEqual(movementFlow.value.components.map(component => component.length), [2, 1]);
 
+const ABSENCE_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
+    '[ no MarkerX Alpha ] -> [ no MarkerX Alpha MarkerY ]\n+ [ MarkerX ] -> []'
+);
+const absenceEnableGroup = analyzeSource(ABSENCE_ENABLE_GROUP_GAME, { sourcePath: 'absence_enable_group.txt' });
+const absenceFlow = firstFlowFact(absenceEnableGroup);
+assert.strictEqual(absenceFlow.status, 'rejected', 'absence-enabling interactions should keep the group connected');
+assert.deepStrictEqual(absenceFlow.value.interaction_edges.map(edge => [edge.from, edge.to, edge.reasons]), [
+    ['early_group_0_rule_1', 'early_group_0_rule_0', ['object_absence']],
+]);
+assert.deepStrictEqual(absenceFlow.value.rerun_masks.early_group_0_rule_1, ['early_group_0_rule_0']);
+
 const BACKWARD_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
     '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
     '[ MarkerX ] -> [ MarkerX MarkerY ]\n+ [ Alpha ] -> [ Alpha MarkerX ]'
