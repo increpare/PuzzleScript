@@ -2,6 +2,8 @@
 'use strict';
 
 const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
 
 const { analyzeSource } = require('./ps_static_analysis');
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
@@ -769,29 +771,41 @@ function drainAgainRuntime() {
     }
 }
 
-function compileRuntimeSource(source, seed = 'static-analysis-runtime') {
+function compileRuntimeSource(source, options = {}) {
+    const levelIndex = options.levelIndex || 0;
+    const seed = options.seed || 'static-analysis-runtime';
     ensurePuzzleScriptRuntime();
     if (typeof resetParserErrorState === 'function') {
         resetParserErrorState();
     }
-    compile(['loadLevel', 0], `${source}\n`, seed);
+    compile(['loadLevel', levelIndex], `${source}\n`, seed);
     assert.strictEqual(errorCount, 0, errorStrings.map(stripHTMLTags).join('\n'));
     drainAgainRuntime();
 }
 
-function withRuntimeSource(source, callback) {
+function withRuntimeSource(source, callback, options = {}) {
     ensurePuzzleScriptRuntime();
     const previousUnitTesting = unitTesting;
     const previousLazyFunctionGeneration = lazyFunctionGeneration;
     unitTesting = false;
     lazyFunctionGeneration = false;
     try {
-        compileRuntimeSource(source);
+        compileRuntimeSource(source, options);
         callback();
     } finally {
         unitTesting = previousUnitTesting;
         lazyFunctionGeneration = previousLazyFunctionGeneration;
     }
+}
+
+function inputForToken(token) {
+    const inputByToken = { up: 0, left: 1, down: 2, right: 3, action: 4 };
+    assert.ok(Object.prototype.hasOwnProperty.call(inputByToken, token), `known input token: ${token}`);
+    return inputByToken[token];
+}
+
+function inputsForTokens(tokens) {
+    return tokens.map(inputForToken);
 }
 
 function processRuntimeInputs(inputs, afterTurn) {
@@ -1010,6 +1024,73 @@ function assertStaticLayersUnchangedAfterReplay(source, inputs) {
     });
 }
 
+function solverTestSource(fileName) {
+    return fs.readFileSync(path.join(__dirname, 'solver_tests', fileName), 'utf8');
+}
+
+function assertLimerickMergeabilityReplay() {
+    const source = solverTestSource('limerick.txt');
+    const analysis = analyzeSource(source, { sourcePath: 'limerick.txt' });
+    const bodyMerge = analysis.facts.mergeability.find(item =>
+        item.subjects.objects.join(',') === 'PlayerBodyH,PlayerBodyV'
+    );
+    assert.ok(bodyMerge, 'limerick should expose the PlayerBodyH/PlayerBodyV mergeability fact');
+    assert.strictEqual(bodyMerge.status, 'candidate');
+
+    const solution = inputsForTokens([
+        'right', 'right', 'right', 'right',
+        'up', 'up',
+        'right', 'right', 'right', 'right',
+        'up', 'up',
+        'right',
+        'up', 'up',
+        'right', 'right', 'right', 'right',
+    ]);
+
+    withRuntimeSource(source, () => {
+        processRuntimeInputs(solution, turnIndex => {
+            rewriteRuntimeObjects(['PlayerBodyH', 'PlayerBodyV'], turnIndex);
+        });
+        assert.strictEqual(winning, true, 'limerick level 1 solution should survive body variant rewrites');
+    }, { levelIndex: 1 });
+}
+
+function assertAtlasTransientReplay() {
+    const source = solverTestSource('atlas shrank.txt');
+    const analysis = analyzeSource(source, { sourcePath: 'atlas shrank.txt' });
+    const transientObjects = analysis.facts.transient_boundary
+        .filter(item => item.status === 'proved')
+        .map(item => item.subjects.objects[0]);
+    assert.ok(transientObjects.includes('H_pickup'), 'atlas should prove H_pickup transient');
+    assert.ok(transientObjects.includes('H_grav'), 'atlas should prove H_grav transient');
+    assert.ok(transientObjects.includes('H_step'), 'atlas should prove H_step transient');
+    assert.ok(transientObjects.includes('ShadowDoor'), 'atlas should prove ShadowDoor transient');
+    assert.ok(transientObjects.includes('ShadowDoorO'), 'atlas should prove ShadowDoorO transient');
+
+    const solution = inputsForTokens([
+        'right', 'right', 'action', 'right', 'right', 'action',
+        'right', 'right', 'action', 'right', 'action',
+        'left', 'action', 'right', 'right', 'left',
+        'action', 'right', 'action', 'right', 'right', 'right',
+    ]);
+
+    withRuntimeSource(source, () => {
+        const assertTransientsAbsent = () => {
+            for (const objectName of transientObjects) {
+                assert.strictEqual(
+                    runtimeObjectCount(objectName),
+                    0,
+                    `${objectName} should be absent at atlas turn boundaries`
+                );
+            }
+        };
+        assertTransientsAbsent();
+        processRuntimeInputs(solution, assertTransientsAbsent);
+        assertTransientsAbsent();
+        assert.strictEqual(winning, true, 'atlas shrank level 4 solution should still solve');
+    }, { levelIndex: 4 });
+}
+
 assertStaticObjectsUnchangedAfterReplay(
     STATIC_OBJECT_GAME
         .replace('[ > PlayerObject ] -> [ > PlayerObject ]', '[ action PlayerObject ] -> win')
@@ -1020,5 +1101,7 @@ assertStaticObjectsUnchangedAfterReplay(
 assertMergeabilitySwapsPreserveReplay();
 assertTransientObjectsAbsentAfterReplay();
 assertStaticLayersUnchangedAfterReplay(STATIC_OBJECT_GAME.replace('Some Player', ''), [3, 1, 3]);
+assertLimerickMergeabilityReplay();
+assertAtlasTransientReplay();
 
 console.log('ps_static_analysis_node: ok');
