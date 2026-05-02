@@ -920,6 +920,18 @@ assert.deepStrictEqual(splittableFlow.value.components.map(component => componen
 assert.deepStrictEqual(splittableFlow.value.interaction_edges, []);
 assert.deepStrictEqual(Object.values(splittableFlow.value.rerun_masks), [[], []]);
 
+const MOVEMENT_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
+    '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
+    '[ right Alpha ] -> [ Alpha ]\n+ [ Alpha ] -> [ right Alpha ]\n+ [ Beta ] -> [ Beta MarkerY ]'
+);
+const movementEnableGroup = analyzeSource(MOVEMENT_ENABLE_GROUP_GAME, { sourcePath: 'movement_enable_group.txt' });
+const movementFlow = firstFlowFact(movementEnableGroup);
+assert.deepStrictEqual(movementFlow.value.interaction_edges.map(edge => [edge.from, edge.to, edge.reasons]), [
+    ['early_group_0_rule_1', 'early_group_0_rule_0', ['movement']],
+]);
+assert.deepStrictEqual(movementFlow.value.rerun_masks.early_group_0_rule_1, ['early_group_0_rule_0']);
+assert.deepStrictEqual(movementFlow.value.components.map(component => component.length), [2, 1]);
+
 const BACKWARD_ENABLE_GROUP_GAME = SPLITTABLE_GROUP_GAME.replace(
     '[ Alpha ] -> [ Alpha MarkerX ]\n+ [ Beta ] -> [ Beta MarkerY ]',
     '[ MarkerX ] -> [ MarkerX MarkerY ]\n+ [ Alpha ] -> [ Alpha MarkerX ]'
