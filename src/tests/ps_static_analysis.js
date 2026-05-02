@@ -663,19 +663,70 @@ function ruleMayAffectObject(psTagged, rule, objectName) {
     return ruleMentionsObject(rule, objectName) || ruleWritesCollisionLayerObject(psTagged, rule, objectName);
 }
 
+function playerObjectNameSet(psTagged) {
+    const playerProperty = psTagged.properties.find(item =>
+        item.canonical_name === 'player' || item.name.toLowerCase() === 'player'
+    );
+    if (playerProperty) return new Set(playerProperty.members);
+    const playerObject = psTagged.objects.find(item =>
+        item.canonical_name === 'player' || item.name.toLowerCase() === 'player'
+    );
+    return new Set(playerObject ? [playerObject.name] : []);
+}
+
+function ruleMovementMentionsObject(rule, objectName) {
+    return rule.summary.lhs_terms.concat(rule.summary.rhs_terms).some(term =>
+        term.movement !== null && termMentionsObject(term, objectName)
+    );
+}
+
+function positiveObjectNamesFromTerms(terms) {
+    return new Set(terms
+        .filter(term => term.kind === 'present')
+        .flatMap(term => term.expanded_objects || []));
+}
+
+function ruleMayCreateCollisionLayerObject(psTagged, rule, layer) {
+    if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return false;
+    const lhsObjects = positiveObjectNamesFromTerms(rule.summary.lhs_terms);
+    return rule.summary.rhs_terms.some(term => {
+        if (term.kind !== 'present' && term.kind !== 'random_object') return false;
+        return (term.expanded_objects || []).some(objectName =>
+            layerForObject(psTagged, objectName) === layer
+            && (term.kind === 'random_object' || !lhsObjects.has(objectName))
+        );
+    });
+}
+
 function deriveCountLayerInvariantFacts(psTagged) {
     const activeRules = allRuleEntries(psTagged).map(entry => entry.rule).filter(rule => rule.tags.solver_state_active);
+    const playerObjects = playerObjectNameSet(psTagged);
     const results = [];
     for (const object of psTagged.objects) {
         const writers = activeRules.filter(rule => ruleMayAffectObject(psTagged, rule, object.name));
+        const movementRules = activeRules.filter(rule => ruleMovementMentionsObject(rule, object.name));
+        const layerCreators = activeRules.filter(rule => ruleMayCreateCollisionLayerObject(psTagged, rule, object.layer));
+        const staticBlockers = [];
+        if (writers.length > 0) staticBlockers.push('object_written_by_solver_active_rule');
+        if (movementRules.length > 0 || playerObjects.has(object.name)) staticBlockers.push('object_may_receive_movement');
+        if (layerCreators.length > 0) staticBlockers.push('collision_layer_object_may_be_created');
         object.tags.may_be_created = writers.length > 0;
         object.tags.may_be_destroyed = writers.length > 0;
         object.tags.count_invariant = writers.length === 0;
+        object.tags.static = staticBlockers.length === 0;
         results.push(fact('count_layer_invariants', `object_${object.name}_count_preserved`, writers.length === 0 ? 'proved' : 'rejected', {
             subjects: { objects: [object.name] },
             proof: writers.length === 0 ? ['no_solver_active_rule_writes_object'] : [],
             blockers: writers.length === 0 ? [] : ['object_written_by_solver_active_rule'],
             evidence: writers.map(rule => rule.id),
+        }));
+        results.push(fact('count_layer_invariants', `object_${object.name}_static`, staticBlockers.length === 0 ? 'proved' : 'rejected', {
+            subjects: { objects: [object.name] },
+            proof: staticBlockers.length === 0
+                ? ['no_solver_active_rule_writes_object', 'no_movement_applied_to_object', 'no_collision_layer_object_creation']
+                : [],
+            blockers: uniqueSorted(staticBlockers),
+            evidence: uniqueSorted(writers.concat(movementRules, layerCreators).map(rule => rule.id)),
         }));
     }
     for (const layer of psTagged.collision_layers) {

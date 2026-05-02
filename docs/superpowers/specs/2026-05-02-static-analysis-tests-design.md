@@ -469,19 +469,25 @@ Runtime/metamorphic tests:
 Notes:
 - Current transient analysis checks wincondition participation internally but does not emit this object tag.
 
-### `static` [planned]
+### `static` [current]
 
-Description: planned object tag for objects whose cell occupancy is unchanged across solver-active turns.
+Description: object cell occupancy is unchanged across solver-active turns.
 
 Static tests:
-- Once emitted, prove for objects unaffected by active rules.
-- Reject when rules can create, destroy, or overwrite the object.
+- Prove for a wall-like object that is unaffected by solver-active rules.
+- Reject player objects because input may apply movement to them.
+- Reject objects that receive movement directly, through a property/synonym, or through an object-set aggregate.
+- Reject objects created, destroyed, or overwritten directly, through a property/synonym, or through an object-set aggregate.
+- Reject objects on a collision layer where a solver-active rule may create or randomly choose another object on that layer.
 
 Runtime/metamorphic tests:
-- Snapshot object occupancy at level start and compare after each full turn for proved objects.
+- Replay a known solution.
+- Snapshot proved-static object occupancy at level start.
+- After the solved end state, assert each proved-static object's occupancy is identical to the initial snapshot.
 
 Notes:
-- Current analyzer emits object `count_invariant`, not object `static`.
+- This is stricter than `count_invariant`; a player can have invariant count while still not being static.
+- The current proof is intentionally conservative around collision-layer creation.
 
 ## Collision Layer Tags
 

@@ -4,6 +4,7 @@
 const assert = require('assert');
 
 const { analyzeSource } = require('./ps_static_analysis');
+const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
 
 const SIMPLE_GAME = `
 title Static Analysis Simple
@@ -354,6 +355,94 @@ const layerOverwriteReport = analyzeSource(LAYER_OVERWRITE_GAME, { sourcePath: '
 const heroOverwriteCount = layerOverwriteReport.facts.count_layer_invariants.find(item => item.id === 'object_Hero_count_preserved');
 assert.strictEqual(heroOverwriteCount.status, 'rejected', 'writing one object in a collision layer can remove siblings');
 
+const STATIC_OBJECT_GAME = `
+title Static Object
+========
+OBJECTS
+========
+Background
+black
+PlayerObject
+white
+Wall
+gray
+Crate
+orange
+Mark
+red
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = PlayerObject
+# = Wall
+C = Crate
+Player = PlayerObject
+Solid = Wall or Crate
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+PlayerObject
+Wall, Crate
+Mark
+=====
+RULES
+=====
+[ > PlayerObject ] -> [ > PlayerObject ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+P#C
+`;
+
+const staticObject = analyzeSource(STATIC_OBJECT_GAME, { sourcePath: 'static_object.txt' });
+const staticWall = staticObject.ps_tagged.objects.find(object => object.name === 'Wall');
+const staticPlayer = staticObject.ps_tagged.objects.find(object => object.name === 'PlayerObject');
+const staticWallFact = staticObject.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+assert.strictEqual(staticWall.tags.static, true, 'unwritten, unmoved wall should be tagged static');
+assert.strictEqual(staticWallFact.status, 'proved', 'unwritten, unmoved wall should have a proved static fact');
+assert.strictEqual(staticPlayer.tags.count_invariant, true, 'player object count can be invariant');
+assert.strictEqual(staticPlayer.tags.static, false, 'player object is not static because input applies movement');
+
+const STATIC_LAYER_CREATE_GAME = STATIC_OBJECT_GAME.replace(
+    '[ > PlayerObject ] -> [ > PlayerObject ]',
+    '[ PlayerObject ] -> [ PlayerObject Crate ]'
+);
+const staticLayerCreate = analyzeSource(STATIC_LAYER_CREATE_GAME, { sourcePath: 'static_layer_create.txt' });
+const layerCreateWall = staticLayerCreate.ps_tagged.objects.find(object => object.name === 'Wall');
+const layerCreateWallFact = staticLayerCreate.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+assert.strictEqual(layerCreateWall.tags.static, false, 'creating a sibling on the wall layer should reject wall static');
+assert.ok(layerCreateWallFact.blockers.includes('collision_layer_object_may_be_created'));
+
+const STATIC_AGGREGATE_WRITE_GAME = STATIC_OBJECT_GAME.replace(
+    '[ > PlayerObject ] -> [ > PlayerObject ]',
+    '[ Solid ] -> []'
+);
+const staticAggregateWrite = analyzeSource(STATIC_AGGREGATE_WRITE_GAME, { sourcePath: 'static_aggregate_write.txt' });
+const aggregateWriteWall = staticAggregateWrite.ps_tagged.objects.find(object => object.name === 'Wall');
+const aggregateWriteWallFact = staticAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+assert.strictEqual(aggregateWriteWall.tags.static, false, 'aggregate deletion mentioning wall should reject wall static');
+assert.ok(aggregateWriteWallFact.blockers.includes('object_written_by_solver_active_rule'));
+
+const STATIC_AGGREGATE_MOVEMENT_GAME = STATIC_OBJECT_GAME.replace(
+    '[ > PlayerObject ] -> [ > PlayerObject ]',
+    '[ Solid ] -> [ right Solid ]'
+);
+const staticAggregateMovement = analyzeSource(STATIC_AGGREGATE_MOVEMENT_GAME, { sourcePath: 'static_aggregate_movement.txt' });
+const aggregateMovementWall = staticAggregateMovement.ps_tagged.objects.find(object => object.name === 'Wall');
+const aggregateMovementWallFact = staticAggregateMovement.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
+assert.strictEqual(aggregateMovementWall.tags.count_invariant, true, 'aggregate movement preserves wall count');
+assert.strictEqual(aggregateMovementWall.tags.static, false, 'aggregate movement mentioning wall should reject wall static');
+assert.ok(aggregateMovementWallFact.blockers.includes('object_may_receive_movement'));
+
 const TRANSIENT_GAME = `
 title Transient
 ========
@@ -491,5 +580,80 @@ function assertProvedFactsHaveProof(reportToCheck) {
 assertProvedFactsHaveProof(report);
 assertProvedFactsHaveProof(mergeable);
 assertProvedFactsHaveProof(transient);
+
+let puzzleScriptRuntimeLoaded = false;
+
+function ensurePuzzleScriptRuntime() {
+    if (!puzzleScriptRuntimeLoaded) {
+        loadPuzzleScript({ messageSink: [] });
+        puzzleScriptRuntimeLoaded = true;
+    }
+}
+
+function engineObjectName(displayName) {
+    const target = displayName.toLowerCase();
+    const match = Object.keys(state.objects).find(name =>
+        name === target || (state.original_case_names && state.original_case_names[name] === displayName)
+    );
+    assert.ok(match, `runtime object should exist: ${displayName}`);
+    return match;
+}
+
+function objectOccupancySnapshot(displayName) {
+    const object = state.objects[engineObjectName(displayName)];
+    const cells = [];
+    for (let index = 0; index < level.n_tiles; index++) {
+        cells.push(level.getCell(index).get(object.id) ? 1 : 0);
+    }
+    return cells;
+}
+
+function drainAgainRuntime() {
+    while (againing) {
+        againing = false;
+        processInput(-1);
+    }
+}
+
+function assertStaticObjectsUnchangedAfterReplay(source, inputs) {
+    const analysis = analyzeSource(source, { sourcePath: 'static_runtime.txt' });
+    const staticObjects = analysis.ps_tagged.objects
+        .filter(object => object.tags.static)
+        .map(object => object.name);
+    assert.ok(staticObjects.includes('Wall'), 'runtime fixture should prove Wall static');
+
+    ensurePuzzleScriptRuntime();
+    const previousUnitTesting = unitTesting;
+    const previousLazyFunctionGeneration = lazyFunctionGeneration;
+    unitTesting = false;
+    lazyFunctionGeneration = false;
+    try {
+        compile(['loadLevel', 0], `${source}\n`, 'static-object-runtime');
+        drainAgainRuntime();
+        const before = new Map(staticObjects.map(objectName => [objectName, objectOccupancySnapshot(objectName)]));
+        for (const input of inputs) {
+            processInput(input);
+            drainAgainRuntime();
+        }
+        assert.strictEqual(winning, true, 'known replay should solve the fixture');
+        for (const objectName of staticObjects) {
+            assert.deepStrictEqual(
+                objectOccupancySnapshot(objectName),
+                before.get(objectName),
+                `${objectName} occupancy should not change during known replay`
+            );
+        }
+    } finally {
+        unitTesting = previousUnitTesting;
+        lazyFunctionGeneration = previousLazyFunctionGeneration;
+    }
+}
+
+assertStaticObjectsUnchangedAfterReplay(
+    STATIC_OBJECT_GAME
+        .replace('[ > PlayerObject ] -> [ > PlayerObject ]', '[ action PlayerObject ] -> win')
+        .replace('Some Player', 'No PlayerObject'),
+    [4]
+);
 
 console.log('ps_static_analysis_node: ok');
