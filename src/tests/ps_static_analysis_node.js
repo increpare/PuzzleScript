@@ -783,6 +783,23 @@ assert.deepStrictEqual(movementPairsFact.value, [
     '2:right',
 ]);
 
+const RANDOMDIR_MOVEMENT_PAIRS_GAME = MOVEMENT_PAIRS_GAME.replace(
+    '[ right Player | Crate ] -> [ right Player | right Crate ]',
+    '[ right Player | Crate ] -> [ right Player | randomDir Crate ]'
+);
+const randomdirMovementPairs = analyzeSource(RANDOMDIR_MOVEMENT_PAIRS_GAME, { sourcePath: 'randomdir_movement_pairs.txt' });
+const randomdirMovementPairsFact = randomdirMovementPairs.facts.movement_action.find(item => item.id === 'movement_pairs');
+assert.deepStrictEqual(randomdirMovementPairsFact.value, [
+    '1:action',
+    '1:moving',
+    '1:right',
+    '2:down',
+    '2:left',
+    '2:moving',
+    '2:right',
+    '2:up',
+]);
+
 const DIRECT_PLAYER_ACTION_GAME = `
 title Direct Player Action
 ========
