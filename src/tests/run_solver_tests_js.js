@@ -8,6 +8,37 @@ const path = require('path');
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
 
 const DEFAULT_STRATEGY = 'weighted-astar';
+const DEFAULT_SOLVER_HEURISTIC = 'winconditions';
+const SOLVER_HEURISTICS = new Set([
+    'zero',
+    'winconditions',
+    'all-on-count',
+    'all-on-rowcol-tiebreak',
+    'all-on-line-distance',
+    'all-on-clear-path',
+    'all-on-goal-coverage',
+    'all-on-rowcol-matching',
+    'all-on-player-nearest-tiebreak',
+    'all-on-push-access',
+    'all-on-dead-position',
+    'all-on-player-tiebreak',
+    'all-on-min-matching',
+    'all-on-matching',
+    'all-on-obstacle',
+    'all-on-player',
+    'all-on-deadlock',
+    'some-on-min',
+    'some-on-player',
+    'some-on-obstacle',
+    'no-on-count',
+    'no-on-escape',
+    'no-on-player',
+    'some-plain-exists',
+    'some-plain-player',
+    'no-plain-count',
+    'no-plain-cluster',
+    'no-plain-player',
+]);
 const DIRECTION_ACTIONS = [
     { token: 'right', input: 3 },
     { token: 'up', input: 0 },
@@ -30,6 +61,7 @@ function parseArgs(argv) {
         timeoutMs: 5000,
         strategy: DEFAULT_STRATEGY,
         astarWeight: 2,
+        solverHeuristic: DEFAULT_SOLVER_HEURISTIC,
         portfolioBfsMs: null,
         progressEvery: 25,
         writeSolutions: true,
@@ -54,6 +86,11 @@ function parseArgs(argv) {
             }
         } else if (arg === '--astar-weight') {
             options.astarWeight = Math.max(1, Number.parseInt(args[++index], 10));
+        } else if (arg === '--solver-heuristic') {
+            options.solverHeuristic = args[++index];
+            if (!SOLVER_HEURISTICS.has(options.solverHeuristic)) {
+                throw new Error(`Unsupported solver heuristic: ${options.solverHeuristic}`);
+            }
         } else if (arg === '--portfolio-bfs-ms') {
             options.portfolioBfsMs = Math.max(1, Number.parseInt(args[++index], 10));
         } else if (arg === '--solutions-dir') {
@@ -91,7 +128,7 @@ function parseArgs(argv) {
 }
 
 function usage(exitCode) {
-    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--portfolio-bfs-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--summary-only] [--quiet] [--json]\n';
+    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--summary-only] [--quiet] [--json]\n';
     (exitCode === 0 ? process.stdout : process.stderr).write(message);
     process.exit(exitCode);
 }
@@ -414,7 +451,20 @@ function priorityForMode(mode, depth, heuristic, astarWeight) {
     return depth;
 }
 
-function createSolverLevelSpecialization() {
+function priorityForPortfolioMode(mode, depth, heuristic) {
+    if (mode === 'wa2') {
+        return depth + heuristic * 2;
+    }
+    if (mode === 'wa8') {
+        return depth + heuristic * 8;
+    }
+    if (mode === 'greedy') {
+        return heuristic;
+    }
+    return depth;
+}
+
+function createSolverLevelSpecialization(options = {}) {
     const objectWordCount = level && level.objects ? level.objects.length : 0;
     const movementWordCount = level && level.movements ? level.movements.length : 0;
     const width = level && level.width;
@@ -422,11 +472,26 @@ function createSolverLevelSpecialization() {
     const ruleGroups = [...(state.rules || []), ...(state.lateRules || [])];
     const usesRandom = ruleGroupsUseRandom(ruleGroups);
     const usesCheckpoint = ruleGroupsUseCommand(ruleGroups, 'checkpoint');
+    const heuristicName = options.solverHeuristic || DEFAULT_SOLVER_HEURISTIC;
     const zobristHasher = createZobristStateHasher(usesRandom);
     const zobristTables = createZobristTables(objectWordCount);
     const zobristTableId = zobristTables;
     const heuristicDistances = new Array(level.n_tiles);
+    const obstacleDistances = new Array(level.n_tiles);
+    const obstacleQueue = new Array(level.n_tiles);
+    const targetRowPresence = new Uint8Array(height || 0);
+    const targetColPresence = new Uint8Array(width || 0);
     const conditionDistances = [];
+    const allObjectsMask = state.objectMasks && state.objectMasks["\nall\n"];
+    const playerAggregate = Array.isArray(state.playerMask) ? state.playerMask[0] : false;
+    const playerMask = Array.isArray(state.playerMask) ? state.playerMask[1] : state.playerMask;
+    const backgroundMask = state.layerMasks && Number.isInteger(state.backgroundlayer)
+        ? state.layerMasks[state.backgroundlayer]
+        : null;
+    const nonBackgroundWords = new Int32Array(STRIDE_OBJ);
+    for (let word = 0; word < STRIDE_OBJ; word++) {
+        nonBackgroundWords[word] = backgroundMask && backgroundMask.data ? ~backgroundMask.data[word] : -1;
+    }
     const verifyZobrist = process.env.PUZZLESCRIPT_VERIFY_ZOBRIST === '1';
 
     function installZobristHash() {
@@ -516,6 +581,470 @@ function createSolverLevelSpecialization() {
         return false;
     }
 
+    function masksEqual(left, right) {
+        if (left === right) {
+            return true;
+        }
+        if (!left || !right || !left.data || !right.data || left.data.length !== right.data.length) {
+            return false;
+        }
+        for (let word = 0; word < left.data.length; word++) {
+            if ((left.data[word] | 0) !== (right.data[word] | 0)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function isPlainCondition(condition) {
+        return Boolean(condition && allObjectsMask && masksEqual(condition[2], allObjectsMask));
+    }
+
+    function singleCondition() {
+        return state.winconditions && state.winconditions.length === 1 ? state.winconditions[0] : null;
+    }
+
+    function singleAllOnCondition() {
+        const condition = singleCondition();
+        return condition && condition[0] === 1 && !isPlainCondition(condition) ? condition : null;
+    }
+
+    function collectMatchingTiles(mask, aggregate) {
+        const tiles = [];
+        for (let tile = 0; tile < level.n_tiles; tile++) {
+            if (matchesMask(mask, aggregate, tile)) {
+                tiles.push(tile);
+            }
+        }
+        return tiles;
+    }
+
+    function collectUnsatisfiedAllOnTiles(condition) {
+        const tiles = [];
+        for (let tile = 0; tile < level.n_tiles; tile++) {
+            if (matchesMask(condition[1], condition[4], tile) && !matchesMask(condition[2], condition[5], tile)) {
+                tiles.push(tile);
+            }
+        }
+        return tiles;
+    }
+
+    function collectOverlapTiles(condition) {
+        const tiles = [];
+        for (let tile = 0; tile < level.n_tiles; tile++) {
+            if (matchesMask(condition[1], condition[4], tile) && matchesMask(condition[2], condition[5], tile)) {
+                tiles.push(tile);
+            }
+        }
+        return tiles;
+    }
+
+    function manhattan(left, right) {
+        const leftX = (left / level.height) | 0;
+        const leftY = left % level.height;
+        const rightX = (right / level.height) | 0;
+        const rightY = right % level.height;
+        return Math.abs(leftX - rightX) + Math.abs(leftY - rightY);
+    }
+
+    function tileX(tile) {
+        return (tile / level.height) | 0;
+    }
+
+    function tileY(tile) {
+        return tile % level.height;
+    }
+
+    function tileIndexAt(x, y) {
+        return x * level.height + y;
+    }
+
+    function inBounds(x, y) {
+        return x >= 0 && y >= 0 && x < level.width && y < level.height;
+    }
+
+    function bestManhattan(tile, targets) {
+        let best = Infinity;
+        for (const target of targets) {
+            best = Math.min(best, manhattan(tile, target));
+        }
+        return distanceOrFallback(best);
+    }
+
+    function minPlayerDistanceToTiles(tiles) {
+        if (!playerMask || !playerMask.data || tiles.length === 0) {
+            return 0;
+        }
+        const players = collectMatchingTiles(playerMask, playerAggregate);
+        if (players.length === 0) {
+            return 0;
+        }
+        let best = Infinity;
+        for (const playerTile of players) {
+            for (const tile of tiles) {
+                best = Math.min(best, manhattan(playerTile, tile));
+            }
+        }
+        return distanceOrFallback(best);
+    }
+
+    function minAssignmentDistance(sources, targets) {
+        if (sources.length === 0) {
+            return 0;
+        }
+        if (targets.length === 0) {
+            return sources.length * 64;
+        }
+        if (targets.length >= sources.length && sources.length <= 10 && targets.length <= 20) {
+            const memo = new Map();
+            const dfs = (sourceIndex, usedMask) => {
+                if (sourceIndex >= sources.length) {
+                    return 0;
+                }
+                const key = `${sourceIndex}:${usedMask}`;
+                const cached = memo.get(key);
+                if (cached !== undefined) {
+                    return cached;
+                }
+                let best = Infinity;
+                for (let targetIndex = 0; targetIndex < targets.length; targetIndex++) {
+                    const targetBit = 1 << targetIndex;
+                    if ((usedMask & targetBit) !== 0) {
+                        continue;
+                    }
+                    best = Math.min(
+                        best,
+                        manhattan(sources[sourceIndex], targets[targetIndex]) + dfs(sourceIndex + 1, usedMask | targetBit)
+                    );
+                }
+                const result = distanceOrFallback(best);
+                memo.set(key, result);
+                return result;
+            };
+            return dfs(0, 0);
+        }
+
+        const pairs = [];
+        for (let sourceIndex = 0; sourceIndex < sources.length; sourceIndex++) {
+            for (let targetIndex = 0; targetIndex < targets.length; targetIndex++) {
+                pairs.push({
+                    sourceIndex,
+                    targetIndex,
+                    distance: manhattan(sources[sourceIndex], targets[targetIndex]),
+                });
+            }
+        }
+        pairs.sort((left, right) => left.distance - right.distance);
+        const usedSources = new Set();
+        const usedTargets = new Set();
+        let total = 0;
+        for (const pair of pairs) {
+            if (usedSources.has(pair.sourceIndex) || usedTargets.has(pair.targetIndex)) {
+                continue;
+            }
+            usedSources.add(pair.sourceIndex);
+            usedTargets.add(pair.targetIndex);
+            total += pair.distance;
+            if (usedSources.size === sources.length) {
+                break;
+            }
+        }
+        return total + (sources.length - usedSources.size) * 64;
+    }
+
+    function cellHasBlockingObject(tile, condition) {
+        const offset = tile * STRIDE_OBJ;
+        for (let word = 0; word < STRIDE_OBJ; word++) {
+            let allowed = 0;
+            if (condition && condition[1] && condition[1].data) {
+                allowed |= condition[1].data[word] | 0;
+            }
+            if (condition && condition[2] && condition[2].data) {
+                allowed |= condition[2].data[word] | 0;
+            }
+            if (playerMask && playerMask.data) {
+                allowed |= playerMask.data[word] | 0;
+            }
+            if ((level.objects[offset + word] & nonBackgroundWords[word] & ~allowed) !== 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function buildTargetLinePresence(condition) {
+        targetRowPresence.fill(0);
+        targetColPresence.fill(0);
+        let targetCount = 0;
+        for (let tile = 0; tile < level.n_tiles; tile++) {
+            if (!matchesMask(condition[2], condition[5], tile)) {
+                continue;
+            }
+            targetRowPresence[tileY(tile)] = 1;
+            targetColPresence[tileX(tile)] = 1;
+            targetCount++;
+        }
+        return targetCount;
+    }
+
+    function rowColAlignmentPenalty(unsatisfied, condition) {
+        buildTargetLinePresence(condition);
+        let penalty = 0;
+        for (const tile of unsatisfied) {
+            const rowHasTarget = targetRowPresence[tileY(tile)] !== 0;
+            const colHasTarget = targetColPresence[tileX(tile)] !== 0;
+            if (!rowHasTarget && !colHasTarget) {
+                penalty += 2;
+            } else if (!rowHasTarget || !colHasTarget) {
+                penalty += 1;
+            }
+        }
+        return penalty;
+    }
+
+    function nearestTargetLineDistance(tile, targetCount) {
+        if (targetCount === 0) {
+            return 64;
+        }
+        const x = tileX(tile);
+        const y = tileY(tile);
+        if (targetRowPresence[y] !== 0 || targetColPresence[x] !== 0) {
+            return 0;
+        }
+        let best = 64;
+        for (let row = 0; row < level.height; row++) {
+            if (targetRowPresence[row] !== 0) {
+                best = Math.min(best, Math.abs(y - row));
+            }
+        }
+        for (let col = 0; col < level.width; col++) {
+            if (targetColPresence[col] !== 0) {
+                best = Math.min(best, Math.abs(x - col));
+            }
+        }
+        return best;
+    }
+
+    function targetLineDistancePenalty(unsatisfied, condition) {
+        const targetCount = buildTargetLinePresence(condition);
+        let penalty = 0;
+        for (const tile of unsatisfied) {
+            penalty += nearestTargetLineDistance(tile, targetCount);
+        }
+        return penalty;
+    }
+
+    function clearPathBetween(left, right, condition) {
+        const leftX = tileX(left);
+        const leftY = tileY(left);
+        const rightX = tileX(right);
+        const rightY = tileY(right);
+        const dx = Math.sign(rightX - leftX);
+        const dy = Math.sign(rightY - leftY);
+        let x = leftX + dx;
+        let y = leftY + dy;
+        while (x !== rightX || y !== rightY) {
+            if (cellHasBlockingObject(tileIndexAt(x, y), condition)) {
+                return false;
+            }
+            x += dx;
+            y += dy;
+        }
+        return true;
+    }
+
+    function hasClearAlignedTarget(tile, targets, condition) {
+        const x = tileX(tile);
+        const y = tileY(tile);
+        for (const target of targets) {
+            if ((tileX(target) === x || tileY(target) === y) && clearPathBetween(tile, target, condition)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function clearPathPenalty(unsatisfied, targets, condition) {
+        if (targets.length === 0) {
+            return unsatisfied.length * 16;
+        }
+        let penalty = 0;
+        buildTargetLinePresence(condition);
+        for (const tile of unsatisfied) {
+            const aligned = targetRowPresence[tileY(tile)] !== 0 || targetColPresence[tileX(tile)] !== 0;
+            if (!aligned) {
+                penalty += 4;
+            } else if (!hasClearAlignedTarget(tile, targets, condition)) {
+                penalty += 2;
+            }
+        }
+        return penalty;
+    }
+
+    function plausibleTargetCount(targets, condition) {
+        let count = 0;
+        for (const target of targets) {
+            if (!cellHasBlockingObject(target, condition)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    function rowColGreedyAssignmentDistance(sources, targets) {
+        if (sources.length === 0) {
+            return 0;
+        }
+        if (targets.length === 0) {
+            return sources.length * 64;
+        }
+        const pairs = [];
+        for (let sourceIndex = 0; sourceIndex < sources.length; sourceIndex++) {
+            const source = sources[sourceIndex];
+            const sourceX = tileX(source);
+            const sourceY = tileY(source);
+            for (let targetIndex = 0; targetIndex < targets.length; targetIndex++) {
+                const target = targets[targetIndex];
+                if (tileX(target) !== sourceX && tileY(target) !== sourceY) {
+                    continue;
+                }
+                pairs.push({
+                    sourceIndex,
+                    targetIndex,
+                    distance: manhattan(source, target),
+                });
+            }
+        }
+        pairs.sort((left, right) => left.distance - right.distance);
+        const usedSources = new Set();
+        const usedTargets = new Set();
+        let total = 0;
+        for (const pair of pairs) {
+            if (usedSources.has(pair.sourceIndex) || usedTargets.has(pair.targetIndex)) {
+                continue;
+            }
+            usedSources.add(pair.sourceIndex);
+            usedTargets.add(pair.targetIndex);
+            total += pair.distance;
+        }
+        for (let sourceIndex = 0; sourceIndex < sources.length; sourceIndex++) {
+            if (usedSources.has(sourceIndex)) {
+                continue;
+            }
+            total += bestManhattan(sources[sourceIndex], targets);
+        }
+        return total;
+    }
+
+    function pushAccessPenalty(unsatisfied, targets, condition) {
+        if (targets.length === 0) {
+            return unsatisfied.length * 16;
+        }
+        let penalty = 0;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        for (const tile of unsatisfied) {
+            const x = tileX(tile);
+            const y = tileY(tile);
+            const currentDistance = bestManhattan(tile, targets);
+            let anyPush = false;
+            let usefulPush = false;
+            for (const [dx, dy] of directions) {
+                const fromX = x - dx;
+                const fromY = y - dy;
+                const toX = x + dx;
+                const toY = y + dy;
+                if (!inBounds(fromX, fromY) || !inBounds(toX, toY)) {
+                    continue;
+                }
+                const fromTile = tileIndexAt(fromX, fromY);
+                const toTile = tileIndexAt(toX, toY);
+                if (cellHasBlockingObject(fromTile, condition) || cellHasBlockingObject(toTile, condition)) {
+                    continue;
+                }
+                anyPush = true;
+                if (bestManhattan(toTile, targets) < currentDistance) {
+                    usefulPush = true;
+                    break;
+                }
+            }
+            if (!anyPush) {
+                penalty += 12;
+            } else if (!usefulPush) {
+                penalty += 4;
+            }
+        }
+        return penalty;
+    }
+
+    function deadPositionPenalty(unsatisfied, condition) {
+        let penalty = 0;
+        buildTargetLinePresence(condition);
+        for (const tile of unsatisfied) {
+            const horizontalBlocked = adjacentCellBlocked(tile, -1, 0, condition) || adjacentCellBlocked(tile, 1, 0, condition);
+            const verticalBlocked = adjacentCellBlocked(tile, 0, -1, condition) || adjacentCellBlocked(tile, 0, 1, condition);
+            if (horizontalBlocked && verticalBlocked) {
+                penalty += 32;
+            } else if ((horizontalBlocked || verticalBlocked) &&
+                targetRowPresence[tileY(tile)] === 0 &&
+                targetColPresence[tileX(tile)] === 0) {
+                penalty += 8;
+            }
+        }
+        return penalty;
+    }
+
+    function obstacleDistanceField(mask, aggregate, condition, distances) {
+        let head = 0;
+        let tail = 0;
+        for (let tile = 0; tile < level.n_tiles; tile++) {
+            if (matchesMask(mask, aggregate, tile)) {
+                distances[tile] = 0;
+                obstacleQueue[tail++] = tile;
+            } else {
+                distances[tile] = Infinity;
+            }
+        }
+        while (head < tail) {
+            const tile = obstacleQueue[head++];
+            const nextDistance = distances[tile] + 1;
+            const x = (tile / level.height) | 0;
+            const y = tile % level.height;
+            if (x > 0) {
+                const next = (x - 1) * level.height + y;
+                if (distances[next] === Infinity && !cellHasBlockingObject(next, condition)) {
+                    distances[next] = nextDistance;
+                    obstacleQueue[tail++] = next;
+                }
+            }
+            if (x + 1 < level.width) {
+                const next = (x + 1) * level.height + y;
+                if (distances[next] === Infinity && !cellHasBlockingObject(next, condition)) {
+                    distances[next] = nextDistance;
+                    obstacleQueue[tail++] = next;
+                }
+            }
+            if (y > 0) {
+                const next = x * level.height + y - 1;
+                if (distances[next] === Infinity && !cellHasBlockingObject(next, condition)) {
+                    distances[next] = nextDistance;
+                    obstacleQueue[tail++] = next;
+                }
+            }
+            if (y + 1 < level.height) {
+                const next = x * level.height + y + 1;
+                if (distances[next] === Infinity && !cellHasBlockingObject(next, condition)) {
+                    distances[next] = nextDistance;
+                    obstacleQueue[tail++] = next;
+                }
+            }
+        }
+    }
+
     function matchingDistanceField(mask, aggregate, distances) {
         for (let tile = 0; tile < level.n_tiles; tile++) {
             distances[tile] = matchesMask(mask, aggregate, tile) ? 0 : Infinity;
@@ -540,7 +1069,7 @@ function createSolverLevelSpecialization() {
         }
     }
 
-    function heuristic() {
+    function winconditionDistanceHeuristic() {
         if (!state.winconditions || state.winconditions.length === 0) {
             return 0;
         }
@@ -586,9 +1115,7 @@ function createSolverLevelSpecialization() {
             }
         }
 
-        if (score > 0 && state.playerMask && state.playerMask[1]) {
-            const playerAggregate = state.playerMask[0];
-            const playerMask = state.playerMask[1];
+        if (score > 0 && playerMask && playerMask.data) {
             let hasPlayer = false;
             let best = 64;
             for (let conditionIndex = 0; conditionIndex < state.winconditions.length; conditionIndex++) {
@@ -611,6 +1138,400 @@ function createSolverLevelSpecialization() {
             }
         }
         return score;
+    }
+
+    function allOnCountHeuristic() {
+        const condition = singleAllOnCondition();
+        if (!condition) {
+            return winconditionDistanceHeuristic();
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        return unsatisfied.length * 10;
+    }
+
+    function allOnRowColTiebreakHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        return base + rowColAlignmentPenalty(unsatisfied, condition) / 1024;
+    }
+
+    function allOnLineDistanceHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        return base + targetLineDistancePenalty(unsatisfied, condition);
+    }
+
+    function allOnClearPathHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        return base + clearPathPenalty(unsatisfied, targets, condition);
+    }
+
+    function allOnGoalCoverageHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        const usableTargets = plausibleTargetCount(targets, condition);
+        const shortage = Math.max(0, unsatisfied.length - usableTargets);
+        return base + shortage * 32;
+    }
+
+    function allOnRowColMatchingHeuristic() {
+        const condition = singleAllOnCondition();
+        if (!condition) {
+            return winconditionDistanceHeuristic();
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        return unsatisfied.length * 10 + rowColGreedyAssignmentDistance(unsatisfied, targets);
+    }
+
+    function allOnPlayerNearestTiebreakHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        return base + Math.min(minPlayerDistanceToTiles(unsatisfied), 16) / 1024;
+    }
+
+    function allOnPushAccessHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        return base + pushAccessPenalty(unsatisfied, targets, condition);
+    }
+
+    function allOnDeadPositionHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        return base + deadPositionPenalty(unsatisfied, condition);
+    }
+
+    function allOnMatchingHeuristic() {
+        const condition = singleAllOnCondition();
+        if (!condition) {
+            return winconditionDistanceHeuristic();
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        return unsatisfied.length * 10 + minAssignmentDistance(unsatisfied, targets);
+    }
+
+    function allOnPlayerTiebreakHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        const assignment = minAssignmentDistance(unsatisfied, targets);
+        const player = minPlayerDistanceToTiles(unsatisfied);
+        return base + Math.min(assignment, 255) / 1024 + Math.min(player, 16) / 65536;
+    }
+
+    function allOnMinMatchingHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (!condition) {
+            return base;
+        }
+        return Math.min(base, allOnMatchingHeuristic());
+    }
+
+    function allOnObstacleHeuristic() {
+        const condition = singleAllOnCondition();
+        if (!condition) {
+            return winconditionDistanceHeuristic();
+        }
+        obstacleDistanceField(condition[2], condition[5], condition, obstacleDistances);
+        let score = 0;
+        for (const tile of collectUnsatisfiedAllOnTiles(condition)) {
+            score += 10 + distanceOrFallback(obstacleDistances[tile]);
+        }
+        return score;
+    }
+
+    function allOnPlayerHeuristic() {
+        const condition = singleAllOnCondition();
+        if (!condition) {
+            return winconditionDistanceHeuristic();
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        return unsatisfied.length * 10 +
+            minAssignmentDistance(unsatisfied, targets) +
+            Math.min(minPlayerDistanceToTiles(unsatisfied), 16);
+    }
+
+    function adjacentCellBlocked(tile, dx, dy, condition) {
+        const x = (tile / level.height) | 0;
+        const y = tile % level.height;
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= level.width || ny >= level.height) {
+            return true;
+        }
+        return cellHasBlockingObject(nx * level.height + ny, condition);
+    }
+
+    function allOnDeadlockHeuristic() {
+        const condition = singleAllOnCondition();
+        if (!condition) {
+            return winconditionDistanceHeuristic();
+        }
+        let deadlocks = 0;
+        for (const tile of collectUnsatisfiedAllOnTiles(condition)) {
+            const horizontal = adjacentCellBlocked(tile, -1, 0, condition) || adjacentCellBlocked(tile, 1, 0, condition);
+            const vertical = adjacentCellBlocked(tile, 0, -1, condition) || adjacentCellBlocked(tile, 0, 1, condition);
+            if (horizontal && vertical) {
+                deadlocks++;
+            }
+        }
+        return allOnMatchingHeuristic() + deadlocks * 32;
+    }
+
+    function someOnMinHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== 0 || isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        const sources = collectMatchingTiles(condition[1], condition[4]);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        let best = Infinity;
+        for (const source of sources) {
+            if (matchesMask(condition[2], condition[5], source)) {
+                return 0;
+            }
+            best = Math.min(best, bestManhattan(source, targets));
+        }
+        return distanceOrFallback(best);
+    }
+
+    function someOnPlayerHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== 0 || isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        const sources = collectMatchingTiles(condition[1], condition[4]);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        const players = playerMask && playerMask.data ? collectMatchingTiles(playerMask, playerAggregate) : [];
+        let best = Infinity;
+        for (const source of sources) {
+            if (matchesMask(condition[2], condition[5], source)) {
+                return 0;
+            }
+            const sourceToTarget = bestManhattan(source, targets);
+            if (players.length === 0) {
+                best = Math.min(best, sourceToTarget);
+                continue;
+            }
+            for (const playerTile of players) {
+                best = Math.min(best, manhattan(playerTile, source) + sourceToTarget);
+            }
+        }
+        return distanceOrFallback(best);
+    }
+
+    function someOnObstacleHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== 0 || isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        obstacleDistanceField(condition[2], condition[5], condition, obstacleDistances);
+        let best = Infinity;
+        for (const source of collectMatchingTiles(condition[1], condition[4])) {
+            if (matchesMask(condition[2], condition[5], source)) {
+                return 0;
+            }
+            best = Math.min(best, obstacleDistances[source]);
+        }
+        return distanceOrFallback(best);
+    }
+
+    function noOnCountHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== -1 || isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        return collectOverlapTiles(condition).length * 10;
+    }
+
+    function noOnEscapeHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== -1 || isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        const escapeTiles = [];
+        for (let tile = 0; tile < level.n_tiles; tile++) {
+            if (!matchesMask(condition[2], condition[5], tile)) {
+                escapeTiles.push(tile);
+            }
+        }
+        let score = 0;
+        for (const offender of collectOverlapTiles(condition)) {
+            score += 10 + bestManhattan(offender, escapeTiles);
+        }
+        return score;
+    }
+
+    function noOnPlayerHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== -1 || isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        const offenders = collectOverlapTiles(condition);
+        return noOnEscapeHeuristic() + Math.min(minPlayerDistanceToTiles(offenders), 16);
+    }
+
+    function somePlainExistsHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== 0 || !isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        return collectMatchingTiles(condition[1], condition[4]).length > 0 ? 0 : 64;
+    }
+
+    function somePlainPlayerHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== 0 || !isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        const sources = collectMatchingTiles(condition[1], condition[4]);
+        if (sources.length === 0) {
+            return 64;
+        }
+        return Math.min(minPlayerDistanceToTiles(sources), 16);
+    }
+
+    function noPlainCountHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== -1 || !isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        return collectMatchingTiles(condition[1], condition[4]).length * 10;
+    }
+
+    function noPlainClusterHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== -1 || !isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        let count = 0;
+        let adjacentPairs = 0;
+        for (let tile = 0; tile < level.n_tiles; tile++) {
+            if (!matchesMask(condition[1], condition[4], tile)) {
+                continue;
+            }
+            count++;
+            const x = (tile / level.height) | 0;
+            const y = tile % level.height;
+            if (x + 1 < level.width && matchesMask(condition[1], condition[4], (x + 1) * level.height + y)) {
+                adjacentPairs++;
+            }
+            if (y + 1 < level.height && matchesMask(condition[1], condition[4], x * level.height + y + 1)) {
+                adjacentPairs++;
+            }
+        }
+        return Math.max(0, count * 12 - Math.min(count * 4, adjacentPairs * 3));
+    }
+
+    function noPlainPlayerHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== -1 || !isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        const remaining = collectMatchingTiles(condition[1], condition[4]);
+        return remaining.length * 10 + Math.min(minPlayerDistanceToTiles(remaining), 16);
+    }
+
+    function heuristic() {
+        switch (heuristicName) {
+            case 'zero':
+                return 0;
+            case 'all-on-count':
+                return allOnCountHeuristic();
+            case 'all-on-rowcol-tiebreak':
+                return allOnRowColTiebreakHeuristic();
+            case 'all-on-line-distance':
+                return allOnLineDistanceHeuristic();
+            case 'all-on-clear-path':
+                return allOnClearPathHeuristic();
+            case 'all-on-goal-coverage':
+                return allOnGoalCoverageHeuristic();
+            case 'all-on-rowcol-matching':
+                return allOnRowColMatchingHeuristic();
+            case 'all-on-player-nearest-tiebreak':
+                return allOnPlayerNearestTiebreakHeuristic();
+            case 'all-on-push-access':
+                return allOnPushAccessHeuristic();
+            case 'all-on-dead-position':
+                return allOnDeadPositionHeuristic();
+            case 'all-on-player-tiebreak':
+                return allOnPlayerTiebreakHeuristic();
+            case 'all-on-min-matching':
+                return allOnMinMatchingHeuristic();
+            case 'all-on-matching':
+                return allOnMatchingHeuristic();
+            case 'all-on-obstacle':
+                return allOnObstacleHeuristic();
+            case 'all-on-player':
+                return allOnPlayerHeuristic();
+            case 'all-on-deadlock':
+                return allOnDeadlockHeuristic();
+            case 'some-on-min':
+                return someOnMinHeuristic();
+            case 'some-on-player':
+                return someOnPlayerHeuristic();
+            case 'some-on-obstacle':
+                return someOnObstacleHeuristic();
+            case 'no-on-count':
+                return noOnCountHeuristic();
+            case 'no-on-escape':
+                return noOnEscapeHeuristic();
+            case 'no-on-player':
+                return noOnPlayerHeuristic();
+            case 'some-plain-exists':
+                return somePlainExistsHeuristic();
+            case 'some-plain-player':
+                return somePlainPlayerHeuristic();
+            case 'no-plain-count':
+                return noPlainCountHeuristic();
+            case 'no-plain-cluster':
+                return noPlainClusterHeuristic();
+            case 'no-plain-player':
+                return noPlainPlayerHeuristic();
+            case 'winconditions':
+            default:
+                return allOnClearPathHeuristic();
+        }
     }
 
     function flagsForHash() {
@@ -710,10 +1631,8 @@ function createSolverLevelSpecialization() {
             zeroBitVecArray(level.rigidMovementAppliedMask);
             zeroBitVecArray(level.rigidGroupIndexMask);
         }
-        zeroBitVecArray(level.rowCellContents);
-        zeroBitVecArray(level.rowCellContents_Movements);
-        zeroBitVecArray(level.colCellContents);
-        zeroBitVecArray(level.colCellContents_Movements);
+        // Solver turns call state.calculateRowColMasks(level) at processInput start,
+        // so keep post-turn row/column scratch available for heuristics until then.
         oldflickscreendat = Array.isArray(snapshot.oldflickscreendat) ? snapshot.oldflickscreendat.slice() : [];
         backups = [];
         if (usesCheckpoint) {
@@ -763,6 +1682,7 @@ function createSolverLevelSpecialization() {
         hash,
         matchesSnapshot,
         heuristic,
+        heuristicName,
         hashMode: usesRandom ? 'incremental_zobrist_with_rng' : 'incremental_zobrist',
         snapshotMode: usesCheckpoint ? 'specialized_typed_array_checkpoint' : 'specialized_typed_array_no_undo',
     };
@@ -1014,15 +1934,15 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
 
     const searchStarted = Date.now();
     const deadline = Number.isFinite(timeoutMs) ? searchStarted + timeoutMs : Infinity;
-    const initialSnapshot = createSolverLevelSpecialization().capture();
+    const initialSnapshot = createSolverLevelSpecialization(options).capture();
     const strategy = options.strategy || DEFAULT_STRATEGY;
 
     const runMode = (mode, modeDeadline) => {
         const modeResult = createSolverResult(game, levelIndex, timeoutMs, compileMs);
         modeResult.load_ms = result.load_ms;
         modeResult.strategy = mode;
-        modeResult.heuristic = mode === 'bfs' ? 'zero' : 'winconditions';
-        const solverOps = createSolverLevelSpecialization();
+        modeResult.heuristic = mode === 'bfs' ? 'zero' : (options.solverHeuristic || DEFAULT_SOLVER_HEURISTIC);
+        const solverOps = createSolverLevelSpecialization(options);
         modeResult.hash_mode = solverOps.hashMode;
         modeResult.snapshot_mode = solverOps.snapshotMode;
         const initialRestoreStart = performance.now();
@@ -1149,44 +2069,208 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
         return modeResult;
     };
 
+    const runAdaptivePortfolio = (modeDeadline) => {
+        const modeResult = createSolverResult(game, levelIndex, timeoutMs, compileMs);
+        modeResult.load_ms = result.load_ms;
+        modeResult.strategy = 'portfolio';
+        modeResult.heuristic = 'mixed';
+        const solverOps = createSolverLevelSpecialization(options);
+        modeResult.hash_mode = solverOps.hashMode;
+        modeResult.snapshot_mode = solverOps.snapshotMode;
+        modeResult.heuristic = `mixed:${solverOps.heuristicName}`;
+        const initialRestoreStart = performance.now();
+        solverOps.restore(initialSnapshot);
+        modeResult.clone_ms += performance.now() - initialRestoreStart;
+        const initialHeuristicStart = performance.now();
+        const initialHeuristic = solverOps.heuristic();
+        modeResult.heuristic_ms += performance.now() - initialHeuristicStart;
+        const initialSnapshotStart = performance.now();
+        const nodes = [{
+            snapshot: solverOps.capture(),
+            parent: -1,
+            input: null,
+            depth: 0,
+            expanded: false,
+        }];
+        modeResult.snapshot_ms += performance.now() - initialSnapshotStart;
+        const visited = useHashBuckets ? new VisitedStateBuckets(nodes, solverOps) : null;
+        const bestDepth = useHashBuckets ? null : new Map();
+        const hashStart = performance.now();
+        const initialHash = solverOps.hash();
+        if (useHashBuckets) {
+            visited.addInitial(initialHash, 0);
+        } else {
+            bestDepth.set(initialHash, 0);
+        }
+        modeResult.hash_ms += performance.now() - hashStart;
+        modeResult.unique_states = useHashBuckets ? visited.size : bestDepth.size;
+
+        const portfolioModes = [
+            { name: 'wa2', heap: new MinHeap(), expansionSlice: 128 },
+            { name: 'bfs', heap: new MinHeap(), expansionSlice: 128 },
+            { name: 'wa8', heap: new MinHeap(), expansionSlice: 128 },
+            { name: 'greedy', heap: new MinHeap(), expansionSlice: 64 },
+        ];
+        if (Number.isFinite(options.portfolioBfsMs)) {
+            const bfsIndex = portfolioModes.findIndex((mode) => mode.name === 'bfs');
+            const bfsMode = portfolioModes.splice(bfsIndex, 1)[0];
+            bfsMode.expansionSlice = Math.max(1, options.portfolioBfsMs);
+            portfolioModes.unshift(bfsMode);
+        }
+        let tie = 0;
+        for (const mode of portfolioModes) {
+            mode.heap.push({ priority: priorityForPortfolioMode(mode.name, 0, initialHeuristic), tie: tie++, index: 0 });
+        }
+        let totalFrontier = portfolioModes.length;
+        modeResult.max_frontier = totalFrontier;
+        const actions = solverActionsForGame();
+        let modeIndex = 0;
+        let activeMode = portfolioModes[0];
+        let sliceExpansionsLeft = activeMode.expansionSlice;
+        let lockedToWeightedAstar = false;
+        const weightedMode = portfolioModes.find((mode) => mode.name === 'wa2');
+
+        const hasFrontier = () => totalFrontier > 0;
+        const advanceMode = () => {
+            if (lockedToWeightedAstar && weightedMode && weightedMode.heap.length > 0) {
+                activeMode = weightedMode;
+                sliceExpansionsLeft = weightedMode.expansionSlice;
+                return true;
+            }
+            for (let attempt = 0; attempt < portfolioModes.length; attempt++) {
+                modeIndex = (modeIndex + 1) % portfolioModes.length;
+                const candidate = portfolioModes[modeIndex];
+                if (candidate.heap.length > 0) {
+                    activeMode = candidate;
+                    sliceExpansionsLeft = activeMode.expansionSlice;
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        while (hasFrontier()) {
+            if (Date.now() >= modeDeadline) {
+                modeResult.status = 'timeout';
+                break;
+            }
+            if (activeMode.heap.length === 0 || sliceExpansionsLeft <= 0) {
+                if (!advanceMode()) {
+                    break;
+                }
+            }
+
+            const queueStart = performance.now();
+            const entry = activeMode.heap.pop();
+            modeResult.queue_ms += performance.now() - queueStart;
+            if (entry === null) {
+                continue;
+            }
+            totalFrontier--;
+            const node = nodes[entry.index];
+            if (node.expanded) {
+                continue;
+            }
+            node.expanded = true;
+            sliceExpansionsLeft--;
+            modeResult.expanded++;
+            if (!lockedToWeightedAstar && modeResult.expanded >= 128 && modeResult.step_ms / modeResult.generated > 0.05) {
+                lockedToWeightedAstar = true;
+                if (activeMode !== weightedMode && weightedMode && weightedMode.heap.length > 0) {
+                    activeMode = weightedMode;
+                    sliceExpansionsLeft = weightedMode.expansionSlice;
+                }
+            }
+
+            for (const action of actions) {
+                if (Date.now() >= modeDeadline) {
+                    modeResult.status = 'timeout';
+                    break;
+                }
+                const cloneStart = performance.now();
+                solverOps.restore(node.snapshot);
+                modeResult.clone_ms += performance.now() - cloneStart;
+
+                const stepStart = performance.now();
+                const stepResult = stepSolverAction(action);
+                modeResult.step_ms += performance.now() - stepStart;
+                modeResult.generated++;
+
+                if (stepResult.solved) {
+                    const reconstructStart = performance.now();
+                    modeResult.solution = reconstruct(nodes, entry.index, action.token);
+                    modeResult.solution_length = modeResult.solution.length;
+                    modeResult.reconstruct_ms += performance.now() - reconstructStart;
+                    modeResult.elapsed_ms = Date.now() - searchStarted;
+                    modeResult.status = 'solved';
+                    modeResult.strategy = `portfolio:${activeMode.name}`;
+                    return modeResult;
+                }
+                if (!stepResult.changed) {
+                    continue;
+                }
+
+                const hashStart2 = performance.now();
+                const key = solverOps.hash();
+                modeResult.hash_ms += performance.now() - hashStart2;
+                const childDepth = node.depth + 1;
+                let visitedMatch = null;
+                if (useHashBuckets) {
+                    visitedMatch = visited.find(key, childDepth);
+                    if (visitedMatch.duplicate) {
+                        modeResult.duplicates++;
+                        continue;
+                    }
+                } else {
+                    if (bestDepth.has(key) && bestDepth.get(key) <= childDepth) {
+                        modeResult.duplicates++;
+                        continue;
+                    }
+                    bestDepth.set(key, childDepth);
+                }
+                const heuristicStart = performance.now();
+                const childHeuristic = solverOps.heuristic();
+                modeResult.heuristic_ms += performance.now() - heuristicStart;
+                const snapshotStart = performance.now();
+                const snapshot = solverOps.capture();
+                modeResult.snapshot_ms += performance.now() - snapshotStart;
+                nodes.push({
+                    snapshot,
+                    parent: entry.index,
+                    input: action.token,
+                    depth: childDepth,
+                    expanded: false,
+                });
+                const childIndex = nodes.length - 1;
+                if (useHashBuckets) {
+                    visited.record(key, childDepth, childIndex, visitedMatch.entry, visitedMatch.collided);
+                    modeResult.unique_states = visited.size;
+                    modeResult.hash_collisions = visited.collisions;
+                } else {
+                    modeResult.unique_states = bestDepth.size;
+                }
+                const queueStart2 = performance.now();
+                const queueModes = lockedToWeightedAstar && weightedMode ? [weightedMode] : portfolioModes;
+                for (const mode of queueModes) {
+                    mode.heap.push({
+                        priority: priorityForPortfolioMode(mode.name, childDepth, childHeuristic),
+                        tie: tie++,
+                        index: childIndex,
+                    });
+                }
+                totalFrontier += queueModes.length;
+                modeResult.queue_ms += performance.now() - queueStart2;
+                modeResult.max_frontier = Math.max(modeResult.max_frontier, totalFrontier);
+            }
+        }
+
+        modeResult.solution_length = modeResult.solution.length;
+        modeResult.elapsed_ms = Date.now() - searchStarted;
+        return modeResult;
+    };
+
     if (strategy === 'portfolio') {
-        const configuredBfsMs = Number.isFinite(options.portfolioBfsMs) ? options.portfolioBfsMs : null;
-        const bfsDuration = configuredBfsMs !== null
-            ? Math.max(0, Number.isFinite(timeoutMs) ? Math.min(configuredBfsMs, timeoutMs) : configuredBfsMs)
-            : (Number.isFinite(timeoutMs) ? Math.max(1, Math.floor(timeoutMs / 6)) : 0);
-        const bfsDeadline = Math.min(searchStarted + bfsDuration, deadline);
-        const bfs = bfsDuration > 0 ? runMode('bfs', bfsDeadline) : createSolverResult(game, levelIndex, timeoutMs, compileMs);
-        mergeSearchResultTotals(result, bfs);
-        if (bfs.status === 'solved') {
-            Object.assign(result, bfs, { strategy: 'bfs', elapsed_ms: Date.now() - searchStarted });
-            return result;
-        }
-        if (Date.now() < deadline) {
-            const weighted = runMode('weighted-astar', deadline);
-            mergeSearchResultTotals(result, weighted);
-            Object.assign(result, weighted, {
-                expanded: result.expanded,
-                generated: result.generated,
-                duplicates: result.duplicates,
-                hash_collisions: result.hash_collisions,
-                unique_states: Math.max(result.unique_states, weighted.unique_states || 0),
-                max_frontier: Math.max(result.max_frontier, weighted.max_frontier || 0),
-                clone_ms: result.clone_ms,
-                snapshot_ms: result.snapshot_ms,
-                step_ms: result.step_ms,
-                heuristic_ms: result.heuristic_ms,
-                hash_ms: result.hash_ms,
-                queue_ms: result.queue_ms,
-                reconstruct_ms: result.reconstruct_ms,
-                strategy: weighted.status === 'solved' ? 'weighted-astar' : 'portfolio',
-                elapsed_ms: Date.now() - searchStarted,
-            });
-            return result;
-        }
-        result.status = 'timeout';
-        result.strategy = 'portfolio';
-        result.elapsed_ms = Date.now() - searchStarted;
-        return result;
+        return runAdaptivePortfolio(deadline);
     }
 
     return runMode(strategy, deadline);
