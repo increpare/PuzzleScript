@@ -1621,6 +1621,14 @@ function inputsForTokens(tokens) {
     return tokens.map(inputForToken);
 }
 
+function addNoActionMetadata(source) {
+    if (/^noaction$/im.test(source)) return source;
+    if (/^title\b/im.test(source)) {
+        return source.replace(/^(title[^\n]*\n)/im, '$1noaction\n');
+    }
+    return `noaction\n${source}`;
+}
+
 function processRuntimeInputs(inputs, afterTurn) {
     inputs.forEach((input, index) => {
         if (afterTurn) afterTurn(index, 'before');
@@ -1745,6 +1753,13 @@ function assertActionNoopAfterReplay(source, inputs, options = {}) {
         });
         if (options.expectWinning) {
             assert.strictEqual(winning, true, 'known replay should solve while action is noop');
+        }
+    }, { levelIndex: options.levelIndex || 0 });
+
+    withRuntimeSource(addNoActionMetadata(source), () => {
+        processRuntimeInputs(inputs);
+        if (options.expectWinning) {
+            assert.strictEqual(winning, true, 'known replay should solve with injected noaction metadata');
         }
     }, { levelIndex: options.levelIndex || 0 });
 }
