@@ -330,6 +330,46 @@ const actionMovementFact = actionMovement.facts.movement_action.find(item => ite
 assert.strictEqual(actionMovementFact.status, 'rejected');
 assert.ok(actionMovementFact.blockers.includes('action_may_create_directional_movement'));
 
+const DIRECT_PLAYER_ACTION_GAME = `
+title Direct Player Action
+========
+OBJECTS
+========
+Background
+black
+Player
+white
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Player
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Player
+=====
+RULES
+=====
+[ action Player ] -> [ right Player ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+P
+`;
+const directPlayerAction = analyzeSource(DIRECT_PLAYER_ACTION_GAME, { sourcePath: 'direct_player_action.txt' });
+const directPlayerActionFact = directPlayerAction.facts.movement_action.find(item => item.id === 'action_noop');
+assert.strictEqual(directPlayerActionFact.status, 'rejected', 'direct Player objects should seed action reachability');
+assert.ok(directPlayerActionFact.blockers.includes('reads_action'));
+
 const STATIONARY_TICK_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ stationary Goal ] -> [ randomDir Goal ]');
 const stationaryTick = analyzeSource(STATIONARY_TICK_GAME, { sourcePath: 'stationary_tick.txt' });
 const stationaryTickFact = stationaryTick.facts.movement_action.find(item => item.id === 'action_noop');
@@ -825,6 +865,15 @@ function runtimeObjectCount(displayName) {
     return objectOccupancySnapshot(displayName).reduce((sum, present) => sum + present, 0);
 }
 
+function levelSolverStateSnapshot() {
+    return {
+        objects: Array.from(level.objects),
+        movements: Array.from(level.movements),
+        rigidGroupIndexMask: Array.from(level.rigidGroupIndexMask || []),
+        rigidMovementAppliedMask: Array.from(level.rigidMovementAppliedMask || []),
+    };
+}
+
 function rewriteRuntimeObjects(objects, turnIndex) {
     const ids = objects.map(runtimeObjectId);
     for (let cellIndex = 0; cellIndex < level.n_tiles; cellIndex++) {
@@ -889,6 +938,36 @@ function assertCountInvariantsPreservedAfterReplay(source, inputs, options = {})
         });
         if (options.expectWinning) {
             assert.strictEqual(winning, true, 'known replay should solve while count invariants hold');
+        }
+    }, { levelIndex: options.levelIndex || 0 });
+}
+
+function assertActionNoopAfterReplay(source, inputs, options = {}) {
+    const analysis = analyzeSource(source, { sourcePath: options.sourcePath || 'action_noop_runtime.txt' });
+    const actionNoop = analysis.facts.movement_action.find(item => item.id === 'action_noop');
+    assert.ok(actionNoop, 'runtime fixture should emit action_noop fact');
+    assert.strictEqual(actionNoop.status, 'proved', 'runtime fixture should prove action_noop before replay checks');
+
+    withRuntimeSource(source, () => {
+        const assertActionDoesNothing = label => {
+            const before = levelSolverStateSnapshot();
+            const modified = processInput(inputForToken('action'));
+            drainAgainRuntime();
+            assert.strictEqual(modified, false, `action should report no modification at ${label}`);
+            assert.deepStrictEqual(
+                levelSolverStateSnapshot(),
+                before,
+                `action should leave solver-visible state unchanged at ${label}`
+            );
+        };
+        assertActionDoesNothing('initial boundary');
+        inputs.forEach((input, turnIndex) => {
+            processInput(input);
+            drainAgainRuntime();
+            assertActionDoesNothing(`turn ${turnIndex} after`);
+        });
+        if (options.expectWinning) {
+            assert.strictEqual(winning, true, 'known replay should solve while action is noop');
         }
     }, { levelIndex: options.levelIndex || 0 });
 }
@@ -1171,6 +1250,17 @@ function assertOneMoveCountInvariantReplay() {
     );
 }
 
+function assertOneMoveActionNoopReplay() {
+    assertActionNoopAfterReplay(
+        solverTestSource('one_move.txt'),
+        inputsForTokens(['right']),
+        {
+            sourcePath: 'one_move.txt',
+            expectWinning: true,
+        }
+    );
+}
+
 function assertPushRulegroupFlowReplay() {
     const source = solverTestSource('push.txt');
     const analysis = analyzeSource(source, { sourcePath: 'push.txt' });
@@ -1203,6 +1293,7 @@ assertLimerickMergeabilityReplay();
 assertAtlasTransientReplay();
 assertOneMoveStaticReplay();
 assertOneMoveCountInvariantReplay();
+assertOneMoveActionNoopReplay();
 assertPushRulegroupFlowReplay();
 
 console.log('ps_static_analysis_node: ok');

@@ -549,9 +549,11 @@ function layerForObject(psTagged, objectName) {
 }
 
 function playerLayers(psTagged) {
-    const player = psTagged.properties.find(item => item.canonical_name === 'player' || item.name.toLowerCase() === 'player');
-    if (!player) return [];
-    return uniqueSorted(player.members.map(objectName => String(layerForObject(psTagged, objectName))).filter(layer => layer !== 'null'));
+    const playerObjects = playerObjectNameSet(psTagged);
+    return uniqueSorted(Array.from(playerObjects)
+        .map(objectName => layerForObject(psTagged, objectName))
+        .filter(layer => layer !== null)
+        .map(layer => String(layer)));
 }
 
 function movementRequirementsFromTerms(psTagged, terms) {
