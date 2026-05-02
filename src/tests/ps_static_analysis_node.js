@@ -665,6 +665,13 @@ const actionRuleFact = actionRule.facts.movement_action.find(item => item.id ===
 assert.strictEqual(actionRuleFact.status, 'rejected');
 assert.ok(actionRuleFact.blockers.includes('reads_action'));
 
+const ACTION_AGAIN_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ action Player ] -> [ Player ] again');
+const actionAgain = analyzeSource(ACTION_AGAIN_GAME, { sourcePath: 'action_again.txt' });
+const actionAgainFact = actionAgain.facts.movement_action.find(item => item.id === 'action_noop');
+assert.strictEqual(actionAgainFact.status, 'rejected');
+assert.ok(actionAgainFact.blockers.includes('queues_again'), 'reachable again commands should reject action_noop');
+assert.ok(actionAgainFact.blockers.includes('reads_action'));
+
 const ACTION_MOVEMENT_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ action Player ] -> [ > Player ]');
 const actionMovement = analyzeSource(ACTION_MOVEMENT_GAME, { sourcePath: 'action_movement.txt' });
 const actionMovementFact = actionMovement.facts.movement_action.find(item => item.id === 'action_noop');
