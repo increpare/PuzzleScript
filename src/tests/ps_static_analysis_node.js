@@ -853,6 +853,46 @@ function layerOccupancySnapshot(layerId) {
     return snapshots;
 }
 
+function assertCountInvariantsPreservedAfterReplay(source, inputs, options = {}) {
+    const analysis = analyzeSource(source, { sourcePath: options.sourcePath || 'count_runtime.txt' });
+    const transientObjects = new Set(analysis.facts.transient_boundary
+        .filter(item => item.status === 'proved')
+        .map(item => item.subjects.objects[0]));
+    const countInvariantObjects = analysis.ps_tagged.objects
+        .filter(object => object.tags.count_invariant && !transientObjects.has(object.name))
+        .map(object => object.name);
+    assert.ok(countInvariantObjects.length > 0, 'runtime fixture should prove count-invariant objects');
+    for (const objectName of options.expectedObjects || []) {
+        assert.ok(
+            countInvariantObjects.includes(objectName),
+            `${objectName} should be included in the count-invariant replay set`
+        );
+    }
+
+    withRuntimeSource(source, () => {
+        const before = new Map(countInvariantObjects.map(objectName => [
+            objectName,
+            runtimeObjectCount(objectName),
+        ]));
+        const assertCountsUnchanged = label => {
+            for (const objectName of countInvariantObjects) {
+                assert.strictEqual(
+                    runtimeObjectCount(objectName),
+                    before.get(objectName),
+                    `${objectName} count should not change at ${label}`
+                );
+            }
+        };
+        assertCountsUnchanged('initial boundary');
+        processRuntimeInputs(inputs, (turnIndex, boundary) => {
+            assertCountsUnchanged(`turn ${turnIndex} ${boundary}`);
+        });
+        if (options.expectWinning) {
+            assert.strictEqual(winning, true, 'known replay should solve while count invariants hold');
+        }
+    }, { levelIndex: options.levelIndex || 0 });
+}
+
 function assertStaticObjectsUnchangedAfterReplay(source, inputs) {
     const analysis = analyzeSource(source, { sourcePath: 'static_runtime.txt' });
     const staticObjects = analysis.ps_tagged.objects
@@ -1119,6 +1159,18 @@ function assertOneMoveStaticReplay() {
     });
 }
 
+function assertOneMoveCountInvariantReplay() {
+    assertCountInvariantsPreservedAfterReplay(
+        solverTestSource('one_move.txt'),
+        inputsForTokens(['right']),
+        {
+            sourcePath: 'one_move.txt',
+            expectedObjects: ['Background', 'Target', 'Player'],
+            expectWinning: true,
+        }
+    );
+}
+
 function assertPushRulegroupFlowReplay() {
     const source = solverTestSource('push.txt');
     const analysis = analyzeSource(source, { sourcePath: 'push.txt' });
@@ -1150,6 +1202,7 @@ assertStaticLayersUnchangedAfterReplay(STATIC_OBJECT_GAME.replace('Some Player',
 assertLimerickMergeabilityReplay();
 assertAtlasTransientReplay();
 assertOneMoveStaticReplay();
+assertOneMoveCountInvariantReplay();
 assertPushRulegroupFlowReplay();
 
 console.log('ps_static_analysis_node: ok');
