@@ -599,21 +599,29 @@ async function main() {
         '--jobs', jobs,
         '--strategy', strategy,
         '--no-solutions',
-        '--quiet',
+        '--progress-every',
+        '10',
         '--json',
     ];
+
+    process.stderr.write(
+        `solver_focus_mine: native full-corpus solve (eligible games → pick up to ${maxTargets} targets). ` +
+            `Live lines on stderr; JSON on stdout when finished. This can take many minutes.\n`,
+    );
 
     const started = process.hrtime.bigint();
     const result = spawnSync(solverPath, commandArgs, {
         encoding: 'utf8',
         maxBuffer: 512 * 1024 * 1024,
+        stdio: ['ignore', 'pipe', 'inherit'],
     });
     const wallMs = Number(process.hrtime.bigint() - started) / 1e6;
     if (result.error) {
         throw result.error;
     }
     if (result.status !== 0) {
-        throw new Error(`solver exited ${result.status}\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`);
+        const stderrNote = result.stderr ? `\nstderr:\n${result.stderr}` : '\n(stderr was inherited; see terminal above)';
+        throw new Error(`solver exited ${result.status}\nstdout:\n${result.stdout}${stderrNote}`);
     }
 
     const json = JSON.parse(result.stdout);

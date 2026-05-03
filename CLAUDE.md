@@ -93,6 +93,8 @@ Two types of tests, both using QUnit:
 1. **Play session tests** (`src/tests/resources/testdata.js`, ~4MB) — records a game's source + input sequence + expected end state. Verifies the engine produces deterministic output.
 2. **Error message tests** (`src/tests/resources/errormessage_testdata.js`, ~1MB) — records compilation errors/warnings for game source. New errors are OK; old errors must still be present. If you change error message wording, update the test data to match.
 
+**Solver corpus runner** (`node src/tests/run_solver_tests_js.js`): optional solver-only static optimizations (`src/tests/solver_static_opt.js`) — `--solver-optimize-static` (inert command-only rules), `--solver-opt inert,cosmetic,merge` or `all`, and `--solver-opt-parity` to fail on baseline vs optimized solver mismatch. Quick check: `node src/tests/solver_static_opt_node.js`.
+
 **Generating test data:** In the editor, compile/launch a game, then press Ctrl/Cmd+J to generate test data in the browser console.
 
 ## Development Notes

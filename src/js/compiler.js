@@ -3036,6 +3036,7 @@ function loadFile(str) {
 
     cacheAllRuleNames(state);
     removeDuplicateRules(state);
+    pluginOptimizationHook(state);
     rulesToMask(state);
 
     if (debugMode) {
@@ -3059,7 +3060,6 @@ function loadFile(str) {
 
     formatHomePage(state);
 
-    pluginOptimizationHook(state);
     addSpecializedFunctions(state);
 
     //delete intermediate representations
