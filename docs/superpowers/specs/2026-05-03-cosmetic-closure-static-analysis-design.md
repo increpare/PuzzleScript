@@ -28,13 +28,13 @@ Union of:
 2. **Winconditions:** all objects listed in `win.subjects` **or** `win.targets` for each compiled wincondition row (after display-name normalization, consistent with the rest of `ps_tagged`).
 3. **`win` command on rules:** for each rule whose commands include `win`, every object that appears in **LHS** term expansion (`ruleFlowReads` present/absent/movement object sets — same notion as today’s flow analysis).
 
-## Flow / closure (Approach 2)
+## Flow / closure (read → write graph)
 
-Build a conservative object graph from rules using the same primitives as **Approach 2** already discussed: **directed** edges from LHS read objects (via `ruleFlowReads`) toward objects affected on the RHS (via `ruleFlowWrites` / mutating presence), for rules where those summaries apply; take the **transitive closure** from seeds. If an implementation detail requires symmetrizing for a first pass, document it; the analysis remains conservative (may fail to mark something cosmetic, but should not mark core objects cosmetic).
+For each rule, derive **read** sets and **write** sets with the same helpers used elsewhere in this module (`ruleFlowReads` for LHS presence, absence, and movement-tagged reads; `ruleFlowWrites` for RHS presence/absence and movement effects where `object_mutating` / `writes_movement` apply). Add a **directed** edge **A → B** whenever object **A** appears in that rule’s read set and **B** appears in that rule’s write set (same rule, same evaluation of the summaries).
+
+Take the **transitive closure** of those edges starting from all **core seeds**: any object reachable along directed paths is a **core object**. If a first implementation symmetrizes edges or adds same-rule coupling for soundness, document the deviation here; the property to preserve is **conservatism**: the analysis may leave some cosmetic objects unmarked (`cosmetic` false when they could be true), but must not mark a truly gameplay-critical object as `cosmetic: true`.
 
 Reuse the same rule IR and `expanded_objects` normalization as mergeability / `rulegroup_flow`.
-
-**Core object** = in the closure of seeds along those edges.
 
 ## Cosmetic tag
 
