@@ -260,6 +260,12 @@ function summarizeReport(report, options = {}) {
     const staticLayers = layers
         .filter(layer => layer.tags && layer.tags.static)
         .map(layer => ({ id: layer.id, objects: layer.objects || [] }));
+    const inertLayers = layers
+        .filter(layer => layer.tags && layer.tags.inert)
+        .map(layer => ({ id: layer.id, objects: layer.objects || [] }));
+    const cosmeticObjects = objects
+        .filter(object => object.tags && object.tags.cosmetic)
+        .map(object => object.name);
     const inertRules = rules
         .filter(entry => entry.rule.tags && entry.rule.tags.inert_command_only)
         .map(entry => ({
@@ -284,7 +290,8 @@ function summarizeReport(report, options = {}) {
         + staticObjects.length
         + staticLayers.length
         + transient.length * 2
-        + neverInitialOrCreated.length;
+        + neverInitialOrCreated.length
+        + cosmeticObjects.length;
     return {
         source_path: relativeSourcePath(sourcePath, repoRoot),
         display_name: path.basename(sourcePath),
@@ -298,6 +305,8 @@ function summarizeReport(report, options = {}) {
         static_objects_label: staticObjects.join(', '),
         never_initial_or_created: neverInitialOrCreated,
         static_layers: staticLayers,
+        inert_layers: inertLayers,
+        cosmetic_objects: cosmeticObjects,
         transient_objects: transient,
         inert_rules: inertRules,
         command_only_rules: commandOnlyRules,
@@ -326,6 +335,8 @@ function buildExplorerModel(reports, options = {}) {
             inert_rules: games.reduce((sum, game) => sum + game.inert_rules.length, 0),
             static_objects: games.reduce((sum, game) => sum + game.static_objects.length, 0),
             static_layers: games.reduce((sum, game) => sum + game.static_layers.length, 0),
+            inert_layers: games.reduce((sum, game) => sum + game.inert_layers.length, 0),
+            cosmetic_objects: games.reduce((sum, game) => sum + game.cosmetic_objects.length, 0),
             transient_objects: games.reduce((sum, game) => sum + game.transient_objects.length, 0),
         },
     };
@@ -413,7 +424,7 @@ const list = document.getElementById('gameList');
 const detail = document.getElementById('detail');
 const search = document.getElementById('search');
 const sort = document.getElementById('sort');
-document.getElementById('totals').textContent = model.totals.games + ' games | ' + model.totals.split_groups + ' split groups | ' + model.totals.merge_groups + ' merge groups';
+document.getElementById('totals').textContent = model.totals.games + ' games | ' + model.totals.split_groups + ' split groups | ' + model.totals.merge_groups + ' merge groups | ' + model.totals.inert_layers + ' inert layers | ' + model.totals.cosmetic_objects + ' cosmetic objs';
 function escapeText(value) {
   return String(value).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
 }
@@ -422,6 +433,8 @@ function countBadges(game) {
     ['merge group', game.mergeable_groups.length],
     ['static obj', game.static_objects.length],
     ['static layer', game.static_layers.length],
+    ['inert layer', game.inert_layers.length],
+    ['cosmetic', game.cosmetic_objects.length],
     ['transient', game.transient_objects.length],
     ['inert rule', game.inert_rules.length],
     ['split', game.rulegroup_flow_split_total],
@@ -433,6 +446,8 @@ function searchable(game) {
     game.mergeable_groups.flatMap(group => group.objects).join(' '),
     game.static_objects.join(' '),
     game.static_layers.flatMap(layer => layer.objects).join(' '),
+    game.inert_layers.flatMap(layer => layer.objects).join(' '),
+    game.cosmetic_objects.join(' '),
     game.transient_objects.join(' '),
     game.rulegroup_flow.map(group => group.id).join(' '),
   ].join(' ').toLowerCase();
@@ -493,6 +508,8 @@ function renderDetail() {
     analysisSection('Static Objects', game.static_objects_label ? chipList([game.static_objects_label]) : chipList([])) +
     analysisSection('Never Initial Or Created', chipList(game.never_initial_or_created), false) +
     analysisSection('Static Collision Layers', chipList(game.static_layers.map(layer => 'layer ' + layer.id + ': ' + layer.objects.join(', ')))) +
+    analysisSection('Inert Collision Layers', '<p class="path">No object on these layers appears in any rule (LHS/RHS), win condition, or the Player aggregate.</p>' + chipList(game.inert_layers.map(layer => 'layer ' + layer.id + ': ' + layer.objects.join(', ')))) +
+    analysisSection('Likely cosmetic objects', '<p class="path">Outside the static core closure: Player entities, wincondition objects, <code>win</code>-command LHS reads, plus objects reached by read→write rule edges or rules whose RHS write mask hits a layer that already holds a core object (see <code>docs/superpowers/specs/2026-05-03-cosmetic-closure-static-analysis-design.md</code>).</p>' + chipList(game.cosmetic_objects)) +
     analysisSection('Transient Objects', chipList(game.transient_objects)) +
     analysisSection('Solver-Discardable Rules', chipList(game.inert_rules.map(rule => rule.group + ': ' + rule.text)), false) +
     analysisSection('Semantic Command-Only Rules', chipList(game.command_only_rules.map(rule => rule.group + ': ' + rule.text)), false) +

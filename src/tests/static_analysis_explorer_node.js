@@ -118,6 +118,8 @@ assert.ok(html.includes('Wall, Rock'));
 assert.ok(html.includes('Open in editor'));
 assert.ok(html.includes('<details class="section"'));
 assert.ok(html.includes('rulegroup_flow'));
+assert.ok(html.includes('Inert Collision Layers'));
+assert.ok(html.includes('Likely cosmetic objects'));
 
 const editorSource = fs.readFileSync(path.join(repoRoot, 'src/js/editor.js'), 'utf8');
 assert.ok(editorSource.includes('getParameterByName("file")'), 'editor should accept explorer file links');

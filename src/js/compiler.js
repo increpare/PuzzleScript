@@ -3059,6 +3059,7 @@ function loadFile(str) {
 
     formatHomePage(state);
 
+    pluginOptimizationHook(state);
     addSpecializedFunctions(state);
 
     //delete intermediate representations

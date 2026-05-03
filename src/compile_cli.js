@@ -115,6 +115,7 @@ const sourceFiles = [
     'js/languageConstants.js',
     'js/globalVariables.js',
     'js/debug.js',
+    'js/plugin_header_on.js',
     'js/font.js',
     'js/rng.js',
     'js/riffwave.js',

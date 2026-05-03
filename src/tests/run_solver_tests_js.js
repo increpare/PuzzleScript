@@ -53,12 +53,63 @@ const DIRECTION_ACTIONS = [
     { token: 'left', input: 1 },
 ];
 const ACTIONS_WITH_ACTION = DIRECTION_ACTIONS.concat([{ token: 'action', input: 4 }]);
+const INERT_COMMAND_NAMES = new Set([
+    'message',
+    'sfx0', 'sfx1', 'sfx2', 'sfx3', 'sfx4', 'sfx5',
+    'sfx6', 'sfx7', 'sfx8', 'sfx9', 'sfx10',
+]);
 
 function solverActionsForGame() {
     if (state && state.metadata && Object.prototype.hasOwnProperty.call(state.metadata, 'noaction')) {
         return DIRECTION_ACTIONS;
     }
     return ACTIONS_WITH_ACTION;
+}
+
+function inertCommandOnlyRuleSourceLines(report) {
+    const lines = new Set();
+    if (!report || !report.ps_tagged || !Array.isArray(report.ps_tagged.rule_sections)) {
+        return lines;
+    }
+    for (const section of report.ps_tagged.rule_sections) {
+        if (!section || !Array.isArray(section.groups)) continue;
+        for (const group of section.groups) {
+            if (!group || !Array.isArray(group.rules)) continue;
+            for (const rule of group.rules) {
+                if (rule && rule.tags && rule.tags.inert_command_only && Number.isFinite(rule.source_line)) {
+                    lines.add(rule.source_line);
+                }
+            }
+        }
+    }
+    return lines;
+}
+
+function isInertCommandOnlyCompiledRule(rule, inertSourceLines) {
+    if (!rule || !inertSourceLines.has(rule.lineNumber) || rule.hasReplacements) return false;
+    if (!Array.isArray(rule.commands) || rule.commands.length === 0) return false;
+    return rule.commands.every(command => INERT_COMMAND_NAMES.has(command[0]));
+}
+
+function dropSolverInertCommandOnlyRules(state, inertSourceLines) {
+    let removed = 0;
+    function filterGroups(groups) {
+        for (let groupIndex = 0; groupIndex < groups.length; groupIndex++) {
+            const group = groups[groupIndex];
+            const next = [];
+            for (const rule of group) {
+                if (isInertCommandOnlyCompiledRule(rule, inertSourceLines)) {
+                    removed++;
+                    continue;
+                }
+                next.push(rule);
+            }
+            groups[groupIndex] = next;
+        }
+    }
+    if (Array.isArray(state.rules)) filterGroups(state.rules);
+    if (Array.isArray(state.lateRules)) filterGroups(state.lateRules);
+    return removed;
 }
 
 function parseArgs(argv) {
@@ -79,6 +130,7 @@ function parseArgs(argv) {
         gameFilter: null,
         levelFilter: null,
         solverStaticHash: false,
+        solverOptimizeStatic: false,
     };
     const args = argv.slice(2);
     for (let index = 0; index < args.length; index++) {
@@ -123,6 +175,8 @@ function parseArgs(argv) {
             options.levelFilter = Math.max(0, Number.parseInt(args[++index], 10));
         } else if (arg === '--solver-static-hash') {
             options.solverStaticHash = true;
+        } else if (arg === '--solver-optimize-static') {
+            options.solverOptimizeStatic = true;
         } else if (arg === '--help' || arg === '-h') {
             usage(0);
         } else if (options.corpusPath === null) {
@@ -138,7 +192,7 @@ function parseArgs(argv) {
 }
 
 function usage(exitCode) {
-    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--solver-static-hash] [--summary-only] [--quiet] [--json]\n';
+    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--solver-static-hash] [--solver-optimize-static] [--summary-only] [--quiet] [--json]\n';
     (exitCode === 0 ? process.stdout : process.stderr).write(message);
     process.exit(exitCode);
 }
@@ -2370,6 +2424,7 @@ function createSolverResult(game, levelIndex, timeoutMs, compileMs) {
         timeout_ms: timeoutMs,
         compile_ms: compileMs,
         static_analysis_ms: 0,
+        static_optimization_removed_rules: 0,
         load_ms: 0,
         clone_ms: 0,
         snapshot_ms: 0,
@@ -2806,7 +2861,8 @@ function runGame(root, file, options = {}) {
 
     let staticAnalysisReport = null;
     let staticAnalysisMs = 0;
-    if (options.solverStaticHash) {
+    const needsStaticAnalysis = options.solverStaticHash || options.solverOptimizeStatic;
+    if (needsStaticAnalysis) {
         const staticAnalysisStart = performance.now();
         staticAnalysisReport = analyzeSource(source, {
             sourcePath: game,
@@ -2818,7 +2874,23 @@ function runGame(root, file, options = {}) {
     const compileStart = performance.now();
     unitTesting = true;
     lazyFunctionGeneration = false;
-    compile(['loadLevel', 0], source, `solver:${game}:0`);
+    let staticOptimizationRemovedRules = 0;
+    const inertLines = options.solverOptimizeStatic ? inertCommandOnlyRuleSourceLines(staticAnalysisReport) : new Set();
+    const installOptimizerHook = options.solverOptimizeStatic
+        && inertLines.size > 0
+        && typeof setPluginOptimizationHook === 'function';
+    if (installOptimizerHook) {
+        setPluginOptimizationHook((compiledState) => {
+            staticOptimizationRemovedRules += dropSolverInertCommandOnlyRules(compiledState, inertLines);
+        });
+    }
+    try {
+        compile(['loadLevel', 0], source, `solver:${game}:0`);
+    } finally {
+        if (typeof setPluginOptimizationHook === 'function') {
+            setPluginOptimizationHook(null);
+        }
+    }
     const compileMs = performance.now() - compileStart;
     if (errorCount > 0) {
         return [{
@@ -2838,6 +2910,7 @@ function runGame(root, file, options = {}) {
             timeout_ms: 0,
             compile_ms: compileMs,
             static_analysis_ms: staticAnalysisMs,
+            static_optimization_removed_rules: staticOptimizationRemovedRules,
             load_ms: 0,
             clone_ms: 0,
             step_ms: 0,
@@ -2846,7 +2919,7 @@ function runGame(root, file, options = {}) {
             reconstruct_ms: 0,
         }];
     }
-    return { game, compileMs, source, staticAnalysisReport, staticAnalysisMs };
+    return { game, compileMs, source, staticAnalysisReport, staticAnalysisMs, staticOptimizationRemovedRules };
 }
 
 function trimLine(line) {
@@ -3050,6 +3123,7 @@ function runCorpus(options) {
                     staticAnalysisReport: compiled.staticAnalysisReport,
                 });
                 result.static_analysis_ms = compiled.staticAnalysisMs || 0;
+                result.static_optimization_removed_rules = compiled.staticOptimizationRemovedRules || 0;
             } catch (error) {
                 if (typeof resetParserErrorState === 'function') {
                     resetParserErrorState();
@@ -3084,6 +3158,7 @@ function totals(results) {
         hash_collisions: 0,
         compile_ms: 0,
         static_analysis_ms: 0,
+        static_optimization_removed_rules: 0,
         load_ms: 0,
         clone_ms: 0,
         snapshot_ms: 0,
@@ -3104,6 +3179,7 @@ function totals(results) {
         out.hash_collisions += result.hash_collisions || 0;
         out.compile_ms += result.compile_ms || 0;
         out.static_analysis_ms += result.static_analysis_ms || 0;
+        out.static_optimization_removed_rules += result.static_optimization_removed_rules || 0;
         out.load_ms += result.load_ms || 0;
         out.clone_ms += result.clone_ms || 0;
         out.snapshot_ms += result.snapshot_ms || 0;

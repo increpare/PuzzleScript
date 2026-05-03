@@ -86,6 +86,120 @@ assert.deepStrictEqual(
     [['Background'], ['Hero', 'Goal']],
     'ps_tagged should preserve collision layer membership'
 );
+assert.strictEqual(
+    report.ps_tagged.collision_layers.find(layer => layer.objects.join() === 'Background').tags.inert,
+    true,
+    'background-only layer with no rules/win/player refs should be inert'
+);
+assert.strictEqual(
+    report.ps_tagged.collision_layers.find(layer => layer.objects.includes('Hero')).tags.inert,
+    false,
+    'layer holding player or win-referenced objects should not be inert'
+);
+
+const INERT_LAYER_BACKGROUND_RULE = `
+title Inert layer rule ref
+========
+OBJECTS
+========
+Background
+black
+Block
+gray
+Player
+white
+${'======='}
+LEGEND
+${'======='}
+. = Background
+# = Block
+P = Player
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Block
+Player
+=====
+RULES
+=====
+[ Background ] -> [ Background ]
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+P#
+`;
+
+const inertLayerBgRule = analyzeSource(INERT_LAYER_BACKGROUND_RULE, { sourcePath: 'inert_layer_bg_rule.txt' });
+assert.strictEqual(inertLayerBgRule.status, 'ok');
+assert.strictEqual(
+    inertLayerBgRule.ps_tagged.collision_layers.find(layer => layer.objects.includes('Background')).tags.inert,
+    false,
+    'background layer should not be inert when Background appears in rules'
+);
+assert.strictEqual(
+    inertLayerBgRule.ps_tagged.collision_layers.find(layer => layer.objects.includes('Block')).tags.inert,
+    true,
+    'isolated block layer with no rules should still be inert'
+);
+
+const COSMETIC_STONE_CRATE = `
+title Cosmetic stone crate
+========
+OBJECTS
+========
+Background
+black
+Crate
+brown
+Stone
+gray
+Player
+white
+${'======='}
+LEGEND
+${'======='}
+. = Background
+P = Player
+C = Crate
+S = Stone
+${'======='}
+SOUNDS
+${'======='}
+================
+COLLISIONLAYERS
+================
+Background
+Crate, Stone
+Player
+=====
+RULES
+=====
+[ ] -> [ Stone ]
+=============
+WINCONDITIONS
+=============
+Some Crate
+======
+LEVELS
+======
+PC.
+`;
+
+const stoneCrate = analyzeSource(COSMETIC_STONE_CRATE, { sourcePath: 'stone_crate.txt' });
+assert.strictEqual(stoneCrate.status, 'ok');
+assert.strictEqual(stoneCrate.ps_tagged.objects.find(object => object.name === 'Crate').tags.cosmetic, false, 'crate in wincondition is not cosmetic');
+assert.strictEqual(stoneCrate.ps_tagged.objects.find(object => object.name === 'Stone').tags.cosmetic, false, 'stone on core layer via layer_write propagation is not cosmetic');
+assert.strictEqual(stoneCrate.ps_tagged.objects.find(object => object.name === 'Background').tags.cosmetic, true, 'background never pulled into core is cosmetic');
+assert.strictEqual(stoneCrate.ps_tagged.objects.find(object => object.name === 'Player').tags.cosmetic, false, 'player entity is never cosmetic');
+
 assert.deepStrictEqual(
     report.ps_tagged.properties.find(property => property.name === 'avatar').members,
     ['Hero'],
@@ -2032,6 +2146,9 @@ function assertOneMoveStaticReplay() {
     assert.strictEqual(backgroundLayer.tags.static, true, 'one_move background layer should be static');
     assert.strictEqual(targetLayer.tags.static, true, 'one_move target layer should be static');
     assert.strictEqual(playerLayer.tags.static, false, 'one_move player layer should not be static');
+    assert.strictEqual(backgroundLayer.tags.inert, true, 'one_move background layer should be inert (no rules, not in win, not player)');
+    assert.strictEqual(targetLayer.tags.inert, false, 'one_move target layer is in winconditions');
+    assert.strictEqual(playerLayer.tags.inert, false, 'one_move player layer holds the player');
 
     withRuntimeSource(source, () => {
         const staticLayerIds = [backgroundLayer.id, targetLayer.id];

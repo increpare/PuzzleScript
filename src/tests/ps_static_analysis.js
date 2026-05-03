@@ -439,6 +439,8 @@ function buildPsTagged(state, options = {}) {
     tagObjectLevelPresence(psTagged);
     tagGame(psTagged);
     normalizeTermRefs(psTagged);
+    tagInertCollisionLayers(psTagged);
+    tagCosmeticClosure(psTagged);
     return psTagged;
 }
 
@@ -810,6 +812,155 @@ function allCreatorsHaveLaterClearer(creators, clearers) {
 
 function objectInWincondition(psTagged, objectName) {
     return psTagged.winconditions.some(win => win.subjects.includes(objectName) || win.targets.includes(objectName));
+}
+
+function objectsMentionedInRules(psTagged) {
+    const names = new Set();
+    for (const { rule } of allRuleEntries(psTagged)) {
+        for (const term of rule.summary.lhs_terms.concat(rule.summary.rhs_terms)) {
+            for (const objectName of term.expanded_objects || []) {
+                names.add(objectName);
+            }
+        }
+    }
+    return names;
+}
+
+function tagInertCollisionLayers(psTagged) {
+    const mentioned = objectsMentionedInRules(psTagged);
+    const players = playerObjectNameSet(psTagged);
+    for (const layer of psTagged.collision_layers) {
+        let inert = true;
+        for (const objectName of layer.objects) {
+            if (players.has(objectName) || mentioned.has(objectName) || objectInWincondition(psTagged, objectName)) {
+                inert = false;
+                break;
+            }
+        }
+        layer.tags.inert = inert;
+    }
+}
+
+function objectReadNames(rule) {
+    const flow = ruleFlowReads(rule);
+    const names = new Set(flow.object_present);
+    addValues(names, flow.object_absent);
+    for (const entry of flow.movement) {
+        names.add(entry.object);
+    }
+    return names;
+}
+
+function objectWriteNames(psTagged, rule) {
+    const flow = ruleFlowWrites(psTagged, rule);
+    const names = new Set(flow.object_present);
+    addValues(names, flow.object_absent);
+    return names;
+}
+
+function layerIdsForObjectNames(psTagged, objectNames) {
+    const layers = new Set();
+    for (const objectName of objectNames) {
+        const layer = layerForObject(psTagged, objectName);
+        if (layer !== null && layer !== undefined) layers.add(layer);
+    }
+    return layers;
+}
+
+function coreSeedsFromWinAndPlayer(psTagged) {
+    const seeds = new Set(playerObjectNameSet(psTagged));
+    for (const win of psTagged.winconditions) {
+        addValues(seeds, win.subjects);
+        addValues(seeds, win.targets);
+    }
+    return seeds;
+}
+
+function coreSeedsFromWinCommandRules(psTagged) {
+    const seeds = new Set();
+    for (const { rule } of allRuleEntries(psTagged)) {
+        if (!rule.summary.semantic_commands.includes('win')) continue;
+        addValues(seeds, objectReadNames(rule));
+    }
+    return seeds;
+}
+
+function tagCosmeticClosure(psTagged) {
+    const allNames = psTagged.objects.map(object => object.name);
+    const core = new Set();
+    addValues(core, coreSeedsFromWinAndPlayer(psTagged));
+    addValues(core, coreSeedsFromWinCommandRules(psTagged));
+
+    const readWriteEdges = [];
+    for (const { rule } of allRuleEntries(psTagged)) {
+        const reads = objectReadNames(rule);
+        const writes = objectWriteNames(psTagged, rule);
+        for (const from of reads) {
+            for (const to of writes) {
+                readWriteEdges.push([from, to]);
+            }
+        }
+    }
+
+    function coreLayers() {
+        const layers = new Set();
+        for (const objectName of core) {
+            const layer = layerForObject(psTagged, objectName);
+            if (layer !== null && layer !== undefined) layers.add(layer);
+        }
+        return layers;
+    }
+
+    function expandReadWriteFromCore() {
+        let changed = false;
+        const queue = [...core];
+        const seen = new Set(core);
+        while (queue.length > 0) {
+            const from = queue.pop();
+            for (const [a, b] of readWriteEdges) {
+                if (a !== from) continue;
+                if (seen.has(b)) continue;
+                seen.add(b);
+                core.add(b);
+                queue.push(b);
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    let guard = 0;
+    const maxRounds = allNames.length + readWriteEdges.length + 8;
+    while (guard++ < maxRounds) {
+        let roundChanged = false;
+        const layers = coreLayers();
+        for (const { rule } of allRuleEntries(psTagged)) {
+            const writeNames = objectWriteNames(psTagged, rule);
+            if (writeNames.size === 0) continue;
+            const layerWrite = layerIdsForObjectNames(psTagged, writeNames);
+            let hits = false;
+            for (const layerId of layerWrite) {
+                if (layers.has(layerId)) {
+                    hits = true;
+                    break;
+                }
+            }
+            if (!hits) continue;
+            for (const objectName of writeNames) {
+                if (!core.has(objectName)) {
+                    core.add(objectName);
+                    roundChanged = true;
+                }
+            }
+        }
+        if (expandReadWriteFromCore()) roundChanged = true;
+        if (!roundChanged) break;
+    }
+
+    for (const objectName of allNames) {
+        const object = psTagged.objects.find(item => item.name === objectName);
+        if (object) object.tags.cosmetic = !core.has(objectName);
+    }
 }
 
 function deriveTransientBoundaryFacts(psTagged) {
