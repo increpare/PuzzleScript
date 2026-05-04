@@ -248,6 +248,28 @@ function movementTermSignature(terms) {
         .sort());
 }
 
+function structuredObjectSignature(side) {
+    return JSON.stringify((side || []).map(row =>
+        row.map(cell =>
+            cell
+                .filter(term => term.kind === 'present')
+                .map(term => JSON.stringify(term.ref))
+                .sort()
+        )
+    ));
+}
+
+function structuredMovementSignature(side) {
+    return JSON.stringify((side || []).map(row =>
+        row.map(cell =>
+            cell
+                .filter(term => term.kind === 'present' && term.movement !== null)
+                .map(term => `${JSON.stringify(term.ref)}:${term.movement}`)
+                .sort()
+        )
+    ));
+}
+
 function tagRule(rule) {
     rule.summary = summarizeRule(rule);
     const commandNames = rule.commands.map(command => command[0]);
@@ -255,11 +277,11 @@ function tagRule(rule) {
         && commandNames.every(command => INERT_COMMANDS.has(command));
     const hasReplacement = rule.rhs.length > 0;
     const objectMutating = hasReplacement
-        && (objectTermSignature(rule.summary.lhs_terms) !== objectTermSignature(rule.summary.rhs_terms)
+        && (structuredObjectSignature(rule.lhs) !== structuredObjectSignature(rule.rhs)
         || rule.summary.rhs_absent.length > 0
         || rule.summary.rhs_random_objects.length > 0);
     const writesMovement = hasReplacement
-        && movementTermSignature(rule.summary.lhs_terms) !== movementTermSignature(rule.summary.rhs_terms);
+        && structuredMovementSignature(rule.lhs) !== structuredMovementSignature(rule.rhs);
     const hasSemanticCommand = rule.summary.semantic_commands.length > 0;
 
     rule.tags.command_only = commandNames.length > 0 && !objectMutating && !writesMovement;
@@ -952,8 +974,30 @@ function tagCosmeticClosure(psTagged) {
                     roundChanged = true;
                 }
             }
+            // LHS reads gate whether this rule writes to core layers, so the
+            // reads themselves are gameplay-relevant: removing one would change
+            // when (or whether) the write fires. Pull them into core too.
+            for (const objectName of objectReadNames(rule)) {
+                if (!core.has(objectName)) {
+                    core.add(objectName);
+                    roundChanged = true;
+                }
+            }
         }
         if (expandReadWriteFromCore()) roundChanged = true;
+        // Objects sharing a collision layer with a core object are gameplay-
+        // relevant via the engine's collision system, even if no rule names
+        // them: their presence blocks core objects from occupying a cell.
+        const coreLayerSet = coreLayers();
+        for (const layer of psTagged.collision_layers || []) {
+            if (!coreLayerSet.has(layer.id)) continue;
+            for (const objectName of layer.objects || []) {
+                if (!core.has(objectName)) {
+                    core.add(objectName);
+                    roundChanged = true;
+                }
+            }
+        }
         if (!roundChanged) break;
     }
 

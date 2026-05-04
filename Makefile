@@ -18,7 +18,7 @@
 .PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js static_analysis_tests static_analysis_explorer simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js performance_testpage \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests simulation_corpus_interpreter_benchmark simulation_corpus_compiled_rulegroups_benchmark simulation_corpus_compiled_compact_benchmark simulation_corpus_perf_report simulation_corpus_perf_report_quick \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_compact_codegen_compare solver_focus_perf_report solver_focus_compact_perf_report solver_focus_compact_codegen_perf_report solver_benchmark_targets js_static_optimization_comparison_solver_smoke js_static_optimization_comparison_solver_focus generator_smoke_tests generator_benchmark \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_compact_codegen_compare solver_focus_perf_report solver_focus_compact_perf_report solver_focus_compact_codegen_perf_report solver_benchmark_targets js_static_optimization_comparison_solver_smoke js_static_optimization_comparison_solver_focus static_optimizer_page generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_turn_codegen_coverage compact_turn_codegen_bringup compact_turn_codegen_solver_parity compact_turn_codegen_frontier compact_turn_codegen_testdata_one compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
 	compact_turn_codegen_selected_tests compact_turn_codegen_simulation_tests \
@@ -58,6 +58,12 @@ SOLVER_SOLUTIONS_DIR ?= $(BUILD_DIR)/solver-solutions
 # JS solver: baseline vs --solver-opt all JSON diff (see js_static_optimization_comparison_*).
 JS_STATIC_OPTIMIZATION_COMPARE_OUT ?= $(BUILD_DIR)/js-static-optimization-compare
 JS_STATIC_OPTIMIZATION_COMPARE_EXTRA_ARGS ?=
+# HTML + JSON summary: baseline vs --solver-opt all over a JS solver corpus (slow on full solver_tests).
+STATIC_OPTIMIZER_PAGE_CORPUS ?= $(SOLVER_TESTS_CORPUS)
+STATIC_OPTIMIZER_PAGE_OUT ?= $(BUILD_DIR)/static-optimizer-report/index.html
+STATIC_OPTIMIZER_PAGE_TIMEOUT_MS ?= $(SOLVER_TIMEOUT_MS)
+STATIC_OPTIMIZER_PAGE_GAME ?=
+STATIC_OPTIMIZER_PAGE_GAME_ARG = $(if $(strip $(STATIC_OPTIMIZER_PAGE_GAME)),--game "$(STATIC_OPTIMIZER_PAGE_GAME)",)
 SOLVER_COMPACT_PARITY_CORPUS ?= src/tests/solver_tests
 SOLVER_COMPACT_PARITY_TIMEOUT_MS ?= $(SOLVER_TIMEOUT_MS)
 SOLVER_COMPACT_PARITY_STRATEGY ?= bfs
@@ -391,6 +397,9 @@ help:
 	@echo "  make js_static_optimization_comparison_solver_focus"
 	@echo "                                     A/B baseline vs --solver-opt all on only the manifest target levels"
 	@echo "                                     ($(SOLVER_FOCUS_MANIFEST) over $(SOLVER_FOCUS_CORPUS)); auto-runs solver_focus_mine if manifest missing"
+	@echo "  make static_optimizer_page         Build HTML + JSON per-game solver static-opt summary (two full corpus runs)"
+	@echo "                                     (STATIC_OPTIMIZER_PAGE_CORPUS=$(STATIC_OPTIMIZER_PAGE_CORPUS),"
+	@echo "                                     STATIC_OPTIMIZER_PAGE_OUT=$(STATIC_OPTIMIZER_PAGE_OUT); override STATIC_OPTIMIZER_PAGE_GAME=substring to filter)"
 	@echo "  make solver_tests SOLVER_TIMEOUT_MS=5000"
 	@echo "                                     Run solver corpus with a deeper timeout"
 	@echo "  make solver_tests SOLVER_JOBS=1"
@@ -830,6 +839,15 @@ js_static_optimization_comparison_solver_focus: $(SOLVER_FOCUS_MANIFEST)
 	$(NODE) src/tests/run_solver_tests_js.js "$(SOLVER_FOCUS_CORPUS)" --solver-focus-manifest "$(SOLVER_FOCUS_MANIFEST)" --quiet --json --no-solutions --solver-opt all $(JS_STATIC_OPTIMIZATION_COMPARE_EXTRA_ARGS) > "$$out/optimized.json"; \
 	echo "=== totals A/B (baseline → optimized) ==="; \
 	$(NODE) src/tests/compare_solver_static_opt_runs.js "$$out/baseline.json" "$$out/optimized.json"
+
+static_optimizer_page:
+	@set -e; \
+	echo "static_optimizer_page  (corpus=$(STATIC_OPTIMIZER_PAGE_CORPUS) -> $(STATIC_OPTIMIZER_PAGE_OUT))"; \
+	$(NODE) src/tests/build_static_optimizer_report.js \
+		--corpus "$(STATIC_OPTIMIZER_PAGE_CORPUS)" \
+		--out "$(STATIC_OPTIMIZER_PAGE_OUT)" \
+		--timeout-ms "$(STATIC_OPTIMIZER_PAGE_TIMEOUT_MS)" \
+		$(STATIC_OPTIMIZER_PAGE_GAME_ARG)
 
 solver_tests: solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_tests_cpp solver_tests_js
 
