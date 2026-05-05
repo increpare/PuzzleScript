@@ -52,6 +52,12 @@ const DIRECTION_ACTIONS = [
     { token: 'left', input: 1 },
 ];
 const ACTIONS_WITH_ACTION = DIRECTION_ACTIONS.concat([{ token: 'action', input: 4 }]);
+const PUSH_ACCESS_DIRECTIONS = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+];
 
 function solverActionsForGame() {
     if (state && state.metadata && Object.prototype.hasOwnProperty.call(state.metadata, 'noaction')) {
@@ -150,16 +156,16 @@ function discoverGames(root) {
     }
     const result = [];
     const walk = (dir) => {
-        for (const name of fs.readdirSync(dir)) {
+        for (const dirent of fs.readdirSync(dir, { withFileTypes: true })) {
+            const name = dirent.name;
             const full = path.join(dir, name);
             const rel = path.relative(root, full);
             if (isHiddenRelativePath(rel)) {
                 continue;
             }
-            const itemStat = fs.statSync(full);
-            if (itemStat.isDirectory()) {
+            if (dirent.isDirectory()) {
                 walk(full);
-            } else if (itemStat.isFile() && path.extname(name).toLowerCase() === '.txt') {
+            } else if (dirent.isFile() && path.extname(name).toLowerCase() === '.txt') {
                 result.push(full);
             }
         }
@@ -181,12 +187,10 @@ function cloneLevelState(value) {
         width: value.width,
         height: value.height,
         oldflickscreendat: Array.isArray(value.oldflickscreendat) ? value.oldflickscreendat.slice() : [],
+        dat: new Int32Array(value.dat),
     };
     if (value.diff) {
         clone.diff = true;
-        clone.dat = new Int32Array(value.dat);
-    } else {
-        clone.dat = new Int32Array(value.dat);
     }
     return clone;
 }
@@ -482,9 +486,9 @@ function createSolverLevelSpecialization(options = {}) {
     const zobristHasher = createZobristStateHasher(usesRandom);
     const zobristTables = createZobristTables(objectWordCount);
     const zobristTableId = zobristTables;
-    const heuristicDistances = new Array(level.n_tiles);
-    const obstacleDistances = new Array(level.n_tiles);
-    const obstacleQueue = new Array(level.n_tiles);
+    const heuristicDistances = new Float64Array(level.n_tiles);
+    const obstacleDistances = new Float64Array(level.n_tiles);
+    const obstacleQueue = new Int32Array(level.n_tiles);
     const targetRowPresence = new Uint8Array(height || 0);
     const targetColPresence = new Uint8Array(width || 0);
     const conditionDistances = [];
@@ -974,11 +978,12 @@ function createSolverLevelSpecialization(options = {}) {
         }
         if (targets.length >= sources.length && sources.length <= 10 && targets.length <= 20) {
             const memo = new Map();
+            const targetCountBits = targets.length;
             const dfs = (sourceIndex, usedMask) => {
                 if (sourceIndex >= sources.length) {
                     return 0;
                 }
-                const key = `${sourceIndex}:${usedMask}`;
+                const key = (sourceIndex << targetCountBits) | usedMask;
                 const cached = memo.get(key);
                 if (cached !== undefined) {
                     return cached;
@@ -1029,20 +1034,36 @@ function createSolverLevelSpecialization(options = {}) {
         return total + (sources.length - usedSources.size) * 64;
     }
 
-    function cellHasBlockingObject(tile, condition) {
-        const offset = tile * STRIDE_OBJ;
+    const allowedMaskCache = new Map();
+    function getAllowedMask(condition) {
+        let allowed = allowedMaskCache.get(condition);
+        if (allowed) {
+            return allowed;
+        }
+        allowed = new Int32Array(STRIDE_OBJ);
         for (let word = 0; word < STRIDE_OBJ; word++) {
-            let allowed = 0;
+            let bits = 0;
             if (condition && condition[1] && condition[1].data) {
-                allowed |= condition[1].data[word] | 0;
+                bits |= condition[1].data[word] | 0;
             }
             if (condition && condition[2] && condition[2].data) {
-                allowed |= condition[2].data[word] | 0;
+                bits |= condition[2].data[word] | 0;
             }
             if (playerMask && playerMask.data) {
-                allowed |= playerMask.data[word] | 0;
+                bits |= playerMask.data[word] | 0;
             }
-            if ((level.objects[offset + word] & nonBackgroundWords[word] & ~allowed) !== 0) {
+            allowed[word] = bits;
+        }
+        allowedMaskCache.set(condition, allowed);
+        return allowed;
+    }
+
+    function cellHasBlockingObject(tile, condition) {
+        const offset = tile * STRIDE_OBJ;
+        const allowed = getAllowedMask(condition);
+        const objects = level.objects;
+        for (let word = 0; word < STRIDE_OBJ; word++) {
+            if ((objects[offset + word] & nonBackgroundWords[word] & ~allowed[word]) !== 0) {
                 return true;
             }
         }
@@ -1051,18 +1072,11 @@ function createSolverLevelSpecialization(options = {}) {
 
     function cellHasStaticBlockingObject(tile, condition, blockerMask) {
         const offset = tile * STRIDE_OBJ;
+        const allowed = getAllowedMask(condition);
+        const objects = level.objects;
+        const blockerData = blockerMask.data;
         for (let word = 0; word < STRIDE_OBJ; word++) {
-            let allowed = 0;
-            if (condition && condition[1] && condition[1].data) {
-                allowed |= condition[1].data[word] | 0;
-            }
-            if (condition && condition[2] && condition[2].data) {
-                allowed |= condition[2].data[word] | 0;
-            }
-            if (playerMask && playerMask.data) {
-                allowed |= playerMask.data[word] | 0;
-            }
-            if ((level.objects[offset + word] & blockerMask.data[word] & ~allowed) !== 0) {
+            if ((objects[offset + word] & blockerData[word] & ~allowed[word]) !== 0) {
                 return true;
             }
         }
@@ -1179,8 +1193,7 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     function someOnRowColPenalty(sources, condition) {
-        const targetCount = buildTargetLinePresence(condition);
-        if (targetCount === 0) {
+        if (buildTargetLinePresence(condition) === 0) {
             return 16;
         }
         let best = 16;
@@ -1290,19 +1303,13 @@ function createSolverLevelSpecialization(options = {}) {
             return unsatisfied.length * 16;
         }
         let penalty = 0;
-        const directions = [
-            [1, 0],
-            [-1, 0],
-            [0, 1],
-            [0, -1],
-        ];
         for (const tile of unsatisfied) {
             const x = tileX(tile);
             const y = tileY(tile);
             const currentDistance = bestManhattan(tile, targets);
             let anyPush = false;
             let usefulPush = false;
-            for (const [dx, dy] of directions) {
+            for (const [dx, dy] of PUSH_ACCESS_DIRECTIONS) {
                 const fromX = x - dx;
                 const fromY = y - dy;
                 const toX = x + dx;
@@ -1358,35 +1365,40 @@ function createSolverLevelSpecialization(options = {}) {
                 distances[tile] = Infinity;
             }
         }
+        const isBlocked = blockerMask
+            ? (next) => cellHasStaticBlockingObject(next, condition, blockerMask)
+            : (next) => cellHasBlockingObject(next, condition);
+        const levelHeight = level.height;
+        const levelWidth = level.width;
         while (head < tail) {
             const tile = obstacleQueue[head++];
             const nextDistance = distances[tile] + 1;
-            const x = (tile / level.height) | 0;
-            const y = tile % level.height;
+            const x = (tile / levelHeight) | 0;
+            const y = tile % levelHeight;
             if (x > 0) {
-                const next = (x - 1) * level.height + y;
-                if (distances[next] === Infinity && !(blockerMask ? cellHasStaticBlockingObject(next, condition, blockerMask) : cellHasBlockingObject(next, condition))) {
+                const next = (x - 1) * levelHeight + y;
+                if (distances[next] === Infinity && !isBlocked(next)) {
                     distances[next] = nextDistance;
                     obstacleQueue[tail++] = next;
                 }
             }
-            if (x + 1 < level.width) {
-                const next = (x + 1) * level.height + y;
-                if (distances[next] === Infinity && !(blockerMask ? cellHasStaticBlockingObject(next, condition, blockerMask) : cellHasBlockingObject(next, condition))) {
+            if (x + 1 < levelWidth) {
+                const next = (x + 1) * levelHeight + y;
+                if (distances[next] === Infinity && !isBlocked(next)) {
                     distances[next] = nextDistance;
                     obstacleQueue[tail++] = next;
                 }
             }
             if (y > 0) {
-                const next = x * level.height + y - 1;
-                if (distances[next] === Infinity && !(blockerMask ? cellHasStaticBlockingObject(next, condition, blockerMask) : cellHasBlockingObject(next, condition))) {
+                const next = x * levelHeight + y - 1;
+                if (distances[next] === Infinity && !isBlocked(next)) {
                     distances[next] = nextDistance;
                     obstacleQueue[tail++] = next;
                 }
             }
-            if (y + 1 < level.height) {
-                const next = x * level.height + y + 1;
-                if (distances[next] === Infinity && !(blockerMask ? cellHasStaticBlockingObject(next, condition, blockerMask) : cellHasBlockingObject(next, condition))) {
+            if (y + 1 < levelHeight) {
+                const next = x * levelHeight + y + 1;
+                if (distances[next] === Infinity && !isBlocked(next)) {
                     distances[next] = nextDistance;
                     obstacleQueue[tail++] = next;
                 }
@@ -1469,7 +1481,7 @@ function createSolverLevelSpecialization(options = {}) {
             let best = 64;
             for (let conditionIndex = 0; conditionIndex < state.winconditions.length; conditionIndex++) {
                 const condition = state.winconditions[conditionIndex];
-                const distances = conditionDistances[conditionIndex] || new Array(level.n_tiles);
+                const distances = conditionDistances[conditionIndex] || new Float64Array(level.n_tiles);
                 conditionDistances[conditionIndex] = distances;
                 matchingDistanceField(condition[1], condition[4], distances);
             }
@@ -1583,6 +1595,10 @@ function createSolverLevelSpecialization(options = {}) {
         return base + deadPositionPenalty(unsatisfied, condition);
     }
 
+    function allOnMatchingScore(unsatisfied, targets) {
+        return unsatisfied.length * 10 + minAssignmentDistance(unsatisfied, targets);
+    }
+
     function allOnMatchingHeuristic() {
         const condition = singleAllOnCondition();
         if (!condition) {
@@ -1590,7 +1606,7 @@ function createSolverLevelSpecialization(options = {}) {
         }
         const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
         const targets = collectMatchingTiles(condition[2], condition[5]);
-        return unsatisfied.length * 10 + minAssignmentDistance(unsatisfied, targets);
+        return allOnMatchingScore(unsatisfied, targets);
     }
 
     function allOnPlayerTiebreakHeuristic() {
@@ -1656,15 +1672,17 @@ function createSolverLevelSpecialization(options = {}) {
         if (!condition) {
             return winconditionDistanceHeuristic();
         }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        const targets = collectMatchingTiles(condition[2], condition[5]);
         let deadlocks = 0;
-        for (const tile of collectUnsatisfiedAllOnTiles(condition)) {
+        for (const tile of unsatisfied) {
             const horizontal = adjacentCellBlocked(tile, -1, 0, condition) || adjacentCellBlocked(tile, 1, 0, condition);
             const vertical = adjacentCellBlocked(tile, 0, -1, condition) || adjacentCellBlocked(tile, 0, 1, condition);
             if (horizontal && vertical) {
                 deadlocks++;
             }
         }
-        return allOnMatchingHeuristic() + deadlocks * 32;
+        return allOnMatchingScore(unsatisfied, targets) + deadlocks * 32;
     }
 
     function someOnMinHeuristic() {
@@ -1826,11 +1844,7 @@ function createSolverLevelSpecialization(options = {}) {
         return collectOverlapTiles(condition).length * 10;
     }
 
-    function noOnEscapeHeuristic() {
-        const condition = singleCondition();
-        if (!condition || condition[0] !== -1 || isPlainCondition(condition)) {
-            return winconditionDistanceHeuristic();
-        }
+    function computeNoOnEscapeScore(condition, offenders) {
         const escapeTiles = [];
         for (let tile = 0; tile < level.n_tiles; tile++) {
             if (!matchesMask(condition[2], condition[5], tile)) {
@@ -1838,10 +1852,18 @@ function createSolverLevelSpecialization(options = {}) {
             }
         }
         let score = 0;
-        for (const offender of collectOverlapTiles(condition)) {
+        for (const offender of offenders) {
             score += 10 + bestManhattan(offender, escapeTiles);
         }
         return score;
+    }
+
+    function noOnEscapeHeuristic() {
+        const condition = singleCondition();
+        if (!condition || condition[0] !== -1 || isPlainCondition(condition)) {
+            return winconditionDistanceHeuristic();
+        }
+        return computeNoOnEscapeScore(condition, collectOverlapTiles(condition));
     }
 
     function noOnPlayerHeuristic() {
@@ -1850,7 +1872,7 @@ function createSolverLevelSpecialization(options = {}) {
             return winconditionDistanceHeuristic();
         }
         const offenders = collectOverlapTiles(condition);
-        return noOnEscapeHeuristic() + Math.min(minPlayerDistanceToTiles(offenders), 16);
+        return computeNoOnEscapeScore(condition, offenders) + Math.min(minPlayerDistanceToTiles(offenders), 16);
     }
 
     function somePlainExistsHeuristic() {
@@ -1914,78 +1936,45 @@ function createSolverLevelSpecialization(options = {}) {
         return remaining.length * 10 + Math.min(minPlayerDistanceToTiles(remaining), 16);
     }
 
+    const HEURISTIC_FUNCTIONS = {
+        'zero': () => 0,
+        'all-on-count': allOnCountHeuristic,
+        'all-on-rowcol-tiebreak': allOnRowColTiebreakHeuristic,
+        'all-on-line-distance': allOnLineDistanceHeuristic,
+        'all-on-clear-path': allOnClearPathHeuristic,
+        'all-on-goal-coverage': allOnGoalCoverageHeuristic,
+        'all-on-rowcol-matching': allOnRowColMatchingHeuristic,
+        'all-on-player-nearest-tiebreak': allOnPlayerNearestTiebreakHeuristic,
+        'all-on-push-access': allOnPushAccessHeuristic,
+        'all-on-dead-position': allOnDeadPositionHeuristic,
+        'all-on-player-tiebreak': allOnPlayerTiebreakHeuristic,
+        'all-on-min-matching': allOnMinMatchingHeuristic,
+        'all-on-matching': allOnMatchingHeuristic,
+        'all-on-obstacle': allOnObstacleHeuristic,
+        'all-on-player': allOnPlayerHeuristic,
+        'all-on-deadlock': allOnDeadlockHeuristic,
+        'some-on-rowcol-tiebreak': someOnRowColTiebreakHeuristic,
+        'some-on-line-distance': someOnLineDistanceHeuristic,
+        'some-on-clear-path': someOnClearPathHeuristic,
+        'some-on-min': someOnMinHeuristic,
+        'some-on-player': someOnPlayerHeuristic,
+        'some-on-obstacle': someOnObstacleHeuristic,
+        'some-on-static-blockers': someOnStaticBlockersHeuristic,
+        'some-on-static-blockers-tiebreak': someOnStaticBlockersTiebreakHeuristic,
+        'some-on-role-static': someOnRoleStaticHeuristic,
+        'no-on-count': noOnCountHeuristic,
+        'no-on-escape': noOnEscapeHeuristic,
+        'no-on-player': noOnPlayerHeuristic,
+        'some-plain-exists': somePlainExistsHeuristic,
+        'some-plain-player': somePlainPlayerHeuristic,
+        'no-plain-count': noPlainCountHeuristic,
+        'no-plain-cluster': noPlainClusterHeuristic,
+        'no-plain-player': noPlainPlayerHeuristic,
+        'winconditions': allOnClearPathHeuristic,
+    };
+    const selectedHeuristic = HEURISTIC_FUNCTIONS[heuristicName] || allOnClearPathHeuristic;
     function heuristic() {
-        switch (heuristicName) {
-            case 'zero':
-                return 0;
-            case 'all-on-count':
-                return allOnCountHeuristic();
-            case 'all-on-rowcol-tiebreak':
-                return allOnRowColTiebreakHeuristic();
-            case 'all-on-line-distance':
-                return allOnLineDistanceHeuristic();
-            case 'all-on-clear-path':
-                return allOnClearPathHeuristic();
-            case 'all-on-goal-coverage':
-                return allOnGoalCoverageHeuristic();
-            case 'all-on-rowcol-matching':
-                return allOnRowColMatchingHeuristic();
-            case 'all-on-player-nearest-tiebreak':
-                return allOnPlayerNearestTiebreakHeuristic();
-            case 'all-on-push-access':
-                return allOnPushAccessHeuristic();
-            case 'all-on-dead-position':
-                return allOnDeadPositionHeuristic();
-            case 'all-on-player-tiebreak':
-                return allOnPlayerTiebreakHeuristic();
-            case 'all-on-min-matching':
-                return allOnMinMatchingHeuristic();
-            case 'all-on-matching':
-                return allOnMatchingHeuristic();
-            case 'all-on-obstacle':
-                return allOnObstacleHeuristic();
-            case 'all-on-player':
-                return allOnPlayerHeuristic();
-            case 'all-on-deadlock':
-                return allOnDeadlockHeuristic();
-            case 'some-on-rowcol-tiebreak':
-                return someOnRowColTiebreakHeuristic();
-            case 'some-on-line-distance':
-                return someOnLineDistanceHeuristic();
-            case 'some-on-clear-path':
-                return someOnClearPathHeuristic();
-            case 'some-on-min':
-                return someOnMinHeuristic();
-            case 'some-on-player':
-                return someOnPlayerHeuristic();
-            case 'some-on-obstacle':
-                return someOnObstacleHeuristic();
-            case 'some-on-static-blockers':
-                return someOnStaticBlockersHeuristic();
-            case 'some-on-static-blockers-tiebreak':
-                return someOnStaticBlockersTiebreakHeuristic();
-            case 'some-on-role-static':
-                return someOnRoleStaticHeuristic();
-            case 'no-on-count':
-                return noOnCountHeuristic();
-            case 'no-on-escape':
-                return noOnEscapeHeuristic();
-            case 'no-on-player':
-                return noOnPlayerHeuristic();
-            case 'some-plain-exists':
-                return somePlainExistsHeuristic();
-            case 'some-plain-player':
-                return somePlainPlayerHeuristic();
-            case 'no-plain-count':
-                return noPlainCountHeuristic();
-            case 'no-plain-cluster':
-                return noPlainClusterHeuristic();
-            case 'no-plain-player':
-                return noPlainPlayerHeuristic();
-            case 'winconditions':
-            default:
-                return allOnClearPathHeuristic();
-        }
+        return selectedHeuristic();
     }
 
     function flagsForHash() {
@@ -2208,43 +2197,50 @@ class MinHeap {
     }
 
     push(item) {
-        this.items.push(item);
-        let index = this.items.length - 1;
+        const items = this.items;
+        items.push(item);
+        let index = items.length - 1;
         while (index > 0) {
-            const parent = Math.floor((index - 1) / 2);
-            if (!this.less(this.items[index], this.items[parent])) {
+            const parent = (index - 1) >>> 1;
+            const parentItem = items[parent];
+            if (!(item.priority < parentItem.priority || (item.priority === parentItem.priority && item.tie < parentItem.tie))) {
                 break;
             }
-            [this.items[index], this.items[parent]] = [this.items[parent], this.items[index]];
+            items[index] = parentItem;
             index = parent;
         }
+        items[index] = item;
     }
 
     pop() {
-        if (this.items.length === 0) {
+        const items = this.items;
+        if (items.length === 0) {
             return null;
         }
-        const first = this.items[0];
-        const last = this.items.pop();
-        if (this.items.length > 0) {
-            this.items[0] = last;
+        const first = items[0];
+        const last = items.pop();
+        const length = items.length;
+        if (length > 0) {
             let index = 0;
-            while (true) {
-                const left = index * 2 + 1;
-                const right = left + 1;
-                let best = index;
-                if (left < this.items.length && this.less(this.items[left], this.items[best])) {
-                    best = left;
+            const half = length >>> 1;
+            while (index < half) {
+                let best = index * 2 + 1;
+                const right = best + 1;
+                let bestItem = items[best];
+                if (right < length) {
+                    const rightItem = items[right];
+                    if (rightItem.priority < bestItem.priority || (rightItem.priority === bestItem.priority && rightItem.tie < bestItem.tie)) {
+                        best = right;
+                        bestItem = rightItem;
+                    }
                 }
-                if (right < this.items.length && this.less(this.items[right], this.items[best])) {
-                    best = right;
-                }
-                if (best === index) {
+                if (!(bestItem.priority < last.priority || (bestItem.priority === last.priority && bestItem.tie < last.tie))) {
                     break;
                 }
-                [this.items[index], this.items[best]] = [this.items[best], this.items[index]];
+                items[index] = bestItem;
                 index = best;
             }
+            items[index] = last;
         }
         return first;
     }
@@ -2440,10 +2436,6 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
             modeResult.expanded++;
 
             for (const action of actions) {
-                if (Date.now() >= modeDeadline) {
-                    modeResult.status = 'timeout';
-                    break;
-                }
                 const cloneStart = performance.now();
                 solverOps.restore(node.snapshot);
                 modeResult.clone_ms += performance.now() - cloneStart;
@@ -2637,10 +2629,6 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
             }
 
             for (const action of actions) {
-                if (Date.now() >= modeDeadline) {
-                    modeResult.status = 'timeout';
-                    break;
-                }
                 const cloneStart = performance.now();
                 solverOps.restore(node.snapshot);
                 modeResult.clone_ms += performance.now() - cloneStart;
@@ -2957,9 +2945,6 @@ function runCorpus(options) {
     const results = [];
     let attemptedLevels = 0;
     for (const file of discoverGames(options.corpusPath)) {
-        if (!fs.existsSync(file)) {
-            continue;
-        }
         const name = gameName(options.corpusPath, file);
         if (options.gameFilter !== null && name !== options.gameFilter) {
             continue;
