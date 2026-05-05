@@ -59,11 +59,27 @@ const PUSH_ACCESS_DIRECTIONS = [
     [0, -1],
 ];
 
+/** When some-on heuristics have no valid target cells, use a large penalty so search does not treat the state as nearly solved (see TODO.md). */
+const SOME_ON_NO_TARGET_PENALTY = 64;
+
+/** `bestManhattan` with no target tiles: stronger than `distanceOrFallback(Infinity)` (64) so degenerate geometry is not confused with mild distance. */
+const BEST_MANHATTAN_EMPTY_TARGETS_PENALTY = 128;
+
+/** When `PUZZLESCRIPT_SOLVER_DETAIL_TIMING=0`, skip `performance.now()` in the search hot loop (timing breakdown is zeroed; portfolio auto-lock uses step timing only when enabled). */
+const SOLVER_DETAIL_TIMING = process.env.PUZZLESCRIPT_SOLVER_DETAIL_TIMING !== '0';
+
+let _solverActionsNoActionFlag = null;
+let _solverActionsResolved = null;
 function solverActionsForGame() {
-    if (state && state.metadata && Object.prototype.hasOwnProperty.call(state.metadata, 'noaction')) {
-        return DIRECTION_ACTIONS;
+    const noAction = Boolean(
+        state && state.metadata && Object.prototype.hasOwnProperty.call(state.metadata, 'noaction')
+    );
+    if (_solverActionsNoActionFlag === noAction && _solverActionsResolved) {
+        return _solverActionsResolved;
     }
-    return ACTIONS_WITH_ACTION;
+    _solverActionsNoActionFlag = noAction;
+    _solverActionsResolved = noAction ? DIRECTION_ACTIONS : ACTIONS_WITH_ACTION;
+    return _solverActionsResolved;
 }
 
 function parseArgs(argv) {
@@ -140,7 +156,9 @@ function parseArgs(argv) {
 }
 
 function usage(exitCode) {
-    const message = 'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--summary-only] [--quiet] [--json]\n';
+    const message =
+        'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--summary-only] [--quiet] [--json]\n' +
+        '  --astar-weight N (default 2): weighted-astar and portfolio; portfolio wa8 uses 4×N (default 8).\n';
     (exitCode === 0 ? process.stdout : process.stderr).write(message);
     process.exit(exitCode);
 }
@@ -274,15 +292,16 @@ function cloneLevelData(value) {
     if (value == null) {
         return value;
     }
-    const source = value.dat || value.objects;
+    const cells = value.dat ?? value.objects;
     return {
-        dat: source ? new Int32Array(source) : new Int32Array(0),
+        dat: cells ? new Int32Array(cells) : new Int32Array(0),
         width: value.width,
         height: value.height,
         oldflickscreendat: Array.isArray(value.oldflickscreendat) ? value.oldflickscreendat.slice() : [],
     };
 }
 
+/** Hot path: level `objects` / snapshot buffers. Kept separate from `arraysEqual` (number[] RNG state, etc.) to avoid polymorphic loops. */
 function int32ArraysEqual(left, right) {
     if (left === right) {
         return true;
@@ -357,15 +376,14 @@ function createZobristStateHasher(usesRandom) {
     return new Function('lo', 'hi', 'flags', 'randomState', lines.join('\n'));
 }
 
-function nextZobristSeed(seed) {
+/** Writes next mixed seed to `out[0]` and 32-bit table value to `out[1]` (no per-step object alloc). */
+function nextZobristSeedInto(out, seed) {
     seed = (seed + 0x9e3779b9) | 0;
     let value = seed;
     value = Math.imul(value ^ (value >>> 16), 0x85ebca6b);
     value = Math.imul(value ^ (value >>> 13), 0xc2b2ae35);
-    return {
-        seed,
-        value: (value ^ (value >>> 16)) | 0,
-    };
+    out[0] = seed;
+    out[1] = (value ^ (value >>> 16)) | 0;
 }
 
 const ZOBRIST_TABLE_CACHE = new Map();
@@ -378,14 +396,15 @@ function createZobristTables(wordCount) {
     const tableLength = wordCount * 32;
     const lo = new Int32Array(tableLength);
     const hi = new Int32Array(tableLength);
+    const seedScratch = new Int32Array(2);
     let seed = Math.imul(wordCount + 1, 0x45d9f3b) | 0;
     for (let index = 0; index < tableLength; index++) {
-        let next = nextZobristSeed(seed);
-        seed = next.seed;
-        lo[index] = next.value;
-        next = nextZobristSeed(seed);
-        seed = next.seed;
-        hi[index] = next.value;
+        nextZobristSeedInto(seedScratch, seed);
+        seed = seedScratch[0];
+        lo[index] = seedScratch[1];
+        nextZobristSeedInto(seedScratch, seed);
+        seed = seedScratch[0];
+        hi[index] = seedScratch[1];
     }
     const tables = { lo, hi };
     ZOBRIST_TABLE_CACHE.set(wordCount, tables);
@@ -461,12 +480,13 @@ function priorityForMode(mode, depth, heuristic, astarWeight) {
     return depth;
 }
 
-function priorityForPortfolioMode(mode, depth, heuristic) {
+function priorityForPortfolioMode(mode, depth, heuristic, astarWeight) {
+    const w = astarWeight != null && astarWeight > 0 ? astarWeight : 2;
     if (mode === 'wa2') {
-        return depth + heuristic * 2;
+        return depth + heuristic * w;
     }
     if (mode === 'wa8') {
-        return depth + heuristic * 8;
+        return depth + heuristic * (w * 4);
     }
     if (mode === 'greedy') {
         return heuristic;
@@ -508,7 +528,9 @@ function createSolverLevelSpecialization(options = {}) {
 
     function installZobristHash() {
         if (!level || !level.objects || level.objects.length !== objectWordCount) {
-            return;
+            throw new Error(
+                `installZobristHash: level not ready (objectWordCount=${objectWordCount}, hasObjects=${Boolean(level && level.objects)}, length=${level && level.objects ? level.objects.length : 'n/a'})`
+            );
         }
         level.solverZobristTableLo = zobristTables.lo;
         level.solverZobristTableHi = zobristTables.hi;
@@ -945,6 +967,9 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     function bestManhattan(tile, targets) {
+        if (targets.length === 0) {
+            return BEST_MANHATTAN_EMPTY_TARGETS_PENALTY;
+        }
         let best = Infinity;
         for (const target of targets) {
             best = Math.min(best, manhattan(tile, target));
@@ -1194,7 +1219,7 @@ function createSolverLevelSpecialization(options = {}) {
 
     function someOnRowColPenalty(sources, condition) {
         if (buildTargetLinePresence(condition) === 0) {
-            return 16;
+            return SOME_ON_NO_TARGET_PENALTY;
         }
         let best = 16;
         for (const source of sources) {
@@ -1209,7 +1234,7 @@ function createSolverLevelSpecialization(options = {}) {
     function someOnLineDistancePenalty(sources, condition) {
         const targetCount = buildTargetLinePresence(condition);
         if (targetCount === 0) {
-            return 16;
+            return SOME_ON_NO_TARGET_PENALTY;
         }
         let best = 16;
         for (const source of sources) {
@@ -1223,7 +1248,7 @@ function createSolverLevelSpecialization(options = {}) {
 
     function someOnClearPathPenalty(sources, targets, condition) {
         if (targets.length === 0) {
-            return 16;
+            return SOME_ON_NO_TARGET_PENALTY;
         }
         let best = 16;
         buildTargetLinePresence(condition);
@@ -1430,6 +1455,8 @@ function createSolverLevelSpecialization(options = {}) {
         }
     }
 
+    // Informative but not admissible for general PuzzleScript (rules can create/destroy/transform;
+    // weighted A* uses this for ordering only). See native/src/solver/HEURISTICS_IMPLEMENTATION.md.
     function winconditionDistanceHeuristic() {
         if (!state.winconditions || state.winconditions.length === 0) {
             return 0;
@@ -1448,7 +1475,8 @@ function createSolverLevelSpecialization(options = {}) {
                     if (!matchesMask(filter1, aggregate1, tile)) {
                         continue;
                     }
-                    if (matchesMask(filter2, aggregate2, tile)) {
+                    // After matchingDistanceField, distance 0 iff filter2 matches at this tile.
+                    if (heuristicDistances[tile] === 0) {
                         continue;
                     }
                     score += 10 + distanceOrFallback(heuristicDistances[tile]);
@@ -1460,7 +1488,7 @@ function createSolverLevelSpecialization(options = {}) {
                     if (!matchesMask(filter1, aggregate1, tile)) {
                         continue;
                     }
-                    if (matchesMask(filter2, aggregate2, tile)) {
+                    if (heuristicDistances[tile] === 0) {
                         passed = true;
                         break;
                     }
@@ -1469,7 +1497,7 @@ function createSolverLevelSpecialization(options = {}) {
                 score += passed ? 0 : best;
             } else if (quantifier === -1) {
                 for (let tile = 0; tile < level.n_tiles; tile++) {
-                    if (matchesMask(filter1, aggregate1, tile) && matchesMask(filter2, aggregate2, tile)) {
+                    if (matchesMask(filter1, aggregate1, tile) && heuristicDistances[tile] === 0) {
                         score += 10;
                     }
                 }
@@ -1501,6 +1529,17 @@ function createSolverLevelSpecialization(options = {}) {
         return score;
     }
 
+    /** Shared prelude for all-on heuristics that extend the wincondition score (one `winconditionDistanceHeuristic` + unsatisfied scan). */
+    function withAllOnWinconditionExtra(extra) {
+        const base = winconditionDistanceHeuristic();
+        const condition = singleAllOnCondition();
+        if (base <= 0 || !condition) {
+            return base;
+        }
+        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+        return extra(base, unsatisfied, condition);
+    }
+
     function allOnCountHeuristic() {
         const condition = singleAllOnCondition();
         if (!condition) {
@@ -1511,47 +1550,29 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     function allOnRowColTiebreakHeuristic() {
-        const base = winconditionDistanceHeuristic();
-        const condition = singleAllOnCondition();
-        if (base <= 0 || !condition) {
-            return base;
-        }
-        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
-        return base + rowColAlignmentPenalty(unsatisfied, condition) / 1024;
+        return withAllOnWinconditionExtra((base, unsatisfied, condition) =>
+            base + rowColAlignmentPenalty(unsatisfied, condition) / 1024);
     }
 
     function allOnLineDistanceHeuristic() {
-        const base = winconditionDistanceHeuristic();
-        const condition = singleAllOnCondition();
-        if (base <= 0 || !condition) {
-            return base;
-        }
-        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
-        return base + targetLineDistancePenalty(unsatisfied, condition);
+        return withAllOnWinconditionExtra((base, unsatisfied, condition) =>
+            base + targetLineDistancePenalty(unsatisfied, condition));
     }
 
     function allOnClearPathHeuristic() {
-        const base = winconditionDistanceHeuristic();
-        const condition = singleAllOnCondition();
-        if (base <= 0 || !condition) {
-            return base;
-        }
-        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
-        const targets = collectMatchingTiles(condition[2], condition[5]);
-        return base + clearPathPenalty(unsatisfied, targets, condition);
+        return withAllOnWinconditionExtra((base, unsatisfied, condition) => {
+            const targets = collectMatchingTiles(condition[2], condition[5]);
+            return base + clearPathPenalty(unsatisfied, targets, condition);
+        });
     }
 
     function allOnGoalCoverageHeuristic() {
-        const base = winconditionDistanceHeuristic();
-        const condition = singleAllOnCondition();
-        if (base <= 0 || !condition) {
-            return base;
-        }
-        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
-        const targets = collectMatchingTiles(condition[2], condition[5]);
-        const usableTargets = plausibleTargetCount(targets, condition);
-        const shortage = Math.max(0, unsatisfied.length - usableTargets);
-        return base + shortage * 32;
+        return withAllOnWinconditionExtra((base, unsatisfied, condition) => {
+            const targets = collectMatchingTiles(condition[2], condition[5]);
+            const usableTargets = plausibleTargetCount(targets, condition);
+            const shortage = Math.max(0, unsatisfied.length - usableTargets);
+            return base + shortage * 32;
+        });
     }
 
     function allOnRowColMatchingHeuristic() {
@@ -1565,34 +1586,20 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     function allOnPlayerNearestTiebreakHeuristic() {
-        const base = winconditionDistanceHeuristic();
-        const condition = singleAllOnCondition();
-        if (base <= 0 || !condition) {
-            return base;
-        }
-        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
-        return base + Math.min(minPlayerDistanceToTiles(unsatisfied), 16) / 1024;
+        return withAllOnWinconditionExtra((base, unsatisfied) =>
+            base + Math.min(minPlayerDistanceToTiles(unsatisfied), 16) / 1024);
     }
 
     function allOnPushAccessHeuristic() {
-        const base = winconditionDistanceHeuristic();
-        const condition = singleAllOnCondition();
-        if (base <= 0 || !condition) {
-            return base;
-        }
-        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
-        const targets = collectMatchingTiles(condition[2], condition[5]);
-        return base + pushAccessPenalty(unsatisfied, targets, condition);
+        return withAllOnWinconditionExtra((base, unsatisfied, condition) => {
+            const targets = collectMatchingTiles(condition[2], condition[5]);
+            return base + pushAccessPenalty(unsatisfied, targets, condition);
+        });
     }
 
     function allOnDeadPositionHeuristic() {
-        const base = winconditionDistanceHeuristic();
-        const condition = singleAllOnCondition();
-        if (base <= 0 || !condition) {
-            return base;
-        }
-        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
-        return base + deadPositionPenalty(unsatisfied, condition);
+        return withAllOnWinconditionExtra((base, unsatisfied, condition) =>
+            base + deadPositionPenalty(unsatisfied, condition));
     }
 
     function allOnMatchingScore(unsatisfied, targets) {
@@ -1610,16 +1617,12 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     function allOnPlayerTiebreakHeuristic() {
-        const base = winconditionDistanceHeuristic();
-        const condition = singleAllOnCondition();
-        if (base <= 0 || !condition) {
-            return base;
-        }
-        const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
-        const targets = collectMatchingTiles(condition[2], condition[5]);
-        const assignment = minAssignmentDistance(unsatisfied, targets);
-        const player = minPlayerDistanceToTiles(unsatisfied);
-        return base + Math.min(assignment, 255) / 1024 + Math.min(player, 16) / 65536;
+        return withAllOnWinconditionExtra((base, unsatisfied, condition) => {
+            const targets = collectMatchingTiles(condition[2], condition[5]);
+            const assignment = minAssignmentDistance(unsatisfied, targets);
+            const player = minPlayerDistanceToTiles(unsatisfied);
+            return base + Math.min(assignment, 255) / 1024 + Math.min(player, 16) / 65536;
+        });
     }
 
     function allOnMinMatchingHeuristic() {
@@ -1872,7 +1875,8 @@ function createSolverLevelSpecialization(options = {}) {
             return winconditionDistanceHeuristic();
         }
         const offenders = collectOverlapTiles(condition);
-        return computeNoOnEscapeScore(condition, offenders) + Math.min(minPlayerDistanceToTiles(offenders), 16);
+        // Tiebreak scale matches all-on player tiebreaks (not added at full Manhattan magnitude).
+        return computeNoOnEscapeScore(condition, offenders) + Math.min(minPlayerDistanceToTiles(offenders), 16) / 1024;
     }
 
     function somePlainExistsHeuristic() {
@@ -1984,6 +1988,10 @@ function createSolverLevelSpecialization(options = {}) {
         flags = ((flags * 31 + (textMode ? 1 : 0)) | 0);
         flags = ((flags * 31 + (titleMode | 0)) | 0);
         flags = ((flags * 31 + (titleSelection | 0)) | 0);
+        flags = ((flags * 31 + (titleSelected ? 1 : 0)) | 0);
+        flags = ((flags * 31 + (messageselected ? 1 : 0)) | 0);
+        flags = ((flags * 31 + (hasUsedCheckpoint ? 1 : 0)) | 0);
+        flags = ((flags * 31 + (loadedLevelSeed | 0)) | 0);
         flags = ((flags * 31 + (winning ? 1 : 0)) | 0);
         flags = ((flags * 31 + (againing ? 1 : 0)) | 0);
         return flags;
@@ -2114,6 +2122,10 @@ function createSolverLevelSpecialization(options = {}) {
             textMode === snapshot.textMode &&
             titleMode === snapshot.titleMode &&
             titleSelection === snapshot.titleSelection &&
+            titleSelected === snapshot.titleSelected &&
+            messageselected === snapshot.messageselected &&
+            hasUsedCheckpoint === snapshot.hasUsedCheckpoint &&
+            loadedLevelSeed === snapshot.loadedLevelSeed &&
             (!textMode || messagetext === snapshot.messagetext) &&
             winning === snapshot.winning &&
             againing === snapshot.againing;
@@ -2373,6 +2385,14 @@ function mergeSearchResultTotals(target, source) {
 function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
     const result = createSolverResult(game, levelIndex, timeoutMs, compileMs);
     const useHashBuckets = process.env.PUZZLESCRIPT_DISABLE_HASH_BUCKETS !== '1';
+    const timeBlock = SOLVER_DETAIL_TIMING
+        ? (acc, field, fn) => {
+            const t0 = performance.now();
+            const ret = fn();
+            acc[field] += performance.now() - t0;
+            return ret;
+        }
+        : (acc, field, fn) => fn();
     const seed = `solver:${game}:${levelIndex}`;
     const loadStart = performance.now();
     loadLevelFromState(state, levelIndex, seed);
@@ -2395,29 +2415,27 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
         const solverOps = createSolverLevelSpecialization(options);
         modeResult.hash_mode = solverOps.hashMode;
         modeResult.snapshot_mode = solverOps.snapshotMode;
-        const initialRestoreStart = performance.now();
-        solverOps.restore(initialSnapshot);
-        modeResult.clone_ms += performance.now() - initialRestoreStart;
-        const initialSnapshotStart = performance.now();
-        const nodes = [{ snapshot: solverOps.capture(), parent: -1, input: null, depth: 0 }];
-        modeResult.snapshot_ms += performance.now() - initialSnapshotStart;
+        timeBlock(modeResult, 'clone_ms', () => {
+            solverOps.restore(initialSnapshot);
+        });
+        const nodes = timeBlock(modeResult, 'snapshot_ms', () => [
+            { snapshot: solverOps.capture(), parent: -1, input: null, depth: 0 },
+        ]);
         const visited = useHashBuckets ? new VisitedStateBuckets(nodes, solverOps) : null;
         const bestDepth = useHashBuckets ? null : new Map();
-        const hashStart = performance.now();
-        const initialHash = solverOps.hash();
-        if (useHashBuckets) {
-            visited.addInitial(initialHash, 0);
-        } else {
-            bestDepth.set(initialHash, 0);
-        }
-        modeResult.hash_ms += performance.now() - hashStart;
+        timeBlock(modeResult, 'hash_ms', () => {
+            const initialHash = solverOps.hash();
+            if (useHashBuckets) {
+                visited.addInitial(initialHash, 0);
+            } else {
+                bestDepth.set(initialHash, 0);
+            }
+        });
         modeResult.unique_states = useHashBuckets ? visited.size : bestDepth.size;
         const frontier = new MinHeap();
         let initialHeuristic = 0;
         if (mode !== 'bfs') {
-            const heuristicStart = performance.now();
-            initialHeuristic = solverOps.heuristic();
-            modeResult.heuristic_ms += performance.now() - heuristicStart;
+            initialHeuristic = timeBlock(modeResult, 'heuristic_ms', () => solverOps.heuristic());
         }
         frontier.push({ priority: priorityForMode(mode, 0, initialHeuristic, options.astarWeight || 2), tie: 0, index: 0 });
         modeResult.max_frontier = 1;
@@ -2429,27 +2447,23 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                 modeResult.status = 'timeout';
                 break;
             }
-            const queueStart = performance.now();
-            const entry = frontier.pop();
-            modeResult.queue_ms += performance.now() - queueStart;
+            const entry = timeBlock(modeResult, 'queue_ms', () => frontier.pop());
             const node = nodes[entry.index];
             modeResult.expanded++;
 
             for (const action of actions) {
-                const cloneStart = performance.now();
-                solverOps.restore(node.snapshot);
-                modeResult.clone_ms += performance.now() - cloneStart;
+                timeBlock(modeResult, 'clone_ms', () => {
+                    solverOps.restore(node.snapshot);
+                });
 
-                const stepStart = performance.now();
-                const stepResult = stepSolverAction(action);
-                modeResult.step_ms += performance.now() - stepStart;
+                const stepResult = timeBlock(modeResult, 'step_ms', () => stepSolverAction(action));
                 modeResult.generated++;
 
                 if (stepResult.solved) {
-                    const reconstructStart = performance.now();
-                    modeResult.solution = reconstruct(nodes, entry.index, action.token);
-                    modeResult.solution_length = modeResult.solution.length;
-                    modeResult.reconstruct_ms += performance.now() - reconstructStart;
+                    timeBlock(modeResult, 'reconstruct_ms', () => {
+                        modeResult.solution = reconstruct(nodes, entry.index, action.token);
+                        modeResult.solution_length = modeResult.solution.length;
+                    });
                     modeResult.elapsed_ms = Date.now() - searchStarted;
                     modeResult.status = 'solved';
                     return modeResult;
@@ -2458,9 +2472,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                     continue;
                 }
 
-                const hashStart2 = performance.now();
-                const key = solverOps.hash();
-                modeResult.hash_ms += performance.now() - hashStart2;
+                const key = timeBlock(modeResult, 'hash_ms', () => solverOps.hash());
                 const childDepth = node.depth + 1;
                 let visitedMatch = null;
                 if (useHashBuckets) {
@@ -2476,9 +2488,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                     }
                     bestDepth.set(key, childDepth);
                 }
-                const snapshotStart = performance.now();
-                const snapshot = solverOps.capture();
-                modeResult.snapshot_ms += performance.now() - snapshotStart;
+                const snapshot = timeBlock(modeResult, 'snapshot_ms', () => solverOps.capture());
                 nodes.push({
                     snapshot,
                     parent: entry.index,
@@ -2495,17 +2505,15 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                 }
                 let childHeuristic = 0;
                 if (mode !== 'bfs') {
-                    const heuristicStart = performance.now();
-                    childHeuristic = solverOps.heuristic();
-                    modeResult.heuristic_ms += performance.now() - heuristicStart;
+                    childHeuristic = timeBlock(modeResult, 'heuristic_ms', () => solverOps.heuristic());
                 }
-                const queueStart2 = performance.now();
-                frontier.push({
-                    priority: priorityForMode(mode, childDepth, childHeuristic, options.astarWeight || 2),
-                    tie: tie++,
-                    index: childIndex,
+                timeBlock(modeResult, 'queue_ms', () => {
+                    frontier.push({
+                        priority: priorityForMode(mode, childDepth, childHeuristic, options.astarWeight || 2),
+                        tie: tie++,
+                        index: childIndex,
+                    });
                 });
-                modeResult.queue_ms += performance.now() - queueStart2;
                 modeResult.max_frontier = Math.max(modeResult.max_frontier, frontier.length);
             }
         }
@@ -2524,31 +2532,29 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
         modeResult.hash_mode = solverOps.hashMode;
         modeResult.snapshot_mode = solverOps.snapshotMode;
         modeResult.heuristic = `mixed:${solverOps.heuristicName}`;
-        const initialRestoreStart = performance.now();
-        solverOps.restore(initialSnapshot);
-        modeResult.clone_ms += performance.now() - initialRestoreStart;
-        const initialHeuristicStart = performance.now();
-        const initialHeuristic = solverOps.heuristic();
-        modeResult.heuristic_ms += performance.now() - initialHeuristicStart;
-        const initialSnapshotStart = performance.now();
-        const nodes = [{
-            snapshot: solverOps.capture(),
-            parent: -1,
-            input: null,
-            depth: 0,
-            expanded: false,
-        }];
-        modeResult.snapshot_ms += performance.now() - initialSnapshotStart;
+        timeBlock(modeResult, 'clone_ms', () => {
+            solverOps.restore(initialSnapshot);
+        });
+        const initialHeuristic = timeBlock(modeResult, 'heuristic_ms', () => solverOps.heuristic());
+        const nodes = timeBlock(modeResult, 'snapshot_ms', () => [
+            {
+                snapshot: solverOps.capture(),
+                parent: -1,
+                input: null,
+                depth: 0,
+                expanded: false,
+            },
+        ]);
         const visited = useHashBuckets ? new VisitedStateBuckets(nodes, solverOps) : null;
         const bestDepth = useHashBuckets ? null : new Map();
-        const hashStart = performance.now();
-        const initialHash = solverOps.hash();
-        if (useHashBuckets) {
-            visited.addInitial(initialHash, 0);
-        } else {
-            bestDepth.set(initialHash, 0);
-        }
-        modeResult.hash_ms += performance.now() - hashStart;
+        timeBlock(modeResult, 'hash_ms', () => {
+            const initialHash = solverOps.hash();
+            if (useHashBuckets) {
+                visited.addInitial(initialHash, 0);
+            } else {
+                bestDepth.set(initialHash, 0);
+            }
+        });
         modeResult.unique_states = useHashBuckets ? visited.size : bestDepth.size;
 
         const portfolioModes = [
@@ -2564,8 +2570,13 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
             portfolioModes.unshift(bfsMode);
         }
         let tie = 0;
+        const portfolioAstarWeight = options.astarWeight || 2;
         for (const mode of portfolioModes) {
-            mode.heap.push({ priority: priorityForPortfolioMode(mode.name, 0, initialHeuristic), tie: tie++, index: 0 });
+            mode.heap.push({
+                priority: priorityForPortfolioMode(mode.name, 0, initialHeuristic, portfolioAstarWeight),
+                tie: tie++,
+                index: 0,
+            });
         }
         let totalFrontier = portfolioModes.length;
         modeResult.max_frontier = totalFrontier;
@@ -2606,9 +2617,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                 }
             }
 
-            const queueStart = performance.now();
-            const entry = activeMode.heap.pop();
-            modeResult.queue_ms += performance.now() - queueStart;
+            const entry = timeBlock(modeResult, 'queue_ms', () => activeMode.heap.pop());
             if (entry === null) {
                 continue;
             }
@@ -2620,7 +2629,13 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
             node.expanded = true;
             sliceExpansionsLeft--;
             modeResult.expanded++;
-            if (!lockedToWeightedAstar && modeResult.expanded >= 128 && modeResult.step_ms / modeResult.generated > 0.05) {
+            if (
+                !lockedToWeightedAstar &&
+                SOLVER_DETAIL_TIMING &&
+                modeResult.expanded >= 128 &&
+                modeResult.generated > 0 &&
+                modeResult.step_ms / modeResult.generated > 0.05
+            ) {
                 lockedToWeightedAstar = true;
                 if (activeMode !== weightedMode && weightedMode && weightedMode.heap.length > 0) {
                     activeMode = weightedMode;
@@ -2629,20 +2644,18 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
             }
 
             for (const action of actions) {
-                const cloneStart = performance.now();
-                solverOps.restore(node.snapshot);
-                modeResult.clone_ms += performance.now() - cloneStart;
+                timeBlock(modeResult, 'clone_ms', () => {
+                    solverOps.restore(node.snapshot);
+                });
 
-                const stepStart = performance.now();
-                const stepResult = stepSolverAction(action);
-                modeResult.step_ms += performance.now() - stepStart;
+                const stepResult = timeBlock(modeResult, 'step_ms', () => stepSolverAction(action));
                 modeResult.generated++;
 
                 if (stepResult.solved) {
-                    const reconstructStart = performance.now();
-                    modeResult.solution = reconstruct(nodes, entry.index, action.token);
-                    modeResult.solution_length = modeResult.solution.length;
-                    modeResult.reconstruct_ms += performance.now() - reconstructStart;
+                    timeBlock(modeResult, 'reconstruct_ms', () => {
+                        modeResult.solution = reconstruct(nodes, entry.index, action.token);
+                        modeResult.solution_length = modeResult.solution.length;
+                    });
                     modeResult.elapsed_ms = Date.now() - searchStarted;
                     modeResult.status = 'solved';
                     modeResult.strategy = `portfolio:${activeMode.name}`;
@@ -2652,9 +2665,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                     continue;
                 }
 
-                const hashStart2 = performance.now();
-                const key = solverOps.hash();
-                modeResult.hash_ms += performance.now() - hashStart2;
+                const key = timeBlock(modeResult, 'hash_ms', () => solverOps.hash());
                 const childDepth = node.depth + 1;
                 let visitedMatch = null;
                 if (useHashBuckets) {
@@ -2670,12 +2681,8 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                     }
                     bestDepth.set(key, childDepth);
                 }
-                const heuristicStart = performance.now();
-                const childHeuristic = solverOps.heuristic();
-                modeResult.heuristic_ms += performance.now() - heuristicStart;
-                const snapshotStart = performance.now();
-                const snapshot = solverOps.capture();
-                modeResult.snapshot_ms += performance.now() - snapshotStart;
+                const childHeuristic = timeBlock(modeResult, 'heuristic_ms', () => solverOps.heuristic());
+                const snapshot = timeBlock(modeResult, 'snapshot_ms', () => solverOps.capture());
                 nodes.push({
                     snapshot,
                     parent: entry.index,
@@ -2691,17 +2698,17 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                 } else {
                     modeResult.unique_states = bestDepth.size;
                 }
-                const queueStart2 = performance.now();
-                const queueModes = lockedToWeightedAstar && weightedMode ? [weightedMode] : portfolioModes;
-                for (const mode of queueModes) {
-                    mode.heap.push({
-                        priority: priorityForPortfolioMode(mode.name, childDepth, childHeuristic),
-                        tie: tie++,
-                        index: childIndex,
-                    });
-                }
-                totalFrontier += queueModes.length;
-                modeResult.queue_ms += performance.now() - queueStart2;
+                timeBlock(modeResult, 'queue_ms', () => {
+                    const queueModes = lockedToWeightedAstar && weightedMode ? [weightedMode] : portfolioModes;
+                    for (const mode of queueModes) {
+                        mode.heap.push({
+                            priority: priorityForPortfolioMode(mode.name, childDepth, childHeuristic, portfolioAstarWeight),
+                            tie: tie++,
+                            index: childIndex,
+                        });
+                    }
+                    totalFrontier += queueModes.length;
+                });
                 modeResult.max_frontier = Math.max(modeResult.max_frontier, totalFrontier);
             }
         }

@@ -95,6 +95,8 @@ Two types of tests, both using QUnit:
 
 **Generating test data:** In the editor, compile/launch a game, then press Ctrl/Cmd+J to generate test data in the browser console.
 
+**Node solver corpus** (`node src/tests/run_solver_tests_js.js <solver_tests_dir> …`): optional environment variables used by that script include `PUZZLESCRIPT_SOLVER_DETAIL_TIMING=0` (skip per-node `performance.now()` in the search loop), `PUZZLESCRIPT_VERIFY_ZOBRIST=1` (assert incremental Zobrist matches full recompute), and `PUZZLESCRIPT_DISABLE_HASH_BUCKETS=1` (Map-based visited instead of bucketed structure).
+
 ## Development Notes
 
 - Source files in `src/` are the raw, uncompressed, directly-runnable version. The `bin/` directory is generated output — edit only in `src/`.
