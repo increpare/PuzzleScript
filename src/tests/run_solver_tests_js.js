@@ -44,6 +44,7 @@ const SOLVER_HEURISTICS = new Set([
     'no-plain-count',
     'no-plain-cluster',
     'no-plain-player',
+    'auto',
 ]);
 const DIRECTION_ACTIONS = [
     { token: 'right', input: 3 },
@@ -1961,6 +1962,41 @@ function createSolverLevelSpecialization(options = {}) {
         return Math.max(0, count * 12 - Math.min(count * 4, adjacentPairs * 3));
     }
 
+    /** Per-condition router: same as `allOnClearPathHeuristic` for single-all-on levels, plus static-deadlock corner penalty across every all-on condition (uses A3's `getStaticDeadCells` cache). The corner penalty is base-scale (32 per cornered unsatisfied source) — meant as a real lower-bound contribution, not just a tiebreak. */
+    function autoHeuristic() {
+        const base = winconditionDistanceHeuristic();
+        if (!state.winconditions || state.winconditions.length === 0) {
+            return base;
+        }
+        const onlyAllOn = singleAllOnCondition();
+        let extra = 0;
+        if (onlyAllOn) {
+            const unsatisfied = collectUnsatisfiedAllOnTiles(onlyAllOn);
+            if (unsatisfied.length > 0) {
+                const targets = collectMatchingTiles(onlyAllOn[2], onlyAllOn[5]);
+                extra += clearPathPenalty(unsatisfied, targets, onlyAllOn);
+            }
+        }
+        let cornerCount = 0;
+        for (let i = 0; i < state.winconditions.length; i++) {
+            const condition = state.winconditions[i];
+            if (condition[0] !== 1) {
+                continue;
+            }
+            const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
+            if (unsatisfied.length === 0) {
+                continue;
+            }
+            const { corner } = getStaticDeadCells(condition);
+            for (let j = 0; j < unsatisfied.length; j++) {
+                if (corner[unsatisfied[j]]) {
+                    cornerCount++;
+                }
+            }
+        }
+        return base + extra + cornerCount * 32;
+    }
+
     function noPlainPlayerHeuristic() {
         const condition = singleCondition();
         if (!condition || condition[0] !== -1 || !isPlainCondition(condition)) {
@@ -2004,6 +2040,7 @@ function createSolverLevelSpecialization(options = {}) {
         'no-plain-count': noPlainCountHeuristic,
         'no-plain-cluster': noPlainClusterHeuristic,
         'no-plain-player': noPlainPlayerHeuristic,
+        'auto': autoHeuristic,
         'winconditions': allOnClearPathHeuristic,
     };
     const selectedHeuristic = HEURISTIC_FUNCTIONS[heuristicName] || allOnClearPathHeuristic;

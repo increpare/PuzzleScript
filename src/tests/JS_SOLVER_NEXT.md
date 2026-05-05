@@ -9,6 +9,37 @@ C++ solver and shouldn't be treated as a JS to-do list — many of its items are
 already covered here. Cross-references in parentheses point to the native doc
 where the idea overlaps.
 
+## Status / progress log
+
+- **A3 — done.** Per-condition `staticDeadCellsCache` of `{corner, edge}`
+  Uint8Arrays, built once via `inferStaticBlockerMask` + map boundaries.
+  `deadPositionPenalty` and `allOnDeadlockHeuristic` rewritten as O(1) lookups.
+  Bench on `--solver-heuristic all-on-dead-position` (timeout 250ms, 1341
+  levels): **608 → 622 solved (+14), 689 → 675 timeouts (-14), -3s wall.**
+  Default `make solver_tests_js` bench unaffected because the default
+  heuristic (`'winconditions'` → `allOnClearPathHeuristic`) doesn't call dead
+  detection. Switching from dynamic blocker check to static-only is also a
+  semantic upgrade: dynamic "blockers" can move away and aren't true deadlocks.
+
+- **B1 (minimal) — exploratory, neutral on aggregate.** New `'auto'` heuristic
+  reuses `allOnClearPathHeuristic`'s extras plus a static-corner-deadlock
+  penalty (32 per cornered unsatisfied tile, summed across every all-on
+  condition rather than just `singleAllOnCondition`). Aggregate solved count is
+  within noise of `'winconditions'` (615 vs 618 in one paired run), **but the
+  two solve different games**: union is 622, with `winconditions` solving 7
+  unique levels and `'auto'` solving 4 unique levels. This is concrete evidence
+  that **C1 (multi-heuristic portfolio)** would be a real win — about 4 extra
+  solved levels just from running both in parallel.
+
+  Implication: the single-heuristic ranking is a misleading metric. We should
+  evaluate heuristics by *how many union solves they enable*, not just their
+  own count. Promote C1 above the new-heuristic items in the order below.
+
+- **F1 — partially worked around.** The per-game JSON diff above was done
+  manually with `--quiet --json` redirected to disk + a small node script.
+  Codifying that flow into `bench_solver.js` (with N-rep variance reporting)
+  would make every future experiment cheap.
+
 ## Where things stand
 
 - One heuristic at a time. `--solver-heuristic` picks a single function from
@@ -166,19 +197,43 @@ without a manual sweep.
 
 ## G. Suggested order of attack
 
-1. **F1** (bench driver) — without it, every other change is a guess.
-2. **A1 + A3** (plan object + dead-square cache) — modest code, biggest perf
-   win, unlocks D2/D3/D5.
-3. **B1 + B2** (router + `auto` default) — gives every game a sensible scorer.
-4. **D1, D2, D4** (reach-aware some, region isolation, lifecycle no-on) — three
-   different shapes of new signal, each cheap to try with F1 to validate.
-5. **C1** (multi-heuristic portfolio) — pick the best 3 from step 4 and let
-   them race.
-6. **E1 + E2** (no-op / equivalent action skipping) — orthogonal to heuristics,
-   measurable on `expanded`/`generated` ratios.
-7. **D6 + E4** (lookahead, adaptive weight) — refinements once the foundation
+Updated based on the A3/`auto` measurements above.
+
+1. ~~**A3**~~ — done.
+2. **C1** (multi-heuristic portfolio) — promoted above F1 because we already
+   have evidence (`winconditions` ⊕ `auto` = 622 vs 618/615 singletons) that
+   it's worth ~4 levels with zero new heuristic work. Just plumbing.
+3. **F1** (bench driver) — once C1 lands, we'll be choosing *combinations* of
+   heuristics, and the single-config `make solver_tests_js` becomes even less
+   sufficient.
+4. **A1** (plan object) — needed before B1 can do real per-condition routing;
+   the current `'auto'` is a stopgap that just shares extras across conditions.
+5. **B1 proper** (full per-condition router using A1 metadata).
+6. **D1, D2, D4** (reach-aware some, region isolation, lifecycle no-on) —
+   three different shapes of new signal, each cheap to try with F1 + C1 to
+   validate.
+7. **E1 + E2** (no-op / equivalent action skipping) — orthogonal to
+   heuristics, measurable on `expanded`/`generated` ratios.
+8. **D6 + E4** (lookahead, adaptive weight) — refinements once the foundation
    is in place.
-8. **E3** (IDA\*) — only if F1 shows we have a memory ceiling, otherwise skip.
+9. **E3** (IDA\*) — only if F1 shows we have a memory ceiling, otherwise skip.
 
 D5, D7, F3, F4 are nice-to-have polish — pull them in when their parent area
 gets touched.
+
+### C1 implementation sketch
+
+The existing portfolio mode varies *priority formula* (`bfs`/`wa2`/`wa8`/
+`greedy`) on a single `solverOps`. To vary heuristics, the cleanest path is:
+
+- Construct one `solverOps` per heuristic in the portfolio list (each builds
+  its own caches; the Zobrist hash is heuristic-independent so the visited
+  bucket can be shared).
+- Adapt `runAdaptivePortfolio` so each `portfolioMode` entry carries its own
+  `solverOps` reference, and the per-mode heap stores priorities computed
+  against that mode's heuristic.
+- Existing auto-lock-to-wa2 logic still applies; gate it on
+  `(solverOps, mode)` rather than just `mode`.
+- Add `--portfolio-heuristics auto,winconditions` (comma list) with sensible
+  default (`auto,winconditions` once both are in tree). Cap at ~4 entries to
+  bound frontier overhead.
