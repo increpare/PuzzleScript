@@ -514,6 +514,8 @@ function createSolverLevelSpecialization(options = {}) {
     const conditionDistances = [];
     const staticBlockerMasks = new Map();
     const someOnRoleAnalyses = new Map();
+    /** Per-condition static deadlock geometry: { corner: Uint8Array, edge: Uint8Array } keyed by `conditionStaticKey`. Built once per level using `inferStaticBlockerMask` + map boundaries; replaces the per-call neighbor-blocker scan in dead-position heuristics. */
+    const staticDeadCellsCache = new Map();
     const allObjectsMask = state.objectMasks && state.objectMasks["\nall\n"];
     const playerAggregate = Array.isArray(state.playerMask) ? state.playerMask[0] : false;
     const playerMask = Array.isArray(state.playerMask) ? state.playerMask[1] : state.playerMask;
@@ -1362,15 +1364,55 @@ function createSolverLevelSpecialization(options = {}) {
         return penalty;
     }
 
+    function getStaticDeadCells(condition) {
+        const key = conditionStaticKey(condition);
+        let entry = staticDeadCellsCache.get(key);
+        if (entry !== undefined) {
+            return entry;
+        }
+        const n = level.n_tiles;
+        const W = level.width;
+        const H = level.height;
+        const blockerMask = inferStaticBlockerMask(condition);
+        const blocked = new Uint8Array(n);
+        if (blockerMask) {
+            for (let tile = 0; tile < n; tile++) {
+                if (cellHasStaticBlockingObject(tile, condition, blockerMask)) {
+                    blocked[tile] = 1;
+                }
+            }
+        }
+        const corner = new Uint8Array(n);
+        const edge = new Uint8Array(n);
+        for (let x = 0; x < W; x++) {
+            for (let y = 0; y < H; y++) {
+                const tile = x * H + y;
+                const left = x === 0 || blocked[(x - 1) * H + y] !== 0;
+                const right = x === W - 1 || blocked[(x + 1) * H + y] !== 0;
+                const up = y === 0 || blocked[x * H + (y - 1)] !== 0;
+                const down = y === H - 1 || blocked[x * H + (y + 1)] !== 0;
+                const horiz = left || right;
+                const vert = up || down;
+                if (horiz && vert) {
+                    corner[tile] = 1;
+                } else if (horiz || vert) {
+                    edge[tile] = 1;
+                }
+            }
+        }
+        entry = { corner, edge };
+        staticDeadCellsCache.set(key, entry);
+        return entry;
+    }
+
     function deadPositionPenalty(unsatisfied, condition) {
         let penalty = 0;
         buildTargetLinePresence(condition);
+        const { corner, edge } = getStaticDeadCells(condition);
         for (const tile of unsatisfied) {
-            const horizontalBlocked = adjacentCellBlocked(tile, -1, 0, condition) || adjacentCellBlocked(tile, 1, 0, condition);
-            const verticalBlocked = adjacentCellBlocked(tile, 0, -1, condition) || adjacentCellBlocked(tile, 0, 1, condition);
-            if (horizontalBlocked && verticalBlocked) {
+            if (corner[tile]) {
                 penalty += 32;
-            } else if ((horizontalBlocked || verticalBlocked) &&
+            } else if (edge[tile] &&
                 targetRowPresence[tileY(tile)] === 0 &&
                 targetColPresence[tileX(tile)] === 0) {
                 penalty += 8;
@@ -1659,17 +1701,6 @@ function createSolverLevelSpecialization(options = {}) {
             Math.min(minPlayerDistanceToTiles(unsatisfied), 16);
     }
 
-    function adjacentCellBlocked(tile, dx, dy, condition) {
-        const x = (tile / level.height) | 0;
-        const y = tile % level.height;
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx < 0 || ny < 0 || nx >= level.width || ny >= level.height) {
-            return true;
-        }
-        return cellHasBlockingObject(nx * level.height + ny, condition);
-    }
-
     function allOnDeadlockHeuristic() {
         const condition = singleAllOnCondition();
         if (!condition) {
@@ -1677,11 +1708,10 @@ function createSolverLevelSpecialization(options = {}) {
         }
         const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
         const targets = collectMatchingTiles(condition[2], condition[5]);
+        const { corner } = getStaticDeadCells(condition);
         let deadlocks = 0;
         for (const tile of unsatisfied) {
-            const horizontal = adjacentCellBlocked(tile, -1, 0, condition) || adjacentCellBlocked(tile, 1, 0, condition);
-            const vertical = adjacentCellBlocked(tile, 0, -1, condition) || adjacentCellBlocked(tile, 0, 1, condition);
-            if (horizontal && vertical) {
+            if (corner[tile]) {
                 deadlocks++;
             }
         }
