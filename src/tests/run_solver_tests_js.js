@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
+const staticAnalysis = require('./lib/solver_static_analysis');
 
 const DEFAULT_STRATEGY = 'weighted-astar';
 const DEFAULT_SOLVER_HEURISTIC = 'auto';

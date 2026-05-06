@@ -5,6 +5,21 @@ const fs = require('fs');
 const path = require('path');
 
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
+const staticAnalysis = require('./lib/solver_static_analysis');
+
+const {
+    maskHasBits,
+    masksIntersect,
+    masksEqual,
+    cloneMask,
+    iorIntersection,
+    objectPresenceMask,
+    rowObjectsSetMask,
+    foreignSetMask,
+    cellHasMovement,
+    cellChangesObjects,
+    isCancelRule,
+} = staticAnalysis;
 
 function usage() {
     console.error([
@@ -121,126 +136,11 @@ function popcount32(value) {
     return (((value + (value >>> 4)) & 0x0f0f0f0f) * 0x01010101) >>> 24;
 }
 
-function cloneMask(mask) {
-    const result = new BitVec(STRIDE_OBJ);
-    if (mask && mask.data) {
-        result.ior(mask);
-    }
-    return result;
-}
+const movementMaskTouchesObjectMask = (movementMask, objectMask) =>
+    staticAnalysis.movementMaskTouchesObjectMask(state, movementMask, objectMask);
 
-function masksIntersect(left, right) {
-    if (!left || !right || !left.data || !right.data) {
-        return false;
-    }
-    const length = Math.min(left.data.length, right.data.length);
-    for (let word = 0; word < length; word++) {
-        if ((left.data[word] & right.data[word]) !== 0) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function masksEqual(left, right) {
-    if (left === right) {
-        return true;
-    }
-    if (!left || !right || !left.data || !right.data || left.data.length !== right.data.length) {
-        return false;
-    }
-    for (let word = 0; word < left.data.length; word++) {
-        if ((left.data[word] | 0) !== (right.data[word] | 0)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-function maskHasBits(mask) {
-    return Boolean(mask && mask.data && !mask.iszero());
-}
-
-function objectPresenceMask(cell) {
-    const mask = new BitVec(STRIDE_OBJ);
-    if (!cell || !cell.objectsPresent || !cell.objectsPresent.data) {
-        return mask;
-    }
-    mask.ior(cell.objectsPresent);
-    for (const anyMask of cell.anyObjectsPresent || []) {
-        mask.ior(anyMask);
-    }
-    return mask;
-}
-
-function rowObjectsSetMask(row) {
-    const mask = new BitVec(STRIDE_OBJ);
-    for (const cell of row) {
-        if (cell && cell.replacement && cell.replacement.objectsSet) {
-            mask.ior(cell.replacement.objectsSet);
-        }
-    }
-    return mask;
-}
-
-function iorIntersection(target, left, right) {
-    if (!left || !right || !left.data || !right.data) {
-        return;
-    }
-    const length = Math.min(target.data.length, left.data.length, right.data.length);
-    for (let word = 0; word < length; word++) {
-        target.data[word] |= left.data[word] & right.data[word];
-    }
-}
-
-function movementMaskTouchesObjectMask(movementMask, objectMask) {
-    if (!movementMask || !movementMask.data || !objectMask || !objectMask.data) {
-        return false;
-    }
-    for (const objectName of state.idDict) {
-        const object = state.objects[objectName];
-        if (!object || !bit(objectMask, object.id)) {
-            continue;
-        }
-        const movementBits = movementMask.getshiftor(0x1f, 5 * object.layer);
-        if (movementBits !== 0) {
-            return true;
-        }
-    }
-    return false;
-}
-
-function cellChangesObjectMask(cell, objectMask) {
-    if (!cell || !cell.replacement || !objectMask || !objectMask.data) {
-        return false;
-    }
-    const present = objectPresenceMask(cell);
-    if (masksIntersect(cell.replacement.objectsSet, objectMask)) {
-        return true;
-    }
-    if (masksIntersect(present, objectMask) && masksIntersect(cell.replacement.objectsClear, objectMask)) {
-        return true;
-    }
-    if (masksIntersect(present, objectMask) &&
-        (movementMaskTouchesObjectMask(cell.replacement.movementsSet, objectMask) ||
-            movementMaskTouchesObjectMask(cell.replacement.movementsClear, objectMask))) {
-        return true;
-    }
-    return false;
-}
-
-function cellHasMovement(cell) {
-    return Boolean(cell && cell.movementsPresent && !cell.movementsPresent.iszero());
-}
-
-function cellChangesObjects(cell) {
-    return Boolean(cell && cell.replacement &&
-        ((!cell.replacement.objectsSet.iszero()) || (!cell.replacement.objectsClear.iszero())));
-}
-
-function isCancelRule(rule) {
-    return (rule.commands || []).some((command) => command && command[0] === 'cancel');
-}
+const cellChangesObjectMask = (cell, objectMask) =>
+    staticAnalysis.cellChangesObjectMask(state, cell, objectMask);
 
 function layerNamesForMask(mask) {
     const layerNames = new Set();
@@ -257,87 +157,8 @@ function playerMaskForState() {
     return Array.isArray(state.playerMask) ? state.playerMask[1] : state.playerMask;
 }
 
-function inferStaticBlockerMask(condition, playerMask) {
-    const blockers = new BitVec(STRIDE_OBJ);
-    const consumed = new BitVec(STRIDE_OBJ);
-    const actorMask = cloneMask(condition[1]);
-    if (playerMask && playerMask.data && masksIntersect(condition[1], playerMask)) {
-        actorMask.ior(playerMask);
-    }
-
-    for (const group of [...(state.rules || []), ...(state.lateRules || [])]) {
-        for (const rule of group || []) {
-            const cancelRule = isCancelRule(rule);
-            for (const row of rule.patterns || []) {
-                const rowSet = rowObjectsSetMask(row);
-                for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
-                    const cell = row[cellIndex];
-                    if (!cell || !cell.objectsPresent) {
-                        continue;
-                    }
-                    const cellPresent = objectPresenceMask(cell);
-                    const actorCell = masksIntersect(cellPresent, actorMask);
-                    if (!actorCell) {
-                        continue;
-                    }
-                    const actorMoves = cellHasMovement(cell);
-                    const actorChanges = cellChangesObjects(cell);
-                    if (!actorMoves && !actorChanges && !cancelRule) {
-                        continue;
-                    }
-                    for (const neighborIndex of [cellIndex - 1, cellIndex + 1]) {
-                        if (neighborIndex < 0 || neighborIndex >= row.length) {
-                            continue;
-                        }
-                        const neighbor = row[neighborIndex];
-                        if (!neighbor || !neighbor.objectsPresent) {
-                            continue;
-                        }
-                        if ((actorMoves || actorChanges) && maskHasBits(neighbor.objectsMissing)) {
-                            blockers.ior(neighbor.objectsMissing);
-                        }
-                        const neighborPresent = objectPresenceMask(neighbor);
-                        if (neighbor.replacement && maskHasBits(neighborPresent)) {
-                            const cleared = new BitVec(STRIDE_OBJ);
-                            iorIntersection(cleared, neighborPresent, neighbor.replacement.objectsClear);
-                            cleared.iclear(rowSet);
-                            if (!cleared.iszero()) {
-                                consumed.ior(cleared);
-                            }
-                        }
-                        if (!maskHasBits(neighborPresent)) {
-                            continue;
-                        }
-                        if (cancelRule) {
-                            blockers.ior(neighborPresent);
-                        } else if (actorChanges && !cellChangesObjects(neighbor)) {
-                            blockers.ior(neighborPresent);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    blockers.iclear(consumed);
-    blockers.iclear(condition[1]);
-    blockers.iclear(condition[2]);
-    if (playerMask && playerMask.data) {
-        blockers.iclear(playerMask);
-    }
-    return { blockers, consumed };
-}
-
-function foreignSetMask(cell, excludedMask) {
-    const result = new BitVec(STRIDE_OBJ);
-    if (!cell || !cell.replacement || !cell.replacement.objectsSet) {
-        return result;
-    }
-    result.ior(cell.replacement.objectsSet);
-    result.iclear(objectPresenceMask(cell));
-    result.iclear(excludedMask);
-    return result;
-}
+const inferStaticBlockerMask = (condition, playerMask) =>
+    staticAnalysis.inferStaticBlockerMask(state, condition, { playerMask });
 
 function relationSummary(stats, condition, playerMask) {
     const sourceIsPlayer = playerMask && masksIntersect(condition[1], playerMask);
