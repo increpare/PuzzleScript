@@ -172,6 +172,21 @@ where the idea overlaps.
   ~50 lines (cache + scan + heuristic + dead code path in `auto`). Code
   reverted; this log entry preserves the negative result.
 
+- **D1 (`someOnPlayerBfs`) — tested and rejected.** Replaced raw player→source
+  Manhattan with `obstacleDistanceField`-based BFS through the level
+  (blocked by `cellHasBlockingObject`, which treats walls + decorations as
+  blocking but lets the BFS pass through sources/targets/player).
+
+  Bench (250ms): some-on-player (control) 612 → some-on-player-bfs **606
+  (-6)**. Bench (5000ms): 898 → 896 (-2). Both worse.
+
+  Why it doesn't help: the corpus is dominated by small-to-medium Sokoban-style
+  levels where Manhattan is essentially equal to BFS-through-walls. Adding the
+  per-call O(n_tiles) BFS work doesn't pay back in signal — and where BFS
+  diverges from Manhattan it inflates `h` slightly, biasing weighted A*'s
+  `f = depth + 2h` ordering toward shallower states in a way that misled
+  search on a handful of levels (the -6 at 250ms). Reverted.
+
 - **D7 (`someOnPushAccess`) — tested and rejected.** Implemented a some-on
   variant of `pushAccessPenalty` that returns the cheapest-pushable source's
   manhattan distance + a small surcharge for unpushable sources (12 for
@@ -274,11 +289,10 @@ Concrete heuristics worth prototyping. Each should be added as a named entry in
 `HEURISTIC_FUNCTIONS` so it's selectable for benchmarking before becoming part
 of `'auto'`.
 
-- [ ] **D1. Reachability-aware `someOnPlayerBFS`.** Existing
-      `someOnPlayerHeuristic` uses raw Manhattan. Reuse the
-      `obstacleDistanceField` infrastructure (BFS from player, blocked by
-      static blockers) and pick the min distance to a target tile. Should be a
-      strict improvement on player-reach goals.
+- [x] ~~**D1. Reachability-aware `someOnPlayerBFS`.**~~ Tested and rejected
+      (see status log). −6 at 250ms, −2 at 5s. BFS-through-walls degenerates
+      to Manhattan on the corpus's small/open levels; the per-call BFS cost
+      and `h` inflation outweigh any reachability signal.
 - [ ] **D2. `allOnRegionIsolation`.** Cheap connected-component check: if any
       unsatisfied source tile sits in a static-blocker component with no target
       tile, add a large soft penalty per such tile. Catches "boxed in" states
@@ -364,9 +378,8 @@ Updated based on the A3/`auto` measurements above.
 5. **A1** (plan object) — needed before B1 can do real per-condition routing;
    the current `'auto'` is a stopgap that just shares extras across conditions.
 6. **B1 proper** (full per-condition router using A1 metadata).
-7. **D1, D2** (reach-aware some, region isolation) — D2 already landed; D1 is
-   the remaining cheap-to-try signal. D4/D7 already tried, both rejected at
-   the standard 5s timeout.
+7. **D3, D5** (equality cover, 2x2 packing deadlock) — remaining cheap-to-try
+   signals. D1/D2/D4/D7 already tried; only D2 (region isolation) landed.
 8. **E1 + E2** (no-op / equivalent action skipping) — orthogonal to
    heuristics, measurable on `expanded`/`generated` ratios.
 9. **D6 + E4** (lookahead, adaptive weight) — refinements once the foundation
