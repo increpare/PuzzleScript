@@ -1,13 +1,42 @@
 # JS Solver — next steps
 
-Action plan for tightening up `src/tests/run_solver_tests_js.js` after the
-performance/correctness pass logged in `TODO.md`. Items are roughly ordered by
-expected payoff-per-effort, but each is independently doable.
+Action plan for tightening up `src/tests/run_solver_tests_js.js`. Items are
+roughly ordered by expected payoff-per-effort, but each is independently doable.
 
 The native-side doc `native/src/solver/HEURISTICS_IMPLEMENTATION.md` is for the
 C++ solver and shouldn't be treated as a JS to-do list — many of its items are
 already covered here. Cross-references in parentheses point to the native doc
 where the idea overlaps.
+
+## TL;DR — status: paused
+
+Heuristic pass concluded. Single-heuristic gain over baseline at 250ms timeout
+landed at **+14 to +17 solves** (608 → 622-625 depending on heuristic). At
+the 5s default timeout the spread compresses to ~5 solves (897 → ~902).
+
+What landed:
+- **A3** — per-condition static-dead-cell cache (corner/edge masks). +14 solves.
+- **D2** — region-isolation penalty on top of A3. +1 to +4 more.
+- **`auto`** — per-condition router; current `DEFAULT_SOLVER_HEURISTIC`.
+- Opt-in plumbing for `--portfolio-heuristics` and `--strategy phase-split`
+  (kept available; both showed neutral-to-regression at fixed budgets).
+
+What was tried and rejected (see status log for benches):
+C1, C1b, D1, D4, D7. Three consecutive negative D-results plus failed
+multi-heuristic combinations indicate the heuristic-shape space at the 5s
+budget is largely exhausted.
+
+Profiling outcome (this pass): `step_ms` is **86.2%** of search time and
+**38.3%** of step calls are no-ops — recoverable in principle but not safely
+attackable from the heuristic layer (any static "drop this action" check
+risks search corruption per engine semantics). Captured as **E1** in the
+backlog; needs deeper engine-internals work (in `src/js/engine.js`), not
+solver-script tweaking.
+
+Reasonable next moves only with fresh evidence:
+- D3 / D5 if a Sokoban-shape detector lands (small expected wins, 250ms-only).
+- E1 reframed as engine-side `applyRules` early-out (requires care + tests).
+- IDA\* (E3) only if measurement shows a memory ceiling.
 
 ## Status / progress log
 
@@ -203,6 +232,44 @@ where the idea overlaps.
   source tiles that are temporarily blocked but where intermediate moves can
   free them. Reverted.
 
+- **Profiling pass (250ms portfolio+auto, full corpus).** Added a
+  short-lived `no_ops` counter on the `!stepResult.changed` branch and
+  re-ran the full `--json` bench to see where time actually goes. Results
+  reverted; raw findings:
+
+  | bucket | ms | % accounted |
+  |---|---|---|
+  | `step_ms` | 173,724 | **86.2%** |
+  | `heuristic_ms` | 19,526 | 9.7% |
+  | `clone_ms` | 2,481 | 1.2% |
+  | `hash_ms` | 2,427 | 1.2% |
+  | `queue_ms` | 2,032 | 1.0% |
+  | `snapshot_ms` | 1,318 | 0.7% |
+
+  Of the 8.10M `stepSolverAction` calls:
+  - **38.3% are no-ops** (`changed=false` — engine ran but didn't move state)
+  - 32.3% are duplicates (changed but post-step hash already visited)
+  - 29.4% are useful (pushed to frontier)
+
+  At 0.0214 ms/step, the no-op slice alone is ≈66 seconds of search time
+  per corpus run — **~33% of total solver wall-time** spendable on a
+  cheaper-than-`processInput` no-op predictor. This dwarfs any further
+  heuristic-shape work: D1/D4/D7 each shaved <2% even when they helped.
+
+  Per-game distribution: no-ops are 30-75% of step calls in roughly half
+  the corpus (top offenders: `The Far Away Danish Pastry…` 75.5%,
+  `limerick.txt` 72.0%, `gapfiller.txt` 71.0%, `make way.txt` 65.9%).
+  Not concentrated in a few games — a structural property of pressing
+  movement keys against walls.
+
+  **Conclusion: E1 (no-op skipping) is the highest-EV remaining work**,
+  ahead of all D-section heuristics and ahead of E2 (post-step
+  `objects`-array compare, which only saves the snapshot+hash slice =
+  1.9% of time even if 100% effective). Recommend prioritising E1 with
+  a cheap-and-conservative predicate (better to false-negative than
+  false-positive — false-positives skip real children and would corrupt
+  the search).
+
 ## Where things stand
 
 - One heuristic at a time. `--solver-heuristic` picks a single function from
@@ -325,12 +392,46 @@ of `'auto'`.
       action token. If not, treat the result as identical-to-parent and skip
       the snapshot/hash work entirely. (D4's rule-effect scan was implemented
       and reverted; if E1 needs it, it'll need to be re-derived.)
+      **Profiled (see status log): 38.3% of step calls are no-ops, accounting
+      for ~33% of total search wall-time.** Highest-EV remaining work item,
+      but **deferred** — no safe attack found from the solver-script layer.
+      Implementation must be conservative: false-positives (flagging a real
+      child as a no-op) corrupt the search; false-negatives just leave
+      performance on the table. Candidate predicates considered:
+      1. ~~**Drop `action` from the action list when no rule's LHS references
+         the action button.**~~ Considered and rejected: not safe. Engine
+         runs all rules every turn regardless of input, and direction
+         presses set the player's `moving` bit (01111) which `[moving player]`
+         / `[> player]` rules consume; ACTION sets the action bit (10000)
+         which they don't. So even with no rule referencing `action`,
+         pressing ACTION can produce a state distinct from any direction
+         press purely via engine semantics (`resolveMovements`).
+      2. **For movement actions: target cell contains only static-blocker
+         objects AND no rule has a `LATE` or input-direction-agnostic LHS
+         that could fire from the unchanged board.** Trickier; needs care
+         around `[stationary]`, `[moving]`, and global-pattern rules.
+         Likely needs full rule-dependency-graph analysis; out of scope for
+         a heuristic pass.
+      3. **Per-state per-action no-op cache** — won't help because each
+         pre-step state is unique (post-step dedup ensures it).
+      4. **Engine-side `applyRules` early-out.** Move the question into
+         `src/js/engine.js`: short-circuit the rule loop if a cheap
+         pre-pass shows no rule's LHS could match anywhere. Helps every
+         action, not just `action`. Risks correctness regressions in the
+         player; needs the full simulation test suite to gate it.
+
+      Conclusion: this opportunity exists but the right home is engine
+      internals, not solver heuristics.
 - [ ] **E2. Equivalent-action collapse.** Many puzzles have free moves that
       yield the same state as not moving (player against a wall). Detect by
       hashing only the post-step `objects` array against the parent and
       dropping the child if equal. Cheaper than full `capture` + visited
       lookup because the comparison can short-circuit on the first differing
-      word.
+      word. **Already partially in place**: line ~2631 `if (!stepResult.changed) continue;`
+      drops engine-level no-ops without snapshot/hash. The remaining
+      headroom (only saves snapshot+hash slice = ~1.9% of time even if
+      100% of changed-but-equivalent states were caught) is small. Skip
+      until E1 is exhausted.
 - [ ] **E3. IDA\*** mode. For low-branching levels with deep solutions
       (lots of timeouts in current corpus are these), iterative deepening A\*
       cuts memory dramatically. Worth a `--strategy ida-star` experiment to
@@ -362,32 +463,39 @@ without a manual sweep.
       for "is this heuristic actually steering search or just along for the
       ride?".
 
-## G. Suggested order of attack
+## G. Future work — not for this pass
 
-Updated based on the A3/`auto` measurements above.
+This pass is concluded (see TL;DR at the top). The items below are kept as a
+backlog. None of them should be attempted without (a) fresh measurement
+evidence motivating them, and (b) the F1 bench driver to make experiments
+cheap — running each candidate as a one-off is what produced the D1/D4/D7
+false-starts.
 
-1. ~~**A3**~~ — done.
-2. ~~**C1**~~ / ~~**C1b**~~ — both tried, both rejected. Single best
-   heuristic wins at any fixed budget. See status log.
-3. ~~**Switch default to `all-on-dead-position`**~~ — done. Confirmation run
-   landed 623 (vs 618 baseline) at 250ms, no wall-time hit.
-4. **F1** (bench driver) — needed to compare unconditional heuristic
-   improvements (D1, D3) against the new default cleanly across timeouts.
-   Especially important after D4/D7 turned out to be neutral-at-5s wins —
-   a proper driver would have caught that in one pass instead of three.
-5. **A1** (plan object) — needed before B1 can do real per-condition routing;
-   the current `'auto'` is a stopgap that just shares extras across conditions.
-6. **B1 proper** (full per-condition router using A1 metadata).
-7. **D3, D5** (equality cover, 2x2 packing deadlock) — remaining cheap-to-try
-   signals. D1/D2/D4/D7 already tried; only D2 (region isolation) landed.
-8. **E1 + E2** (no-op / equivalent action skipping) — orthogonal to
-   heuristics, measurable on `expanded`/`generated` ratios.
-9. **D6 + E4** (lookahead, adaptive weight) — refinements once the foundation
-   is in place.
-10. **E3** (IDA\*) — only if F1 shows we have a memory ceiling, otherwise skip.
+Done in this pass:
+- ~~**A3**~~ — per-condition static dead-cell cache (+14 solves).
+- ~~**D2**~~ — region isolation penalty on top of A3 (+1 to +4).
+- ~~**B1 (`auto`)**~~ — per-condition router, current default.
+- ~~**C1 / C1b**~~ — both rejected; single best heuristic wins at fixed budget.
 
-D5, F3, F4 are nice-to-have polish — pull them in when their parent area
-gets touched.
+Tried and rejected with negative benches: **D1**, **D4**, **D7** (see status log).
+
+Backlog (only with fresh evidence):
+- **F1** — `bench_solver.js` multi-config driver. Prerequisite for any further
+  experimentation; would have caught D1/D4/D7 as neutral-at-5s in one pass.
+- **A1** — wincondition classifier as a real per-level plan object; needed
+  before any B-section work can do proper per-condition routing.
+- **D3 / D5** — equality cover, 2x2 packing deadlock. Sokoban-shape signals
+  with likely small/250ms-only wins, similar to the rejected D-items.
+- **E1** — no-op action skipping. 33%-of-wall-time potential, but the right
+  home is engine internals (`src/js/engine.js`), not solver heuristics.
+  See E1 entry for why each candidate predicate doesn't work at the solver
+  layer.
+- **D6 / E4** — lookahead heuristic, adaptive `astarWeight` schedule.
+- **E2** — equivalent-action collapse. Already partially in place via the
+  `changed=false` early-out at line ~2631 of `run_solver_tests_js.js`;
+  remaining headroom is the snapshot+hash slice (~1.9% of time).
+- **E3 (IDA\*)** — only if measurement shows a memory ceiling.
+- **F2 / F3 / F4** — finer-grained instrumentation; pull in as needed.
 
 ### C1 implementation sketch
 

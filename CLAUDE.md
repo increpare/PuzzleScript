@@ -97,6 +97,8 @@ Two types of tests, both using QUnit:
 
 **Node solver corpus** (`node src/tests/run_solver_tests_js.js <solver_tests_dir> …`): optional environment variables used by that script include `PUZZLESCRIPT_SOLVER_DETAIL_TIMING=0` (skip per-node `performance.now()` in the search loop), `PUZZLESCRIPT_VERIFY_ZOBRIST=1` (assert incremental Zobrist matches full recompute), and `PUZZLESCRIPT_DISABLE_HASH_BUCKETS=1` (Map-based visited instead of bucketed structure).
 
+**JS solver progress log** (`src/tests/JS_SOLVER_NEXT.md`): canonical record of solver heuristic experiments — what landed, what was tried and rejected (with bench numbers), and remaining backlog. Read the TL;DR at the top before starting any solver-heuristic work.
+
 ## Development Notes
 
 - Source files in `src/` are the raw, uncompressed, directly-runnable version. The `bin/` directory is generated output — edit only in `src/`.
