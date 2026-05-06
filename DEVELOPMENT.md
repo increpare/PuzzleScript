@@ -83,6 +83,6 @@ make performance_testpage PERFORMANCE_TESTPAGE_OUT=build/performance-testpage-sm
 make performance_testpage PERFORMANCE_TESTPAGE_PROFILE=true
 ```
 
-The report uses the JavaScript runtime as the baseline, so JS is always shown as `1.00x`; native interpreter, hybrid, and compiled timings are shown relative to that.  Solver rows are selected focus levels from the focus manifest, not the whole solver corpus.  The JavaScript solver uses the same broad portfolio shape as the native solver - a short BFS slice followed by weighted A* with the win-condition heuristic - and does not apply a JavaScript solver timeout.
+The report uses the JavaScript runtime as the baseline, so JS is always shown as `1.00x`; native interpreter, hybrid, and compiled timings are shown relative to that.  Solver rows are selected focus levels from the checked-in `src/tests/solver_focus_group.json` manifest, not the whole solver corpus.  The JavaScript solver uses the same broad portfolio shape as the native solver - a short BFS slice followed by weighted A* with the win-condition heuristic - and does not apply a JavaScript solver timeout.
 
 The testpage intentionally does not compute historical comparisons.  Timestamped runs are kept so they can be inspected manually when the report shape and benchmark inputs are still comparable.

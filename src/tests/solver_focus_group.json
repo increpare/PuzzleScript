@@ -1,0 +1,2042 @@
+{
+  "schema_version": 1,
+  "kind": "solver_focus_group",
+  "generated_at": "2026-05-03T18:06:01.304Z",
+  "solver": "build/native/puzzlescript_solver",
+  "corpus": "src/tests/solver_tests",
+  "mined_corpus": "build/native/solver_focus_compile_probes/eligible-corpus",
+  "strategy": "portfolio",
+  "jobs": "1",
+  "timeout_ms": 500,
+  "min_elapsed_ms": 250,
+  "max_targets": 50,
+  "excluded_games": [],
+  "compile_probe": {
+    "enabled": false,
+    "timeout_seconds": 0,
+    "max_rows": 99,
+    "max_compiled_rules_per_source": 500,
+    "max_generated_lines_per_source": 20000,
+    "opt_level": "1",
+    "probe_jobs": "auto",
+    "resolved_probe_jobs": 0,
+    "build_jobs": "1",
+    "cmake_generator": "Ninja",
+    "root": "build/native/solver_focus_compile_probes",
+    "game_count": 184,
+    "eligible_game_count": 153,
+    "excluded_game_count": 0,
+    "random_excluded_game_count": 31
+  },
+  "compile_excluded_games": [],
+  "random_excluded_games": [
+    {
+      "game": "autohurdler.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 189,
+          "text": "random late up [ teleport_up player | crate | no obstacle ] -> [ teleport_up | crate | Player ] sfx1"
+        }
+      ]
+    },
+    {
+      "game": "butteater.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 216,
+          "text": "random up [moving player] [ tail tailend c_up | c_down ] -> [moving player] [ | tailend ]"
+        }
+      ]
+    },
+    {
+      "game": "car crash.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 238,
+          "text": "random [ ] -> [ bg_light]"
+        }
+      ]
+    },
+    {
+      "game": "collapse.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 230,
+          "text": "random right [ PlayerHoverRight | No Obstacle] -> [ JetTrail1 | PlayerHoverRight] again sfx2"
+        },
+        {
+          "line": 234,
+          "text": "random left [ PlayerHoverLeft | No Obstacle] -> [JetTrail1 | PlayerHoverLeft] again sfx2"
+        }
+      ]
+    },
+    {
+      "game": "color chained.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 298,
+          "text": "random [Pop][inc] -> [][left inc] again"
+        },
+        {
+          "line": 343,
+          "text": "[PieceGen No Piece] -> [PieceGen Random Piece]"
+        }
+      ]
+    },
+    {
+      "game": "cute train.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 300,
+          "text": "[ action WaterR ] -> [ random WaterR ]"
+        }
+      ]
+    },
+    {
+      "game": "dice goblin.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 225,
+          "text": "random  down [tl no visited ||]->[tl visited x11|x12|x13]"
+        }
+      ]
+    },
+    {
+      "game": "Double-Entry Bookkeeping Simulator.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 399,
+          "text": "random late [ deleting red1 | deleted ] -> [ wall wall1 deleted | deleted ] again sfx0"
+        },
+        {
+          "line": 409,
+          "text": "random late [ deleting blue1 | deleted ] -> [ wall wall1 deleted | deleted ] again sfx0"
+        },
+        {
+          "line": 419,
+          "text": "random late [ deleting red1 | deleting blue1 ] -> [ wall wall1 deleted | wall wall1 deleted ] again sfx0"
+        }
+      ]
+    },
+    {
+      "game": "dropswap.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 294,
+          "text": "[ DropWall1 ] [ Init ] -> [ DropWall1 ] [ random DropMix1 Marked ]"
+        },
+        {
+          "line": 295,
+          "text": "[ DropWall2 ] [ Init ] -> [ DropWall2 ] [ random DropMix1 ]"
+        },
+        {
+          "line": 296,
+          "text": "[ DropWall3 ] [ Init ] -> [ DropWall3 ] [ random DropMix1 Marked ]"
+        },
+        {
+          "line": 297,
+          "text": "[ DropWall4 ] [ Init ] -> [ DropWall4 ] [ random DropMix5 ]"
+        },
+        {
+          "line": 345,
+          "text": "random right [ OldPos ] [ Count | No Count ] -> [ OldPos ] [ | ]"
+        },
+        {
+          "line": 377,
+          "text": "down [ DropWall1 | Empty ] -> [ DropWall1 | random DropMix1 ] again"
+        },
+        {
+          "line": 378,
+          "text": "down [ DropWall2 | Empty ] -> [ DropWall2 | random DropMix2 ] again"
+        },
+        {
+          "line": 379,
+          "text": "down [ DropWall3 | Empty ] -> [ DropWall3 | random DropMix3 ] again"
+        },
+        {
+          "line": 380,
+          "text": "down [ DropWall4 | Empty ] -> [ DropWall4 | random DropMix4 ] again"
+        }
+      ]
+    },
+    {
+      "game": "dungeon janitor.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 242,
+          "text": "RANDOM [ Slime NO Player ] -> [ Slime Head ]"
+        }
+      ]
+    },
+    {
+      "game": "easyenigma.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 997,
+          "text": "up [glitch1][letter ] -> [glitch1][random letter mark]"
+        },
+        {
+          "line": 1003,
+          "text": "[glitch2][glitchright no roulette] -> [glitch2][glitchright random roulette]"
+        },
+        {
+          "line": 1006,
+          "text": "down [glitch2][no glitchright|mark] -> [glitch2][random glitchright|mark]"
+        },
+        {
+          "line": 1019,
+          "text": "[glitch4][letter no mark] -> [glitch4][letter random back mark]"
+        },
+        {
+          "line": 1022,
+          "text": "[play1][moving player][wall no roulette] -> [play1][moving player][wall random roulette]"
+        },
+        {
+          "line": 1152,
+          "text": "[glitch6][item no roulette] -> [glitch6 ][ item random roulette]"
+        },
+        {
+          "line": 1153,
+          "text": "[glitch6][item roulette6] -> [glitch6][random item]"
+        }
+      ]
+    },
+    {
+      "game": "expand also avoid the flames.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 183,
+          "text": "[spawntile no arrow ] -> [ spawntile random arrow ]  again"
+        },
+        {
+          "line": 185,
+          "text": "random [t2]->[up t3]"
+        },
+        {
+          "line": 186,
+          "text": "random [stationary t3]->[t2]"
+        },
+        {
+          "line": 265,
+          "text": "random [spawntile fire] [no fire no totenkopf] -> [ spawntile fire ] [ totenkopf no arrow no spawntile] again"
+        },
+        {
+          "line": 266,
+          "text": "random [totenkopf ] [no fire no totenkopf] -> [ totenkopf ] [ totenkopf  no arrow no spawntile] again"
+        },
+        {
+          "line": 267,
+          "text": "random [totenkopf ] [fire spawntile] -> [ totenkopf ] [ no arrow no fire] again"
+        }
+      ]
+    },
+    {
+      "game": "Garten der Medusen.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 176,
+          "text": "random [ ] -> [ t ]"
+        }
+      ]
+    },
+    {
+      "game": "gobble_rush.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 271,
+          "text": "late random [ Chicken CanMove ] -> [ Chicken LoS ]"
+        }
+      ]
+    },
+    {
+      "game": "hungry kraken.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 624,
+          "text": "random down [ Fallable | no thing ] -> [ | Fallable ] sfx1 again"
+        }
+      ]
+    },
+    {
+      "game": "kishoutenketsu.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 470,
+          "text": "[ Stationary Worm ] -> [ randomDir Worm ]"
+        }
+      ]
+    },
+    {
+      "game": "konsum.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 314,
+          "text": "random  [ place blacktile] -> [ place blacktile canplace ]"
+        },
+        {
+          "line": 322,
+          "text": "random [ action place ] -> [ explore ]"
+        },
+        {
+          "line": 334,
+          "text": "random late [ place blacktile ] -> [ place temp blacktile ]"
+        }
+      ]
+    },
+    {
+      "game": "legend of zokoban.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 155,
+          "text": "[ Stationary Baddie ] -> [ RandomDir Baddie ]"
+        },
+        {
+          "line": 181,
+          "text": "random [ Moving Block Cave | ... | Cave ] -> [ Cave | ... | Block Cave ]"
+        },
+        {
+          "line": 183,
+          "text": "late random [ Block Cave | No Obstacle ] -> [ Cave | Block ]"
+        },
+        {
+          "line": 185,
+          "text": "late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2"
+        }
+      ]
+    },
+    {
+      "game": "North Wind Simple Sailboat Buoy Collection.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 1406,
+          "text": "random [ movement_target ] [ player  ] -> [ movement_target player ] []"
+        },
+        {
+          "line": 1407,
+          "text": "random [ movement_target ] [ heading  ] -> [ movement_target heading ] []"
+        },
+        {
+          "line": 1408,
+          "text": "random [ movement_target ] [ rudderdir  ] -> [ movement_target rudderdir ] []"
+        },
+        {
+          "line": 1409,
+          "text": "random [ movement_target ] [ tension  ] -> [ movement_target tension ] []"
+        },
+        {
+          "line": 1410,
+          "text": "random [ movement_target ] [ sail_side  ] -> [ movement_target sail_side ] []"
+        },
+        {
+          "line": 1411,
+          "text": "random [ movement_target ] [ sail_direction ] -> [ movement_target sail_direction ] []"
+        },
+        {
+          "line": 1412,
+          "text": "random [ movement_target]->[]"
+        }
+      ]
+    },
+    {
+      "game": "Oh No My Dog Is About To Swallow A Piece Of.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 1077,
+          "text": "random right [cancontracttoken] [DogNeck | DogNeck ] -> [] [ no skins|no skins]"
+        }
+      ]
+    },
+    {
+      "game": "Putting Bicycle Helmets on Young Children.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 248,
+          "text": "random left [ zipper_l_retract  strapstart | ] -> [ no strap  strapsource_l no strap | Player ] sfx1"
+        },
+        {
+          "line": 249,
+          "text": "random left [ zipper_l_retract | strapstart | ] -> [ no strap | strapsource_l no strap | Player ]  sfx1"
+        },
+        {
+          "line": 250,
+          "text": "random left [ zipper_l_retract | strap ] -> [  | zipper_l_retract ] sfx3"
+        },
+        {
+          "line": 252,
+          "text": "random right [ zipper_r_retract  strapstart | ] -> [ no strap  strapsource_r no strap | Player ]  sfx1"
+        },
+        {
+          "line": 253,
+          "text": "random right [ zipper_r_retract | strapstart | ] -> [ no strap | strapsource_r no strap | Player ]  sfx1"
+        },
+        {
+          "line": 254,
+          "text": "random right [ zipper_r_retract | strap ] -> [  | zipper_r_retract ]  sfx3"
+        },
+        {
+          "line": 256,
+          "text": "random right [ zipper_r | strapsource_r ] [skin no helmetbg ]-> [zipper_l_retract | strapsource_r]  [skin no helmetbg ]"
+        },
+        {
+          "line": 257,
+          "text": "random right [ zipper_r | strapsource_r | ] -> [ strap | strap strapstart | Player ] sfx0"
+        },
+        {
+          "line": 258,
+          "text": "random right [ zipper_r | obstacle ] -> [zipper_l_retract | obstacle]  sfx4"
+        },
+        {
+          "line": 259,
+          "text": "random right [ zipper_r | no obstacle ] -> [ strap | zipper_r ] sfx2"
+        },
+        {
+          "line": 261,
+          "text": "random left [ zipper_l | strapsource_l ] [skin no helmetbg ]-> [zipper_r_retract | strapsource_l]  [skin no helmetbg ]"
+        },
+        {
+          "line": 262,
+          "text": "random left [ zipper_l | strapsource_l | ] -> [ strap | strap strapstart | Player ] sfx0"
+        },
+        {
+          "line": 263,
+          "text": "random left [ zipper_l | obstacle ] -> [zipper_r_retract |obstacle ]  sfx4"
+        },
+        {
+          "line": 264,
+          "text": "random left [ zipper_l | no obstacle ] -> [ strap | zipper_l ] sfx2"
+        }
+      ]
+    },
+    {
+      "game": "realtime dog mountain rescue.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 319,
+          "text": "random right [stationary player ] [ rescue_head_partial | no starter_body no rescue_body no rescue_body_partial] -> [ stationary player ] [ rescue_head_frozen | ] sfx3"
+        },
+        {
+          "line": 340,
+          "text": "random down [ down player no active_grounded ] [ foot_active ]  [ leg_active | no leg_active ]  -> [ down player no active_grounded ][ down foot_active ]  [ leg_active | leg_active ]"
+        },
+        {
+          "line": 422,
+          "text": "random down [ action player | leg_active | no leg_active ] [ foot_active | ] -> [ action player | | leg_active ] [ | foot_active ]"
+        }
+      ]
+    },
+    {
+      "game": "riverpuzzle.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 172,
+          "text": "[ Water ] -> [ random Water ]"
+        }
+      ]
+    },
+    {
+      "game": "Scalesoban.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 99,
+          "text": "random [ > player | > crate ] [ stationary crate ] -> [ > crate | > crate ] [ player ]"
+        }
+      ]
+    },
+    {
+      "game": "seize the flag.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 1228,
+          "text": "random up [move_ul] [person | ] -> [ move_ul] [ person |  person_target]"
+        },
+        {
+          "line": 1229,
+          "text": "random up [move_ur] [person | ] -> [ move_ur] [ person |  person_target]"
+        },
+        {
+          "line": 1230,
+          "text": "random down [move_dl] [person | ] -> [ move_dl] [ person |  person_target]"
+        },
+        {
+          "line": 1231,
+          "text": "random down [move_dr] [person | ] -> [ move_dr] [ person |  person_target]"
+        },
+        {
+          "line": 1233,
+          "text": "random left [move_ul] [person_target | ] -> [ moved] [ | person_target ]"
+        },
+        {
+          "line": 1234,
+          "text": "random right [move_ur] [person_target | ] -> [ moved] [ | person_target ]"
+        },
+        {
+          "line": 1235,
+          "text": "random left [move_dl] [person_target | ] -> [ moved] [ | person_target ]"
+        },
+        {
+          "line": 1236,
+          "text": "random right [move_dr] [person_target | ] -> [ moved] [ | person_target ]"
+        }
+      ]
+    },
+    {
+      "game": "sok7.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 259,
+          "text": "[C No Object | C No Object | C No Object | C No Object| C No Object | C No Object] -> [ |  | random RandomDisc | |  | ] SFX0"
+        },
+        {
+          "line": 261,
+          "text": "[D | Garbage2] -> [ | random NumberDisc]"
+        }
+      ]
+    },
+    {
+      "game": "sum three horizontally to 8.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 215,
+          "text": "[player] [? no k]->[player spawnfall] [ ? random k] again"
+        }
+      ]
+    },
+    {
+      "game": "threes.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 319,
+          "text": "right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block768 ] -> [ Wall Spawn random Block6 random Block12 random Block24 random Block48 random Block96 | Wall ] [ Grid Block768 ]"
+        },
+        {
+          "line": 320,
+          "text": "right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block384 ] -> [ Wall Spawn random Block6 random Block12 random Block24 random Block48 | Wall ] [ Grid Block384 ]"
+        },
+        {
+          "line": 321,
+          "text": "right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block192 ] -> [ Wall Spawn random Block6 random Block12 random Block24 | Wall ] [ Grid Block192 ]"
+        },
+        {
+          "line": 322,
+          "text": "right [ Wall Spawn Block1Grey | Wall no Spawn ] [ Grid Block96 ] -> [ Wall Spawn random Block6 random Block12 | Wall ] [ Grid Block96 ]"
+        },
+        {
+          "line": 329,
+          "text": "random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]"
+        },
+        {
+          "line": 330,
+          "text": "random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]"
+        },
+        {
+          "line": 331,
+          "text": "random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]"
+        },
+        {
+          "line": 332,
+          "text": "random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]"
+        },
+        {
+          "line": 333,
+          "text": "random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]"
+        },
+        {
+          "line": 334,
+          "text": "random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]"
+        },
+        {
+          "line": 335,
+          "text": "random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]"
+        },
+        {
+          "line": 336,
+          "text": "random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]"
+        },
+        {
+          "line": 337,
+          "text": "random right [ Grid Spawn no Block ] [ Spawn Wall Block | ... | Spawn no Wall no Grid ] -> [ Grid Spawn Block Player ] [ Spawn Wall | ... | Spawn ]"
+        },
+        {
+          "line": 372,
+          "text": "up random [ Spawn Block no Wall ] [ Wall | Grid | ... | up Player ] -> [ Spawn ] [ Wall up Block up Player | Grid | ... | up Player ]"
+        },
+        {
+          "line": 373,
+          "text": "down random [ Spawn Block no Wall ] [ Wall | Grid | ... | down Player ] -> [ Spawn ] [ Wall down Block down Player | Grid | ... | down Player ]"
+        },
+        {
+          "line": 374,
+          "text": "left random [ Spawn Block no Wall ] [ Wall | Grid | ... | left Player ] -> [ Spawn ] [ Wall left Block left Player | Grid | ... | left Player ]"
+        },
+        {
+          "line": 375,
+          "text": "right random [ Spawn Block no Wall ] [ Wall | Grid | ... | right Player ] -> [ Spawn ] [ Wall right Block right Player | Grid | ... | right Player ]"
+        },
+        {
+          "line": 376,
+          "text": "up random [ Spawn Block no Wall ] [ Wall | Grid up Player ] -> [ Spawn ] [ Wall up Block up Player | Grid up Player ]"
+        },
+        {
+          "line": 377,
+          "text": "down random [ Spawn Block no Wall ] [ Wall | Grid down Player ] -> [ Spawn ] [ Wall down Block down Player | Grid down Player ]"
+        },
+        {
+          "line": 378,
+          "text": "left random [ Spawn Block no Wall ] [ Wall | Grid left Player ] -> [ Spawn ] [ Wall left Block left Player | Grid left Player ]"
+        },
+        {
+          "line": 379,
+          "text": "right random [ Spawn Block no Wall ] [ Wall | Grid right Player ] -> [ Spawn ] [ Wall right Block right Player | Grid right Player ]"
+        },
+        {
+          "line": 382,
+          "text": "random right [ Spawn Wall Block | ... | Wall | Wall | Grid ] [ Spawn no Wall no Block ] -> [ Spawn Wall | ... | Wall | Wall | Grid ] [ Spawn Block ]"
+        },
+        {
+          "line": 388,
+          "text": "random right [ Spawn Wall Block | ... | Spawn No Block No Number no Wall no Grid ] -> [ Spawn Wall | ... | Spawn Block ]"
+        }
+      ]
+    },
+    {
+      "game": "tiny treasure hunt.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 241,
+          "text": "[ LowFloorRaw ] -> [ random LowFloor ]"
+        },
+        {
+          "line": 242,
+          "text": "[ FirePit ] -> [ random FirePit ]"
+        }
+      ]
+    },
+    {
+      "game": "tunnel rat.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 222,
+          "text": "random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]"
+        },
+        {
+          "line": 223,
+          "text": "random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]"
+        },
+        {
+          "line": 224,
+          "text": "random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]"
+        },
+        {
+          "line": 225,
+          "text": "random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow random overlays ]"
+        },
+        {
+          "line": 226,
+          "text": "random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]"
+        },
+        {
+          "line": 227,
+          "text": "random [ scrolling ] [ inflow ] -> [ scrolling ] [ inflow enemyoverlay ]"
+        },
+        {
+          "line": 232,
+          "text": "random [ tempwall ] -> [ dirtm ]"
+        },
+        {
+          "line": 233,
+          "text": "random [ tempwall ] -> [ dirtm ]"
+        },
+        {
+          "line": 234,
+          "text": "random [ tempwall ] -> [ dirtm ]"
+        },
+        {
+          "line": 235,
+          "text": "random [ tempwall ] -> [ dirtm ]"
+        },
+        {
+          "line": 236,
+          "text": "random [ tempwall ] -> [ dirtm ]"
+        },
+        {
+          "line": 237,
+          "text": "random [ tempwall ] -> [ dirtm ]"
+        },
+        {
+          "line": 238,
+          "text": "random [ tempwall ] -> [ ]"
+        },
+        {
+          "line": 239,
+          "text": "random [ tempwall ] -> [ ]"
+        },
+        {
+          "line": 240,
+          "text": "random down [ tempwall | solid ] -> [ rock | Solid ]"
+        },
+        {
+          "line": 241,
+          "text": "random down [ tempwall | solid ] -> [ rock | Solid ]"
+        },
+        {
+          "line": 245,
+          "text": "[ pickupoverlay rock ] -> [ random pickups]"
+        },
+        {
+          "line": 248,
+          "text": "random down [ Solid inflow | rock | rock ] -> [ rock inflow | rock | rock ]"
+        },
+        {
+          "line": 300,
+          "text": "random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Rock ]"
+        },
+        {
+          "line": 301,
+          "text": "random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]"
+        },
+        {
+          "line": 302,
+          "text": "random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]"
+        },
+        {
+          "line": 303,
+          "text": "random [ > Player | Unraser ] [ Solid no Player | no Solid ] -> [ > Player | Unraser ] [ Solid | Dirtm ]"
+        }
+      ]
+    },
+    {
+      "game": "zokoban.txt",
+      "status": "random_rules_excluded",
+      "reason": "focus mining excludes random/randomDir rules",
+      "hits": [
+        {
+          "line": 155,
+          "text": "[ Stationary Baddie ] -> [ RandomDir Baddie ]"
+        },
+        {
+          "line": 181,
+          "text": "random [ Moving Block Cave | ... | Cave ] -> [ Cave | ... | Block Cave ]"
+        },
+        {
+          "line": 183,
+          "text": "late random [ Block Cave | No Obstacle ] -> [ Cave | Block ]"
+        },
+        {
+          "line": 185,
+          "text": "late random [ Player Cave | ... | Cave ] -> [ Cave | ... | Player Cave ] SFX2"
+        }
+      ]
+    }
+  ],
+  "compile_probe_results": [],
+  "target_count": 50,
+  "candidate_count": 80,
+  "totals": {
+    "levels": 2679,
+    "solved": 863,
+    "timeout": 469,
+    "exhausted": 33,
+    "skipped_message": 1314,
+    "errors": 0,
+    "expanded": 8294598,
+    "generated": 39854305,
+    "compact_turn_attempts": 0,
+    "compact_turn_hits": 0,
+    "compact_turn_native_attempts": 0,
+    "compact_turn_native_hits": 0,
+    "compact_turn_bridge_attempts": 0,
+    "compact_turn_bridge_hits": 0,
+    "compact_turn_unhandled": 0,
+    "compact_turn_fallbacks": 0,
+    "compact_turn_unsupported": 0,
+    "compact_turn_oracle_checks": 0,
+    "compact_turn_oracle_failures": 0,
+    "compile_ms": 5437.07,
+    "load_ms": 90.7248,
+    "clone_ms": 18820.8,
+    "step_ms": 243889,
+    "hash_ms": 10977.3,
+    "queue_ms": 0,
+    "frontier_pop_ms": 840.296,
+    "frontier_push_ms": 315.387,
+    "visited_lookup_ms": 1635.12,
+    "visited_insert_ms": 6133.25,
+    "visited_lookup_probes": 11241544,
+    "visited_insert_probes": 52585248,
+    "visited_grows": 74,
+    "visited_capacity": 131072,
+    "visited_max_probe": 125,
+    "visited_key_collisions": 0,
+    "compact_state_bytes": 14176620253,
+    "compact_max_state_bytes": 51987,
+    "node_store_ms": 590.949,
+    "heuristic_ms": 15998.5,
+    "solved_check_ms": 719.19,
+    "timeout_check_ms": 1639.19,
+    "reconstruct_ms": 2.7129,
+    "unattributed_ms": 11388.4
+  },
+  "wall_ms": 314187.386291,
+  "targets": [
+    {
+      "game": "Van-to-Mobile-Living-Space-Conversion Window.txt",
+      "level": 7,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 250,
+      "solved_elapsed_ratio": 0.5,
+      "solved_expanded": 7307,
+      "solved_generated": 36533,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 250,
+          "expanded": 7307,
+          "generated": 36533,
+          "unique_states": 7743,
+          "duplicates": 27604,
+          "max_frontier": 982,
+          "solution_length": 35
+        }
+      ]
+    },
+    {
+      "game": "heroes_of_sokoban_3.txt",
+      "level": 10,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 252,
+      "solved_elapsed_ratio": 0.504,
+      "solved_expanded": 7939,
+      "solved_generated": 39691,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 252,
+          "expanded": 7939,
+          "generated": 39691,
+          "unique_states": 5553,
+          "duplicates": 25643,
+          "max_frontier": 541,
+          "solution_length": 20
+        }
+      ]
+    },
+    {
+      "game": "Vexatious Match 3.txt",
+      "level": 8,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 252,
+      "solved_elapsed_ratio": 0.504,
+      "solved_expanded": 18841,
+      "solved_generated": 94201,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 252,
+          "expanded": 18841,
+          "generated": 94201,
+          "unique_states": 27680,
+          "duplicates": 65396,
+          "max_frontier": 5350,
+          "solution_length": 61
+        }
+      ]
+    },
+    {
+      "game": "constellationz.txt",
+      "level": 10,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 258,
+      "solved_elapsed_ratio": 0.516,
+      "solved_expanded": 4957,
+      "solved_generated": 24782,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 258,
+          "expanded": 4957,
+          "generated": 24782,
+          "unique_states": 5789,
+          "duplicates": 17764,
+          "max_frontier": 1211,
+          "solution_length": 64
+        }
+      ]
+    },
+    {
+      "game": "gem soketeer.txt",
+      "level": 31,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 270,
+      "solved_elapsed_ratio": 0.54,
+      "solved_expanded": 3994,
+      "solved_generated": 19964,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 270,
+          "expanded": 3994,
+          "generated": 19964,
+          "unique_states": 3853,
+          "duplicates": 14954,
+          "max_frontier": 521,
+          "solution_length": 36
+        }
+      ]
+    },
+    {
+      "game": "alternatey.txt",
+      "level": 4,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 271,
+      "solved_elapsed_ratio": 0.542,
+      "solved_expanded": 424,
+      "solved_generated": 1693,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 271,
+          "expanded": 424,
+          "generated": 1693,
+          "unique_states": 632,
+          "duplicates": 906,
+          "max_frontier": 203,
+          "solution_length": 7
+        }
+      ]
+    },
+    {
+      "game": "dollyban.txt",
+      "level": 3,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 275,
+      "solved_elapsed_ratio": 0.55,
+      "solved_expanded": 19539,
+      "solved_generated": 97691,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 275,
+          "expanded": 19539,
+          "generated": 97691,
+          "unique_states": 20970,
+          "duplicates": 75714,
+          "max_frontier": 1454,
+          "solution_length": 35
+        }
+      ]
+    },
+    {
+      "game": "cakemonsters.txt",
+      "level": 49,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 276,
+      "solved_elapsed_ratio": 0.552,
+      "solved_expanded": 20524,
+      "solved_generated": 82091,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 276,
+          "expanded": 20524,
+          "generated": 82091,
+          "unique_states": 16402,
+          "duplicates": 59997,
+          "max_frontier": 1503,
+          "solution_length": 27
+        }
+      ]
+    },
+    {
+      "game": "Recondite Star Sector Sigma.txt",
+      "level": 17,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 276,
+      "solved_elapsed_ratio": 0.552,
+      "solved_expanded": 23394,
+      "solved_generated": 116969,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 276,
+          "expanded": 23394,
+          "generated": 116969,
+          "unique_states": 25268,
+          "duplicates": 91395,
+          "max_frontier": 1672,
+          "solution_length": 39
+        }
+      ]
+    },
+    {
+      "game": "head skuller.txt",
+      "level": 11,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 278,
+      "solved_elapsed_ratio": 0.556,
+      "solved_expanded": 18658,
+      "solved_generated": 93286,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 278,
+          "expanded": 18658,
+          "generated": 93286,
+          "unique_states": 37052,
+          "duplicates": 55998,
+          "max_frontier": 12935,
+          "solution_length": 31
+        }
+      ]
+    },
+    {
+      "game": "paint everything everywhere.txt",
+      "level": 9,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 279,
+      "solved_elapsed_ratio": 0.558,
+      "solved_expanded": 162,
+      "solved_generated": 805,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 279,
+          "expanded": 162,
+          "generated": 805,
+          "unique_states": 318,
+          "duplicates": 488,
+          "max_frontier": 96,
+          "solution_length": 44
+        }
+      ]
+    },
+    {
+      "game": "witch lifter.txt",
+      "level": 1,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 282,
+      "solved_elapsed_ratio": 0.564,
+      "solved_expanded": 2291,
+      "solved_generated": 9160,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 282,
+          "expanded": 2291,
+          "generated": 9160,
+          "unique_states": 2476,
+          "duplicates": 6685,
+          "max_frontier": 116,
+          "solution_length": 28
+        }
+      ]
+    },
+    {
+      "game": "Put the logs in the water, elephant.txt",
+      "level": 7,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 284,
+      "solved_elapsed_ratio": 0.568,
+      "solved_expanded": 6072,
+      "solved_generated": 30356,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 284,
+          "expanded": 6072,
+          "generated": 30356,
+          "unique_states": 5837,
+          "duplicates": 23999,
+          "max_frontier": 355,
+          "solution_length": 55
+        }
+      ]
+    },
+    {
+      "game": "Recondite Star Sector Sigma.txt",
+      "level": 7,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 287,
+      "solved_elapsed_ratio": 0.574,
+      "solved_expanded": 19182,
+      "solved_generated": 95905,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 287,
+          "expanded": 19182,
+          "generated": 95905,
+          "unique_states": 19900,
+          "duplicates": 75240,
+          "max_frontier": 979,
+          "solution_length": 81
+        }
+      ]
+    },
+    {
+      "game": "karamell.txt",
+      "level": 1,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 294,
+      "solved_elapsed_ratio": 0.588,
+      "solved_expanded": 1238,
+      "solved_generated": 6184,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 294,
+          "expanded": 1238,
+          "generated": 6184,
+          "unique_states": 1659,
+          "duplicates": 2564,
+          "max_frontier": 279,
+          "solution_length": 45
+        }
+      ]
+    },
+    {
+      "game": "the_saga_of_the_candy_scroll.txt",
+      "level": 112,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 297,
+      "solved_elapsed_ratio": 0.594,
+      "solved_expanded": 7401,
+      "solved_generated": 37005,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 297,
+          "expanded": 7401,
+          "generated": 37005,
+          "unique_states": 7508,
+          "duplicates": 28354,
+          "max_frontier": 708,
+          "solution_length": 104
+        }
+      ]
+    },
+    {
+      "game": "pushit.txt",
+      "level": 1,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 299,
+      "solved_elapsed_ratio": 0.598,
+      "solved_expanded": 17780,
+      "solved_generated": 88896,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 299,
+          "expanded": 17780,
+          "generated": 88896,
+          "unique_states": 34303,
+          "duplicates": 54504,
+          "max_frontier": 11550,
+          "solution_length": 33
+        }
+      ]
+    },
+    {
+      "game": "SWIMMING TIME.txt",
+      "level": 2,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 302,
+      "solved_elapsed_ratio": 0.604,
+      "solved_expanded": 920,
+      "solved_generated": 4594,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 302,
+          "expanded": 920,
+          "generated": 4594,
+          "unique_states": 1067,
+          "duplicates": 3528,
+          "max_frontier": 116,
+          "solution_length": 64
+        }
+      ]
+    },
+    {
+      "game": "unclean residues.txt",
+      "level": 4,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 302,
+      "solved_elapsed_ratio": 0.604,
+      "solved_expanded": 13251,
+      "solved_generated": 66252,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 302,
+          "expanded": 13251,
+          "generated": 66252,
+          "unique_states": 18372,
+          "duplicates": 47475,
+          "max_frontier": 4502,
+          "solution_length": 39
+        }
+      ]
+    },
+    {
+      "game": "push.txt",
+      "level": 19,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 305,
+      "solved_elapsed_ratio": 0.61,
+      "solved_expanded": 11085,
+      "solved_generated": 44337,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 305,
+          "expanded": 11085,
+          "generated": 44337,
+          "unique_states": 11566,
+          "duplicates": 32739,
+          "max_frontier": 720,
+          "solution_length": 56
+        }
+      ]
+    },
+    {
+      "game": "Put the logs in the water, elephant.txt",
+      "level": 16,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 306,
+      "solved_elapsed_ratio": 0.612,
+      "solved_expanded": 7557,
+      "solved_generated": 37781,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 306,
+          "expanded": 7557,
+          "generated": 37781,
+          "unique_states": 7644,
+          "duplicates": 29908,
+          "max_frontier": 312,
+          "solution_length": 54
+        }
+      ]
+    },
+    {
+      "game": "kreiseln.txt",
+      "level": 5,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 309,
+      "solved_elapsed_ratio": 0.618,
+      "solved_expanded": 6691,
+      "solved_generated": 33451,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 309,
+          "expanded": 6691,
+          "generated": 33451,
+          "unique_states": 6871,
+          "duplicates": 24287,
+          "max_frontier": 1421,
+          "solution_length": 42
+        }
+      ]
+    },
+    {
+      "game": "Wand Spinner.txt",
+      "level": 29,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 309,
+      "solved_elapsed_ratio": 0.618,
+      "solved_expanded": 20694,
+      "solved_generated": 103464,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 309,
+          "expanded": 20694,
+          "generated": 103464,
+          "unique_states": 19163,
+          "duplicates": 82038,
+          "max_frontier": 766,
+          "solution_length": 50
+        }
+      ]
+    },
+    {
+      "game": "constellationz.txt",
+      "level": 6,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 312,
+      "solved_elapsed_ratio": 0.624,
+      "solved_expanded": 4023,
+      "solved_generated": 20111,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 312,
+          "expanded": 4023,
+          "generated": 20111,
+          "unique_states": 3429,
+          "duplicates": 15582,
+          "max_frontier": 339,
+          "solution_length": 30
+        }
+      ]
+    },
+    {
+      "game": "manic_ammo.txt",
+      "level": 10,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 313,
+      "solved_elapsed_ratio": 0.626,
+      "solved_expanded": 21001,
+      "solved_generated": 105003,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 313,
+          "expanded": 21001,
+          "generated": 105003,
+          "unique_states": 32022,
+          "duplicates": 72554,
+          "max_frontier": 8523,
+          "solution_length": 19
+        }
+      ]
+    },
+    {
+      "game": "Put the logs in the water, elephant.txt",
+      "level": 22,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 316,
+      "solved_elapsed_ratio": 0.632,
+      "solved_expanded": 7744,
+      "solved_generated": 38717,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 316,
+          "expanded": 7744,
+          "generated": 38717,
+          "unique_states": 7905,
+          "duplicates": 30492,
+          "max_frontier": 505,
+          "solution_length": 41
+        }
+      ]
+    },
+    {
+      "game": "dollyban.txt",
+      "level": 7,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 318,
+      "solved_elapsed_ratio": 0.636,
+      "solved_expanded": 21426,
+      "solved_generated": 107127,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 318,
+          "expanded": 21426,
+          "generated": 107127,
+          "unique_states": 22100,
+          "duplicates": 84075,
+          "max_frontier": 1179,
+          "solution_length": 52
+        }
+      ]
+    },
+    {
+      "game": "Any hole is a goal.txt",
+      "level": 65,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 321,
+      "solved_elapsed_ratio": 0.642,
+      "solved_expanded": 4119,
+      "solved_generated": 20589,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 321,
+          "expanded": 4119,
+          "generated": 20589,
+          "unique_states": 4656,
+          "duplicates": 15934,
+          "max_frontier": 333,
+          "solution_length": 20
+        }
+      ]
+    },
+    {
+      "game": "Cucumber Surprise.txt",
+      "level": 39,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 321,
+      "solved_elapsed_ratio": 0.642,
+      "solved_expanded": 18103,
+      "solved_generated": 90513,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 321,
+          "expanded": 18103,
+          "generated": 90513,
+          "unique_states": 19834,
+          "duplicates": 70509,
+          "max_frontier": 1441,
+          "solution_length": 68
+        }
+      ]
+    },
+    {
+      "game": "take heart lass.txt",
+      "level": 19,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 322,
+      "solved_elapsed_ratio": 0.644,
+      "solved_expanded": 1642,
+      "solved_generated": 8204,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 322,
+          "expanded": 1642,
+          "generated": 8204,
+          "unique_states": 2149,
+          "duplicates": 6055,
+          "max_frontier": 336,
+          "solution_length": 15
+        }
+      ]
+    },
+    {
+      "game": "Yellow Box.txt",
+      "level": 35,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 325,
+      "solved_elapsed_ratio": 0.65,
+      "solved_expanded": 11482,
+      "solved_generated": 57406,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 325,
+          "expanded": 11482,
+          "generated": 57406,
+          "unique_states": 9114,
+          "duplicates": 45241,
+          "max_frontier": 488,
+          "solution_length": 55
+        }
+      ]
+    },
+    {
+      "game": "paint everything everywhere.txt",
+      "level": 17,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 333,
+      "solved_elapsed_ratio": 0.666,
+      "solved_expanded": 95,
+      "solved_generated": 468,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 333,
+          "expanded": 95,
+          "generated": 468,
+          "unique_states": 186,
+          "duplicates": 283,
+          "max_frontier": 60,
+          "solution_length": 31
+        }
+      ]
+    },
+    {
+      "game": "hedgehog stimulator.txt",
+      "level": 1,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 337,
+      "solved_elapsed_ratio": 0.674,
+      "solved_expanded": 10662,
+      "solved_generated": 53306,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 337,
+          "expanded": 10662,
+          "generated": 53306,
+          "unique_states": 10766,
+          "duplicates": 41398,
+          "max_frontier": 832,
+          "solution_length": 42
+        }
+      ]
+    },
+    {
+      "game": "heroes_of_sokoban_2.txt",
+      "level": 8,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 339,
+      "solved_elapsed_ratio": 0.678,
+      "solved_expanded": 15018,
+      "solved_generated": 75085,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 339,
+          "expanded": 15018,
+          "generated": 75085,
+          "unique_states": 20759,
+          "duplicates": 50505,
+          "max_frontier": 5714,
+          "solution_length": 25
+        }
+      ]
+    },
+    {
+      "game": "slidings.txt",
+      "level": 17,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 340,
+      "solved_elapsed_ratio": 0.68,
+      "solved_expanded": 16437,
+      "solved_generated": 82179,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 340,
+          "expanded": 16437,
+          "generated": 82179,
+          "unique_states": 26975,
+          "duplicates": 52006,
+          "max_frontier": 7593,
+          "solution_length": 12
+        }
+      ]
+    },
+    {
+      "game": "15 push pull levels.txt",
+      "level": 27,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 350,
+      "solved_elapsed_ratio": 0.7,
+      "solved_expanded": 31534,
+      "solved_generated": 157662,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 350,
+          "expanded": 31534,
+          "generated": 157662,
+          "unique_states": 29353,
+          "duplicates": 119568,
+          "max_frontier": 3827,
+          "solution_length": 52
+        }
+      ]
+    },
+    {
+      "game": "Hole-Stuffer.txt",
+      "level": 1,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 361,
+      "solved_elapsed_ratio": 0.722,
+      "solved_expanded": 8687,
+      "solved_generated": 43432,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 361,
+          "expanded": 8687,
+          "generated": 43432,
+          "unique_states": 12605,
+          "duplicates": 30828,
+          "max_frontier": 2829,
+          "solution_length": 20
+        }
+      ]
+    },
+    {
+      "game": "S-tercourse.txt",
+      "level": 23,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 362,
+      "solved_elapsed_ratio": 0.724,
+      "solved_expanded": 8504,
+      "solved_generated": 34013,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 362,
+          "expanded": 8504,
+          "generated": 34013,
+          "unique_states": 8043,
+          "duplicates": 24687,
+          "max_frontier": 511,
+          "solution_length": 29
+        }
+      ]
+    },
+    {
+      "game": "BIAXIAL INVASION OF SATURN.txt",
+      "level": 13,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 363,
+      "solved_elapsed_ratio": 0.726,
+      "solved_expanded": 2718,
+      "solved_generated": 13590,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 363,
+          "expanded": 2718,
+          "generated": 13590,
+          "unique_states": 2923,
+          "duplicates": 10367,
+          "max_frontier": 482,
+          "solution_length": 9
+        }
+      ]
+    },
+    {
+      "game": "Yellow Box.txt",
+      "level": 11,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 368,
+      "solved_elapsed_ratio": 0.736,
+      "solved_expanded": 11869,
+      "solved_generated": 59340,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 368,
+          "expanded": 11869,
+          "generated": 59340,
+          "unique_states": 12546,
+          "duplicates": 45064,
+          "max_frontier": 1454,
+          "solution_length": 42
+        }
+      ]
+    },
+    {
+      "game": "gem soketeer.txt",
+      "level": 13,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 370,
+      "solved_elapsed_ratio": 0.74,
+      "solved_expanded": 4101,
+      "solved_generated": 20500,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 370,
+          "expanded": 4101,
+          "generated": 20500,
+          "unique_states": 4437,
+          "duplicates": 15143,
+          "max_frontier": 871,
+          "solution_length": 48
+        }
+      ]
+    },
+    {
+      "game": "Put the logs in the water, elephant.txt",
+      "level": 19,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 371,
+      "solved_elapsed_ratio": 0.742,
+      "solved_expanded": 5927,
+      "solved_generated": 29633,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 371,
+          "expanded": 5927,
+          "generated": 29633,
+          "unique_states": 6467,
+          "duplicates": 22922,
+          "max_frontier": 457,
+          "solution_length": 57
+        }
+      ]
+    },
+    {
+      "game": "15 push pull levels.txt",
+      "level": 21,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 378,
+      "solved_elapsed_ratio": 0.756,
+      "solved_expanded": 32528,
+      "solved_generated": 162638,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 378,
+          "expanded": 32528,
+          "generated": 162638,
+          "unique_states": 33260,
+          "duplicates": 120068,
+          "max_frontier": 6510,
+          "solution_length": 40
+        }
+      ]
+    },
+    {
+      "game": "sokobond demake.txt",
+      "level": 20,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 378,
+      "solved_elapsed_ratio": 0.756,
+      "solved_expanded": 15431,
+      "solved_generated": 61719,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 378,
+          "expanded": 15431,
+          "generated": 61719,
+          "unique_states": 17665,
+          "duplicates": 43192,
+          "max_frontier": 1904,
+          "solution_length": 27
+        }
+      ]
+    },
+    {
+      "game": "dollyban.txt",
+      "level": 5,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 379,
+      "solved_elapsed_ratio": 0.758,
+      "solved_expanded": 25012,
+      "solved_generated": 125056,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 379,
+          "expanded": 25012,
+          "generated": 125056,
+          "unique_states": 25598,
+          "duplicates": 98624,
+          "max_frontier": 1494,
+          "solution_length": 52
+        }
+      ]
+    },
+    {
+      "game": "mazezam.txt",
+      "level": 55,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 382,
+      "solved_elapsed_ratio": 0.764,
+      "solved_expanded": 18533,
+      "solved_generated": 74126,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 382,
+          "expanded": 18533,
+          "generated": 74126,
+          "unique_states": 19285,
+          "duplicates": 54761,
+          "max_frontier": 563,
+          "solution_length": 159
+        }
+      ]
+    },
+    {
+      "game": "the_saga_of_the_candy_scroll.txt",
+      "level": 55,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 388,
+      "solved_elapsed_ratio": 0.776,
+      "solved_expanded": 13449,
+      "solved_generated": 67241,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 388,
+          "expanded": 13449,
+          "generated": 67241,
+          "unique_states": 11777,
+          "duplicates": 51422,
+          "max_frontier": 1671,
+          "solution_length": 24
+        }
+      ]
+    },
+    {
+      "game": "dollyban.txt",
+      "level": 9,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 392,
+      "solved_elapsed_ratio": 0.784,
+      "solved_expanded": 26720,
+      "solved_generated": 133595,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 392,
+          "expanded": 26720,
+          "generated": 133595,
+          "unique_states": 29061,
+          "duplicates": 104282,
+          "max_frontier": 2057,
+          "solution_length": 48
+        }
+      ]
+    },
+    {
+      "game": "gem soketeer.txt",
+      "level": 17,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 392,
+      "solved_elapsed_ratio": 0.784,
+      "solved_expanded": 2701,
+      "solved_generated": 13498,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 392,
+          "expanded": 2701,
+          "generated": 13498,
+          "unique_states": 2994,
+          "duplicates": 10392,
+          "max_frontier": 292,
+          "solution_length": 68
+        }
+      ]
+    },
+    {
+      "game": "heroes_of_sokoban_2.txt",
+      "level": 17,
+      "first_solved_timeout_ms": 500,
+      "previous_timeout_ms": 250,
+      "previous_status": "above_focus_min_elapsed",
+      "solved_elapsed_ms": 392,
+      "solved_elapsed_ratio": 0.784,
+      "solved_expanded": 11717,
+      "solved_generated": 58580,
+      "observations": [
+        {
+          "timeout_ms": 500,
+          "status": "solved",
+          "elapsed_ms": 392,
+          "expanded": 11717,
+          "generated": 58580,
+          "unique_states": 17161,
+          "duplicates": 24878,
+          "max_frontier": 5839,
+          "solution_length": 43
+        }
+      ]
+    }
+  ]
+}

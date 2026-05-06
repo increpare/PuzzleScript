@@ -32,7 +32,7 @@ const corpusPath = path.resolve(args[1]);
 let timeoutMs = 500;
 let minElapsedMs = 250;
 let maxTargets = 50;
-let outPath = path.resolve('build/native/solver_focus_group.json');
+let outPath = path.resolve('src/tests/solver_focus_group.json');
 let strategy = 'portfolio';
 let jobs = '1';
 let repoRoot = process.cwd();
@@ -148,6 +148,18 @@ function resultKey(result) {
 
 function normalizeGamePath(filePath) {
     return path.relative(corpusPath, filePath).split(path.sep).join('/');
+}
+
+function repoRelativePath(filePath) {
+    const resolved = path.resolve(filePath);
+    const relative = path.relative(repoRoot, resolved).split(path.sep).join('/');
+    if (relative === '') {
+        return '.';
+    }
+    if (!relative.startsWith('..') && !path.isAbsolute(relative)) {
+        return relative;
+    }
+    return resolved;
 }
 
 function listGameFiles(dir) {
@@ -657,9 +669,9 @@ async function main() {
         schema_version: 1,
         kind: 'solver_focus_group',
         generated_at: new Date().toISOString(),
-        solver: solverPath,
-        corpus: corpusPath,
-        mined_corpus: solverCorpusPath,
+        solver: repoRelativePath(solverPath),
+        corpus: repoRelativePath(corpusPath),
+        mined_corpus: repoRelativePath(solverCorpusPath),
         strategy,
         jobs,
         timeout_ms: timeoutMs,
@@ -677,7 +689,7 @@ async function main() {
             resolved_probe_jobs: preparedCorpus.compile_probe_jobs,
             build_jobs: compileBuildJobs,
             cmake_generator: cmakeGenerator,
-            root: compileProbeRoot,
+            root: repoRelativePath(compileProbeRoot),
             game_count: preparedCorpus.game_count,
             eligible_game_count: preparedCorpus.eligible_game_count,
             excluded_game_count: preparedCorpus.compile_excluded_games.length,

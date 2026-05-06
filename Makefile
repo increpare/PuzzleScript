@@ -18,7 +18,7 @@
 .PHONY: help build build_32 build_solver build_generator generator solver run ctest tests js_parity_tests tests_js simulation_tests_js simulation_tests_js_profile simulation_tests_js_profile_breakdown compilation_tests_js performance_testpage \
 	simulation_tests_cpp compilation_tests_cpp simulation_tests compilation_tests simulation_corpus_interpreter_benchmark simulation_corpus_compiled_rulegroups_benchmark simulation_corpus_compiled_compact_benchmark simulation_corpus_perf_report simulation_corpus_perf_report_quick \
 	simulation_tests_cpp_32 compilation_tests_cpp_32 \
-	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_compact_codegen_compare solver_focus_perf_report solver_focus_compact_perf_report solver_focus_compact_codegen_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
+	solver_tests_cpp solver_tests_js solver_tests solver_smoke_tests solver_determinism_tests solver_parity_smoke solver_compact_parity_smoke solver_compact_parity solver_benchmark solver_mine_pippable solver_focus_mine solver_focus_manifest_check solver_focus_benchmark solver_focus_compare solver_focus_compact_compare solver_focus_compact_codegen_compare solver_focus_perf_report solver_focus_compact_perf_report solver_focus_compact_codegen_perf_report solver_benchmark_targets generator_smoke_tests generator_benchmark \
 	simulation_tests_cpp_js_parity compilation_tests_cpp_direct \
 	compiled_rules_simulation_suite_coverage compiled_rules_coverage_shape_smoke specialized_full_turn_dispatch_smoke compiled_tick_dispatch_smoke compact_turn_oracle_smoke compact_turn_simulation_tests compact_turn_coverage compact_turn_codegen_coverage compact_turn_codegen_bringup compact_turn_codegen_solver_parity compact_turn_codegen_frontier compact_turn_codegen_testdata_one compact_tick_oracle_smoke compact_tick_simulation_tests compact_tick_coverage \
 	compact_turn_codegen_selected_tests compact_turn_codegen_simulation_tests \
@@ -75,7 +75,7 @@ SOLVER_MINE_NEAR_RATIO ?= 0.5
 SOLVER_MINE_MAX_TARGETS ?=
 SOLVER_PIPPABLE_MANIFEST ?= $(BUILD_DIR)/native/solver_pippable_targets.json
 SOLVER_FOCUS_CORPUS ?= $(SOLVER_TESTS_CORPUS)
-SOLVER_FOCUS_MANIFEST ?= $(BUILD_DIR)/native/solver_focus_group.json
+SOLVER_FOCUS_MANIFEST ?= src/tests/solver_focus_group.json
 SOLVER_FOCUS_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark.json
 SOLVER_FOCUS_INTERPRETED_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark_interpreted.json
 SOLVER_FOCUS_COMPILED_OUT ?= $(BUILD_DIR)/native/solver_focus_benchmark_compiled$(if $(filter true,$(COMPILED_RULES_PERF)),_perf,).json
@@ -349,6 +349,7 @@ help:
 	@echo "                                     Build a shorter smoke-sized performance report"
 	@echo "  make solver_mine_pippable          Mine near-threshold native solver targets"
 	@echo "  make solver_focus_mine             Mine a small solver optimization focus group"
+	@echo "  make solver_focus_manifest_check   Validate the checked-in solver focus group"
 	@echo "  make solver_focus_benchmark        Benchmark the current solver focus group"
 	@echo "  make solver_focus_compare          Compare interpreted vs compiled focus outputs"
 	@echo "  make solver_focus_compact_compare  Compare interpreted vs compiled compact-node focus outputs"
@@ -396,7 +397,7 @@ help:
 	@echo "  make solver_mine_pippable SOLVER_MINE_TIMEOUTS_MS=50,100,250,500"
 	@echo "                                     Write $(SOLVER_PIPPABLE_MANIFEST)"
 	@echo "  make solver_focus_mine SOLVER_FOCUS_COMPILE_PROBE_JOBS=auto"
-	@echo "                                     Recompute focus group with parallel compile probes"
+	@echo "                                     Recompute checked-in focus group with parallel compile probes"
 	@echo "  make solver_benchmark_targets SOLVER_TARGET_BENCH_RUNS=10"
 	@echo "                                     Write $(SOLVER_TARGET_BENCH_OUT)"
 	@echo "  make solver_benchmark SPECIALIZE=true"
@@ -823,6 +824,9 @@ $(SOLVER_FOCUS_MANIFEST):
 	else \
 		$(MAKE) solver_focus_mine; \
 	fi
+
+solver_focus_manifest_check:
+	$(NODE) src/tests/check_solver_focus_manifest.js
 
 solver_focus_benchmark: $(PUZZLESCRIPT_SOLVER) $(SOLVER_FOCUS_MANIFEST)
 	@if [ "$(SPECIALIZE)" = "true" ]; then \
