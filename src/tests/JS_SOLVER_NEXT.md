@@ -40,6 +40,154 @@ where the idea overlaps.
   Codifying that flow into `bench_solver.js` (with N-rep variance reporting)
   would make every future experiment cheap.
 
+- **D2 + B1 (revised default) — landed.** Region-isolation penalty
+  (`regionIsolationPenalty`) added: for each unsatisfied tile in an all-on
+  condition, +256 if its static-blocker-bounded connected component contains
+  no current target tile. Component IDs are folded into the existing per-
+  condition `staticDeadCellsCache`, so the per-call cost is one pass over
+  current targets + one over unsatisfied tiles.
+
+  New heuristic `'all-on-dead-isolated'` = dead-position + isolation. Bench
+  (paired runs vs `'all-on-dead-position'`): **+1 to +4 solves** consistently
+  (~622-625 vs ~620-624). Honest finish: real but small.
+
+  Then on the (correct) critique that an all-on-named heuristic is the wrong
+  shape for a general default, `'auto'` was rewritten as a per-condition
+  router:
+  - Iterates every wincondition; for every all-on condition it adds
+    `deadPositionPenalty + regionIsolationPenalty`.
+  - Base is `allOnClearPathHeuristic` (which falls through to
+    `winconditionDistanceHeuristic` when there's no single all-on condition).
+  - SOME and NO conditions contribute via base only — measured the existing
+    specialized scorers (`some-on-static-blockers` 611, `no-on-escape` 610)
+    and they're all *worse* than the base distance heuristic (~617). New
+    SOME/NO specialized adders are still wanted (D4, D7) but plugging in the
+    existing ones regresses.
+
+  Switched `DEFAULT_SOLVER_HEURISTIC` to `'auto'`. Bench: ~615-621 solved.
+  This is ~3-6 below `'all-on-dead-isolated'` because that heuristic only
+  fires for *single* all-on conditions and skips per-condition iteration on
+  multi-condition levels (cheaper per call). Net trade: small aggregate
+  for per-shape correctness — the corpus is heavily Sokoban-skewed and
+  rewarded the all-on-only specialist.
+
+- **C1/C1b — both implemented, both **don't pay off***** at fixed wall-clock
+  budgets. Decisive evidence below.
+
+  Re-grounded baselines first (default `make solver_tests_js` strategy is
+  `weighted-astar`, **not** `portfolio` — earlier C1 numbers in this log were
+  vs the wrong baseline):
+
+  | config (250ms timeout) | solved |
+  |---|---|
+  | `--solver-heuristic winconditions` (default) | 618 |
+  | `--solver-heuristic all-on-dead-position` (post-A3) | 622 ×2 |
+  | `--solver-heuristic auto` | 613 |
+  | `--strategy portfolio --portfolio-heuristics all-on-dead-position` | 618 |
+  | `--strategy portfolio --portfolio-heuristics all-on-dead-position,winconditions` | 613 (−5) |
+  | `--strategy portfolio --portfolio-heuristics all-on-dead-position,auto` | 616 (−2) |
+
+  At 500ms timeout the gap is even starker:
+
+  | config (500ms timeout) | solved |
+  |---|---|
+  | `--solver-heuristic all-on-dead-position` | **700** |
+  | `--strategy phase-split --portfolio-heuristics all-on-dead-position,winconditions` (250+250) | 631 |
+
+  **+69 solves** for a single best heuristic with full budget over a
+  phase-split that gives each heuristic the *same* 250ms budget the single
+  heuristic uses at the lower timeout. Even when the orthogonality story
+  (`union 622`) was technically true, putting both heuristics into one
+  budgeted run sacrifices way more search than diversification recovers.
+
+  **Actionable conclusions:**
+  - **Done (and superseded):** `DEFAULT_SOLVER_HEURISTIC` was switched from
+    `'winconditions'` to `'all-on-dead-position'` (623/1341), then to
+    `'all-on-dead-isolated'` (~622-625) after D2 landed, then to `'auto'`
+    (~615-621) on win-condition-shape grounds (see B-section below).
+  - Heuristic combination work (B1's `auto`, multi-heuristic portfolios) is
+    chasing a phantom. A *better single* heuristic beats any combination of
+    weaker ones because per-level budget is the binding constraint, not
+    diversity. Future heuristic work should target unconditional improvement
+    of the leading scorer (D1, D2, D4 ideas — reach-aware some, region
+    isolation, lifecycle no-on), not blending.
+
+  Plumbing kept as opt-in: `--portfolio-heuristics A,B,…` (interleaved) and
+  `--strategy phase-split --portfolio-heuristics A,B,…` (sequential) both
+  remain, in case scheduling tricks (uneven budgets, locked phases) make
+  them viable later.
+
+- **(historical) Earlier C1 reading vs `--strategy portfolio` baseline.**
+  Added `--portfolio-heuristics NAME[,NAME…]` to `parseArgs`; when omitted
+  falls back to single-heuristic behaviour (`solverHeuristic`).
+  `runAdaptivePortfolio` builds one `solverOps` spec per heuristic, primary
+  spec drives state ops, secondary specs add `wa2` entries. Each child node
+  evaluates every active heuristic.
+  Bench (250ms timeout, 1341 levels) — variance turned out to be wider than
+  the earlier 3-run sample suggested:
+  - Baseline (5 runs): **613 ± 7 solved** (619, 617, 616, 606, 611)
+  - Single-heuristic via portfolio plumbing (`--portfolio-heuristics
+    winconditions`): 613 — refactor itself ≈ neutral
+  - Multi `winconditions,auto`: 611 — within noise
+  - Multi `auto,winconditions`: 610 — within noise
+  - Earlier 4-mode-replaced design (`wa2:auto,wa2:winconditions,bfs`): 605 —
+    likely a real regression because it dropped wa8/greedy
+
+  Verdict: the plumbing-conserving design (primary keeps full quartet,
+  secondaries contribute wa2 only) is **noise-neutral** vs baseline at 250ms
+  timeouts. The expected union-of-622 win **doesn't appear** because each
+  heuristic gets less effective budget per node and the extra heuristic
+  computation eats into search depth. We get neither the gain nor a clear
+  loss.
+
+  Implication for the next iteration: **interleaving doesn't pay; sequencing
+  might.** A phase-split portfolio (run heuristic A for `T1` ms, then on
+  timeout restart with heuristic B for the remaining budget) preserves
+  per-heuristic search density and is the obvious next experiment. C1 plumbing
+  stays in place behind the opt-in flag; default behaviour unchanged.
+
+- **D4 (`noOnLifecycle`) — tested and rejected.** Implemented a static rule scan
+  that classifies every NO X ON Y condition as "no rule can ever introduce a
+  new offender" vs "some rule might". For the no-create case, the offender
+  count alone is monotone-decreasing along any solution path, so the standalone
+  `'no-on-lifecycle'` heuristic returns `count * 32`; otherwise it falls back
+  to `noOnEscape`'s distance-to-escape score.
+
+  Bench (250ms, 1341 levels):
+  - `--solver-heuristic no-on-escape` (control): 612
+  - `--solver-heuristic no-on-lifecycle`: **615 (+3)**
+
+  Bench (5000ms default):
+  - `--solver-heuristic no-on-escape`: 897
+  - `--solver-heuristic no-on-lifecycle`: 897 (no change)
+
+  The +3 at tight timeouts disappears at the standard timeout — the levels
+  that lifecycle solves faster also fit inside `noOnEscape`'s 5s budget. Wiring
+  D4 into `auto` (per-condition, additive on top of base) **regressed** by ~3
+  solves at 250ms because adding `+32` per offender on top of base's `+10` per
+  offender over-prioritises NO destruction relative to all-on alignment in
+  mixed-condition levels.
+
+  Verdict: the win is too small at any realistic timeout to justify the new
+  ~50 lines (cache + scan + heuristic + dead code path in `auto`). Code
+  reverted; this log entry preserves the negative result.
+
+- **D7 (`someOnPushAccess`) — tested and rejected.** Implemented a some-on
+  variant of `pushAccessPenalty` that returns the cheapest-pushable source's
+  manhattan distance + a small surcharge for unpushable sources (12 for
+  cornered, 4 for "can push but not toward closest target").
+
+  Bench (250ms):
+  - `--solver-heuristic some-on-clear-path` (control): 616
+  - `--solver-heuristic some-on-push-access`: **609 (-7)**
+
+  Bench (5000ms): both 897.
+
+  The cheapest-pushable signal at 250ms misleads search vs the existing
+  aligned-row/col bonus from `someOnClearPath` — the surcharges over-penalise
+  source tiles that are temporarily blocked but where intermediate moves can
+  free them. Reverted.
+
 ## Where things stand
 
 - One heuristic at a time. `--solver-heuristic` picks a single function from
@@ -107,10 +255,15 @@ The portfolio currently runs `bfs`/`wa2`/`wa8`/`greedy` on the *same*
 heuristic. Different heuristics rank states very differently; the cheap
 diversification is to also run several heuristics in parallel slices.
 
-- [ ] **C1. Multi-heuristic portfolio.** Add `--portfolio-heuristics
-      auto,all-on-matching,no-on-escape` (comma list). Portfolio rotates over
-      `(heuristic × priorityMode)` pairs, sharing the visited bucket. Probably
-      cap at 4 pairs to keep frontier overhead bounded.
+- [x] **C1. Multi-heuristic portfolio.** Plumbing landed via
+      `--portfolio-heuristics NAME[,NAME…]`; primary spec drives state ops,
+      secondary specs add `wa2` entries. **Tested and rejected** — see status
+      log. Kept as opt-in flag, not used in defaults.
+- [x] **C1b. Phase-split portfolio.** Implemented as `--strategy phase-split`
+      with `--portfolio-heuristics A,B,…` slicing the budget evenly. **Tested
+      and rejected** — at fixed wall-clock budget, each phase loses more
+      search depth than diversification recovers. Even at 2× budget the
+      single best heuristic wins by tens of solves. Kept as opt-in.
 - [ ] **C2. Auto-lock on best phase.** Today the portfolio locks to wa2 when
       `step_ms/generated > 0.05`. Extend the same idea to lock to whichever
       `(heuristic, mode)` pair was last to expand a depth-improving node.
@@ -136,10 +289,8 @@ of `'auto'`.
       satisfaction: count target tiles not currently covered. For symmetric
       Sokoban-style placement this is often more discriminating than the
       source-side count. (cf. native A2)
-- [ ] **D4. `noOnLifecycle`.** If rules can never *create* an offending object
-      (one-time scan of right-hand sides for the relevant mask), use the offender
-      count directly with a high weight — it becomes a near-admissible monotone
-      score. Otherwise fall back to `noOnEscape`. (cf. L0/L2)
+- [x] ~~**D4. `noOnLifecycle`.**~~ Tested and rejected (see status log). +3
+      standalone at 250ms, neutral at 5s. Wiring into `auto` regressed by ~3.
 - [ ] **D5. 2×2 packing deadlock.** For all-on placement against a static target
       mask, detect 2×2 blocks of unsatisfied movables in non-target cells with
       no rule that can split them. Mostly a Sokoban move; gate on the same
@@ -148,16 +299,18 @@ of `'auto'`.
       the best priority, expand once and re-score with the *minimum* child
       heuristic. Cheap with the existing solver ops, often defeats heuristic
       plateaus. Worth measuring `expanded` reduction vs added time.
-- [ ] **D7. Push-direction feasibility on `someOnClearPath`.** `pushAccessPenalty`
-      is all-on only. A `someOn` variant that picks the cheapest-pushable
-      target (rather than the closest) helps on non-ALL Sokoban-ish goals.
+- [x] ~~**D7. Push-direction feasibility on `someOnClearPath`.**~~ Tested and
+      rejected (see status log). −7 standalone at 250ms vs `some-on-clear-path`,
+      neutral at 5s. Cheapest-pushable surcharges over-penalise temporarily
+      blocked sources.
 
 ## E. Search-side wins (not heuristics)
 
 - [ ] **E1. No-op action skipping.** Before calling `stepSolverAction`, check
       whether any rule could possibly fire from the current cell occupancy +
       action token. If not, treat the result as identical-to-parent and skip
-      the snapshot/hash work entirely. Needs the rule-effect scan from D4.
+      the snapshot/hash work entirely. (D4's rule-effect scan was implemented
+      and reverted; if E1 needs it, it'll need to be re-derived.)
 - [ ] **E2. Equivalent-action collapse.** Many puzzles have free moves that
       yield the same state as not moving (player against a wall). Detect by
       hashing only the post-step `objects` array against the parent and
@@ -200,25 +353,27 @@ without a manual sweep.
 Updated based on the A3/`auto` measurements above.
 
 1. ~~**A3**~~ — done.
-2. **C1** (multi-heuristic portfolio) — promoted above F1 because we already
-   have evidence (`winconditions` ⊕ `auto` = 622 vs 618/615 singletons) that
-   it's worth ~4 levels with zero new heuristic work. Just plumbing.
-3. **F1** (bench driver) — once C1 lands, we'll be choosing *combinations* of
-   heuristics, and the single-config `make solver_tests_js` becomes even less
-   sufficient.
-4. **A1** (plan object) — needed before B1 can do real per-condition routing;
+2. ~~**C1**~~ / ~~**C1b**~~ — both tried, both rejected. Single best
+   heuristic wins at any fixed budget. See status log.
+3. ~~**Switch default to `all-on-dead-position`**~~ — done. Confirmation run
+   landed 623 (vs 618 baseline) at 250ms, no wall-time hit.
+4. **F1** (bench driver) — needed to compare unconditional heuristic
+   improvements (D1, D3) against the new default cleanly across timeouts.
+   Especially important after D4/D7 turned out to be neutral-at-5s wins —
+   a proper driver would have caught that in one pass instead of three.
+5. **A1** (plan object) — needed before B1 can do real per-condition routing;
    the current `'auto'` is a stopgap that just shares extras across conditions.
-5. **B1 proper** (full per-condition router using A1 metadata).
-6. **D1, D2, D4** (reach-aware some, region isolation, lifecycle no-on) —
-   three different shapes of new signal, each cheap to try with F1 + C1 to
-   validate.
-7. **E1 + E2** (no-op / equivalent action skipping) — orthogonal to
+6. **B1 proper** (full per-condition router using A1 metadata).
+7. **D1, D2** (reach-aware some, region isolation) — D2 already landed; D1 is
+   the remaining cheap-to-try signal. D4/D7 already tried, both rejected at
+   the standard 5s timeout.
+8. **E1 + E2** (no-op / equivalent action skipping) — orthogonal to
    heuristics, measurable on `expanded`/`generated` ratios.
-8. **D6 + E4** (lookahead, adaptive weight) — refinements once the foundation
+9. **D6 + E4** (lookahead, adaptive weight) — refinements once the foundation
    is in place.
-9. **E3** (IDA\*) — only if F1 shows we have a memory ceiling, otherwise skip.
+10. **E3** (IDA\*) — only if F1 shows we have a memory ceiling, otherwise skip.
 
-D5, D7, F3, F4 are nice-to-have polish — pull them in when their parent area
+D5, F3, F4 are nice-to-have polish — pull them in when their parent area
 gets touched.
 
 ### C1 implementation sketch

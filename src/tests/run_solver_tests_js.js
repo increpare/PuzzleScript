@@ -8,7 +8,7 @@ const path = require('path');
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
 
 const DEFAULT_STRATEGY = 'weighted-astar';
-const DEFAULT_SOLVER_HEURISTIC = 'winconditions';
+const DEFAULT_SOLVER_HEURISTIC = 'auto';
 const SOLVER_HEURISTICS = new Set([
     'zero',
     'winconditions',
@@ -21,6 +21,7 @@ const SOLVER_HEURISTICS = new Set([
     'all-on-player-nearest-tiebreak',
     'all-on-push-access',
     'all-on-dead-position',
+    'all-on-dead-isolated',
     'all-on-player-tiebreak',
     'all-on-min-matching',
     'all-on-matching',
@@ -92,6 +93,7 @@ function parseArgs(argv) {
         astarWeight: 2,
         solverHeuristic: DEFAULT_SOLVER_HEURISTIC,
         portfolioBfsMs: null,
+        portfolioHeuristics: null,
         progressEvery: 25,
         writeSolutions: true,
         progressPerGame: false,
@@ -110,7 +112,7 @@ function parseArgs(argv) {
             options.timeoutMs = null;
         } else if (arg === '--strategy') {
             options.strategy = args[++index];
-            if (!['portfolio', 'bfs', 'weighted-astar', 'greedy'].includes(options.strategy)) {
+            if (!['portfolio', 'bfs', 'weighted-astar', 'greedy', 'phase-split'].includes(options.strategy)) {
                 throw new Error(`Unsupported strategy: ${options.strategy}`);
             }
         } else if (arg === '--astar-weight') {
@@ -122,6 +124,17 @@ function parseArgs(argv) {
             }
         } else if (arg === '--portfolio-bfs-ms') {
             options.portfolioBfsMs = Math.max(1, Number.parseInt(args[++index], 10));
+        } else if (arg === '--portfolio-heuristics') {
+            const list = args[++index].split(',').map((s) => s.trim()).filter(Boolean);
+            for (const name of list) {
+                if (!SOLVER_HEURISTICS.has(name)) {
+                    throw new Error(`Unsupported portfolio heuristic: ${name}`);
+                }
+            }
+            if (list.length === 0) {
+                throw new Error('--portfolio-heuristics requires at least one heuristic name');
+            }
+            options.portfolioHeuristics = list;
         } else if (arg === '--solutions-dir') {
             options.solutionsDir = path.resolve(args[++index]);
             options.writeSolutions = true;
@@ -158,7 +171,7 @@ function parseArgs(argv) {
 
 function usage(exitCode) {
     const message =
-        'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--summary-only] [--quiet] [--json]\n' +
+        'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--portfolio-heuristics NAME[,NAME...]] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--summary-only] [--quiet] [--json]\n' +
         '  --astar-weight N (default 2): weighted-astar and portfolio; portfolio wa8 uses 4×N (default 8).\n';
     (exitCode === 0 ? process.stdout : process.stderr).write(message);
     process.exit(exitCode);
@@ -1401,7 +1414,43 @@ function createSolverLevelSpecialization(options = {}) {
                 }
             }
         }
-        entry = { corner, edge };
+        // Connected components of non-blocked cells (4-neighbour).
+        // componentId[tile] = -1 for blocked cells, otherwise the 0..componentCount-1 id.
+        // Used by `regionIsolationPenalty` to detect targets unreachable through static blockers.
+        const componentId = new Int32Array(n);
+        componentId.fill(-1);
+        const queue = new Int32Array(n);
+        let componentCount = 0;
+        for (let start = 0; start < n; start++) {
+            if (blocked[start] || componentId[start] !== -1) continue;
+            const id = componentCount++;
+            componentId[start] = id;
+            let head = 0;
+            let tail = 0;
+            queue[tail++] = start;
+            while (head < tail) {
+                const cur = queue[head++];
+                const cx = (cur / H) | 0;
+                const cy = cur - cx * H;
+                if (cx > 0) {
+                    const nb = (cx - 1) * H + cy;
+                    if (!blocked[nb] && componentId[nb] === -1) { componentId[nb] = id; queue[tail++] = nb; }
+                }
+                if (cx < W - 1) {
+                    const nb = (cx + 1) * H + cy;
+                    if (!blocked[nb] && componentId[nb] === -1) { componentId[nb] = id; queue[tail++] = nb; }
+                }
+                if (cy > 0) {
+                    const nb = cx * H + (cy - 1);
+                    if (!blocked[nb] && componentId[nb] === -1) { componentId[nb] = id; queue[tail++] = nb; }
+                }
+                if (cy < H - 1) {
+                    const nb = cx * H + (cy + 1);
+                    if (!blocked[nb] && componentId[nb] === -1) { componentId[nb] = id; queue[tail++] = nb; }
+                }
+            }
+        }
+        entry = { corner, edge, componentId, componentCount };
         staticDeadCellsCache.set(key, entry);
         return entry;
     }
@@ -1420,6 +1469,40 @@ function createSolverLevelSpecialization(options = {}) {
             }
         }
         return penalty;
+    }
+
+    /**
+     * Counts unsatisfied tiles that sit in a static-blocker-bounded connected
+     * component containing no current target tile. Such tiles can never reach
+     * a target through pushes, so they're a strict-superset deadlock signal
+     * vs the cornered-tile check (every corner is also isolated, but not every
+     * isolated tile is a corner). Component IDs are cached per-condition; the
+     * per-call cost is one pass over current targets + one pass over unsatisfied.
+     */
+    function regionIsolationPenalty(unsatisfied, condition) {
+        const { componentId, componentCount } = getStaticDeadCells(condition);
+        if (componentCount <= 1) {
+            return 0;
+        }
+        const targets = collectMatchingTiles(condition[2], condition[5]);
+        if (targets.length === 0) {
+            return 0;
+        }
+        const liveComponent = new Uint8Array(componentCount);
+        for (let i = 0; i < targets.length; i++) {
+            const cid = componentId[targets[i]];
+            if (cid >= 0) {
+                liveComponent[cid] = 1;
+            }
+        }
+        let isolated = 0;
+        for (let i = 0; i < unsatisfied.length; i++) {
+            const cid = componentId[unsatisfied[i]];
+            if (cid >= 0 && liveComponent[cid] === 0) {
+                isolated++;
+            }
+        }
+        return isolated * 256;
     }
 
     function obstacleDistanceField(mask, aggregate, condition, distances, blockerMask = null) {
@@ -1643,6 +1726,11 @@ function createSolverLevelSpecialization(options = {}) {
     function allOnDeadPositionHeuristic() {
         return withAllOnWinconditionExtra((base, unsatisfied, condition) =>
             base + deadPositionPenalty(unsatisfied, condition));
+    }
+
+    function allOnDeadIsolatedHeuristic() {
+        return withAllOnWinconditionExtra((base, unsatisfied, condition) =>
+            base + deadPositionPenalty(unsatisfied, condition) + regionIsolationPenalty(unsatisfied, condition));
     }
 
     function allOnMatchingScore(unsatisfied, targets) {
@@ -1963,38 +2051,42 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     /** Per-condition router: same as `allOnClearPathHeuristic` for single-all-on levels, plus static-deadlock corner penalty across every all-on condition (uses A3's `getStaticDeadCells` cache). The corner penalty is base-scale (32 per cornered unsatisfied source) — meant as a real lower-bound contribution, not just a tiebreak. */
+    /**
+     * Per-shape router. The empirical picture in this corpus:
+     *   - For ALL X ON Y conditions, the specialized signals (corner deadlock,
+     *     region isolation) really help — they prune unwinnable branches.
+     *   - For SOME X ON Y and NO X ON Y, none of the existing specialized
+     *     heuristics beat the base `allOnClearPathHeuristic` (which falls
+     *     through to `winconditionDistanceHeuristic` when there's no all-on).
+     *     `some-on-static-blockers` and `no-on-escape` both score ~610 vs
+     *     winconditions' 617 standalone.
+     *
+     * So `auto` adds all-on specialized signals when applicable, and
+     * otherwise leaves the base alone. It dispatches per condition (so a
+     * mixed-shape level still gets all-on penalties on its all-on conditions),
+     * which is the structurally-correct win-condition-aware behaviour the
+     * earlier `'all-on-dead-isolated'` default lacked. New SOME/NO specialized
+     * adders (D4/D7 in JS_SOLVER_NEXT.md) will plug in here when they exist.
+     */
     function autoHeuristic() {
-        const base = winconditionDistanceHeuristic();
-        if (!state.winconditions || state.winconditions.length === 0) {
+        const conditions = state.winconditions || [];
+        if (conditions.length === 0) {
+            return winconditionDistanceHeuristic();
+        }
+        const base = allOnClearPathHeuristic();
+        if (base <= 0) {
             return base;
         }
-        const onlyAllOn = singleAllOnCondition();
         let extra = 0;
-        if (onlyAllOn) {
-            const unsatisfied = collectUnsatisfiedAllOnTiles(onlyAllOn);
-            if (unsatisfied.length > 0) {
-                const targets = collectMatchingTiles(onlyAllOn[2], onlyAllOn[5]);
-                extra += clearPathPenalty(unsatisfied, targets, onlyAllOn);
-            }
-        }
-        let cornerCount = 0;
-        for (let i = 0; i < state.winconditions.length; i++) {
-            const condition = state.winconditions[i];
-            if (condition[0] !== 1) {
-                continue;
-            }
+        for (let i = 0; i < conditions.length; i++) {
+            const condition = conditions[i];
+            if (condition[0] !== 1 || isPlainCondition(condition)) continue;
             const unsatisfied = collectUnsatisfiedAllOnTiles(condition);
-            if (unsatisfied.length === 0) {
-                continue;
-            }
-            const { corner } = getStaticDeadCells(condition);
-            for (let j = 0; j < unsatisfied.length; j++) {
-                if (corner[unsatisfied[j]]) {
-                    cornerCount++;
-                }
-            }
+            if (unsatisfied.length === 0) continue;
+            extra += deadPositionPenalty(unsatisfied, condition);
+            extra += regionIsolationPenalty(unsatisfied, condition);
         }
-        return base + extra + cornerCount * 32;
+        return base + extra;
     }
 
     function noPlainPlayerHeuristic() {
@@ -2017,6 +2109,7 @@ function createSolverLevelSpecialization(options = {}) {
         'all-on-player-nearest-tiebreak': allOnPlayerNearestTiebreakHeuristic,
         'all-on-push-access': allOnPushAccessHeuristic,
         'all-on-dead-position': allOnDeadPositionHeuristic,
+        'all-on-dead-isolated': allOnDeadIsolatedHeuristic,
         'all-on-player-tiebreak': allOnPlayerTiebreakHeuristic,
         'all-on-min-matching': allOnMinMatchingHeuristic,
         'all-on-matching': allOnMatchingHeuristic,
@@ -2595,27 +2688,34 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
         modeResult.load_ms = result.load_ms;
         modeResult.strategy = 'portfolio';
         modeResult.heuristic = 'mixed';
-        const solverOps = createSolverLevelSpecialization(options);
-        modeResult.hash_mode = solverOps.hashMode;
-        modeResult.snapshot_mode = solverOps.snapshotMode;
-        modeResult.heuristic = `mixed:${solverOps.heuristicName}`;
+        const heuristicNames = Array.isArray(options.portfolioHeuristics) && options.portfolioHeuristics.length > 0
+            ? options.portfolioHeuristics.slice()
+            : [options.solverHeuristic || DEFAULT_SOLVER_HEURISTIC];
+        const specs = heuristicNames.map((name) => createSolverLevelSpecialization({ ...options, solverHeuristic: name }));
+        const primarySpec = specs[0];
+        modeResult.hash_mode = primarySpec.hashMode;
+        modeResult.snapshot_mode = primarySpec.snapshotMode;
+        modeResult.heuristic = `mixed:${specs.map((s) => s.heuristicName).join('+')}`;
         timeBlock(modeResult, 'clone_ms', () => {
-            solverOps.restore(initialSnapshot);
+            primarySpec.restore(initialSnapshot);
         });
-        const initialHeuristic = timeBlock(modeResult, 'heuristic_ms', () => solverOps.heuristic());
+        const initialHeuristics = new Float64Array(specs.length);
+        for (let i = 0; i < specs.length; i++) {
+            initialHeuristics[i] = timeBlock(modeResult, 'heuristic_ms', () => specs[i].heuristic());
+        }
         const nodes = timeBlock(modeResult, 'snapshot_ms', () => [
             {
-                snapshot: solverOps.capture(),
+                snapshot: primarySpec.capture(),
                 parent: -1,
                 input: null,
                 depth: 0,
                 expanded: false,
             },
         ]);
-        const visited = useHashBuckets ? new VisitedStateBuckets(nodes, solverOps) : null;
+        const visited = useHashBuckets ? new VisitedStateBuckets(nodes, primarySpec) : null;
         const bestDepth = useHashBuckets ? null : new Map();
         timeBlock(modeResult, 'hash_ms', () => {
-            const initialHash = solverOps.hash();
+            const initialHash = primarySpec.hash();
             if (useHashBuckets) {
                 visited.addInitial(initialHash, 0);
             } else {
@@ -2624,23 +2724,37 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
         });
         modeResult.unique_states = useHashBuckets ? visited.size : bestDepth.size;
 
-        const portfolioModes = [
-            { name: 'wa2', heap: new MinHeap(), expansionSlice: 128 },
-            { name: 'bfs', heap: new MinHeap(), expansionSlice: 128 },
-            { name: 'wa8', heap: new MinHeap(), expansionSlice: 128 },
-            { name: 'greedy', heap: new MinHeap(), expansionSlice: 64 },
-        ];
+        // Each portfolio entry: priorityMode + which heuristic spec it uses.
+        // The primary heuristic gets the full wa2/bfs/wa8/greedy quartet; secondary
+        // heuristics each contribute a wa2 entry so they can guide search through
+        // states where their evaluation differs from the primary.
+        const portfolioModes = [];
+        portfolioModes.push({ name: specs.length > 1 ? `wa2:${heuristicNames[0]}` : 'wa2', priorityMode: 'wa2', heuristicIndex: 0, heap: new MinHeap(), expansionSlice: 128 });
+        portfolioModes.push({ name: 'bfs', priorityMode: 'bfs', heuristicIndex: 0, heap: new MinHeap(), expansionSlice: 128 });
+        portfolioModes.push({ name: specs.length > 1 ? `wa8:${heuristicNames[0]}` : 'wa8', priorityMode: 'wa8', heuristicIndex: 0, heap: new MinHeap(), expansionSlice: 128 });
+        portfolioModes.push({ name: specs.length > 1 ? `greedy:${heuristicNames[0]}` : 'greedy', priorityMode: 'greedy', heuristicIndex: 0, heap: new MinHeap(), expansionSlice: 64 });
+        for (let i = 1; i < specs.length; i++) {
+            portfolioModes.push({
+                name: `wa2:${heuristicNames[i]}`,
+                priorityMode: 'wa2',
+                heuristicIndex: i,
+                heap: new MinHeap(),
+                expansionSlice: 128,
+            });
+        }
         if (Number.isFinite(options.portfolioBfsMs)) {
-            const bfsIndex = portfolioModes.findIndex((mode) => mode.name === 'bfs');
-            const bfsMode = portfolioModes.splice(bfsIndex, 1)[0];
-            bfsMode.expansionSlice = Math.max(1, options.portfolioBfsMs);
-            portfolioModes.unshift(bfsMode);
+            const bfsIndex = portfolioModes.findIndex((mode) => mode.priorityMode === 'bfs');
+            if (bfsIndex >= 0) {
+                const bfsMode = portfolioModes.splice(bfsIndex, 1)[0];
+                bfsMode.expansionSlice = Math.max(1, options.portfolioBfsMs);
+                portfolioModes.unshift(bfsMode);
+            }
         }
         let tie = 0;
         const portfolioAstarWeight = options.astarWeight || 2;
         for (const mode of portfolioModes) {
             mode.heap.push({
-                priority: priorityForPortfolioMode(mode.name, 0, initialHeuristic, portfolioAstarWeight),
+                priority: priorityForPortfolioMode(mode.priorityMode, 0, initialHeuristics[mode.heuristicIndex], portfolioAstarWeight),
                 tie: tie++,
                 index: 0,
             });
@@ -2652,7 +2766,9 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
         let activeMode = portfolioModes[0];
         let sliceExpansionsLeft = activeMode.expansionSlice;
         let lockedToWeightedAstar = false;
-        const weightedMode = portfolioModes.find((mode) => mode.name === 'wa2');
+        // When locking to wa2, prefer the primary-heuristic wa2 entry.
+        const weightedMode = portfolioModes.find((mode) => mode.priorityMode === 'wa2' && mode.heuristicIndex === 0)
+            || portfolioModes.find((mode) => mode.priorityMode === 'wa2');
 
         const hasFrontier = () => totalFrontier > 0;
         const advanceMode = () => {
@@ -2712,7 +2828,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
 
             for (const action of actions) {
                 timeBlock(modeResult, 'clone_ms', () => {
-                    solverOps.restore(node.snapshot);
+                    primarySpec.restore(node.snapshot);
                 });
 
                 const stepResult = timeBlock(modeResult, 'step_ms', () => stepSolverAction(action));
@@ -2732,7 +2848,7 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                     continue;
                 }
 
-                const key = timeBlock(modeResult, 'hash_ms', () => solverOps.hash());
+                const key = timeBlock(modeResult, 'hash_ms', () => primarySpec.hash());
                 const childDepth = node.depth + 1;
                 let visitedMatch = null;
                 if (useHashBuckets) {
@@ -2748,8 +2864,24 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                     }
                     bestDepth.set(key, childDepth);
                 }
-                const childHeuristic = timeBlock(modeResult, 'heuristic_ms', () => solverOps.heuristic());
-                const snapshot = timeBlock(modeResult, 'snapshot_ms', () => solverOps.capture());
+                // Determine which heuristics we still need to compute. When locked to
+                // weighted-astar we only need the heuristic for the locked entry; otherwise
+                // every heuristic that still has at least one queue entry needs to be evaluated.
+                const queueModes = lockedToWeightedAstar && weightedMode ? [weightedMode] : portfolioModes;
+                const childHeuristics = new Float64Array(specs.length);
+                const heuristicNeeded = new Uint8Array(specs.length);
+                for (const mode of queueModes) {
+                    if (mode.priorityMode !== 'bfs') {
+                        heuristicNeeded[mode.heuristicIndex] = 1;
+                    }
+                }
+                // All specs share global `level` / `state`, so the post-step world is
+                // already visible to each — just call heuristic on each needed spec.
+                for (let i = 0; i < specs.length; i++) {
+                    if (!heuristicNeeded[i]) continue;
+                    childHeuristics[i] = timeBlock(modeResult, 'heuristic_ms', () => specs[i].heuristic());
+                }
+                const snapshot = timeBlock(modeResult, 'snapshot_ms', () => primarySpec.capture());
                 nodes.push({
                     snapshot,
                     parent: entry.index,
@@ -2766,10 +2898,9 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
                     modeResult.unique_states = bestDepth.size;
                 }
                 timeBlock(modeResult, 'queue_ms', () => {
-                    const queueModes = lockedToWeightedAstar && weightedMode ? [weightedMode] : portfolioModes;
                     for (const mode of queueModes) {
                         mode.heap.push({
-                            priority: priorityForPortfolioMode(mode.name, childDepth, childHeuristic, portfolioAstarWeight),
+                            priority: priorityForPortfolioMode(mode.priorityMode, childDepth, childHeuristics[mode.heuristicIndex], portfolioAstarWeight),
                             tie: tie++,
                             index: childIndex,
                         });
@@ -2787,6 +2918,54 @@ function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
 
     if (strategy === 'portfolio') {
         return runAdaptivePortfolio(deadline);
+    }
+
+    if (strategy === 'phase-split') {
+        const heuristicNames = Array.isArray(options.portfolioHeuristics) && options.portfolioHeuristics.length > 0
+            ? options.portfolioHeuristics.slice()
+            : [options.solverHeuristic || DEFAULT_SOLVER_HEURISTIC];
+        const totalBudgetMs = Number.isFinite(timeoutMs) ? timeoutMs : null;
+        const originalHeuristic = options.solverHeuristic;
+        let lastResult = null;
+        const phaseStarts = searchStarted;
+        for (let i = 0; i < heuristicNames.length; i++) {
+            const phasesRemaining = heuristicNames.length - i;
+            let phaseDeadline = deadline;
+            if (totalBudgetMs !== null) {
+                const elapsed = Date.now() - phaseStarts;
+                const remaining = Math.max(0, totalBudgetMs - elapsed);
+                const phaseBudget = Math.max(1, Math.floor(remaining / phasesRemaining));
+                phaseDeadline = Date.now() + phaseBudget;
+                if (phaseDeadline > deadline) phaseDeadline = deadline;
+            }
+            options.solverHeuristic = heuristicNames[i];
+            const phaseResult = runMode('weighted-astar', phaseDeadline);
+            phaseResult.strategy = `phase-split:${heuristicNames[i]}`;
+            if (lastResult) {
+                phaseResult.expanded += lastResult.expanded;
+                phaseResult.generated += lastResult.generated;
+                phaseResult.duplicates += lastResult.duplicates;
+                phaseResult.heuristic_ms += lastResult.heuristic_ms;
+                phaseResult.step_ms += lastResult.step_ms;
+                phaseResult.hash_ms += lastResult.hash_ms;
+                phaseResult.queue_ms += lastResult.queue_ms;
+                phaseResult.clone_ms += lastResult.clone_ms;
+                phaseResult.snapshot_ms += lastResult.snapshot_ms;
+            }
+            lastResult = phaseResult;
+            if (phaseResult.status === 'solved') {
+                options.solverHeuristic = originalHeuristic;
+                phaseResult.elapsed_ms = Date.now() - searchStarted;
+                return phaseResult;
+            }
+        }
+        options.solverHeuristic = originalHeuristic;
+        if (lastResult) {
+            lastResult.elapsed_ms = Date.now() - searchStarted;
+            return lastResult;
+        }
+        // Shouldn't reach here, but safe fallback.
+        return runMode('weighted-astar', deadline);
     }
 
     return runMode(strategy, deadline);
