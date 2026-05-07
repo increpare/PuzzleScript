@@ -8,6 +8,20 @@ const path = require('path');
 const { analyzeSource } = require('./ps_static_analysis');
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
 
+function allAnalyzedRules(analysisReport) {
+    return analysisReport.ps_tagged.rule_sections.flatMap(section =>
+        section.groups.flatMap(group => group.rules)
+    );
+}
+
+function onlyAnalyzedRule(source) {
+    const analysisReport = analyzeSource(source);
+    assert.strictEqual(analysisReport.status, 'ok');
+    const rules = allAnalyzedRules(analysisReport);
+    assert.strictEqual(rules.length, 1);
+    return rules[0];
+}
+
 const SIMPLE_GAME = `
 title Static Analysis Simple
 
@@ -2325,5 +2339,72 @@ assertOneMoveActionNoopReplay();
 assertCastleClosetActionNoopRejected();
 assertPushRulegroupFlowReplay();
 assertSplittableRulegroupTransformReplay();
+
+const RULE_TAG_DELETE_GAME = `
+title Static Analysis Rule Tag Delete
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Mark
+yellow
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+M = Mark
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Mark
+
+=====
+RULES
+=====
+
+[ Wall ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P#M
+`;
+
+const deleteRule = onlyAnalyzedRule(RULE_TAG_DELETE_GAME);
+assert.deepStrictEqual(deleteRule.tags.objects_required, ['Wall']);
+assert.deepStrictEqual(deleteRule.tags.objects_matched, ['Wall']);
+assert.deepStrictEqual(deleteRule.tags.object_absences_matched, []);
+assert.deepStrictEqual(deleteRule.tags.objects_written, []);
+assert.deepStrictEqual(deleteRule.tags.objects_erased, ['Wall']);
 
 console.log('ps_static_analysis_node: ok');

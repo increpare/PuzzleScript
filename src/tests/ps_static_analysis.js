@@ -461,6 +461,7 @@ function buildPsTagged(state, options = {}) {
     tagObjectLevelPresence(psTagged);
     tagGame(psTagged);
     normalizeTermRefs(psTagged);
+    tagRuleObjectTags(psTagged);
     tagInertCollisionLayers(psTagged);
     tagCosmeticClosure(psTagged);
     return psTagged;
@@ -1242,6 +1243,49 @@ function ruleFlowWrites(psTagged, rule) {
     }
 
     return { object_present: objectPresent, object_absent: objectAbsent, movement };
+}
+
+function requiredPresentObjectSet(terms) {
+    const objects = new Set();
+    for (const term of terms) {
+        if (term.kind === 'present' && term.ref && term.ref.type === 'object') {
+            addValues(objects, termObjects(term));
+        }
+    }
+    return objects;
+}
+
+function ruleFlowReadTags(rule) {
+    const objectsRequired = new Set();
+    const objectsMatched = new Set();
+    const objectAbsencesMatched = new Set();
+    for (const term of rule.summary.lhs_terms) {
+        if (term.kind === 'present') {
+            addValues(objectsMatched, termObjects(term));
+            if (term.ref && term.ref.type === 'object') {
+                addValues(objectsRequired, termObjects(term));
+            }
+        } else if (term.kind === 'absent') {
+            addValues(objectAbsencesMatched, termObjects(term));
+        }
+    }
+    return {
+        objects_required: objectsRequired,
+        objects_matched: objectsMatched,
+        object_absences_matched: objectAbsencesMatched,
+    };
+}
+
+function tagRuleObjectTags(psTagged) {
+    for (const { rule } of allRuleEntries(psTagged)) {
+        const reads = ruleFlowReadTags(rule);
+        const writes = ruleFlowWrites(psTagged, rule);
+        rule.tags.objects_required = uniqueSorted(reads.objects_required);
+        rule.tags.objects_matched = uniqueSorted(reads.objects_matched);
+        rule.tags.object_absences_matched = uniqueSorted(reads.object_absences_matched);
+        rule.tags.objects_written = uniqueSorted(writes.object_present);
+        rule.tags.objects_erased = uniqueSorted(writes.object_absent);
+    }
 }
 
 function movementWriteMayEnableRead(write, read) {
