@@ -1,0 +1,62 @@
+title Static Analysis Role Properties
+
+========
+OBJECTS
+========
+
+Floor
+black
+
+Water
+blue
+
+Avatar
+white
+
+Ghost
+gray
+
+Goal
+yellow
+
+========
+LEGEND
+========
+
+. = Floor
+~ = Water
+A = Avatar
+G = Ghost
+T = Goal
+Player = Avatar or Ghost
+Background = Floor or Water
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Floor, Water
+Avatar, Ghost
+Goal
+
+=====
+RULES
+=====
+
+=============
+WINCONDITIONS
+=============
+
+Some Player on Goal
+
+======
+LEVELS
+======
+
+A~T
+
+G.T
