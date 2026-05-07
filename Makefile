@@ -564,6 +564,7 @@ tests_js:
 static_analysis_tests:
 	$(NODE) src/tests/ps_static_analysis_node.js
 	$(NODE) src/tests/static_analysis_testdata_runner.js
+	$(NODE) src/tests/static_analysis_testdata_runner_node.js
 	$(NODE) src/tests/static_analysis_explorer_node.js
 	$(NODE) src/tests/solver_static_opt_node.js
 	$(NODE) src/tests/compare_solver_static_opt_runs_node.js
