@@ -2407,4 +2407,200 @@ assert.deepStrictEqual(deleteRule.tags.object_absences_matched, []);
 assert.deepStrictEqual(deleteRule.tags.objects_written, []);
 assert.deepStrictEqual(deleteRule.tags.objects_erased, ['Wall']);
 
+const RULE_TAG_ABSENT_WRITE_GAME = `
+title Static Analysis Rule Tag Absent Write
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Mark
+yellow
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+M = Mark
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Mark
+
+=====
+RULES
+=====
+
+[ Player no Wall ] -> [ Player Mark ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P#M
+`;
+
+const absentWriteRule = onlyAnalyzedRule(RULE_TAG_ABSENT_WRITE_GAME);
+assert.deepStrictEqual(absentWriteRule.tags.objects_required, ['Player']);
+assert.deepStrictEqual(absentWriteRule.tags.objects_matched, ['Player']);
+assert.deepStrictEqual(absentWriteRule.tags.object_absences_matched, ['Wall']);
+assert.deepStrictEqual(absentWriteRule.tags.objects_written, ['Mark']);
+assert.deepStrictEqual(absentWriteRule.tags.objects_erased, []);
+
+const RULE_TAG_RELOCATION_GAME = `
+title Static Analysis Rule Tag Relocation
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+A = Alpha
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha
+
+=====
+RULES
+=====
+
+right [ Alpha | ] -> [ | Alpha ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PA
+`;
+
+const relocationRule = onlyAnalyzedRule(RULE_TAG_RELOCATION_GAME);
+assert.deepStrictEqual(relocationRule.tags.objects_required, ['Alpha']);
+assert.deepStrictEqual(relocationRule.tags.objects_matched, ['Alpha']);
+assert.deepStrictEqual(relocationRule.tags.object_absences_matched, []);
+assert.deepStrictEqual(relocationRule.tags.objects_written, ['Alpha']);
+assert.deepStrictEqual(relocationRule.tags.objects_erased, ['Alpha']);
+
+const RULE_TAG_PROPERTY_REPLACEMENT_GAME = `
+title Static Analysis Rule Tag Property Replacement
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+green
+
+Wall
+brown
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+C = Crate
+# = Wall
+Obstacle = Crate or Wall
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Crate, Wall
+
+=====
+RULES
+=====
+
+[ Obstacle ] -> [ Crate ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PC#
+`;
+
+const propertyReplacementRule = onlyAnalyzedRule(RULE_TAG_PROPERTY_REPLACEMENT_GAME);
+assert.deepStrictEqual(propertyReplacementRule.tags.objects_required, []);
+assert.deepStrictEqual(propertyReplacementRule.tags.objects_matched, ['Crate', 'Wall']);
+assert.deepStrictEqual(propertyReplacementRule.tags.object_absences_matched, []);
+assert.deepStrictEqual(propertyReplacementRule.tags.objects_written, ['Crate']);
+assert.deepStrictEqual(propertyReplacementRule.tags.objects_erased, ['Wall']);
+
 console.log('ps_static_analysis_node: ok');

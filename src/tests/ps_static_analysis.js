@@ -1185,34 +1185,35 @@ function ruleFlowWrites(psTagged, rule) {
             for (let cellIndex = 0; cellIndex < cellCount; cellIndex++) {
                 const lhsCell = lhsRow[cellIndex] || [];
                 const rhsCell = rhsRow[cellIndex] || [];
-                const lhsPresent = presentObjectSet(lhsCell);
+                const lhsRequiredPresent = requiredPresentObjectSet(lhsCell);
+                const lhsMatchedPresent = presentObjectSet(lhsCell);
                 const lhsAbsent = absentObjectSet(lhsCell);
                 const rhsCellPresent = presentObjectSet(rhsCell);
 
                 for (const term of rhsCell) {
                     if (term.kind === 'present' || term.kind === 'random_object') {
                         const writtenObjects = termObjects(term).filter(objectName =>
-                            term.kind === 'random_object' || !lhsPresent.has(objectName)
+                            term.kind === 'random_object' || !lhsRequiredPresent.has(objectName)
                         );
                         addValues(objectPresent, writtenObjects);
                         for (const objectName of termObjects(term)) {
                             for (const sibling of layerObjectsForObject(psTagged, objectName)) {
                                 if (sibling === objectName || rhsCellPresent.has(sibling)) continue;
-                                if (cellCouldContainObjectBefore(psTagged, lhsPresent, lhsAbsent, sibling)) {
+                                if (cellCouldContainObjectBefore(psTagged, lhsMatchedPresent, lhsAbsent, sibling)) {
                                     objectAbsent.add(sibling);
                                 }
                             }
                         }
                     } else if (term.kind === 'absent') {
                         for (const objectName of termObjects(term)) {
-                            if (cellCouldContainObjectBefore(psTagged, lhsPresent, lhsAbsent, objectName)) {
+                            if (cellCouldContainObjectBefore(psTagged, lhsMatchedPresent, lhsAbsent, objectName)) {
                                 objectAbsent.add(objectName);
                             }
                         }
                     }
                 }
 
-                for (const objectName of lhsPresent) {
+                for (const objectName of lhsMatchedPresent) {
                     if (!rhsCellPresent.has(objectName)) {
                         objectAbsent.add(objectName);
                     }
