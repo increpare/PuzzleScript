@@ -139,7 +139,7 @@ When it finds `src/tests/static_analysis_testdata/object_tags/foo.txt` with no m
 
 1. Analyzes `foo.txt`.
 2. Generates `foo.json`.
-3. Prints a clear message such as `generated static analysis testdata: object_tags/foo.json`.
+3. Prints a clear message such as `generated static analysis testdata: object_tags/foo.json (review before committing)`.
 4. Continues the test run and checks the generated JSON.
 
 Generated object-tag JSON includes:
@@ -150,6 +150,8 @@ Generated object-tag JSON includes:
 - explicit values for every object tag known at generation time: `true` and `false` for boolean tags, named values for valued tags
 
 The runner never overwrites an existing `.json`. There is no draft status. Once generated, the file is a legitimate test and may be trimmed by hand.
+
+Auto-generated or mechanically regenerated expectation JSON must be reviewed by Stephen before it is committed, merged, or submitted. The generated JSON is an authoring shortcut, not permission to skip review of the expected facts.
 
 ## Runner Behavior
 

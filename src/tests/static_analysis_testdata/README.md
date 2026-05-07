@@ -38,5 +38,12 @@ Object-tag expectations are grouped by object:
 5. Run `make static_analysis_tests` again. Existing JSON files are never
    overwritten, and only listed expectations are checked.
 
+## Review Policy
+
+Auto-generated or mechanically regenerated expectation JSON is a proposal, not
+something to submit unseen. Before committing, merging, or submitting generated
+testdata, show Stephen the generated expectations or diff and get explicit
+approval.
+
 If an interpretation question comes up while writing a fixture, stop and decide
 the tag meaning before committing the test.

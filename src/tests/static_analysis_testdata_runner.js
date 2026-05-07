@@ -178,7 +178,7 @@ function runObjectTagsDir(dirPath, claimDescriptions, log = process.stdout.write
             const report = analyzeSource(source, { sourcePath: txtPath });
             assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
             writeJson(jsonPath, buildObjectTagExpectations(report, claimDescriptions));
-            log(`generated static analysis testdata: object_tags/${stem}.json\n`);
+            log(`generated static analysis testdata: object_tags/${stem}.json (review before committing)\n`);
         }
         checkFixture(txtPath, jsonPath, claimDescriptions);
     }

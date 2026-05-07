@@ -34,7 +34,7 @@ function run() {
         const claimDescriptions = loadClaimDescriptions();
         const generatedLog = [];
         runObjectTagsDir(objectTagsDir, claimDescriptions, message => generatedLog.push(message));
-        assert.deepStrictEqual(generatedLog, ['generated static analysis testdata: object_tags/roles-basic.json\n']);
+        assert.deepStrictEqual(generatedLog, ['generated static analysis testdata: object_tags/roles-basic.json (review before committing)\n']);
 
         const jsonPath = path.join(objectTagsDir, 'roles-basic.json');
         const generated = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
