@@ -1,0 +1,69 @@
+title Static Analysis Rule Creation Destruction
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Seed
+green
+
+Mark
+yellow
+
+Dust
+gray
+
+Wall
+brown
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+S = Seed
+M = Mark
+D = Dust
+# = Wall
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Seed
+Mark
+Dust
+Wall
+
+=====
+RULES
+=====
+
+[ Seed ] -> [ Seed Mark ]
+[ Dust ] -> [ ]
+[ > Player | Wall ] -> [ > Player | Wall ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PSMD#

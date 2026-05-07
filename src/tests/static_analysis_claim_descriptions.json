@@ -1,0 +1,31 @@
+{
+  "schema": "ps-static-analysis-claim-descriptions-v1",
+  "objectTags": [
+    {
+      "name": "is_player",
+      "description": "Object is part of the resolved Player role.",
+      "specification": "An object has is_player when it is the object named by the Player object, Player synonym, or a member of the Player property in the compiled game. If Player resolves to a property with multiple member objects, every member object has is_player true."
+    },
+    {
+      "name": "is_background",
+      "description": "Object is part of the resolved Background role.",
+      "specification": "An object has is_background when it is the object named by the Background object, Background synonym, or a member of the Background property in the compiled game. If Background resolves to a property with multiple member objects on the same collision layer, every member object has is_background true."
+    },
+    {
+      "name": "level_presence",
+      "description": "Whether the object appears in all, some, or no playable levels.",
+      "specification": "The level_presence tag is one of all, some, or none. Message levels are ignored. The value all means there is at least one playable level and the object appears in every playable level. The value some means the object appears in at least one but not every playable level. The value none means the object appears in no playable levels; if a valid source has zero playable levels, every object has level_presence none.",
+      "values": ["all", "some", "none"]
+    },
+    {
+      "name": "created_by_rules",
+      "description": "A solver-active rule may write this object present in a cell.",
+      "specification": "An object has created_by_rules when rule object-write analysis finds a solver-active rule that may write that object present in a cell where the left-hand side does not already require that object to be present in the same cell. This is a cell-local write tag: relocation can count as creation in the destination cell, even if the object's total count is preserved."
+    },
+    {
+      "name": "destroyed_by_rules",
+      "description": "A solver-active rule may write this object absent from a cell.",
+      "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may write that object absent from a cell where the left-hand side allows that object to be present in the same cell. This includes explicit absent writes, removing a left-hand side object from its original cell, and overwriting a possible same-layer occupant. This is a cell-local write tag: relocation can count as destruction in the source cell, even if the object's total count is preserved."
+    }
+  ]
+}

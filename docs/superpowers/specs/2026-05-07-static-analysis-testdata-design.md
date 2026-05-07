@@ -1,0 +1,213 @@
+# Static Analysis Testdata Design
+
+## Purpose
+
+Build a careful, low-friction test battery for PuzzleScript static-analysis claims.
+
+The immediate goal is not to add new analysis semantics. The immediate goal is to make existing and future claims easy to specify, inspect, and test one by one. Static-analysis features should only enter the testdata suite after their interpretation has been decided. There is no pending or expected-failure area.
+
+The first implementation slice covers object tags only. Rule tags, layer tags, fact families, dashboard generation, and fixture-authoring UI are later slices.
+
+## Design Principles
+
+- Every test source is a complete valid PuzzleScript source file.
+- Default to small, diagnosis-friendly specimens. Larger specimens are allowed when the interaction itself is the point.
+- A test expectation file checks only the claims it lists. Unlisted analyzer output is not part of that test.
+- Existing expectation JSON files are curated and must never be overwritten automatically.
+- Adding a new analysis claim later must not break existing expectation JSON files.
+- If an interpretational question arises, stop and ask before encoding or changing analyzer semantics.
+
+## File Layout
+
+```text
+src/tests/static_analysis_claim_descriptions.json
+src/tests/static_analysis_testdata/
+  object_tags/
+    *.txt
+    *.json
+src/tests/static_analysis_testdata_runner.js
+```
+
+`static_analysis_testdata/` is grouped by broad analysis area, not by individual tag. The first area is `object_tags/`.
+
+Every committed `.json` in an area must have a matching `.txt` with the same stem. A `.json` without a `.txt` is an error.
+
+## Claim Descriptions
+
+`src/tests/static_analysis_claim_descriptions.json` is the shared glossary for static-analysis claims. It is consumed by tests now and can be consumed by the dashboard later.
+
+The first version contains only `objectTags`.
+
+```json
+{
+  "schema": "ps-static-analysis-claim-descriptions-v1",
+  "objectTags": [
+    {
+      "name": "is_player",
+      "description": "Object is part of the resolved Player role.",
+      "specification": "An object has is_player when it is the object named by the Player object, Player synonym, or a member of the Player property in the compiled game. If Player resolves to a property with multiple member objects, every member object has is_player true."
+    },
+    {
+      "name": "is_background",
+      "description": "Object is part of the resolved Background role.",
+      "specification": "An object has is_background when it is the object named by the Background object, Background synonym, or a member of the Background property in the compiled game. If Background resolves to a property with multiple member objects on the same collision layer, every member object has is_background true."
+    },
+    {
+      "name": "level_presence",
+      "description": "Whether the object appears in all, some, or no playable levels.",
+      "specification": "The level_presence tag is one of all, some, or none. Message levels are ignored. The value all means there is at least one playable level and the object appears in every playable level. The value some means the object appears in at least one but not every playable level. The value none means the object appears in no playable levels; if a valid source has zero playable levels, every object has level_presence none.",
+      "values": ["all", "some", "none"]
+    },
+    {
+      "name": "created_by_rules",
+      "description": "A solver-active rule may write this object present in a cell.",
+      "specification": "An object has created_by_rules when rule object-write analysis finds a solver-active rule that may write that object present in a cell where the left-hand side does not already require that object to be present in the same cell. This is a cell-local write tag: relocation can count as creation in the destination cell, even if the object's total count is preserved."
+    },
+    {
+      "name": "destroyed_by_rules",
+      "description": "A solver-active rule may write this object absent from a cell.",
+      "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may write that object absent from a cell where the left-hand side allows that object to be present in the same cell. This includes explicit absent writes, removing a left-hand side object from its original cell, and overwriting a possible same-layer occupant. This is a cell-local write tag: relocation can count as destruction in the source cell, even if the object's total count is preserved."
+    }
+  ]
+}
+```
+
+Each entry has:
+
+- `name`: the analyzer output key.
+- `description`: a short human-facing explanation.
+- `specification`: the precise contract the analyzer and tests are accountable to.
+- `values`: optional list for valued tags. Omit it for boolean tags.
+- `examples`: optional list of real testdata stems, such as `object_tags/roles-basic`. Examples must correspond to committed `.txt`/`.json` files.
+
+There is no separate label field, no status field, and no expectation-type field. If a claim appears in this file, it is a valid, decided claim. Planned or speculative analyses do not belong here.
+
+Claim order in this file is the generated expectation order.
+
+The testdata vocabulary is author-facing. The runner may derive these claims from analyzer output if the analyzer stores them differently internally. For example, the first implementation can derive `level_presence` from existing `present_in_all_levels`, `present_in_some_levels`, and `present_in_no_levels` booleans instead of requiring the analyzer to change its raw output immediately.
+
+The first implementation can derive `created_by_rules` from `may_be_created` and `destroyed_by_rules` from `may_be_destroyed`. The raw analyzer output can be renamed in a later semantic cleanup if desired.
+
+Initial object tags:
+
+- `is_player`
+- `is_background`
+- `level_presence`, with values `all`, `some`, and `none`
+- `created_by_rules`
+- `destroyed_by_rules`
+
+`static` and `cosmetic` are intentionally not in the first slice. `static` depends on movement/write/layer-creation analysis. `cosmetic` depends on core-seed selection, rule object read/write extraction, rule/core reachability, and collision-layer closure. Those prerequisite analyses need their own testdata before these derived claims are formally added.
+
+## Expectation JSON Format
+
+Each expectation JSON groups object-tag expectations by object.
+
+```json
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "note": "Optional human note.",
+  "objectTag": [
+    {
+      "object": "Background",
+      "is_player": false,
+      "is_background": true,
+      "level_presence": "all",
+      "created_by_rules": false,
+      "destroyed_by_rules": false
+    },
+    {
+      "object": "Player",
+      "is_player": true,
+      "is_background": false,
+      "level_presence": "all",
+      "created_by_rules": false,
+      "destroyed_by_rules": false
+    }
+  ]
+}
+```
+
+Rules:
+
+- `note` is optional at top level.
+- `object` uses the analyzer's display object name.
+- `objectTag` is the only expectation category in the first slice.
+- Each object row can list any subset of object tags.
+- Boolean tags use boolean values. Valued tags use one of the tag's listed `values`.
+- Only listed row fields are checked.
+- New claim descriptions added later do not affect existing expectation files.
+
+Object names are sufficient locators for object-tag expectations. Later rule and rule-group expectations will need stronger locators such as source line plus source-text guard.
+
+## Auto-Generation Workflow
+
+The test runner supports an authoring shortcut for orphan `.txt` files.
+
+When it finds `src/tests/static_analysis_testdata/object_tags/foo.txt` with no matching `foo.json`, it:
+
+1. Analyzes `foo.txt`.
+2. Generates `foo.json`.
+3. Prints a clear message such as `generated static analysis testdata: object_tags/foo.json (review before committing)`.
+4. Continues the test run and checks the generated JSON.
+
+Generated object-tag JSON includes:
+
+- all objects, including Background and Player
+- object order from the analyzer/compiler
+- object tags in claim-description order
+- explicit values for every object tag known at generation time: `true` and `false` for boolean tags, named values for valued tags
+
+The runner never overwrites an existing `.json`. There is no draft status. Once generated, the file is a legitimate test and may be trimmed by hand.
+
+Auto-generated or mechanically regenerated expectation JSON must be reviewed by Stephen before it is committed, merged, or submitted. The generated JSON is an authoring shortcut, not permission to skip review of the expected facts.
+
+## Runner Behavior
+
+The runner scans `src/tests/static_analysis_testdata/` and handles each area according to that area's rules.
+
+For `object_tags/`:
+
+- valid `.txt` files are full PuzzleScript sources
+- orphan `.txt` files generate matching `.json`
+- orphan `.json` files fail
+- invalid PuzzleScript source fails
+- unknown expectation types fail
+- unknown object names fail with a list of available object names
+- unknown tag names fail against `static_analysis_claim_descriptions.json`
+
+Expectation failures should be domain-specific, not generic JSON path errors.
+
+Example failure:
+
+```text
+object_tags/roles-basic.json
+objectTag Player.is_player expected true, got false
+  object: Player id=1 layer=2
+```
+
+The runner should be wired into `make static_analysis_tests` beside the existing node assertion files. Existing assertions can migrate later, but migration is not part of the first slice.
+
+## First Specimen Themes
+
+The first object-tag specimens should be small standalone games:
+
+- level presence: all, some, and no playable levels
+- structural roles: player and background object/property resolution
+- objects that are, and are not, created or destroyed by rules
+
+Each specimen should be as small as possible while still being a whole valid source file.
+
+## Later Work
+
+Later slices may add:
+
+- `static` object tags, after movement/write/layer-creation analysis has testdata
+- `cosmetic` object tags, after core closure and rule-flow prerequisites have testdata
+- rule tag expectation types
+- rule-group expectation types with line/text locators
+- layer tag expectation types
+- fact-family expectation types
+- a browser specimen builder that can paste/open PuzzleScript source, show grouped analysis claims, and export selected expectation JSON
+- dashboard support using `static_analysis_claim_descriptions.json`
+
+These later slices should reuse the same discipline: decide the interpretation first, then add a passing testdata specimen.

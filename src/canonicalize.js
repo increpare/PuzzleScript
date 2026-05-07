@@ -13,6 +13,7 @@ const sourceFiles = [
     'js/languageConstants.js',
     'js/globalVariables.js',
     'js/debug.js',
+    'js/plugin_header_on.js',
     'js/font.js',
     'js/rng.js',
     'js/riffwave.js',
@@ -196,6 +197,21 @@ globalThis.__ps_exports = {
                 state: state,
                 errorCount: errorCount,
                 errorStrings: errorStrings.slice()
+            };
+        } catch (error) {
+            const message = error && error.message ? error.message : String(error);
+            if (message !== "Too many errors/warnings; aborting compilation.") {
+                throw error;
+            }
+            const errors = errorStrings.slice();
+            if (errors.indexOf(message) < 0) {
+                errors.push(message);
+            }
+            return {
+                state: null,
+                errorCount: errorCount > 0 ? errorCount : errors.length,
+                errorStrings: errors,
+                thrown: true
             };
         } finally {
             compiling = false;
@@ -1034,6 +1050,17 @@ function canonicalizeSource(source, mode = 'structural') {
     return canonicalizeState(parsed.state, options);
 }
 
+function compileSemanticSource(source, options = {}) {
+    const includeWinConditions = options.includeWinConditions !== false;
+    const throwOnError = options.throwOnError !== false;
+    const compiled = getRuntime().compileSemantic(source, includeWinConditions);
+    if (throwOnError && (compiled.errorCount > 0 || compiled.state === null || compiled.state.invalid)) {
+        const message = compiled.errorStrings.join('\n');
+        throw new Error(`Unable to compile PuzzleScript source.\n${message}`);
+    }
+    return compiled;
+}
+
 function stableStringify(value) {
     return JSON.stringify(value, null, 2);
 }
@@ -1060,6 +1087,7 @@ module.exports = {
     buildComparisonHashes,
     canonicalizeFile,
     canonicalizeSource,
+    compileSemanticSource,
     hashCanonical,
     stableStringify,
 };

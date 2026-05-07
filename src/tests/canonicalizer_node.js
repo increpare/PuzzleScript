@@ -6,6 +6,7 @@ const assert = require('assert');
 const {
     buildComparisonHashes,
     canonicalizeSource,
+    compileSemanticSource,
     hashCanonical,
 } = require('../canonicalize');
 
@@ -81,6 +82,15 @@ P.G
 ...
 ...
 `;
+
+const compiledBase = compileSemanticSource(baseGame);
+assert.strictEqual(compiledBase.errorCount, 0, 'compileSemanticSource should compile valid source');
+assert.ok(compiledBase.state, 'compileSemanticSource should return compiled state');
+assert.ok(compiledBase.state.objects.hero, 'compiled state should expose normalized compiler object names');
+assert.strictEqual(compiledBase.state.original_case_names.hero, 'Hero', 'compiled state should retain original object casing');
+assert.ok(Array.isArray(compiledBase.state.rules), 'compiled state should expose processed rules');
+assert.ok(compiledBase.state.rules.some(rule => rule.lineNumber), 'compiled rules should retain source line numbers');
+assert.ok(Array.isArray(compiledBase.state.winconditions), 'compiled state should expose processed win conditions');
 
 const renamedAndReskinned = `
 (comment)

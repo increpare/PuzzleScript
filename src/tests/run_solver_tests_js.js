@@ -7,6 +7,17 @@ const path = require('path');
 
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
 const staticAnalysis = require('./lib/solver_static_analysis');
+const { analyzeSource } = require('./ps_static_analysis');
+const {
+    resolveSolverPasses,
+    createSolverOptimizationHook,
+    solverPassesNeedFullStaticReport,
+    effectiveSolverPassesForHook,
+    formatSolverOptimizationHumanSuffixFromTotals,
+    buildSolverOptimizationJsonTotals,
+    inertCommandOnlyRuleSourceLines,
+    parseSolverOptPassList,
+} = require('./solver_static_opt');
 
 const DEFAULT_STRATEGY = 'weighted-astar';
 const DEFAULT_SOLVER_HEURISTIC = 'auto';
@@ -103,6 +114,12 @@ function parseArgs(argv) {
         summaryOnly: false,
         gameFilter: null,
         levelFilter: null,
+        solverFocusManifest: null,
+        solverFocusLevelSet: null,
+        solverStaticHash: false,
+        solverOptimizeStatic: false,
+        solverOptPasses: null,
+        solverOptParity: false,
     };
     const args = argv.slice(2);
     for (let index = 0; index < args.length; index++) {
@@ -156,6 +173,16 @@ function parseArgs(argv) {
             options.gameFilter = args[++index];
         } else if (arg === '--level') {
             options.levelFilter = Math.max(0, Number.parseInt(args[++index], 10));
+        } else if (arg === '--solver-focus-manifest') {
+            options.solverFocusManifest = path.resolve(args[++index]);
+        } else if (arg === '--solver-static-hash') {
+            options.solverStaticHash = true;
+        } else if (arg === '--solver-optimize-static') {
+            options.solverOptimizeStatic = true;
+        } else if (arg === '--solver-opt') {
+            options.solverOptPasses = parseSolverOptPassList(args[++index]);
+        } else if (arg === '--solver-opt-parity') {
+            options.solverOptParity = true;
         } else if (arg === '--help' || arg === '-h') {
             usage(0);
         } else if (options.corpusPath === null) {
@@ -172,8 +199,11 @@ function parseArgs(argv) {
 
 function usage(exitCode) {
     const message =
-        'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--portfolio-heuristics NAME[,NAME...]] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--summary-only] [--quiet] [--json]\n' +
-        '  --astar-weight N (default 2): weighted-astar and portfolio; portfolio wa8 uses 4×N (default 8).\n';
+        'Usage: node src/tests/run_solver_tests_js.js <solver_tests_dir> [--timeout-ms N|--no-timeout] [--strategy portfolio|bfs|weighted-astar|greedy|phase-split] [--astar-weight N] [--solver-heuristic NAME] [--portfolio-bfs-ms N] [--portfolio-heuristics NAME[,NAME...]] [--solutions-dir DIR] [--no-solutions] [--progress-every N] [--progress-per-game] [--game NAME] [--level N] [--solver-focus-manifest PATH] [--solver-static-hash] [--solver-optimize-static] [--solver-opt inert,cosmetic,merge|all] [--solver-opt-parity] [--summary-only] [--quiet] [--json]\n' +
+        '  --astar-weight N (default 2): weighted-astar and portfolio; portfolio wa8 uses 4xN (default 8).\n' +
+        '  --portfolio-heuristics: comma-separated heuristic list for portfolio and phase-split strategies.\n' +
+        '  --solver-focus-manifest: only run (game, level) pairs listed in the JSON manifest targets (corpus dir must contain those .txt files). Ignores --game/--level when set.\n' +
+        '  Static solver optimizations (off by default): --solver-optimize-static enables inert-command-only rule pruning. --solver-opt selects passes (inert, cosmetic, merge, or all). --solver-opt-parity re-solves each level without optimizations first and fails on status/solution mismatch vs optimized compile.\n';
     (exitCode === 0 ? process.stdout : process.stderr).write(message);
     process.exit(exitCode);
 }
@@ -426,11 +456,14 @@ function createZobristTables(wordCount) {
     return tables;
 }
 
-function computeZobristBoardHash(objects, tableLo, tableHi) {
+function computeZobristBoardHash(objects, tableLo, tableHi, ignoredObjectWords = null) {
     let lo = 0;
     let hi = 0;
     for (let wordIndex = 0; wordIndex < objects.length; wordIndex++) {
         let bits = objects[wordIndex] >>> 0;
+        if (ignoredObjectWords) {
+            bits = (bits & ~(ignoredObjectWords[wordIndex % ignoredObjectWords.length] | 0)) >>> 0;
+        }
         const tableOffset = wordIndex * 32;
         while (bits !== 0) {
             const lowBit = bits & -bits;
@@ -442,6 +475,28 @@ function computeZobristBoardHash(objects, tableLo, tableHi) {
         }
     }
     return { lo: lo | 0, hi: hi | 0 };
+}
+
+function createStaticHashObjectWords(report) {
+    const words = new Int32Array(STRIDE_OBJ);
+    if (!report || report.status !== 'ok' || !report.ps_tagged || !Array.isArray(report.ps_tagged.objects)) {
+        return { words, count: 0 };
+    }
+    let count = 0;
+    for (const taggedObject of report.ps_tagged.objects) {
+        if (!taggedObject.tags || taggedObject.tags.static !== true) {
+            continue;
+        }
+        const canonicalName = taggedObject.canonical_name || (taggedObject.name && taggedObject.name.toLowerCase());
+        const runtimeObject = (canonicalName && state.objects && state.objects[canonicalName])
+            || (taggedObject.name && state.objects && state.objects[taggedObject.name]);
+        if (!runtimeObject || !Number.isInteger(runtimeObject.id)) {
+            continue;
+        }
+        words[runtimeObject.id >> 5] |= 1 << (runtimeObject.id & 31);
+        count++;
+    }
+    return { words, count };
 }
 
 function ruleGroupsUseRandom(groups) {
@@ -521,6 +576,10 @@ function createSolverLevelSpecialization(options = {}) {
     const zobristHasher = createZobristStateHasher(usesRandom);
     const zobristTables = createZobristTables(objectWordCount);
     const zobristTableId = zobristTables;
+    const staticHash = options.solverStaticHash
+        ? createStaticHashObjectWords(options.staticAnalysisReport)
+        : { words: null, count: 0 };
+    const ignoredHashObjectWords = staticHash.count > 0 ? staticHash.words : null;
     const heuristicDistances = new Float64Array(level.n_tiles);
     const obstacleDistances = new Float64Array(level.n_tiles);
     const obstacleQueue = new Int32Array(level.n_tiles);
@@ -558,7 +617,7 @@ function createSolverLevelSpecialization(options = {}) {
     }
 
     function recomputeZobrist() {
-        const hash = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+        const hash = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
         level.solverZobristLo = hash.lo;
         level.solverZobristHi = hash.hi;
     }
@@ -568,7 +627,7 @@ function createSolverLevelSpecialization(options = {}) {
         let hi = level.solverZobristHi | 0;
         const offset = tileIndex * STRIDE_OBJ;
         if (verifyZobrist) {
-            const expectedStart = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            const expectedStart = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
             if (lo !== expectedStart.lo || hi !== expectedStart.hi) {
                 throw new Error(`Incremental Zobrist hash already drifted before tile ${tileIndex}: ${lo}:${hi} !== ${expectedStart.lo}:${expectedStart.hi}`);
             }
@@ -577,6 +636,9 @@ function createSolverLevelSpecialization(options = {}) {
             const oldWord = level.objects[offset + word] | 0;
             const newWord = vec.data[word] | 0;
             let changed = (oldWord ^ newWord) >>> 0;
+            if (ignoredHashObjectWords) {
+                changed = (changed & ~(ignoredHashObjectWords[word] | 0)) >>> 0;
+            }
             const tableOffset = (offset + word) * 32;
             while (changed !== 0) {
                 const lowBit = changed & -changed;
@@ -590,7 +652,7 @@ function createSolverLevelSpecialization(options = {}) {
         level.solverZobristLo = lo | 0;
         level.solverZobristHi = hi | 0;
         if (verifyZobrist) {
-            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
             // updateZobristCell runs before the caller writes vec into level.objects, so
             // compare against the board with this one cell patched in.
             const oldWords = [];
@@ -598,7 +660,7 @@ function createSolverLevelSpecialization(options = {}) {
                 oldWords[word] = level.objects[offset + word];
                 level.objects[offset + word] = vec.data[word];
             }
-            const patched = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            const patched = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
             for (let word = 0; word < STRIDE_OBJ; word++) {
                 level.objects[offset + word] = oldWords[word];
             }
@@ -2163,7 +2225,7 @@ function createSolverLevelSpecialization(options = {}) {
             return hashCurrentState();
         }
         if (verifyZobrist) {
-            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi);
+            const expected = computeZobristBoardHash(level.objects, zobristTables.lo, zobristTables.hi, ignoredHashObjectWords);
             if ((level.solverZobristLo | 0) !== expected.lo || (level.solverZobristHi | 0) !== expected.hi) {
                 throw new Error(`Incremental Zobrist hash drifted: ${level.solverZobristLo}:${level.solverZobristHi} !== ${expected.lo}:${expected.hi}`);
             }
@@ -2299,7 +2361,7 @@ function createSolverLevelSpecialization(options = {}) {
         matchesSnapshot,
         heuristic,
         heuristicName,
-        hashMode: usesRandom ? 'incremental_zobrist_with_rng' : 'incremental_zobrist',
+        hashMode: `${usesRandom ? 'incremental_zobrist_with_rng' : 'incremental_zobrist'}${ignoredHashObjectWords ? `_static${staticHash.count}` : ''}`,
         snapshotMode: usesCheckpoint ? 'specialized_typed_array_checkpoint' : 'specialized_typed_array_no_undo',
     };
 }
@@ -2502,6 +2564,17 @@ function createSolverResult(game, levelIndex, timeoutMs, compileMs) {
         max_frontier: 0,
         timeout_ms: timeoutMs,
         compile_ms: compileMs,
+        static_analysis_ms: 0,
+        static_optimization_removed_rules: 0,
+        removed_inert_rules: 0,
+        removed_cosmetic_objects: 0,
+        removed_collision_layers: 0,
+        merged_object_aliases: 0,
+        merged_object_groups: 0,
+        solver_opt_ms_inert: 0,
+        solver_opt_ms_cosmetic: 0,
+        solver_opt_ms_merge: 0,
+        solver_optimization_gated: false,
         load_ms: 0,
         clone_ms: 0,
         snapshot_ms: 0,
@@ -2515,32 +2588,6 @@ function createSolverResult(game, levelIndex, timeoutMs, compileMs) {
         strategy: null,
         heuristic: 'zero',
     };
-}
-
-function mergeSearchResultTotals(target, source) {
-    for (const key of [
-        'expanded',
-        'generated',
-        'duplicates',
-        'hash_collisions',
-        'clone_ms',
-        'snapshot_ms',
-        'step_ms',
-        'heuristic_ms',
-        'hash_ms',
-        'queue_ms',
-        'reconstruct_ms',
-    ]) {
-        target[key] = (target[key] || 0) + (source[key] || 0);
-    }
-    target.unique_states = Math.max(target.unique_states || 0, source.unique_states || 0);
-    target.max_frontier = Math.max(target.max_frontier || 0, source.max_frontier || 0);
-    if (source.hash_mode) {
-        target.hash_mode = source.hash_mode;
-    }
-    if (source.snapshot_mode) {
-        target.snapshot_mode = source.snapshot_mode;
-    }
 }
 
 function solveLevel(game, levelIndex, timeoutMs, compileMs, options = {}) {
@@ -2989,6 +3036,7 @@ function levelErrorResult(game, levelIndex, timeoutMs, compileMs, error) {
         max_frontier: 0,
         timeout_ms: timeoutMs,
         compile_ms: compileMs,
+        static_analysis_ms: 0,
         load_ms: 0,
         clone_ms: 0,
         snapshot_ms: 0,
@@ -3000,18 +3048,63 @@ function levelErrorResult(game, levelIndex, timeoutMs, compileMs, error) {
     };
 }
 
-function runGame(root, file) {
+function runGame(root, file, options = {}) {
     const game = gameName(root, file);
     let source = fs.readFileSync(file, 'utf8');
     if (!source.endsWith('\n')) {
         source += '\n';
     }
 
+    const passes = resolveSolverPasses(options);
+    const needsStaticAnalysis = options.solverStaticHash
+        || passes.inert
+        || passes.cosmetic
+        || passes.merge
+        || options.solverOptParity;
+    const useFullStaticFamilies = solverPassesNeedFullStaticReport(passes)
+        || passes.inert
+        || options.solverOptimizeStatic
+        || options.solverOptParity;
+
+    let staticAnalysisReport = null;
+    let staticAnalysisMs = 0;
+    if (needsStaticAnalysis) {
+        const staticAnalysisStart = performance.now();
+        staticAnalysisReport = analyzeSource(source, {
+            sourcePath: game,
+            familyFilter: useFullStaticFamilies ? undefined : 'count_layer_invariants',
+        });
+        staticAnalysisMs = performance.now() - staticAnalysisStart;
+    }
+
     const compileStart = performance.now();
     unitTesting = true;
     lazyFunctionGeneration = false;
-    compile(['loadLevel', 0], source, `solver:${game}:0`);
+    const hookPasses = effectiveSolverPassesForHook(staticAnalysisReport, passes);
+    const solverOptimizationGated = passes.cosmetic !== hookPasses.cosmetic || passes.merge !== hookPasses.merge;
+    if (!options.quiet && solverOptimizationGated) {
+        const st = staticAnalysisReport && staticAnalysisReport.status ? staticAnalysisReport.status : 'none';
+        process.stderr.write(`solver_notice game=${game} static_analysis=${st} solver_opt_reduced_to_inert_only\n`);
+    }
+    const inertLines = hookPasses.inert ? inertCommandOnlyRuleSourceLines(staticAnalysisReport) : new Set();
+    const installOptimizerHook = typeof setPluginOptimizationHook === 'function'
+        && (hookPasses.cosmetic || hookPasses.merge || (hookPasses.inert && inertLines.size > 0));
+    const optimizationHook = installOptimizerHook
+        ? createSolverOptimizationHook(staticAnalysisReport, hookPasses)
+        : null;
+    if (optimizationHook) {
+        setPluginOptimizationHook(optimizationHook);
+    }
+    try {
+        compile(['loadLevel', 0], source, `solver:${game}:0`);
+    } finally {
+        if (typeof setPluginOptimizationHook === 'function') {
+            setPluginOptimizationHook(null);
+        }
+    }
     const compileMs = performance.now() - compileStart;
+    const telemetry = state && state.solverOptimizationTelemetry ? state.solverOptimizationTelemetry : null;
+    const staticOptimizationRemovedRules = telemetry ? telemetry.removed_inert_rules : 0;
     if (errorCount > 0) {
         return [{
             game,
@@ -3029,6 +3122,8 @@ function runGame(root, file) {
             max_frontier: 0,
             timeout_ms: 0,
             compile_ms: compileMs,
+            static_analysis_ms: staticAnalysisMs,
+            static_optimization_removed_rules: staticOptimizationRemovedRules,
             load_ms: 0,
             clone_ms: 0,
             step_ms: 0,
@@ -3037,7 +3132,16 @@ function runGame(root, file) {
             reconstruct_ms: 0,
         }];
     }
-    return { game, compileMs, source };
+    return {
+        game,
+        compileMs,
+        source,
+        staticAnalysisReport,
+        staticAnalysisMs,
+        staticOptimizationRemovedRules,
+        solverOptimizationTelemetry: telemetry,
+        solverOptimizationGated,
+    };
 }
 
 function trimLine(line) {
@@ -3194,38 +3298,159 @@ function printHumanBlock(stream, label, summary, elapsedMs) {
     }
 }
 
+function assertSolverOptParity(baseline, optimized, game, levelIndex) {
+    if (!baseline || !optimized) return;
+    if (baseline.status !== optimized.status) {
+        throw new Error(`solver_opt_parity status mismatch game=${game} level=${levelIndex} baseline=${baseline.status} optimized=${optimized.status}`);
+    }
+    if (baseline.solution_length !== optimized.solution_length) {
+        throw new Error(`solver_opt_parity solution_length mismatch game=${game} level=${levelIndex} baseline=${baseline.solution_length} optimized=${optimized.solution_length}`);
+    }
+    if (baseline.status === 'solved' && optimized.status === 'solved') {
+        const a = JSON.stringify(baseline.solution);
+        const b = JSON.stringify(optimized.solution);
+        if (a !== b) {
+            throw new Error(`solver_opt_parity solution mismatch game=${game} level=${levelIndex}`);
+        }
+    }
+}
+
+function loadSolverFocusManifestByGame(manifestPath) {
+    const abs = path.resolve(manifestPath);
+    const man = JSON.parse(fs.readFileSync(abs, 'utf8'));
+    if (!man || !Array.isArray(man.targets)) {
+        throw new Error(`--solver-focus-manifest: expected targets[] in ${abs}`);
+    }
+    const byGame = new Map();
+    for (const t of man.targets) {
+        if (!t || typeof t.game !== 'string' || t.game.length === 0) {
+            continue;
+        }
+        const lev = t.level | 0;
+        if (!byGame.has(t.game)) {
+            byGame.set(t.game, new Set());
+        }
+        byGame.get(t.game).add(lev);
+    }
+    if (byGame.size === 0) {
+        throw new Error(`--solver-focus-manifest: no valid targets in ${abs}`);
+    }
+    return byGame;
+}
+
+function levelIncludedForRun(opts, levelIndex) {
+    if (opts.solverFocusLevelSet) {
+        return opts.solverFocusLevelSet.has(levelIndex);
+    }
+    if (opts.levelFilter !== null) {
+        return levelIndex === opts.levelFilter;
+    }
+    return true;
+}
+
+function collectCorpusRunJobs(options) {
+    if (options.solverFocusManifest) {
+        const byGame = loadSolverFocusManifestByGame(options.solverFocusManifest);
+        const jobs = [];
+        for (const gameRel of Array.from(byGame.keys()).sort()) {
+            const file = path.join(options.corpusPath, gameRel);
+            if (!fs.existsSync(file)) {
+                if (!options.quiet) {
+                    process.stderr.write(`solver_focus_manifest: skip missing game file ${file}\n`);
+                }
+                continue;
+            }
+            const levelSet = byGame.get(gameRel);
+            const effectiveOptions = Object.assign({}, options, {
+                solverFocusLevelSet: levelSet,
+                levelFilter: null,
+                gameFilter: null,
+            });
+            jobs.push({ file, opts: effectiveOptions });
+        }
+        return jobs;
+    }
+    const jobs = [];
+    for (const file of discoverGames(options.corpusPath)) {
+        if (!fs.existsSync(file)) {
+            continue;
+        }
+        jobs.push({ file, opts: options });
+    }
+    return jobs;
+}
+
 function runCorpus(options) {
     loadPuzzleScript();
     const results = [];
     let attemptedLevels = 0;
-    for (const file of discoverGames(options.corpusPath)) {
-        const name = gameName(options.corpusPath, file);
-        if (options.gameFilter !== null && name !== options.gameFilter) {
+    const jobs = collectCorpusRunJobs(options);
+    for (const { file, opts } of jobs) {
+        const name = gameName(opts.corpusPath, file);
+        if (opts.gameFilter !== null && name !== opts.gameFilter) {
             continue;
         }
         const gameResultBegin = results.length;
         const gameStarted = Date.now();
-        if (!options.quiet && !options.progressPerGame) {
+        if (!opts.quiet && !opts.progressPerGame) {
             process.stderr.write(`solver_progress game=${name} phase=compile\n`);
         }
-        const compiled = runGame(options.corpusPath, file);
+        const passes = resolveSolverPasses(opts);
+        let baselineByLevel = null;
+        if (opts.solverOptParity && (passes.inert || passes.cosmetic || passes.merge)) {
+            const baselineOpts = Object.assign({}, opts, { solverOptParityBaseline: true });
+            const compiledBaseline = runGame(opts.corpusPath, file, baselineOpts);
+            if (!Array.isArray(compiledBaseline)) {
+                baselineByLevel = [];
+                for (let li = 0; li < state.levels.length; li++) {
+                    if (!levelIncludedForRun(opts, li)) {
+                        baselineByLevel.push(null);
+                        continue;
+                    }
+                    let baselineResult;
+                    try {
+                        if (typeof resetParserErrorState === 'function') {
+                            resetParserErrorState();
+                        }
+                        baselineResult = solveLevel(compiledBaseline.game, li, opts.timeoutMs, compiledBaseline.compileMs, {
+                            ...opts,
+                            staticAnalysisReport: compiledBaseline.staticAnalysisReport,
+                        });
+                    } catch (error) {
+                        if (typeof resetParserErrorState === 'function') {
+                            resetParserErrorState();
+                        }
+                        baselineResult = levelErrorResult(compiledBaseline.game, li, opts.timeoutMs, compiledBaseline.compileMs, error);
+                    }
+                    baselineByLevel.push(baselineResult);
+                }
+            }
+        }
+        const compiled = runGame(opts.corpusPath, file, opts);
         if (Array.isArray(compiled)) {
             results.push(...compiled);
-            if (!options.quiet && options.progressPerGame) {
-                printHumanBlock(process.stderr, `Game: ${name}`, summarizeHuman(results.slice(gameResultBegin)), Date.now() - gameStarted);
-            } else if (!options.quiet) {
+            if (!opts.quiet && opts.progressPerGame) {
+                const sliceErr = results.slice(gameResultBegin);
+                printHumanBlock(process.stderr, `Game: ${name}`, summarizeHuman(sliceErr), Date.now() - gameStarted);
+                const optErr = formatSolverOptimizationHumanSuffixFromTotals(totals(sliceErr));
+                if (optErr) {
+                    process.stderr.write(`${optErr}\n`);
+                }
+            } else if (!opts.quiet) {
                 process.stderr.write(`solver_progress game=${name} level=-1 status=compile_error completed=${results.length}\n`);
             }
             continue;
         }
-        if (!options.quiet && !options.progressPerGame) {
+        if (!opts.quiet && !opts.progressPerGame) {
             process.stderr.write(`solver_progress game=${compiled.game} phase=levels count=${state.levels.length}\n`);
         }
+        const compileGated = !!compiled.solverOptimizationGated;
+        let attachCompileOnceMetrics = true;
         for (let levelIndex = 0; levelIndex < state.levels.length; levelIndex++) {
-            if (options.levelFilter !== null && levelIndex !== options.levelFilter) {
+            if (!levelIncludedForRun(opts, levelIndex)) {
                 continue;
             }
-            if (!options.quiet && !options.progressPerGame) {
+            if (!opts.quiet && !opts.progressPerGame) {
                 process.stderr.write(`solver_progress game=${compiled.game} level=${levelIndex} phase=start\n`);
             }
             let result;
@@ -3233,23 +3458,61 @@ function runCorpus(options) {
                 if (typeof resetParserErrorState === 'function') {
                     resetParserErrorState();
                 }
-                result = solveLevel(compiled.game, levelIndex, options.timeoutMs, compiled.compileMs, options);
+                result = solveLevel(compiled.game, levelIndex, opts.timeoutMs, compiled.compileMs, {
+                    ...opts,
+                    staticAnalysisReport: compiled.staticAnalysisReport,
+                });
             } catch (error) {
+                const msg = error && error.message ? error.message : String(error);
+                if (msg.includes('solver_opt_parity')) {
+                    throw error;
+                }
                 if (typeof resetParserErrorState === 'function') {
                     resetParserErrorState();
                 }
-                result = levelErrorResult(compiled.game, levelIndex, options.timeoutMs, compiled.compileMs, error);
+                result = levelErrorResult(compiled.game, levelIndex, opts.timeoutMs, compiled.compileMs, error);
+            }
+            if (attachCompileOnceMetrics) {
+                result.compile_ms = compiled.compileMs || 0;
+                result.static_analysis_ms = compiled.staticAnalysisMs || 0;
+                result.static_optimization_removed_rules = compiled.staticOptimizationRemovedRules || 0;
+                const tel = compiled.solverOptimizationTelemetry;
+                if (tel) {
+                    result.removed_inert_rules = tel.removed_inert_rules || 0;
+                    result.removed_cosmetic_objects = tel.removed_cosmetic_objects || 0;
+                    result.removed_collision_layers = tel.removed_collision_layers || 0;
+                    result.merged_object_aliases = tel.merged_object_aliases || 0;
+                    result.merged_object_groups = tel.merged_object_groups || 0;
+                    result.solver_opt_ms_inert = tel.ms_inert || 0;
+                    result.solver_opt_ms_cosmetic = tel.ms_cosmetic || 0;
+                    result.solver_opt_ms_merge = tel.ms_merge || 0;
+                }
+            } else {
+                result.compile_ms = 0;
+                result.static_analysis_ms = 0;
+                result.static_optimization_removed_rules = 0;
+            }
+            if (compileGated) {
+                result.solver_optimization_gated = true;
+            }
+            attachCompileOnceMetrics = false;
+            if (baselineByLevel && baselineByLevel[levelIndex]) {
+                assertSolverOptParity(baselineByLevel[levelIndex], result, compiled.game, levelIndex);
             }
             results.push(result);
             attemptedLevels++;
-            if (!options.quiet && !options.progressPerGame && options.progressEvery > 0 && attemptedLevels % options.progressEvery === 0) {
+            if (!opts.quiet && !opts.progressPerGame && opts.progressEvery > 0 && attemptedLevels % opts.progressEvery === 0) {
                 process.stderr.write(`solver_progress game=${compiled.game} level=${levelIndex} status=${result.status} solution_length=${result.solution.length} elapsed_ms=${result.elapsed_ms} expanded=${result.expanded} generated=${result.generated} completed=${attemptedLevels}\n`);
             }
         }
         const slice = results.slice(gameResultBegin);
-        writeAnnotatedSolutions(options, compiled.game, compiled.source, slice);
-        if (!options.quiet && options.progressPerGame) {
+        writeAnnotatedSolutions(opts, compiled.game, compiled.source, slice);
+        if (!opts.quiet && opts.progressPerGame) {
             printHumanBlock(process.stderr, `Game: ${compiled.game}`, summarizeHuman(slice), Date.now() - gameStarted);
+            const optGame = formatSolverOptimizationHumanSuffixFromTotals(totals(slice));
+            if (optGame) {
+                process.stderr.write(`${optGame}\n`);
+            }
         }
     }
     return results;
@@ -3267,6 +3530,16 @@ function totals(results) {
         generated: 0,
         hash_collisions: 0,
         compile_ms: 0,
+        static_analysis_ms: 0,
+        static_optimization_removed_rules: 0,
+        removed_cosmetic_objects: 0,
+        removed_collision_layers: 0,
+        merged_object_aliases: 0,
+        merged_object_groups: 0,
+        solver_opt_ms_inert: 0,
+        solver_opt_ms_cosmetic: 0,
+        solver_opt_ms_merge: 0,
+        solver_optimization_gated: false,
         load_ms: 0,
         clone_ms: 0,
         snapshot_ms: 0,
@@ -3286,6 +3559,18 @@ function totals(results) {
         out.generated += result.generated;
         out.hash_collisions += result.hash_collisions || 0;
         out.compile_ms += result.compile_ms || 0;
+        out.static_analysis_ms += result.static_analysis_ms || 0;
+        out.static_optimization_removed_rules += result.static_optimization_removed_rules || 0;
+        out.removed_cosmetic_objects += result.removed_cosmetic_objects || 0;
+        out.removed_collision_layers += result.removed_collision_layers || 0;
+        out.merged_object_aliases += result.merged_object_aliases || 0;
+        out.merged_object_groups += result.merged_object_groups || 0;
+        out.solver_opt_ms_inert += result.solver_opt_ms_inert || 0;
+        out.solver_opt_ms_cosmetic += result.solver_opt_ms_cosmetic || 0;
+        out.solver_opt_ms_merge += result.solver_opt_ms_merge || 0;
+        if (result.solver_optimization_gated) {
+            out.solver_optimization_gated = true;
+        }
         out.load_ms += result.load_ms || 0;
         out.clone_ms += result.clone_ms || 0;
         out.snapshot_ms += result.snapshot_ms || 0;
@@ -3306,6 +3591,10 @@ function printHuman(results) {
     }
     const t = totals(results);
     process.stdout.write(`solver_totals levels=${t.levels} solved=${t.solved} timeout=${t.timeout} exhausted=${t.exhausted} skipped_message=${t.skipped_message} errors=${t.errors}\n`);
+    const optLine = formatSolverOptimizationHumanSuffixFromTotals(t);
+    if (optLine) {
+        process.stdout.write(`${optLine}\n`);
+    }
 }
 
 function printSolutionsLocation(options) {
@@ -3316,10 +3605,23 @@ function main() {
     const options = parseArgs(process.argv);
     const results = runCorpus(options);
     if (options.json) {
-        process.stdout.write(`${JSON.stringify({ results, totals: totals(results) }, null, 2)}\n`);
+        const t = totals(results);
+        const payload = { results, totals: t };
+        const optNest = buildSolverOptimizationJsonTotals(t);
+        if (optNest) {
+            payload.totals.solver_optimization = optNest;
+        }
+        if (t.solver_optimization_gated) {
+            payload.totals.solver_optimization_gated = true;
+        }
+        process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
     } else if (options.summaryOnly) {
         const elapsedMs = results.reduce((sum, result) => sum + result.elapsed_ms, 0);
         printHumanBlock(process.stdout, 'Totals', summarizeHuman(results), elapsedMs);
+        const optLine = formatSolverOptimizationHumanSuffixFromTotals(totals(results));
+        if (optLine) {
+            process.stdout.write(`${optLine}\n`);
+        }
         printSolutionsLocation(options);
     } else {
         printHuman(results);
@@ -3327,4 +3629,12 @@ function main() {
     }
 }
 
-main();
+if (require.main === module) {
+    main();
+}
+
+module.exports = {
+    parseArgs,
+    runCorpus,
+    totals,
+};

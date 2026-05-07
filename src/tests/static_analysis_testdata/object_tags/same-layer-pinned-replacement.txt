@@ -1,0 +1,60 @@
+title Static Analysis Same Layer Pinned Replacement
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+Beta
+green
+
+Gamma
+blue
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+X = Alpha
+Y = Beta
+Z = Gamma
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha, Beta, Gamma
+
+=====
+RULES
+=====
+
+[ Alpha ] -> [ Beta ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PXYZ

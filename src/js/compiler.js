@@ -3036,6 +3036,7 @@ function loadFile(str) {
 
     cacheAllRuleNames(state);
     removeDuplicateRules(state);
+    pluginOptimizationHook(state);
     rulesToMask(state);
 
     if (debugMode) {

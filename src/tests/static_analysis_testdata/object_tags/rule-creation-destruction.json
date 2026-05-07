@@ -1,0 +1,35 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "objectTag": [
+    {
+      "object": "Background",
+      "created_by_rules": false,
+      "destroyed_by_rules": false
+    },
+    {
+      "object": "Player",
+      "created_by_rules": false,
+      "destroyed_by_rules": false
+    },
+    {
+      "object": "Seed",
+      "created_by_rules": false,
+      "destroyed_by_rules": false
+    },
+    {
+      "object": "Mark",
+      "created_by_rules": true,
+      "destroyed_by_rules": false
+    },
+    {
+      "object": "Dust",
+      "created_by_rules": false,
+      "destroyed_by_rules": true
+    },
+    {
+      "object": "Wall",
+      "created_by_rules": false,
+      "destroyed_by_rules": false
+    }
+  ]
+}

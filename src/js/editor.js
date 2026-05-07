@@ -8,8 +8,12 @@ let code = document.getElementById('code');
 let _editorDirty = false;
 let _editorCleanState = "";
 
+let sourceFileToOpen=getParameterByName("file");
 let fileToOpen=getParameterByName("demo");
-if (fileToOpen!==null&&fileToOpen.length>0) {
+if (sourceFileToOpen!==null&&sourceFileToOpen.length>0) {
+	tryLoadSourceFile(sourceFileToOpen);
+	code.value = "loading...";
+} else if (fileToOpen!==null&&fileToOpen.length>0) {
 	tryLoadFile(fileToOpen);
 	code.value = "loading...";
 } else {
@@ -213,12 +217,47 @@ function tryLoadFile(fileName) {
 		} else {
 			let handler = (event)=>{
 				if (document.readyState === "complete") {
-					doStuff();			
-					document.removeEventListener("readystatechange",handler);							
+					doStuff();
+					document.removeEventListener("readystatechange",handler);
 				}
 			};
 			document.addEventListener("readystatechange",handler);
 		}
+	}
+	fileOpenClient.send();
+}
+
+function tryLoadSourceFile(fileName) {
+	let safeFileName = fileName.replace(/^\/+/, "");
+	if (safeFileName.indexOf("..") >= 0) {
+		consoleError("Cannot load paths containing '..'.");
+		return;
+	}
+	let fileOpenClient = new XMLHttpRequest();
+	fileOpenClient.open('GET', safeFileName);
+	fileOpenClient.onreadystatechange = function() {
+		if(fileOpenClient.readyState!=4) {
+			return;
+		}
+
+		function doStuff(){
+			editor.setValue(fileOpenClient.responseText);
+			clearConsole();
+			setEditorClean();
+			unloadGame();
+			compile(["restart"]);
+		}
+		if (document.readyState === "complete") {
+			doStuff();
+			} else {
+				let handler = (event)=>{
+					if (document.readyState === "complete") {
+						doStuff();
+						document.removeEventListener("readystatechange",handler);
+					}
+				};
+				document.addEventListener("readystatechange",handler);
+			}
 	}
 	fileOpenClient.send();
 }

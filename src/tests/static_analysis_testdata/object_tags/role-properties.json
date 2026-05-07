@@ -1,0 +1,30 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "objectTag": [
+    {
+      "object": "Floor",
+      "is_player": false,
+      "is_background": true
+    },
+    {
+      "object": "Water",
+      "is_player": false,
+      "is_background": true
+    },
+    {
+      "object": "Avatar",
+      "is_player": true,
+      "is_background": false
+    },
+    {
+      "object": "Ghost",
+      "is_player": true,
+      "is_background": false
+    },
+    {
+      "object": "Goal",
+      "is_player": false,
+      "is_background": false
+    }
+  ]
+}
