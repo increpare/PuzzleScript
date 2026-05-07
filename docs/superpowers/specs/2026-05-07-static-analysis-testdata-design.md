@@ -43,6 +43,12 @@ The first version contains only `objectTags`.
   "schema": "ps-static-analysis-claim-descriptions-v1",
   "objectTags": [
     {
+      "name": "level_presence",
+      "description": "Whether the object appears in all, some, or no playable levels.",
+      "specification": "The level_presence tag is one of all, some, or none. Message levels are ignored. The value all means there is at least one playable level and the object appears in every playable level. The value some means the object appears in at least one but not every playable level. The value none means the object appears in no playable levels; if a valid source has zero playable levels, every object has level_presence none.",
+      "values": ["all", "some", "none"]
+    },
+    {
       "name": "cosmetic",
       "description": "Object is outside the solver-visible core closure.",
       "specification": "An object has the cosmetic tag when the analyzer proves it is outside the current solver-visible core closure for object identity: it is not a player object, not referenced by win conditions, not read by win-command rules, and not reached by the analyzer's rule read/write closure from those core objects."
@@ -56,17 +62,18 @@ Each entry has:
 - `name`: the analyzer output key.
 - `description`: a short human-facing explanation.
 - `specification`: the precise contract the analyzer and tests are accountable to.
+- `values`: optional list for valued tags. Omit it for boolean tags.
 - `examples`: optional list of real testdata stems, such as `object_tags/cosmetic-basic`. Examples must correspond to committed `.txt`/`.json` files.
 
 There is no separate label field, no status field, and no expectation-type field. If a claim appears in this file, it is a valid, decided claim. Planned or speculative analyses do not belong here.
 
 Claim order in this file is the generated expectation order.
 
+The testdata vocabulary is author-facing. The runner may derive these claims from analyzer output if the analyzer stores them differently internally. For example, the first implementation can derive `level_presence` from existing `present_in_all_levels`, `present_in_some_levels`, and `present_in_no_levels` booleans instead of requiring the analyzer to change its raw output immediately.
+
 Initial object tags:
 
-- `present_in_all_levels`
-- `present_in_some_levels`
-- `present_in_no_levels`
+- `level_presence`, with values `all`, `some`, and `none`
 - `may_be_created`
 - `may_be_destroyed`
 - `count_invariant`
@@ -82,6 +89,7 @@ Each expectation JSON uses a flat `expect` list.
   "schema": "ps-static-analysis-testdata-v1",
   "note": "Optional human note.",
   "expect": [
+    { "type": "objectTag", "object": "Background", "tag": "level_presence", "is": "all" },
     { "type": "objectTag", "object": "Background", "tag": "cosmetic", "is": true },
     { "type": "objectTag", "object": "Player", "tag": "cosmetic", "is": false }
   ]
@@ -94,6 +102,7 @@ Rules:
 - `note` is optional at top level and per expectation.
 - `object` uses the analyzer's display object name.
 - `type: "objectTag"` is the only expectation type in the first slice.
+- `is` is either a boolean for boolean tags or one of the tag's listed `values` for valued tags.
 - Only listed expectations are checked.
 - For a listed boolean expectation, a missing analyzer tag is interpreted as `false`.
 - New claim descriptions added later do not affect existing expectation files.
@@ -116,7 +125,7 @@ Generated object-tag JSON includes:
 - all objects, including Background and Player
 - object order from the analyzer/compiler
 - object tags in claim-description order
-- explicit `true` and `false` values for every object tag known at generation time
+- explicit values for every object tag known at generation time: `true` and `false` for boolean tags, named values for valued tags
 
 The runner never overwrites an existing `.json`. There is no draft status. Once generated, the file is a legitimate test and may be trimmed by hand.
 
