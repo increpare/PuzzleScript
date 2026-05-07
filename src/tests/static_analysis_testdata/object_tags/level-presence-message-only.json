@@ -1,0 +1,77 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "expect": [
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "is_background",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "level_presence",
+      "is": "none"
+    },
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "is_player",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "level_presence",
+      "is": "none"
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Goal",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Goal",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Goal",
+      "tag": "level_presence",
+      "is": "none"
+    },
+    {
+      "type": "objectTag",
+      "object": "Goal",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    }
+  ]
+}

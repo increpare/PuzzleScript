@@ -1,0 +1,50 @@
+title Static Analysis Message Only Presence
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Goal
+yellow
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+G = Goal
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Goal
+
+=====
+RULES
+=====
+
+=============
+WINCONDITIONS
+=============
+
+Some Player on Goal
+
+======
+LEVELS
+======
+
+message message-only levels do not make objects present
