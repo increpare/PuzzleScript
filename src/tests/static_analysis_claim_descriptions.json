@@ -27,5 +27,32 @@
       "description": "A solver-active rule may write this object absent from a cell.",
       "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may write that object absent from a cell where the left-hand side allows that object to be present in the same cell. This includes explicit absent writes, removing a left-hand side object from its original cell, and overwriting a possible same-layer occupant. This is a cell-local write tag: relocation can count as destruction in the source cell, even if the object's total count is preserved."
     }
+  ],
+  "ruleTags": [
+    {
+      "name": "objects_required",
+      "description": "Concrete objects definitely required present by the rule LHS.",
+      "specification": "A rule has objects_required entries for concrete objects whose presence is definitely required by positive LHS terms. Single-object terms are required. Objects of required aggregates are all tagged as required. Members of an OR property are not individually required because any one member may satisfy the term."
+    },
+    {
+      "name": "objects_matched",
+      "description": "Concrete objects whose presence may satisfy a positive LHS term.",
+      "specification": "A rule has objects_matched entries for every concrete object that may satisfy a positive LHS term after resolving synonyms, properties, and aggregates to object names. This includes concrete required objects, OR-property alternatives, and objects in aggregates."
+    },
+    {
+      "name": "object_absences_matched",
+      "description": "Concrete objects whose absence may satisfy a negative LHS term.",
+      "specification": "A rule has object_absences_matched entries for every concrete object that may satisfy a negative LHS term after resolving synonyms, properties, and aggregates to object names. For example, no Obstacle records every concrete object in Obstacle."
+    },
+    {
+      "name": "objects_written",
+      "description": "Concrete objects written present by the rule RHS.",
+      "specification": "A rule has objects_written entries for concrete objects the RHS may write present in a cell where the LHS does not already require that object present in the same cell. This is cell-local: relocation writes the object at the destination even if total object count is preserved."
+    },
+    {
+      "name": "objects_erased",
+      "description": "Concrete objects written absent by the rule RHS.",
+      "specification": "A rule has objects_erased entries for concrete objects the RHS may write absent from a cell where the LHS allows that object to be present in the same cell. This includes explicit no terms, removal from the original cell, and possible same-layer erasure caused by writing another object on the layer."
+    }
   ]
 }

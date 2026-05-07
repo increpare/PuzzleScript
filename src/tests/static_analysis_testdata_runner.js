@@ -19,14 +19,12 @@ function writeJson(filePath, value) {
     fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
-function loadClaimDescriptions(filePath = CLAIM_DESCRIPTIONS_PATH) {
-    const claims = readJson(filePath);
-    assert.strictEqual(claims.schema, 'ps-static-analysis-claim-descriptions-v1', `${filePath}: unsupported claim-description schema`);
-    assert.ok(Array.isArray(claims.objectTags), `${filePath}: objectTags must be an array`);
+function validateClaimDescriptionList(filePath, familyName, tags) {
+    assert.ok(Array.isArray(tags), `${filePath}: ${familyName} must be an array`);
     const seen = new Set();
-    for (const tag of claims.objectTags) {
-        assert.ok(tag && typeof tag.name === 'string' && tag.name.length > 0, `${filePath}: object tag missing name`);
-        assert.ok(!seen.has(tag.name), `${filePath}: duplicate object tag ${tag.name}`);
+    for (const tag of tags) {
+        assert.ok(tag && typeof tag.name === 'string' && tag.name.length > 0, `${filePath}: ${familyName} tag missing name`);
+        assert.ok(!seen.has(tag.name), `${filePath}: duplicate ${familyName} tag ${tag.name}`);
         seen.add(tag.name);
         assert.ok(typeof tag.description === 'string' && tag.description.length > 0, `${filePath}: ${tag.name} missing description`);
         assert.ok(typeof tag.specification === 'string' && tag.specification.length > 0, `${filePath}: ${tag.name} missing specification`);
@@ -34,6 +32,13 @@ function loadClaimDescriptions(filePath = CLAIM_DESCRIPTIONS_PATH) {
             assert.ok(Array.isArray(tag.values) && tag.values.every(value => typeof value === 'string'), `${filePath}: ${tag.name}.values must be string[]`);
         }
     }
+}
+
+function loadClaimDescriptions(filePath = CLAIM_DESCRIPTIONS_PATH) {
+    const claims = readJson(filePath);
+    assert.strictEqual(claims.schema, 'ps-static-analysis-claim-descriptions-v1', `${filePath}: unsupported claim-description schema`);
+    validateClaimDescriptionList(filePath, 'objectTags', claims.objectTags);
+    validateClaimDescriptionList(filePath, 'ruleTags', claims.ruleTags);
     return claims;
 }
 

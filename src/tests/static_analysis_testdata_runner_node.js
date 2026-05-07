@@ -32,6 +32,14 @@ function run() {
         );
 
         const claimDescriptions = loadClaimDescriptions();
+        const ruleTagNames = claimDescriptions.ruleTags.map(tag => tag.name);
+        assert.deepStrictEqual(ruleTagNames, [
+            'objects_required',
+            'objects_matched',
+            'object_absences_matched',
+            'objects_written',
+            'objects_erased',
+        ]);
         const generatedLog = [];
         runObjectTagsDir(objectTagsDir, claimDescriptions, message => generatedLog.push(message));
         assert.deepStrictEqual(generatedLog, ['generated static analysis testdata: object_tags/roles-basic.json (review before committing)\n']);
