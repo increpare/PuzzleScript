@@ -1,0 +1,52 @@
+title Static Analysis Rule Tag Relocation
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+A = Alpha
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha
+
+=====
+RULES
+=====
+
+right [ Alpha | ] -> [ | Alpha ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PA

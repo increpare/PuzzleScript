@@ -1,0 +1,16 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 45,
+      "text": "[ Player no Wall ] -> [ Player Mark ]",
+      "tags": {
+        "objects_required": ["Player"],
+        "objects_matched": ["Player"],
+        "object_absences_matched": ["Wall"],
+        "objects_written": ["Mark"],
+        "objects_erased": []
+      }
+    }
+  ]
+}

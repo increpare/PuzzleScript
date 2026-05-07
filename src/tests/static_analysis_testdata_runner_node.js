@@ -7,14 +7,20 @@ const os = require('os');
 const path = require('path');
 
 const {
+    findRuleRecord,
     loadClaimDescriptions,
     runObjectTagsDir,
+    runRuleTagsDir,
 } = require('./static_analysis_testdata_runner');
 
 const FIXTURE_SCHEMA = 'ps-static-analysis-testdata-v1';
 
 function findObjectTag(payload, object) {
     return payload.objectTag.find(item => item.object === object);
+}
+
+function findRuleTag(payload, text) {
+    return payload.ruleTag.find(item => item.text === text);
 }
 
 function writeJson(filePath, payload) {
@@ -71,6 +77,102 @@ function run() {
         runObjectTagsDir(objectTagsDir, claimDescriptions, message => rerunLog.push(message));
         assert.deepStrictEqual(rerunLog, []);
         assert.strictEqual(fs.readFileSync(jsonPath, 'utf8'), curatedText);
+
+        const ruleTagsDir = path.join(tmpRoot, 'rule_tags');
+        fs.mkdirSync(ruleTagsDir, { recursive: true });
+        const ruleTagSource = `title Static Analysis Rule Tag Tmp
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+
+=====
+RULES
+=====
+
+[ Wall ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P#
+`;
+        fs.writeFileSync(path.join(ruleTagsDir, 'tmp-rule.txt'), ruleTagSource, 'utf8');
+
+        const generatedRuleLog = [];
+        runRuleTagsDir(ruleTagsDir, claimDescriptions, message => generatedRuleLog.push(message));
+        assert.deepStrictEqual(generatedRuleLog, ['generated static analysis testdata: rule_tags/tmp-rule.json (review before committing)\n']);
+
+        const ruleJsonPath = path.join(ruleTagsDir, 'tmp-rule.json');
+        const generatedRulePayload = JSON.parse(fs.readFileSync(ruleJsonPath, 'utf8'));
+        assert.strictEqual(generatedRulePayload.schema, FIXTURE_SCHEMA);
+        assert.strictEqual(generatedRulePayload.ruleTag.length, 1);
+        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ Wall ] -> [ ]').tags.objects_required, ['Wall']);
+        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ Wall ] -> [ ]').tags.objects_erased, ['Wall']);
+
+        const curatedRulePayload = {
+            schema: FIXTURE_SCHEMA,
+            ruleTag: [
+                {
+                    line: 40,
+                    text: '[ Wall ] -> [ ]',
+                    tags: {
+                        objects_erased: ['Wall'],
+                    },
+                },
+            ],
+        };
+        writeJson(ruleJsonPath, curatedRulePayload);
+        const curatedRuleText = fs.readFileSync(ruleJsonPath, 'utf8');
+
+        const rerunRuleLog = [];
+        runRuleTagsDir(ruleTagsDir, claimDescriptions, message => rerunRuleLog.push(message));
+        assert.deepStrictEqual(rerunRuleLog, []);
+        assert.strictEqual(fs.readFileSync(ruleJsonPath, 'utf8'), curatedRuleText);
+
+        assert.throws(
+            () => findRuleRecord('ambiguous-rule.json', [
+                { line: 12, text: '[ Wall ] -> [ ]', rule: { tags: {} } },
+                { line: 12, text: '[ Wall ] -> [ ]', rule: { tags: {} } },
+            ], { line: 12, text: '[ Wall ] -> [ ]' }),
+            /matched 2 analyzed rules; expected exactly 1/
+        );
     } finally {
         fs.rmSync(tmpRoot, { recursive: true, force: true });
     }

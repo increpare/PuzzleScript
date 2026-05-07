@@ -161,6 +161,106 @@ function checkFixture(txtPath, jsonPath, claimDescriptions) {
     }
 }
 
+function allRuleRecords(report, source) {
+    const sourceLines = source.split(/\r?\n/);
+    const records = [];
+    for (const section of (report.ps_tagged && report.ps_tagged.rule_sections) || []) {
+        for (const group of section.groups || []) {
+            for (const rule of group.rules || []) {
+                const text = (sourceLines[rule.source_line - 1] || '').trim();
+                records.push({ rule, line: rule.source_line, text });
+            }
+        }
+    }
+    return records;
+}
+
+function ruleClaimByName(claimDescriptions, tagName) {
+    return (claimDescriptions.ruleTags || []).find(tag => tag.name === tagName) || null;
+}
+
+function deriveRuleTagValue(rule, tagName) {
+    const value = rule.tags ? rule.tags[tagName] : undefined;
+    return Array.isArray(value) ? value.slice() : [];
+}
+
+function assertStringArray(filePath, label, value) {
+    assert.ok(Array.isArray(value), `${filePath}: ${label} expected value must be string[]`);
+    assert.ok(value.every(item => typeof item === 'string'), `${filePath}: ${label} expected value must be string[]`);
+}
+
+function sortedStringSet(value) {
+    return Array.from(new Set(value)).sort((left, right) =>
+        left.localeCompare(right, undefined, { numeric: true })
+    );
+}
+
+function assertSameStringSet(filePath, label, expected, actual) {
+    const expectedSet = sortedStringSet(expected);
+    const actualSet = sortedStringSet(actual);
+    if (JSON.stringify(expectedSet) !== JSON.stringify(actualSet)) {
+        assert.fail(`${filePath}\n${label} expected ${JSON.stringify(expectedSet)}, got ${JSON.stringify(actualSet)}`);
+    }
+}
+
+function buildRuleTagExpectations(source, report, claimDescriptions) {
+    const ruleTags = claimDescriptions.ruleTags || [];
+    return {
+        schema: FIXTURE_SCHEMA,
+        ruleTag: allRuleRecords(report, source).map(record => ({
+            line: record.line,
+            text: record.text,
+            tags: Object.fromEntries(ruleTags.map(tag => [
+                tag.name,
+                deriveRuleTagValue(record.rule, tag.name),
+            ])),
+        })),
+    };
+}
+
+function validateRuleTagExpectationShape(filePath, payload) {
+    assert.strictEqual(payload.schema, FIXTURE_SCHEMA, `${filePath}: unsupported fixture schema`);
+    assert.ok(Array.isArray(payload.ruleTag), `${filePath}: ruleTag must be an array`);
+    for (const [index, item] of payload.ruleTag.entries()) {
+        assert.ok(item && typeof item === 'object' && !Array.isArray(item), `${filePath}: ruleTag[${index}] must be an object`);
+        assert.ok(Number.isInteger(item.line) && item.line > 0, `${filePath}: ruleTag[${index}] missing positive integer line`);
+        assert.ok(typeof item.text === 'string' && item.text.length > 0, `${filePath}: ruleTag[${index}] missing text`);
+        assert.ok(item.tags && typeof item.tags === 'object' && !Array.isArray(item.tags), `${filePath}: ruleTag[${index}] missing tags object`);
+    }
+}
+
+function findRuleRecord(filePath, records, expected) {
+    const matches = records.filter(record => record.line === expected.line && record.text === expected.text);
+    if (matches.length !== 1) {
+        assert.fail(`${filePath}: ruleTag line ${expected.line} text ${JSON.stringify(expected.text)} matched ${matches.length} analyzed rules; expected exactly 1`);
+    }
+    return matches[0];
+}
+
+function checkRuleTagExpectation(filePath, record, claimDescriptions, tags, tagName) {
+    const claim = ruleClaimByName(claimDescriptions, tagName);
+    assert.ok(claim, `${filePath}: unknown rule tag ${tagName}`);
+    const expected = tags[tagName];
+    assertStringArray(filePath, tagName, expected);
+    const actual = deriveRuleTagValue(record.rule, tagName);
+    assertSameStringSet(filePath, `ruleTag line ${record.line} ${record.text} ${tagName}`, expected, actual);
+}
+
+function checkRuleFixture(txtPath, jsonPath, claimDescriptions) {
+    const source = fs.readFileSync(txtPath, 'utf8');
+    const report = analyzeSource(source, { sourcePath: txtPath });
+    assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+    const payload = readJson(jsonPath);
+    validateRuleTagExpectationShape(jsonPath, payload);
+    const records = allRuleRecords(report, source);
+    for (const row of payload.ruleTag) {
+        const record = findRuleRecord(jsonPath, records, row);
+        for (const tagName of Object.keys(row.tags)) {
+            checkRuleTagExpectation(jsonPath, record, claimDescriptions, row.tags, tagName);
+        }
+    }
+}
+
 function sortedFiles(dirPath, ext) {
     return fs.readdirSync(dirPath)
         .filter(name => name.endsWith(ext))
@@ -192,12 +292,40 @@ function runObjectTagsDir(dirPath, claimDescriptions, log = process.stdout.write
     }
 }
 
+function runRuleTagsDir(dirPath, claimDescriptions, log = process.stdout.write.bind(process.stdout)) {
+    const txtFiles = sortedFiles(dirPath, '.txt');
+    const jsonFiles = sortedFiles(dirPath, '.json');
+    const txtStems = new Set(txtFiles.map(name => path.basename(name, '.txt')));
+    const jsonStems = new Set(jsonFiles.map(name => path.basename(name, '.json')));
+
+    for (const stem of jsonStems) {
+        assert.ok(txtStems.has(stem), `${path.join(dirPath, `${stem}.json`)}: missing matching .txt`);
+    }
+
+    for (const txtName of txtFiles) {
+        const stem = path.basename(txtName, '.txt');
+        const txtPath = path.join(dirPath, txtName);
+        const jsonPath = path.join(dirPath, `${stem}.json`);
+        if (!fs.existsSync(jsonPath)) {
+            const source = fs.readFileSync(txtPath, 'utf8');
+            const report = analyzeSource(source, { sourcePath: txtPath });
+            assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+            writeJson(jsonPath, buildRuleTagExpectations(source, report, claimDescriptions));
+            log(`generated static analysis testdata: rule_tags/${stem}.json (review before committing)\n`);
+        }
+        checkRuleFixture(txtPath, jsonPath, claimDescriptions);
+    }
+}
+
 function runStaticAnalysisTestdata(options = {}) {
     const root = options.root || TESTDATA_ROOT;
     const claimDescriptions = loadClaimDescriptions(options.claimDescriptionsPath || CLAIM_DESCRIPTIONS_PATH);
     const objectTagsDir = path.join(root, 'object_tags');
     assert.ok(fs.existsSync(objectTagsDir), `${objectTagsDir}: missing object_tags testdata directory`);
     runObjectTagsDir(objectTagsDir, claimDescriptions, options.log);
+    const ruleTagsDir = path.join(root, 'rule_tags');
+    assert.ok(fs.existsSync(ruleTagsDir), `${ruleTagsDir}: missing rule_tags testdata directory`);
+    runRuleTagsDir(ruleTagsDir, claimDescriptions, options.log);
     process.stdout.write('static_analysis_testdata_runner: ok\n');
 }
 
@@ -207,8 +335,12 @@ if (require.main === module) {
 
 module.exports = {
     buildObjectTagExpectations,
+    buildRuleTagExpectations,
     deriveObjectTagValue,
+    deriveRuleTagValue,
+    findRuleRecord,
     loadClaimDescriptions,
     runObjectTagsDir,
+    runRuleTagsDir,
     runStaticAnalysisTestdata,
 };

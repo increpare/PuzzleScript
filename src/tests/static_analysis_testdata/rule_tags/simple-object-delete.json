@@ -1,0 +1,16 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 45,
+      "text": "[ Wall ] -> [ ]",
+      "tags": {
+        "objects_required": ["Wall"],
+        "objects_matched": ["Wall"],
+        "object_absences_matched": [],
+        "objects_written": [],
+        "objects_erased": ["Wall"]
+      }
+    }
+  ]
+}

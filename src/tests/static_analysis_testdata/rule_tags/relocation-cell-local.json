@@ -1,0 +1,16 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 40,
+      "text": "right [ Alpha | ] -> [ | Alpha ]",
+      "tags": {
+        "objects_required": ["Alpha"],
+        "objects_matched": ["Alpha"],
+        "object_absences_matched": [],
+        "objects_written": ["Alpha"],
+        "objects_erased": ["Alpha"]
+      }
+    }
+  ]
+}
