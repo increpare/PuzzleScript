@@ -39,6 +39,26 @@ Object-tag expectations are grouped by object:
 5. Run `make static_analysis_tests` again. Existing JSON files are never
    overwritten, and only listed expectations are checked.
 
+## Adding A Rule-Tag Test
+
+1. Add a small whole-source `.txt` file under `rule_tags/`.
+2. Run:
+
+   ```sh
+   make static_analysis_tests
+   ```
+
+3. The runner will create the missing matching `.json` file and print a
+   `generated static analysis testdata` message.
+4. Read the generated JSON with Stephen before committing it. Keep only the
+   rule rows and tag fields that express the intended test.
+5. Run `make static_analysis_tests` again. Existing JSON files are never
+   overwritten, and only listed rule-tag expectations are checked.
+
+Rule-tag expectations identify rules by `line` plus trimmed source `text`.
+If those two fields do not identify exactly one analyzed rule, the runner fails
+instead of inventing another locator.
+
 ## Review Policy
 
 Auto-generated or mechanically regenerated expectation JSON is a proposal, not
