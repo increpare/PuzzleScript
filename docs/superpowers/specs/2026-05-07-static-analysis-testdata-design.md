@@ -43,6 +43,16 @@ The first version contains only `objectTags`.
   "schema": "ps-static-analysis-claim-descriptions-v1",
   "objectTags": [
     {
+      "name": "is_player",
+      "description": "Object is part of the resolved Player role.",
+      "specification": "An object has is_player when it is the object named by the Player object, Player synonym, or a member of the Player property in the compiled game. If Player resolves to a property with multiple member objects, every member object has is_player true."
+    },
+    {
+      "name": "is_background",
+      "description": "Object is part of the resolved Background role.",
+      "specification": "An object has is_background when it is the object named by the Background object, Background synonym, or a member of the Background property in the compiled game. If Background resolves to a property with multiple member objects on the same collision layer, every member object has is_background true."
+    },
+    {
       "name": "level_presence",
       "description": "Whether the object appears in all, some, or no playable levels.",
       "specification": "The level_presence tag is one of all, some, or none. Message levels are ignored. The value all means there is at least one playable level and the object appears in every playable level. The value some means the object appears in at least one but not every playable level. The value none means the object appears in no playable levels; if a valid source has zero playable levels, every object has level_presence none.",
@@ -52,11 +62,6 @@ The first version contains only `objectTags`.
       "name": "not_created_or_destroyed_by_rules",
       "description": "No solver-active rule creates or destroys this object.",
       "specification": "An object has not_created_or_destroyed_by_rules when the analyzer proves no solver-active rule can create or destroy an instance of that object according to rule object-write analysis. Pure movement or relocation of an existing object does not count as creation or destruction."
-    },
-    {
-      "name": "cosmetic",
-      "description": "Object is outside the solver-visible core closure.",
-      "specification": "An object has the cosmetic tag when the analyzer proves it is outside the current solver-visible core closure for object identity: it is not a player object, not referenced by win conditions, not read by win-command rules, and not reached by the analyzer's rule read/write closure from those core objects."
     }
   ]
 }
@@ -68,7 +73,7 @@ Each entry has:
 - `description`: a short human-facing explanation.
 - `specification`: the precise contract the analyzer and tests are accountable to.
 - `values`: optional list for valued tags. Omit it for boolean tags.
-- `examples`: optional list of real testdata stems, such as `object_tags/cosmetic-basic`. Examples must correspond to committed `.txt`/`.json` files.
+- `examples`: optional list of real testdata stems, such as `object_tags/roles-basic`. Examples must correspond to committed `.txt`/`.json` files.
 
 There is no separate label field, no status field, and no expectation-type field. If a claim appears in this file, it is a valid, decided claim. Planned or speculative analyses do not belong here.
 
@@ -80,10 +85,12 @@ The first implementation can derive `not_created_or_destroyed_by_rules` from the
 
 Initial object tags:
 
+- `is_player`
+- `is_background`
 - `level_presence`, with values `all`, `some`, and `none`
 - `not_created_or_destroyed_by_rules`
-- `static`
-- `cosmetic`
+
+`static` and `cosmetic` are intentionally not in the first slice. `static` depends on movement/write/layer-creation analysis. `cosmetic` depends on core-seed selection, rule object read/write extraction, rule/core reachability, and collision-layer closure. Those prerequisite analyses need their own testdata before these derived claims are formally added.
 
 ## Expectation JSON Format
 
@@ -94,9 +101,10 @@ Each expectation JSON uses a flat `expect` list.
   "schema": "ps-static-analysis-testdata-v1",
   "note": "Optional human note.",
   "expect": [
+    { "type": "objectTag", "object": "Background", "tag": "is_background", "is": true },
+    { "type": "objectTag", "object": "Player", "tag": "is_player", "is": true },
     { "type": "objectTag", "object": "Background", "tag": "level_presence", "is": "all" },
-    { "type": "objectTag", "object": "Background", "tag": "cosmetic", "is": true },
-    { "type": "objectTag", "object": "Player", "tag": "cosmetic", "is": false }
+    { "type": "objectTag", "object": "Player", "tag": "not_created_or_destroyed_by_rules", "is": true }
   ]
 }
 ```
@@ -153,9 +161,9 @@ Expectation failures should be domain-specific, not generic JSON path errors.
 Example failure:
 
 ```text
-object_tags/static-basic.json
-objectTag Wall.static expected true, got false
-  object: Wall id=2 layer=1
+object_tags/roles-basic.json
+objectTag Player.is_player expected true, got false
+  object: Player id=1 layer=2
 ```
 
 The runner should be wired into `make static_analysis_tests` beside the existing node assertion files. Existing assertions can migrate later, but migration is not part of the first slice.
@@ -165,10 +173,8 @@ The runner should be wired into `make static_analysis_tests` beside the existing
 The first object-tag specimens should be small standalone games:
 
 - level presence: all, some, and no playable levels
+- structural roles: player and background object/property resolution
 - objects that are, and are not, created or destroyed by rules
-- static objects versus player/movement-affected objects
-- cosmetic objects
-- Background and Player edge cases
 
 Each specimen should be as small as possible while still being a whole valid source file.
 
@@ -176,6 +182,8 @@ Each specimen should be as small as possible while still being a whole valid sou
 
 Later slices may add:
 
+- `static` object tags, after movement/write/layer-creation analysis has testdata
+- `cosmetic` object tags, after core closure and rule-flow prerequisites have testdata
 - rule tag expectation types
 - rule-group expectation types with line/text locators
 - layer tag expectation types
