@@ -19,13 +19,13 @@
     },
     {
       "name": "created_by_rules",
-      "description": "A solver-active rule may create this object.",
-      "specification": "An object has created_by_rules when rule object-write analysis finds a solver-active rule that may create an instance of that object. Pure movement or relocation of an existing object does not count as creation."
+      "description": "A solver-active rule may write this object present in a cell.",
+      "specification": "An object has created_by_rules when rule object-write analysis finds a solver-active rule that may write that object present in a cell where the left-hand side does not already require that object to be present in the same cell. This is a cell-local write tag: relocation can count as creation in the destination cell, even if the object's total count is preserved."
     },
     {
       "name": "destroyed_by_rules",
-      "description": "A solver-active rule may destroy this object.",
-      "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may destroy an instance of that object, including by overwriting a possible same-layer occupant. Pure movement or relocation of an existing object does not count as destruction."
+      "description": "A solver-active rule may write this object absent from a cell.",
+      "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may write that object absent from a cell where the left-hand side allows that object to be present in the same cell. This includes explicit absent writes, removing a left-hand side object from its original cell, and overwriting a possible same-layer occupant. This is a cell-local write tag: relocation can count as destruction in the source cell, even if the object's total count is preserved."
     }
   ]
 }
