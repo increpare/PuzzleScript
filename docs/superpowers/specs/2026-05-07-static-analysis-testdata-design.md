@@ -49,6 +49,11 @@ The first version contains only `objectTags`.
       "values": ["all", "some", "none"]
     },
     {
+      "name": "not_created_or_destroyed_by_rules",
+      "description": "No solver-active rule creates or destroys this object.",
+      "specification": "An object has not_created_or_destroyed_by_rules when the analyzer proves no solver-active rule can create or destroy an instance of that object according to rule object-write analysis. Pure movement or relocation of an existing object does not count as creation or destruction."
+    },
+    {
       "name": "cosmetic",
       "description": "Object is outside the solver-visible core closure.",
       "specification": "An object has the cosmetic tag when the analyzer proves it is outside the current solver-visible core closure for object identity: it is not a player object, not referenced by win conditions, not read by win-command rules, and not reached by the analyzer's rule read/write closure from those core objects."
@@ -71,12 +76,12 @@ Claim order in this file is the generated expectation order.
 
 The testdata vocabulary is author-facing. The runner may derive these claims from analyzer output if the analyzer stores them differently internally. For example, the first implementation can derive `level_presence` from existing `present_in_all_levels`, `present_in_some_levels`, and `present_in_no_levels` booleans instead of requiring the analyzer to change its raw output immediately.
 
+The first implementation can derive `not_created_or_destroyed_by_rules` from the existing `count_invariant` analyzer tag. The testdata vocabulary uses the more precise name; the raw analyzer output can be renamed in a later semantic cleanup if desired.
+
 Initial object tags:
 
 - `level_presence`, with values `all`, `some`, and `none`
-- `may_be_created`
-- `may_be_destroyed`
-- `count_invariant`
+- `not_created_or_destroyed_by_rules`
 - `static`
 - `cosmetic`
 
@@ -160,8 +165,7 @@ The runner should be wired into `make static_analysis_tests` beside the existing
 The first object-tag specimens should be small standalone games:
 
 - level presence: all, some, and no playable levels
-- created and destroyed objects
-- count-invariant objects
+- objects that are, and are not, created or destroyed by rules
 - static objects versus player/movement-affected objects
 - cosmetic objects
 - Background and Player edge cases
