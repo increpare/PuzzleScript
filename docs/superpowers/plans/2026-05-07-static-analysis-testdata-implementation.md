@@ -2,7 +2,9 @@
 
 > Historical note: the implemented fixture JSON format was later changed from
 > the flat `expect` draft shown in this plan to grouped `objectTag` rows. The
-> current schema is documented in
+> public object churn tag was also renamed from the negative
+> `not_created_or_destroyed_by_rules` draft to separate positive
+> `created_by_rules` and `destroyed_by_rules` tags. The current schema is documented in
 > `src/tests/static_analysis_testdata/README.md`.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
@@ -19,7 +21,7 @@
 
 - Create `src/tests/static_analysis_claim_descriptions.json`
   - Shared glossary for valid, decided object claims.
-  - First entries: `is_player`, `is_background`, `level_presence`, `not_created_or_destroyed_by_rules`.
+  - First entries: `is_player`, `is_background`, `level_presence`, `created_by_rules`, `destroyed_by_rules`.
 
 - Create `src/tests/static_analysis_testdata_runner.js`
   - Discovers `src/tests/static_analysis_testdata/object_tags/*.txt` and `*.json`.
@@ -37,7 +39,7 @@
 
 - Create `src/tests/static_analysis_testdata/object_tags/rule-creation-destruction.txt`
   - Whole valid PuzzleScript source.
-  - Exercises `not_created_or_destroyed_by_rules` true and false.
+  - Exercises `created_by_rules` and `destroyed_by_rules` true and false.
 
 - Modify `Makefile`
   - Add `$(NODE) src/tests/static_analysis_testdata_runner.js` to `static_analysis_tests`.
@@ -76,9 +78,14 @@
       "values": ["all", "some", "none"]
     },
     {
-      "name": "not_created_or_destroyed_by_rules",
-      "description": "No solver-active rule creates or destroys this object.",
-      "specification": "An object has not_created_or_destroyed_by_rules when the analyzer proves no solver-active rule can create or destroy an instance of that object according to rule object-write analysis. Pure movement or relocation of an existing object does not count as creation or destruction."
+      "name": "created_by_rules",
+      "description": "A solver-active rule may create this object.",
+      "specification": "An object has created_by_rules when rule object-write analysis finds a solver-active rule that may create an instance of that object. Pure movement or relocation of an existing object does not count as creation."
+    },
+    {
+      "name": "destroyed_by_rules",
+      "description": "A solver-active rule may destroy this object.",
+      "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may destroy an instance of that object, including by overwriting a possible same-layer occupant. Pure movement or relocation of an existing object does not count as destruction."
     }
   ]
 }
@@ -377,8 +384,11 @@ function deriveObjectTagValue(report, object, tagName) {
     if (tagName === 'level_presence') {
         return deriveLevelPresence(object);
     }
-    if (tagName === 'not_created_or_destroyed_by_rules') {
-        return !!((object.tags || {}).count_invariant);
+    if (tagName === 'created_by_rules') {
+        return !!((object.tags || {}).may_be_created);
+    }
+    if (tagName === 'destroyed_by_rules') {
+        return !!((object.tags || {}).may_be_destroyed);
     }
     return !!((object.tags || {})[tagName]);
 }

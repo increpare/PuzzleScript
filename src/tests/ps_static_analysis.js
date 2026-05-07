@@ -679,6 +679,16 @@ function ruleMayAffectObject(psTagged, rule, objectName) {
     return objectWriteNames(psTagged, rule).has(objectName);
 }
 
+function ruleMayCreateObject(psTagged, rule, objectName) {
+    if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return false;
+    return ruleFlowWrites(psTagged, rule).object_present.has(objectName);
+}
+
+function ruleMayDestroyObject(psTagged, rule, objectName) {
+    if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return false;
+    return ruleFlowWrites(psTagged, rule).object_absent.has(objectName);
+}
+
 function playerObjectNameSet(psTagged) {
     const playerProperty = psTagged.properties.find(item =>
         item.canonical_name === 'player' || item.name.toLowerCase() === 'player'
@@ -720,14 +730,16 @@ function deriveCountLayerInvariantFacts(psTagged) {
     const results = [];
     for (const object of psTagged.objects) {
         const writers = activeRules.filter(rule => ruleMayAffectObject(psTagged, rule, object.name));
+        const creators = activeRules.filter(rule => ruleMayCreateObject(psTagged, rule, object.name));
+        const destroyers = activeRules.filter(rule => ruleMayDestroyObject(psTagged, rule, object.name));
         const movementRules = activeRules.filter(rule => ruleMovementMentionsObject(rule, object.name));
         const layerCreators = activeRules.filter(rule => ruleMayCreateCollisionLayerObject(psTagged, rule, object.layer));
         const staticBlockers = [];
         if (writers.length > 0) staticBlockers.push('object_written_by_solver_active_rule');
         if (movementRules.length > 0 || playerObjects.has(object.name)) staticBlockers.push('object_may_receive_movement');
         if (layerCreators.length > 0) staticBlockers.push('collision_layer_object_may_be_created');
-        object.tags.may_be_created = writers.length > 0;
-        object.tags.may_be_destroyed = writers.length > 0;
+        object.tags.may_be_created = creators.length > 0;
+        object.tags.may_be_destroyed = destroyers.length > 0;
         object.tags.count_invariant = writers.length === 0;
         object.tags.static = staticBlockers.length === 0;
         results.push(fact('count_layer_invariants', `object_${object.name}_count_preserved`, writers.length === 0 ? 'proved' : 'rejected', {

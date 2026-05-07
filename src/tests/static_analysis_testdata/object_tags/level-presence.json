@@ -2,39 +2,16 @@
   "schema": "ps-static-analysis-testdata-v1",
   "objectTag": [
     {
-      "object": "Background",
-      "is_player": false,
-      "is_background": true,
-      "level_presence": "all",
-      "not_created_or_destroyed_by_rules": true
-    },
-    {
-      "object": "Player",
-      "is_player": true,
-      "is_background": false,
-      "level_presence": "all",
-      "not_created_or_destroyed_by_rules": true
-    },
-    {
       "object": "Always",
-      "is_player": false,
-      "is_background": false,
-      "level_presence": "all",
-      "not_created_or_destroyed_by_rules": true
+      "level_presence": "all"
     },
     {
       "object": "Sometimes",
-      "is_player": false,
-      "is_background": false,
-      "level_presence": "some",
-      "not_created_or_destroyed_by_rules": true
+      "level_presence": "some"
     },
     {
       "object": "Never",
-      "is_player": false,
-      "is_background": false,
-      "level_presence": "none",
-      "not_created_or_destroyed_by_rules": true
+      "level_presence": "none"
     }
   ]
 }

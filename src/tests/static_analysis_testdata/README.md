@@ -15,7 +15,8 @@ Object-tag expectations are grouped by object:
       "is_player": true,
       "is_background": false,
       "level_presence": "all",
-      "not_created_or_destroyed_by_rules": true
+      "created_by_rules": false,
+      "destroyed_by_rules": false
     }
   ]
 }

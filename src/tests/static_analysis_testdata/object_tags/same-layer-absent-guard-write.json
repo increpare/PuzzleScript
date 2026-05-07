@@ -2,39 +2,19 @@
   "schema": "ps-static-analysis-testdata-v1",
   "objectTag": [
     {
-      "object": "Background",
-      "is_player": false,
-      "is_background": true,
-      "level_presence": "all",
-      "not_created_or_destroyed_by_rules": true
-    },
-    {
-      "object": "Player",
-      "is_player": true,
-      "is_background": false,
-      "level_presence": "all",
-      "not_created_or_destroyed_by_rules": true
-    },
-    {
       "object": "Alpha",
-      "is_player": false,
-      "is_background": false,
-      "level_presence": "all",
-      "not_created_or_destroyed_by_rules": true
+      "created_by_rules": false,
+      "destroyed_by_rules": false
     },
     {
       "object": "Beta",
-      "is_player": false,
-      "is_background": false,
-      "level_presence": "all",
-      "not_created_or_destroyed_by_rules": false
+      "created_by_rules": true,
+      "destroyed_by_rules": false
     },
     {
       "object": "Gamma",
-      "is_player": false,
-      "is_background": false,
-      "level_presence": "all",
-      "not_created_or_destroyed_by_rules": false
+      "created_by_rules": false,
+      "destroyed_by_rules": true
     }
   ]
 }

@@ -18,9 +18,14 @@
       "values": ["all", "some", "none"]
     },
     {
-      "name": "not_created_or_destroyed_by_rules",
-      "description": "No solver-active rule creates or destroys this object.",
-      "specification": "An object has not_created_or_destroyed_by_rules when the analyzer proves no solver-active rule can create or destroy an instance of that object according to rule object-write analysis. Pure movement or relocation of an existing object does not count as creation or destruction."
+      "name": "created_by_rules",
+      "description": "A solver-active rule may create this object.",
+      "specification": "An object has created_by_rules when rule object-write analysis finds a solver-active rule that may create an instance of that object. Pure movement or relocation of an existing object does not count as creation."
+    },
+    {
+      "name": "destroyed_by_rules",
+      "description": "A solver-active rule may destroy this object.",
+      "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may destroy an instance of that object, including by overwriting a possible same-layer occupant. Pure movement or relocation of an existing object does not count as destruction."
     }
   ]
 }

@@ -71,8 +71,11 @@ function deriveObjectTagValue(report, object, tagName) {
     if (tagName === 'level_presence') {
         return deriveLevelPresence(object);
     }
-    if (tagName === 'not_created_or_destroyed_by_rules') {
-        return !!((object.tags || {}).count_invariant);
+    if (tagName === 'created_by_rules') {
+        return !!((object.tags || {}).may_be_created);
+    }
+    if (tagName === 'destroyed_by_rules') {
+        return !!((object.tags || {}).may_be_destroyed);
     }
     return !!((object.tags || {})[tagName]);
 }

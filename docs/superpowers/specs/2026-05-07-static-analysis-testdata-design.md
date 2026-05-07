@@ -59,9 +59,14 @@ The first version contains only `objectTags`.
       "values": ["all", "some", "none"]
     },
     {
-      "name": "not_created_or_destroyed_by_rules",
-      "description": "No solver-active rule creates or destroys this object.",
-      "specification": "An object has not_created_or_destroyed_by_rules when the analyzer proves no solver-active rule can create or destroy an instance of that object according to rule object-write analysis. Pure movement or relocation of an existing object does not count as creation or destruction."
+      "name": "created_by_rules",
+      "description": "A solver-active rule may create this object.",
+      "specification": "An object has created_by_rules when rule object-write analysis finds a solver-active rule that may create an instance of that object. Pure movement or relocation of an existing object does not count as creation."
+    },
+    {
+      "name": "destroyed_by_rules",
+      "description": "A solver-active rule may destroy this object.",
+      "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may destroy an instance of that object, including by overwriting a possible same-layer occupant. Pure movement or relocation of an existing object does not count as destruction."
     }
   ]
 }
@@ -81,14 +86,15 @@ Claim order in this file is the generated expectation order.
 
 The testdata vocabulary is author-facing. The runner may derive these claims from analyzer output if the analyzer stores them differently internally. For example, the first implementation can derive `level_presence` from existing `present_in_all_levels`, `present_in_some_levels`, and `present_in_no_levels` booleans instead of requiring the analyzer to change its raw output immediately.
 
-The first implementation can derive `not_created_or_destroyed_by_rules` from the existing `count_invariant` analyzer tag. The testdata vocabulary uses the more precise name; the raw analyzer output can be renamed in a later semantic cleanup if desired.
+The first implementation can derive `created_by_rules` from `may_be_created` and `destroyed_by_rules` from `may_be_destroyed`. The raw analyzer output can be renamed in a later semantic cleanup if desired.
 
 Initial object tags:
 
 - `is_player`
 - `is_background`
 - `level_presence`, with values `all`, `some`, and `none`
-- `not_created_or_destroyed_by_rules`
+- `created_by_rules`
+- `destroyed_by_rules`
 
 `static` and `cosmetic` are intentionally not in the first slice. `static` depends on movement/write/layer-creation analysis. `cosmetic` depends on core-seed selection, rule object read/write extraction, rule/core reachability, and collision-layer closure. Those prerequisite analyses need their own testdata before these derived claims are formally added.
 
@@ -106,14 +112,16 @@ Each expectation JSON groups object-tag expectations by object.
       "is_player": false,
       "is_background": true,
       "level_presence": "all",
-      "not_created_or_destroyed_by_rules": true
+      "created_by_rules": false,
+      "destroyed_by_rules": false
     },
     {
       "object": "Player",
       "is_player": true,
       "is_background": false,
       "level_presence": "all",
-      "not_created_or_destroyed_by_rules": true
+      "created_by_rules": false,
+      "destroyed_by_rules": false
     }
   ]
 }

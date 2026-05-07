@@ -41,6 +41,8 @@ function run() {
         assert.strictEqual(generated.schema, FIXTURE_SCHEMA);
         assert.strictEqual(generated.objectTag.length, 3);
         assert.strictEqual(findObjectTag(generated, 'Avatar').is_player, true);
+        assert.strictEqual(findObjectTag(generated, 'Avatar').created_by_rules, false);
+        assert.strictEqual(findObjectTag(generated, 'Avatar').destroyed_by_rules, false);
         assert.strictEqual(findObjectTag(generated, 'Background').is_background, true);
         assert.strictEqual(findObjectTag(generated, 'Goal').level_presence, 'all');
 
