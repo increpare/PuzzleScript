@@ -459,6 +459,22 @@ function collectCosmeticNames(report) {
     return set;
 }
 
+function collectStructuralObjectNames(state) {
+    const out = new Set(['player']);
+    if (!state || !state.objects) return out;
+    if (state.objects.background) out.add('background');
+    if (Number.isInteger(state.backgroundid) && state.idDict && state.idDict[state.backgroundid]) {
+        out.add(state.idDict[state.backgroundid]);
+    }
+    if (Number.isInteger(state.backgroundlayer) && Array.isArray(state.collisionLayers)) {
+        const layer = state.collisionLayers[state.backgroundlayer];
+        if (Array.isArray(layer)) {
+            for (const name of layer) out.add(name);
+        }
+    }
+    return out;
+}
+
 function passCosmeticPrune(state, report, telemetry) {
     const cosmetic = collectCosmeticNames(report);
     if (cosmetic.size === 0) return;
@@ -471,10 +487,11 @@ function passCosmeticPrune(state, report, telemetry) {
     // Intentionally omit compiled level maps: cosmetic objects may sit on tiles
     // only for display; remapLevelsToNewIds drops those bits during rebuild.
     const referenced = expandLegendRefsToConcreteObjectNames(state, raw);
+    const structural = collectStructuralObjectNames(state);
 
     const rename = new Map();
     for (const name of cosmetic) {
-        if (name === 'player') continue;
+        if (structural.has(name)) continue;
         if (!state.objects[name]) continue;
         if (referenced.has(name)) continue;
         rename.set(name, null);

@@ -98,7 +98,7 @@ assert.ok(game.mergeable.some(pair => pair.objects.join(',') === 'BodyH,BodyV'))
 assert.ok(game.mergeable_groups.some(group => group.objects.join(',') === 'BodyD,BodyH,BodyV'));
 assert.ok(game.static_objects.includes('Wall'));
 assert.ok(game.static_objects.includes('Rock'));
-assert.strictEqual(game.static_objects_label, 'Background, Wall, Rock, BodyH, BodyV, BodyD');
+assert.strictEqual(game.static_objects_label, 'Background, Wall, Rock, BodyH, BodyV, BodyD, Alpha, Beta');
 assert.ok(game.static_layers.some(layer => layer.objects.includes('Wall')));
 assert.ok(game.inert_rules.some(rule => rule.text.includes('sfx0')));
 assert.ok(game.rulegroup_flow.some(group => group.status === 'candidate' && group.components.length === 2));

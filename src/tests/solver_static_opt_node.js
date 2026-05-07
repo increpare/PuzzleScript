@@ -159,6 +159,75 @@ function run() {
     assert.ok(typeof tel.ms_cosmetic === 'number' && tel.ms_cosmetic >= 0);
     assert.ok(typeof tel.ms_merge === 'number' && tel.ms_merge >= 0);
 
+    const backgroundOnlySource = `
+title Solver Static Cosmetic Background
+
+========
+OBJECTS
+========
+
+background
+black
+
+Player
+blue
+
+Target
+green
+
+========
+LEGEND
+========
+
+. = background
+P = Player and background
+T = Target and background
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+background
+Target
+Player
+
+======
+RULES
+======
+
+=============
+WINCONDITIONS
+=============
+
+all Player on Target
+
+======
+LEVELS
+======
+
+PT
+`;
+    const backgroundReport = analyzeSource(backgroundOnlySource, { sourcePath: 'solver_static_cosmetic_background.txt' });
+    assert.strictEqual(backgroundReport.status, 'ok');
+    assert.strictEqual(
+        backgroundReport.ps_tagged.objects.find(object => object.name === 'background').tags.cosmetic,
+        true,
+        'fixture should exercise a cosmetic-tagged background object',
+    );
+    const backgroundHook = createSolverOptimizationHook(backgroundReport, { inert: false, cosmetic: true, merge: false });
+    setPluginOptimizationHook(backgroundHook);
+    try {
+        compile(['loadLevel', 0], backgroundOnlySource, 'solver_static_cosmetic_background');
+    } finally {
+        setPluginOptimizationHook(null);
+    }
+    assert.strictEqual(errorCount, 0, 'cosmetic pruning must preserve the compiler background object');
+    assert.ok(state && state.objects && state.objects.background, 'background object should remain after cosmetic pruning');
+
     const corpusDir = path.join(__dirname, 'solver_smoke_tests');
     const runner = path.join(__dirname, 'run_solver_tests_js.js');
     const mlJson = execFileSync(

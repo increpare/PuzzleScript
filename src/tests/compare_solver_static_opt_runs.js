@@ -25,6 +25,40 @@ function fmt(k, v) {
     return String(Math.round(n));
 }
 
+function resultKey(row) {
+    return `${row.game || ''}#${Number.isFinite(row.level) ? row.level : ''}`;
+}
+
+function collectComparisonFailures(b, o) {
+    const failures = [];
+    const bt = b.totals || {};
+    const ot = o.totals || {};
+    for (const key of ['levels', 'solved', 'timeout', 'exhausted', 'skipped_message', 'errors']) {
+        if (num(bt[key]) !== num(ot[key])) {
+            failures.push(`${key} baseline=${fmt(key, bt[key])} optimized=${fmt(key, ot[key])}`);
+        }
+    }
+
+    const bRows = new Map((b.results || []).map(row => [resultKey(row), row]));
+    const oRows = new Map((o.results || []).map(row => [resultKey(row), row]));
+    for (const [key, row] of bRows) {
+        const opt = oRows.get(key);
+        if (!opt) {
+            failures.push(`missing optimized result ${key}`);
+            continue;
+        }
+        if (row.status !== opt.status) {
+            failures.push(`status ${key} baseline=${row.status} optimized=${opt.status}`);
+        } else if (row.status === 'solved' && num(row.solution_length) !== num(opt.solution_length)) {
+            failures.push(`solution_length ${key} baseline=${fmt('solution_length', row.solution_length)} optimized=${fmt('solution_length', opt.solution_length)}`);
+        }
+    }
+    for (const key of oRows.keys()) {
+        if (!bRows.has(key)) failures.push(`extra optimized result ${key}`);
+    }
+    return failures;
+}
+
 function main() {
     const baselinePath = process.argv[2];
     const optimizedPath = process.argv[3];
@@ -88,6 +122,13 @@ function main() {
     }
     if (ot.solver_optimization) {
         process.stdout.write(`\noptimized.solver_optimization (JSON nest): ${JSON.stringify(ot.solver_optimization)}\n`);
+    }
+    const failures = collectComparisonFailures(b, o);
+    if (failures.length > 0) {
+        process.stderr.write(
+            `\nstatic optimization comparison failed:\n${failures.map(f => `  - ${f}`).join('\n')}\n`,
+        );
+        process.exit(1);
     }
 }
 

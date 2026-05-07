@@ -1488,6 +1488,21 @@ assert.strictEqual(andAggregateMovementWall.tags.count_invariant, true, 'and-agg
 assert.strictEqual(andAggregateMovementWall.tags.static, false, 'and-aggregate movement mentioning wall should reject wall static');
 assert.ok(andAggregateMovementWallFact.blockers.includes('object_may_receive_movement'));
 
+const ABSENT_GUARD_ADJACENT_MOVE_GAME = STATIC_OBJECT_GAME
+    .replace('Solid = Wall or Crate', 'Solid = Wall or Crate\nObstacle = PlayerObject or Wall or Crate')
+    .replace('[ > PlayerObject ] -> [ > PlayerObject ]', '[ > Crate | no Obstacle ] -> [ | > Crate ]');
+const absentGuardAdjacentMove = analyzeSource(ABSENT_GUARD_ADJACENT_MOVE_GAME, { sourcePath: 'absent_guard_adjacent_move.txt' });
+for (const objectName of ['PlayerObject', 'Wall', 'Crate']) {
+    const countFact = absentGuardAdjacentMove.facts.count_layer_invariants.find(item =>
+        item.id === `object_${objectName}_count_preserved`
+    );
+    assert.strictEqual(
+        countFact.status,
+        'proved',
+        `${objectName} count should be preserved by adjacent movement guarded with absence`
+    );
+}
+
 const TRANSIENT_GAME = `
 title Transient
 ========

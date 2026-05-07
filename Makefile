@@ -65,7 +65,7 @@ STATIC_OPTIMIZER_PAGE_TIMEOUT_MS ?= $(SOLVER_TIMEOUT_MS)
 STATIC_OPTIMIZER_PAGE_GAME ?=
 STATIC_OPTIMIZER_PAGE_GAME_ARG = $(if $(strip $(STATIC_OPTIMIZER_PAGE_GAME)),--game "$(STATIC_OPTIMIZER_PAGE_GAME)",)
 SOLVER_COMPACT_PARITY_CORPUS ?= src/tests/solver_tests
-SOLVER_COMPACT_PARITY_TIMEOUT_MS ?= $(SOLVER_TIMEOUT_MS)
+SOLVER_COMPACT_PARITY_TIMEOUT_MS ?= 1000
 SOLVER_COMPACT_PARITY_STRATEGY ?= bfs
 SOLVER_COMPACT_PARITY_GAME ?=
 SOLVER_COMPACT_PARITY_LEVEL ?=
@@ -343,8 +343,8 @@ help:
 	@echo "  make solver_compact_parity         Compare normal vs compact solver storage on non-random corpus games"
 	@echo "  make compact_turn_oracle_smoke     Run specialized compact turns against interpreter oracle"
 	@echo "  make compact_turn_simulation_tests Run testdata.js through specialized compact turn oracle"
-	@echo "  make compact_turn_coverage         Report native-vs-bridge compact turn coverage"
-	@echo "  make compact_turn_codegen_coverage Report compiler-mode compact turn coverage"
+	@echo "  make compact_turn_coverage         Report default compact ABI coverage; bridge backends can count"
+	@echo "  make compact_turn_codegen_coverage Report compiler-mode native compact kernel coverage"
 	@echo "  make compact_turn_codegen_bringup  Build compiler-mode compact smoke and require oracle parity"
 	@echo "  make compact_turn_codegen_solver_parity"
 	@echo "                                      Run solver compact parity with compiler-mode compact turns"
@@ -564,6 +564,8 @@ tests_js:
 static_analysis_tests:
 	$(NODE) src/tests/ps_static_analysis_node.js
 	$(NODE) src/tests/static_analysis_explorer_node.js
+	$(NODE) src/tests/solver_static_opt_node.js
+	$(NODE) src/tests/compare_solver_static_opt_runs_node.js
 
 static_analysis_explorer:
 	$(NODE) src/tests/build_static_analysis_explorer.js $(STATIC_ANALYSIS_EXPLORER_INPUTS) --out "$(STATIC_ANALYSIS_EXPLORER_OUT)" $(if $(strip $(STATIC_ANALYSIS_EXPLORER_GAME)),--game "$(STATIC_ANALYSIS_EXPLORER_GAME)",)

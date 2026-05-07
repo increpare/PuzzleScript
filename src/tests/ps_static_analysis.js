@@ -674,22 +674,9 @@ function termMentionsObject(term, objectName) {
     return (term.expanded_objects || []).includes(objectName);
 }
 
-function ruleMentionsObject(rule, objectName) {
-    return rule.summary.lhs_terms.concat(rule.summary.rhs_terms).some(term => termMentionsObject(term, objectName));
-}
-
-function ruleWritesCollisionLayerObject(psTagged, rule, objectName) {
-    const layer = layerForObject(psTagged, objectName);
-    if (layer === null) return false;
-    return rule.summary.rhs_terms.some(term =>
-        (term.kind === 'present' || term.kind === 'random_object')
-        && (term.expanded_objects || []).some(termObject => layerForObject(psTagged, termObject) === layer)
-    );
-}
-
 function ruleMayAffectObject(psTagged, rule, objectName) {
     if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return false;
-    return ruleMentionsObject(rule, objectName) || ruleWritesCollisionLayerObject(psTagged, rule, objectName);
+    return objectWriteNames(psTagged, rule).has(objectName);
 }
 
 function playerObjectNameSet(psTagged) {
