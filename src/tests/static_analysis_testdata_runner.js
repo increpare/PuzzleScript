@@ -79,20 +79,17 @@ function deriveObjectTagValue(report, object, tagName) {
 
 function buildObjectTagExpectations(report, claimDescriptions) {
     const objectTags = claimDescriptions.objectTags || [];
-    const expect = [];
+    const objectTag = [];
     for (const object of (report.ps_tagged && report.ps_tagged.objects) || []) {
+        const row = { object: object.name };
         for (const tag of objectTags) {
-            expect.push({
-                type: 'objectTag',
-                object: object.name,
-                tag: tag.name,
-                is: deriveObjectTagValue(report, object, tag.name),
-            });
+            row[tag.name] = deriveObjectTagValue(report, object, tag.name);
         }
+        objectTag.push(row);
     }
     return {
         schema: FIXTURE_SCHEMA,
-        expect,
+        objectTag,
     };
 }
 
@@ -106,36 +103,38 @@ function claimByName(claimDescriptions, tagName) {
 
 function validateExpectationShape(filePath, payload) {
     assert.strictEqual(payload.schema, FIXTURE_SCHEMA, `${filePath}: unsupported fixture schema`);
-    assert.ok(Array.isArray(payload.expect), `${filePath}: expect must be an array`);
-    for (const [index, item] of payload.expect.entries()) {
-        assert.ok(item && item.type === 'objectTag', `${filePath}: expect[${index}] unsupported type ${item && item.type}`);
-        assert.ok(typeof item.object === 'string' && item.object.length > 0, `${filePath}: expect[${index}] missing object`);
-        assert.ok(typeof item.tag === 'string' && item.tag.length > 0, `${filePath}: expect[${index}] missing tag`);
-        assert.ok(Object.prototype.hasOwnProperty.call(item, 'is'), `${filePath}: expect[${index}] missing is`);
+    assert.ok(Array.isArray(payload.objectTag), `${filePath}: objectTag must be an array`);
+    for (const [index, item] of payload.objectTag.entries()) {
+        assert.ok(item && typeof item === 'object' && !Array.isArray(item), `${filePath}: objectTag[${index}] must be an object`);
+        assert.ok(typeof item.object === 'string' && item.object.length > 0, `${filePath}: objectTag[${index}] missing object`);
+        for (const tagName of Object.keys(item)) {
+            assert.ok(tagName === 'object' || tagName.length > 0, `${filePath}: objectTag[${index}] has an empty tag name`);
+        }
     }
 }
 
-function checkObjectTagExpectation(filePath, report, claimDescriptions, expectation) {
-    const claim = claimByName(claimDescriptions, expectation.tag);
-    assert.ok(claim, `${filePath}: unknown object tag ${expectation.tag}`);
+function checkObjectTagExpectation(filePath, report, claimDescriptions, row, tagName) {
+    const claim = claimByName(claimDescriptions, tagName);
+    assert.ok(claim, `${filePath}: unknown object tag ${tagName}`);
 
-    const object = objectByName(report, expectation.object);
+    const object = objectByName(report, row.object);
     if (!object) {
         const available = ((report.ps_tagged && report.ps_tagged.objects) || []).map(item => item.name).join(', ');
-        assert.fail(`${filePath}: unknown object ${expectation.object}; available objects: ${available}`);
+        assert.fail(`${filePath}: unknown object ${row.object}; available objects: ${available}`);
     }
 
+    const expected = row[tagName];
     if (claim.values) {
-        assert.ok(claim.values.includes(expectation.is), `${filePath}: ${expectation.tag} expected value must be one of ${claim.values.join(', ')}`);
+        assert.ok(claim.values.includes(expected), `${filePath}: ${tagName} expected value must be one of ${claim.values.join(', ')}`);
     } else {
-        assert.strictEqual(typeof expectation.is, 'boolean', `${filePath}: ${expectation.tag} expected value must be boolean`);
+        assert.strictEqual(typeof expected, 'boolean', `${filePath}: ${tagName} expected value must be boolean`);
     }
 
-    const actual = deriveObjectTagValue(report, object, expectation.tag);
-    if (actual !== expectation.is) {
+    const actual = deriveObjectTagValue(report, object, tagName);
+    if (actual !== expected) {
         assert.fail([
             `${filePath}`,
-            `objectTag ${expectation.object}.${expectation.tag} expected ${JSON.stringify(expectation.is)}, got ${JSON.stringify(actual)}`,
+            `objectTag ${row.object}.${tagName} expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`,
             `  object: ${object.name} id=${object.id} layer=${object.layer}`,
         ].join('\n'));
     }
@@ -147,8 +146,10 @@ function checkFixture(txtPath, jsonPath, claimDescriptions) {
     assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
     const payload = readJson(jsonPath);
     validateExpectationShape(jsonPath, payload);
-    for (const expectation of payload.expect) {
-        checkObjectTagExpectation(jsonPath, report, claimDescriptions, expectation);
+    for (const row of payload.objectTag) {
+        for (const tagName of Object.keys(row)) {
+            if (tagName !== 'object') checkObjectTagExpectation(jsonPath, report, claimDescriptions, row, tagName);
+        }
     }
 }
 

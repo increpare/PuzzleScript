@@ -4,6 +4,23 @@ Each `.txt` file is a whole valid PuzzleScript source. Each matching `.json`
 file lists the static-analysis expectations that should be checked for that
 source.
 
+Object-tag expectations are grouped by object:
+
+```json
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "objectTag": [
+    {
+      "object": "Player",
+      "is_player": true,
+      "is_background": false,
+      "level_presence": "all",
+      "not_created_or_destroyed_by_rules": true
+    }
+  ]
+}
+```
+
 ## Adding An Object-Tag Test
 
 1. Add a small whole-source `.txt` file under `object_tags/`.
@@ -16,7 +33,7 @@ source.
 3. The runner will create the missing matching `.json` file and print a
    `generated static analysis testdata` message.
 4. Read the generated JSON. Keep it as-is for a broad fixture, or delete
-   expectations until it focuses on the specific object/tag facts the file is
+   object rows or tag fields until it focuses on the specific facts the file is
    meant to protect.
 5. Run `make static_analysis_tests` again. Existing JSON files are never
    overwritten, and only listed expectations are checked.

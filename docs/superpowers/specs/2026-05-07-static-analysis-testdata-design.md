@@ -94,30 +94,39 @@ Initial object tags:
 
 ## Expectation JSON Format
 
-Each expectation JSON uses a flat `expect` list.
+Each expectation JSON groups object-tag expectations by object.
 
 ```json
 {
   "schema": "ps-static-analysis-testdata-v1",
   "note": "Optional human note.",
-  "expect": [
-    { "type": "objectTag", "object": "Background", "tag": "is_background", "is": true },
-    { "type": "objectTag", "object": "Player", "tag": "is_player", "is": true },
-    { "type": "objectTag", "object": "Background", "tag": "level_presence", "is": "all" },
-    { "type": "objectTag", "object": "Player", "tag": "not_created_or_destroyed_by_rules", "is": true }
+  "objectTag": [
+    {
+      "object": "Background",
+      "is_player": false,
+      "is_background": true,
+      "level_presence": "all",
+      "not_created_or_destroyed_by_rules": true
+    },
+    {
+      "object": "Player",
+      "is_player": true,
+      "is_background": false,
+      "level_presence": "all",
+      "not_created_or_destroyed_by_rules": true
+    }
   ]
 }
 ```
 
 Rules:
 
-- `name` is not required on individual expectations.
-- `note` is optional at top level and per expectation.
+- `note` is optional at top level.
 - `object` uses the analyzer's display object name.
-- `type: "objectTag"` is the only expectation type in the first slice.
-- `is` is either a boolean for boolean tags or one of the tag's listed `values` for valued tags.
-- Only listed expectations are checked.
-- For a listed boolean expectation, a missing analyzer tag is interpreted as `false`.
+- `objectTag` is the only expectation category in the first slice.
+- Each object row can list any subset of object tags.
+- Boolean tags use boolean values. Valued tags use one of the tag's listed `values`.
+- Only listed row fields are checked.
 - New claim descriptions added later do not affect existing expectation files.
 
 Object names are sufficient locators for object-tag expectations. Later rule and rule-group expectations will need stronger locators such as source line plus source-text guard.

@@ -13,8 +13,8 @@ const {
 
 const FIXTURE_SCHEMA = 'ps-static-analysis-testdata-v1';
 
-function findExpectation(payload, object, tag) {
-    return payload.expect.find(item => item.object === object && item.tag === tag);
+function findObjectTag(payload, object) {
+    return payload.objectTag.find(item => item.object === object);
 }
 
 function writeJson(filePath, payload) {
@@ -39,16 +39,19 @@ function run() {
         const jsonPath = path.join(objectTagsDir, 'roles-basic.json');
         const generated = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
         assert.strictEqual(generated.schema, FIXTURE_SCHEMA);
-        assert.strictEqual(generated.expect.length, 12);
-        assert.strictEqual(findExpectation(generated, 'Avatar', 'is_player').is, true);
-        assert.strictEqual(findExpectation(generated, 'Background', 'is_background').is, true);
-        assert.strictEqual(findExpectation(generated, 'Goal', 'level_presence').is, 'all');
+        assert.strictEqual(generated.objectTag.length, 3);
+        assert.strictEqual(findObjectTag(generated, 'Avatar').is_player, true);
+        assert.strictEqual(findObjectTag(generated, 'Background').is_background, true);
+        assert.strictEqual(findObjectTag(generated, 'Goal').level_presence, 'all');
 
         const curated = {
             schema: FIXTURE_SCHEMA,
             note: 'This intentionally keeps only one focused expectation.',
-            expect: [
-                findExpectation(generated, 'Avatar', 'is_player'),
+            objectTag: [
+                {
+                    object: 'Avatar',
+                    is_player: true,
+                },
             ],
         };
         writeJson(jsonPath, curated);

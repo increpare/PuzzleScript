@@ -1,5 +1,10 @@
 # Static Analysis Testdata Implementation Plan
 
+> Historical note: the implemented fixture JSON format was later changed from
+> the flat `expect` draft shown in this plan to grouped `objectTag` rows. The
+> current schema is documented in
+> `src/tests/static_analysis_testdata/README.md`.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a low-friction static-analysis testdata suite for first-slice object claims.

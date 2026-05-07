@@ -1,125 +1,40 @@
 {
   "schema": "ps-static-analysis-testdata-v1",
-  "expect": [
+  "objectTag": [
     {
-      "type": "objectTag",
       "object": "Background",
-      "tag": "is_player",
-      "is": false
+      "is_player": false,
+      "is_background": true,
+      "level_presence": "all",
+      "not_created_or_destroyed_by_rules": true
     },
     {
-      "type": "objectTag",
-      "object": "Background",
-      "tag": "is_background",
-      "is": true
-    },
-    {
-      "type": "objectTag",
-      "object": "Background",
-      "tag": "level_presence",
-      "is": "all"
-    },
-    {
-      "type": "objectTag",
-      "object": "Background",
-      "tag": "not_created_or_destroyed_by_rules",
-      "is": true
-    },
-    {
-      "type": "objectTag",
       "object": "Player",
-      "tag": "is_player",
-      "is": true
+      "is_player": true,
+      "is_background": false,
+      "level_presence": "all",
+      "not_created_or_destroyed_by_rules": true
     },
     {
-      "type": "objectTag",
-      "object": "Player",
-      "tag": "is_background",
-      "is": false
-    },
-    {
-      "type": "objectTag",
-      "object": "Player",
-      "tag": "level_presence",
-      "is": "all"
-    },
-    {
-      "type": "objectTag",
-      "object": "Player",
-      "tag": "not_created_or_destroyed_by_rules",
-      "is": true
-    },
-    {
-      "type": "objectTag",
       "object": "Alpha",
-      "tag": "is_player",
-      "is": false
+      "is_player": false,
+      "is_background": false,
+      "level_presence": "all",
+      "not_created_or_destroyed_by_rules": false
     },
     {
-      "type": "objectTag",
-      "object": "Alpha",
-      "tag": "is_background",
-      "is": false
-    },
-    {
-      "type": "objectTag",
-      "object": "Alpha",
-      "tag": "level_presence",
-      "is": "all"
-    },
-    {
-      "type": "objectTag",
-      "object": "Alpha",
-      "tag": "not_created_or_destroyed_by_rules",
-      "is": false
-    },
-    {
-      "type": "objectTag",
       "object": "Beta",
-      "tag": "is_player",
-      "is": false
+      "is_player": false,
+      "is_background": false,
+      "level_presence": "all",
+      "not_created_or_destroyed_by_rules": false
     },
     {
-      "type": "objectTag",
-      "object": "Beta",
-      "tag": "is_background",
-      "is": false
-    },
-    {
-      "type": "objectTag",
-      "object": "Beta",
-      "tag": "level_presence",
-      "is": "all"
-    },
-    {
-      "type": "objectTag",
-      "object": "Beta",
-      "tag": "not_created_or_destroyed_by_rules",
-      "is": false
-    },
-    {
-      "type": "objectTag",
       "object": "Gamma",
-      "tag": "is_player",
-      "is": false
-    },
-    {
-      "type": "objectTag",
-      "object": "Gamma",
-      "tag": "is_background",
-      "is": false
-    },
-    {
-      "type": "objectTag",
-      "object": "Gamma",
-      "tag": "level_presence",
-      "is": "all"
-    },
-    {
-      "type": "objectTag",
-      "object": "Gamma",
-      "tag": "not_created_or_destroyed_by_rules",
-      "is": true
+      "is_player": false,
+      "is_background": false,
+      "level_presence": "all",
+      "not_created_or_destroyed_by_rules": true
     }
   ]
 }
