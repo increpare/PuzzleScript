@@ -31,19 +31,19 @@ The first rule-tag vocabulary is:
 {
   "ruleTags": [
     {
-      "name": "objects_present_required",
+      "name": "objects_required",
       "description": "Concrete objects definitely required present by the rule LHS.",
-      "specification": "A rule has objects_present_required entries for concrete objects whose presence is definitely required by positive LHS terms. Single-object terms are required. Aggregate members are required. Members of an OR property are not individually required because any one member may satisfy the term."
+      "specification": "A rule has objects_required entries for concrete objects whose presence is definitely required by positive LHS terms. Single-object terms are required. Objects of required aggregates are all tagged as required. Members of an OR property are not individually required because any one member may satisfy the term."
     },
     {
-      "name": "objects_present_matched",
+      "name": "objects_matched",
       "description": "Concrete objects whose presence may satisfy a positive LHS term.",
-      "specification": "A rule has objects_present_matched entries for every concrete object that may satisfy a positive LHS term after resolving synonyms, properties, and aggregates to object names. This includes concrete required objects, OR-property alternatives, and aggregate members."
+      "specification": "A rule has objects_matched entries for every concrete object that may satisfy a positive LHS term after resolving synonyms, properties, and aggregates to object names. This includes concrete required objects, OR-property alternatives, and objects in aggregates."
     },
     {
-      "name": "objects_absent_matched",
+      "name": "object_absences_matched",
       "description": "Concrete objects whose absence may satisfy a negative LHS term.",
-      "specification": "A rule has objects_absent_matched entries for every concrete object that may satisfy a negative LHS term after resolving synonyms, properties, and aggregates to object names. For example, no Obstacle records every concrete object in Obstacle."
+      "specification": "A rule has object_absences_matched entries for every concrete object that may satisfy a negative LHS term after resolving synonyms, properties, and aggregates to object names. For example, no Obstacle records every concrete object in Obstacle."
     },
     {
       "name": "objects_written",
@@ -75,9 +75,9 @@ Each expectation JSON groups rule-tag expectations by rule.
       "line": 48,
       "text": "[ Alpha | ] -> [ | Alpha ]",
       "tags": {
-        "objects_present_required": ["Alpha"],
-        "objects_present_matched": ["Alpha"],
-        "objects_absent_matched": [],
+        "objects_required": ["Alpha"],
+        "objects_matched": ["Alpha"],
+        "object_absences_matched": [],
         "objects_written": ["Alpha"],
         "objects_erased": ["Alpha"]
       }
@@ -118,9 +118,9 @@ Expected rule tags:
 
 ```json
 {
-  "objects_present_required": [],
-  "objects_present_matched": ["Alpha", "Beta"],
-  "objects_absent_matched": [],
+  "objects_required": [],
+  "objects_matched": ["Alpha", "Beta"],
+  "object_absences_matched": [],
   "objects_written": ["Gamma"],
   "objects_erased": ["Alpha", "Beta"]
 }
@@ -137,9 +137,9 @@ Expected rule tags:
 
 ```json
 {
-  "objects_present_required": ["Wall", "Mark"],
-  "objects_present_matched": ["Wall", "Mark"],
-  "objects_absent_matched": [],
+  "objects_required": ["Wall", "Mark"],
+  "objects_matched": ["Wall", "Mark"],
+  "object_absences_matched": [],
   "objects_written": [],
   "objects_erased": ["Wall", "Mark"]
 }
@@ -156,9 +156,9 @@ Expected rule tags:
 
 ```json
 {
-  "objects_present_required": ["Player"],
-  "objects_present_matched": ["Player"],
-  "objects_absent_matched": ["Wall", "Crate"],
+  "objects_required": ["Player"],
+  "objects_matched": ["Player"],
+  "object_absences_matched": ["Wall", "Crate"],
   "objects_written": ["Mark"],
   "objects_erased": []
 }
@@ -174,9 +174,9 @@ Expected rule tags:
 
 ```json
 {
-  "objects_present_required": ["Alpha"],
-  "objects_present_matched": ["Alpha"],
-  "objects_absent_matched": [],
+  "objects_required": ["Alpha"],
+  "objects_matched": ["Alpha"],
+  "object_absences_matched": [],
   "objects_written": ["Alpha"],
   "objects_erased": ["Alpha"]
 }
