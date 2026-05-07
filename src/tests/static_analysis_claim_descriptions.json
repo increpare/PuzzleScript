@@ -1,0 +1,26 @@
+{
+  "schema": "ps-static-analysis-claim-descriptions-v1",
+  "objectTags": [
+    {
+      "name": "is_player",
+      "description": "Object is part of the resolved Player role.",
+      "specification": "An object has is_player when it is the object named by the Player object, Player synonym, or a member of the Player property in the compiled game. If Player resolves to a property with multiple member objects, every member object has is_player true."
+    },
+    {
+      "name": "is_background",
+      "description": "Object is part of the resolved Background role.",
+      "specification": "An object has is_background when it is the object named by the Background object, Background synonym, or a member of the Background property in the compiled game. If Background resolves to a property with multiple member objects on the same collision layer, every member object has is_background true."
+    },
+    {
+      "name": "level_presence",
+      "description": "Whether the object appears in all, some, or no playable levels.",
+      "specification": "The level_presence tag is one of all, some, or none. Message levels are ignored. The value all means there is at least one playable level and the object appears in every playable level. The value some means the object appears in at least one but not every playable level. The value none means the object appears in no playable levels; if a valid source has zero playable levels, every object has level_presence none.",
+      "values": ["all", "some", "none"]
+    },
+    {
+      "name": "not_created_or_destroyed_by_rules",
+      "description": "No solver-active rule creates or destroys this object.",
+      "specification": "An object has not_created_or_destroyed_by_rules when the analyzer proves no solver-active rule can create or destroy an instance of that object according to rule object-write analysis. Pure movement or relocation of an existing object does not count as creation or destruction."
+    }
+  ]
+}

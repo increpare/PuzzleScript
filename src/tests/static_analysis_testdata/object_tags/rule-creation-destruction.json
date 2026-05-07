@@ -1,0 +1,149 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "expect": [
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "is_background",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "level_presence",
+      "is": "all"
+    },
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "is_player",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "level_presence",
+      "is": "all"
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Seed",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Seed",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Seed",
+      "tag": "level_presence",
+      "is": "all"
+    },
+    {
+      "type": "objectTag",
+      "object": "Seed",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Mark",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Mark",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Mark",
+      "tag": "level_presence",
+      "is": "all"
+    },
+    {
+      "type": "objectTag",
+      "object": "Mark",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Dust",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Dust",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Dust",
+      "tag": "level_presence",
+      "is": "all"
+    },
+    {
+      "type": "objectTag",
+      "object": "Dust",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Wall",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Wall",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Wall",
+      "tag": "level_presence",
+      "is": "all"
+    },
+    {
+      "type": "objectTag",
+      "object": "Wall",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    }
+  ]
+}

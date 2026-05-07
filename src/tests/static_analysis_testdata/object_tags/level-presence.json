@@ -1,0 +1,125 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "expect": [
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "is_background",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "level_presence",
+      "is": "all"
+    },
+    {
+      "type": "objectTag",
+      "object": "Background",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "is_player",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "level_presence",
+      "is": "all"
+    },
+    {
+      "type": "objectTag",
+      "object": "Player",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Always",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Always",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Always",
+      "tag": "level_presence",
+      "is": "all"
+    },
+    {
+      "type": "objectTag",
+      "object": "Always",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Sometimes",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Sometimes",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Sometimes",
+      "tag": "level_presence",
+      "is": "some"
+    },
+    {
+      "type": "objectTag",
+      "object": "Sometimes",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    },
+    {
+      "type": "objectTag",
+      "object": "Never",
+      "tag": "is_player",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Never",
+      "tag": "is_background",
+      "is": false
+    },
+    {
+      "type": "objectTag",
+      "object": "Never",
+      "tag": "level_presence",
+      "is": "none"
+    },
+    {
+      "type": "objectTag",
+      "object": "Never",
+      "tag": "not_created_or_destroyed_by_rules",
+      "is": true
+    }
+  ]
+}
