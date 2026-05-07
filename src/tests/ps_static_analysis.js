@@ -1075,10 +1075,24 @@ function presentObjectSet(terms) {
     return objects;
 }
 
+function absentObjectSet(terms) {
+    const objects = new Set();
+    for (const term of terms) {
+        if (term.kind === 'absent') {
+            addValues(objects, termObjects(term));
+        }
+    }
+    return objects;
+}
+
 function layerObjectsForObject(psTagged, objectName) {
     const layer = layerForObject(psTagged, objectName);
     const collisionLayer = psTagged.collision_layers.find(item => item.id === layer);
     return collisionLayer ? collisionLayer.objects : [];
+}
+
+function objectsInLayer(psTagged, objectNames, layer) {
+    return Array.from(objectNames).filter(objectName => layerForObject(psTagged, objectName) === layer);
 }
 
 function ruleFlowWrites(psTagged, rule) {
@@ -1086,6 +1100,7 @@ function ruleFlowWrites(psTagged, rule) {
     const objectAbsent = new Set();
     const movement = [];
     const lhsPresent = presentObjectSet(rule.summary.lhs_terms.filter(term => term.kind === 'present'));
+    const lhsAbsent = absentObjectSet(rule.summary.lhs_terms);
     const rhsPresent = presentObjectSet(rule.summary.rhs_terms);
 
     if (rule.tags.object_mutating) {
@@ -1096,8 +1111,13 @@ function ruleFlowWrites(psTagged, rule) {
                 );
                 addValues(objectPresent, writtenObjects);
                 for (const objectName of writtenObjects) {
+                    const layer = layerForObject(psTagged, objectName);
+                    const lhsPresentOnLayer = objectsInLayer(psTagged, lhsPresent, layer);
                     for (const sibling of layerObjectsForObject(psTagged, objectName)) {
-                        if (sibling !== objectName && !rhsPresent.has(sibling)) {
+                        if (sibling === objectName || rhsPresent.has(sibling)) continue;
+                        if (lhsPresentOnLayer.length > 0) {
+                            if (lhsPresentOnLayer.includes(sibling)) objectAbsent.add(sibling);
+                        } else if (!lhsAbsent.has(sibling)) {
                             objectAbsent.add(sibling);
                         }
                     }
