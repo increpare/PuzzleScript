@@ -1,0 +1,22 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 45,
+      "text": "[ player ] -> [ player random wall ]",
+      "tags": {
+        "objects_required": [
+          "Player"
+        ],
+        "objects_matched": [
+          "Player"
+        ],
+        "object_absences_matched": [],
+        "objects_written": [
+          "Wall"
+        ],
+        "objects_erased": []
+      }
+    }
+  ]
+}

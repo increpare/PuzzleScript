@@ -1188,7 +1188,7 @@ function ruleFlowWrites(psTagged, rule) {
                 const lhsRequiredPresent = requiredPresentObjectSet(lhsCell);
                 const lhsMatchedPresent = presentObjectSet(lhsCell);
                 const lhsAbsent = absentObjectSet(lhsCell);
-                const rhsCellPresent = presentObjectSet(rhsCell);
+                const rhsCellDefinitePresent = requiredPresentObjectSet(rhsCell);
 
                 for (const term of rhsCell) {
                     if (term.kind === 'present' || term.kind === 'random_object') {
@@ -1198,7 +1198,7 @@ function ruleFlowWrites(psTagged, rule) {
                         addValues(objectPresent, writtenObjects);
                         for (const objectName of termObjects(term)) {
                             for (const sibling of layerObjectsForObject(psTagged, objectName)) {
-                                if (sibling === objectName || rhsCellPresent.has(sibling)) continue;
+                                if (sibling === objectName || rhsCellDefinitePresent.has(sibling)) continue;
                                 if (cellCouldContainObjectBefore(psTagged, lhsMatchedPresent, lhsAbsent, sibling)) {
                                     objectAbsent.add(sibling);
                                 }
@@ -1214,7 +1214,7 @@ function ruleFlowWrites(psTagged, rule) {
                 }
 
                 for (const objectName of lhsMatchedPresent) {
-                    if (!rhsCellPresent.has(objectName)) {
+                    if (!rhsCellDefinitePresent.has(objectName)) {
                         objectAbsent.add(objectName);
                     }
                 }

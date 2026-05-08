@@ -1,0 +1,62 @@
+title Static Analysis Rule Tag Random Property Write
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Mark
+yellow
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+C = Crate
+M = Mark
+Thing = Wall or Crate
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall, Crate
+Mark
+
+=====
+RULES
+=====
+
+[ player ] -> [ player random thing ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P#CM
