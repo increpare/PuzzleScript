@@ -377,7 +377,7 @@ Mark
 RULES
 =====
 
-[ Player no Wall ] -> [ Player Mark ]
+[ Player no Wall ] -> [ Player stationary Mark ]
 
 =============
 WINCONDITIONS
@@ -1106,7 +1106,7 @@ Mark
 RULES
 =====
 
-[ Player no Wall ] -> [ Player Mark ]
+[ Player no Wall ] -> [ Player stationary Mark ]
 
 =============
 WINCONDITIONS
@@ -1129,7 +1129,7 @@ P#M
   "ruleTag": [
     {
       "line": 45,
-      "text": "[ Player no Wall ] -> [ Player Mark ]",
+      "text": "[ Player no Wall ] -> [ Player stationary Mark ]",
       "tags": {
         "objects_required": ["Player"],
         "objects_matched": ["Player"],
@@ -1266,6 +1266,10 @@ Append this section after “Adding An Object-Tag Test”:
 Rule-tag expectations identify rules by `line` plus trimmed source `text`.
 If those two fields do not identify exactly one analyzed rule, the runner fails
 instead of inventing another locator.
+
+Where practical, prefer rule-tag test sources whose rule text is already close
+to the compiler's idempotent representation, so the fixture is testing the
+analysis rather than incidental rule expansion.
 ```
 
 - [ ] **Step 2: Run no-op README verification**

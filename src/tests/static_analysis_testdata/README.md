@@ -59,6 +59,10 @@ Rule-tag expectations identify rules by `line` plus trimmed source `text`.
 If those two fields do not identify exactly one analyzed rule, the runner fails
 instead of inventing another locator.
 
+Where practical, prefer rule-tag test sources whose rule text is already close
+to the compiler's idempotent representation, so the fixture is testing the
+analysis rather than incidental rule expansion.
+
 ## Review Policy
 
 Auto-generated or mechanically regenerated expectation JSON is a proposal, not

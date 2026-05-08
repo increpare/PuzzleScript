@@ -2452,7 +2452,7 @@ Mark
 RULES
 =====
 
-[ Player no Wall ] -> [ Player Mark ]
+[ Player no Wall ] -> [ Player stationary Mark ]
 
 =============
 WINCONDITIONS
