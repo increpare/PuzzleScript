@@ -1,0 +1,24 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 49,
+      "text": "[ mover ] -> [ gamma ]",
+      "tags": {
+        "objects_required": [],
+        "objects_matched": [
+          "Alpha",
+          "Beta"
+        ],
+        "object_absences_matched": [],
+        "objects_written": [
+          "Gamma"
+        ],
+        "objects_erased": [
+          "Alpha",
+          "Beta"
+        ]
+      }
+    }
+  ]
+}

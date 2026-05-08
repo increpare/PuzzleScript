@@ -1,0 +1,61 @@
+title Static Analysis Rule Tag OR Property Write
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+yellow
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+A = Alpha
+B = Beta
+G = Gamma
+Mover = Alpha or Beta
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha, Beta, Gamma
+
+=====
+RULES
+=====
+
+[ mover ] -> [ gamma ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PABG
