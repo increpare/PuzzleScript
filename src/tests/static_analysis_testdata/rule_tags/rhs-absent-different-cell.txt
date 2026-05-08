@@ -1,0 +1,92 @@
+title Static Analysis Rule Tag RHS Absent Different Cell
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
+
+Orphan1
+lightblue
+
+Orphan2
+grey
+
+Sibling1
+purple
+
+Sibling2
+pink
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+C = Crate
+A = Alpha
+B = Beta
+G = Gamma
+O = Orphan1
+R = Orphan2
+X = Sibling1
+Y = Sibling2
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+Orphan1
+Orphan2
+Sibling1, Sibling2
+
+=====
+RULES
+=====
+
+right [ orphan1 no sibling1 | orphan2 ] -> [ orphan1 | orphan2 no sibling1 ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+TP#CABGORXY

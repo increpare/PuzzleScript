@@ -1,0 +1,12 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 75,
+      "text": "[ orphan1 sibling1 ] -> [ orphan1 no sibling1 no sibling2 ]",
+      "tags": {
+        "objects_erased": ["Sibling1"]
+      }
+    }
+  ]
+}

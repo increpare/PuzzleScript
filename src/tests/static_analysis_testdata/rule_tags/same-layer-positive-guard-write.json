@@ -1,0 +1,14 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 66,
+      "text": "[ orphan1 alpha ] -> [ orphan1 stationary beta ]",
+      "tags": {
+        "objects_required": ["Alpha", "Orphan1"],
+        "objects_written": ["Beta"],
+        "objects_erased": ["Alpha"]
+      }
+    }
+  ]
+}

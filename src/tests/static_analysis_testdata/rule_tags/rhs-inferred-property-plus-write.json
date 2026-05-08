@@ -1,0 +1,13 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 76,
+      "text": "[ sibling1_or_sibling2 ] -> [ sibling1_or_sibling2 stationary orphan1 ]",
+      "tags": {
+        "objects_written": ["Orphan1"],
+        "objects_erased": []
+      }
+    }
+  ]
+}

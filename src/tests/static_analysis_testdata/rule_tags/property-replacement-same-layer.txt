@@ -1,0 +1,83 @@
+title Static Analysis Rule Tag Property Replacement Same Layer
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
+
+Sibling1
+purple
+
+Sibling2
+pink
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+C = Crate
+A = Alpha
+B = Beta
+G = Gamma
+X = Sibling1
+Y = Sibling2
+Sibling1_or_Sibling2 = Sibling1 or Sibling2
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+Sibling1, Sibling2
+
+=====
+RULES
+=====
+
+[ sibling1_or_sibling2 ] -> [ sibling1 ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+TP#CABGXY

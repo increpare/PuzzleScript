@@ -1,0 +1,13 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 80,
+      "text": "right [ orphan1 no sibling1 | orphan2 ] -> [ orphan1 | orphan2 no sibling1 ]",
+      "tags": {
+        "object_absences_matched": ["Sibling1"],
+        "objects_erased": ["Sibling1"]
+      }
+    }
+  ]
+}

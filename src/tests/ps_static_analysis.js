@@ -1150,6 +1150,26 @@ function absentObjectSet(terms) {
     return objects;
 }
 
+function sameObjectSet(left, right) {
+    const leftObjects = uniqueSorted(termObjects(left));
+    const rightObjects = uniqueSorted(termObjects(right));
+    return JSON.stringify(leftObjects) === JSON.stringify(rightObjects);
+}
+
+function inferredRhsPropertyObjectSet(lhsCell, rhsCell) {
+    const objects = new Set();
+    const lhsProperties = lhsCell.filter(term =>
+        term.kind === 'present' && term.ref && term.ref.type === 'object_set'
+    );
+    for (const rhsTerm of rhsCell) {
+        if (rhsTerm.kind !== 'present' || !rhsTerm.ref || rhsTerm.ref.type !== 'object_set') continue;
+        if (lhsProperties.some(lhsTerm => sameObjectSet(lhsTerm, rhsTerm))) {
+            addValues(objects, termObjects(rhsTerm));
+        }
+    }
+    return objects;
+}
+
 function layerObjectsForObject(psTagged, objectName) {
     const layer = layerForObject(psTagged, objectName);
     const collisionLayer = psTagged.collision_layers.find(item => item.id === layer);
@@ -1188,14 +1208,19 @@ function ruleFlowWrites(psTagged, rule) {
                 const lhsRequiredPresent = requiredPresentObjectSet(lhsCell);
                 const lhsMatchedPresent = presentObjectSet(lhsCell);
                 const lhsAbsent = absentObjectSet(lhsCell);
+                const rhsInferredPresent = inferredRhsPropertyObjectSet(lhsCell, rhsCell);
                 const rhsCellDefinitePresent = requiredPresentObjectSet(rhsCell);
+                addValues(rhsCellDefinitePresent, rhsInferredPresent);
 
                 for (const term of rhsCell) {
                     if (term.kind === 'present' || term.kind === 'random_object') {
                         const writtenObjects = termObjects(term).filter(objectName =>
-                            term.kind === 'random_object' || !lhsRequiredPresent.has(objectName)
+                            term.kind === 'random_object' || (!lhsRequiredPresent.has(objectName) && !rhsInferredPresent.has(objectName))
                         );
                         addValues(objectPresent, writtenObjects);
+                        if (term.kind === 'present' && term.ref && term.ref.type === 'object_set' && termObjects(term).every(objectName => rhsInferredPresent.has(objectName))) {
+                            continue;
+                        }
                         for (const objectName of termObjects(term)) {
                             for (const sibling of layerObjectsForObject(psTagged, objectName)) {
                                 if (sibling === objectName || rhsCellDefinitePresent.has(sibling)) continue;
