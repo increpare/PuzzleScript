@@ -1,0 +1,60 @@
+title Static Analysis Rule Tag Same Layer Unconstrained Write
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+yellow
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+A = Alpha
+B = Beta
+G = Gamma
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha, Beta, Gamma
+
+=====
+RULES
+=====
+
+[ ] -> [ stationary beta ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PABG

@@ -1,0 +1,24 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 48,
+      "text": "[ alpha ] -> [ beta ]",
+      "tags": {
+        "objects_required": [
+          "Alpha"
+        ],
+        "objects_matched": [
+          "Alpha"
+        ],
+        "object_absences_matched": [],
+        "objects_written": [
+          "Beta"
+        ],
+        "objects_erased": [
+          "Alpha"
+        ]
+      }
+    }
+  ]
+}
