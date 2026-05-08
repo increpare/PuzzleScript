@@ -1,0 +1,73 @@
+title Static Analysis Rule Tag Movement Multicell Preserve And Change
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+C = Crate
+A = Alpha
+B = Beta
+G = Gamma
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+
+=====
+RULES
+=====
+
+right [ right player | left crate ] -> [ left player | left crate ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+TP#CABG

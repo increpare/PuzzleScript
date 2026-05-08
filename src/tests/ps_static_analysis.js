@@ -11,6 +11,7 @@ const INERT_COMMANDS = new Set(['message', 'sfx0', 'sfx1', 'sfx2', 'sfx3', 'sfx4
 const SEMANTIC_COMMANDS = new Set(['cancel', 'again', 'restart', 'win', 'checkpoint']);
 const DIRECTIONAL_MOVEMENTS = new Set(['up', 'down', 'left', 'right', 'moving', 'randomdir']);
 const CARDINAL_MOVEMENTS = ['up', 'down', 'left', 'right'];
+const POSITIVE_MOVEMENT_STATES = CARDINAL_MOVEMENTS.concat(['action']);
 
 function uniqueSorted(values) {
     return Array.from(new Set(values)).sort((left, right) =>
@@ -1130,6 +1131,18 @@ function movementTermKeys(terms) {
     return keys;
 }
 
+function movementKeyObjectName(key) {
+    return key.slice(0, key.lastIndexOf(':'));
+}
+
+function movementKeysContainObject(keys, objectName) {
+    return Array.from(keys).some(key => movementKeyObjectName(key) === objectName);
+}
+
+function possibleMovementStateKeys(objectName) {
+    return POSITIVE_MOVEMENT_STATES.map(movement => `${objectName}:${movement}`);
+}
+
 function presentObjectSet(terms) {
     const objects = new Set();
     for (const term of terms) {
@@ -1148,6 +1161,15 @@ function absentObjectSet(terms) {
         }
     }
     return objects;
+}
+
+function cellCouldContainObject(termObjectsInCell, objectName) {
+    return termObjectsInCell.has(objectName)
+        || objectsInLayer(
+            { collision_layers: [], objects: [] },
+            [],
+            null
+        ).length === 0;
 }
 
 function sameObjectSet(left, right) {
@@ -1248,25 +1270,34 @@ function ruleFlowWrites(psTagged, rule) {
     }
 
     if (rule.tags.writes_movement) {
-        const lhsMovementKeys = movementTermKeys(rule.summary.lhs_terms);
-        const rhsMovementKeys = movementTermKeys(rule.summary.rhs_terms);
-        for (const term of rule.summary.rhs_terms) {
-            if (term.kind !== 'present' || term.movement === null) continue;
-            for (const objectName of termObjects(term)) {
-                if (lhsMovementKeys.has(`${objectName}:${term.movement}`)) continue;
-                for (const movementName of movementExpansions(term.movement)) {
-                    movement.push({ object: objectName, movement: movementName });
+        const rowCount = Math.max(rule.lhs.length, rule.rhs.length);
+        for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+            const lhsRow = rule.lhs[rowIndex] || [];
+            const rhsRow = rule.rhs[rowIndex] || [];
+            const cellCount = maxCellsInRows(lhsRow, rhsRow);
+            for (let cellIndex = 0; cellIndex < cellCount; cellIndex++) {
+                const lhsCell = lhsRow[cellIndex] || [];
+                const rhsCell = rhsRow[cellIndex] || [];
+                const lhsMovementKeys = movementTermKeys(lhsCell);
+                const rhsMovementKeys = movementTermKeys(rhsCell);
+                const rhsPresent = presentObjectSet(rhsCell);
+
+                for (const term of rhsCell) {
+                    if (term.kind !== 'present' || term.movement === null) continue;
+                    for (const objectName of termObjects(term)) {
+                        if (lhsMovementKeys.has(`${objectName}:${term.movement}`)) continue;
+                        for (const movementName of movementExpansions(term.movement)) {
+                            movement.push({ object: objectName, movement: movementName });
+                        }
+                    }
                 }
-            }
-        }
-        for (const key of lhsMovementKeys) {
-            if (rhsMovementKeys.has(key)) continue;
-            const objectName = key.slice(0, key.lastIndexOf(':'));
-            const hasRhsMovement = Array.from(rhsMovementKeys).some(rhsKey =>
-                rhsKey.slice(0, rhsKey.lastIndexOf(':')) === objectName
-            );
-            if (rhsPresent.has(objectName) && !hasRhsMovement) {
-                movement.push({ object: objectName, movement: 'stationary' });
+                for (const key of lhsMovementKeys) {
+                    if (rhsMovementKeys.has(key)) continue;
+                    const objectName = movementKeyObjectName(key);
+                    if (rhsPresent.has(objectName) && !movementKeysContainObject(rhsMovementKeys, objectName)) {
+                        movement.push({ object: objectName, movement: 'stationary' });
+                    }
+                }
             }
         }
     }
@@ -1319,29 +1350,37 @@ function ruleFlowReadTags(rule) {
 
 function ruleMovementWriteTags(rule) {
     const movementsWritten = new Set();
-    const rhsPresent = presentObjectSet(rule.summary.rhs_terms);
 
     if (!rule.tags.writes_movement) return movementsWritten;
 
-    const lhsMovementKeys = movementTermKeys(rule.summary.lhs_terms);
-    const rhsMovementKeys = movementTermKeys(rule.summary.rhs_terms);
-    for (const term of rule.summary.rhs_terms) {
-        if (term.kind !== 'present' || term.movement === null) continue;
-        for (const objectName of termObjects(term)) {
-            const key = `${objectName}:${term.movement}`;
-            if (!lhsMovementKeys.has(key)) {
-                movementsWritten.add(key);
+    const rowCount = Math.max(rule.lhs.length, rule.rhs.length);
+    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        const lhsRow = rule.lhs[rowIndex] || [];
+        const rhsRow = rule.rhs[rowIndex] || [];
+        const cellCount = maxCellsInRows(lhsRow, rhsRow);
+        for (let cellIndex = 0; cellIndex < cellCount; cellIndex++) {
+            const lhsCell = lhsRow[cellIndex] || [];
+            const rhsCell = rhsRow[cellIndex] || [];
+            const lhsMovementKeys = movementTermKeys(lhsCell);
+            const rhsMovementKeys = movementTermKeys(rhsCell);
+            const rhsPresent = presentObjectSet(rhsCell);
+
+            for (const term of rhsCell) {
+                if (term.kind !== 'present' || term.movement === null) continue;
+                for (const objectName of termObjects(term)) {
+                    const key = `${objectName}:${term.movement}`;
+                    if (!lhsMovementKeys.has(key)) {
+                        movementsWritten.add(key);
+                    }
+                }
             }
-        }
-    }
-    for (const key of lhsMovementKeys) {
-        if (rhsMovementKeys.has(key)) continue;
-        const objectName = key.slice(0, key.lastIndexOf(':'));
-        const hasRhsMovement = Array.from(rhsMovementKeys).some(rhsKey =>
-            rhsKey.slice(0, rhsKey.lastIndexOf(':')) === objectName
-        );
-        if (rhsPresent.has(objectName) && !hasRhsMovement) {
-            movementsWritten.add(`${objectName}:stationary`);
+            for (const key of lhsMovementKeys) {
+                if (rhsMovementKeys.has(key)) continue;
+                const objectName = movementKeyObjectName(key);
+                if (rhsPresent.has(objectName) && !movementKeysContainObject(rhsMovementKeys, objectName)) {
+                    movementsWritten.add(`${objectName}:stationary`);
+                }
+            }
         }
     }
     return movementsWritten;
@@ -1352,11 +1391,19 @@ function ruleMovementRemoveTags(rule) {
 
     if (!rule.tags.writes_movement) return movementsRemoved;
 
-    const lhsMovementKeys = movementTermKeys(rule.summary.lhs_terms);
-    const rhsMovementKeys = movementTermKeys(rule.summary.rhs_terms);
-    for (const key of lhsMovementKeys) {
-        if (!rhsMovementKeys.has(key)) {
-            movementsRemoved.add(key);
+    const rowCount = Math.max(rule.lhs.length, rule.rhs.length);
+    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        const lhsRow = rule.lhs[rowIndex] || [];
+        const rhsRow = rule.rhs[rowIndex] || [];
+        const cellCount = maxCellsInRows(lhsRow, rhsRow);
+        for (let cellIndex = 0; cellIndex < cellCount; cellIndex++) {
+            const lhsMovementKeys = movementTermKeys(lhsRow[cellIndex] || []);
+            const rhsMovementKeys = movementTermKeys(rhsRow[cellIndex] || []);
+            for (const key of lhsMovementKeys) {
+                if (!rhsMovementKeys.has(key)) {
+                    movementsRemoved.add(key);
+                }
+            }
         }
     }
     return movementsRemoved;

@@ -67,12 +67,12 @@
     {
       "name": "movements_written",
       "description": "Concrete object movements written or cleared by the rule RHS.",
-      "specification": "A rule has movements_written entries of the form Object:movement for concrete object movements the RHS may write. RHS movement terms use the compiled movement name visible to this analysis stage, after resolving synonyms, properties, and aggregates to object names. If an LHS movement requirement is removed while the object remains present with no RHS movement, the rule writes Object:stationary."
+      "specification": "A rule has movements_written entries of the form Object:movement for concrete object movements the RHS may write in a cell where the corresponding LHS cell does not already have the same Object:movement. RHS movement terms use the compiled movement name visible to this analysis stage, after resolving synonyms, properties, and aggregates to object names. If an LHS movement requirement is removed while the object remains present in the corresponding RHS cell with no RHS movement, the rule writes Object:stationary."
     },
     {
       "name": "movements_removed",
       "description": "Concrete object movements no longer present after the rule RHS.",
-      "specification": "A rule has movements_removed entries of the form Object:movement for concrete LHS movement matches that are not preserved by an identical RHS movement match for the same object. This includes direction changes, movement clears, object deletion, and action matches consumed by an RHS movement write."
+      "specification": "A rule has movements_removed entries of the form Object:movement for concrete LHS movement matches that are not preserved by an identical RHS movement match for the same object in the corresponding RHS cell. This includes direction changes, movement clears, object relocation, object deletion, and action matches consumed by an RHS movement write."
     }
   ]
 }

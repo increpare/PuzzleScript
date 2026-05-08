@@ -65,8 +65,9 @@ contains concrete object movements that may satisfy an LHS movement term.
 `movements_required` is the definite subset for single-object movement terms.
 `movements_written` contains concrete object movements written by the RHS, or
 `Object:stationary` when a movement requirement is cleared while the object
-stays present. `movements_removed` contains concrete LHS movement matches that
-are not preserved by the RHS, including consumed `action` matches.
+stays present in the corresponding RHS cell. `movements_removed` contains
+concrete LHS movement matches that are not preserved in the corresponding RHS
+cell, including consumed `action` matches.
 
 Rule-tag test sources must use compiler-idempotent rule text, so the fixture is
 testing the analysis rather than incidental rule expansion. Non-idempotent rule
