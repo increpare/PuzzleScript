@@ -101,7 +101,7 @@ Rules:
 
 If it matches zero analyzed rules, the runner fails. If it matches more than one analyzed rule, the runner fails. This slice does not add `index_on_line` or any other disambiguator. Fixtures should be written so their rule expectations are unambiguous.
 
-The checks operate on analyzer rule records after compilation. The first specimens should therefore use already-simple source rules whose expected tags are invariant under basic rule compilation and rule-group decomposition. Where practical, fixtures should use rule text that is already close to the compiler's idempotent representation, so the test is not about incidental expansion. Tests that deliberately explore property or directional decomposition can be added later as their own careful fixtures.
+The checks operate on analyzer rule records after compilation. The first specimens should therefore use already-simple source rules whose expected tags are invariant under basic rule compilation and rule-group decomposition. Rule-tag fixtures must use compiler-idempotent rule text, so the test is not about incidental expansion. Non-idempotent source examples belong in a separate fixture area whose explicit purpose is compiler normalization or rule decomposition.
 
 ## Semantics
 
