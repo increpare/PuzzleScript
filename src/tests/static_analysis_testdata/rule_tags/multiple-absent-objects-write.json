@@ -1,0 +1,25 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 50,
+      "text": "[ no wall no crate player ] -> [ player stationary mark ]",
+      "tags": {
+        "objects_required": [
+          "Player"
+        ],
+        "objects_matched": [
+          "Player"
+        ],
+        "object_absences_matched": [
+          "Crate",
+          "Wall"
+        ],
+        "objects_written": [
+          "Mark"
+        ],
+        "objects_erased": []
+      }
+    }
+  ]
+}
