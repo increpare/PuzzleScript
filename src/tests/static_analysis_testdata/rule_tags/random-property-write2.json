@@ -5,22 +5,11 @@
       "line": 76,
       "text": "[ orphan1 no sibling1 ] -> [ orphan1 random sibling1_or_sibling2 ]",
       "tags": {
-        "objects_required": [
-          "Orphan1"
-        ],
-        "objects_matched": [
-          "Orphan1"
-        ],
-        "object_absences_matched": [
-          "Sibling1"
-        ],
-        "objects_written": [
-          "Sibling1",
-          "Sibling2"
-        ],
-        "objects_erased": [
-          "Sibling2"
-        ]
+        "objects_required": ["Orphan1"],
+        "objects_matched": ["Orphan1"],
+        "object_absences_matched": ["Sibling1"],
+        "objects_written": ["Sibling1", "Sibling2"],
+        "objects_erased": ["Sibling2"]
       }
     }
   ]

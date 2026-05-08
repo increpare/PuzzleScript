@@ -5,19 +5,10 @@
       "line": 81,
       "text": "[ orphan1 no orphan2 no orphan3 ] -> [ orphan1 stationary orphan4 ]",
       "tags": {
-        "objects_required": [
-          "Orphan1"
-        ],
-        "objects_matched": [
-          "Orphan1"
-        ],
-        "object_absences_matched": [
-          "Orphan2",
-          "Orphan3"
-        ],
-        "objects_written": [
-          "Orphan4"
-        ],
+        "objects_required": ["Orphan1"],
+        "objects_matched": ["Orphan1"],
+        "object_absences_matched": ["Orphan2", "Orphan3"],
+        "objects_written": ["Orphan4"],
         "objects_erased": []
       }
     }

@@ -15,8 +15,38 @@ function readJson(filePath) {
     return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
 
+function isInlineJsonArray(value) {
+    return value.every(item => item === null || ['string', 'number', 'boolean'].includes(typeof item));
+}
+
+function formatJsonValue(value, depth) {
+    const indent = '  '.repeat(depth);
+    const childIndent = '  '.repeat(depth + 1);
+
+    if (Array.isArray(value)) {
+        if (value.length === 0) return '[]';
+        if (isInlineJsonArray(value)) {
+            return `[${value.map(item => JSON.stringify(item)).join(', ')}]`;
+        }
+        return `[\n${value.map(item => `${childIndent}${formatJsonValue(item, depth + 1)}`).join(',\n')}\n${indent}]`;
+    }
+
+    if (value && typeof value === 'object') {
+        const entries = Object.keys(value).map(key =>
+            `${childIndent}${JSON.stringify(key)}: ${formatJsonValue(value[key], depth + 1)}`
+        );
+        return entries.length === 0 ? '{}' : `{\n${entries.join(',\n')}\n${indent}}`;
+    }
+
+    return JSON.stringify(value);
+}
+
+function formatFixtureJson(value) {
+    return formatJsonValue(value, 0);
+}
+
 function writeJson(filePath, value) {
-    fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+    fs.writeFileSync(filePath, `${formatFixtureJson(value)}\n`, 'utf8');
 }
 
 function validateClaimDescriptionList(filePath, familyName, tags) {
@@ -397,6 +427,7 @@ module.exports = {
     deriveObjectTagValue,
     deriveRuleTagValue,
     findRuleRecord,
+    formatFixtureJson,
     loadClaimDescriptions,
     runObjectTagsDir,
     runRuleTagsDir,

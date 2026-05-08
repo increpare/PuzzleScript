@@ -8,6 +8,7 @@ const path = require('path');
 
 const {
     findRuleRecord,
+    formatFixtureJson,
     loadClaimDescriptions,
     runObjectTagsDir,
     runRuleTagsDir,
@@ -24,7 +25,7 @@ function findRuleTag(payload, text) {
 }
 
 function writeJson(filePath, payload) {
-    fs.writeFileSync(filePath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
+    fs.writeFileSync(filePath, `${formatFixtureJson(payload)}\n`, 'utf8');
 }
 
 function run() {
@@ -145,6 +146,35 @@ P#
         assert.strictEqual(generatedRulePayload.ruleTag.length, 1);
         assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ wall ] -> [ ]').tags.objects_required, ['Wall']);
         assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ wall ] -> [ ]').tags.objects_erased, ['Wall']);
+        const generatedRuleText = fs.readFileSync(ruleJsonPath, 'utf8');
+        assert.ok(generatedRuleText.includes('"objects_required": ["Wall"]'));
+        assert.ok(generatedRuleText.includes('"object_absences_matched": []'));
+        assert.ok(!generatedRuleText.includes('"objects_required": [\n'));
+        assert.strictEqual(formatFixtureJson({
+            schema: FIXTURE_SCHEMA,
+            ruleTag: [
+                {
+                    line: 40,
+                    text: '[ wall ] -> [ ]',
+                    tags: {
+                        objects_required: ['Wall'],
+                        object_absences_matched: [],
+                    },
+                },
+            ],
+        }).trim(), `{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 40,
+      "text": "[ wall ] -> [ ]",
+      "tags": {
+        "objects_required": ["Wall"],
+        "object_absences_matched": []
+      }
+    }
+  ]
+}`);
 
         const curatedRulePayload = {
             schema: FIXTURE_SCHEMA,
