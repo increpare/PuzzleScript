@@ -1,0 +1,57 @@
+title Static Analysis Rule Tag Explicit RHS No Erases
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Mark
+yellow
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+M = Mark
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Mark
+
+=====
+RULES
+=====
+
+[ player wall ] -> [ player no wall ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P#M
