@@ -1,0 +1,15 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 61,
+      "text": "right [ action player | crate ] -> [ player | right crate ]",
+      "tags": {
+        "movements_required": ["Player:action"],
+        "movements_matched": ["Player:action"],
+        "movements_written": ["Crate:right", "Player:stationary"],
+        "movements_removed": ["Player:action"]
+      }
+    }
+  ]
+}
