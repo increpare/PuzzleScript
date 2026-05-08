@@ -119,7 +119,7 @@ Wall
 RULES
 =====
 
-[ Wall ] -> [ ]
+[ wall ] -> [ ]
 
 =============
 WINCONDITIONS
@@ -143,15 +143,15 @@ P#
         const generatedRulePayload = JSON.parse(fs.readFileSync(ruleJsonPath, 'utf8'));
         assert.strictEqual(generatedRulePayload.schema, FIXTURE_SCHEMA);
         assert.strictEqual(generatedRulePayload.ruleTag.length, 1);
-        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ Wall ] -> [ ]').tags.objects_required, ['Wall']);
-        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ Wall ] -> [ ]').tags.objects_erased, ['Wall']);
+        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ wall ] -> [ ]').tags.objects_required, ['Wall']);
+        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ wall ] -> [ ]').tags.objects_erased, ['Wall']);
 
         const curatedRulePayload = {
             schema: FIXTURE_SCHEMA,
             ruleTag: [
                 {
                     line: 40,
-                    text: '[ Wall ] -> [ ]',
+                    text: '[ wall ] -> [ ]',
                     tags: {
                         objects_erased: ['Wall'],
                     },
@@ -168,10 +168,88 @@ P#
 
         assert.throws(
             () => findRuleRecord('ambiguous-rule.json', [
-                { line: 12, text: '[ Wall ] -> [ ]', rule: { tags: {} } },
-                { line: 12, text: '[ Wall ] -> [ ]', rule: { tags: {} } },
-            ], { line: 12, text: '[ Wall ] -> [ ]' }),
+                { line: 12, text: '[ wall ] -> [ ]', rule: { tags: {} } },
+                { line: 12, text: '[ wall ] -> [ ]', rule: { tags: {} } },
+            ], { line: 12, text: '[ wall ] -> [ ]' }),
             /matched 2 analyzed rules; expected exactly 1/
+        );
+
+        const nonIdempotentDir = path.join(tmpRoot, 'rule_tags_non_idempotent');
+        fs.mkdirSync(nonIdempotentDir, { recursive: true });
+        const nonIdempotentSource = `title Static Analysis Rule Tag Non Idempotent
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Mark
+yellow
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+M = Mark
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Mark
+
+=====
+RULES
+=====
+
+[ Player no Wall ] -> [ Player Mark ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P#M
+`;
+        fs.writeFileSync(path.join(nonIdempotentDir, 'non-idempotent.txt'), nonIdempotentSource, 'utf8');
+        writeJson(path.join(nonIdempotentDir, 'non-idempotent.json'), {
+            schema: FIXTURE_SCHEMA,
+            ruleTag: [
+                {
+                    line: 45,
+                    text: '[ Player no Wall ] -> [ Player Mark ]',
+                    tags: {
+                        objects_written: ['Mark'],
+                    },
+                },
+            ],
+        });
+        assert.throws(
+            () => runRuleTagsDir(nonIdempotentDir, claimDescriptions, () => {}),
+            /non-idempotent rule text/
         );
     } finally {
         fs.rmSync(tmpRoot, { recursive: true, force: true });

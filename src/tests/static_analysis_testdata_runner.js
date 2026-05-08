@@ -161,6 +161,49 @@ function checkFixture(txtPath, jsonPath, claimDescriptions) {
     }
 }
 
+function termRefName(term) {
+    const ref = term.ref || {};
+    if (ref.type === 'object_set') return String(ref.source || ref.objects.join(' or ')).toLowerCase();
+    if (ref.canonical_name) return String(ref.canonical_name).toLowerCase();
+    if (ref.name) return String(ref.name).toLowerCase();
+    if (ref.type === 'ellipsis') return '...';
+    return '';
+}
+
+function renderRuleTerm(term) {
+    if (term.kind === 'absent') return `no ${termRefName(term)}`;
+    if (term.kind === 'random_object') return `random ${termRefName(term)}`;
+    const name = termRefName(term);
+    return term.movement === null ? name : `${term.movement} ${name}`;
+}
+
+function renderRuleCell(cell) {
+    return cell.map(renderRuleTerm).join(' ');
+}
+
+function renderRuleSide(side) {
+    return (side || []).map(row => {
+        let text = '[';
+        row.map(renderRuleCell).forEach((cell, index) => {
+            if (index === 0) {
+                if (cell.length > 0) text += ` ${cell}`;
+            } else {
+                text += cell.length > 0 ? ` | ${cell}` : ' |';
+            }
+        });
+        return `${text} ]`;
+    }).join(' ');
+}
+
+function ruleHasMultipleCells(rule) {
+    return rule.lhs.concat(rule.rhs).some(row => row.length > 1);
+}
+
+function renderRuleText(rule) {
+    const prefix = ruleHasMultipleCells(rule) ? `${rule.direction} ` : '';
+    return `${prefix}${renderRuleSide(rule.lhs)} -> ${renderRuleSide(rule.rhs)}`;
+}
+
 function allRuleRecords(report, source) {
     const sourceLines = source.split(/\r?\n/);
     const records = [];
@@ -168,11 +211,23 @@ function allRuleRecords(report, source) {
         for (const group of section.groups || []) {
             for (const rule of group.rules || []) {
                 const text = (sourceLines[rule.source_line - 1] || '').trim();
-                records.push({ rule, line: rule.source_line, text });
+                records.push({ rule, line: rule.source_line, text, canonicalText: renderRuleText(rule) });
             }
         }
     }
     return records;
+}
+
+function assertRuleRecordsIdempotent(filePath, records) {
+    for (const record of records) {
+        if (record.text !== record.canonicalText) {
+            assert.fail([
+                `${filePath}: non-idempotent rule text at line ${record.line}`,
+                `  source:    ${record.text}`,
+                `  canonical: ${record.canonicalText}`,
+            ].join('\n'));
+        }
+    }
 }
 
 function ruleClaimByName(claimDescriptions, tagName) {
@@ -205,9 +260,11 @@ function assertSameStringSet(filePath, label, expected, actual) {
 
 function buildRuleTagExpectations(source, report, claimDescriptions) {
     const ruleTags = claimDescriptions.ruleTags || [];
+    const records = allRuleRecords(report, source);
+    assertRuleRecordsIdempotent(report.source.path, records);
     return {
         schema: FIXTURE_SCHEMA,
-        ruleTag: allRuleRecords(report, source).map(record => ({
+        ruleTag: records.map(record => ({
             line: record.line,
             text: record.text,
             tags: Object.fromEntries(ruleTags.map(tag => [
@@ -253,6 +310,7 @@ function checkRuleFixture(txtPath, jsonPath, claimDescriptions) {
     const payload = readJson(jsonPath);
     validateRuleTagExpectationShape(jsonPath, payload);
     const records = allRuleRecords(report, source);
+    assertRuleRecordsIdempotent(txtPath, records);
     for (const row of payload.ruleTag) {
         const record = findRuleRecord(jsonPath, records, row);
         for (const tagName of Object.keys(row.tags)) {

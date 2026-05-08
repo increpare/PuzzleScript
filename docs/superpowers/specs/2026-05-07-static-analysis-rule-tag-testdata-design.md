@@ -73,7 +73,7 @@ Each expectation JSON groups rule-tag expectations by rule.
   "ruleTag": [
     {
       "line": 48,
-      "text": "[ Alpha | ] -> [ | Alpha ]",
+      "text": "right [ alpha | ] -> [ | stationary alpha ]",
       "tags": {
         "objects_required": ["Alpha"],
         "objects_matched": ["Alpha"],
@@ -111,7 +111,7 @@ For OR properties:
 
 ```text
 Mover = Alpha or Beta
-[ Mover ] -> [ Gamma ]
+[ mover ] -> [ gamma ]
 ```
 
 Expected rule tags:
@@ -130,7 +130,7 @@ For aggregates:
 
 ```text
 Pair = Wall and Mark
-[ Pair ] -> []
+[ wall mark ] -> [ ]
 ```
 
 Expected rule tags:
@@ -149,7 +149,7 @@ For absent terms:
 
 ```text
 Obstacle = Wall or Crate
-[ no Obstacle Player ] -> [ Player Mark ]
+[ no wall no crate player ] -> [ player stationary mark ]
 ```
 
 Expected rule tags:
@@ -167,7 +167,7 @@ Expected rule tags:
 For relocation:
 
 ```text
-[ Alpha | ] -> [ | Alpha ]
+right [ alpha | ] -> [ | stationary alpha ]
 ```
 
 Expected rule tags:
@@ -189,6 +189,8 @@ When the runner sees an orphan `rule_tags/foo.txt`, it may generate `foo.json` c
 The runner never overwrites existing rule-tag JSON.
 
 Generated rule expectations should use source order and the agreed `line` / `text` / `tags` structure. If a rule cannot be identified unambiguously by `line` plus `text`, generation should fail rather than inventing another locator.
+
+Generation should also fail when the source rule text is not compiler-idempotent. The ordinary `rule_tags` suite is for already-normalized rule records, not compiler-normalization examples.
 
 ## Initial Specimen Themes
 

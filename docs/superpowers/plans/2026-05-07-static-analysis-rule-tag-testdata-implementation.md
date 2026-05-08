@@ -214,7 +214,7 @@ Mark
 RULES
 =====
 
-[ Wall ] -> [ ]
+[ wall ] -> [ ]
 
 =============
 WINCONDITIONS
@@ -377,7 +377,7 @@ Mark
 RULES
 =====
 
-[ Player no Wall ] -> [ Player stationary Mark ]
+[ player no wall ] -> [ player stationary mark ]
 
 =============
 WINCONDITIONS
@@ -439,7 +439,7 @@ Alpha
 RULES
 =====
 
-right [ Alpha | ] -> [ | Alpha ]
+right [ alpha | ] -> [ | stationary alpha ]
 
 =============
 WINCONDITIONS
@@ -506,7 +506,7 @@ Crate, Wall
 RULES
 =====
 
-[ Obstacle ] -> [ Crate ]
+[ obstacle ] -> [ crate ]
 
 =============
 WINCONDITIONS
@@ -537,7 +537,7 @@ Run:
 node src/tests/ps_static_analysis_node.js
 ```
 
-Expected: FAIL because the current write logic treats `Crate` as already present whenever `[ Obstacle ]` matches and misses at least `objects_written: ["Crate"]`.
+Expected: FAIL because the current write logic treats `Crate` as already present whenever `[ obstacle ]` matches and misses at least `objects_written: ["Crate"]`.
 
 - [ ] **Step 3: Update cell-local write analysis to use required-vs-matched LHS sets**
 
@@ -724,7 +724,7 @@ Wall
 RULES
 =====
 
-[ Wall ] -> [ ]
+[ wall ] -> [ ]
 
 =============
 WINCONDITIONS
@@ -748,15 +748,15 @@ P#
         const generatedRulePayload = JSON.parse(fs.readFileSync(ruleJsonPath, 'utf8'));
         assert.strictEqual(generatedRulePayload.schema, FIXTURE_SCHEMA);
         assert.strictEqual(generatedRulePayload.ruleTag.length, 1);
-        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ Wall ] -> [ ]').tags.objects_required, ['Wall']);
-        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ Wall ] -> [ ]').tags.objects_erased, ['Wall']);
+        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ wall ] -> [ ]').tags.objects_required, ['Wall']);
+        assert.deepStrictEqual(findRuleTag(generatedRulePayload, '[ wall ] -> [ ]').tags.objects_erased, ['Wall']);
 
         const curatedRulePayload = {
             schema: FIXTURE_SCHEMA,
             ruleTag: [
                 {
                     line: 40,
-                    text: '[ Wall ] -> [ ]',
+                    text: '[ wall ] -> [ ]',
                     tags: {
                         objects_erased: ['Wall'],
                     },
@@ -773,9 +773,9 @@ P#
 
         assert.throws(
             () => findRuleRecord('ambiguous-rule.json', [
-                { line: 12, text: '[ Wall ] -> [ ]', rule: { tags: {} } },
-                { line: 12, text: '[ Wall ] -> [ ]', rule: { tags: {} } },
-            ], { line: 12, text: '[ Wall ] -> [ ]' }),
+                { line: 12, text: '[ wall ] -> [ ]', rule: { tags: {} } },
+                { line: 12, text: '[ wall ] -> [ ]', rule: { tags: {} } },
+            ], { line: 12, text: '[ wall ] -> [ ]' }),
             /matched 2 analyzed rules; expected exactly 1/
         );
 ```
@@ -1023,7 +1023,7 @@ Mark
 RULES
 =====
 
-[ Wall ] -> [ ]
+[ wall ] -> [ ]
 
 =============
 WINCONDITIONS
@@ -1046,7 +1046,7 @@ P#M
   "ruleTag": [
     {
       "line": 45,
-      "text": "[ Wall ] -> [ ]",
+      "text": "[ wall ] -> [ ]",
       "tags": {
         "objects_required": ["Wall"],
         "objects_matched": ["Wall"],
@@ -1106,7 +1106,7 @@ Mark
 RULES
 =====
 
-[ Player no Wall ] -> [ Player stationary Mark ]
+[ player no wall ] -> [ player stationary mark ]
 
 =============
 WINCONDITIONS
@@ -1129,7 +1129,7 @@ P#M
   "ruleTag": [
     {
       "line": 45,
-      "text": "[ Player no Wall ] -> [ Player stationary Mark ]",
+      "text": "[ player no wall ] -> [ player stationary mark ]",
       "tags": {
         "objects_required": ["Player"],
         "objects_matched": ["Player"],
@@ -1184,7 +1184,7 @@ Alpha
 RULES
 =====
 
-right [ Alpha | ] -> [ | Alpha ]
+right [ alpha | ] -> [ | stationary alpha ]
 
 =============
 WINCONDITIONS
@@ -1207,7 +1207,7 @@ PA
   "ruleTag": [
     {
       "line": 40,
-      "text": "right [ Alpha | ] -> [ | Alpha ]",
+      "text": "right [ alpha | ] -> [ | stationary alpha ]",
       "tags": {
         "objects_required": ["Alpha"],
         "objects_matched": ["Alpha"],
@@ -1359,5 +1359,5 @@ Skip this step if there are no changes after Tasks 1-6.
 
 - Spec coverage: the plan covers claim descriptions, per-rule tag derivation, `rule_tags/` fixture format, `line + text` identity, set comparison, orphan `.txt` generation, no overwrite behavior, generated-test review policy, and the initial small specimen nucleus.
 - Scope check: this deliberately does not add rule-group flow, movement-flow decomposition, dashboard UI, static object tags, or cosmetic object tags.
-- Semantics check: the OR-property replacement test locks in Stephen’s chosen semantics for `[ Obstacle ] -> [ Crate ]`: `objects_written: ["Crate"]`, `objects_erased: ["Wall"]`.
+- Semantics check: the OR-property replacement test locks in Stephen’s chosen semantics for `[ obstacle ] -> [ crate ]`: `objects_written: ["Crate"]`, `objects_erased: ["Wall"]`.
 - Placeholder scan: no pending/expected-failure area is introduced; every committed fixture is either valid or absent.

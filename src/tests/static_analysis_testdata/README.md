@@ -49,7 +49,8 @@ Object-tag expectations are grouped by object:
    ```
 
 3. The runner will create the missing matching `.json` file and print a
-   `generated static analysis testdata` message.
+   `generated static analysis testdata` message. If the source rule text is not
+   compiler-idempotent, generation fails instead.
 4. Read the generated JSON with Stephen before committing it. Keep only the
    rule rows and tag fields that express the intended test.
 5. Run `make static_analysis_tests` again. Existing JSON files are never
