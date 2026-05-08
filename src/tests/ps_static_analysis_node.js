@@ -2603,4 +2603,126 @@ assert.deepStrictEqual(propertyReplacementRule.tags.object_absences_matched, [])
 assert.deepStrictEqual(propertyReplacementRule.tags.objects_written, ['Crate']);
 assert.deepStrictEqual(propertyReplacementRule.tags.objects_erased, ['Wall']);
 
+const RULE_TAG_SINGLETON_MOVEMENT_GAME = `
+title Static Analysis Rule Tag Singleton Movement
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+
+=====
+RULES
+=====
+
+[ right Player ] -> [ left Player ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P#
+`;
+
+const singletonMovementRule = onlyAnalyzedRule(RULE_TAG_SINGLETON_MOVEMENT_GAME);
+assert.deepStrictEqual(singletonMovementRule.tags.movements_required, ['Player:right']);
+assert.deepStrictEqual(singletonMovementRule.tags.movements_matched, ['Player:right']);
+assert.deepStrictEqual(singletonMovementRule.tags.movements_written, ['Player:left']);
+assert.deepStrictEqual(singletonMovementRule.tags.movements_removed, ['Player:right']);
+
+const RULE_TAG_PROPERTY_MOVEMENT_GAME = `
+title Static Analysis Rule Tag Property Movement
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+Player_or_Wall = Player or Wall
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+
+=====
+RULES
+=====
+
+[ right Player_or_Wall ] -> [ left Player_or_Wall ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P#
+`;
+
+const propertyMovementRule = onlyAnalyzedRule(RULE_TAG_PROPERTY_MOVEMENT_GAME);
+assert.deepStrictEqual(propertyMovementRule.tags.movements_required, []);
+assert.deepStrictEqual(propertyMovementRule.tags.movements_matched, ['Player:right', 'Wall:right']);
+assert.deepStrictEqual(propertyMovementRule.tags.movements_written, ['Player:left', 'Wall:left']);
+assert.deepStrictEqual(propertyMovementRule.tags.movements_removed, ['Player:right', 'Wall:right']);
+
 console.log('ps_static_analysis_node: ok');

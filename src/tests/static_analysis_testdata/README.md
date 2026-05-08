@@ -60,6 +60,14 @@ Rule-tag expectations identify rules by `line` plus trimmed source `text`.
 If those two fields do not identify exactly one analyzed rule, the runner fails
 instead of inventing another locator.
 
+Movement rule tags use flat `Object:movement` strings. `movements_matched`
+contains concrete object movements that may satisfy an LHS movement term.
+`movements_required` is the definite subset for single-object movement terms.
+`movements_written` contains concrete object movements written by the RHS, or
+`Object:stationary` when a movement requirement is cleared while the object
+stays present. `movements_removed` contains concrete LHS movement matches that
+are not preserved by the RHS, including consumed `action` matches.
+
 Rule-tag test sources must use compiler-idempotent rule text, so the fixture is
 testing the analysis rather than incidental rule expansion. Non-idempotent rule
 text belongs in a separate fixture area whose explicit purpose is compiler

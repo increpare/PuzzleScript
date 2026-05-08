@@ -45,6 +45,16 @@
       "specification": "A rule has object_absences_matched entries for every concrete object that may satisfy a negative LHS term after resolving synonyms, properties, and aggregates to object names. For example, no Obstacle records every concrete object in Obstacle."
     },
     {
+      "name": "movements_required",
+      "description": "Concrete object movements definitely required by the rule LHS.",
+      "specification": "A rule has movements_required entries of the form Object:movement for concrete object movement terms that the LHS definitely requires. Single-object movement terms are required. Members of an OR property are not individually required because any one member may satisfy the movement term."
+    },
+    {
+      "name": "movements_matched",
+      "description": "Concrete object movements whose presence may satisfy a rule LHS movement term.",
+      "specification": "A rule has movements_matched entries of the form Object:movement for every concrete object movement that may satisfy a positive LHS movement term after resolving synonyms, properties, and aggregates to object names. Property movement terms are expanded to their concrete members as may-matches."
+    },
+    {
       "name": "objects_written",
       "description": "Concrete objects written present by the rule RHS.",
       "specification": "A rule has objects_written entries for concrete objects the RHS may write present in a cell where the LHS does not already require that object present in the same cell. This is cell-local: relocation writes the object at the destination even if total object count is preserved."
@@ -53,6 +63,16 @@
       "name": "objects_erased",
       "description": "Concrete objects written absent by the rule RHS.",
       "specification": "A rule has objects_erased entries for concrete objects the RHS may write absent from a cell where the LHS allows that object to be present in the same cell. This includes explicit no terms, removal from the original cell, and possible same-layer erasure caused by writing another object on the layer."
+    },
+    {
+      "name": "movements_written",
+      "description": "Concrete object movements written or cleared by the rule RHS.",
+      "specification": "A rule has movements_written entries of the form Object:movement for concrete object movements the RHS may write. RHS movement terms use the compiled movement name visible to this analysis stage, after resolving synonyms, properties, and aggregates to object names. If an LHS movement requirement is removed while the object remains present with no RHS movement, the rule writes Object:stationary."
+    },
+    {
+      "name": "movements_removed",
+      "description": "Concrete object movements no longer present after the rule RHS.",
+      "specification": "A rule has movements_removed entries of the form Object:movement for concrete LHS movement matches that are not preserved by an identical RHS movement match for the same object. This includes direction changes, movement clears, object deletion, and action matches consumed by an RHS movement write."
     }
   ]
 }

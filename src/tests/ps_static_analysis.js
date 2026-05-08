@@ -1262,7 +1262,10 @@ function ruleFlowWrites(psTagged, rule) {
         for (const key of lhsMovementKeys) {
             if (rhsMovementKeys.has(key)) continue;
             const objectName = key.slice(0, key.lastIndexOf(':'));
-            if (rhsPresent.has(objectName)) {
+            const hasRhsMovement = Array.from(rhsMovementKeys).some(rhsKey =>
+                rhsKey.slice(0, rhsKey.lastIndexOf(':')) === objectName
+            );
+            if (rhsPresent.has(objectName) && !hasRhsMovement) {
                 movement.push({ object: objectName, movement: 'stationary' });
             }
         }
@@ -1285,11 +1288,21 @@ function ruleFlowReadTags(rule) {
     const objectsRequired = new Set();
     const objectsMatched = new Set();
     const objectAbsencesMatched = new Set();
+    const movementsRequired = new Set();
+    const movementsMatched = new Set();
     for (const term of rule.summary.lhs_terms) {
         if (term.kind === 'present') {
             addValues(objectsMatched, termObjects(term));
             if (term.ref && term.ref.type === 'object') {
                 addValues(objectsRequired, termObjects(term));
+            }
+            if (term.movement !== null) {
+                for (const objectName of termObjects(term)) {
+                    movementsMatched.add(`${objectName}:${term.movement}`);
+                    if (term.ref && term.ref.type === 'object') {
+                        movementsRequired.add(`${objectName}:${term.movement}`);
+                    }
+                }
             }
         } else if (term.kind === 'absent') {
             addValues(objectAbsencesMatched, termObjects(term));
@@ -1299,18 +1312,71 @@ function ruleFlowReadTags(rule) {
         objects_required: objectsRequired,
         objects_matched: objectsMatched,
         object_absences_matched: objectAbsencesMatched,
+        movements_required: movementsRequired,
+        movements_matched: movementsMatched,
     };
+}
+
+function ruleMovementWriteTags(rule) {
+    const movementsWritten = new Set();
+    const rhsPresent = presentObjectSet(rule.summary.rhs_terms);
+
+    if (!rule.tags.writes_movement) return movementsWritten;
+
+    const lhsMovementKeys = movementTermKeys(rule.summary.lhs_terms);
+    const rhsMovementKeys = movementTermKeys(rule.summary.rhs_terms);
+    for (const term of rule.summary.rhs_terms) {
+        if (term.kind !== 'present' || term.movement === null) continue;
+        for (const objectName of termObjects(term)) {
+            const key = `${objectName}:${term.movement}`;
+            if (!lhsMovementKeys.has(key)) {
+                movementsWritten.add(key);
+            }
+        }
+    }
+    for (const key of lhsMovementKeys) {
+        if (rhsMovementKeys.has(key)) continue;
+        const objectName = key.slice(0, key.lastIndexOf(':'));
+        const hasRhsMovement = Array.from(rhsMovementKeys).some(rhsKey =>
+            rhsKey.slice(0, rhsKey.lastIndexOf(':')) === objectName
+        );
+        if (rhsPresent.has(objectName) && !hasRhsMovement) {
+            movementsWritten.add(`${objectName}:stationary`);
+        }
+    }
+    return movementsWritten;
+}
+
+function ruleMovementRemoveTags(rule) {
+    const movementsRemoved = new Set();
+
+    if (!rule.tags.writes_movement) return movementsRemoved;
+
+    const lhsMovementKeys = movementTermKeys(rule.summary.lhs_terms);
+    const rhsMovementKeys = movementTermKeys(rule.summary.rhs_terms);
+    for (const key of lhsMovementKeys) {
+        if (!rhsMovementKeys.has(key)) {
+            movementsRemoved.add(key);
+        }
+    }
+    return movementsRemoved;
 }
 
 function tagRuleObjectTags(psTagged) {
     for (const { rule } of allRuleEntries(psTagged)) {
         const reads = ruleFlowReadTags(rule);
         const writes = ruleFlowWrites(psTagged, rule);
+        const movementsWritten = ruleMovementWriteTags(rule);
+        const movementsRemoved = ruleMovementRemoveTags(rule);
         rule.tags.objects_required = uniqueSorted(reads.objects_required);
         rule.tags.objects_matched = uniqueSorted(reads.objects_matched);
         rule.tags.object_absences_matched = uniqueSorted(reads.object_absences_matched);
         rule.tags.objects_written = uniqueSorted(writes.object_present);
         rule.tags.objects_erased = uniqueSorted(writes.object_absent);
+        rule.tags.movements_required = uniqueSorted(reads.movements_required);
+        rule.tags.movements_matched = uniqueSorted(reads.movements_matched);
+        rule.tags.movements_written = uniqueSorted(movementsWritten);
+        rule.tags.movements_removed = uniqueSorted(movementsRemoved);
     }
 }
 

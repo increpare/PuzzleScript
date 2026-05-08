@@ -44,8 +44,12 @@ function run() {
             'objects_required',
             'objects_matched',
             'object_absences_matched',
+            'movements_required',
+            'movements_matched',
             'objects_written',
             'objects_erased',
+            'movements_written',
+            'movements_removed',
         ]);
         const generatedLog = [];
         runObjectTagsDir(objectTagsDir, claimDescriptions, message => generatedLog.push(message));
