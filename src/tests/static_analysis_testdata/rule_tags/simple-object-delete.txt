@@ -7,23 +7,39 @@ OBJECTS
 Background
 black
 
+Target
+yellow
+
 Player
 white
 
 Wall
 brown
 
-Mark
-yellow
+Crate
+orange
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
 
 ========
 LEGEND
 ========
 
 . = Background
+T = Target
 P = Player
 # = Wall
-M = Mark
+C = Crate
+A = Alpha
+B = Beta
+G = Gamma
 
 ========
 SOUNDS
@@ -34,9 +50,9 @@ COLLISIONLAYERS
 ================
 
 Background
-Player
-Wall
-Mark
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
 
 =====
 RULES
@@ -54,4 +70,4 @@ Some Player
 LEVELS
 ======
 
-P#M
+TP#CABG

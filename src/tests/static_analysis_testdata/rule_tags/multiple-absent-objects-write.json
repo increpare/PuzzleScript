@@ -2,21 +2,21 @@
   "schema": "ps-static-analysis-testdata-v1",
   "ruleTag": [
     {
-      "line": 50,
-      "text": "[ no wall no crate player ] -> [ player stationary mark ]",
+      "line": 81,
+      "text": "[ orphan1 no orphan2 no orphan3 ] -> [ orphan1 stationary orphan4 ]",
       "tags": {
         "objects_required": [
-          "Player"
+          "Orphan1"
         ],
         "objects_matched": [
-          "Player"
+          "Orphan1"
         ],
         "object_absences_matched": [
-          "Crate",
-          "Wall"
+          "Orphan2",
+          "Orphan3"
         ],
         "objects_written": [
-          "Mark"
+          "Orphan4"
         ],
         "objects_erased": []
       }

@@ -7,19 +7,43 @@ OBJECTS
 Background
 black
 
+Target
+yellow
+
 Player
 white
 
+Wall
+brown
+
+Crate
+orange
+
 Alpha
 red
+
+Beta
+blue
+
+Gamma
+green
+
+Orphan1
+lightblue
 
 ========
 LEGEND
 ========
 
 . = Background
+T = Target
 P = Player
+# = Wall
+C = Crate
 A = Alpha
+B = Beta
+G = Gamma
+O = Orphan1
 
 ========
 SOUNDS
@@ -30,14 +54,16 @@ COLLISIONLAYERS
 ================
 
 Background
-Player
-Alpha
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+Orphan1
 
 =====
 RULES
 =====
 
-right [ alpha | ] -> [ | stationary alpha ]
+right [ orphan1 | ] -> [ | stationary orphan1 ]
 
 =============
 WINCONDITIONS
@@ -49,4 +75,4 @@ Some Player
 LEVELS
 ======
 
-PA
+TP#CABGO

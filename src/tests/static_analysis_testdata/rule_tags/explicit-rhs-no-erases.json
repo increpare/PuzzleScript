@@ -2,15 +2,15 @@
   "schema": "ps-static-analysis-testdata-v1",
   "ruleTag": [
     {
-      "line": 45,
-      "text": "[ player wall ] -> [ player no wall ]",
+      "line": 66,
+      "text": "[ orphan1 wall ] -> [ orphan1 no wall ]",
       "tags": {
         "objects_required": [
-          "Player",
+          "Orphan1",
           "Wall"
         ],
         "objects_matched": [
-          "Player",
+          "Orphan1",
           "Wall"
         ],
         "object_absences_matched": [],

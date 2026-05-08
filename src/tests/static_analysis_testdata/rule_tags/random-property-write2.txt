@@ -7,6 +7,9 @@ OBJECTS
 Background
 black
 
+Target
+yellow
+
 Player
 white
 
@@ -16,19 +19,40 @@ brown
 Crate
 orange
 
-Mark
-yellow
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
+
+Orphan1
+lightblue
+
+Sibling1
+purple
+
+Sibling2
+pink
 
 ========
 LEGEND
 ========
 
 . = Background
+T = Target
 P = Player
 # = Wall
 C = Crate
-M = Mark
-Thing = Wall or Crate
+A = Alpha
+B = Beta
+G = Gamma
+O = Orphan1
+X = Sibling1
+Y = Sibling2
+Sibling1_or_Sibling2 = Sibling1 or Sibling2
 
 ========
 SOUNDS
@@ -39,15 +63,17 @@ COLLISIONLAYERS
 ================
 
 Background
-Player
-Wall, Crate
-Mark
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+Orphan1
+Sibling1, Sibling2
 
 =====
 RULES
 =====
 
-[ player no wall ] -> [ player random thing ]
+[ orphan1 no sibling1 ] -> [ orphan1 random sibling1_or_sibling2 ]
 
 =============
 WINCONDITIONS
@@ -59,4 +85,4 @@ Some Player
 LEVELS
 ======
 
-P#CM
+TP#CABGOXY

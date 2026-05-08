@@ -2,23 +2,23 @@
   "schema": "ps-static-analysis-testdata-v1",
   "ruleTag": [
     {
-      "line": 50,
-      "text": "[ player ] -> [ player random thing ]",
+      "line": 76,
+      "text": "[ orphan1 ] -> [ orphan1 random sibling1_or_sibling2 ]",
       "tags": {
         "objects_required": [
-          "Player"
+          "Orphan1"
         ],
         "objects_matched": [
-          "Player"
+          "Orphan1"
         ],
         "object_absences_matched": [],
         "objects_written": [
-          "Crate",
-          "Wall"
+          "Sibling1",
+          "Sibling2"
         ],
         "objects_erased": [
-          "Crate",
-          "Wall"
+          "Sibling1",
+          "Sibling2"
         ]
       }
     }

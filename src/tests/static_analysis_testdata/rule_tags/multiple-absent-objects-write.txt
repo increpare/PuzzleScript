@@ -7,6 +7,9 @@ OBJECTS
 Background
 black
 
+Target
+yellow
+
 Player
 white
 
@@ -16,18 +19,43 @@ brown
 Crate
 orange
 
-Mark
-yellow
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
+
+Orphan1
+lightblue
+
+Orphan2
+grey
+
+Orphan3
+purple
+
+Orphan4
+pink
 
 ========
 LEGEND
 ========
 
 . = Background
+T = Target
 P = Player
 # = Wall
 C = Crate
-M = Mark
+A = Alpha
+B = Beta
+G = Gamma
+O = Orphan1
+R = Orphan2
+S = Orphan3
+U = Orphan4
 
 ========
 SOUNDS
@@ -38,16 +66,19 @@ COLLISIONLAYERS
 ================
 
 Background
-Player
-Wall
-Crate
-Mark
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+Orphan1
+Orphan2
+Orphan3
+Orphan4
 
 =====
 RULES
 =====
 
-[ no wall no crate player ] -> [ player stationary mark ]
+[ orphan1 no orphan2 no orphan3 ] -> [ orphan1 stationary orphan4 ]
 
 =============
 WINCONDITIONS
@@ -59,4 +90,4 @@ Some Player
 LEVELS
 ======
 
-P#CM
+TP#CABGORSU

@@ -2,14 +2,22 @@
   "schema": "ps-static-analysis-testdata-v1",
   "ruleTag": [
     {
-      "line": 40,
-      "text": "right [ alpha | ] -> [ | stationary alpha ]",
+      "line": 66,
+      "text": "right [ orphan1 | ] -> [ | stationary orphan1 ]",
       "tags": {
-        "objects_required": ["Alpha"],
-        "objects_matched": ["Alpha"],
+        "objects_required": [
+          "Orphan1"
+        ],
+        "objects_matched": [
+          "Orphan1"
+        ],
         "object_absences_matched": [],
-        "objects_written": ["Alpha"],
-        "objects_erased": ["Alpha"]
+        "objects_written": [
+          "Orphan1"
+        ],
+        "objects_erased": [
+          "Orphan1"
+        ]
       }
     }
   ]

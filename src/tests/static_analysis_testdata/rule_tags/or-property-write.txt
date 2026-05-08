@@ -7,8 +7,17 @@ OBJECTS
 Background
 black
 
+Target
+yellow
+
 Player
 white
+
+Wall
+brown
+
+Crate
+orange
 
 Alpha
 red
@@ -17,18 +26,21 @@ Beta
 blue
 
 Gamma
-yellow
+green
 
 ========
 LEGEND
 ========
 
 . = Background
+T = Target
 P = Player
+# = Wall
+C = Crate
 A = Alpha
 B = Beta
 G = Gamma
-Mover = Alpha or Beta
+Alpha_or_Beta = Alpha or Beta
 
 ========
 SOUNDS
@@ -39,14 +51,15 @@ COLLISIONLAYERS
 ================
 
 Background
-Player
+Target
+Player, Wall, Crate
 Alpha, Beta, Gamma
 
 =====
 RULES
 =====
 
-[ mover ] -> [ gamma ]
+[ alpha_or_beta ] -> [ gamma ]
 
 =============
 WINCONDITIONS
@@ -58,4 +71,4 @@ Some Player
 LEVELS
 ======
 
-PABG
+TP#CABG

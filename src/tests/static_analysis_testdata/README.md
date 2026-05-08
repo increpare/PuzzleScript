@@ -65,6 +65,33 @@ testing the analysis rather than incidental rule expansion. Non-idempotent rule
 text belongs in a separate fixture area whose explicit purpose is compiler
 normalization or rule decomposition.
 
+Rule-tag tests should use the shared object/layer scaffold when the normal
+PuzzleScript-ish layer shape is part of the specimen:
+
+```text
+Background
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+```
+
+Use these names consistently so rule expectations can be read from the rule
+text without re-learning the fixture's collision layers.
+
+When a rule-tag fixture needs extra layer structure, name that structure
+directly:
+
+- `Orphan1`, `Orphan2`, ... are helper objects alone on their own layers.
+- `Sibling1`, `Sibling2`, ... are helper objects that deliberately share one
+  fixture-local layer.
+- Property names should spell out their expansion, for example
+  `Player_or_Crate = Player or Crate` or
+  `Sibling1_or_Sibling2 = Sibling1 or Sibling2`.
+
+Avoid names that describe the expected analyzer output. The object names should
+describe the specimen's layer/property structure, not whether a tag is expected
+to report an object as matched, absent, written, or erased.
+
 ## Review Policy
 
 Auto-generated or mechanically regenerated expectation JSON is a proposal, not
