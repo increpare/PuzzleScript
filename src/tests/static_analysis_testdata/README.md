@@ -101,6 +101,21 @@ Avoid names that describe the expected analyzer output. The object names should
 describe the specimen's layer/property structure, not whether a tag is expected
 to report an object as matched, absent, written, or erased.
 
+## Adding A Program-Flow Test
+
+1. Add a small whole-source `.txt` file under `program_flow/`.
+2. Run `make static_analysis_tests` (or `node src/tests/static_analysis_testdata_runner.js`).
+3. The runner will create the missing matching `.json` file. Each entry under
+   `wakeEdges` lists one ordered (from, to) rule pair where firing `from`
+   may enable a new match for `to`, with the reasons that triggered the edge
+   (`object_presence`, `object_absence`, or `movement`). Each entry under
+   `againRules` lists a rule whose firing semantically forces a tick restart.
+4. Read the generated JSON and confirm by hand that every edge corresponds to
+   an actual write-on-from / read-on-to relationship in the source.
+
+Like rule-tag tests, edges identify rules by `line` plus trimmed source `text`,
+so program-flow sources should also use compiler-idempotent rule text.
+
 ## Review Policy
 
 Auto-generated or mechanically regenerated expectation JSON is a proposal, not

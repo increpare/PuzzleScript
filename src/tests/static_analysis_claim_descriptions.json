@@ -74,5 +74,12 @@
       "description": "Concrete object movements no longer present after the rule RHS.",
       "specification": "A rule has movements_removed entries of the form Object:movement for concrete LHS movement matches that are not preserved by an identical RHS movement match for the same object in the corresponding RHS cell. This includes direction changes, movement clears, object relocation, object deletion, and action matches consumed by an RHS movement write."
     }
+  ],
+  "factFamilies": [
+    {
+      "name": "program_flow",
+      "description": "Pairwise wake graph: which rules may, when applied, create a new match for which other rules.",
+      "specification": "The program_flow fact lists, for the whole program, every ordered rule pair (R1, R2) where R1's RHS writes may enable a new match for R2's LHS. An edge is emitted whenever R1's writes intersect R2's reads in any of: object presence (writing an object R2 requires present), object absence (erasing an object R2 requires absent), or movement (writing an object:movement R2 reads, including the cardinal-to-moving subsumption). Edges are listed for all ordered pairs across all rule sections without scope segmentation; self-edges (R -> R) are kept when present. The again_rules field lists every rule whose firing semantically forces a tick restart (rules whose summary commands include `again`). Consumers that want the worst-case wake set should take the union of wake_edges with again_rules x rule_ids; this expansion is intentionally not materialised in the fact."
+    }
   ]
 }

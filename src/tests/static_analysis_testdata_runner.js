@@ -69,6 +69,7 @@ function loadClaimDescriptions(filePath = CLAIM_DESCRIPTIONS_PATH) {
     assert.strictEqual(claims.schema, 'ps-static-analysis-claim-descriptions-v1', `${filePath}: unsupported claim-description schema`);
     validateClaimDescriptionList(filePath, 'objectTags', claims.objectTags);
     validateClaimDescriptionList(filePath, 'ruleTags', claims.ruleTags);
+    validateClaimDescriptionList(filePath, 'factFamilies', claims.factFamilies);
     return claims;
 }
 
@@ -229,9 +230,18 @@ function ruleHasMultipleCells(rule) {
     return rule.lhs.concat(rule.rhs).some(row => row.length > 1);
 }
 
+function renderRuleCommands(rule) {
+    return (rule.commands || [])
+        .map(command => command.join(' '))
+        .join(' ');
+}
+
 function renderRuleText(rule) {
+    const lateMark = rule.late ? 'late ' : '';
     const prefix = ruleHasMultipleCells(rule) ? `${rule.direction} ` : '';
-    return `${prefix}${renderRuleSide(rule.lhs)} -> ${renderRuleSide(rule.rhs)}`;
+    const body = `${lateMark}${prefix}${renderRuleSide(rule.lhs)} -> ${renderRuleSide(rule.rhs)}`;
+    const suffix = renderRuleCommands(rule);
+    return suffix.length > 0 ? `${body} ${suffix}` : body;
 }
 
 function allRuleRecords(report, source) {
@@ -349,6 +359,101 @@ function checkRuleFixture(txtPath, jsonPath, claimDescriptions) {
     }
 }
 
+const REASON_VALUES = ['object_presence', 'object_absence', 'movement'];
+
+function recordById(records) {
+    const byId = new Map();
+    for (const record of records) {
+        byId.set(record.rule.id, record);
+    }
+    return byId;
+}
+
+function compareEdgeRows(a, b) {
+    if (a.from_line !== b.from_line) return a.from_line - b.from_line;
+    if (a.from_text !== b.from_text) return a.from_text.localeCompare(b.from_text);
+    if (a.to_line !== b.to_line) return a.to_line - b.to_line;
+    return a.to_text.localeCompare(b.to_text);
+}
+
+function compareAgainRows(a, b) {
+    if (a.line !== b.line) return a.line - b.line;
+    return a.text.localeCompare(b.text);
+}
+
+function programFlowFactValue(report) {
+    const facts = (report.facts && report.facts.program_flow) || [];
+    if (facts.length === 0) return { rule_ids: [], wake_edges: [], again_rules: [], tick_restart_possible: false };
+    return facts[0].value;
+}
+
+function buildProgramFlowExpectations(source, report) {
+    const records = allRuleRecords(report, source);
+    assertRuleRecordsIdempotent(report.source.path, records);
+    const byId = recordById(records);
+    const value = programFlowFactValue(report);
+    const wakeEdges = value.wake_edges.map(edge => {
+        const from = byId.get(edge.from);
+        const to = byId.get(edge.to);
+        assert.ok(from, `program_flow edge from rule id ${edge.from} not found in records`);
+        assert.ok(to, `program_flow edge to rule id ${edge.to} not found in records`);
+        return {
+            from_line: from.line,
+            from_text: from.text,
+            to_line: to.line,
+            to_text: to.text,
+            reasons: edge.reasons.slice(),
+        };
+    });
+    wakeEdges.sort(compareEdgeRows);
+    const againRules = value.again_rules.map(ruleId => {
+        const record = byId.get(ruleId);
+        assert.ok(record, `program_flow again rule id ${ruleId} not found in records`);
+        return { line: record.line, text: record.text };
+    });
+    againRules.sort(compareAgainRows);
+    return {
+        schema: FIXTURE_SCHEMA,
+        wakeEdges,
+        againRules,
+    };
+}
+
+function validateProgramFlowExpectationShape(filePath, payload) {
+    assert.strictEqual(payload.schema, FIXTURE_SCHEMA, `${filePath}: unsupported fixture schema`);
+    assert.ok(Array.isArray(payload.wakeEdges), `${filePath}: wakeEdges must be an array`);
+    assert.ok(Array.isArray(payload.againRules), `${filePath}: againRules must be an array`);
+    for (const [index, edge] of payload.wakeEdges.entries()) {
+        assert.ok(edge && typeof edge === 'object' && !Array.isArray(edge), `${filePath}: wakeEdges[${index}] must be an object`);
+        assert.ok(Number.isInteger(edge.from_line) && edge.from_line > 0, `${filePath}: wakeEdges[${index}] missing positive integer from_line`);
+        assert.ok(typeof edge.from_text === 'string' && edge.from_text.length > 0, `${filePath}: wakeEdges[${index}] missing from_text`);
+        assert.ok(Number.isInteger(edge.to_line) && edge.to_line > 0, `${filePath}: wakeEdges[${index}] missing positive integer to_line`);
+        assert.ok(typeof edge.to_text === 'string' && edge.to_text.length > 0, `${filePath}: wakeEdges[${index}] missing to_text`);
+        assert.ok(Array.isArray(edge.reasons) && edge.reasons.length > 0, `${filePath}: wakeEdges[${index}].reasons must be a non-empty array`);
+        for (const reason of edge.reasons) {
+            assert.ok(REASON_VALUES.includes(reason), `${filePath}: wakeEdges[${index}].reasons contains unknown reason ${JSON.stringify(reason)}`);
+        }
+    }
+    for (const [index, row] of payload.againRules.entries()) {
+        assert.ok(row && typeof row === 'object' && !Array.isArray(row), `${filePath}: againRules[${index}] must be an object`);
+        assert.ok(Number.isInteger(row.line) && row.line > 0, `${filePath}: againRules[${index}] missing positive integer line`);
+        assert.ok(typeof row.text === 'string' && row.text.length > 0, `${filePath}: againRules[${index}] missing text`);
+    }
+}
+
+function checkProgramFlowFixture(txtPath, jsonPath) {
+    const source = fs.readFileSync(txtPath, 'utf8');
+    const report = analyzeSource(source, { sourcePath: txtPath });
+    assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+    const payload = readJson(jsonPath);
+    validateProgramFlowExpectationShape(jsonPath, payload);
+    const actual = buildProgramFlowExpectations(source, report);
+    const expectedEdges = payload.wakeEdges.slice().sort(compareEdgeRows);
+    const expectedAgain = payload.againRules.slice().sort(compareAgainRows);
+    assert.deepStrictEqual(actual.wakeEdges, expectedEdges, `${jsonPath}: wakeEdges mismatch`);
+    assert.deepStrictEqual(actual.againRules, expectedAgain, `${jsonPath}: againRules mismatch`);
+}
+
 function sortedFiles(dirPath, ext) {
     return fs.readdirSync(dirPath)
         .filter(name => name.endsWith(ext))
@@ -405,6 +510,31 @@ function runRuleTagsDir(dirPath, claimDescriptions, log = process.stdout.write.b
     }
 }
 
+function runProgramFlowDir(dirPath, log = process.stdout.write.bind(process.stdout)) {
+    const txtFiles = sortedFiles(dirPath, '.txt');
+    const jsonFiles = sortedFiles(dirPath, '.json');
+    const txtStems = new Set(txtFiles.map(name => path.basename(name, '.txt')));
+    const jsonStems = new Set(jsonFiles.map(name => path.basename(name, '.json')));
+
+    for (const stem of jsonStems) {
+        assert.ok(txtStems.has(stem), `${path.join(dirPath, `${stem}.json`)}: missing matching .txt`);
+    }
+
+    for (const txtName of txtFiles) {
+        const stem = path.basename(txtName, '.txt');
+        const txtPath = path.join(dirPath, txtName);
+        const jsonPath = path.join(dirPath, `${stem}.json`);
+        if (!fs.existsSync(jsonPath)) {
+            const source = fs.readFileSync(txtPath, 'utf8');
+            const report = analyzeSource(source, { sourcePath: txtPath });
+            assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+            writeJson(jsonPath, buildProgramFlowExpectations(source, report));
+            log(`generated static analysis testdata: program_flow/${stem}.json (review before committing)\n`);
+        }
+        checkProgramFlowFixture(txtPath, jsonPath);
+    }
+}
+
 function runStaticAnalysisTestdata(options = {}) {
     const root = options.root || TESTDATA_ROOT;
     const claimDescriptions = loadClaimDescriptions(options.claimDescriptionsPath || CLAIM_DESCRIPTIONS_PATH);
@@ -414,6 +544,9 @@ function runStaticAnalysisTestdata(options = {}) {
     const ruleTagsDir = path.join(root, 'rule_tags');
     assert.ok(fs.existsSync(ruleTagsDir), `${ruleTagsDir}: missing rule_tags testdata directory`);
     runRuleTagsDir(ruleTagsDir, claimDescriptions, options.log);
+    const programFlowDir = path.join(root, 'program_flow');
+    assert.ok(fs.existsSync(programFlowDir), `${programFlowDir}: missing program_flow testdata directory`);
+    runProgramFlowDir(programFlowDir, options.log);
     process.stdout.write('static_analysis_testdata_runner: ok\n');
 }
 
@@ -423,6 +556,7 @@ if (require.main === module) {
 
 module.exports = {
     buildObjectTagExpectations,
+    buildProgramFlowExpectations,
     buildRuleTagExpectations,
     deriveObjectTagValue,
     deriveRuleTagValue,
@@ -430,6 +564,7 @@ module.exports = {
     formatFixtureJson,
     loadClaimDescriptions,
     runObjectTagsDir,
+    runProgramFlowDir,
     runRuleTagsDir,
     runStaticAnalysisTestdata,
 };
