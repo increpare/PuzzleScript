@@ -1,0 +1,17 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 76,
+      "text": "[ sibling1_or_sibling2 no orphan1 ] -> [ sibling1_or_sibling2 stationary orphan1 ]",
+      "tags": {
+        "objects_matched": ["Sibling1", "Sibling2"],
+        "object_absences_matched": ["Orphan1"],
+        "objects_written": ["Orphan1"],
+        "objects_erased": [],
+        "movements_written": ["Orphan1:stationary"],
+        "movements_removed": []
+      }
+    }
+  ]
+}
