@@ -1423,8 +1423,7 @@ function ruleMovementRemoveTags(rule) {
             const rhsMovementKeys = movementTermKeys(rhsCell);
             for (const key of lhsMovementKeys) {
                 if (!rhsMovementKeys.has(key)) {
-                    const movement = key.slice(key.lastIndexOf(':') + 1);
-                    if (movement !== 'stationary') movementsRemoved.add(key);
+                    movementsRemoved.add(key);
                 }
             }
             const lhsPresent = presentObjectSet(lhsCell);
