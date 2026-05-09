@@ -1367,10 +1367,13 @@ function ruleMovementWriteTags(rule) {
 
             for (const term of rhsCell) {
                 if (term.kind !== 'present' || term.movement === null) continue;
+                const writtenMovements = term.movement === 'randomdir' ? CARDINAL_MOVEMENTS : [term.movement];
                 for (const objectName of termObjects(term)) {
-                    const key = `${objectName}:${term.movement}`;
-                    if (!lhsMovementKeys.has(key)) {
-                        movementsWritten.add(key);
+                    for (const movement of writtenMovements) {
+                        const key = `${objectName}:${movement}`;
+                        if (!lhsMovementKeys.has(key)) {
+                            movementsWritten.add(key);
+                        }
                     }
                 }
             }
