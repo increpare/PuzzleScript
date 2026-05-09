@@ -475,6 +475,7 @@ function emptyFacts() {
         count_layer_invariants: [],
         transient_boundary: [],
         rulegroup_flow: [],
+        program_flow: [],
     };
 }
 
@@ -1490,6 +1491,21 @@ function ruleMayEnableRule(writes, reads) {
     return reasons;
 }
 
+function wakeEdgesForRules(psTagged, rules) {
+    const reads = new Map(rules.map(rule => [rule.id, ruleFlowReads(rule)]));
+    const writes = new Map(rules.map(rule => [rule.id, ruleFlowWrites(psTagged, rule)]));
+    const edges = [];
+    for (const fromRule of rules) {
+        const fromWrites = writes.get(fromRule.id);
+        for (const toRule of rules) {
+            const reasons = ruleMayEnableRule(fromWrites, reads.get(toRule.id));
+            if (reasons.length === 0) continue;
+            edges.push({ from: fromRule.id, to: toRule.id, reasons });
+        }
+    }
+    return edges;
+}
+
 function connectedComponents(ruleIds, edges) {
     const parent = new Map(ruleIds.map(id => [id, id]));
     function find(id) {
@@ -1524,21 +1540,12 @@ function deriveRulegroupFlowFacts(psTagged) {
         for (const group of section.groups) {
             if (group.rules.length <= 1) continue;
             const ruleIds = group.rules.map(rule => rule.id);
-            const readsByRule = new Map(group.rules.map(rule => [rule.id, ruleFlowReads(rule)]));
-            const writesByRule = new Map(group.rules.map(rule => [rule.id, ruleFlowWrites(psTagged, rule)]));
-            const interactionEdges = [];
+            const indexById = new Map(group.rules.map((rule, index) => [rule.id, index]));
+            const interactionEdges = wakeEdgesForRules(psTagged, group.rules);
             const rerunMasks = Object.fromEntries(ruleIds.map(id => [id, []]));
-            for (let fromIndex = 0; fromIndex < group.rules.length; fromIndex++) {
-                const fromRule = group.rules[fromIndex];
-                const writes = writesByRule.get(fromRule.id);
-                for (let toIndex = 0; toIndex < group.rules.length; toIndex++) {
-                    const toRule = group.rules[toIndex];
-                    const reasons = ruleMayEnableRule(writes, readsByRule.get(toRule.id));
-                    if (reasons.length === 0) continue;
-                    interactionEdges.push({ from: fromRule.id, to: toRule.id, reasons });
-                    if (toIndex <= fromIndex) {
-                        rerunMasks[fromRule.id].push(toRule.id);
-                    }
+            for (const edge of interactionEdges) {
+                if (indexById.get(edge.to) <= indexById.get(edge.from)) {
+                    rerunMasks[edge.from].push(edge.to);
                 }
             }
             for (const ruleId of ruleIds) {
@@ -1569,6 +1576,25 @@ function deriveRulegroupFlowFacts(psTagged) {
     return results;
 }
 
+function deriveProgramFlowFacts(psTagged) {
+    const entries = allRuleEntries(psTagged);
+    const rules = entries.map(entry => entry.rule);
+    const ruleIds = rules.map(rule => rule.id);
+    const wakeEdges = wakeEdgesForRules(psTagged, rules);
+    const againRules = rules.filter(rule => rule.tags.has_again).map(rule => rule.id);
+    return [fact('program_flow', 'program_flow', 'proved', {
+        subjects: { rules: ruleIds },
+        value: {
+            rule_ids: ruleIds,
+            wake_edges: wakeEdges,
+            again_rules: uniqueSorted(againRules),
+            tick_restart_possible: againRules.length > 0,
+        },
+        proof: ['direct_wake_enablement', 'again_rules_listed'],
+        evidence: ruleIds,
+    })];
+}
+
 function deriveFacts(psTagged) {
     return {
         mergeability: deriveMergeabilityFacts(psTagged),
@@ -1576,6 +1602,7 @@ function deriveFacts(psTagged) {
         count_layer_invariants: deriveCountLayerInvariantFacts(psTagged),
         transient_boundary: deriveTransientBoundaryFacts(psTagged),
         rulegroup_flow: deriveRulegroupFlowFacts(psTagged),
+        program_flow: deriveProgramFlowFacts(psTagged),
     };
 }
 
