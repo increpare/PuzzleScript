@@ -1,0 +1,14 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 76,
+      "text": "[ sibling1_or_sibling2 ] -> [ sibling1 ]",
+      "tags": {
+        "objects_matched": ["Sibling1", "Sibling2"],
+        "objects_written": ["Sibling1"],
+        "objects_erased": ["Sibling2"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 66,
+      "text": "right [ player | no orphan1 ] -> [ player | stationary orphan1 ]",
+      "tags": {
+        "objects_required": ["Player"],
+        "objects_matched": ["Player"],
+        "object_absences_matched": ["Orphan1"],
+        "objects_written": ["Orphan1"],
+        "objects_erased": [],
+        "movements_written": ["Orphan1:stationary"],
+        "movements_removed": []
+      }
+    }
+  ]
+}

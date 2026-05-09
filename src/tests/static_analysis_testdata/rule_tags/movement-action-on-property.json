@@ -1,0 +1,18 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 76,
+      "text": "[ action sibling1_or_sibling2 ] -> [ sibling1_or_sibling2 ]",
+      "tags": {
+        "objects_matched": ["Sibling1", "Sibling2"],
+        "objects_written": [],
+        "objects_erased": [],
+        "movements_required": [],
+        "movements_matched": ["Sibling1:action", "Sibling2:action"],
+        "movements_written": ["Sibling1:stationary", "Sibling2:stationary"],
+        "movements_removed": ["Sibling1:action", "Sibling2:action"]
+      }
+    }
+  ]
+}
