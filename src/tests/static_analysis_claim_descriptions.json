@@ -86,7 +86,7 @@
     {
       "name": "objects_matched",
       "description": "Concrete objects whose presence or absence is read by this win condition.",
-      "specification": "A win condition has objects_matched entries for every concrete object referenced in either the subjects mask or the targets mask, after resolving properties to concrete names. This is the conservative union: an object appears here whenever its distribution on the board could affect the win outcome, regardless of quantifier. objects_matched = subjects_matched ∪ targets_matched ∪ object_absences_matched."
+      "specification": "A win condition has objects_matched entries for every concrete object that contributes to the win read-set, after resolving properties to concrete names. For SOME and ALL this is subjects ∪ targets. For NO this is the subjects mask only (the location qualifier Y in 'No X on Y' is not considered a read). objects_matched = subjects_matched ∪ targets_matched ∪ object_absences_matched."
     },
     {
       "name": "subjects_matched",
@@ -96,7 +96,7 @@
     {
       "name": "targets_matched",
       "description": "Concrete objects in the targets mask (the 'on X' part of a win condition).",
-      "specification": "A win condition has targets_matched entries for the concrete objects in the targets mask, after resolving properties to concrete names. The targets mask is the optional second mask in a two-mask win condition of the form 'Some X on Y'. When there is no targets mask, targets_matched is empty. The targets mask applies to all quantifiers."
+      "specification": "A win condition has targets_matched entries for the concrete objects in the targets mask, after resolving properties to concrete names. The targets mask is the optional second mask in a two-mask win condition of the form 'Some X on Y' or 'All X on Y'. When there is no targets mask, or when the quantifier is NO, targets_matched is empty. Under NO, the location qualifier Y is not considered a read for wake-edge purposes."
     },
     {
       "name": "object_absences_matched",
