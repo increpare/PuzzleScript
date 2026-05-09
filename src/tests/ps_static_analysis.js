@@ -1367,10 +1367,13 @@ function ruleMovementWriteTags(rule) {
 
             for (const term of rhsCell) {
                 if (term.kind !== 'present' || term.movement === null) continue;
+                const writtenMovements = term.movement === 'randomdir' ? CARDINAL_MOVEMENTS : [term.movement];
                 for (const objectName of termObjects(term)) {
-                    const key = `${objectName}:${term.movement}`;
-                    if (!lhsMovementKeys.has(key)) {
-                        movementsWritten.add(key);
+                    for (const movement of writtenMovements) {
+                        const key = `${objectName}:${movement}`;
+                        if (!lhsMovementKeys.has(key)) {
+                            movementsWritten.add(key);
+                        }
                     }
                 }
             }
@@ -1386,6 +1389,24 @@ function ruleMovementWriteTags(rule) {
     return movementsWritten;
 }
 
+function rhsMovementsForObject(rhsMovementKeys, objectName) {
+    const movements = [];
+    for (const key of rhsMovementKeys) {
+        if (movementKeyObjectName(key) === objectName) {
+            movements.push(key.slice(key.lastIndexOf(':') + 1));
+        }
+    }
+    return movements;
+}
+
+function positiveStatesCoveredByRhsMovement(movement) {
+    if (movement === 'randomdir') return [];
+    if (CARDINAL_MOVEMENTS.includes(movement)) return [movement];
+    if (movement === 'action') return ['action'];
+    if (movement === 'stationary') return ['stationary'];
+    return [];
+}
+
 function ruleMovementRemoveTags(rule) {
     const movementsRemoved = new Set();
 
@@ -1397,11 +1418,30 @@ function ruleMovementRemoveTags(rule) {
         const rhsRow = rule.rhs[rowIndex] || [];
         const cellCount = maxCellsInRows(lhsRow, rhsRow);
         for (let cellIndex = 0; cellIndex < cellCount; cellIndex++) {
-            const lhsMovementKeys = movementTermKeys(lhsRow[cellIndex] || []);
-            const rhsMovementKeys = movementTermKeys(rhsRow[cellIndex] || []);
+            const lhsCell = lhsRow[cellIndex] || [];
+            const rhsCell = rhsRow[cellIndex] || [];
+            const lhsMovementKeys = movementTermKeys(lhsCell);
+            const rhsMovementKeys = movementTermKeys(rhsCell);
             for (const key of lhsMovementKeys) {
                 if (!rhsMovementKeys.has(key)) {
                     movementsRemoved.add(key);
+                }
+            }
+            const lhsPresent = presentObjectSet(lhsCell);
+            for (const objectName of lhsPresent) {
+                if (movementKeysContainObject(lhsMovementKeys, objectName)) continue;
+                const rhsMovements = rhsMovementsForObject(rhsMovementKeys, objectName);
+                if (rhsMovements.length === 0) continue;
+                const covered = new Set();
+                for (const movement of rhsMovements) {
+                    for (const state of positiveStatesCoveredByRhsMovement(movement)) {
+                        covered.add(state);
+                    }
+                }
+                for (const state of [...POSITIVE_MOVEMENT_STATES, 'stationary']) {
+                    if (!covered.has(state)) {
+                        movementsRemoved.add(`${objectName}:${state}`);
+                    }
                 }
             }
         }

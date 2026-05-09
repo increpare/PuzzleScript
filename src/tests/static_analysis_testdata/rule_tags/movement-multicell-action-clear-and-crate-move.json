@@ -3,11 +3,11 @@
   "ruleTag": [
     {
       "line": 61,
-      "text": "right [ action player | crate ] -> [ right player | right crate ]",
+      "text": "right [ action player | crate ] -> [ player | right crate ]",
       "tags": {
         "movements_required": ["Player:action"],
         "movements_matched": ["Player:action"],
-        "movements_written": ["Crate:right", "Player:right"],
+        "movements_written": ["Crate:right", "Player:stationary"],
         "movements_removed": ["Crate:action", "Crate:down", "Crate:left", "Crate:stationary", "Crate:up", "Player:action"]
       }
     }

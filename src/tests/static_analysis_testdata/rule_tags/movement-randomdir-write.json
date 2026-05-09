@@ -1,0 +1,17 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 61,
+      "text": "[ player ] -> [ randomdir player ]",
+      "tags": {
+        "objects_required": ["Player"],
+        "objects_matched": ["Player"],
+        "movements_required": [],
+        "movements_matched": [],
+        "movements_written": ["Player:down", "Player:left", "Player:right", "Player:up"],
+        "movements_removed": ["Player:action", "Player:down", "Player:left", "Player:right", "Player:stationary", "Player:up"]
+      }
+    }
+  ]
+}
