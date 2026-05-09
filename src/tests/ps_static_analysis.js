@@ -1403,6 +1403,7 @@ function positiveStatesCoveredByRhsMovement(movement) {
     if (movement === 'randomdir') return [];
     if (CARDINAL_MOVEMENTS.includes(movement)) return [movement];
     if (movement === 'action') return ['action'];
+    if (movement === 'stationary') return ['stationary'];
     return [];
 }
 
@@ -1437,7 +1438,7 @@ function ruleMovementRemoveTags(rule) {
                         covered.add(state);
                     }
                 }
-                for (const state of POSITIVE_MOVEMENT_STATES) {
+                for (const state of [...POSITIVE_MOVEMENT_STATES, 'stationary']) {
                     if (!covered.has(state)) {
                         movementsRemoved.add(`${objectName}:${state}`);
                     }
