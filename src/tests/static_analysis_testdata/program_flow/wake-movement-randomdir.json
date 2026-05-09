@@ -1,0 +1,13 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 48,
+      "from_text": "[ player ] -> [ randomdir player ]",
+      "to_line": 49,
+      "to_text": "[ right player ] -> [ stationary player ]",
+      "reasons": ["movement"]
+    }
+  ],
+  "againRules": []
+}

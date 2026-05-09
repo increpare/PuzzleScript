@@ -1,0 +1,13 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 48,
+      "from_text": "[ player ] -> [ crate ]",
+      "to_line": 49,
+      "to_text": "[ crate ] -> [ stationary target ]",
+      "reasons": ["object_presence"]
+    }
+  ],
+  "againRules": []
+}

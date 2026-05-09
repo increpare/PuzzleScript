@@ -1,0 +1,13 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 48,
+      "from_text": "right [ player | crate ] -> [ player | right crate ]",
+      "to_line": 49,
+      "to_text": "[ right crate ] -> [ stationary crate ]",
+      "reasons": ["movement"]
+    }
+  ],
+  "againRules": []
+}

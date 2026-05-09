@@ -1,0 +1,61 @@
+title Static Analysis Program Flow Wake Movement Exact
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+C = Crate
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+=====
+RULES
+=====
+
+right [ player | crate ] -> [ player | right crate ]
+[ right crate ] -> [ stationary crate ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PC.

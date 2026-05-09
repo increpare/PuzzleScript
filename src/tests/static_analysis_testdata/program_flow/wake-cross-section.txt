@@ -1,0 +1,74 @@
+title Static Analysis Program Flow Wake Cross Section
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+C = Crate
+A = Alpha
+B = Beta
+G = Gamma
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+
+=====
+RULES
+=====
+
+[ player ] -> [ stationary alpha ]
+late [ alpha ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P..

@@ -1,0 +1,76 @@
+title Static Analysis Program Flow Wake Property Write
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Orphan1
+lightblue
+
+Sibling1
+purple
+
+Sibling2
+pink
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+C = Crate
+O = Orphan1
+X = Sibling1
+Y = Sibling2
+Sibling1_or_Sibling2 = Sibling1 or Sibling2
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Orphan1
+Sibling1, Sibling2
+
+=====
+RULES
+=====
+
+[ orphan1 ] -> [ stationary sibling1 ]
+[ sibling1_or_sibling2 ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+POXY

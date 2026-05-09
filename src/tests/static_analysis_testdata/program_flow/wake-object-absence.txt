@@ -1,0 +1,66 @@
+title Static Analysis Program Flow Wake Object Absence
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Orphan1
+lightblue
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+C = Crate
+O = Orphan1
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Orphan1
+
+=====
+RULES
+=====
+
+[ orphan1 ] -> [ ]
+[ player no orphan1 ] -> [ stationary player ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P.O
