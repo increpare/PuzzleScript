@@ -1400,7 +1400,7 @@ function rhsMovementsForObject(rhsMovementKeys, objectName) {
 }
 
 function positiveStatesCoveredByRhsMovement(movement) {
-    if (movement === 'randomdir') return CARDINAL_MOVEMENTS.slice();
+    if (movement === 'randomdir') return POSITIVE_MOVEMENT_STATES.slice();
     if (CARDINAL_MOVEMENTS.includes(movement)) return [movement];
     if (movement === 'action') return ['action'];
     return [];
