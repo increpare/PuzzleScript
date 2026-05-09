@@ -1,0 +1,18 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 76,
+      "text": "[ right sibling1_or_sibling2 ] -> [ left sibling1_or_sibling2 ]",
+      "tags": {
+        "objects_matched": ["Sibling1", "Sibling2"],
+        "objects_written": [],
+        "objects_erased": [],
+        "movements_required": [],
+        "movements_matched": ["Sibling1:right", "Sibling2:right"],
+        "movements_written": ["Sibling1:left", "Sibling2:left"],
+        "movements_removed": ["Sibling1:right", "Sibling2:right"]
+      }
+    }
+  ]
+}
