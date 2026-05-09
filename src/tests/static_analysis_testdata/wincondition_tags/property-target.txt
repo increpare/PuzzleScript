@@ -1,0 +1,61 @@
+title Static Analysis Wincondition Tags Property Target
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+orange
+
+Sibling1
+red
+
+Sibling2
+blue
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+C = Crate
+A = Sibling1
+B = Sibling2
+Sibling1_or_Sibling2 = Sibling1 or Sibling2
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Sibling1, Sibling2
+Player, Crate
+
+=====
+RULES
+=====
+
+[ player ] -> [ stationary player ]
+
+=============
+WINCONDITIONS
+=============
+
+All Crate on Sibling1_or_Sibling2
+
+======
+LEVELS
+======
+
+PCA.

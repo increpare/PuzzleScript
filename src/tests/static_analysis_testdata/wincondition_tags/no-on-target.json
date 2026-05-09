@@ -1,0 +1,15 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "winConditionTag": [
+    {
+      "line": 50,
+      "text": "No Crate on Target",
+      "tags": {
+        "objects_matched": ["Crate", "Target"],
+        "subjects_matched": [],
+        "targets_matched": ["Target"],
+        "object_absences_matched": ["Crate"]
+      }
+    }
+  ]
+}

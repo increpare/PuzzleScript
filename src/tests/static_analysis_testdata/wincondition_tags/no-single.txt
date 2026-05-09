@@ -1,0 +1,51 @@
+title Static Analysis Wincondition Tags No Single
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+orange
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+C = Crate
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate
+
+=====
+RULES
+=====
+
+[ player ] -> [ stationary player ]
+
+=============
+WINCONDITIONS
+=============
+
+No Crate
+
+======
+LEVELS
+======
+
+P..

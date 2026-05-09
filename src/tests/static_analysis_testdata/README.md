@@ -116,6 +116,26 @@ to report an object as matched, absent, written, or erased.
 Like rule-tag tests, edges identify rules by `line` plus trimmed source `text`,
 so program-flow sources should also use compiler-idempotent rule text.
 
+## Adding A Win-Condition-Tag Test
+
+1. Add a small whole-source `.txt` file under `wincondition_tags/`.
+2. Run `make static_analysis_tests` (or `node src/tests/static_analysis_testdata_runner.js`).
+3. The runner will create the missing matching `.json` file. Each entry under
+   `winConditionTag` lists one win condition identified by `line` plus trimmed
+   source `text`, with four tag arrays:
+   - `objects_matched` — union of all concrete objects referenced (subjects ∪ targets).
+   - `subjects_matched` — concrete subjects when quantifier is SOME or ALL; empty for NO.
+   - `targets_matched` — concrete targets from the optional `on Y` part; empty when absent.
+   - `object_absences_matched` — concrete subjects when quantifier is NO; empty for SOME/ALL.
+4. Read the generated JSON and confirm that each tag array reflects the correct
+   expansion of the source win condition.
+
+Win-condition-tag sources must use compiler-idempotent rule text (same constraint
+as rule-tag tests). Fixtures should follow the same object-naming conventions
+(Background / Target / Player / Wall / Crate / Alpha / Beta / Gamma / Orphan1 /
+Sibling1 / Sibling2) so readers can understand the collision-layer structure
+without re-reading the entire source file.
+
 ## Review Policy
 
 Auto-generated or mechanically regenerated expectation JSON is a proposal, not

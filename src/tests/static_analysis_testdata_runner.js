@@ -535,6 +535,102 @@ function runProgramFlowDir(dirPath, log = process.stdout.write.bind(process.stdo
     }
 }
 
+function allWinConditionRecords(report, source) {
+    const sourceLines = source.split(/\r?\n/);
+    return (report.ps_tagged && report.ps_tagged.winconditions || []).map(wincondition => {
+        const text = (sourceLines[(wincondition.source_line || 1) - 1] || '').trim();
+        return { wincondition, line: wincondition.source_line, text };
+    });
+}
+
+function winConditionClaimByName(claimDescriptions, tagName) {
+    return (claimDescriptions.winConditionTags || []).find(tag => tag.name === tagName) || null;
+}
+
+function deriveWinConditionTagValue(wincondition, tagName) {
+    const value = wincondition.tags ? wincondition.tags[tagName] : undefined;
+    return Array.isArray(value) ? value.slice() : [];
+}
+
+function buildWinConditionTagExpectations(source, report, claimDescriptions) {
+    const winConditionTags = claimDescriptions.winConditionTags || [];
+    const records = allWinConditionRecords(report, source);
+    return {
+        schema: FIXTURE_SCHEMA,
+        winConditionTag: records.map(record => ({
+            line: record.line,
+            text: record.text,
+            tags: Object.fromEntries(winConditionTags.map(tag => [
+                tag.name,
+                deriveWinConditionTagValue(record.wincondition, tag.name),
+            ])),
+        })),
+    };
+}
+
+function validateWinConditionTagExpectationShape(filePath, payload) {
+    assert.strictEqual(payload.schema, FIXTURE_SCHEMA, `${filePath}: unsupported fixture schema`);
+    assert.ok(Array.isArray(payload.winConditionTag), `${filePath}: winConditionTag must be an array`);
+    for (const [index, item] of payload.winConditionTag.entries()) {
+        assert.ok(item && typeof item === 'object' && !Array.isArray(item), `${filePath}: winConditionTag[${index}] must be an object`);
+        assert.ok(Number.isInteger(item.line) && item.line > 0, `${filePath}: winConditionTag[${index}] missing positive integer line`);
+        assert.ok(typeof item.text === 'string' && item.text.length > 0, `${filePath}: winConditionTag[${index}] missing text`);
+        assert.ok(item.tags && typeof item.tags === 'object' && !Array.isArray(item.tags), `${filePath}: winConditionTag[${index}] missing tags object`);
+    }
+}
+
+function findWinConditionRecord(filePath, records, expected) {
+    const matches = records.filter(record => record.line === expected.line && record.text === expected.text);
+    if (matches.length !== 1) {
+        assert.fail(`${filePath}: winConditionTag line ${expected.line} text ${JSON.stringify(expected.text)} matched ${matches.length} analyzed win conditions; expected exactly 1`);
+    }
+    return matches[0];
+}
+
+function checkWinConditionFixture(txtPath, jsonPath, claimDescriptions) {
+    const source = fs.readFileSync(txtPath, 'utf8');
+    const report = analyzeSource(source, { sourcePath: txtPath });
+    assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+    const payload = readJson(jsonPath);
+    validateWinConditionTagExpectationShape(jsonPath, payload);
+    const records = allWinConditionRecords(report, source);
+    for (const row of payload.winConditionTag) {
+        const record = findWinConditionRecord(jsonPath, records, row);
+        for (const tagName of Object.keys(row.tags)) {
+            const claim = winConditionClaimByName(claimDescriptions, tagName);
+            assert.ok(claim, `${jsonPath}: unknown win condition tag ${tagName}`);
+            assertStringArray(jsonPath, tagName, row.tags[tagName]);
+            const actual = deriveWinConditionTagValue(record.wincondition, tagName);
+            assertSameStringSet(jsonPath, `winConditionTag line ${record.line} ${record.text} ${tagName}`, row.tags[tagName], actual);
+        }
+    }
+}
+
+function runWinConditionTagsDir(dirPath, claimDescriptions, log = process.stdout.write.bind(process.stdout)) {
+    const txtFiles = sortedFiles(dirPath, '.txt');
+    const jsonFiles = sortedFiles(dirPath, '.json');
+    const txtStems = new Set(txtFiles.map(name => path.basename(name, '.txt')));
+    const jsonStems = new Set(jsonFiles.map(name => path.basename(name, '.json')));
+
+    for (const stem of jsonStems) {
+        assert.ok(txtStems.has(stem), `${path.join(dirPath, `${stem}.json`)}: missing matching .txt`);
+    }
+
+    for (const txtName of txtFiles) {
+        const stem = path.basename(txtName, '.txt');
+        const txtPath = path.join(dirPath, txtName);
+        const jsonPath = path.join(dirPath, `${stem}.json`);
+        if (!fs.existsSync(jsonPath)) {
+            const source = fs.readFileSync(txtPath, 'utf8');
+            const report = analyzeSource(source, { sourcePath: txtPath });
+            assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+            writeJson(jsonPath, buildWinConditionTagExpectations(source, report, claimDescriptions));
+            log(`generated static analysis testdata: wincondition_tags/${stem}.json (review before committing)\n`);
+        }
+        checkWinConditionFixture(txtPath, jsonPath, claimDescriptions);
+    }
+}
+
 function runStaticAnalysisTestdata(options = {}) {
     const root = options.root || TESTDATA_ROOT;
     const claimDescriptions = loadClaimDescriptions(options.claimDescriptionsPath || CLAIM_DESCRIPTIONS_PATH);
@@ -547,6 +643,9 @@ function runStaticAnalysisTestdata(options = {}) {
     const programFlowDir = path.join(root, 'program_flow');
     assert.ok(fs.existsSync(programFlowDir), `${programFlowDir}: missing program_flow testdata directory`);
     runProgramFlowDir(programFlowDir, options.log);
+    const winConditionTagsDir = path.join(root, 'wincondition_tags');
+    assert.ok(fs.existsSync(winConditionTagsDir), `${winConditionTagsDir}: missing wincondition_tags testdata directory`);
+    runWinConditionTagsDir(winConditionTagsDir, claimDescriptions, options.log);
     process.stdout.write('static_analysis_testdata_runner: ok\n');
 }
 
@@ -558,13 +657,17 @@ module.exports = {
     buildObjectTagExpectations,
     buildProgramFlowExpectations,
     buildRuleTagExpectations,
+    buildWinConditionTagExpectations,
     deriveObjectTagValue,
     deriveRuleTagValue,
+    deriveWinConditionTagValue,
     findRuleRecord,
+    findWinConditionRecord,
     formatFixtureJson,
     loadClaimDescriptions,
     runObjectTagsDir,
     runProgramFlowDir,
     runRuleTagsDir,
     runStaticAnalysisTestdata,
+    runWinConditionTagsDir,
 };

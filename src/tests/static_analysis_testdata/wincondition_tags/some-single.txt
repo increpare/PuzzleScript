@@ -1,0 +1,47 @@
+title Static Analysis Wincondition Tags Some Single
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+=====
+RULES
+=====
+
+[ player ] -> [ stationary player ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P..

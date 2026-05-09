@@ -99,12 +99,22 @@ function buildWinconditions(state) {
     return Array.from(state.winconditions, (condition, index) => {
         const targetNames = condition[2] ? objectInternalNamesFromMask(state, condition[2]) : [];
         const plainCondition = targetNames.length === objectCount;
+        const subjects = objectNamesFromMask(state, condition[1]);
+        const targets = plainCondition ? [] : targetNames.map(name => displayName(state, name));
+        const isNo = condition[0] === -1;
         return {
             id: `win_${index}`,
             quantifier: condition[0],
-            subjects: objectNamesFromMask(state, condition[1]),
-            targets: plainCondition ? [] : targetNames.map(name => displayName(state, name)),
-            tags: { plain: plainCondition },
+            source_line: condition[3],
+            subjects,
+            targets,
+            tags: {
+                plain: plainCondition,
+                objects_matched: uniqueSorted(subjects.concat(targets)),
+                subjects_matched: isNo ? [] : uniqueSorted(subjects),
+                targets_matched: uniqueSorted(targets),
+                object_absences_matched: isNo ? uniqueSorted(subjects) : [],
+            },
         };
     });
 }
