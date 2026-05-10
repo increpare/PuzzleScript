@@ -116,6 +116,23 @@ to report an object as matched, absent, written, or erased.
 Like rule-tag tests, edges identify rules by `line` plus trimmed source `text`,
 so program-flow sources should also use compiler-idempotent rule text.
 
+## Adding A Winflow Test
+
+1. Add a small whole-source `.txt` file under `winflow/`.
+2. Run `make static_analysis_tests` (or `node src/tests/static_analysis_testdata_runner.js`).
+3. The runner will create the matching `.json` file. Each entry under `wakeEdges` lists one
+   (rule, win-condition) pair where firing the rule may newly satisfy the win condition:
+   - `object_presence` reason: rule's `objects_written` intersects the win's `objects_matched`
+     (writing an object the win reads as requiring-present).
+   - `object_absence` reason: rule's `objects_erased` intersects the win's `object_absences_matched`
+     (erasing an object the win reads as requiring-absent).
+   Only enabling wakes are tracked: a rule that could invalidate a win without enabling it
+   does not produce an edge.
+4. Read the generated JSON and confirm each edge corresponds to a genuine enabling relationship.
+
+Like rule-tag and program-flow tests, edges identify rules by `line` plus trimmed source `text`
+(idempotency required) and win conditions by `line` plus trimmed source `text`.
+
 ## Adding A Win-Condition-Tag Test
 
 1. Add a small whole-source `.txt` file under `wincondition_tags/`.

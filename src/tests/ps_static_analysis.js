@@ -486,6 +486,7 @@ function emptyFacts() {
         transient_boundary: [],
         rulegroup_flow: [],
         program_flow: [],
+        winflow: [],
     };
 }
 
@@ -1586,6 +1587,38 @@ function deriveRulegroupFlowFacts(psTagged) {
     return results;
 }
 
+function deriveWinflowFacts(psTagged) {
+    const entries = allRuleEntries(psTagged);
+    const rules = entries.map(entry => entry.rule);
+    const ruleIds = rules.map(rule => rule.id);
+    const wins = psTagged.winconditions;
+    const winIds = wins.map(win => win.id);
+    const wakeEdges = [];
+    for (const rule of rules) {
+        const writes = ruleFlowWrites(psTagged, rule);
+        for (const win of wins) {
+            const reasons = [];
+            for (const objectName of win.tags.objects_matched) {
+                if (writes.object_present.has(objectName)) { reasons.push('object_presence'); break; }
+            }
+            for (const objectName of win.tags.object_absences_matched) {
+                if (writes.object_absent.has(objectName)) { reasons.push('object_absence'); break; }
+            }
+            if (reasons.length > 0) wakeEdges.push({ from: rule.id, to: win.id, reasons });
+        }
+    }
+    return [fact('winflow', 'winflow', 'proved', {
+        subjects: { rules: ruleIds, wins: winIds },
+        value: {
+            rule_ids: ruleIds,
+            win_ids: winIds,
+            wake_edges: wakeEdges,
+        },
+        proof: ['direct_wake_enablement'],
+        evidence: ruleIds,
+    })];
+}
+
 function deriveProgramFlowFacts(psTagged) {
     const entries = allRuleEntries(psTagged);
     const rules = entries.map(entry => entry.rule);
@@ -1613,6 +1646,7 @@ function deriveFacts(psTagged) {
         transient_boundary: deriveTransientBoundaryFacts(psTagged),
         rulegroup_flow: deriveRulegroupFlowFacts(psTagged),
         program_flow: deriveProgramFlowFacts(psTagged),
+        winflow: deriveWinflowFacts(psTagged),
     };
 }
 

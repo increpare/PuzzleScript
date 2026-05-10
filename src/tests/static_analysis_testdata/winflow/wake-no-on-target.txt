@@ -1,0 +1,58 @@
+title Static Analysis Winflow Wake No On Target
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Crate
+orange
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+C = Crate
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player
+Crate
+
+=====
+RULES
+=====
+
+[ player ] -> [ stationary player stationary target ]
+[ crate ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+No Crate on Target
+
+======
+LEVELS
+======
+
+PCT.

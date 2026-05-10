@@ -1,0 +1,12 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 40,
+      "from_text": "[ crate ] -> [ ]",
+      "to_line": 46,
+      "to_text": "No Crate",
+      "reasons": ["object_absence"]
+    }
+  ]
+}

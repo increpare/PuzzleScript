@@ -1,0 +1,56 @@
+title Static Analysis Winflow Wake Implicit Erase
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Sibling1
+red
+
+Sibling2
+blue
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+A = Sibling1
+B = Sibling2
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Sibling1, Sibling2
+
+=====
+RULES
+=====
+
+[ sibling1 ] -> [ sibling2 ]
+
+=============
+WINCONDITIONS
+=============
+
+No Sibling1
+
+======
+LEVELS
+======
+
+PA.

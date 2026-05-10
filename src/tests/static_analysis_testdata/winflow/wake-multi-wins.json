@@ -1,0 +1,19 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 50,
+      "from_text": "[ player ] -> [ stationary player stationary crate ]",
+      "to_line": 58,
+      "to_text": "All Crate on Target",
+      "reasons": ["object_presence"]
+    },
+    {
+      "from_line": 51,
+      "from_text": "[ orphan1 ] -> [ ]",
+      "to_line": 59,
+      "to_text": "No Orphan1",
+      "reasons": ["object_absence"]
+    }
+  ]
+}

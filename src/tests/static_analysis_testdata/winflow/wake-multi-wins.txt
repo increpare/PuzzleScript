@@ -1,0 +1,65 @@
+title Static Analysis Winflow Wake Multi Wins
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Crate
+orange
+
+Orphan1
+lightblue
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+C = Crate
+O = Orphan1
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player
+Crate
+Orphan1
+
+=====
+RULES
+=====
+
+[ player ] -> [ stationary player stationary crate ]
+[ orphan1 ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+All Crate on Target
+No Orphan1
+
+======
+LEVELS
+======
+
+PCT.O

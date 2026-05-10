@@ -70,6 +70,8 @@ function loadClaimDescriptions(filePath = CLAIM_DESCRIPTIONS_PATH) {
     validateClaimDescriptionList(filePath, 'objectTags', claims.objectTags);
     validateClaimDescriptionList(filePath, 'ruleTags', claims.ruleTags);
     validateClaimDescriptionList(filePath, 'factFamilies', claims.factFamilies);
+    validateClaimDescriptionList(filePath, 'winflow', claims.winflow);
+    validateClaimDescriptionList(filePath, 'winConditionTags', claims.winConditionTags);
     return claims;
 }
 
@@ -535,6 +537,86 @@ function runProgramFlowDir(dirPath, log = process.stdout.write.bind(process.stdo
     }
 }
 
+function winflowFactValue(report) {
+    const facts = (report.facts && report.facts.winflow) || [];
+    if (facts.length === 0) return { rule_ids: [], win_ids: [], wake_edges: [] };
+    return facts[0].value;
+}
+
+function buildWinflowExpectations(source, report) {
+    const ruleRecords = allRuleRecords(report, source);
+    assertRuleRecordsIdempotent(report.source.path, ruleRecords);
+    const winRecords = allWinConditionRecords(report, source);
+    const ruleById = recordById(ruleRecords);
+    const winById = new Map(winRecords.map(r => [r.wincondition.id, r]));
+    const value = winflowFactValue(report);
+    const wakeEdges = value.wake_edges.map(edge => {
+        const from = ruleById.get(edge.from);
+        const to = winById.get(edge.to);
+        assert.ok(from, `winflow edge from rule id ${edge.from} not found in records`);
+        assert.ok(to, `winflow edge to win id ${edge.to} not found in records`);
+        return {
+            from_line: from.line,
+            from_text: from.text,
+            to_line: to.line,
+            to_text: to.text,
+            reasons: edge.reasons.slice(),
+        };
+    });
+    wakeEdges.sort(compareEdgeRows);
+    return { schema: FIXTURE_SCHEMA, wakeEdges };
+}
+
+function validateWinflowExpectationShape(filePath, payload) {
+    assert.strictEqual(payload.schema, FIXTURE_SCHEMA, `${filePath}: unsupported fixture schema`);
+    assert.ok(Array.isArray(payload.wakeEdges), `${filePath}: wakeEdges must be an array`);
+    for (const [index, edge] of payload.wakeEdges.entries()) {
+        assert.ok(edge && typeof edge === 'object' && !Array.isArray(edge), `${filePath}: wakeEdges[${index}] must be an object`);
+        assert.ok(Number.isInteger(edge.from_line) && edge.from_line > 0, `${filePath}: wakeEdges[${index}] missing positive integer from_line`);
+        assert.ok(typeof edge.from_text === 'string' && edge.from_text.length > 0, `${filePath}: wakeEdges[${index}] missing from_text`);
+        assert.ok(Number.isInteger(edge.to_line) && edge.to_line > 0, `${filePath}: wakeEdges[${index}] missing positive integer to_line`);
+        assert.ok(typeof edge.to_text === 'string' && edge.to_text.length > 0, `${filePath}: wakeEdges[${index}] missing to_text`);
+        assert.ok(Array.isArray(edge.reasons) && edge.reasons.length > 0, `${filePath}: wakeEdges[${index}].reasons must be a non-empty array`);
+        for (const reason of edge.reasons) {
+            assert.ok(REASON_VALUES.includes(reason), `${filePath}: wakeEdges[${index}].reasons contains unknown reason ${JSON.stringify(reason)}`);
+        }
+    }
+}
+
+function checkWinflowFixture(txtPath, jsonPath) {
+    const source = fs.readFileSync(txtPath, 'utf8');
+    const report = analyzeSource(source, { sourcePath: txtPath });
+    assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+    const payload = readJson(jsonPath);
+    validateWinflowExpectationShape(jsonPath, payload);
+    const actual = buildWinflowExpectations(source, report);
+    const expectedEdges = payload.wakeEdges.slice().sort(compareEdgeRows);
+    assert.deepStrictEqual(actual.wakeEdges, expectedEdges, `${jsonPath}: wakeEdges mismatch`);
+}
+
+function runWinflowDir(dirPath, log = process.stdout.write.bind(process.stdout)) {
+    const txtFiles = sortedFiles(dirPath, '.txt');
+    const jsonFiles = sortedFiles(dirPath, '.json');
+    const txtStems = new Set(txtFiles.map(name => path.basename(name, '.txt')));
+    const jsonStems = new Set(jsonFiles.map(name => path.basename(name, '.json')));
+    for (const stem of jsonStems) {
+        assert.ok(txtStems.has(stem), `${path.join(dirPath, `${stem}.json`)}: missing matching .txt`);
+    }
+    for (const txtName of txtFiles) {
+        const stem = path.basename(txtName, '.txt');
+        const txtPath = path.join(dirPath, txtName);
+        const jsonPath = path.join(dirPath, `${stem}.json`);
+        if (!fs.existsSync(jsonPath)) {
+            const source = fs.readFileSync(txtPath, 'utf8');
+            const report = analyzeSource(source, { sourcePath: txtPath });
+            assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+            writeJson(jsonPath, buildWinflowExpectations(source, report));
+            log(`generated static analysis testdata: winflow/${stem}.json (review before committing)\n`);
+        }
+        checkWinflowFixture(txtPath, jsonPath);
+    }
+}
+
 function allWinConditionRecords(report, source) {
     const sourceLines = source.split(/\r?\n/);
     return (report.ps_tagged && report.ps_tagged.winconditions || []).map(wincondition => {
@@ -643,6 +725,9 @@ function runStaticAnalysisTestdata(options = {}) {
     const programFlowDir = path.join(root, 'program_flow');
     assert.ok(fs.existsSync(programFlowDir), `${programFlowDir}: missing program_flow testdata directory`);
     runProgramFlowDir(programFlowDir, options.log);
+    const winflowDir = path.join(root, 'winflow');
+    assert.ok(fs.existsSync(winflowDir), `${winflowDir}: missing winflow testdata directory`);
+    runWinflowDir(winflowDir, options.log);
     const winConditionTagsDir = path.join(root, 'wincondition_tags');
     assert.ok(fs.existsSync(winConditionTagsDir), `${winConditionTagsDir}: missing wincondition_tags testdata directory`);
     runWinConditionTagsDir(winConditionTagsDir, claimDescriptions, options.log);
@@ -658,6 +743,7 @@ module.exports = {
     buildProgramFlowExpectations,
     buildRuleTagExpectations,
     buildWinConditionTagExpectations,
+    buildWinflowExpectations,
     deriveObjectTagValue,
     deriveRuleTagValue,
     deriveWinConditionTagValue,
@@ -670,4 +756,5 @@ module.exports = {
     runRuleTagsDir,
     runStaticAnalysisTestdata,
     runWinConditionTagsDir,
+    runWinflowDir,
 };

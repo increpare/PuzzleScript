@@ -1,0 +1,56 @@
+title Static Analysis Winflow No Wake Disjoint
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+orange
+
+Wall
+brown
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+C = Crate
+# = Wall
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Crate, Wall
+
+=====
+RULES
+=====
+
+[ crate ] -> [ wall ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PC.

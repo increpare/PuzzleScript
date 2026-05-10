@@ -82,6 +82,13 @@
       "specification": "The program_flow fact lists, for the whole program, every ordered rule pair (R1, R2) where R1's RHS writes may enable a new match for R2's LHS. An edge is emitted whenever R1's writes intersect R2's reads in any of: object presence (writing an object R2 requires present), object absence (erasing an object R2 requires absent), or movement (writing an object:movement R2 reads, including the cardinal-to-moving subsumption). Edges are listed for all ordered pairs across all rule sections without scope segmentation; self-edges (R -> R) are kept when present. The again_rules field lists every rule whose firing semantically forces a tick restart (rules whose summary commands include `again`). Consumers that want the worst-case wake set should take the union of wake_edges with again_rules x rule_ids; this expansion is intentionally not materialised in the fact."
     }
   ],
+  "winflow": [
+    {
+      "name": "winflow",
+      "description": "Pairwise wake graph: which rules may, when applied, newly satisfy a win condition.",
+      "specification": "The winflow fact lists, for the whole program, every ordered pair (R, W) where R's RHS writes may newly satisfy win condition W. An object_presence edge is emitted when R's objects_written intersects W's objects_matched (W's presence reads). An object_absence edge is emitted when R's objects_erased intersects W's object_absences_matched (W's absence reads). Only enabling wakes are tracked: a rule that could invalidate a win condition without enabling it does not produce an edge. The win_ids field lists win condition ids in source order; rule_ids lists rule ids in source order."
+    }
+  ],
   "winConditionTags": [
     {
       "name": "objects_matched",

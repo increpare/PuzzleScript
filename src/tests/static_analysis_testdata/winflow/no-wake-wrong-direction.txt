@@ -1,0 +1,59 @@
+title Static Analysis Winflow No Wake Wrong Direction
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+Orphan1
+lightblue
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+A = Alpha
+O = Orphan1
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha
+Orphan1
+
+=====
+RULES
+=====
+
+[ alpha ] -> [ ]
+[ player ] -> [ stationary player stationary orphan1 ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Alpha
+No Orphan1
+
+======
+LEVELS
+======
+
+PA.
