@@ -474,8 +474,8 @@ function buildPsTagged(state, options = {}) {
     normalizeTermRefs(psTagged);
     tagRuleObjectTags(psTagged);
     tagInertCollisionLayers(psTagged);
-    tagCosmeticClosure(psTagged);
     tagCosmeticRules(psTagged);
+    tagCosmeticObjects(psTagged);
     return psTagged;
 }
 
@@ -946,130 +946,40 @@ function objectWriteNames(psTagged, rule) {
     return names;
 }
 
-function layerIdsForObjectNames(psTagged, objectNames) {
-    const layers = new Set();
-    for (const objectName of objectNames) {
-        const layer = layerForObject(psTagged, objectName);
-        if (layer !== null && layer !== undefined) layers.add(layer);
-    }
-    return layers;
-}
+function tagCosmeticObjects(psTagged) {
+    const nonCosmetic = new Set(playerObjectNameSet(psTagged));
 
-function coreSeedsFromWinAndPlayer(psTagged) {
-    const seeds = new Set(playerObjectNameSet(psTagged));
     for (const win of psTagged.winconditions) {
-        addValues(seeds, win.subjects);
-        addValues(seeds, win.targets);
+        addValues(nonCosmetic, win.tags.objects_matched);
+        addValues(nonCosmetic, win.tags.object_absences_matched);
     }
-    return seeds;
-}
 
-function coreSeedsFromWinCommandRules(psTagged) {
-    const seeds = new Set();
     for (const { rule } of allRuleEntries(psTagged)) {
-        if (!rule.summary.semantic_commands.includes('win')) continue;
-        addValues(seeds, objectReadNames(rule));
-    }
-    return seeds;
-}
-
-function tagCosmeticClosure(psTagged) {
-    const allNames = psTagged.objects.map(object => object.name);
-    const core = new Set();
-    addValues(core, coreSeedsFromWinAndPlayer(psTagged));
-    addValues(core, coreSeedsFromWinCommandRules(psTagged));
-
-    const readWriteEdges = [];
-    for (const { rule } of allRuleEntries(psTagged)) {
-        const reads = objectReadNames(rule);
-        const writes = objectWriteNames(psTagged, rule);
-        for (const from of reads) {
-            for (const to of writes) {
-                readWriteEdges.push([from, to]);
-            }
+        if (rule.tags.cosmetic) continue;
+        addValues(nonCosmetic, rule.tags.objects_matched);
+        addValues(nonCosmetic, rule.tags.object_absences_matched);
+        for (const key of rule.tags.movements_matched) {
+            nonCosmetic.add(movementKeyObjectName(key));
         }
     }
 
-    function coreLayers() {
-        const layers = new Set();
-        for (const objectName of core) {
-            const layer = layerForObject(psTagged, objectName);
-            if (layer !== null && layer !== undefined) layers.add(layer);
-        }
-        return layers;
-    }
-
-    function expandReadWriteFromCore() {
-        let changed = false;
-        const queue = [...core];
-        const seen = new Set(core);
-        while (queue.length > 0) {
-            const from = queue.pop();
-            for (const [a, b] of readWriteEdges) {
-                if (a !== from) continue;
-                if (seen.has(b)) continue;
-                seen.add(b);
-                core.add(b);
-                queue.push(b);
-                changed = true;
-            }
-        }
-        return changed;
-    }
-
-    let guard = 0;
-    const maxRounds = allNames.length + readWriteEdges.length + 8;
-    while (guard++ < maxRounds) {
-        let roundChanged = false;
-        const layers = coreLayers();
-        for (const { rule } of allRuleEntries(psTagged)) {
-            const writeNames = objectWriteNames(psTagged, rule);
-            if (writeNames.size === 0) continue;
-            const layerWrite = layerIdsForObjectNames(psTagged, writeNames);
-            let hits = false;
-            for (const layerId of layerWrite) {
-                if (layers.has(layerId)) {
-                    hits = true;
-                    break;
-                }
-            }
-            if (!hits) continue;
-            for (const objectName of writeNames) {
-                if (!core.has(objectName)) {
-                    core.add(objectName);
-                    roundChanged = true;
-                }
-            }
-            // LHS reads gate whether this rule writes to core layers, so the
-            // reads themselves are gameplay-relevant: removing one would change
-            // when (or whether) the write fires. Pull them into core too.
-            for (const objectName of objectReadNames(rule)) {
-                if (!core.has(objectName)) {
-                    core.add(objectName);
-                    roundChanged = true;
-                }
-            }
-        }
-        if (expandReadWriteFromCore()) roundChanged = true;
-        // Objects sharing a collision layer with a core object are gameplay-
-        // relevant via the engine's collision system, even if no rule names
-        // them: their presence blocks core objects from occupying a cell.
-        const coreLayerSet = coreLayers();
+    let changed = true;
+    while (changed) {
+        changed = false;
         for (const layer of psTagged.collision_layers || []) {
-            if (!coreLayerSet.has(layer.id)) continue;
-            for (const objectName of layer.objects || []) {
-                if (!core.has(objectName)) {
-                    core.add(objectName);
-                    roundChanged = true;
+            const layerObjects = layer.objects || [];
+            if (!layerObjects.some(obj => nonCosmetic.has(obj))) continue;
+            for (const obj of layerObjects) {
+                if (!nonCosmetic.has(obj)) {
+                    nonCosmetic.add(obj);
+                    changed = true;
                 }
             }
         }
-        if (!roundChanged) break;
     }
 
-    for (const objectName of allNames) {
-        const object = psTagged.objects.find(item => item.name === objectName);
-        if (object) object.tags.cosmetic = !core.has(objectName);
+    for (const object of psTagged.objects) {
+        object.tags.cosmetic = !nonCosmetic.has(object.name);
     }
 }
 

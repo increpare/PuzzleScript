@@ -24,6 +24,9 @@ Object-tag expectations are grouped by object:
 
 ## Adding An Object-Tag Test
 
+Boolean object tags (such as `cosmetic`, `is_player`, `created_by_rules`) take a
+JSON boolean value. String-enum tags (such as `level_presence`) take a quoted string.
+
 1. Add a small whole-source `.txt` file under `object_tags/`.
 2. Run:
 

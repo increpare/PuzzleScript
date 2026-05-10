@@ -26,6 +26,11 @@
       "name": "destroyed_by_rules",
       "description": "A solver-active rule may write this object absent from a cell.",
       "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may write that object absent from a cell where the left-hand side allows that object to be present in the same cell. This includes explicit absent writes, removing a left-hand side object from its original cell, and overwriting a possible same-layer occupant. This is a cell-local write tag: relocation can count as destruction in the source cell, even if the object's total count is preserved."
+    },
+    {
+      "name": "cosmetic",
+      "description": "Object is not read by any win condition or non-cosmetic rule.",
+      "specification": "An object is cosmetic (true) when it is not in any win condition's presence or absence read set (objects_matched ∪ object_absences_matched), not read (presence, absence, or movement) by any non-cosmetic rule, and does not share a collision layer with any non-cosmetic object. Player-role objects are always non-cosmetic regardless of whether rules or win conditions reference them. Background-role objects are cosmetic if unreferenced."
     }
   ],
   "ruleTags": [
