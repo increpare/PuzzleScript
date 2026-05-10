@@ -1050,6 +1050,7 @@ function deriveTransientBoundaryFacts(psTagged) {
         if (creators.some(entry => entry.group.tags.has_again || entry.rule.tags.has_again)) blockers.push('has_again_taint');
         if (creators.some(entry => entry.rule.rigid) || clearers.some(entry => entry.rule.rigid)) blockers.push('rigid_rule');
         const status = blockers.length === 0 ? 'proved' : 'rejected';
+        object.tags.temporary = status === 'proved';
         results.push(fact('transient_boundary', `object_${object.name}_end_turn_transient`, status, {
             subjects: { objects: [object.name] },
             tags: { single_turn_only: true },

@@ -31,6 +31,16 @@
       "name": "cosmetic",
       "description": "Object is not read by any win condition or non-cosmetic rule.",
       "specification": "An object is cosmetic (true) when it is not in any win condition's presence or absence read set (objects_matched ∪ object_absences_matched), not read (presence, absence, or movement) by any non-cosmetic rule, and does not share a collision layer with any non-cosmetic object. Player-role objects are always non-cosmetic regardless of whether rules or win conditions reference them. Background-role objects are cosmetic if unreferenced."
+    },
+    {
+      "name": "static",
+      "description": "No solver-active rule can create, destroy, or move this object.",
+      "specification": "An object is static (true) when no solver-active rule writes it present, writes it absent, assigns it a movement, and no solver-active rule can create any object on the same collision layer (which would implicitly displace it). Player-role objects are never static because player input always assigns them movement."
+    },
+    {
+      "name": "temporary",
+      "description": "No instance of this object survives to the end of a turn.",
+      "specification": "An object is temporary (true) when: it is never present in any initial level; it is not referenced by any win condition; every instance is created by a solver-active rule (not placed in levels); every creator rule is followed by at least one late-section solver-active rule that unconditionally clears the object (single positive LHS term matching only the object with no movement qualifier, RHS does not keep it); and no creator or clearer is a rigid rule or has again taint."
     }
   ],
   "ruleTags": [
