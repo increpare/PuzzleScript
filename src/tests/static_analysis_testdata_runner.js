@@ -281,6 +281,11 @@ function deriveRuleTagValue(rule, tagName) {
     return Array.isArray(value) ? value.slice() : [];
 }
 
+function deriveRuleTagBooleanValue(rule, tagName) {
+    const value = rule.tags ? rule.tags[tagName] : undefined;
+    return typeof value === 'boolean' ? value : false;
+}
+
 function assertStringArray(filePath, label, value) {
     assert.ok(Array.isArray(value), `${filePath}: ${label} expected value must be string[]`);
     assert.ok(value.every(item => typeof item === 'string'), `${filePath}: ${label} expected value must be string[]`);
@@ -311,7 +316,9 @@ function buildRuleTagExpectations(source, report, claimDescriptions) {
             text: record.text,
             tags: Object.fromEntries(ruleTags.map(tag => [
                 tag.name,
-                deriveRuleTagValue(record.rule, tag.name),
+                tag.type === 'boolean'
+                    ? deriveRuleTagBooleanValue(record.rule, tag.name)
+                    : deriveRuleTagValue(record.rule, tag.name),
             ])),
         })),
     };
@@ -340,6 +347,12 @@ function checkRuleTagExpectation(filePath, record, claimDescriptions, tags, tagN
     const claim = ruleClaimByName(claimDescriptions, tagName);
     assert.ok(claim, `${filePath}: unknown rule tag ${tagName}`);
     const expected = tags[tagName];
+    if (claim.type === 'boolean') {
+        assert.ok(typeof expected === 'boolean', `${filePath}: ${tagName} expected value must be boolean`);
+        const actual = deriveRuleTagBooleanValue(record.rule, tagName);
+        assert.strictEqual(actual, expected, `${filePath}: ruleTag line ${record.line} ${record.text} ${tagName} expected ${expected}, got ${actual}`);
+        return;
+    }
     assertStringArray(filePath, tagName, expected);
     const actual = deriveRuleTagValue(record.rule, tagName);
     assertSameStringSet(filePath, `ruleTag line ${record.line} ${record.text} ${tagName}`, expected, actual);

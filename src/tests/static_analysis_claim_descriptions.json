@@ -73,6 +73,12 @@
       "name": "movements_removed",
       "description": "Concrete object movements no longer present after the rule RHS.",
       "specification": "A rule has movements_removed entries of the form Object:movement for concrete LHS movement matches that are not preserved by an identical RHS movement match for the same object in the corresponding RHS cell. This includes direction changes, movement clears, object relocation, object deletion, and action matches consumed by an RHS movement write."
+    },
+    {
+      "name": "cosmetic",
+      "type": "boolean",
+      "description": "Rule has no reachable effect on win conditions or non-cosmetic rules.",
+      "specification": "A rule is cosmetic (true) when backward reachability from win conditions and non-cosmetic semantic commands determines that firing the rule cannot affect any win condition check or any non-cosmetic rule match. A rule is non-cosmetic (false) when: (1) it carries a non-cosmetic semantic command (again, restart, cancel, win); (2) its objects_written or objects_erased intersect any win condition's objects_matched or object_absences_matched; or (3) its write effects (objects or movements) intersect the read requirements (objects_matched, object_absences_matched, or movements_matched) of any non-cosmetic rule."
     }
   ],
   "factFamilies": [

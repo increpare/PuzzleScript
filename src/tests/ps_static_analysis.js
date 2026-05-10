@@ -475,6 +475,7 @@ function buildPsTagged(state, options = {}) {
     tagRuleObjectTags(psTagged);
     tagInertCollisionLayers(psTagged);
     tagCosmeticClosure(psTagged);
+    tagCosmeticRules(psTagged);
     return psTagged;
 }
 
@@ -1069,6 +1070,57 @@ function tagCosmeticClosure(psTagged) {
     for (const objectName of allNames) {
         const object = psTagged.objects.find(item => item.name === objectName);
         if (object) object.tags.cosmetic = !core.has(objectName);
+    }
+}
+
+const NON_COSMETIC_COMMANDS = new Set(['again', 'restart', 'cancel', 'win']);
+
+function tagCosmeticRules(psTagged) {
+    const allRules = allRuleEntries(psTagged).map(entry => entry.rule);
+    const nonCosmetic = new Set();
+
+    for (const rule of allRules) {
+        if (rule.summary.semantic_commands.some(cmd => NON_COSMETIC_COMMANDS.has(cmd))) {
+            nonCosmetic.add(rule.id);
+        }
+    }
+
+    for (const rule of allRules) {
+        if (nonCosmetic.has(rule.id)) continue;
+        for (const win of psTagged.winconditions) {
+            const winReadSet = new Set([...win.tags.objects_matched, ...win.tags.object_absences_matched]);
+            if ([...rule.tags.objects_written, ...rule.tags.objects_erased].some(obj => winReadSet.has(obj))) {
+                nonCosmetic.add(rule.id);
+                break;
+            }
+        }
+    }
+
+    function r1AffectsR2(r1, r2) {
+        const r2ReadObjs = new Set([...r2.tags.objects_matched, ...r2.tags.object_absences_matched]);
+        if ([...r1.tags.objects_written, ...r1.tags.objects_erased].some(obj => r2ReadObjs.has(obj))) return true;
+        const r2MovSet = new Set(r2.tags.movements_matched);
+        return [...r1.tags.movements_written, ...r1.tags.movements_removed].some(mov => r2MovSet.has(mov));
+    }
+
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const r1 of allRules) {
+            if (nonCosmetic.has(r1.id)) continue;
+            for (const r2 of allRules) {
+                if (!nonCosmetic.has(r2.id)) continue;
+                if (r1AffectsR2(r1, r2)) {
+                    nonCosmetic.add(r1.id);
+                    changed = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    for (const rule of allRules) {
+        rule.tags.cosmetic = !nonCosmetic.has(rule.id);
     }
 }
 

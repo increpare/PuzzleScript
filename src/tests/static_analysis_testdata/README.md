@@ -56,7 +56,9 @@ Object-tag expectations are grouped by object:
 5. Run `make static_analysis_tests` again. Existing JSON files are never
    overwritten, and only listed rule-tag expectations are checked.
 
-Rule-tag expectations identify rules by `line` plus trimmed source `text`.
+Rule-tag expectations identify rules by `line` plus trimmed source `text`. Most rule
+tags are string arrays; boolean tags (such as `cosmetic`) take a JSON boolean value
+instead of an array.
 If those two fields do not identify exactly one analyzed rule, the runner fails
 instead of inventing another locator.
 
