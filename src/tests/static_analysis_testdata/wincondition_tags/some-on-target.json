@@ -1,0 +1,15 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "winConditionTag": [
+    {
+      "line": 46,
+      "text": "Some Player on Target",
+      "tags": {
+        "objects_matched": ["Player", "Target"],
+        "subjects_matched": ["Player"],
+        "targets_matched": ["Target"],
+        "object_absences_matched": []
+      }
+    }
+  ]
+}

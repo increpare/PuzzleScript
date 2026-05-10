@@ -1,0 +1,15 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "winConditionTag": [
+    {
+      "line": 55,
+      "text": "All Crate on Sibling1_or_Sibling2",
+      "tags": {
+        "objects_matched": ["Crate", "Sibling1", "Sibling2"],
+        "subjects_matched": ["Crate"],
+        "targets_matched": ["Sibling1", "Sibling2"],
+        "object_absences_matched": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 63,
+      "from_text": "[ orphan1 ] -> [ stationary sibling1 ]",
+      "to_line": 64,
+      "to_text": "[ sibling1_or_sibling2 ] -> [ ]",
+      "reasons": ["object_presence"]
+    }
+  ],
+  "againRules": []
+}

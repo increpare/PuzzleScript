@@ -1,0 +1,13 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 61,
+      "from_text": "right [ alpha | no alpha ] -> [ alpha | alpha ]",
+      "to_line": 61,
+      "to_text": "right [ alpha | no alpha ] -> [ alpha | alpha ]",
+      "reasons": ["object_presence"]
+    }
+  ],
+  "againRules": []
+}

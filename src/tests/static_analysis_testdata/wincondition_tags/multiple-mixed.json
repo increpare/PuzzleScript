@@ -1,0 +1,35 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "winConditionTag": [
+    {
+      "line": 55,
+      "text": "Some Player",
+      "tags": {
+        "objects_matched": ["Player"],
+        "subjects_matched": ["Player"],
+        "targets_matched": [],
+        "object_absences_matched": []
+      }
+    },
+    {
+      "line": 56,
+      "text": "All Crate on Target",
+      "tags": {
+        "objects_matched": ["Crate", "Target"],
+        "subjects_matched": ["Crate"],
+        "targets_matched": ["Target"],
+        "object_absences_matched": []
+      }
+    },
+    {
+      "line": 57,
+      "text": "No Orphan1",
+      "tags": {
+        "objects_matched": ["Orphan1"],
+        "subjects_matched": [],
+        "targets_matched": [],
+        "object_absences_matched": ["Orphan1"]
+      }
+    }
+  ]
+}
