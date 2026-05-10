@@ -1,0 +1,33 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 61,
+      "from_text": "[ stationary alpha ] -> [ right alpha ]",
+      "to_line": 69,
+      "to_text": "Some Alpha on Target",
+      "reasons": ["movement"]
+    },
+    {
+      "from_line": 61,
+      "from_text": "[ stationary alpha ] -> [ right alpha ]",
+      "to_line": 71,
+      "to_text": "No Alpha on Target",
+      "reasons": ["movement"]
+    },
+    {
+      "from_line": 62,
+      "from_text": "[ right alpha ] -> [ alpha ]",
+      "to_line": 69,
+      "to_text": "Some Alpha on Target",
+      "reasons": ["movement"]
+    },
+    {
+      "from_line": 62,
+      "from_text": "[ right alpha ] -> [ alpha ]",
+      "to_line": 71,
+      "to_text": "No Alpha on Target",
+      "reasons": ["movement"]
+    }
+  ]
+}

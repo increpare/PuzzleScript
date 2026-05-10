@@ -1558,6 +1558,16 @@ function deriveWinflowFacts(psTagged) {
     const wakeEdges = [];
     for (const rule of rules) {
         const writes = ruleFlowWrites(psTagged, rule);
+        const lhsObjects = new Set(rule.tags.objects_matched);
+        const movementObjects = new Set();
+        for (const key of rule.tags.movements_written) {
+            const obj = movementKeyObjectName(key);
+            if (lhsObjects.has(obj)) movementObjects.add(obj);
+        }
+        for (const key of rule.tags.movements_removed) {
+            const obj = movementKeyObjectName(key);
+            if (lhsObjects.has(obj)) movementObjects.add(obj);
+        }
         for (const win of wins) {
             const reasons = [];
             for (const objectName of win.tags.objects_matched) {
@@ -1565,6 +1575,12 @@ function deriveWinflowFacts(psTagged) {
             }
             for (const objectName of win.tags.object_absences_matched) {
                 if (writes.object_absent.has(objectName)) { reasons.push('object_absence'); break; }
+            }
+            if (win.tags.targets_matched.length > 0) {
+                const winReads = new Set([...win.tags.objects_matched, ...win.tags.object_absences_matched]);
+                for (const obj of movementObjects) {
+                    if (winReads.has(obj)) { reasons.push('movement'); break; }
+                }
             }
             if (reasons.length > 0) wakeEdges.push({ from: rule.id, to: win.id, reasons });
         }
