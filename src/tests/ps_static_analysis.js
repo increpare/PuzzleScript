@@ -110,9 +110,9 @@ function buildWinconditions(state) {
             targets,
             tags: {
                 plain: plainCondition,
-                objects_matched: isNo ? [] : uniqueSorted(subjects.concat(targets)),
+                objects_matched: uniqueSorted((isNo ? [] : subjects).concat(targets)),
                 subjects_matched: isNo ? [] : uniqueSorted(subjects),
-                targets_matched: isNo ? [] : uniqueSorted(targets),
+                targets_matched: uniqueSorted(targets),
                 object_absences_matched: isNo ? uniqueSorted(subjects) : [],
             },
         };
