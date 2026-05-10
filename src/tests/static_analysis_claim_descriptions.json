@@ -86,7 +86,7 @@
     {
       "name": "objects_matched",
       "description": "Concrete objects whose presence or absence is read by this win condition.",
-      "specification": "A win condition has objects_matched entries for every concrete object that contributes to the win read-set, after resolving properties to concrete names. For SOME and ALL this is subjects ∪ targets. For NO this is the subjects mask only (the location qualifier Y in 'No X on Y' is not considered a read). objects_matched = subjects_matched ∪ targets_matched ∪ object_absences_matched."
+      "specification": "A win condition has objects_matched entries for the concrete objects whose presence is read by this win condition: subjects_matched ∪ targets_matched. For NO conditions, objects_matched is empty because NO has no presence reads — its subject appears only in object_absences_matched."
     },
     {
       "name": "subjects_matched",
