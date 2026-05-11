@@ -34,8 +34,8 @@
     },
     {
       "name": "static",
-      "description": "No solver-active rule directly writes, erases, or moves this object.",
-      "specification": "An object is static (true) when no solver-active rule mentions it in any write or movement term: no rule writes it present, writes it absent, or assigns or reads its movement state. Player-role objects are never static because player input always assigns them movement. Note: a static object may share a collision layer with non-static objects; the layer-level static fact (layer.tags.static) is the stricter guarantee that covers the whole layer."
+      "description": "No solver-active rule can move, create, destroy, or overwrite this object.",
+      "specification": "An object is static (true) when no solver-active rule writes it present, writes it absent, or assigns or reads its movement state. Same-layer overwrite counts as a write-absent: a rule whose RHS writes another layer-mate in a cell whose LHS does not prohibit this object writes this object absent. A rule whose LHS prohibits the object (e.g., `[ no beta ] -> [ alpha ]`) does not write Beta absent, so Beta remains static with respect to that rule. Player-role objects are never static because player input always assigns them movement. The layer-level fact (layer.tags.static) is the conjunction over the layer's objects."
     },
     {
       "name": "temporary",
