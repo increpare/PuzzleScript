@@ -1442,6 +1442,16 @@ assert.strictEqual(staticPlayer.tags.static, false, 'player object is not static
 assert.strictEqual(staticPlayerLayerFact.status, 'candidate', 'a layer containing a moving player is not proved static');
 assert.ok(staticPlayerLayerFact.blockers.includes('layer_contains_nonstatic_object'));
 
+const STATIC_AGGREGATE_PLAYER_GAME = STATIC_OBJECT_GAME.replace(
+    'Player = PlayerObject',
+    'Player = PlayerObject and Mark'
+);
+const staticAggregatePlayer = analyzeSource(STATIC_AGGREGATE_PLAYER_GAME, { sourcePath: 'static_aggregate_player.txt' });
+const aggregatePlayerMark = staticAggregatePlayer.ps_tagged.objects.find(object => object.name === 'Mark');
+const aggregatePlayerMarkFact = staticAggregatePlayer.facts.count_layer_invariants.find(item => item.id === 'object_Mark_static');
+assert.strictEqual(aggregatePlayerMark.tags.static, false, 'aggregate player members should not be tagged static');
+assert.ok(aggregatePlayerMarkFact.blockers.includes('object_may_receive_movement'));
+
 const STATIC_LAYER_CREATE_GAME = STATIC_OBJECT_GAME.replace(
     '[ > PlayerObject ] -> [ > PlayerObject ]',
     '[ PlayerObject ] -> [ PlayerObject Crate ]'

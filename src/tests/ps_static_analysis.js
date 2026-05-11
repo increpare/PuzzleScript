@@ -77,6 +77,15 @@ function buildProperties(state) {
             tags: {},
         });
     }
+    for (const [name, members] of Object.entries(state.aggregatesDict || {})) {
+        properties.push({
+            name: displayName(state, name),
+            canonical_name: name,
+            kind: 'aggregate',
+            members: uniqueSorted(Array.from(members, member => displayName(state, member))),
+            tags: {},
+        });
+    }
     return properties.sort((left, right) =>
         left.name.localeCompare(right.name, undefined, { numeric: true })
     );
@@ -790,18 +799,66 @@ function ruleMayCreateCollisionLayerObject(psTagged, rule, layer) {
     });
 }
 
+function addRuleForObject(map, objectName, rule) {
+    if (!map.has(objectName)) map.set(objectName, []);
+    map.get(objectName).push(rule);
+}
+
+function rulesForObject(map, objectName) {
+    return map.get(objectName) || [];
+}
+
+function buildCountLayerRuleIndex(psTagged, activeRules) {
+    const writersByObject = new Map();
+    const creatorsByObject = new Map();
+    const destroyersByObject = new Map();
+    const movementRulesByObject = new Map();
+    const layerCreatorsByLayer = new Map();
+
+    for (const rule of activeRules) {
+        const writes = ruleFlowWrites(psTagged, rule);
+        const writerObjects = new Set(writes.object_present);
+        addValues(writerObjects, writes.object_absent);
+
+        for (const objectName of writerObjects) addRuleForObject(writersByObject, objectName, rule);
+        for (const objectName of writes.object_present) {
+            addRuleForObject(creatorsByObject, objectName, rule);
+            addRuleForObject(layerCreatorsByLayer, layerForObject(psTagged, objectName), rule);
+        }
+        for (const objectName of writes.object_absent) addRuleForObject(destroyersByObject, objectName, rule);
+
+        const movementObjects = new Set();
+        for (const term of rule.summary.lhs_terms.concat(rule.summary.rhs_terms)) {
+            if (term.movement !== null) addValues(movementObjects, termObjects(term));
+        }
+        for (const objectName of movementObjects) addRuleForObject(movementRulesByObject, objectName, rule);
+    }
+
+    return {
+        writersByObject,
+        creatorsByObject,
+        destroyersByObject,
+        movementRulesByObject,
+        layerCreatorsByLayer,
+    };
+}
+
 function deriveCountLayerInvariantFacts(psTagged) {
     const activeRules = allRuleEntries(psTagged).map(entry => entry.rule).filter(rule => rule.tags.solver_state_active);
+    const ruleIndex = buildCountLayerRuleIndex(psTagged, activeRules);
     const playerObjects = playerObjectNameSet(psTagged);
     const results = [];
     for (const object of psTagged.objects) {
-        const writers = activeRules.filter(rule => ruleMayAffectObject(psTagged, rule, object.name));
+        const writers = rulesForObject(ruleIndex.writersByObject, object.name);
         const countChangers = activeRules.filter(rule => ruleMayChangeObjectCount(psTagged, rule, object.name));
-        const creators = activeRules.filter(rule => ruleMayCreateObject(psTagged, rule, object.name));
-        const destroyers = activeRules.filter(rule => ruleMayDestroyObject(psTagged, rule, object.name));
-        const movementRules = activeRules.filter(rule => ruleMovementMentionsObject(rule, object.name));
+        const creators = rulesForObject(ruleIndex.creatorsByObject, object.name);
+        const destroyers = rulesForObject(ruleIndex.destroyersByObject, object.name);
+        const movementRules = rulesForObject(ruleIndex.movementRulesByObject, object.name);
+        const siblingLayerCreators = rulesForObject(ruleIndex.layerCreatorsByLayer, object.layer)
+            .filter(rule => !creators.includes(rule));
         const staticBlockers = [];
         if (writers.length > 0) staticBlockers.push('object_written_by_solver_active_rule');
+        if (siblingLayerCreators.length > 0) staticBlockers.push('collision_layer_object_may_be_created');
         if (movementRules.length > 0 || playerObjects.has(object.name)) staticBlockers.push('object_may_receive_movement');
         object.tags.may_be_created = creators.length > 0;
         object.tags.may_be_destroyed = destroyers.length > 0;
@@ -819,12 +876,12 @@ function deriveCountLayerInvariantFacts(psTagged) {
                 ? ['no_solver_active_rule_writes_object', 'no_movement_applied_to_object']
                 : [],
             blockers: uniqueSorted(staticBlockers),
-            evidence: uniqueSorted(writers.concat(movementRules).map(rule => rule.id)),
+            evidence: uniqueSorted(writers.concat(siblingLayerCreators, movementRules).map(rule => rule.id)),
         }));
     }
     for (const layer of psTagged.collision_layers) {
         const layerWriterIds = uniqueSorted(layer.objects.flatMap(objectName =>
-            activeRules.filter(rule => ruleMayAffectObject(psTagged, rule, objectName)).map(rule => rule.id)
+            rulesForObject(ruleIndex.writersByObject, objectName).map(rule => rule.id)
         ));
         const nonStaticObjects = uniqueSorted(layer.objects.filter(objectName => {
             const object = psTagged.objects.find(item => item.name === objectName);
@@ -1615,21 +1672,28 @@ function deriveProgramFlowFacts(psTagged) {
     })];
 }
 
-function deriveFacts(psTagged) {
+function factDerivers() {
     return {
-        mergeability: deriveMergeabilityFacts(psTagged),
-        movement_action: deriveMovementActionFacts(psTagged),
-        count_layer_invariants: deriveCountLayerInvariantFacts(psTagged),
-        transient_boundary: deriveTransientBoundaryFacts(psTagged),
-        rulegroup_flow: deriveRulegroupFlowFacts(psTagged),
-        program_flow: deriveProgramFlowFacts(psTagged),
-        winflow: deriveWinflowFacts(psTagged),
+        mergeability: deriveMergeabilityFacts,
+        movement_action: deriveMovementActionFacts,
+        count_layer_invariants: deriveCountLayerInvariantFacts,
+        transient_boundary: deriveTransientBoundaryFacts,
+        rulegroup_flow: deriveRulegroupFlowFacts,
+        program_flow: deriveProgramFlowFacts,
+        winflow: deriveWinflowFacts,
     };
 }
 
-function filterFacts(facts, familyFilter) {
-    if (!familyFilter) return facts;
-    return { [familyFilter]: facts[familyFilter] || [] };
+function deriveFacts(psTagged, familyFilter) {
+    const derivers = factDerivers();
+    if (familyFilter) {
+        return { [familyFilter]: derivers[familyFilter] ? derivers[familyFilter](psTagged) : [] };
+    }
+
+    return Object.fromEntries(Object.entries(derivers).map(([family, derive]) => [
+        family,
+        derive(psTagged),
+    ]));
 }
 
 function summarizeFacts(facts) {
@@ -1677,7 +1741,7 @@ function analyzeSource(source, options = {}) {
     }
 
     const psTagged = buildPsTagged(compiled.state, { sourcePath });
-    const facts = filterFacts(deriveFacts(psTagged), options.familyFilter);
+    const facts = deriveFacts(psTagged, options.familyFilter);
     const report = {
         schema: SCHEMA,
         source: { path: sourcePath },
