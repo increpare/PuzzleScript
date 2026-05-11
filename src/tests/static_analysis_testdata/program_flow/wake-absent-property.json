@@ -1,0 +1,13 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 56,
+      "from_text": "[ alpha ] -> [ ]",
+      "to_line": 57,
+      "to_text": "[ player no alpha no beta ] -> [ stationary player ]",
+      "reasons": ["object_absence"]
+    }
+  ],
+  "againRules": []
+}

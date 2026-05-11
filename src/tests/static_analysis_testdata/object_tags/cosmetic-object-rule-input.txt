@@ -1,0 +1,84 @@
+title Static Analysis Object Tag Cosmetic Rule Input
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
+
+Orphan1
+lightblue
+
+Orphan2
+pink
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+C = Crate
+A = Alpha
+B = Beta
+G = Gamma
+O = Orphan1
+R = Orphan2
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+Orphan1
+Orphan2
+
+=====
+RULES
+=====
+
+[ player ] -> [ stationary player stationary orphan1 ]
+[ orphan2 ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Orphan1
+
+======
+LEVELS
+======
+
+POR

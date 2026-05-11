@@ -1,0 +1,67 @@
+title Static Analysis Object Tag Cosmetic Absence Read
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Target
+yellow
+
+Orphan1
+lightblue
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+C = Crate
+T = Target
+O = Orphan1
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Wall
+Crate
+Target
+Orphan1
+
+=====
+RULES
+=====
+
+[ crate no wall ] -> [ crate target ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Target
+
+======
+LEVELS
+======
+
+PC#.TO

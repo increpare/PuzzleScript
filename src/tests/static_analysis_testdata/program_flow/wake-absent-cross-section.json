@@ -1,0 +1,20 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 53,
+      "from_text": "[ crate ] -> [ stationary orphan1 ]",
+      "to_line": 56,
+      "to_text": "late [ orphan1 ] -> [ ]",
+      "reasons": ["object_presence"]
+    },
+    {
+      "from_line": 56,
+      "from_text": "late [ orphan1 ] -> [ ]",
+      "to_line": 54,
+      "to_text": "[ player no orphan1 ] -> [ stationary player ]",
+      "reasons": ["object_absence"]
+    }
+  ],
+  "againRules": []
+}

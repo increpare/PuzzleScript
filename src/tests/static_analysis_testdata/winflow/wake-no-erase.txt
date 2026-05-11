@@ -1,0 +1,52 @@
+title Static Analysis Winflow Wake No Erase
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+orange
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+C = Crate
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Crate
+
+=====
+RULES
+=====
+
+[ crate ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+No Crate
+
+======
+LEVELS
+======
+
+PC.

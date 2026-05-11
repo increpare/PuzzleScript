@@ -1,0 +1,79 @@
+title Static Analysis Rule Tag Cosmetic Propagation
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
+
+Orphan1
+lightblue
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+C = Crate
+A = Alpha
+B = Beta
+G = Gamma
+O = Orphan1
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+Alpha, Beta, Gamma
+Orphan1
+
+=====
+RULES
+=====
+
+[ player ] -> [ stationary player stationary alpha ]
+[ alpha ] -> [ stationary alpha stationary orphan1 ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Orphan1
+
+======
+LEVELS
+======
+
+P..

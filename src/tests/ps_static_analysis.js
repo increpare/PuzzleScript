@@ -110,9 +110,9 @@ function buildWinconditions(state) {
             targets,
             tags: {
                 plain: plainCondition,
-                objects_matched: isNo ? uniqueSorted(subjects) : uniqueSorted(subjects.concat(targets)),
+                objects_matched: uniqueSorted((isNo ? [] : subjects).concat(targets)),
                 subjects_matched: isNo ? [] : uniqueSorted(subjects),
-                targets_matched: isNo ? [] : uniqueSorted(targets),
+                targets_matched: uniqueSorted(targets),
                 object_absences_matched: isNo ? uniqueSorted(subjects) : [],
             },
         };
@@ -474,7 +474,8 @@ function buildPsTagged(state, options = {}) {
     normalizeTermRefs(psTagged);
     tagRuleObjectTags(psTagged);
     tagInertCollisionLayers(psTagged);
-    tagCosmeticClosure(psTagged);
+    tagCosmeticRules(psTagged);
+    tagCosmeticObjects(psTagged);
     return psTagged;
 }
 
@@ -486,6 +487,7 @@ function emptyFacts() {
         transient_boundary: [],
         rulegroup_flow: [],
         program_flow: [],
+        winflow: [],
     };
 }
 
@@ -798,11 +800,9 @@ function deriveCountLayerInvariantFacts(psTagged) {
         const creators = activeRules.filter(rule => ruleMayCreateObject(psTagged, rule, object.name));
         const destroyers = activeRules.filter(rule => ruleMayDestroyObject(psTagged, rule, object.name));
         const movementRules = activeRules.filter(rule => ruleMovementMentionsObject(rule, object.name));
-        const layerCreators = activeRules.filter(rule => ruleMayCreateCollisionLayerObject(psTagged, rule, object.layer));
         const staticBlockers = [];
         if (writers.length > 0) staticBlockers.push('object_written_by_solver_active_rule');
         if (movementRules.length > 0 || playerObjects.has(object.name)) staticBlockers.push('object_may_receive_movement');
-        if (layerCreators.length > 0) staticBlockers.push('collision_layer_object_may_be_created');
         object.tags.may_be_created = creators.length > 0;
         object.tags.may_be_destroyed = destroyers.length > 0;
         object.tags.count_invariant = countChangers.length === 0;
@@ -816,10 +816,10 @@ function deriveCountLayerInvariantFacts(psTagged) {
         results.push(fact('count_layer_invariants', `object_${object.name}_static`, staticBlockers.length === 0 ? 'proved' : 'rejected', {
             subjects: { objects: [object.name] },
             proof: staticBlockers.length === 0
-                ? ['no_solver_active_rule_writes_object', 'no_movement_applied_to_object', 'no_collision_layer_object_creation']
+                ? ['no_solver_active_rule_writes_object', 'no_movement_applied_to_object']
                 : [],
             blockers: uniqueSorted(staticBlockers),
-            evidence: uniqueSorted(writers.concat(movementRules, layerCreators).map(rule => rule.id)),
+            evidence: uniqueSorted(writers.concat(movementRules).map(rule => rule.id)),
         }));
     }
     for (const layer of psTagged.collision_layers) {
@@ -944,130 +944,91 @@ function objectWriteNames(psTagged, rule) {
     return names;
 }
 
-function layerIdsForObjectNames(psTagged, objectNames) {
-    const layers = new Set();
-    for (const objectName of objectNames) {
-        const layer = layerForObject(psTagged, objectName);
-        if (layer !== null && layer !== undefined) layers.add(layer);
-    }
-    return layers;
-}
+function tagCosmeticObjects(psTagged) {
+    const nonCosmetic = new Set(playerObjectNameSet(psTagged));
 
-function coreSeedsFromWinAndPlayer(psTagged) {
-    const seeds = new Set(playerObjectNameSet(psTagged));
     for (const win of psTagged.winconditions) {
-        addValues(seeds, win.subjects);
-        addValues(seeds, win.targets);
+        addValues(nonCosmetic, win.tags.objects_matched);
+        addValues(nonCosmetic, win.tags.object_absences_matched);
     }
-    return seeds;
-}
 
-function coreSeedsFromWinCommandRules(psTagged) {
-    const seeds = new Set();
     for (const { rule } of allRuleEntries(psTagged)) {
-        if (!rule.summary.semantic_commands.includes('win')) continue;
-        addValues(seeds, objectReadNames(rule));
+        if (rule.tags.cosmetic) continue;
+        addValues(nonCosmetic, rule.tags.objects_matched);
+        addValues(nonCosmetic, rule.tags.object_absences_matched);
+        for (const key of rule.tags.movements_matched) {
+            nonCosmetic.add(movementKeyObjectName(key));
+        }
     }
-    return seeds;
-}
 
-function tagCosmeticClosure(psTagged) {
-    const allNames = psTagged.objects.map(object => object.name);
-    const core = new Set();
-    addValues(core, coreSeedsFromWinAndPlayer(psTagged));
-    addValues(core, coreSeedsFromWinCommandRules(psTagged));
-
-    const readWriteEdges = [];
-    for (const { rule } of allRuleEntries(psTagged)) {
-        const reads = objectReadNames(rule);
-        const writes = objectWriteNames(psTagged, rule);
-        for (const from of reads) {
-            for (const to of writes) {
-                readWriteEdges.push([from, to]);
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const layer of psTagged.collision_layers || []) {
+            const layerObjects = layer.objects || [];
+            if (!layerObjects.some(obj => nonCosmetic.has(obj))) continue;
+            for (const obj of layerObjects) {
+                if (!nonCosmetic.has(obj)) {
+                    nonCosmetic.add(obj);
+                    changed = true;
+                }
             }
         }
     }
 
-    function coreLayers() {
-        const layers = new Set();
-        for (const objectName of core) {
-            const layer = layerForObject(psTagged, objectName);
-            if (layer !== null && layer !== undefined) layers.add(layer);
+    for (const object of psTagged.objects) {
+        object.tags.cosmetic = !nonCosmetic.has(object.name);
+    }
+}
+
+const NON_COSMETIC_COMMANDS = new Set(['again', 'restart', 'cancel', 'win']);
+
+function tagCosmeticRules(psTagged) {
+    const allRules = allRuleEntries(psTagged).map(entry => entry.rule);
+    const nonCosmetic = new Set();
+
+    for (const rule of allRules) {
+        if (rule.summary.semantic_commands.some(cmd => NON_COSMETIC_COMMANDS.has(cmd))) {
+            nonCosmetic.add(rule.id);
         }
-        return layers;
     }
 
-    function expandReadWriteFromCore() {
-        let changed = false;
-        const queue = [...core];
-        const seen = new Set(core);
-        while (queue.length > 0) {
-            const from = queue.pop();
-            for (const [a, b] of readWriteEdges) {
-                if (a !== from) continue;
-                if (seen.has(b)) continue;
-                seen.add(b);
-                core.add(b);
-                queue.push(b);
-                changed = true;
+    for (const rule of allRules) {
+        if (nonCosmetic.has(rule.id)) continue;
+        for (const win of psTagged.winconditions) {
+            const winReadSet = new Set([...win.tags.objects_matched, ...win.tags.object_absences_matched]);
+            if ([...rule.tags.objects_written, ...rule.tags.objects_erased].some(obj => winReadSet.has(obj))) {
+                nonCosmetic.add(rule.id);
+                break;
             }
         }
-        return changed;
     }
 
-    let guard = 0;
-    const maxRounds = allNames.length + readWriteEdges.length + 8;
-    while (guard++ < maxRounds) {
-        let roundChanged = false;
-        const layers = coreLayers();
-        for (const { rule } of allRuleEntries(psTagged)) {
-            const writeNames = objectWriteNames(psTagged, rule);
-            if (writeNames.size === 0) continue;
-            const layerWrite = layerIdsForObjectNames(psTagged, writeNames);
-            let hits = false;
-            for (const layerId of layerWrite) {
-                if (layers.has(layerId)) {
-                    hits = true;
+    function r1AffectsR2(r1, r2) {
+        const r2ReadObjs = new Set([...r2.tags.objects_matched, ...r2.tags.object_absences_matched]);
+        if ([...r1.tags.objects_written, ...r1.tags.objects_erased].some(obj => r2ReadObjs.has(obj))) return true;
+        const r2MovSet = new Set(r2.tags.movements_matched);
+        return [...r1.tags.movements_written, ...r1.tags.movements_removed].some(mov => r2MovSet.has(mov));
+    }
+
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const r1 of allRules) {
+            if (nonCosmetic.has(r1.id)) continue;
+            for (const r2 of allRules) {
+                if (!nonCosmetic.has(r2.id)) continue;
+                if (r1AffectsR2(r1, r2)) {
+                    nonCosmetic.add(r1.id);
+                    changed = true;
                     break;
                 }
             }
-            if (!hits) continue;
-            for (const objectName of writeNames) {
-                if (!core.has(objectName)) {
-                    core.add(objectName);
-                    roundChanged = true;
-                }
-            }
-            // LHS reads gate whether this rule writes to core layers, so the
-            // reads themselves are gameplay-relevant: removing one would change
-            // when (or whether) the write fires. Pull them into core too.
-            for (const objectName of objectReadNames(rule)) {
-                if (!core.has(objectName)) {
-                    core.add(objectName);
-                    roundChanged = true;
-                }
-            }
         }
-        if (expandReadWriteFromCore()) roundChanged = true;
-        // Objects sharing a collision layer with a core object are gameplay-
-        // relevant via the engine's collision system, even if no rule names
-        // them: their presence blocks core objects from occupying a cell.
-        const coreLayerSet = coreLayers();
-        for (const layer of psTagged.collision_layers || []) {
-            if (!coreLayerSet.has(layer.id)) continue;
-            for (const objectName of layer.objects || []) {
-                if (!core.has(objectName)) {
-                    core.add(objectName);
-                    roundChanged = true;
-                }
-            }
-        }
-        if (!roundChanged) break;
     }
 
-    for (const objectName of allNames) {
-        const object = psTagged.objects.find(item => item.name === objectName);
-        if (object) object.tags.cosmetic = !core.has(objectName);
+    for (const rule of allRules) {
+        rule.tags.cosmetic = !nonCosmetic.has(rule.id);
     }
 }
 
@@ -1087,6 +1048,7 @@ function deriveTransientBoundaryFacts(psTagged) {
         if (creators.some(entry => entry.group.tags.has_again || entry.rule.tags.has_again)) blockers.push('has_again_taint');
         if (creators.some(entry => entry.rule.rigid) || clearers.some(entry => entry.rule.rigid)) blockers.push('rigid_rule');
         const status = blockers.length === 0 ? 'proved' : 'rejected';
+        object.tags.temporary = status === 'proved';
         results.push(fact('transient_boundary', `object_${object.name}_end_turn_transient`, status, {
             subjects: { objects: [object.name] },
             tags: { single_turn_only: true },
@@ -1586,6 +1548,54 @@ function deriveRulegroupFlowFacts(psTagged) {
     return results;
 }
 
+function deriveWinflowFacts(psTagged) {
+    const entries = allRuleEntries(psTagged);
+    const rules = entries.map(entry => entry.rule);
+    const ruleIds = rules.map(rule => rule.id);
+    const wins = psTagged.winconditions;
+    const winIds = wins.map(win => win.id);
+    const wakeEdges = [];
+    for (const rule of rules) {
+        const writes = ruleFlowWrites(psTagged, rule);
+        const lhsObjects = new Set(rule.tags.objects_matched);
+        const movementObjects = new Set();
+        for (const key of rule.tags.movements_written) {
+            const obj = movementKeyObjectName(key);
+            if (lhsObjects.has(obj)) movementObjects.add(obj);
+        }
+        for (const key of rule.tags.movements_removed) {
+            const obj = movementKeyObjectName(key);
+            if (lhsObjects.has(obj)) movementObjects.add(obj);
+        }
+        for (const win of wins) {
+            const reasons = [];
+            for (const objectName of win.tags.objects_matched) {
+                if (writes.object_present.has(objectName)) { reasons.push('object_presence'); break; }
+            }
+            for (const objectName of win.tags.object_absences_matched) {
+                if (writes.object_absent.has(objectName)) { reasons.push('object_absence'); break; }
+            }
+            if (win.tags.targets_matched.length > 0) {
+                const winReads = new Set([...win.tags.objects_matched, ...win.tags.object_absences_matched]);
+                for (const obj of movementObjects) {
+                    if (winReads.has(obj)) { reasons.push('movement'); break; }
+                }
+            }
+            if (reasons.length > 0) wakeEdges.push({ from: rule.id, to: win.id, reasons });
+        }
+    }
+    return [fact('winflow', 'winflow', 'proved', {
+        subjects: { rules: ruleIds, wins: winIds },
+        value: {
+            rule_ids: ruleIds,
+            win_ids: winIds,
+            wake_edges: wakeEdges,
+        },
+        proof: ['direct_wake_enablement'],
+        evidence: ruleIds,
+    })];
+}
+
 function deriveProgramFlowFacts(psTagged) {
     const entries = allRuleEntries(psTagged);
     const rules = entries.map(entry => entry.rule);
@@ -1613,6 +1623,7 @@ function deriveFacts(psTagged) {
         transient_boundary: deriveTransientBoundaryFacts(psTagged),
         rulegroup_flow: deriveRulegroupFlowFacts(psTagged),
         program_flow: deriveProgramFlowFacts(psTagged),
+        winflow: deriveWinflowFacts(psTagged),
     };
 }
 

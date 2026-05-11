@@ -1,0 +1,12 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 45,
+      "from_text": "[ player ] -> [ stationary player stationary sibling1 ]",
+      "to_line": 51,
+      "to_text": "Some Sibling1_or_Sibling2",
+      "reasons": ["object_presence"]
+    }
+  ]
+}

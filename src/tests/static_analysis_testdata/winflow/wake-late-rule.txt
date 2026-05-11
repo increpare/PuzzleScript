@@ -1,0 +1,56 @@
+title Static Analysis Winflow Wake Late Rule
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Orphan1
+lightblue
+
+Crate
+orange
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+O = Orphan1
+C = Crate
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Orphan1, Crate
+
+=====
+RULES
+=====
+
+late [ orphan1 ] -> [ crate ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Crate
+
+======
+LEVELS
+======
+
+PO.

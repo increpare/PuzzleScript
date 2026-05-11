@@ -1,0 +1,63 @@
+title Static Analysis Mergeability Rejected Different Win Roles
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Alpha
+red
+
+Beta
+blue
+
+Target
+yellow
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+A = Alpha
+B = Beta
+T = Target
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+Alpha, Beta
+Target
+
+=====
+RULES
+=====
+
+=============
+WINCONDITIONS
+=============
+
+Some Alpha on Target
+
+======
+LEVELS
+======
+
+P.ABT

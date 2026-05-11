@@ -1,0 +1,62 @@
+title Static Analysis Mergeability Candidate
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Alpha
+red
+
+Beta
+blue
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+A = Alpha
+B = Beta
+
+Stuff = Alpha or Beta
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+Alpha, Beta
+
+=====
+RULES
+=====
+
+[ player | stuff ] -> [ stationary player | ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PAB

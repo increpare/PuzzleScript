@@ -1,0 +1,12 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "wakeEdges": [
+    {
+      "from_line": 44,
+      "from_text": "late [ orphan1 ] -> [ crate ]",
+      "to_line": 50,
+      "to_text": "Some Crate",
+      "reasons": ["object_presence"]
+    }
+  ]
+}

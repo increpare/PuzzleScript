@@ -1,0 +1,19 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "ruleTag": [
+    {
+      "line": 66,
+      "text": "[ player ] -> [ right player ]",
+      "tags": {
+        "cosmetic": false
+      }
+    },
+    {
+      "line": 67,
+      "text": "[ right player ] -> [ player stationary orphan1 ]",
+      "tags": {
+        "cosmetic": false
+      }
+    }
+  ]
+}

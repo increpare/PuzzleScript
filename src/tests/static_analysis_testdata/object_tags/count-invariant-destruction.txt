@@ -1,0 +1,56 @@
+title Static Analysis Object Tag Count Invariant Destruction
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Alpha
+red
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+A = Alpha
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+Alpha
+
+=====
+RULES
+=====
+
+[ alpha ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PA.

@@ -1,0 +1,57 @@
+title Static Analysis Winflow Wake Property In Rule
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Sibling1
+red
+
+Sibling2
+blue
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+A = Sibling1
+B = Sibling2
+Sibling1_or_Sibling2 = Sibling1 or Sibling2
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Sibling1, Sibling2
+
+=====
+RULES
+=====
+
+[ player ] -> [ stationary player random sibling1_or_sibling2 ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Sibling1
+
+======
+LEVELS
+======
+
+P..

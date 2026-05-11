@@ -70,6 +70,8 @@ function loadClaimDescriptions(filePath = CLAIM_DESCRIPTIONS_PATH) {
     validateClaimDescriptionList(filePath, 'objectTags', claims.objectTags);
     validateClaimDescriptionList(filePath, 'ruleTags', claims.ruleTags);
     validateClaimDescriptionList(filePath, 'factFamilies', claims.factFamilies);
+    validateClaimDescriptionList(filePath, 'winflow', claims.winflow);
+    validateClaimDescriptionList(filePath, 'winConditionTags', claims.winConditionTags);
     return claims;
 }
 
@@ -279,6 +281,11 @@ function deriveRuleTagValue(rule, tagName) {
     return Array.isArray(value) ? value.slice() : [];
 }
 
+function deriveRuleTagBooleanValue(rule, tagName) {
+    const value = rule.tags ? rule.tags[tagName] : undefined;
+    return typeof value === 'boolean' ? value : false;
+}
+
 function assertStringArray(filePath, label, value) {
     assert.ok(Array.isArray(value), `${filePath}: ${label} expected value must be string[]`);
     assert.ok(value.every(item => typeof item === 'string'), `${filePath}: ${label} expected value must be string[]`);
@@ -309,7 +316,9 @@ function buildRuleTagExpectations(source, report, claimDescriptions) {
             text: record.text,
             tags: Object.fromEntries(ruleTags.map(tag => [
                 tag.name,
-                deriveRuleTagValue(record.rule, tag.name),
+                tag.type === 'boolean'
+                    ? deriveRuleTagBooleanValue(record.rule, tag.name)
+                    : deriveRuleTagValue(record.rule, tag.name),
             ])),
         })),
     };
@@ -338,6 +347,12 @@ function checkRuleTagExpectation(filePath, record, claimDescriptions, tags, tagN
     const claim = ruleClaimByName(claimDescriptions, tagName);
     assert.ok(claim, `${filePath}: unknown rule tag ${tagName}`);
     const expected = tags[tagName];
+    if (claim.type === 'boolean') {
+        assert.ok(typeof expected === 'boolean', `${filePath}: ${tagName} expected value must be boolean`);
+        const actual = deriveRuleTagBooleanValue(record.rule, tagName);
+        assert.strictEqual(actual, expected, `${filePath}: ruleTag line ${record.line} ${record.text} ${tagName} expected ${expected}, got ${actual}`);
+        return;
+    }
     assertStringArray(filePath, tagName, expected);
     const actual = deriveRuleTagValue(record.rule, tagName);
     assertSameStringSet(filePath, `ruleTag line ${record.line} ${record.text} ${tagName}`, expected, actual);
@@ -535,6 +550,86 @@ function runProgramFlowDir(dirPath, log = process.stdout.write.bind(process.stdo
     }
 }
 
+function winflowFactValue(report) {
+    const facts = (report.facts && report.facts.winflow) || [];
+    if (facts.length === 0) return { rule_ids: [], win_ids: [], wake_edges: [] };
+    return facts[0].value;
+}
+
+function buildWinflowExpectations(source, report) {
+    const ruleRecords = allRuleRecords(report, source);
+    assertRuleRecordsIdempotent(report.source.path, ruleRecords);
+    const winRecords = allWinConditionRecords(report, source);
+    const ruleById = recordById(ruleRecords);
+    const winById = new Map(winRecords.map(r => [r.wincondition.id, r]));
+    const value = winflowFactValue(report);
+    const wakeEdges = value.wake_edges.map(edge => {
+        const from = ruleById.get(edge.from);
+        const to = winById.get(edge.to);
+        assert.ok(from, `winflow edge from rule id ${edge.from} not found in records`);
+        assert.ok(to, `winflow edge to win id ${edge.to} not found in records`);
+        return {
+            from_line: from.line,
+            from_text: from.text,
+            to_line: to.line,
+            to_text: to.text,
+            reasons: edge.reasons.slice(),
+        };
+    });
+    wakeEdges.sort(compareEdgeRows);
+    return { schema: FIXTURE_SCHEMA, wakeEdges };
+}
+
+function validateWinflowExpectationShape(filePath, payload) {
+    assert.strictEqual(payload.schema, FIXTURE_SCHEMA, `${filePath}: unsupported fixture schema`);
+    assert.ok(Array.isArray(payload.wakeEdges), `${filePath}: wakeEdges must be an array`);
+    for (const [index, edge] of payload.wakeEdges.entries()) {
+        assert.ok(edge && typeof edge === 'object' && !Array.isArray(edge), `${filePath}: wakeEdges[${index}] must be an object`);
+        assert.ok(Number.isInteger(edge.from_line) && edge.from_line > 0, `${filePath}: wakeEdges[${index}] missing positive integer from_line`);
+        assert.ok(typeof edge.from_text === 'string' && edge.from_text.length > 0, `${filePath}: wakeEdges[${index}] missing from_text`);
+        assert.ok(Number.isInteger(edge.to_line) && edge.to_line > 0, `${filePath}: wakeEdges[${index}] missing positive integer to_line`);
+        assert.ok(typeof edge.to_text === 'string' && edge.to_text.length > 0, `${filePath}: wakeEdges[${index}] missing to_text`);
+        assert.ok(Array.isArray(edge.reasons) && edge.reasons.length > 0, `${filePath}: wakeEdges[${index}].reasons must be a non-empty array`);
+        for (const reason of edge.reasons) {
+            assert.ok(REASON_VALUES.includes(reason), `${filePath}: wakeEdges[${index}].reasons contains unknown reason ${JSON.stringify(reason)}`);
+        }
+    }
+}
+
+function checkWinflowFixture(txtPath, jsonPath) {
+    const source = fs.readFileSync(txtPath, 'utf8');
+    const report = analyzeSource(source, { sourcePath: txtPath });
+    assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+    const payload = readJson(jsonPath);
+    validateWinflowExpectationShape(jsonPath, payload);
+    const actual = buildWinflowExpectations(source, report);
+    const expectedEdges = payload.wakeEdges.slice().sort(compareEdgeRows);
+    assert.deepStrictEqual(actual.wakeEdges, expectedEdges, `${jsonPath}: wakeEdges mismatch`);
+}
+
+function runWinflowDir(dirPath, log = process.stdout.write.bind(process.stdout)) {
+    const txtFiles = sortedFiles(dirPath, '.txt');
+    const jsonFiles = sortedFiles(dirPath, '.json');
+    const txtStems = new Set(txtFiles.map(name => path.basename(name, '.txt')));
+    const jsonStems = new Set(jsonFiles.map(name => path.basename(name, '.json')));
+    for (const stem of jsonStems) {
+        assert.ok(txtStems.has(stem), `${path.join(dirPath, `${stem}.json`)}: missing matching .txt`);
+    }
+    for (const txtName of txtFiles) {
+        const stem = path.basename(txtName, '.txt');
+        const txtPath = path.join(dirPath, txtName);
+        const jsonPath = path.join(dirPath, `${stem}.json`);
+        if (!fs.existsSync(jsonPath)) {
+            const source = fs.readFileSync(txtPath, 'utf8');
+            const report = analyzeSource(source, { sourcePath: txtPath });
+            assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+            writeJson(jsonPath, buildWinflowExpectations(source, report));
+            log(`generated static analysis testdata: winflow/${stem}.json (review before committing)\n`);
+        }
+        checkWinflowFixture(txtPath, jsonPath);
+    }
+}
+
 function allWinConditionRecords(report, source) {
     const sourceLines = source.split(/\r?\n/);
     return (report.ps_tagged && report.ps_tagged.winconditions || []).map(wincondition => {
@@ -631,6 +726,215 @@ function runWinConditionTagsDir(dirPath, claimDescriptions, log = process.stdout
     }
 }
 
+// ─── mergeability ────────────────────────────────────────────────────────────
+
+function buildMergeabilityExpectations(report) {
+    const facts = (report.facts && report.facts.mergeability) || [];
+    const mergePairs = facts.map(fact => ({
+        objects: (fact.subjects && fact.subjects.objects ? fact.subjects.objects.slice() : []).sort(),
+        status: fact.status,
+        blockers: (fact.blockers || []).slice().sort(),
+    }));
+    mergePairs.sort((a, b) => {
+        const cmp = a.objects[0].localeCompare(b.objects[0]);
+        return cmp !== 0 ? cmp : (a.objects[1] || '').localeCompare(b.objects[1] || '');
+    });
+    return { schema: FIXTURE_SCHEMA, mergePairs };
+}
+
+function validateMergeabilityExpectationShape(filePath, payload) {
+    assert.strictEqual(payload.schema, FIXTURE_SCHEMA, `${filePath}: unsupported fixture schema`);
+    assert.ok(Array.isArray(payload.mergePairs), `${filePath}: mergePairs must be an array`);
+    for (const [index, item] of payload.mergePairs.entries()) {
+        assert.ok(item && typeof item === 'object' && !Array.isArray(item), `${filePath}: mergePairs[${index}] must be an object`);
+        assert.ok(Array.isArray(item.objects) && item.objects.length === 2 && item.objects.every(o => typeof o === 'string' && o.length > 0), `${filePath}: mergePairs[${index}].objects must be a 2-element string[]`);
+        assert.ok(item.status === 'candidate' || item.status === 'rejected', `${filePath}: mergePairs[${index}].status must be candidate or rejected`);
+        assertStringArray(filePath, `mergePairs[${index}].blockers`, item.blockers);
+    }
+}
+
+function checkMergeabilityFixture(txtPath, jsonPath) {
+    const source = fs.readFileSync(txtPath, 'utf8');
+    const report = analyzeSource(source, { sourcePath: txtPath });
+    assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+    const payload = readJson(jsonPath);
+    validateMergeabilityExpectationShape(jsonPath, payload);
+    const actual = buildMergeabilityExpectations(report);
+    const actualByKey = new Map(actual.mergePairs.map(p => [p.objects.join('\0'), p]));
+    for (const expected of payload.mergePairs) {
+        const key = expected.objects.slice().sort().join('\0');
+        const actualPair = actualByKey.get(key);
+        if (!actualPair) {
+            const available = Array.from(actualByKey.keys()).map(k => k.replace('\0', '+')).join(', ');
+            assert.fail(`${jsonPath}: mergePairs pair ${expected.objects.join('+')} not found; available: ${available}`);
+        }
+        assert.strictEqual(actualPair.status, expected.status, `${jsonPath}: pair ${expected.objects.join('+')} status expected ${expected.status}, got ${actualPair.status}`);
+        assertSameStringSet(jsonPath, `pair ${expected.objects.join('+')} blockers`, expected.blockers, actualPair.blockers);
+    }
+}
+
+function runMergeabilityDir(dirPath, log = process.stdout.write.bind(process.stdout)) {
+    const txtFiles = sortedFiles(dirPath, '.txt');
+    const jsonFiles = sortedFiles(dirPath, '.json');
+    const txtStems = new Set(txtFiles.map(name => path.basename(name, '.txt')));
+    const jsonStems = new Set(jsonFiles.map(name => path.basename(name, '.json')));
+    for (const stem of jsonStems) {
+        assert.ok(txtStems.has(stem), `${path.join(dirPath, `${stem}.json`)}: missing matching .txt`);
+    }
+    for (const txtName of txtFiles) {
+        const stem = path.basename(txtName, '.txt');
+        const txtPath = path.join(dirPath, txtName);
+        const jsonPath = path.join(dirPath, `${stem}.json`);
+        if (!fs.existsSync(jsonPath)) {
+            const source = fs.readFileSync(txtPath, 'utf8');
+            const report = analyzeSource(source, { sourcePath: txtPath });
+            assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+            writeJson(jsonPath, buildMergeabilityExpectations(report));
+            log(`generated static analysis testdata: mergeability/${stem}.json (review before committing)\n`);
+        }
+        checkMergeabilityFixture(txtPath, jsonPath);
+    }
+}
+
+// ─── rulegroup_flow ───────────────────────────────────────────────────────────
+
+function allGroupRecords(report) {
+    const records = [];
+    for (const section of (report.ps_tagged && report.ps_tagged.rule_sections) || []) {
+        for (const group of section.groups || []) {
+            records.push({ group, section });
+        }
+    }
+    return records;
+}
+
+function buildRulegroupFlowExpectations(report) {
+    const facts = (report.facts && report.facts.rulegroup_flow) || [];
+    const groupRecords = allGroupRecords(report);
+    const groupById = new Map(groupRecords.map(r => [r.group.id, r.group]));
+    const rulegroupFlow = facts.map(fact => {
+        const groupId = (fact.subjects && fact.subjects.groups && fact.subjects.groups[0]) || '';
+        const group = groupById.get(groupId);
+        assert.ok(group, `rulegroup_flow fact ${fact.id} references unknown group ${groupId}`);
+        const value = fact.value || {};
+        return {
+            line: group.source_line_min,
+            split_candidate: value.split_candidate || false,
+            components_count: (value.components || []).length,
+            blockers: (fact.blockers || []).slice().sort(),
+        };
+    });
+    rulegroupFlow.sort((a, b) => a.line - b.line);
+    return { schema: FIXTURE_SCHEMA, rulegroupFlow };
+}
+
+function validateRulegroupFlowExpectationShape(filePath, payload) {
+    assert.strictEqual(payload.schema, FIXTURE_SCHEMA, `${filePath}: unsupported fixture schema`);
+    assert.ok(Array.isArray(payload.rulegroupFlow), `${filePath}: rulegroupFlow must be an array`);
+    for (const [index, item] of payload.rulegroupFlow.entries()) {
+        assert.ok(item && typeof item === 'object' && !Array.isArray(item), `${filePath}: rulegroupFlow[${index}] must be an object`);
+        assert.ok(Number.isInteger(item.line) && item.line > 0, `${filePath}: rulegroupFlow[${index}] missing positive integer line`);
+        assert.ok(typeof item.split_candidate === 'boolean', `${filePath}: rulegroupFlow[${index}].split_candidate must be boolean`);
+        assert.ok(Number.isInteger(item.components_count) && item.components_count >= 0, `${filePath}: rulegroupFlow[${index}].components_count must be a non-negative integer`);
+        assertStringArray(filePath, `rulegroupFlow[${index}].blockers`, item.blockers);
+    }
+}
+
+function checkRulegroupFlowFixture(txtPath, jsonPath) {
+    const source = fs.readFileSync(txtPath, 'utf8');
+    const report = analyzeSource(source, { sourcePath: txtPath });
+    assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+    const payload = readJson(jsonPath);
+    validateRulegroupFlowExpectationShape(jsonPath, payload);
+    const actual = buildRulegroupFlowExpectations(report);
+    const actualByLine = new Map(actual.rulegroupFlow.map(r => [r.line, r]));
+    for (const expected of payload.rulegroupFlow) {
+        const actualRow = actualByLine.get(expected.line);
+        if (!actualRow) {
+            const available = Array.from(actualByLine.keys()).join(', ');
+            assert.fail(`${jsonPath}: rulegroupFlow group at line ${expected.line} not found; available lines: ${available}`);
+        }
+        assert.strictEqual(actualRow.split_candidate, expected.split_candidate, `${jsonPath}: group at line ${expected.line} split_candidate expected ${expected.split_candidate}, got ${actualRow.split_candidate}`);
+        assert.strictEqual(actualRow.components_count, expected.components_count, `${jsonPath}: group at line ${expected.line} components_count expected ${expected.components_count}, got ${actualRow.components_count}`);
+        assertSameStringSet(jsonPath, `group at line ${expected.line} blockers`, expected.blockers, actualRow.blockers);
+    }
+}
+
+function runRulegroupFlowDir(dirPath, log = process.stdout.write.bind(process.stdout)) {
+    const txtFiles = sortedFiles(dirPath, '.txt');
+    const jsonFiles = sortedFiles(dirPath, '.json');
+    const txtStems = new Set(txtFiles.map(name => path.basename(name, '.txt')));
+    const jsonStems = new Set(jsonFiles.map(name => path.basename(name, '.json')));
+    for (const stem of jsonStems) {
+        assert.ok(txtStems.has(stem), `${path.join(dirPath, `${stem}.json`)}: missing matching .txt`);
+    }
+    for (const txtName of txtFiles) {
+        const stem = path.basename(txtName, '.txt');
+        const txtPath = path.join(dirPath, txtName);
+        const jsonPath = path.join(dirPath, `${stem}.json`);
+        if (!fs.existsSync(jsonPath)) {
+            const source = fs.readFileSync(txtPath, 'utf8');
+            const report = analyzeSource(source, { sourcePath: txtPath });
+            assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+            writeJson(jsonPath, buildRulegroupFlowExpectations(report));
+            log(`generated static analysis testdata: rulegroup_flow/${stem}.json (review before committing)\n`);
+        }
+        checkRulegroupFlowFixture(txtPath, jsonPath);
+    }
+}
+
+// ─── movement_action ──────────────────────────────────────────────────────────
+
+function buildMovementActionExpectations(report) {
+    const facts = (report.facts && report.facts.movement_action) || [];
+    const noopFact = facts.find(f => f.id === 'action_noop');
+    return {
+        schema: FIXTURE_SCHEMA,
+        actionNoop: noopFact ? !!noopFact.value : true,
+        actionBlockers: noopFact ? (noopFact.blockers || []).slice().sort() : [],
+    };
+}
+
+function validateMovementActionExpectationShape(filePath, payload) {
+    assert.strictEqual(payload.schema, FIXTURE_SCHEMA, `${filePath}: unsupported fixture schema`);
+    assert.ok(typeof payload.actionNoop === 'boolean', `${filePath}: actionNoop must be boolean`);
+    assertStringArray(filePath, 'actionBlockers', payload.actionBlockers);
+}
+
+function checkMovementActionFixture(txtPath, jsonPath) {
+    const source = fs.readFileSync(txtPath, 'utf8');
+    const report = analyzeSource(source, { sourcePath: txtPath });
+    assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+    const payload = readJson(jsonPath);
+    validateMovementActionExpectationShape(jsonPath, payload);
+    const actual = buildMovementActionExpectations(report);
+    assert.strictEqual(actual.actionNoop, payload.actionNoop, `${jsonPath}: actionNoop expected ${payload.actionNoop}, got ${actual.actionNoop}`);
+    assertSameStringSet(jsonPath, 'actionBlockers', payload.actionBlockers, actual.actionBlockers);
+}
+
+function runMovementActionDir(dirPath, log = process.stdout.write.bind(process.stdout)) {
+    const txtFiles = sortedFiles(dirPath, '.txt');
+    const jsonFiles = sortedFiles(dirPath, '.json');
+    const txtStems = new Set(txtFiles.map(name => path.basename(name, '.txt')));
+    const jsonStems = new Set(jsonFiles.map(name => path.basename(name, '.json')));
+    for (const stem of jsonStems) {
+        assert.ok(txtStems.has(stem), `${path.join(dirPath, `${stem}.json`)}: missing matching .txt`);
+    }
+    for (const txtName of txtFiles) {
+        const stem = path.basename(txtName, '.txt');
+        const txtPath = path.join(dirPath, txtName);
+        const jsonPath = path.join(dirPath, `${stem}.json`);
+        if (!fs.existsSync(jsonPath)) {
+            const source = fs.readFileSync(txtPath, 'utf8');
+            const report = analyzeSource(source, { sourcePath: txtPath });
+            assert.strictEqual(report.status, 'ok', `${txtPath}: static analysis status ${report.status}`);
+            writeJson(jsonPath, buildMovementActionExpectations(report));
+            log(`generated static analysis testdata: movement_action/${stem}.json (review before committing)\n`);
+        }
+        checkMovementActionFixture(txtPath, jsonPath);
+    }
+}
+
 function runStaticAnalysisTestdata(options = {}) {
     const root = options.root || TESTDATA_ROOT;
     const claimDescriptions = loadClaimDescriptions(options.claimDescriptionsPath || CLAIM_DESCRIPTIONS_PATH);
@@ -643,9 +947,21 @@ function runStaticAnalysisTestdata(options = {}) {
     const programFlowDir = path.join(root, 'program_flow');
     assert.ok(fs.existsSync(programFlowDir), `${programFlowDir}: missing program_flow testdata directory`);
     runProgramFlowDir(programFlowDir, options.log);
+    const winflowDir = path.join(root, 'winflow');
+    assert.ok(fs.existsSync(winflowDir), `${winflowDir}: missing winflow testdata directory`);
+    runWinflowDir(winflowDir, options.log);
     const winConditionTagsDir = path.join(root, 'wincondition_tags');
     assert.ok(fs.existsSync(winConditionTagsDir), `${winConditionTagsDir}: missing wincondition_tags testdata directory`);
     runWinConditionTagsDir(winConditionTagsDir, claimDescriptions, options.log);
+    const mergeabilityDir = path.join(root, 'mergeability');
+    assert.ok(fs.existsSync(mergeabilityDir), `${mergeabilityDir}: missing mergeability testdata directory`);
+    runMergeabilityDir(mergeabilityDir, options.log);
+    const rulegroupFlowDir = path.join(root, 'rulegroup_flow');
+    assert.ok(fs.existsSync(rulegroupFlowDir), `${rulegroupFlowDir}: missing rulegroup_flow testdata directory`);
+    runRulegroupFlowDir(rulegroupFlowDir, options.log);
+    const movementActionDir = path.join(root, 'movement_action');
+    assert.ok(fs.existsSync(movementActionDir), `${movementActionDir}: missing movement_action testdata directory`);
+    runMovementActionDir(movementActionDir, options.log);
     process.stdout.write('static_analysis_testdata_runner: ok\n');
 }
 
@@ -654,10 +970,14 @@ if (require.main === module) {
 }
 
 module.exports = {
+    buildMergeabilityExpectations,
+    buildMovementActionExpectations,
     buildObjectTagExpectations,
     buildProgramFlowExpectations,
     buildRuleTagExpectations,
+    buildRulegroupFlowExpectations,
     buildWinConditionTagExpectations,
+    buildWinflowExpectations,
     deriveObjectTagValue,
     deriveRuleTagValue,
     deriveWinConditionTagValue,
@@ -665,9 +985,13 @@ module.exports = {
     findWinConditionRecord,
     formatFixtureJson,
     loadClaimDescriptions,
+    runMergeabilityDir,
+    runMovementActionDir,
     runObjectTagsDir,
     runProgramFlowDir,
     runRuleTagsDir,
+    runRulegroupFlowDir,
     runStaticAnalysisTestdata,
     runWinConditionTagsDir,
+    runWinflowDir,
 };

@@ -26,6 +26,26 @@
       "name": "destroyed_by_rules",
       "description": "A solver-active rule may write this object absent from a cell.",
       "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may write that object absent from a cell where the left-hand side allows that object to be present in the same cell. This includes explicit absent writes, removing a left-hand side object from its original cell, and overwriting a possible same-layer occupant. This is a cell-local write tag: relocation can count as destruction in the source cell, even if the object's total count is preserved."
+    },
+    {
+      "name": "cosmetic",
+      "description": "Object is not read by any win condition or non-cosmetic rule.",
+      "specification": "An object is cosmetic (true) when it is not in any win condition's presence or absence read set (objects_matched ∪ object_absences_matched), not read (presence, absence, or movement) by any non-cosmetic rule, and does not share a collision layer with any non-cosmetic object. Player-role objects are always non-cosmetic regardless of whether rules or win conditions reference them. Background-role objects are cosmetic if unreferenced."
+    },
+    {
+      "name": "static",
+      "description": "No solver-active rule can move, create, destroy, or overwrite this object.",
+      "specification": "An object is static (true) when no solver-active rule writes it present, writes it absent, or assigns or reads its movement state. Same-layer overwrite counts as a write-absent: a rule whose RHS writes another layer-mate in a cell whose LHS does not prohibit this object writes this object absent. A rule whose LHS prohibits the object (e.g., `[ no beta ] -> [ alpha ]`) does not write Beta absent, so Beta remains static with respect to that rule. Player-role objects are never static because player input always assigns them movement. The layer-level fact (layer.tags.static) is the conjunction over the layer's objects."
+    },
+    {
+      "name": "temporary",
+      "description": "No instance of this object survives to the end of a turn.",
+      "specification": "An object is temporary (true) when: it is never present in any initial level; it is not referenced by any win condition; every instance is created by a solver-active rule (not placed in levels); every creator rule is followed by at least one late-section solver-active rule that unconditionally clears the object (single positive LHS term matching only the object with no movement qualifier, RHS does not keep it); and no creator or clearer is a rigid rule or has again taint."
+    },
+    {
+      "name": "count_invariant",
+      "description": "No solver-active rule changes the total board count of this object.",
+      "specification": "An object has count_invariant (true) when no solver-active, object-mutating rule may change the total count of that object across all board cells. A rule changes count when it creates instances that are not balanced by equal destruction in the same rule application (guaranteed creates ≠ guaranteed destroys), or when uncertain creation or displacement is possible (random writes, same-layer overwrite under uncertain occupancy, or explicit erasure under uncertain occupancy). Relocation — removing from one cell and writing to another in the same rule — is count-neutral. Player-role objects are not automatically non-invariant; only their rule writes determine this tag."
     }
   ],
   "ruleTags": [
@@ -73,6 +93,12 @@
       "name": "movements_removed",
       "description": "Concrete object movements no longer present after the rule RHS.",
       "specification": "A rule has movements_removed entries of the form Object:movement for concrete LHS movement matches that are not preserved by an identical RHS movement match for the same object in the corresponding RHS cell. This includes direction changes, movement clears, object relocation, object deletion, and action matches consumed by an RHS movement write."
+    },
+    {
+      "name": "cosmetic",
+      "type": "boolean",
+      "description": "Rule has no reachable effect on win conditions or non-cosmetic rules.",
+      "specification": "A rule is cosmetic (true) when backward reachability from win conditions and non-cosmetic semantic commands determines that firing the rule cannot affect any win condition check or any non-cosmetic rule match. A rule is non-cosmetic (false) when: (1) it carries a non-cosmetic semantic command (again, restart, cancel, win); (2) its objects_written or objects_erased intersect any win condition's objects_matched or object_absences_matched; or (3) its write effects (objects or movements) intersect the read requirements (objects_matched, object_absences_matched, or movements_matched) of any non-cosmetic rule."
     }
   ],
   "factFamilies": [
@@ -80,13 +106,35 @@
       "name": "program_flow",
       "description": "Pairwise wake graph: which rules may, when applied, create a new match for which other rules.",
       "specification": "The program_flow fact lists, for the whole program, every ordered rule pair (R1, R2) where R1's RHS writes may enable a new match for R2's LHS. An edge is emitted whenever R1's writes intersect R2's reads in any of: object presence (writing an object R2 requires present), object absence (erasing an object R2 requires absent), or movement (writing an object:movement R2 reads, including the cardinal-to-moving subsumption). Edges are listed for all ordered pairs across all rule sections without scope segmentation; self-edges (R -> R) are kept when present. The again_rules field lists every rule whose firing semantically forces a tick restart (rules whose summary commands include `again`). Consumers that want the worst-case wake set should take the union of wake_edges with again_rules x rule_ids; this expansion is intentionally not materialised in the fact."
+    },
+    {
+      "name": "mergeability",
+      "description": "Per-layer-pair analysis: whether two same-layer objects can be merged into one without changing observable game behaviour.",
+      "specification": "For each pair of objects on the same collision layer, a mergeability fact is produced. Status is candidate when: (1) no rule LHS reads one object of the pair directly without also reading the other in the same cell and in the same way (no individual_lhs_read); (2) both objects have the same role in every win condition (no different_win_roles); and (3) every property (object_set) term on any rule LHS that includes one object of the pair also includes the other (no partial_property_observation). Status is rejected when any blocker is present."
+    },
+    {
+      "name": "rulegroup_flow",
+      "description": "Per-multi-rule-group analysis: whether the group's rules can be split into independent sub-groups.",
+      "specification": "For each rule group containing more than one rule (created via the '+' join syntax), a rulegroup_flow fact is produced. The interaction_edges field lists intra-group wake edges (R1 → R2 where R1's writes may enable R2). The rerun_masks field maps each rule id to the set of rule ids earlier in the group that should be re-evaluated after it fires. The components field lists the connected components of the interaction graph. Status is candidate (split_candidate true) when there are multiple components and no blockers: no random_rule_group, no rigid_rule, and no semantic_command in the group. Status is rejected otherwise."
+    },
+    {
+      "name": "movement_action",
+      "description": "Conservative reachability analysis for movement states reachable by pressing the action key, and whether that press is a no-op for the solver.",
+      "specification": "The movement_pairs fact lists all layer:movement pairs reachable starting from the player layer's action movement via a fixpoint over solver-active rules whose movement requirements are satisfiable. The action_noop fact (proved when true) asserts that pressing action has no solver-observable effect: no reachable solver-active rule reads action (reads_action), queues again (queues_again), is rigid (rigid_rule), fires without any movement requirement (autonomous_solver_active_rule), mutates objects (action_may_mutate_objects), or creates directional movement (action_may_create_directional_movement)."
+    }
+  ],
+  "winflow": [
+    {
+      "name": "winflow",
+      "description": "Pairwise wake graph: which rules may, when applied, newly satisfy a win condition.",
+      "specification": "The winflow fact lists, for the whole program, every ordered pair (R, W) where R's RHS writes may newly satisfy win condition W. An object_presence edge is emitted when R's objects_written intersects W's objects_matched (W's presence reads). An object_absence edge is emitted when R's objects_erased intersects W's object_absences_matched (W's absence reads). A movement edge is emitted when W has a non-empty targets_matched (an 'on' win condition) and the rule modifies the movement state of an object that is also in W's objects_matched ∪ object_absences_matched: specifically, an object appearing in both R's objects_matched (LHS presence) and either R's movements_written or movements_removed. Movement state changes on an LHS-matched object can relocate it on or off a co-located cell. Movement entries for objects that are not in the LHS are treated as creation, captured by object_presence rather than movement. Only enabling wakes are tracked: a rule that could invalidate a win condition without enabling it does not produce an edge. The win_ids field lists win condition ids in source order; rule_ids lists rule ids in source order."
     }
   ],
   "winConditionTags": [
     {
       "name": "objects_matched",
       "description": "Concrete objects whose presence or absence is read by this win condition.",
-      "specification": "A win condition has objects_matched entries for every concrete object that contributes to the win read-set, after resolving properties to concrete names. For SOME and ALL this is subjects ∪ targets. For NO this is the subjects mask only (the location qualifier Y in 'No X on Y' is not considered a read). objects_matched = subjects_matched ∪ targets_matched ∪ object_absences_matched."
+      "specification": "A win condition has objects_matched entries for the concrete objects whose presence is read by this win condition: subjects_matched ∪ targets_matched. For SOME and ALL this is subjects ∪ targets. For NO, only the targets mask contributes (the subject is an absence read and appears only in object_absences_matched); a bare 'No X' with no targets mask has objects_matched empty."
     },
     {
       "name": "subjects_matched",
@@ -96,7 +144,7 @@
     {
       "name": "targets_matched",
       "description": "Concrete objects in the targets mask (the 'on X' part of a win condition).",
-      "specification": "A win condition has targets_matched entries for the concrete objects in the targets mask, after resolving properties to concrete names. The targets mask is the optional second mask in a two-mask win condition of the form 'Some X on Y' or 'All X on Y'. When there is no targets mask, or when the quantifier is NO, targets_matched is empty. Under NO, the location qualifier Y is not considered a read for wake-edge purposes."
+      "specification": "A win condition has targets_matched entries for the concrete objects in the targets mask, after resolving properties to concrete names. The targets mask is the optional second mask in a two-mask win condition of the form 'Some/All/No X on Y'. When there is no targets mask, targets_matched is empty. The targets mask is a presence read for all quantifiers including NO: in 'No X on Y', Y is the location context whose presence must be checked."
     },
     {
       "name": "object_absences_matched",

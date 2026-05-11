@@ -1,0 +1,66 @@
+title Static Analysis Mergeability Rejected Partial Property
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Alpha
+red
+
+Beta
+blue
+
+Gamma
+green
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+A = Alpha
+B = Beta
+G = Gamma
+
+AlphaGamma = Alpha or Gamma
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+Alpha, Beta, Gamma
+
+=====
+RULES
+=====
+
+[ player | alphaGamma ] -> [ stationary player | ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PABG
