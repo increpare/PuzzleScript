@@ -8,6 +8,25 @@ const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
 
 let runtimeLoaded = false;
 
+const ANALYSIS_UNAVAILABLE_TESTS = new Map([
+    ['by your side', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['test testing starting at level N', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['collapse simple', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['collapse long', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['damn I\'m huge', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['rule application hat test', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['too many rigid bodies', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['dang I\'m huge', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['Drop Swap', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['Drop Swap 2', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['Drop Swap 3', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['a = b and b #393', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['gallery:cyber-lasso', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['Putting Bicycle Helmets on Young Children', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['[testing for recording through level-changes A]  Level-Change test', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['parser rigid in strange place highlighting test', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+]);
+
 function parseArgs(argv) {
     const options = { filter: null, help: false };
     for (let index = 2; index < argv.length; index++) {
@@ -57,15 +76,20 @@ function drainAgain() {
     }
 }
 
-function staticContractForSource(source, sourcePath) {
+function staticContractForSource(source, testName) {
+    const sourcePath = `testdata:${testName}`;
     const report = analyzeSource(source, {
         sourcePath,
         familyFilter: 'count_layer_invariants',
     });
     if (report.status !== 'ok') {
+        const knownReason = ANALYSIS_UNAVAILABLE_TESTS.get(testName);
+        if (!knownReason) {
+            throw new Error(`${sourcePath}: static analysis status ${report.status}`);
+        }
         return {
             objectNames: [],
-            unavailableReason: report.status,
+            unavailableReason: `${report.status}: ${knownReason}`,
         };
     }
     return {
@@ -210,7 +234,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const targetLevel = dataarray[3] === undefined ? 0 : dataarray[3];
     const randomSeed = dataarray[4] === undefined ? null : dataarray[4];
     const expectedSounds = dataarray[5] === undefined ? null : dataarray[5];
-    const staticContract = staticContractForSource(source, `testdata:${testName}`);
+    const staticContract = staticContractForSource(source, testName);
     const staticObjects = staticContract.objectNames;
 
     const previousUnitTesting = unitTesting;
@@ -363,6 +387,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+    ANALYSIS_UNAVAILABLE_TESTS,
     boardIdentity,
     engineObjectName,
     firstSnapshotDifference,

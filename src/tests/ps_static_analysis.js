@@ -813,7 +813,7 @@ function buildCountLayerRuleIndex(psTagged, activeRules) {
     const creatorsByObject = new Map();
     const destroyersByObject = new Map();
     const movementRulesByObject = new Map();
-    const layerCreatorsByLayer = new Map();
+    const layerCreateOverwritersByObject = new Map();
 
     for (const rule of activeRules) {
         const writes = ruleFlowWrites(psTagged, rule);
@@ -823,9 +823,21 @@ function buildCountLayerRuleIndex(psTagged, activeRules) {
         for (const objectName of writerObjects) addRuleForObject(writersByObject, objectName, rule);
         for (const objectName of writes.object_present) {
             addRuleForObject(creatorsByObject, objectName, rule);
-            addRuleForObject(layerCreatorsByLayer, layerForObject(psTagged, objectName), rule);
         }
         for (const objectName of writes.object_absent) addRuleForObject(destroyersByObject, objectName, rule);
+
+        const createdLayers = new Map();
+        for (const objectName of writes.object_present) {
+            const layer = layerForObject(psTagged, objectName);
+            if (!createdLayers.has(layer)) createdLayers.set(layer, new Set());
+            createdLayers.get(layer).add(objectName);
+        }
+        for (const objectName of writes.object_absent) {
+            const createdOnLayer = createdLayers.get(layerForObject(psTagged, objectName));
+            if (createdOnLayer && [...createdOnLayer].some(createdName => createdName !== objectName)) {
+                addRuleForObject(layerCreateOverwritersByObject, objectName, rule);
+            }
+        }
 
         const movementObjects = new Set();
         for (const term of rule.summary.lhs_terms.concat(rule.summary.rhs_terms)) {
@@ -839,7 +851,7 @@ function buildCountLayerRuleIndex(psTagged, activeRules) {
         creatorsByObject,
         destroyersByObject,
         movementRulesByObject,
-        layerCreatorsByLayer,
+        layerCreateOverwritersByObject,
     };
 }
 
@@ -854,11 +866,10 @@ function deriveCountLayerInvariantFacts(psTagged) {
         const creators = rulesForObject(ruleIndex.creatorsByObject, object.name);
         const destroyers = rulesForObject(ruleIndex.destroyersByObject, object.name);
         const movementRules = rulesForObject(ruleIndex.movementRulesByObject, object.name);
-        const siblingLayerCreators = rulesForObject(ruleIndex.layerCreatorsByLayer, object.layer)
-            .filter(rule => !creators.includes(rule));
+        const layerCreateOverwriters = rulesForObject(ruleIndex.layerCreateOverwritersByObject, object.name);
         const staticBlockers = [];
         if (writers.length > 0) staticBlockers.push('object_written_by_solver_active_rule');
-        if (siblingLayerCreators.length > 0) staticBlockers.push('collision_layer_object_may_be_created');
+        if (layerCreateOverwriters.length > 0) staticBlockers.push('collision_layer_object_may_be_created');
         if (movementRules.length > 0 || playerObjects.has(object.name)) staticBlockers.push('object_may_receive_movement');
         object.tags.may_be_created = creators.length > 0;
         object.tags.may_be_destroyed = destroyers.length > 0;
@@ -876,7 +887,7 @@ function deriveCountLayerInvariantFacts(psTagged) {
                 ? ['no_solver_active_rule_writes_object', 'no_movement_applied_to_object']
                 : [],
             blockers: uniqueSorted(staticBlockers),
-            evidence: uniqueSorted(writers.concat(siblingLayerCreators, movementRules).map(rule => rule.id)),
+            evidence: uniqueSorted(writers.concat(layerCreateOverwriters, movementRules).map(rule => rule.id)),
         }));
     }
     for (const layer of psTagged.collision_layers) {

@@ -50,6 +50,7 @@ function run() {
             'objects_erased',
             'movements_written',
             'movements_removed',
+            'cosmetic',
         ]);
         const generatedLog = [];
         runObjectTagsDir(objectTagsDir, claimDescriptions, message => generatedLog.push(message));
