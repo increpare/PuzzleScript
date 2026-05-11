@@ -800,11 +800,9 @@ function deriveCountLayerInvariantFacts(psTagged) {
         const creators = activeRules.filter(rule => ruleMayCreateObject(psTagged, rule, object.name));
         const destroyers = activeRules.filter(rule => ruleMayDestroyObject(psTagged, rule, object.name));
         const movementRules = activeRules.filter(rule => ruleMovementMentionsObject(rule, object.name));
-        const layerCreators = activeRules.filter(rule => ruleMayCreateCollisionLayerObject(psTagged, rule, object.layer));
         const staticBlockers = [];
         if (writers.length > 0) staticBlockers.push('object_written_by_solver_active_rule');
         if (movementRules.length > 0 || playerObjects.has(object.name)) staticBlockers.push('object_may_receive_movement');
-        if (layerCreators.length > 0) staticBlockers.push('collision_layer_object_may_be_created');
         object.tags.may_be_created = creators.length > 0;
         object.tags.may_be_destroyed = destroyers.length > 0;
         object.tags.count_invariant = countChangers.length === 0;
@@ -818,10 +816,10 @@ function deriveCountLayerInvariantFacts(psTagged) {
         results.push(fact('count_layer_invariants', `object_${object.name}_static`, staticBlockers.length === 0 ? 'proved' : 'rejected', {
             subjects: { objects: [object.name] },
             proof: staticBlockers.length === 0
-                ? ['no_solver_active_rule_writes_object', 'no_movement_applied_to_object', 'no_collision_layer_object_creation']
+                ? ['no_solver_active_rule_writes_object', 'no_movement_applied_to_object']
                 : [],
             blockers: uniqueSorted(staticBlockers),
-            evidence: uniqueSorted(writers.concat(movementRules, layerCreators).map(rule => rule.id)),
+            evidence: uniqueSorted(writers.concat(movementRules).map(rule => rule.id)),
         }));
     }
     for (const layer of psTagged.collision_layers) {
