@@ -764,6 +764,84 @@ function ruleMayChangeObjectCount(psTagged, rule, objectName) {
     return guaranteedCreates !== guaranteedDestroys;
 }
 
+function incrementCount(map, objectName) {
+    map.set(objectName, (map.get(objectName) || 0) + 1);
+}
+
+function ruleCountChangedObjects(psTagged, rule) {
+    const changed = new Set();
+    if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return changed;
+
+    const guaranteedCreates = new Map();
+    const guaranteedDestroys = new Map();
+    const rowCount = Math.max(rule.lhs.length, rule.rhs.length);
+    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+        const lhsRow = rule.lhs[rowIndex] || [];
+        const rhsRow = rule.rhs[rowIndex] || [];
+        const cellCount = maxCellsInRows(lhsRow, rhsRow);
+        for (let cellIndex = 0; cellIndex < cellCount; cellIndex++) {
+            const lhsCell = lhsRow[cellIndex] || [];
+            const rhsCell = rhsRow[cellIndex] || [];
+            const lhsPresent = presentObjectSet(lhsCell);
+            const lhsAbsent = absentObjectSet(lhsCell);
+            const rhsCellPresent = presentObjectSet(rhsCell);
+            const rhsAbsent = absentObjectSet(rhsCell);
+            const possibleCellObjects = new Set();
+            addValues(possibleCellObjects, lhsPresent);
+            addValues(possibleCellObjects, rhsCellPresent);
+            addValues(possibleCellObjects, rhsAbsent);
+
+            for (const term of rhsCell) {
+                if (term.kind !== 'present' && term.kind !== 'random_object') continue;
+                addValues(possibleCellObjects, termObjects(term).flatMap(objectName =>
+                    layerObjectsForObject(psTagged, objectName)
+                ));
+                if (term.kind === 'random_object') addValues(changed, termObjects(term));
+            }
+
+            for (const objectName of possibleCellObjects) {
+                const lhsHasObject = lhsPresent.has(objectName);
+                const rhsHasObject = rhsCellPresent.has(objectName);
+                const couldContainObject = cellCouldContainObjectBefore(psTagged, lhsPresent, lhsAbsent, objectName);
+
+                if (rhsHasObject && !lhsHasObject) {
+                    if (couldContainObject) {
+                        changed.add(objectName);
+                    } else {
+                        incrementCount(guaranteedCreates, objectName);
+                    }
+                }
+                if (lhsHasObject && !rhsHasObject) {
+                    incrementCount(guaranteedDestroys, objectName);
+                }
+                if (!lhsHasObject && !rhsHasObject && rhsAbsent.has(objectName) && couldContainObject) {
+                    changed.add(objectName);
+                }
+                if (!rhsHasObject && couldContainObject) {
+                    const objectLayer = layerForObject(psTagged, objectName);
+                    const writesSameLayerObject = rhsCell.some(term =>
+                        (term.kind === 'present' || term.kind === 'random_object')
+                        && termObjects(term).some(termObject =>
+                            termObject !== objectName && layerForObject(psTagged, termObject) === objectLayer
+                        )
+                    );
+                    if (writesSameLayerObject) changed.add(objectName);
+                }
+            }
+        }
+    }
+
+    const guaranteedObjects = new Set(guaranteedCreates.keys());
+    addValues(guaranteedObjects, guaranteedDestroys.keys());
+    for (const objectName of guaranteedObjects) {
+        if ((guaranteedCreates.get(objectName) || 0) !== (guaranteedDestroys.get(objectName) || 0)) {
+            changed.add(objectName);
+        }
+    }
+
+    return changed;
+}
+
 function playerObjectNameSet(psTagged) {
     const playerProperty = psTagged.properties.find(item =>
         item.canonical_name === 'player' || item.name.toLowerCase() === 'player'
@@ -814,6 +892,7 @@ function buildCountLayerRuleIndex(psTagged, activeRules) {
     const destroyersByObject = new Map();
     const movementRulesByObject = new Map();
     const layerCreateOverwritersByObject = new Map();
+    const countChangersByObject = new Map();
 
     for (const rule of activeRules) {
         const writes = ruleFlowWrites(psTagged, rule);
@@ -839,6 +918,10 @@ function buildCountLayerRuleIndex(psTagged, activeRules) {
             }
         }
 
+        for (const objectName of ruleCountChangedObjects(psTagged, rule)) {
+            addRuleForObject(countChangersByObject, objectName, rule);
+        }
+
         const movementObjects = new Set();
         for (const term of rule.summary.lhs_terms.concat(rule.summary.rhs_terms)) {
             if (term.movement !== null) addValues(movementObjects, termObjects(term));
@@ -852,6 +935,7 @@ function buildCountLayerRuleIndex(psTagged, activeRules) {
         destroyersByObject,
         movementRulesByObject,
         layerCreateOverwritersByObject,
+        countChangersByObject,
     };
 }
 
@@ -862,7 +946,7 @@ function deriveCountLayerInvariantFacts(psTagged) {
     const results = [];
     for (const object of psTagged.objects) {
         const writers = rulesForObject(ruleIndex.writersByObject, object.name);
-        const countChangers = activeRules.filter(rule => ruleMayChangeObjectCount(psTagged, rule, object.name));
+        const countChangers = rulesForObject(ruleIndex.countChangersByObject, object.name);
         const creators = rulesForObject(ruleIndex.creatorsByObject, object.name);
         const destroyers = rulesForObject(ruleIndex.destroyersByObject, object.name);
         const movementRules = rulesForObject(ruleIndex.movementRulesByObject, object.name);

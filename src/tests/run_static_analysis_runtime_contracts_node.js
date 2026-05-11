@@ -7,24 +7,25 @@ const { analyzeSource } = require('./ps_static_analysis');
 const { loadPuzzleScript } = require('./js_oracle/lib/puzzlescript_node_env');
 
 let runtimeLoaded = false;
+const MAX_AGAIN_DRAIN_STEPS = 10000;
 
 const ANALYSIS_UNAVAILABLE_TESTS = new Map([
-    ['by your side', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['test testing starting at level N', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['collapse simple', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['collapse long', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['damn I\'m huge', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['rule application hat test', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['too many rigid bodies', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['dang I\'m huge', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['Drop Swap', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['Drop Swap 2', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['Drop Swap 3', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['a = b and b #393', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['gallery:cyber-lasso', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['Putting Bicycle Helmets on Young Children', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['[testing for recording through level-changes A]  Level-Change test', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
-    ['parser rigid in strange place highlighting test', 'compileSemanticSource reports diagnostics for this legacy simulation fixture'],
+    ['by your side', { status: 'compile_error', diagnostic: 'Object "TARGET" included in multiple collision layers' }],
+    ['test testing starting at level N', { status: 'compile_error', diagnostic: 'Object "TARGET" included in multiple collision layers' }],
+    ['collapse simple', { status: 'compile_error', diagnostic: 'YouTube support' }],
+    ['collapse long', { status: 'compile_error', diagnostic: 'YouTube support' }],
+    ['damn I\'m huge', { status: 'compile_error', diagnostic: 'YouTube support' }],
+    ['rule application hat test', { status: 'compile_error', diagnostic: 'Object "WALL" included in multiple collision layers' }],
+    ['too many rigid bodies', { status: 'compile_error', diagnostic: 'Name "1" already in use' }],
+    ['dang I\'m huge', { status: 'compile_error', diagnostic: 'YouTube support' }],
+    ['Drop Swap', { status: 'compile_error', diagnostic: 'Name "P" already in use' }],
+    ['Drop Swap 2', { status: 'compile_error', diagnostic: 'Name "P" already in use' }],
+    ['Drop Swap 3', { status: 'compile_error', diagnostic: 'Name "P" already in use' }],
+    ['a = b and b #393', { status: 'compile_error', diagnostic: 'Trying to create an aggregate object' }],
+    ['gallery:cyber-lasso', { status: 'compile_error', diagnostic: 'You named an object "|", but this is a keyword' }],
+    ['Putting Bicycle Helmets on Young Children', { status: 'compile_error', diagnostic: 'strap occurs multiple times' }],
+    ['[testing for recording through level-changes A]  Level-Change test', { status: 'compile_error', diagnostic: 'unexpected sound token "un"' }],
+    ['parser rigid in strange place highlighting test', { status: 'compile_error', diagnostic: 'malformed cell rule' }],
 ]);
 
 function parseArgs(argv) {
@@ -69,8 +70,17 @@ function resetParserErrors() {
     }
 }
 
-function drainAgain() {
+function diagnosticText(errors) {
+    return (errors || []).map(error => String(error).replace(/<[^>]*>/g, ' ')).join('\n');
+}
+
+function drainAgain(context) {
+    let stepCount = 0;
     while (againing) {
+        stepCount++;
+        if (stepCount > MAX_AGAIN_DRAIN_STEPS) {
+            throw new Error(`${context}: exceeded ${MAX_AGAIN_DRAIN_STEPS} again-drain steps`);
+        }
         againing = false;
         processInput(-1);
     }
@@ -83,13 +93,20 @@ function staticContractForSource(source, testName) {
         familyFilter: 'count_layer_invariants',
     });
     if (report.status !== 'ok') {
-        const knownReason = ANALYSIS_UNAVAILABLE_TESTS.get(testName);
-        if (!knownReason) {
+        const expected = ANALYSIS_UNAVAILABLE_TESTS.get(testName);
+        if (!expected) {
             throw new Error(`${sourcePath}: static analysis status ${report.status}`);
+        }
+        if (report.status !== expected.status) {
+            throw new Error(`${sourcePath}: static analysis status ${report.status}, expected ${expected.status}`);
+        }
+        const diagnostics = diagnosticText(report.errors);
+        if (!diagnostics.includes(expected.diagnostic)) {
+            throw new Error(`${sourcePath}: static analysis diagnostic changed; expected ${JSON.stringify(expected.diagnostic)}`);
         }
         return {
             objectNames: [],
-            unavailableReason: `${report.status}: ${knownReason}`,
+            unavailableReason: `${report.status}: ${expected.diagnostic}`,
         };
     }
     return {
@@ -201,11 +218,11 @@ function executeInputToken(inputToken) {
     return { resetsSnapshot: false };
 }
 
-function compileSimulationSource(source, targetLevel, randomSeed) {
+function compileSimulationSource(testName, source, targetLevel, randomSeed) {
     levelString = source;
     resetParserErrors();
     compile(['loadLevel', targetLevel], source, randomSeed);
-    drainAgain();
+    drainAgain(`${testName}: initial compile`);
 }
 
 function tokenLabel(inputToken) {
@@ -244,7 +261,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
     let objectBoundaryChecks = 0;
     try {
-        compileSimulationSource(source, targetLevel, randomSeed);
+        compileSimulationSource(testName, source, targetLevel, randomSeed);
 
         let currentIdentity = boardIdentity();
         let snapshots = snapshotStaticObjects(staticObjects);
@@ -252,7 +269,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
         for (let inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
             const inputToken = inputs[inputIndex];
             const result = executeInputToken(inputToken);
-            drainAgain();
+            drainAgain(`${testName}: input ${inputIndex} ${tokenLabel(inputToken)}`);
 
             const nextIdentity = boardIdentity();
             const resetBoundary =
@@ -388,6 +405,7 @@ if (require.main === module) {
 
 module.exports = {
     ANALYSIS_UNAVAILABLE_TESTS,
+    MAX_AGAIN_DRAIN_STEPS,
     boardIdentity,
     engineObjectName,
     firstSnapshotDifference,
