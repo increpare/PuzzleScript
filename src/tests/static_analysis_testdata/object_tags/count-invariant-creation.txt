@@ -1,0 +1,61 @@
+title Static Analysis Object Tag Count Invariant Creation
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Alpha
+red
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+C = Crate
+A = Alpha
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+Crate
+Alpha
+
+=====
+RULES
+=====
+
+[ crate ] -> [ alpha ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PC.

@@ -1,0 +1,47 @@
+title Static Analysis Movement Action Reads Action
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+=====
+RULES
+=====
+
+[ action player ] -> [ player ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P.

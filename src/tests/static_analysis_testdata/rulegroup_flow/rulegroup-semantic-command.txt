@@ -1,0 +1,62 @@
+title Static Analysis Rulegroup Flow Semantic Command
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Alpha
+red
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+C = Crate
+A = Alpha
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+Crate
+Alpha
+
+=====
+RULES
+=====
+
+[ crate ] -> [ ] again
++ [ alpha ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PCA.

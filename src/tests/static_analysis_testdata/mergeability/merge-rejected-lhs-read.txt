@@ -1,0 +1,60 @@
+title Static Analysis Mergeability Rejected Individual LHS Read
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Alpha
+red
+
+Beta
+blue
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+A = Alpha
+B = Beta
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+Alpha, Beta
+
+=====
+RULES
+=====
+
+[ alpha ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PAB

@@ -1,0 +1,20 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "mergePairs": [
+    {
+      "objects": ["Alpha", "Beta"],
+      "status": "rejected",
+      "blockers": ["partial_property_observation"]
+    },
+    {
+      "objects": ["Alpha", "Gamma"],
+      "status": "candidate",
+      "blockers": []
+    },
+    {
+      "objects": ["Beta", "Gamma"],
+      "status": "rejected",
+      "blockers": ["partial_property_observation"]
+    }
+  ]
+}

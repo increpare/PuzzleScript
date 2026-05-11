@@ -1,0 +1,62 @@
+title Static Analysis Rulegroup Flow Single Component
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+brown
+
+Crate
+orange
+
+Alpha
+red
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+# = Wall
+C = Crate
+A = Alpha
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+Crate
+Alpha
+
+=====
+RULES
+=====
+
+[ crate ] -> [ stationary alpha ]
++ [ alpha ] -> [ ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PC.

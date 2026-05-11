@@ -1,0 +1,69 @@
+title Static Analysis Program Flow Wake Absent Property
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+yellow
+
+Player
+white
+
+Wall
+brown
+
+Alpha
+red
+
+Beta
+blue
+
+========
+LEGEND
+========
+
+. = Background
+T = Target
+P = Player
+# = Wall
+A = Alpha
+B = Beta
+
+Movable = Alpha or Beta
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall
+Alpha
+Beta
+
+=====
+RULES
+=====
+
+[ alpha ] -> [ ]
+[ player no alpha no beta ] -> [ stationary player ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PAB
