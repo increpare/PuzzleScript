@@ -19,7 +19,7 @@ For each simulation test:
 5. Snapshot each static object's occupancy across `level.n_tiles`.
 6. Replay the recorded inputs exactly like the existing simulation runner.
 7. After each input plus `again` drain, assert every static object snapshot is unchanged.
-8. Compare the final serialized level against the simulation test's expected output.
+8. Compare the final serialized level against the simulation test's expected output as a replay-parity guard.
 
 `undo` and `restart` are snapshot reset points. After either command runs and any `again` chain drains, the checker rebuilds static object snapshots from the current level. Static objects are promised not to move because of gameplay rules and input; undo and restart intentionally restore or reload board state.
 
@@ -53,7 +53,7 @@ The contract runner reads the same fields:
 
 - `source` goes to both `analyzeSource` and `compile`.
 - `inputs` drive `processInput`, `DoUndo`, `DoRestart`, and `tick` handling.
-- `expectedSerializedLevel` remains the final replay oracle.
+- `expectedSerializedLevel` is checked to confirm the contract runner replayed the test the same way as the normal simulation suite.
 - `targetLevel` and `randomSeed` are passed to `compile` exactly as in `runTest`.
 - `expectedSounds`, when present, is checked like `runTest`.
 
@@ -76,7 +76,7 @@ Other failures should be strict:
 - static analysis status is not `ok`
 - static object display name cannot be mapped to a runtime object
 - replay throws
-- final serialized level differs from expected output
+- final serialized level differs from expected output, which means the contract runner did not faithfully replay the simulation case
 - sound output differs from expected output when `expectedSounds` is present
 
 The runner should return a non-zero exit status on any failure.
@@ -132,7 +132,7 @@ The harness should be written so later claim families can reuse its compile/repl
 - The new runner checks all ordinary simulation tests by default.
 - Every proved static object is asserted unchanged after each normal input/tick turn boundary.
 - `undo` and `restart` rebuild snapshots instead of comparing against the previous board.
-- Final serialized-level checks still match the simulation corpus expectations.
+- Final serialized-level checks still match the simulation corpus expectations, confirming replay parity with `runTest`.
 - Sound-output checks still match simulation corpus expectations when expected sounds are listed.
 - `make static_analysis_tests` runs the contract runner.
 - Failures name the simulation case, input, object, and changed cell.
