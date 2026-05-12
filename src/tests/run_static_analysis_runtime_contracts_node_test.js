@@ -256,4 +256,68 @@ assert.strictEqual(
     'cosmetic checks should compare final projected replay states'
 );
 
+const neverAppearsSource = [
+    '========',
+    'OBJECTS',
+    '========',
+    '',
+    'Background',
+    'Black',
+    '',
+    'Player',
+    'Pink',
+    '',
+    'Unused',
+    'Blue',
+    '',
+    '=======',
+    'LEGEND',
+    '=======',
+    '',
+    'P = Player',
+    '. = Background',
+    '',
+    '======',
+    'SOUNDS',
+    '======',
+    '',
+    '================',
+    'COLLISIONLAYERS',
+    '================',
+    '',
+    'Background',
+    'Player',
+    'Unused',
+    '',
+    '======',
+    'RULES',
+    '======',
+    '',
+    '[ > Player ] -> [ > Player ]',
+    '',
+    '==============',
+    'WINCONDITIONS',
+    '==============',
+    '',
+    'Some Player',
+    '',
+    '=======',
+    'LEVELS',
+    '=======',
+    '',
+    'P..',
+].join('\n');
+
+const neverAppears = runSimulationWithStaticChecks('never appears', [
+    neverAppearsSource,
+    [3],
+    'background:0,background player:1,0,\n',
+]);
+
+assert.strictEqual(neverAppears.neverAppearsObjectCount, 1, 'never-appears fixture should have one never-appearing object');
+assert.ok(
+    neverAppears.neverAppearsBoundaryChecks > 0,
+    'never-appears checks should run for absent uncreated objects'
+);
+
 console.log('run_static_analysis_runtime_contracts_node_test: ok');

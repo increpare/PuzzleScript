@@ -112,6 +112,7 @@ function emptyStaticContract(unavailableReason) {
         constantQuantityObjectNames: [],
         quantityContracts: [],
         temporaryObjectNames: [],
+        neverAppearsObjectNames: [],
         cosmeticObjectNames: [],
         referencedObjectNames: [],
         actionNoopProved: false,
@@ -191,6 +192,9 @@ function staticContractForSource(source, testName) {
         quantityContracts,
         temporaryObjectNames: objects
             .filter(object => object.tags && object.tags.temporary === true)
+            .map(object => object.name),
+        neverAppearsObjectNames: objects
+            .filter(object => object.tags && object.tags.present_in_no_levels === true && object.tags.may_be_created === false)
             .map(object => object.name),
         cosmeticObjectNames: objects
             .filter(object => object.tags && object.tags.cosmetic === true)
@@ -856,6 +860,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const constantQuantityObjects = staticContract.constantQuantityObjectNames;
     const quantityContracts = staticContract.quantityContracts;
     const temporaryObjects = staticContract.temporaryObjectNames;
+    const neverAppearsObjects = staticContract.neverAppearsObjectNames;
     let cosmeticObjects = staticContract.cosmeticObjectNames;
     const countedObjects = quantityObjectNames(quantityContracts);
     const actionNoopProved = staticContract.actionNoopProved;
@@ -874,6 +879,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     let inertLayerBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
     let temporaryBoundaryChecks = 0;
+    let neverAppearsBoundaryChecks = 0;
     let actionNoopBoundaryChecks = 0;
     let tickNoopBoundaryChecks = 0;
     let noAgainBoundaryChecks = 0;
@@ -947,6 +953,16 @@ function runSimulationWithStaticChecks(testName, dataarray) {
                     ].join('\n'));
                 }
                 temporaryBoundaryChecks += temporaryObjects.length;
+                const neverAppearsDiff = firstTemporaryPresence(neverAppearsObjects);
+                if (neverAppearsDiff) {
+                    throw new Error([
+                        `${testName}: never-appears object appeared at stable boundary`,
+                        `  input ${inputIndex}: ${tokenLabel(inputToken)}`,
+                        `  object: ${neverAppearsDiff.objectName}`,
+                        `  count: ${neverAppearsDiff.count}`,
+                    ].join('\n'));
+                }
+                neverAppearsBoundaryChecks += neverAppearsObjects.length;
             }
 
             if (resetBoundary) {
@@ -1082,12 +1098,14 @@ function runSimulationWithStaticChecks(testName, dataarray) {
             inertLayerCount: inertLayers.length,
             constantQuantityObjectCount: constantQuantityObjects.length,
             temporaryObjectCount: temporaryObjects.length,
+            neverAppearsObjectCount: neverAppearsObjects.length,
             objectBoundaryChecks,
             staticLayerBoundaryChecks,
             layerBoundaryChecks: staticLayerBoundaryChecks,
             inertLayerBoundaryChecks,
             quantityBoundaryChecks,
             temporaryBoundaryChecks,
+            neverAppearsBoundaryChecks,
             cosmeticObjectCount: cosmeticObjects.length,
             cosmeticProjectionChecks,
             actionNoopProved,
@@ -1130,6 +1148,7 @@ function runAll(options = {}) {
     let casesWithInertLayers = 0;
     let casesWithConstantQuantityObjects = 0;
     let casesWithTemporaryObjects = 0;
+    let casesWithNeverAppearsObjects = 0;
     let casesWithCosmeticObjects = 0;
     let casesWithActionNoop = 0;
     let casesWithTickNoop = 0;
@@ -1140,6 +1159,7 @@ function runAll(options = {}) {
     let inertLayerBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
     let temporaryBoundaryChecks = 0;
+    let neverAppearsBoundaryChecks = 0;
     let cosmeticProjectionChecks = 0;
     let actionNoopBoundaryChecks = 0;
     let tickNoopBoundaryChecks = 0;
@@ -1179,6 +1199,9 @@ function runAll(options = {}) {
             if (result.temporaryObjectCount > 0) {
                 casesWithTemporaryObjects++;
             }
+            if (result.neverAppearsObjectCount > 0) {
+                casesWithNeverAppearsObjects++;
+            }
             if (result.cosmeticObjectCount > 0) {
                 casesWithCosmeticObjects++;
             }
@@ -1199,6 +1222,7 @@ function runAll(options = {}) {
             inertLayerBoundaryChecks += result.inertLayerBoundaryChecks;
             quantityBoundaryChecks += result.quantityBoundaryChecks;
             temporaryBoundaryChecks += result.temporaryBoundaryChecks;
+            neverAppearsBoundaryChecks += result.neverAppearsBoundaryChecks;
             cosmeticProjectionChecks += result.cosmeticProjectionChecks;
             actionNoopBoundaryChecks += result.actionNoopBoundaryChecks;
             tickNoopBoundaryChecks += result.tickNoopBoundaryChecks;
@@ -1221,6 +1245,7 @@ function runAll(options = {}) {
         casesWithInertLayers,
         casesWithConstantQuantityObjects,
         casesWithTemporaryObjects,
+        casesWithNeverAppearsObjects,
         casesWithCosmeticObjects,
         casesWithActionNoop,
         casesWithTickNoop,
@@ -1232,6 +1257,7 @@ function runAll(options = {}) {
         inertLayerBoundaryChecks,
         quantityBoundaryChecks,
         temporaryBoundaryChecks,
+        neverAppearsBoundaryChecks,
         cosmeticProjectionChecks,
         actionNoopBoundaryChecks,
         tickNoopBoundaryChecks,
@@ -1259,7 +1285,7 @@ function main() {
     }
 
     console.log(
-        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithStaticLayers} with static layers, ${result.casesWithInertLayers} with inert layers, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.casesWithTemporaryObjects} with temporary objects, ${result.casesWithCosmeticObjects} with projectable cosmetic objects, ${result.casesWithActionNoop} with action-noop, ${result.casesWithTickNoop} with tick-noop, ${result.casesWithNoAgain} with no-again, ${result.casesWithNoRandomReplayChecks} with no-random replay checks, ${result.objectBoundaryChecks} object-boundary checks, ${result.staticLayerBoundaryChecks} static-layer-boundary checks, ${result.inertLayerBoundaryChecks} inert-layer-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks, ${result.temporaryBoundaryChecks} temporary-boundary checks, ${result.cosmeticProjectionChecks} cosmetic-projection checks, ${result.actionNoopBoundaryChecks} action-noop-boundary checks, ${result.tickNoopBoundaryChecks} tick-noop-boundary checks, ${result.noAgainBoundaryChecks} no-again checks, ${result.noRandomReplayChecks} no-random replay checks)`
+        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithStaticLayers} with static layers, ${result.casesWithInertLayers} with inert layers, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.casesWithTemporaryObjects} with temporary objects, ${result.casesWithNeverAppearsObjects} with never-appears objects, ${result.casesWithCosmeticObjects} with projectable cosmetic objects, ${result.casesWithActionNoop} with action-noop, ${result.casesWithTickNoop} with tick-noop, ${result.casesWithNoAgain} with no-again, ${result.casesWithNoRandomReplayChecks} with no-random replay checks, ${result.objectBoundaryChecks} object-boundary checks, ${result.staticLayerBoundaryChecks} static-layer-boundary checks, ${result.inertLayerBoundaryChecks} inert-layer-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks, ${result.temporaryBoundaryChecks} temporary-boundary checks, ${result.neverAppearsBoundaryChecks} never-appears-boundary checks, ${result.cosmeticProjectionChecks} cosmetic-projection checks, ${result.actionNoopBoundaryChecks} action-noop-boundary checks, ${result.tickNoopBoundaryChecks} tick-noop-boundary checks, ${result.noAgainBoundaryChecks} no-again checks, ${result.noRandomReplayChecks} no-random replay checks)`
     );
     return 0;
 }
