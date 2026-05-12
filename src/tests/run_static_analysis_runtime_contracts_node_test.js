@@ -17,9 +17,14 @@ const result = runSimulationWithStaticChecks(sokoban[0], sokoban[1]);
 
 assert.strictEqual(result.staticObjectCount, 3, 'sokoban should have three static objects');
 assert.strictEqual(result.constantQuantityObjectCount, 5, 'sokoban should have five constant-quantity objects');
+assert.strictEqual(result.noAgainProved, true, 'sokoban should have no AGAIN rules');
 assert.ok(
     result.quantityBoundaryChecks > result.objectBoundaryChecks,
     'quantity checks should include movable constant-quantity objects'
+);
+assert.ok(
+    result.noAgainBoundaryChecks > 0,
+    'no-again checks should include stable replay boundaries'
 );
 
 const restartBoundarySource = [

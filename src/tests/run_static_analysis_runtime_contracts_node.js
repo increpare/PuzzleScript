@@ -84,6 +84,7 @@ function drainAgain(context) {
         againing = false;
         processInput(-1);
     }
+    return stepCount;
 }
 
 function staticContractForSource(source, testName) {
@@ -108,10 +109,12 @@ function staticContractForSource(source, testName) {
             objectNames: [],
             constantQuantityObjectNames: [],
             quantityContracts: [],
+            noAgainProved: false,
             unavailableReason: `${report.status}: ${expected.diagnostic}`,
         };
     }
     const objects = ((report.ps_tagged && report.ps_tagged.objects) || []);
+    const gameTags = (report.ps_tagged && report.ps_tagged.game && report.ps_tagged.game.tags) || {};
     const quantityContracts = objects
         .filter(object => object.tags && object.tags.quantity)
         .map(object => ({
@@ -128,6 +131,7 @@ function staticContractForSource(source, testName) {
             .filter(contract => contract.neverIncreases && contract.neverDecreases)
             .map(contract => contract.objectName),
         quantityContracts,
+        noAgainProved: gameTags.has_again !== true,
         unavailableReason: null,
     };
 }
@@ -287,7 +291,7 @@ function compileSimulationSource(testName, source, targetLevel, randomSeed) {
     levelString = source;
     resetParserErrors();
     compile(['loadLevel', targetLevel], source, randomSeed);
-    drainAgain(`${testName}: initial compile`);
+    return drainAgain(`${testName}: initial compile`);
 }
 
 function tokenLabel(inputToken) {
@@ -321,6 +325,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const constantQuantityObjects = staticContract.constantQuantityObjectNames;
     const quantityContracts = staticContract.quantityContracts;
     const countedObjects = quantityObjectNames(quantityContracts);
+    const noAgainProved = staticContract.noAgainProved;
 
     const previousUnitTesting = unitTesting;
     const previousLazyFunctionGeneration = lazyFunctionGeneration;
@@ -329,6 +334,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let noAgainBoundaryChecks = 0;
     let restartBoundaryTriggered = false;
     const previousDoRestart = global.DoRestart;
     if (typeof previousDoRestart === 'function') {
@@ -338,7 +344,17 @@ function runSimulationWithStaticChecks(testName, dataarray) {
         };
     }
     try {
-        compileSimulationSource(testName, source, targetLevel, randomSeed);
+        const initialAgainSteps = compileSimulationSource(testName, source, targetLevel, randomSeed);
+        if (noAgainProved) {
+            noAgainBoundaryChecks++;
+            if (initialAgainSteps !== 0) {
+                throw new Error([
+                    `${testName}: no-again claim violated`,
+                    '  boundary: initial compile',
+                    `  again steps: ${initialAgainSteps}`,
+                ].join('\n'));
+            }
+        }
 
         let currentIdentity = boardIdentity();
         let snapshots = snapshotStaticObjects(staticObjects);
@@ -348,7 +364,17 @@ function runSimulationWithStaticChecks(testName, dataarray) {
             const inputToken = inputs[inputIndex];
             restartBoundaryTriggered = false;
             const result = executeInputToken(inputToken);
-            drainAgain(`${testName}: input ${inputIndex} ${tokenLabel(inputToken)}`);
+            const againSteps = drainAgain(`${testName}: input ${inputIndex} ${tokenLabel(inputToken)}`);
+            if (noAgainProved) {
+                noAgainBoundaryChecks++;
+                if (againSteps !== 0) {
+                    throw new Error([
+                        `${testName}: no-again claim violated`,
+                        `  input ${inputIndex}: ${tokenLabel(inputToken)}`,
+                        `  again steps: ${againSteps}`,
+                    ].join('\n'));
+                }
+            }
 
             const nextIdentity = boardIdentity();
             const resetBoundary =
@@ -401,6 +427,8 @@ function runSimulationWithStaticChecks(testName, dataarray) {
             constantQuantityObjectCount: constantQuantityObjects.length,
             objectBoundaryChecks,
             quantityBoundaryChecks,
+            noAgainProved,
+            noAgainBoundaryChecks,
             analysisUnavailableReason: staticContract.unavailableReason,
         };
     } finally {
@@ -430,8 +458,10 @@ function runAll(options = {}) {
     let caseCount = 0;
     let casesWithStaticObjects = 0;
     let casesWithConstantQuantityObjects = 0;
+    let casesWithNoAgain = 0;
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let noAgainBoundaryChecks = 0;
     let analysisUnavailableCount = 0;
     const entries = global.testdata.filter(entry => testMatchesFilter(entry[0], options.filter || null));
 
@@ -457,8 +487,12 @@ function runAll(options = {}) {
             if (result.constantQuantityObjectCount > 0) {
                 casesWithConstantQuantityObjects++;
             }
+            if (result.noAgainProved) {
+                casesWithNoAgain++;
+            }
             objectBoundaryChecks += result.objectBoundaryChecks;
             quantityBoundaryChecks += result.quantityBoundaryChecks;
+            noAgainBoundaryChecks += result.noAgainBoundaryChecks;
             if (result.analysisUnavailableReason) {
                 analysisUnavailableCount++;
                 progressLog(options, `static_analysis_runtime_contracts:   static analysis unavailable: ${result.analysisUnavailableReason}`);
@@ -473,8 +507,10 @@ function runAll(options = {}) {
         caseCount,
         casesWithStaticObjects,
         casesWithConstantQuantityObjects,
+        casesWithNoAgain,
         objectBoundaryChecks,
         quantityBoundaryChecks,
+        noAgainBoundaryChecks,
         analysisUnavailableCount,
         failures,
     };
@@ -497,7 +533,7 @@ function main() {
     }
 
     console.log(
-        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks)`
+        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.casesWithNoAgain} with no-again, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks, ${result.noAgainBoundaryChecks} no-again checks)`
     );
     return 0;
 }
