@@ -1,0 +1,53 @@
+title Static Analysis Movement Action Again
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Hero
+white
+
+Goal
+yellow
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Hero
+G = Goal
+Player = Hero
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Hero, Goal
+
+=====
+RULES
+=====
+
+[ action Player ] -> [ Player ] again
+
+=============
+WINCONDITIONS
+=============
+
+Some Player on Goal
+
+======
+LEVELS
+======
+
+P.G
+...

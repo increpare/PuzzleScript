@@ -1,0 +1,24 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "rulegroupFlow": [
+    {
+      "line": 55,
+      "split_candidate": false,
+      "components_count": 2,
+      "interactionEdges": [],
+      "rerunMasks": [
+        {
+          "line": 55,
+          "text": "random [ alpha ] -> [ alpha markerx ]",
+          "rerun": []
+        },
+        {
+          "line": 56,
+          "text": "+ [ beta ] -> [ beta markery ]",
+          "rerun": []
+        }
+      ],
+      "blockers": ["random_rule_group"]
+    }
+  ]
+}

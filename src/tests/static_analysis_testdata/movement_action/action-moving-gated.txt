@@ -1,0 +1,53 @@
+title Static Analysis Movement Action Moving Gated
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Hero
+white
+
+Goal
+yellow
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Hero
+G = Goal
+Player = Hero
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Hero, Goal
+
+=====
+RULES
+=====
+
+[ moving Goal ] -> [ randomDir Goal ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player on Goal
+
+======
+LEVELS
+======
+
+P.G
+...

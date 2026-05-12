@@ -1,0 +1,69 @@
+title Static Analysis Rulegroup Flow And Aggregate Enable
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+Beta
+blue
+
+MarkerX
+green
+
+MarkerY
+yellow
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+a = Alpha
+b = Beta
+x = MarkerX
+y = MarkerY
+Pair = MarkerX and MarkerY
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha
+Beta
+MarkerX
+MarkerY
+
+=====
+RULES
+=====
+
+[ pair ] -> [ pair player ]
++ [ alpha ] -> [ alpha markerx ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+Pab

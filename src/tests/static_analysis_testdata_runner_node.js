@@ -7,12 +7,17 @@ const os = require('os');
 const path = require('path');
 
 const {
+    assertFixtureFieldsDocumented,
+    buildMovementActionExpectations,
+    fixtureFieldsAtPath,
+    fixtureSchemaByName,
     findRuleRecord,
     formatFixtureJson,
     loadClaimDescriptions,
     runObjectTagsDir,
     runRuleTagsDir,
 } = require('./static_analysis_testdata_runner');
+const { analyzeSource } = require('./ps_static_analysis');
 
 const FIXTURE_SCHEMA = 'ps-static-analysis-testdata-v1';
 
@@ -39,7 +44,10 @@ function run() {
         );
 
         const claimDescriptions = loadClaimDescriptions();
-        const ruleTagNames = claimDescriptions.ruleTags.map(tag => tag.name);
+        const ruleTagNames = fixtureFieldsAtPath(
+            fixtureSchemaByName(claimDescriptions, 'rule_tags'),
+            ['ruleTag', 'tags']
+        ).map(tag => tag.name);
         assert.deepStrictEqual(ruleTagNames, [
             'objects_required',
             'objects_matched',
@@ -52,6 +60,59 @@ function run() {
             'movements_removed',
             'cosmetic',
         ]);
+        const movementActionReport = analyzeSource(`title Static Analysis Movement Action Name
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+=====
+RULES
+=====
+
+[ action Player ] -> [ right Player ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P
+`, { sourcePath: 'movement-action-name.txt' });
+        const movementActionPayload = buildMovementActionExpectations(movementActionReport);
+        assert.deepStrictEqual(
+            movementActionPayload.movements_reachable_from_action_input,
+            ['Player:action', 'Player:moving', 'Player:right']
+        );
         const generatedLog = [];
         runObjectTagsDir(objectTagsDir, claimDescriptions, message => generatedLog.push(message));
         assert.deepStrictEqual(generatedLog, ['generated static analysis testdata: object_tags/roles-basic.json (review before committing)\n']);
@@ -66,9 +127,47 @@ function run() {
         assert.strictEqual(findObjectTag(generated, 'Background').is_background, true);
         assert.strictEqual(findObjectTag(generated, 'Goal').level_presence, 'all');
 
+        assert.throws(
+            () => assertFixtureFieldsDocumented(
+                'undocumented-field.json',
+                fixtureSchemaByName(claimDescriptions, 'object_tags'),
+                {
+                    schema: FIXTURE_SCHEMA,
+                    note: 'undocumented fields should be rejected',
+                    objectTag: [
+                        {
+                            object: 'Avatar',
+                            is_player: true,
+                        },
+                    ],
+                }
+            ),
+            /undocumented fixture field note/
+        );
+        assert.throws(
+            () => assertFixtureFieldsDocumented(
+                'undocumented-nested-field.json',
+                fixtureSchemaByName(claimDescriptions, 'program_flow'),
+                {
+                    schema: FIXTURE_SCHEMA,
+                    wakeEdges: [
+                        {
+                            from_line: 1,
+                            from_text: '[ a ] -> [ b ]',
+                            to_line: 2,
+                            to_text: '[ b ] -> [ c ]',
+                            reasons: ['object_presence'],
+                            mysteryEdgeField: true,
+                        },
+                    ],
+                    againRules: [],
+                }
+            ),
+            /undocumented fixture field wakeEdges\[\]\.mysteryEdgeField/
+        );
+
         const curated = {
             schema: FIXTURE_SCHEMA,
-            note: 'This intentionally keeps only one focused expectation.',
             objectTag: [
                 {
                     object: 'Avatar',

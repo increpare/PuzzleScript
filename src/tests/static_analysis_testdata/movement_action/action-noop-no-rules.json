@@ -1,5 +1,6 @@
 {
   "schema": "ps-static-analysis-testdata-v1",
   "actionNoop": true,
-  "actionBlockers": []
+  "actionNoopBlockers": [],
+  "movements_reachable_from_action_input": ["Player:action"]
 }

@@ -1,0 +1,53 @@
+title Static Analysis Action Reachable RandomDir
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+orange
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Crate
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Crate
+
+=====
+RULES
+=====
+
+[ action Player ] -> [ right Player ]
+[ right Player | Crate ] -> [ right Player | randomDir Crate ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PC

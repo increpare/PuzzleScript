@@ -1,0 +1,68 @@
+title Static Analysis Rulegroup Flow Rigid Blocker
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+Beta
+blue
+
+MarkerX
+green
+
+MarkerY
+yellow
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+a = Alpha
+b = Beta
+x = MarkerX
+y = MarkerY
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha
+Beta
+MarkerX
+MarkerY
+
+=====
+RULES
+=====
+
+rigid [ alpha ] -> [ alpha markerx ]
++ [ beta ] -> [ beta markery ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+Pab

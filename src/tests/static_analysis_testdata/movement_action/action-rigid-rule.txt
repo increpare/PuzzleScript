@@ -1,0 +1,47 @@
+title Static Analysis Movement Action Rigid Rule
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+=====
+RULES
+=====
+
+rigid [ action Player ] -> [ right Player ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P

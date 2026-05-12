@@ -4,6 +4,12 @@ Each `.txt` file is a whole valid PuzzleScript source. Each matching `.json`
 file lists the static-analysis expectations that should be checked for that
 source.
 
+`../static_analysis_claim_descriptions.json` is the schema companion for these
+fixtures. Its `fixtureSchemas` entries are named after the testdata directories
+and mirror the JSON hierarchy used by those fixture files. The runner rejects any
+fixture field that is not documented there, including nested fields such as
+`wakeEdges[].reasons` or `ruleTag[].tags.objects_required`.
+
 Object-tag expectations are grouped by object:
 
 ```json
@@ -120,6 +126,33 @@ to report an object as matched, absent, written, or erased.
 
 Like rule-tag tests, edges identify rules by `line` plus trimmed source `text`,
 so program-flow sources should also use compiler-idempotent rule text.
+
+## Adding A Rulegroup-Flow Test
+
+1. Add a small whole-source `.txt` file under `rulegroup_flow/`.
+2. Run `make static_analysis_tests` (or `node src/tests/static_analysis_testdata_runner.js`).
+3. The runner will create the missing matching `.json` file. Each
+   `rulegroupFlow` row lists the source line for a `+`-joined rule group, whether
+   it is a split candidate, the connected-component count, blockers, optional
+   intra-group `interactionEdges`, and optional `rerunMasks`.
+4. Read the generated JSON and keep the edge/mask details when the test is meant
+   to pin down the exact intra-group dependency graph. Otherwise, delete those
+   optional fields and keep only the high-level split-candidate expectation.
+
+Unlike rule-tag tests, rulegroup-flow sources may keep the leading `+` marker in
+continued rule lines because the group shape is part of the specimen.
+
+## Adding A Movement-Action Test
+
+1. Add a small whole-source `.txt` file under `movement_action/`.
+2. Run `make static_analysis_tests` (or `node src/tests/static_analysis_testdata_runner.js`).
+3. The runner will create the matching `.json` file with `actionNoop`
+   (`action_noop.value`), `actionNoopBlockers` (`action_noop.blockers`),
+   and object-level `movements_reachable_from_action_input` entries shaped
+   as `Object:movement`.
+4. Keep `movements_reachable_from_action_input` when the test is meant to protect action-reachable
+   movement propagation. Delete it for a fixture that only cares whether action
+   is a solver no-op.
 
 ## Adding A Winflow Test
 

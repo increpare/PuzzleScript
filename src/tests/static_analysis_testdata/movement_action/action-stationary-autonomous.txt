@@ -1,0 +1,53 @@
+title Static Analysis Movement Action Stationary Autonomous
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Hero
+white
+
+Goal
+yellow
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Hero
+G = Goal
+Player = Hero
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Hero, Goal
+
+=====
+RULES
+=====
+
+[ stationary Goal ] -> [ randomDir Goal ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player on Goal
+
+======
+LEVELS
+======
+
+P.G
+...

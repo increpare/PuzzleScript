@@ -1,0 +1,37 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "rulegroupFlow": [
+    {
+      "line": 55,
+      "split_candidate": false,
+      "components_count": 1,
+      "interactionEdges": [
+        {
+          "from_line": 56,
+          "from_text": "+ [ markerx ] -> [ ]",
+          "to_line": 55,
+          "to_text": "[ no markerx alpha ] -> [ alpha stationary markery ]",
+          "reasons": ["object_absence"]
+        }
+      ],
+      "rerunMasks": [
+        {
+          "line": 55,
+          "text": "[ no markerx alpha ] -> [ alpha stationary markery ]",
+          "rerun": []
+        },
+        {
+          "line": 56,
+          "text": "+ [ markerx ] -> [ ]",
+          "rerun": [
+            {
+              "line": 55,
+              "text": "[ no markerx alpha ] -> [ alpha stationary markery ]"
+            }
+          ]
+        }
+      ],
+      "blockers": ["single_component"]
+    }
+  ]
+}

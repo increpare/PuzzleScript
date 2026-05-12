@@ -1,0 +1,54 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "rulegroupFlow": [
+    {
+      "line": 55,
+      "split_candidate": true,
+      "components_count": 2,
+      "interactionEdges": [
+        {
+          "from_line": 55,
+          "from_text": "[ stationary alpha ] -> [ alpha markerx ]",
+          "to_line": 55,
+          "to_text": "[ stationary alpha ] -> [ alpha markerx ]",
+          "reasons": ["movement"]
+        },
+        {
+          "from_line": 56,
+          "from_text": "+ [ right alpha ] -> [ alpha ]",
+          "to_line": 55,
+          "to_text": "[ stationary alpha ] -> [ alpha markerx ]",
+          "reasons": ["movement"]
+        }
+      ],
+      "rerunMasks": [
+        {
+          "line": 55,
+          "text": "[ stationary alpha ] -> [ alpha markerx ]",
+          "rerun": [
+            {
+              "line": 55,
+              "text": "[ stationary alpha ] -> [ alpha markerx ]"
+            }
+          ]
+        },
+        {
+          "line": 56,
+          "text": "+ [ right alpha ] -> [ alpha ]",
+          "rerun": [
+            {
+              "line": 55,
+              "text": "[ stationary alpha ] -> [ alpha markerx ]"
+            }
+          ]
+        },
+        {
+          "line": 57,
+          "text": "+ [ beta ] -> [ beta markery ]",
+          "rerun": []
+        }
+      ],
+      "blockers": []
+    }
+  ]
+}

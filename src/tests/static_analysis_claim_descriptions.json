@@ -1,155 +1,602 @@
 {
   "schema": "ps-static-analysis-claim-descriptions-v1",
-  "objectTags": [
+  "fixtureSchemas": [
     {
-      "name": "is_player",
-      "description": "Object is part of the resolved Player role.",
-      "specification": "An object has is_player when it is the object named by the Player object, Player synonym, or a member of the Player property in the compiled game. If Player resolves to a property with multiple member objects, every member object has is_player true."
+      "name": "object_tags",
+      "description": "Fixtures for per-object static-analysis tags.",
+      "specification": "Each object_tags fixture contains an objectTag array. Every row identifies one compiled object by display name and then lists one or more object analysis tags to assert for that object.",
+      "fields": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Fixture format version.",
+          "specification": "Must be ps-static-analysis-testdata-v1."
+        },
+        {
+          "name": "objectTag",
+          "type": "array",
+          "description": "Per-object tag expectation rows.",
+          "specification": "Each row names one object and includes the object tags that this fixture wants to pin down.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "object",
+                "type": "string",
+                "description": "Compiled display name of the object under test.",
+                "specification": "The runner resolves this name against ps_tagged.objects and compares the rest of the row to that object's derived tags."
+              },
+              {
+                "name": "is_player",
+                "type": "boolean",
+                "description": "Object is part of the resolved Player role.",
+                "specification": "An object has is_player when it is the object named by the Player object, Player synonym, or a member of the Player property in the compiled game. If Player resolves to a property with multiple member objects, every member object has is_player true."
+              },
+              {
+                "name": "is_background",
+                "type": "boolean",
+                "description": "Object is part of the resolved Background role.",
+                "specification": "An object has is_background when it is the object named by the Background object, Background synonym, or a member of the Background property in the compiled game. If Background resolves to a property with multiple member objects on the same collision layer, every member object has is_background true."
+              },
+              {
+                "name": "level_presence",
+                "type": "enum",
+                "description": "Whether the object appears in all, some, or no playable levels.",
+                "specification": "Message levels are ignored. The value all means there is at least one playable level and the object appears in every playable level. The value some means the object appears in at least one but not every playable level. The value none means the object appears in no playable levels; if a valid source has zero playable levels, every object has level_presence none.",
+                "values": ["all", "some", "none"]
+              },
+              {
+                "name": "created_by_rules",
+                "type": "boolean",
+                "description": "A solver-active rule may write this object present in a cell.",
+                "specification": "An object has created_by_rules when rule object-write analysis finds a solver-active rule that may write that object present in a cell where the left-hand side does not already require that object to be present in the same cell. This is a cell-local write tag: relocation can count as creation in the destination cell, even if the object's total count is preserved."
+              },
+              {
+                "name": "destroyed_by_rules",
+                "type": "boolean",
+                "description": "A solver-active rule may write this object absent from a cell.",
+                "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may write that object absent from a cell where the left-hand side allows that object to be present in the same cell. This includes explicit absent writes, removing a left-hand side object from its original cell, and overwriting a possible same-layer occupant. This is a cell-local write tag: relocation can count as destruction in the source cell, even if the object's total count is preserved."
+              },
+              {
+                "name": "cosmetic",
+                "type": "boolean",
+                "description": "Object is not read by any win condition or non-cosmetic rule.",
+                "specification": "An object is cosmetic when it is not in any win condition's presence or absence read set, not read by any non-cosmetic rule, and does not share a collision layer with any non-cosmetic object. Player-role objects are always non-cosmetic. Background-role objects are cosmetic if unreferenced."
+              },
+              {
+                "name": "static",
+                "type": "boolean",
+                "description": "No solver-active rule can move, create, destroy, or overwrite this object.",
+                "specification": "An object is static when no solver-active rule writes it present, writes it absent, or assigns or reads its movement state. Same-layer overwrite counts as a write-absent. Player-role objects are never static because player input always assigns them movement."
+              },
+              {
+                "name": "temporary",
+                "type": "boolean",
+                "description": "No instance of this object survives to the end of a turn.",
+                "specification": "An object is temporary when it is absent from initial levels and win conditions, every instance is created by solver-active rules, every creator is followed by an unconditional late cleanup clear, and no creator or clearer is rigid or has again taint."
+              },
+              {
+                "name": "count_invariant",
+                "type": "boolean",
+                "description": "No solver-active rule changes the total board count of this object.",
+                "specification": "An object has count_invariant when no solver-active, object-mutating rule may change the total count of that object across all board cells. Relocation is count-neutral; unbalanced creation, destruction, random writes, uncertain same-layer overwrite, and uncertain explicit erasure are not."
+              }
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "is_background",
-      "description": "Object is part of the resolved Background role.",
-      "specification": "An object has is_background when it is the object named by the Background object, Background synonym, or a member of the Background property in the compiled game. If Background resolves to a property with multiple member objects on the same collision layer, every member object has is_background true."
+      "name": "rule_tags",
+      "description": "Fixtures for per-rule static-analysis tags.",
+      "specification": "Each rule_tags fixture contains a ruleTag array. Every row identifies one compiled rule by source line and exact source text, then asserts selected rule tags inside the row's tags object.",
+      "fields": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Fixture format version.",
+          "specification": "Must be ps-static-analysis-testdata-v1."
+        },
+        {
+          "name": "ruleTag",
+          "type": "array",
+          "description": "Per-rule tag expectation rows.",
+          "specification": "Each row identifies exactly one analyzed rule and contains a tags object with the rule tags this fixture wants to assert.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "line",
+                "type": "integer",
+                "description": "1-based source line of the rule.",
+                "specification": "Together with text, this must identify exactly one analyzed rule."
+              },
+              {
+                "name": "text",
+                "type": "string",
+                "description": "Trimmed source text of the rule.",
+                "specification": "The runner requires this text to be compiler-idempotent so the fixture remains stable."
+              },
+              {
+                "name": "tags",
+                "type": "object",
+                "description": "Rule tag expectations for this rule.",
+                "specification": "Each field in tags is a documented rule tag and is compared with the derived rule tag value.",
+                "fields": [
+                  {
+                    "name": "objects_required",
+                    "type": "string[]",
+                    "description": "Concrete objects definitely required present by the rule LHS.",
+                    "specification": "Single-object terms are required. Objects of required aggregates are all tagged as required. Members of an OR property are not individually required because any one member may satisfy the term."
+                  },
+                  {
+                    "name": "objects_matched",
+                    "type": "string[]",
+                    "description": "Concrete objects whose presence may satisfy a positive LHS term.",
+                    "specification": "Includes concrete required objects, OR-property alternatives, and objects in aggregates after resolving synonyms, properties, and aggregates to object names."
+                  },
+                  {
+                    "name": "object_absences_matched",
+                    "type": "string[]",
+                    "description": "Concrete objects whose absence may satisfy a negative LHS term.",
+                    "specification": "For example, no Obstacle records every concrete object in Obstacle."
+                  },
+                  {
+                    "name": "movements_required",
+                    "type": "string[]",
+                    "description": "Concrete object movements definitely required by the rule LHS.",
+                    "specification": "Entries use Object:movement. Single-object movement terms are required. Members of an OR property are not individually required because any one member may satisfy the movement term."
+                  },
+                  {
+                    "name": "movements_matched",
+                    "type": "string[]",
+                    "description": "Concrete object movements whose presence may satisfy a rule LHS movement term.",
+                    "specification": "Entries use Object:movement for every concrete object movement that may satisfy a positive LHS movement term after resolving synonyms, properties, and aggregates to object names."
+                  },
+                  {
+                    "name": "objects_written",
+                    "type": "string[]",
+                    "description": "Concrete objects written present by the rule RHS.",
+                    "specification": "This is cell-local: relocation writes the object at the destination even if total object count is preserved."
+                  },
+                  {
+                    "name": "objects_erased",
+                    "type": "string[]",
+                    "description": "Concrete objects written absent by the rule RHS.",
+                    "specification": "Includes explicit no terms, removal from the original cell, and possible same-layer erasure caused by writing another object on the layer."
+                  },
+                  {
+                    "name": "movements_written",
+                    "type": "string[]",
+                    "description": "Concrete object movements written or cleared by the rule RHS.",
+                    "specification": "Entries use Object:movement. RHS movement terms use the compiled movement name visible to this analysis stage. If an LHS movement requirement is removed while the object remains present in the corresponding RHS cell with no RHS movement, the rule writes Object:stationary."
+                  },
+                  {
+                    "name": "movements_removed",
+                    "type": "string[]",
+                    "description": "Concrete object movements no longer present after the rule RHS.",
+                    "specification": "Entries use Object:movement for concrete LHS movement matches that are not preserved by an identical RHS movement match for the same object in the corresponding RHS cell."
+                  },
+                  {
+                    "name": "cosmetic",
+                    "type": "boolean",
+                    "description": "Rule has no reachable effect on win conditions or non-cosmetic rules.",
+                    "specification": "A rule is non-cosmetic if it carries a non-cosmetic semantic command, its object writes intersect a win-condition read, or its writes may enable any non-cosmetic rule."
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
     },
-    {
-      "name": "level_presence",
-      "description": "Whether the object appears in all, some, or no playable levels.",
-      "specification": "The level_presence tag is one of all, some, or none. Message levels are ignored. The value all means there is at least one playable level and the object appears in every playable level. The value some means the object appears in at least one but not every playable level. The value none means the object appears in no playable levels; if a valid source has zero playable levels, every object has level_presence none.",
-      "values": ["all", "some", "none"]
-    },
-    {
-      "name": "created_by_rules",
-      "description": "A solver-active rule may write this object present in a cell.",
-      "specification": "An object has created_by_rules when rule object-write analysis finds a solver-active rule that may write that object present in a cell where the left-hand side does not already require that object to be present in the same cell. This is a cell-local write tag: relocation can count as creation in the destination cell, even if the object's total count is preserved."
-    },
-    {
-      "name": "destroyed_by_rules",
-      "description": "A solver-active rule may write this object absent from a cell.",
-      "specification": "An object has destroyed_by_rules when rule object-write analysis finds a solver-active rule that may write that object absent from a cell where the left-hand side allows that object to be present in the same cell. This includes explicit absent writes, removing a left-hand side object from its original cell, and overwriting a possible same-layer occupant. This is a cell-local write tag: relocation can count as destruction in the source cell, even if the object's total count is preserved."
-    },
-    {
-      "name": "cosmetic",
-      "description": "Object is not read by any win condition or non-cosmetic rule.",
-      "specification": "An object is cosmetic (true) when it is not in any win condition's presence or absence read set (objects_matched ∪ object_absences_matched), not read (presence, absence, or movement) by any non-cosmetic rule, and does not share a collision layer with any non-cosmetic object. Player-role objects are always non-cosmetic regardless of whether rules or win conditions reference them. Background-role objects are cosmetic if unreferenced."
-    },
-    {
-      "name": "static",
-      "description": "No solver-active rule can move, create, destroy, or overwrite this object.",
-      "specification": "An object is static (true) when no solver-active rule writes it present, writes it absent, or assigns or reads its movement state. Same-layer overwrite counts as a write-absent: a rule whose RHS writes another layer-mate in a cell whose LHS does not prohibit this object writes this object absent. A rule whose LHS prohibits the object (e.g., `[ no beta ] -> [ alpha ]`) does not write Beta absent, so Beta remains static with respect to that rule. Player-role objects are never static because player input always assigns them movement. The layer-level fact (layer.tags.static) is the conjunction over the layer's objects."
-    },
-    {
-      "name": "temporary",
-      "description": "No instance of this object survives to the end of a turn.",
-      "specification": "An object is temporary (true) when: it is never present in any initial level; it is not referenced by any win condition; every instance is created by a solver-active rule (not placed in levels); every creator rule is followed by at least one late-section solver-active rule that unconditionally clears the object (single positive LHS term matching only the object with no movement qualifier, RHS does not keep it); and no creator or clearer is a rigid rule or has again taint."
-    },
-    {
-      "name": "count_invariant",
-      "description": "No solver-active rule changes the total board count of this object.",
-      "specification": "An object has count_invariant (true) when no solver-active, object-mutating rule may change the total count of that object across all board cells. A rule changes count when it creates instances that are not balanced by equal destruction in the same rule application (guaranteed creates ≠ guaranteed destroys), or when uncertain creation or displacement is possible (random writes, same-layer overwrite under uncertain occupancy, or explicit erasure under uncertain occupancy). Relocation — removing from one cell and writing to another in the same rule — is count-neutral. Player-role objects are not automatically non-invariant; only their rule writes determine this tag."
-    }
-  ],
-  "ruleTags": [
-    {
-      "name": "objects_required",
-      "description": "Concrete objects definitely required present by the rule LHS.",
-      "specification": "A rule has objects_required entries for concrete objects whose presence is definitely required by positive LHS terms. Single-object terms are required. Objects of required aggregates are all tagged as required. Members of an OR property are not individually required because any one member may satisfy the term."
-    },
-    {
-      "name": "objects_matched",
-      "description": "Concrete objects whose presence may satisfy a positive LHS term.",
-      "specification": "A rule has objects_matched entries for every concrete object that may satisfy a positive LHS term after resolving synonyms, properties, and aggregates to object names. This includes concrete required objects, OR-property alternatives, and objects in aggregates."
-    },
-    {
-      "name": "object_absences_matched",
-      "description": "Concrete objects whose absence may satisfy a negative LHS term.",
-      "specification": "A rule has object_absences_matched entries for every concrete object that may satisfy a negative LHS term after resolving synonyms, properties, and aggregates to object names. For example, no Obstacle records every concrete object in Obstacle."
-    },
-    {
-      "name": "movements_required",
-      "description": "Concrete object movements definitely required by the rule LHS.",
-      "specification": "A rule has movements_required entries of the form Object:movement for concrete object movement terms that the LHS definitely requires. Single-object movement terms are required. Members of an OR property are not individually required because any one member may satisfy the movement term."
-    },
-    {
-      "name": "movements_matched",
-      "description": "Concrete object movements whose presence may satisfy a rule LHS movement term.",
-      "specification": "A rule has movements_matched entries of the form Object:movement for every concrete object movement that may satisfy a positive LHS movement term after resolving synonyms, properties, and aggregates to object names. Property movement terms are expanded to their concrete members as may-matches."
-    },
-    {
-      "name": "objects_written",
-      "description": "Concrete objects written present by the rule RHS.",
-      "specification": "A rule has objects_written entries for concrete objects the RHS may write present in a cell where the LHS does not already require that object present in the same cell. This is cell-local: relocation writes the object at the destination even if total object count is preserved."
-    },
-    {
-      "name": "objects_erased",
-      "description": "Concrete objects written absent by the rule RHS.",
-      "specification": "A rule has objects_erased entries for concrete objects the RHS may write absent from a cell where the LHS allows that object to be present in the same cell. This includes explicit no terms, removal from the original cell, and possible same-layer erasure caused by writing another object on the layer."
-    },
-    {
-      "name": "movements_written",
-      "description": "Concrete object movements written or cleared by the rule RHS.",
-      "specification": "A rule has movements_written entries of the form Object:movement for concrete object movements the RHS may write in a cell where the corresponding LHS cell does not already have the same Object:movement. RHS movement terms use the compiled movement name visible to this analysis stage, after resolving synonyms, properties, and aggregates to object names. If an LHS movement requirement is removed while the object remains present in the corresponding RHS cell with no RHS movement, the rule writes Object:stationary."
-    },
-    {
-      "name": "movements_removed",
-      "description": "Concrete object movements no longer present after the rule RHS.",
-      "specification": "A rule has movements_removed entries of the form Object:movement for concrete LHS movement matches that are not preserved by an identical RHS movement match for the same object in the corresponding RHS cell. This includes direction changes, movement clears, object relocation, object deletion, and action matches consumed by an RHS movement write."
-    },
-    {
-      "name": "cosmetic",
-      "type": "boolean",
-      "description": "Rule has no reachable effect on win conditions or non-cosmetic rules.",
-      "specification": "A rule is cosmetic (true) when backward reachability from win conditions and non-cosmetic semantic commands determines that firing the rule cannot affect any win condition check or any non-cosmetic rule match. A rule is non-cosmetic (false) when: (1) it carries a non-cosmetic semantic command (again, restart, cancel, win); (2) its objects_written or objects_erased intersect any win condition's objects_matched or object_absences_matched; or (3) its write effects (objects or movements) intersect the read requirements (objects_matched, object_absences_matched, or movements_matched) of any non-cosmetic rule."
-    }
-  ],
-  "factFamilies": [
     {
       "name": "program_flow",
-      "description": "Pairwise wake graph: which rules may, when applied, create a new match for which other rules.",
-      "specification": "The program_flow fact lists, for the whole program, every ordered rule pair (R1, R2) where R1's RHS writes may enable a new match for R2's LHS. An edge is emitted whenever R1's writes intersect R2's reads in any of: object presence (writing an object R2 requires present), object absence (erasing an object R2 requires absent), or movement (writing an object:movement R2 reads, including the cardinal-to-moving subsumption). Edges are listed for all ordered pairs across all rule sections without scope segmentation; self-edges (R -> R) are kept when present. The again_rules field lists every rule whose firing semantically forces a tick restart (rules whose summary commands include `again`). Consumers that want the worst-case wake set should take the union of wake_edges with again_rules x rule_ids; this expansion is intentionally not materialised in the fact."
+      "description": "Fixtures for whole-program rule wake edges.",
+      "specification": "Each program_flow fixture asserts the projected wake graph for one source program: which rule writes may enable which other rule reads, plus the rules that queue again.",
+      "fields": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Fixture format version.",
+          "specification": "Must be ps-static-analysis-testdata-v1."
+        },
+        {
+          "name": "wakeEdges",
+          "type": "array",
+          "description": "Rule-to-rule wake edges.",
+          "specification": "Each edge means the from rule may make the to rule newly match through object presence, object absence, or movement.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "from_line",
+                "type": "integer",
+                "description": "1-based source line of the waking rule.",
+                "specification": "Together with from_text, identifies the rule whose writes may enable another rule."
+              },
+              {
+                "name": "from_text",
+                "type": "string",
+                "description": "Trimmed source text of the waking rule.",
+                "specification": "Used with from_line to identify the source rule."
+              },
+              {
+                "name": "to_line",
+                "type": "integer",
+                "description": "1-based source line of the rule that may become newly matchable.",
+                "specification": "Together with to_text, identifies the destination rule."
+              },
+              {
+                "name": "to_text",
+                "type": "string",
+                "description": "Trimmed source text of the rule that may become newly matchable.",
+                "specification": "Used with to_line to identify the destination rule."
+              },
+              {
+                "name": "reasons",
+                "type": "string[]",
+                "description": "Why the wake edge exists.",
+                "specification": "Allowed reasons are object_presence, object_absence, and movement."
+              }
+            ]
+          }
+        },
+        {
+          "name": "againRules",
+          "type": "array",
+          "description": "Rules whose firing queues again.",
+          "specification": "Consumers that want the worst-case wake set should combine wakeEdges with againRules x all rules.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "line",
+                "type": "integer",
+                "description": "1-based source line of the again rule.",
+                "specification": "Together with text, identifies a rule whose summary commands include again."
+              },
+              {
+                "name": "text",
+                "type": "string",
+                "description": "Trimmed source text of the again rule.",
+                "specification": "Used with line to identify a rule whose summary commands include again."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "winflow",
+      "description": "Fixtures for rule-to-win-condition wake edges.",
+      "specification": "Each winflow fixture asserts which rules may newly satisfy which win conditions.",
+      "fields": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Fixture format version.",
+          "specification": "Must be ps-static-analysis-testdata-v1."
+        },
+        {
+          "name": "wakeEdges",
+          "type": "array",
+          "description": "Rule-to-win-condition wake edges.",
+          "specification": "Each edge means the from rule may newly satisfy the to win condition.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "from_line",
+                "type": "integer",
+                "description": "1-based source line of the waking rule.",
+                "specification": "Together with from_text, identifies the rule whose writes may affect a win condition."
+              },
+              {
+                "name": "from_text",
+                "type": "string",
+                "description": "Trimmed source text of the waking rule.",
+                "specification": "Used with from_line to identify the source rule."
+              },
+              {
+                "name": "to_line",
+                "type": "integer",
+                "description": "1-based source line of the win condition.",
+                "specification": "Together with to_text, identifies the win condition that may become satisfied."
+              },
+              {
+                "name": "to_text",
+                "type": "string",
+                "description": "Trimmed source text of the win condition.",
+                "specification": "Used with to_line to identify the destination win condition."
+              },
+              {
+                "name": "reasons",
+                "type": "string[]",
+                "description": "Why the win wake edge exists.",
+                "specification": "Allowed reasons are object_presence, object_absence, and movement."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "wincondition_tags",
+      "description": "Fixtures for per-win-condition static-analysis tags.",
+      "specification": "Each wincondition_tags fixture contains a winConditionTag array. Every row identifies one win condition by source line and exact source text, then asserts selected win-condition tags inside the row's tags object.",
+      "fields": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Fixture format version.",
+          "specification": "Must be ps-static-analysis-testdata-v1."
+        },
+        {
+          "name": "winConditionTag",
+          "type": "array",
+          "description": "Per-win-condition tag expectation rows.",
+          "specification": "Each row identifies exactly one analyzed win condition and contains a tags object with the win-condition tags this fixture wants to assert.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "line",
+                "type": "integer",
+                "description": "1-based source line of the win condition.",
+                "specification": "Together with text, this must identify exactly one analyzed win condition."
+              },
+              {
+                "name": "text",
+                "type": "string",
+                "description": "Trimmed source text of the win condition.",
+                "specification": "Used with line to identify the win condition under test."
+              },
+              {
+                "name": "tags",
+                "type": "object",
+                "description": "Win-condition tag expectations for this win condition.",
+                "specification": "Each field in tags is a documented win-condition tag and is compared with the derived win-condition tag value.",
+                "fields": [
+                  {
+                    "name": "objects_matched",
+                    "type": "string[]",
+                    "description": "Concrete objects whose presence is read by this win condition.",
+                    "specification": "For SOME and ALL this is subjects plus targets. For NO, only the targets mask contributes; the subject is an absence read and appears only in object_absences_matched."
+                  },
+                  {
+                    "name": "subjects_matched",
+                    "type": "string[]",
+                    "description": "Concrete objects in the subjects mask when the quantifier is SOME or ALL.",
+                    "specification": "When the quantifier is NO, the subjects represent an absence requirement, so subjects_matched is empty and the same concrete names appear in object_absences_matched."
+                  },
+                  {
+                    "name": "targets_matched",
+                    "type": "string[]",
+                    "description": "Concrete objects in the targets mask.",
+                    "specification": "Targets are the optional on X part of a win condition after resolving properties to concrete names. When there is no targets mask, targets_matched is empty."
+                  },
+                  {
+                    "name": "object_absences_matched",
+                    "type": "string[]",
+                    "description": "Concrete objects whose absence is the win signal when the quantifier is NO.",
+                    "specification": "For NO, the win condition is satisfied when none of the subject objects are present. For SOME and ALL, object_absences_matched is empty."
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "mergeability",
-      "description": "Per-layer-pair analysis: whether two same-layer objects can be merged into one without changing observable game behaviour.",
-      "specification": "For each pair of objects on the same collision layer, a mergeability fact is produced. Status is candidate when: (1) no rule LHS reads one object of the pair directly without also reading the other in the same cell and in the same way (no individual_lhs_read); (2) both objects have the same role in every win condition (no different_win_roles); and (3) every property (object_set) term on any rule LHS that includes one object of the pair also includes the other (no partial_property_observation). Status is rejected when any blocker is present."
+      "description": "Fixtures for same-layer object mergeability facts.",
+      "specification": "Each mergeability fixture contains mergePairs rows describing whether two same-layer objects can be merged without changing observable game behavior.",
+      "fields": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Fixture format version.",
+          "specification": "Must be ps-static-analysis-testdata-v1."
+        },
+        {
+          "name": "mergePairs",
+          "type": "array",
+          "description": "Mergeability expectations for object pairs.",
+          "specification": "Each row names a pair of same-layer objects and the status of the mergeability fact for that pair.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "objects",
+                "type": "string[]",
+                "description": "Two object names that form the mergeability pair.",
+                "specification": "The runner sorts these names before matching the analyzed mergeability fact."
+              },
+              {
+                "name": "status",
+                "type": "enum",
+                "description": "Whether the pair is a merge candidate or rejected.",
+                "specification": "candidate means the mergeability proof found no blockers. rejected means at least one blocker was found.",
+                "values": ["candidate", "rejected"]
+              },
+              {
+                "name": "blockers",
+                "type": "string[]",
+                "description": "Reasons this pair is not mergeable.",
+                "specification": "Known blockers include individual_lhs_read, different_win_roles, and partial_property_observation."
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "rulegroup_flow",
-      "description": "Per-multi-rule-group analysis: whether the group's rules can be split into independent sub-groups.",
-      "specification": "For each rule group containing more than one rule (created via the '+' join syntax), a rulegroup_flow fact is produced. The interaction_edges field lists intra-group wake edges (R1 → R2 where R1's writes may enable R2). The rerun_masks field maps each rule id to the set of rule ids earlier in the group that should be re-evaluated after it fires. The components field lists the connected components of the interaction graph. Status is candidate (split_candidate true) when there are multiple components and no blockers: no random_rule_group, no rigid_rule, and no semantic_command in the group. Status is rejected otherwise."
+      "description": "Fixtures for multi-rule-group split analysis.",
+      "specification": "Each rulegroup_flow fixture contains rulegroupFlow rows describing whether a plus-joined rule group can be split into independent sub-groups and, optionally, the exact dependency graph.",
+      "fields": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Fixture format version.",
+          "specification": "Must be ps-static-analysis-testdata-v1."
+        },
+        {
+          "name": "rulegroupFlow",
+          "type": "array",
+          "description": "Rule-group flow expectations.",
+          "specification": "Each row describes one source rule group containing more than one compiled rule.",
+          "items": {
+            "type": "object",
+            "fields": [
+              {
+                "name": "line",
+                "type": "integer",
+                "description": "1-based source line where the group starts.",
+                "specification": "Used to identify the plus-joined rule group under test."
+              },
+              {
+                "name": "split_candidate",
+                "type": "boolean",
+                "description": "Whether this group can be split into independent sub-groups.",
+                "specification": "true when there are multiple connected components and no rulegroup-flow blockers."
+              },
+              {
+                "name": "components_count",
+                "type": "integer",
+                "description": "Number of connected components in the group dependency graph.",
+                "specification": "A split candidate requires more than one component."
+              },
+              {
+                "name": "blockers",
+                "type": "string[]",
+                "description": "Reasons this rule group is not a split candidate.",
+                "specification": "Known blockers include single_component, random_rule_group, rigid_rule, and semantic_command."
+              },
+              {
+                "name": "interactionEdges",
+                "type": "array",
+                "description": "Optional exact intra-group dependency edges.",
+                "specification": "Each edge means one rule in the group may enable a later or earlier rule in the same group.",
+                "items": {
+                  "type": "object",
+                  "fields": [
+                    {
+                      "name": "from_line",
+                      "type": "integer",
+                      "description": "1-based source line of the enabling rule.",
+                      "specification": "Together with from_text, identifies the edge source rule."
+                    },
+                    {
+                      "name": "from_text",
+                      "type": "string",
+                      "description": "Trimmed source text of the enabling rule.",
+                      "specification": "Used with from_line to identify the edge source rule."
+                    },
+                    {
+                      "name": "to_line",
+                      "type": "integer",
+                      "description": "1-based source line of the enabled rule.",
+                      "specification": "Together with to_text, identifies the edge destination rule."
+                    },
+                    {
+                      "name": "to_text",
+                      "type": "string",
+                      "description": "Trimmed source text of the enabled rule.",
+                      "specification": "Used with to_line to identify the edge destination rule."
+                    },
+                    {
+                      "name": "reasons",
+                      "type": "string[]",
+                      "description": "Why the interaction edge exists.",
+                      "specification": "Allowed reasons are object_presence, object_absence, and movement."
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "rerunMasks",
+                "type": "array",
+                "description": "Optional exact earlier-rule rerun masks.",
+                "specification": "Each mask names a rule and the earlier rules in the same group that should be re-evaluated after it fires.",
+                "items": {
+                  "type": "object",
+                  "fields": [
+                    {
+                      "name": "line",
+                      "type": "integer",
+                      "description": "1-based source line of the rule that may fire.",
+                      "specification": "Together with text, identifies the rule whose rerun mask is listed."
+                    },
+                    {
+                      "name": "text",
+                      "type": "string",
+                      "description": "Trimmed source text of the rule that may fire.",
+                      "specification": "Used with line to identify the rule whose rerun mask is listed."
+                    },
+                    {
+                      "name": "rerun",
+                      "type": "array",
+                      "description": "Earlier rules to re-evaluate after this rule fires.",
+                      "specification": "Each row identifies one earlier rule in the same group.",
+                      "items": {
+                        "type": "object",
+                        "fields": [
+                          {
+                            "name": "line",
+                            "type": "integer",
+                            "description": "1-based source line of the earlier rule to re-evaluate.",
+                            "specification": "Together with text, identifies a rerun target."
+                          },
+                          {
+                            "name": "text",
+                            "type": "string",
+                            "description": "Trimmed source text of the earlier rule to re-evaluate.",
+                            "specification": "Used with line to identify a rerun target."
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "movement_action",
-      "description": "Conservative reachability analysis for movement states reachable by pressing the action key, and whether that press is a no-op for the solver.",
-      "specification": "The movement_pairs fact lists all layer:movement pairs reachable starting from the player layer's action movement via a fixpoint over solver-active rules whose movement requirements are satisfiable. The action_noop fact (proved when true) asserts that pressing action has no solver-observable effect: no reachable solver-active rule reads action (reads_action), queues again (queues_again), is rigid (rigid_rule), fires without any movement requirement (autonomous_solver_active_rule), mutates objects (action_may_mutate_objects), or creates directional movement (action_may_create_directional_movement)."
-    }
-  ],
-  "winflow": [
-    {
-      "name": "winflow",
-      "description": "Pairwise wake graph: which rules may, when applied, newly satisfy a win condition.",
-      "specification": "The winflow fact lists, for the whole program, every ordered pair (R, W) where R's RHS writes may newly satisfy win condition W. An object_presence edge is emitted when R's objects_written intersects W's objects_matched (W's presence reads). An object_absence edge is emitted when R's objects_erased intersects W's object_absences_matched (W's absence reads). A movement edge is emitted when W has a non-empty targets_matched (an 'on' win condition) and the rule modifies the movement state of an object that is also in W's objects_matched ∪ object_absences_matched: specifically, an object appearing in both R's objects_matched (LHS presence) and either R's movements_written or movements_removed. Movement state changes on an LHS-matched object can relocate it on or off a co-located cell. Movement entries for objects that are not in the LHS are treated as creation, captured by object_presence rather than movement. Only enabling wakes are tracked: a rule that could invalidate a win condition without enabling it does not produce an edge. The win_ids field lists win condition ids in source order; rule_ids lists rule ids in source order."
-    }
-  ],
-  "winConditionTags": [
-    {
-      "name": "objects_matched",
-      "description": "Concrete objects whose presence or absence is read by this win condition.",
-      "specification": "A win condition has objects_matched entries for the concrete objects whose presence is read by this win condition: subjects_matched ∪ targets_matched. For SOME and ALL this is subjects ∪ targets. For NO, only the targets mask contributes (the subject is an absence read and appears only in object_absences_matched); a bare 'No X' with no targets mask has objects_matched empty."
-    },
-    {
-      "name": "subjects_matched",
-      "description": "Concrete objects in the subjects mask when the quantifier is SOME or ALL.",
-      "specification": "A win condition has subjects_matched entries for the concrete objects in the subjects mask when the quantifier is SOME (0) or ALL (1). When the quantifier is NO (-1) the subjects represent an absence requirement; in that case subjects_matched is empty and the same concrete names appear in object_absences_matched instead."
-    },
-    {
-      "name": "targets_matched",
-      "description": "Concrete objects in the targets mask (the 'on X' part of a win condition).",
-      "specification": "A win condition has targets_matched entries for the concrete objects in the targets mask, after resolving properties to concrete names. The targets mask is the optional second mask in a two-mask win condition of the form 'Some/All/No X on Y'. When there is no targets mask, targets_matched is empty. The targets mask is a presence read for all quantifiers including NO: in 'No X on Y', Y is the location context whose presence must be checked."
-    },
-    {
-      "name": "object_absences_matched",
-      "description": "Concrete objects whose absence is the win signal when the quantifier is NO.",
-      "specification": "A win condition has object_absences_matched entries for the concrete objects in the subjects mask when the quantifier is NO (-1). Under NO, the win condition is satisfied when none of those objects are present, so the subjects mask represents an absence read rather than a presence read. When the quantifier is SOME or ALL, object_absences_matched is empty."
+      "description": "Fixtures for action-key movement reachability and solver no-op proofs.",
+      "specification": "Each movement_action fixture projects the report.facts.movement_action family into fields that are convenient to assert in testdata.",
+      "fields": [
+        {
+          "name": "schema",
+          "type": "string",
+          "description": "Fixture format version.",
+          "specification": "Must be ps-static-analysis-testdata-v1."
+        },
+        {
+          "name": "actionNoop",
+          "type": "boolean",
+          "description": "Projected action_noop.value.",
+          "specification": "true only when pressing action has no solver-observable effect."
+        },
+        {
+          "name": "actionNoopBlockers",
+          "type": "string[]",
+          "description": "Projected action_noop.blockers.",
+          "specification": "Reasons the no-op proof was rejected. Known blockers are reads_action, queues_again, rigid_rule, autonomous_solver_active_rule, action_may_mutate_objects, and action_may_create_directional_movement."
+        },
+        {
+          "name": "movements_reachable_from_action_input",
+          "type": "string[]",
+          "description": "Projected movements_reachable_from_action_input.value.",
+          "specification": "Object:movement pairs reachable starting from player object action movement via a fixpoint over solver-active rules whose movement requirements are satisfiable. Runtime movement requirements are layer-based, so the check derives layer reachability from object movement facts instead of storing layer movement as the primary analysis state."
+        }
+      ]
     }
   ]
 }

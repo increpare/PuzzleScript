@@ -1,0 +1,58 @@
+title Static Analysis Action Reachable Moving Requirement
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+orange
+
+Goal
+green
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+C = Crate
+G = Goal
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Crate
+Goal
+
+=====
+RULES
+=====
+
+[ action Player ] -> [ right Crate ]
+[ moving Crate ] -> [ right Goal ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PCG

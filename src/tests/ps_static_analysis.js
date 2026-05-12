@@ -598,66 +598,72 @@ function layerForObject(psTagged, objectName) {
     return object ? object.layer : null;
 }
 
-function playerLayers(psTagged) {
+function playerActionMovementSeeds(psTagged) {
     const playerObjects = playerObjectNameSet(psTagged);
     return uniqueSorted(Array.from(playerObjects)
-        .map(objectName => layerForObject(psTagged, objectName))
-        .filter(layer => layer !== null)
-        .map(layer => String(layer)));
+        .filter(objectName => layerForObject(psTagged, objectName) !== null)
+        .map(objectName => `${objectName}:action`));
 }
 
 function movementRequirementsFromTerms(psTagged, terms) {
     const requirements = [];
     for (const term of terms) {
         if (term.kind !== 'present' || !termHasInputMovementRequirement(term)) continue;
-        for (const objectName of term.expanded_objects || []) {
-            const layer = layerForObject(psTagged, objectName);
-            if (layer !== null) requirements.push({ layer: String(layer), movement: term.movement });
-        }
+        const alternatives = (term.expanded_objects || [])
+            .filter(objectName => layerForObject(psTagged, objectName) !== null)
+            .map(objectName => ({ object: objectName, movement: term.movement }));
+        if (alternatives.length > 0) requirements.push(alternatives);
     }
     return requirements;
 }
 
 function movementEffectsFromTerms(psTagged, terms) {
-    const pairs = [];
+    const movements = [];
     for (const term of terms) {
         if (term.kind !== 'present' || term.movement === null || term.movement === 'stationary') continue;
         for (const objectName of term.expanded_objects || []) {
-            const layer = layerForObject(psTagged, objectName);
-            if (layer === null) continue;
-            const layerName = String(layer);
+            if (layerForObject(psTagged, objectName) === null) continue;
             if (term.movement === 'randomdir') {
-                for (const movement of CARDINAL_MOVEMENTS) pairs.push(`${layerName}:${movement}`);
-                pairs.push(`${layerName}:moving`);
+                for (const movement of CARDINAL_MOVEMENTS) movements.push(`${objectName}:${movement}`);
+                movements.push(`${objectName}:moving`);
             } else if (CARDINAL_MOVEMENTS.includes(term.movement)) {
-                pairs.push(`${layerName}:${term.movement}`);
-                pairs.push(`${layerName}:moving`);
+                movements.push(`${objectName}:${term.movement}`);
+                movements.push(`${objectName}:moving`);
             } else {
-                pairs.push(`${layerName}:${term.movement}`);
+                movements.push(`${objectName}:${term.movement}`);
             }
         }
     }
-    return pairs;
+    return movements;
 }
 
-function movementRequirementReachable(requirement, possibleMovements) {
-    if (requirement.movement === 'moving' || requirement.movement === 'randomdir' || requirement.movement === 'orthogonal') {
-        return CARDINAL_MOVEMENTS.some(movement => possibleMovements.has(`${requirement.layer}:${movement}`))
-            || possibleMovements.has(`${requirement.layer}:moving`)
-            || possibleMovements.has(`${requirement.layer}:randomdir`);
+function objectMovementReachable(psTagged, objectName, movementName, possibleMovements) {
+    // Runtime movement matching is layer-based; keep object-level facts and derive
+    // the layer view only at requirement-check time.
+    const layerObjects = layerObjectsForObject(psTagged, objectName);
+    if (movementName === 'moving' || movementName === 'randomdir' || movementName === 'orthogonal') {
+        return layerObjects.some(layerObject =>
+            CARDINAL_MOVEMENTS.some(movement => possibleMovements.has(`${layerObject}:${movement}`))
+            || possibleMovements.has(`${layerObject}:moving`)
+            || possibleMovements.has(`${layerObject}:randomdir`)
+        );
     }
-    return possibleMovements.has(`${requirement.layer}:${requirement.movement}`);
+    return layerObjects.some(layerObject => possibleMovements.has(`${layerObject}:${movementName}`));
 }
 
 function ruleMovementRequirementsReachable(psTagged, rule, possibleMovements) {
     const requirements = movementRequirementsFromTerms(psTagged, rule.summary.lhs_terms);
     if (requirements.length === 0) return true;
-    return requirements.every(requirement => movementRequirementReachable(requirement, possibleMovements));
+    return requirements.every(alternatives =>
+        alternatives.some(requirement =>
+            objectMovementReachable(psTagged, requirement.object, requirement.movement, possibleMovements)
+        )
+    );
 }
 
 function deriveMovementActionFacts(psTagged) {
     const activeRules = allRuleEntries(psTagged).map(entry => entry.rule).filter(rule => rule.tags.solver_state_active);
-    const possibleMovements = new Set(playerLayers(psTagged).map(layer => `${layer}:action`));
+    const possibleMovements = new Set(playerActionMovementSeeds(psTagged));
     const blockers = [];
     let changed = true;
     while (changed) {
@@ -669,11 +675,11 @@ function deriveMovementActionFacts(psTagged) {
             if (rule.rigid) blockers.push('rigid_rule');
             if (!rule.summary.lhs_movement.some(termHasInputMovementRequirement)) blockers.push('autonomous_solver_active_rule');
             if (rule.tags.object_mutating) blockers.push('action_may_mutate_objects');
-            for (const pair of movementEffectsFromTerms(psTagged, rule.summary.rhs_terms)) {
-                const movement = pair.split(':')[1];
+            for (const movementTag of movementEffectsFromTerms(psTagged, rule.summary.rhs_terms)) {
+                const movement = movementTag.slice(movementTag.lastIndexOf(':') + 1);
                 if (DIRECTIONAL_MOVEMENTS.has(movement)) blockers.push('action_may_create_directional_movement');
-                if (!possibleMovements.has(pair)) {
-                    possibleMovements.add(pair);
+                if (!possibleMovements.has(movementTag)) {
+                    possibleMovements.add(movementTag);
                     changed = true;
                 }
             }
@@ -681,7 +687,7 @@ function deriveMovementActionFacts(psTagged) {
     }
     const uniqueBlockers = uniqueSorted(blockers);
     return [
-        fact('movement_action', 'movement_pairs', 'proved', {
+        fact('movement_action', 'movements_reachable_from_action_input', 'proved', {
             value: Array.from(possibleMovements).sort(),
             proof: ['conservative_movement_reachability_fixpoint'],
         }),

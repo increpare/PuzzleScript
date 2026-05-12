@@ -1,0 +1,34 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "rulegroupFlow": [
+    {
+      "line": 41,
+      "split_candidate": true,
+      "components_count": 4,
+      "interactionEdges": [],
+      "rerunMasks": [
+        {
+          "line": 41,
+          "text": "down [ pushable | up pusher ] -> [ up pushable | up pusher ]",
+          "rerun": []
+        },
+        {
+          "line": 42,
+          "text": "+ down [ down pusher | pushable ] -> [ down pusher | down pushable ]",
+          "rerun": []
+        },
+        {
+          "line": 43,
+          "text": "+ right [ pushable | left pusher ] -> [ left pushable | left pusher ]",
+          "rerun": []
+        },
+        {
+          "line": 44,
+          "text": "+ right [ right pusher | pushable ] -> [ right pusher | right pushable ]",
+          "rerun": []
+        }
+      ],
+      "blockers": []
+    }
+  ]
+}

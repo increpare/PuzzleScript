@@ -1,0 +1,69 @@
+title Static Analysis Rulegroup Flow RandomDir Enable
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+Beta
+blue
+
+MarkerX
+green
+
+MarkerY
+yellow
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+a = Alpha
+b = Beta
+x = MarkerX
+y = MarkerY
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha
+Beta
+MarkerX
+MarkerY
+
+=====
+RULES
+=====
+
+[ left alpha ] -> [ alpha markerx ]
++ [ alpha ] -> [ randomdir alpha ]
++ [ beta ] -> [ beta markery ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+Pab

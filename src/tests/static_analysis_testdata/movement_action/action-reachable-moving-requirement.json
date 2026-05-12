@@ -1,0 +1,6 @@
+{
+  "schema": "ps-static-analysis-testdata-v1",
+  "actionNoop": false,
+  "actionNoopBlockers": ["action_may_create_directional_movement", "action_may_mutate_objects", "reads_action"],
+  "movements_reachable_from_action_input": ["Crate:moving", "Crate:right", "Goal:moving", "Goal:right", "Player:action"]
+}

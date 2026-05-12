@@ -1,0 +1,56 @@
+title Static Analysis Rulegroup Flow Pusher Style
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Pusher
+white
+
+Pushable
+orange
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Pusher
+C = Pushable
+Player = Pusher
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Pusher
+Pushable
+
+=====
+RULES
+=====
+
+down [ pushable | up pusher ] -> [ up pushable | up pusher ]
++ down [ down pusher | pushable ] -> [ down pusher | down pushable ]
++ right [ pushable | left pusher ] -> [ left pushable | left pusher ]
++ right [ right pusher | pushable ] -> [ right pusher | right pushable ]
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+PC
