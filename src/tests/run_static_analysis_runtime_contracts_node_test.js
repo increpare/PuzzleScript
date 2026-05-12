@@ -17,9 +17,14 @@ const result = runSimulationWithStaticChecks(sokoban[0], sokoban[1]);
 
 assert.strictEqual(result.staticObjectCount, 3, 'sokoban should have three static objects');
 assert.strictEqual(result.constantQuantityObjectCount, 5, 'sokoban should have five constant-quantity objects');
+assert.strictEqual(result.inertLayerCount, 1, 'sokoban should have one inert collision layer');
 assert.ok(
     result.quantityBoundaryChecks > result.objectBoundaryChecks,
     'quantity checks should include movable constant-quantity objects'
+);
+assert.ok(
+    result.inertLayerBoundaryChecks > 0,
+    'inert layer checks should include stable replay boundaries'
 );
 
 const restartBoundarySource = [
