@@ -17,9 +17,14 @@ const result = runSimulationWithStaticChecks(sokoban[0], sokoban[1]);
 
 assert.strictEqual(result.staticObjectCount, 3, 'sokoban should have three static objects');
 assert.strictEqual(result.constantQuantityObjectCount, 5, 'sokoban should have five constant-quantity objects');
+assert.strictEqual(result.tickNoopProved, true, 'sokoban should have no autonomous tick rules');
 assert.ok(
     result.quantityBoundaryChecks > result.objectBoundaryChecks,
     'quantity checks should include movable constant-quantity objects'
+);
+assert.ok(
+    result.tickNoopBoundaryChecks > 0,
+    'tick-noop checks should probe no-input ticks at stable replay boundaries'
 );
 
 const restartBoundarySource = [

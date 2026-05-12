@@ -108,10 +108,12 @@ function staticContractForSource(source, testName) {
             objectNames: [],
             constantQuantityObjectNames: [],
             quantityContracts: [],
+            tickNoopProved: false,
             unavailableReason: `${report.status}: ${expected.diagnostic}`,
         };
     }
     const objects = ((report.ps_tagged && report.ps_tagged.objects) || []);
+    const gameTags = (report.ps_tagged && report.ps_tagged.game && report.ps_tagged.game.tags) || {};
     const quantityContracts = objects
         .filter(object => object.tags && object.tags.quantity)
         .map(object => ({
@@ -128,6 +130,7 @@ function staticContractForSource(source, testName) {
             .filter(contract => contract.neverIncreases && contract.neverDecreases)
             .map(contract => contract.objectName),
         quantityContracts,
+        tickNoopProved: gameTags.has_autonomous_tick_rules !== true,
         unavailableReason: null,
     };
 }
@@ -266,6 +269,156 @@ function quantityObjectNames(quantityContracts) {
     return quantityContracts.map(contract => contract.objectName);
 }
 
+function bitVecArraySnapshot(items) {
+    return Array.from(items || [], item => {
+        if (item && item.data) {
+            return Array.from(item.data);
+        }
+        return item;
+    });
+}
+
+function tickNoopStateSnapshot() {
+    // The autonomous-tick tag is a solver-state claim; residual UI message text
+    // from fixtures is restored after probes but is not part of the contract.
+    return {
+        board: boardIdentity(),
+        curlevel: typeof curlevel === 'number' ? curlevel : null,
+        curlevelTarget: curlevelTarget === null ? null : JSON.stringify(curlevelTarget),
+        winning: Boolean(winning),
+        againing: Boolean(againing),
+        textMode: Boolean(textMode),
+        titleScreen: Boolean(titleScreen),
+        objects: Array.from(level.objects || []),
+        movements: Array.from(level.movements || []),
+        rigidGroupIndexMask: bitVecArraySnapshot(level.rigidGroupIndexMask),
+        rigidMovementAppliedMask: bitVecArraySnapshot(level.rigidMovementAppliedMask),
+    };
+}
+
+function cloneRandomGenerator(generator) {
+    if (!generator) return generator;
+    const clone = new RNG(generator.seed);
+    clone._normal = generator._normal;
+    if (generator._state) {
+        clone._state = new RC4('');
+        clone._state.s = generator._state.s.slice();
+        clone._state.i = generator._state.i;
+        clone._state.j = generator._state.j;
+    } else {
+        clone._state = null;
+        clone.uniform = generator.uniform;
+        clone.nextByte = generator.nextByte;
+    }
+    return clone;
+}
+
+function captureRuntimeProbeState() {
+    return {
+        levelState: backupLevel(),
+        commandQueue: (level.commandQueue || []).slice(),
+        commandQueueSourceRules: (level.commandQueueSourceRules || []).slice(),
+        backups: backups.slice(),
+        restartTarget,
+        RandomGen: cloneRandomGenerator(RandomGen),
+        curlevel,
+        curlevelTarget,
+        hasUsedCheckpoint,
+        levelEditorOpened,
+        ignoreNotJustPressedAction,
+        textMode,
+        winning,
+        againing,
+        timer,
+        autotick,
+        oldflickscreendat: oldflickscreendat.concat([]),
+        restarting,
+        messageselected,
+        messagetext,
+        titleScreen,
+        soundHistory: soundHistory.slice(),
+    };
+}
+
+function restoreRuntimeProbeState(snapshot) {
+    restoreLevel(snapshot.levelState);
+    level.commandQueue = snapshot.commandQueue.slice();
+    level.commandQueueSourceRules = snapshot.commandQueueSourceRules.slice();
+    backups = snapshot.backups;
+    restartTarget = snapshot.restartTarget;
+    RandomGen = snapshot.RandomGen;
+    curlevel = snapshot.curlevel;
+    curlevelTarget = snapshot.curlevelTarget;
+    hasUsedCheckpoint = snapshot.hasUsedCheckpoint;
+    levelEditorOpened = snapshot.levelEditorOpened;
+    ignoreNotJustPressedAction = snapshot.ignoreNotJustPressedAction;
+    textMode = snapshot.textMode;
+    winning = snapshot.winning;
+    againing = snapshot.againing;
+    timer = snapshot.timer;
+    autotick = snapshot.autotick;
+    oldflickscreendat = snapshot.oldflickscreendat.concat([]);
+    restarting = snapshot.restarting;
+    messageselected = snapshot.messageselected;
+    messagetext = snapshot.messagetext;
+    titleScreen = snapshot.titleScreen;
+    soundHistory = snapshot.soundHistory;
+}
+
+function firstArrayDifference(before, after) {
+    if (!Array.isArray(before) || !Array.isArray(after)) return null;
+    const length = Math.max(before.length, after.length);
+    for (let index = 0; index < length; index++) {
+        const beforeValue = before[index];
+        const afterValue = after[index];
+        if (JSON.stringify(beforeValue) !== JSON.stringify(afterValue)) {
+            return { index, before: beforeValue, after: afterValue };
+        }
+    }
+    return null;
+}
+
+function firstTickNoopDifference(before, after, modified) {
+    if (modified !== false) {
+        return {
+            field: 'modified',
+            before: false,
+            after: modified,
+        };
+    }
+    for (const key of Object.keys(before)) {
+        if (JSON.stringify(before[key]) === JSON.stringify(after[key])) continue;
+        const arrayDiff = firstArrayDifference(before[key], after[key]);
+        if (arrayDiff) {
+            return {
+                field: key,
+                index: arrayDiff.index,
+                before: arrayDiff.before,
+                after: arrayDiff.after,
+            };
+        }
+        return {
+            field: key,
+            before: before[key],
+            after: after[key],
+        };
+    }
+    return null;
+}
+
+function firstTickNoopProbeDifference(testName, label) {
+    const before = tickNoopStateSnapshot();
+    const runtimeState = captureRuntimeProbeState();
+    let modified;
+    try {
+        modified = processInput(-1);
+        drainAgain(`${testName}: tick-noop probe ${label}`);
+        return firstTickNoopDifference(before, tickNoopStateSnapshot(), modified);
+    } finally {
+        restoreRuntimeProbeState(runtimeState);
+    }
+}
+
 function executeInputToken(inputToken) {
     if (inputToken === 'undo') {
         DoUndo(false, true);
@@ -321,6 +474,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const constantQuantityObjects = staticContract.constantQuantityObjectNames;
     const quantityContracts = staticContract.quantityContracts;
     const countedObjects = quantityObjectNames(quantityContracts);
+    const tickNoopProved = staticContract.tickNoopProved;
 
     const previousUnitTesting = unitTesting;
     const previousLazyFunctionGeneration = lazyFunctionGeneration;
@@ -329,6 +483,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let tickNoopBoundaryChecks = 0;
     let restartBoundaryTriggered = false;
     const previousDoRestart = global.DoRestart;
     if (typeof previousDoRestart === 'function') {
@@ -390,6 +545,22 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
             objectBoundaryChecks += staticObjects.length;
             quantityBoundaryChecks += quantityClaimCount(quantityContracts);
+            if (tickNoopProved) {
+                const restartBoundaryBeforeProbe = restartBoundaryTriggered;
+                const tickDiff = firstTickNoopProbeDifference(testName, `input ${inputIndex} ${tokenLabel(inputToken)}`);
+                restartBoundaryTriggered = restartBoundaryBeforeProbe;
+                if (tickDiff) {
+                    const location = tickDiff.index === undefined ? '' : `  index: ${tickDiff.index}\n`;
+                    throw new Error([
+                        `${testName}: tick-noop claim violated`,
+                        `  input ${inputIndex}: ${tokenLabel(inputToken)}`,
+                        `  field: ${tickDiff.field}`,
+                        location + `  before: ${JSON.stringify(tickDiff.before)}`,
+                        `  after: ${JSON.stringify(tickDiff.after)}`,
+                    ].join('\n'));
+                }
+                tickNoopBoundaryChecks++;
+            }
             countSnapshots = snapshotObjectCounts(countedObjects);
             currentIdentity = nextIdentity;
         }
@@ -401,6 +572,8 @@ function runSimulationWithStaticChecks(testName, dataarray) {
             constantQuantityObjectCount: constantQuantityObjects.length,
             objectBoundaryChecks,
             quantityBoundaryChecks,
+            tickNoopProved,
+            tickNoopBoundaryChecks,
             analysisUnavailableReason: staticContract.unavailableReason,
         };
     } finally {
@@ -430,8 +603,10 @@ function runAll(options = {}) {
     let caseCount = 0;
     let casesWithStaticObjects = 0;
     let casesWithConstantQuantityObjects = 0;
+    let casesWithTickNoop = 0;
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let tickNoopBoundaryChecks = 0;
     let analysisUnavailableCount = 0;
     const entries = global.testdata.filter(entry => testMatchesFilter(entry[0], options.filter || null));
 
@@ -457,8 +632,12 @@ function runAll(options = {}) {
             if (result.constantQuantityObjectCount > 0) {
                 casesWithConstantQuantityObjects++;
             }
+            if (result.tickNoopProved) {
+                casesWithTickNoop++;
+            }
             objectBoundaryChecks += result.objectBoundaryChecks;
             quantityBoundaryChecks += result.quantityBoundaryChecks;
+            tickNoopBoundaryChecks += result.tickNoopBoundaryChecks;
             if (result.analysisUnavailableReason) {
                 analysisUnavailableCount++;
                 progressLog(options, `static_analysis_runtime_contracts:   static analysis unavailable: ${result.analysisUnavailableReason}`);
@@ -473,8 +652,10 @@ function runAll(options = {}) {
         caseCount,
         casesWithStaticObjects,
         casesWithConstantQuantityObjects,
+        casesWithTickNoop,
         objectBoundaryChecks,
         quantityBoundaryChecks,
+        tickNoopBoundaryChecks,
         analysisUnavailableCount,
         failures,
     };
@@ -497,7 +678,7 @@ function main() {
     }
 
     console.log(
-        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks)`
+        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.casesWithTickNoop} with tick-noop, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks, ${result.tickNoopBoundaryChecks} tick-noop-boundary checks)`
     );
     return 0;
 }
@@ -518,6 +699,7 @@ module.exports = {
     engineObjectName,
     firstQuantityDifference,
     firstSnapshotDifference,
+    firstTickNoopDifference,
     objectCountSnapshot,
     parseArgs,
     runAll,
