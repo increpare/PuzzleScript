@@ -108,10 +108,12 @@ function staticContractForSource(source, testName) {
             objectNames: [],
             constantQuantityObjectNames: [],
             quantityContracts: [],
+            noRandomProved: false,
             unavailableReason: `${report.status}: ${expected.diagnostic}`,
         };
     }
     const objects = ((report.ps_tagged && report.ps_tagged.objects) || []);
+    const gameTags = (report.ps_tagged && report.ps_tagged.game && report.ps_tagged.game.tags) || {};
     const quantityContracts = objects
         .filter(object => object.tags && object.tags.quantity)
         .map(object => ({
@@ -128,6 +130,7 @@ function staticContractForSource(source, testName) {
             .filter(contract => contract.neverIncreases && contract.neverDecreases)
             .map(contract => contract.objectName),
         quantityContracts,
+        noRandomProved: gameTags.has_random !== true,
         unavailableReason: null,
     };
 }
@@ -266,6 +269,44 @@ function quantityObjectNames(quantityContracts) {
     return quantityContracts.map(contract => contract.objectName);
 }
 
+function replayBoundarySnapshot(boundary) {
+    return {
+        boundary,
+        identity: boardIdentity(),
+        serializedLevel: canSnapshotBoard() ? convertLevelToString() : null,
+        sounds: soundHistory.join(';'),
+    };
+}
+
+function alternateRandomSeed(testName) {
+    return `static-analysis-no-random:${testName}`;
+}
+
+function replayBoundaryTrace(testName, source, inputs, targetLevel, randomSeed, label) {
+    const trace = [];
+    compileSimulationSource(`${testName}: ${label}`, source, targetLevel, randomSeed);
+    trace.push(replayBoundarySnapshot('initial'));
+    for (let inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
+        const inputToken = inputs[inputIndex];
+        executeInputToken(inputToken);
+        drainAgain(`${testName}: ${label} input ${inputIndex} ${tokenLabel(inputToken)}`);
+        trace.push(replayBoundarySnapshot(`input ${inputIndex} ${tokenLabel(inputToken)}`));
+    }
+    return trace;
+}
+
+function firstReplayTraceDifference(leftTrace, rightTrace) {
+    const length = Math.max(leftTrace.length, rightTrace.length);
+    for (let index = 0; index < length; index++) {
+        const left = leftTrace[index] || null;
+        const right = rightTrace[index] || null;
+        if (JSON.stringify(left) !== JSON.stringify(right)) {
+            return { index, left, right };
+        }
+    }
+    return null;
+}
+
 function executeInputToken(inputToken) {
     if (inputToken === 'undo') {
         DoUndo(false, true);
@@ -321,6 +362,8 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const constantQuantityObjects = staticContract.constantQuantityObjectNames;
     const quantityContracts = staticContract.quantityContracts;
     const countedObjects = quantityObjectNames(quantityContracts);
+    const noRandomProved = staticContract.noRandomProved;
+    const checkNoRandomReplay = noRandomProved && randomSeed === null;
 
     const previousUnitTesting = unitTesting;
     const previousLazyFunctionGeneration = lazyFunctionGeneration;
@@ -329,6 +372,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let noRandomReplayChecks = 0;
     let restartBoundaryTriggered = false;
     const previousDoRestart = global.DoRestart;
     if (typeof previousDoRestart === 'function') {
@@ -343,12 +387,18 @@ function runSimulationWithStaticChecks(testName, dataarray) {
         let currentIdentity = boardIdentity();
         let snapshots = snapshotStaticObjects(staticObjects);
         let countSnapshots = snapshotObjectCounts(countedObjects);
+        const noRandomTrace = checkNoRandomReplay
+            ? [replayBoundarySnapshot('initial')]
+            : [];
 
         for (let inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
             const inputToken = inputs[inputIndex];
             restartBoundaryTriggered = false;
             const result = executeInputToken(inputToken);
             drainAgain(`${testName}: input ${inputIndex} ${tokenLabel(inputToken)}`);
+            if (checkNoRandomReplay) {
+                noRandomTrace.push(replayBoundarySnapshot(`input ${inputIndex} ${tokenLabel(inputToken)}`));
+            }
 
             const nextIdentity = boardIdentity();
             const resetBoundary =
@@ -396,11 +446,34 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
         assertFinalReplayParity(testName, expectedSerializedLevel, expectedSounds);
 
+        if (checkNoRandomReplay) {
+            const alternateTrace = replayBoundaryTrace(
+                testName,
+                source,
+                inputs,
+                targetLevel,
+                alternateRandomSeed(testName),
+                'alternate'
+            );
+            const traceDiff = firstReplayTraceDifference(noRandomTrace, alternateTrace);
+            if (traceDiff) {
+                throw new Error([
+                    `${testName}: no-random replay changed under alternate seed`,
+                    `  boundary index: ${traceDiff.index}`,
+                    `  primary: ${JSON.stringify(traceDiff.left)}`,
+                    `  alternate: ${JSON.stringify(traceDiff.right)}`,
+                ].join('\n'));
+            }
+            noRandomReplayChecks = noRandomTrace.length;
+        }
+
         return {
             staticObjectCount: staticObjects.length,
             constantQuantityObjectCount: constantQuantityObjects.length,
             objectBoundaryChecks,
             quantityBoundaryChecks,
+            noRandomProved,
+            noRandomReplayChecks,
             analysisUnavailableReason: staticContract.unavailableReason,
         };
     } finally {
@@ -430,8 +503,10 @@ function runAll(options = {}) {
     let caseCount = 0;
     let casesWithStaticObjects = 0;
     let casesWithConstantQuantityObjects = 0;
+    let casesWithNoRandomReplayChecks = 0;
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let noRandomReplayChecks = 0;
     let analysisUnavailableCount = 0;
     const entries = global.testdata.filter(entry => testMatchesFilter(entry[0], options.filter || null));
 
@@ -457,8 +532,12 @@ function runAll(options = {}) {
             if (result.constantQuantityObjectCount > 0) {
                 casesWithConstantQuantityObjects++;
             }
+            if (result.noRandomReplayChecks > 0) {
+                casesWithNoRandomReplayChecks++;
+            }
             objectBoundaryChecks += result.objectBoundaryChecks;
             quantityBoundaryChecks += result.quantityBoundaryChecks;
+            noRandomReplayChecks += result.noRandomReplayChecks;
             if (result.analysisUnavailableReason) {
                 analysisUnavailableCount++;
                 progressLog(options, `static_analysis_runtime_contracts:   static analysis unavailable: ${result.analysisUnavailableReason}`);
@@ -473,8 +552,10 @@ function runAll(options = {}) {
         caseCount,
         casesWithStaticObjects,
         casesWithConstantQuantityObjects,
+        casesWithNoRandomReplayChecks,
         objectBoundaryChecks,
         quantityBoundaryChecks,
+        noRandomReplayChecks,
         analysisUnavailableCount,
         failures,
     };
@@ -497,7 +578,7 @@ function main() {
     }
 
     console.log(
-        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks)`
+        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.casesWithNoRandomReplayChecks} with no-random replay checks, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks, ${result.noRandomReplayChecks} no-random replay checks)`
     );
     return 0;
 }
@@ -516,6 +597,7 @@ module.exports = {
     MAX_AGAIN_DRAIN_STEPS,
     boardIdentity,
     engineObjectName,
+    firstReplayTraceDifference,
     firstQuantityDifference,
     firstSnapshotDifference,
     objectCountSnapshot,

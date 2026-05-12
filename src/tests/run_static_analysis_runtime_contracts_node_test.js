@@ -17,9 +17,14 @@ const result = runSimulationWithStaticChecks(sokoban[0], sokoban[1]);
 
 assert.strictEqual(result.staticObjectCount, 3, 'sokoban should have three static objects');
 assert.strictEqual(result.constantQuantityObjectCount, 5, 'sokoban should have five constant-quantity objects');
+assert.strictEqual(result.noRandomProved, true, 'sokoban should have no random rules or random RHS objects');
 assert.ok(
     result.quantityBoundaryChecks > result.objectBoundaryChecks,
     'quantity checks should include movable constant-quantity objects'
+);
+assert.ok(
+    result.noRandomReplayChecks > 0,
+    'no-random checks should compare replay boundaries under an alternate seed'
 );
 
 const restartBoundarySource = [
