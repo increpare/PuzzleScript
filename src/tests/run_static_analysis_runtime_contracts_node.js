@@ -90,7 +90,7 @@ function staticContractForSource(source, testName) {
     const sourcePath = `testdata:${testName}`;
     const report = analyzeSource(source, {
         sourcePath,
-        familyFilter: 'count_layer_invariants',
+        familyFilter: ['count_layer_invariants', 'transient_boundary'],
     });
     if (report.status !== 'ok') {
         const expected = ANALYSIS_UNAVAILABLE_TESTS.get(testName);
@@ -108,6 +108,7 @@ function staticContractForSource(source, testName) {
             objectNames: [],
             constantQuantityObjectNames: [],
             quantityContracts: [],
+            temporaryObjectNames: [],
             unavailableReason: `${report.status}: ${expected.diagnostic}`,
         };
     }
@@ -128,6 +129,9 @@ function staticContractForSource(source, testName) {
             .filter(contract => contract.neverIncreases && contract.neverDecreases)
             .map(contract => contract.objectName),
         quantityContracts,
+        temporaryObjectNames: objects
+            .filter(object => object.tags && object.tags.temporary === true)
+            .map(object => object.name),
         unavailableReason: null,
     };
 }
@@ -253,6 +257,16 @@ function firstQuantityDifference(beforeCounts, quantityContracts) {
     return null;
 }
 
+function firstTemporaryPresence(objectNames) {
+    for (const objectName of objectNames) {
+        const count = objectCountSnapshot(objectName);
+        if (count !== 0) {
+            return { objectName, count };
+        }
+    }
+    return null;
+}
+
 function quantityClaimCount(quantityContracts) {
     let count = 0;
     for (const contract of quantityContracts) {
@@ -320,6 +334,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const staticObjects = staticContract.objectNames;
     const constantQuantityObjects = staticContract.constantQuantityObjectNames;
     const quantityContracts = staticContract.quantityContracts;
+    const temporaryObjects = staticContract.temporaryObjectNames;
     const countedObjects = quantityObjectNames(quantityContracts);
 
     const previousUnitTesting = unitTesting;
@@ -329,6 +344,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let temporaryBoundaryChecks = 0;
     let restartBoundaryTriggered = false;
     const previousDoRestart = global.DoRestart;
     if (typeof previousDoRestart === 'function') {
@@ -356,6 +372,19 @@ function runSimulationWithStaticChecks(testName, dataarray) {
                 || restartBoundaryTriggered
                 || !sameBoardIdentity(currentIdentity, nextIdentity)
                 || !canSnapshotBoard();
+
+            if (canSnapshotBoard()) {
+                const temporaryDiff = firstTemporaryPresence(temporaryObjects);
+                if (temporaryDiff) {
+                    throw new Error([
+                        `${testName}: temporary object survived stable boundary`,
+                        `  input ${inputIndex}: ${tokenLabel(inputToken)}`,
+                        `  object: ${temporaryDiff.objectName}`,
+                        `  count: ${temporaryDiff.count}`,
+                    ].join('\n'));
+                }
+                temporaryBoundaryChecks += temporaryObjects.length;
+            }
 
             if (resetBoundary) {
                 currentIdentity = nextIdentity;
@@ -399,8 +428,10 @@ function runSimulationWithStaticChecks(testName, dataarray) {
         return {
             staticObjectCount: staticObjects.length,
             constantQuantityObjectCount: constantQuantityObjects.length,
+            temporaryObjectCount: temporaryObjects.length,
             objectBoundaryChecks,
             quantityBoundaryChecks,
+            temporaryBoundaryChecks,
             analysisUnavailableReason: staticContract.unavailableReason,
         };
     } finally {
@@ -430,8 +461,10 @@ function runAll(options = {}) {
     let caseCount = 0;
     let casesWithStaticObjects = 0;
     let casesWithConstantQuantityObjects = 0;
+    let casesWithTemporaryObjects = 0;
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let temporaryBoundaryChecks = 0;
     let analysisUnavailableCount = 0;
     const entries = global.testdata.filter(entry => testMatchesFilter(entry[0], options.filter || null));
 
@@ -457,8 +490,12 @@ function runAll(options = {}) {
             if (result.constantQuantityObjectCount > 0) {
                 casesWithConstantQuantityObjects++;
             }
+            if (result.temporaryObjectCount > 0) {
+                casesWithTemporaryObjects++;
+            }
             objectBoundaryChecks += result.objectBoundaryChecks;
             quantityBoundaryChecks += result.quantityBoundaryChecks;
+            temporaryBoundaryChecks += result.temporaryBoundaryChecks;
             if (result.analysisUnavailableReason) {
                 analysisUnavailableCount++;
                 progressLog(options, `static_analysis_runtime_contracts:   static analysis unavailable: ${result.analysisUnavailableReason}`);
@@ -473,8 +510,10 @@ function runAll(options = {}) {
         caseCount,
         casesWithStaticObjects,
         casesWithConstantQuantityObjects,
+        casesWithTemporaryObjects,
         objectBoundaryChecks,
         quantityBoundaryChecks,
+        temporaryBoundaryChecks,
         analysisUnavailableCount,
         failures,
     };
@@ -497,7 +536,7 @@ function main() {
     }
 
     console.log(
-        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks)`
+        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.casesWithTemporaryObjects} with temporary objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks, ${result.temporaryBoundaryChecks} temporary-boundary checks)`
     );
     return 0;
 }
@@ -518,6 +557,7 @@ module.exports = {
     engineObjectName,
     firstQuantityDifference,
     firstSnapshotDifference,
+    firstTemporaryPresence,
     objectCountSnapshot,
     parseArgs,
     runAll,

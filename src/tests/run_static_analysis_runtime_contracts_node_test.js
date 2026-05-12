@@ -83,4 +83,68 @@ assert.ok(
     'semantic restart regression should exercise quantity contract checks before restart'
 );
 
+const temporaryBoundarySource = [
+    '========',
+    'OBJECTS',
+    '========',
+    '',
+    'Background',
+    'Black',
+    '',
+    'Player',
+    'Pink',
+    '',
+    'Spark',
+    'Yellow',
+    '',
+    '=======',
+    'LEGEND',
+    '=======',
+    '',
+    'P = Player',
+    '',
+    '======',
+    'SOUNDS',
+    '======',
+    '',
+    '================',
+    'COLLISIONLAYERS',
+    '================',
+    '',
+    'Background',
+    'Player',
+    'Spark',
+    '',
+    '======',
+    'RULES',
+    '======',
+    '',
+    '[ action Player ] -> [ Player Spark ]',
+    'late [ Spark ] -> []',
+    '',
+    '==============',
+    'WINCONDITIONS',
+    '==============',
+    '',
+    'Some Player',
+    '',
+    '=======',
+    'LEVELS',
+    '=======',
+    '',
+    'P',
+].join('\n');
+
+const temporaryBoundary = runSimulationWithStaticChecks('temporary boundary', [
+    temporaryBoundarySource,
+    [4],
+    'background player:0,\n',
+]);
+
+assert.strictEqual(temporaryBoundary.temporaryObjectCount, 1, 'temporary fixture should have one temporary object');
+assert.ok(
+    temporaryBoundary.temporaryBoundaryChecks > 0,
+    'temporary checks should run for temporary objects'
+);
+
 console.log('run_static_analysis_runtime_contracts_node_test: ok');
