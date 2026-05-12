@@ -186,4 +186,74 @@ assert.ok(
     'temporary checks should run for temporary objects'
 );
 
+const cosmeticProjectionSource = [
+    '========',
+    'OBJECTS',
+    '========',
+    '',
+    'Background',
+    'Black',
+    '',
+    'Player',
+    'Pink',
+    '',
+    'Goal',
+    'Yellow',
+    '',
+    'Sparkle',
+    'Blue',
+    '',
+    '=======',
+    'LEGEND',
+    '=======',
+    '',
+    'P = Player',
+    'G = Goal',
+    'S = Sparkle',
+    '',
+    '======',
+    'SOUNDS',
+    '======',
+    '',
+    '================',
+    'COLLISIONLAYERS',
+    '================',
+    '',
+    'Background',
+    'Player',
+    'Goal',
+    'Sparkle',
+    '',
+    '======',
+    'RULES',
+    '======',
+    '',
+    '[ right Player | Goal ] -> [ | Player ]',
+    '',
+    '==============',
+    'WINCONDITIONS',
+    '==============',
+    '',
+    'Some Player On Goal',
+    '',
+    '=======',
+    'LEVELS',
+    '=======',
+    '',
+    'PSG',
+].join('\n');
+
+const cosmeticProjection = runSimulationWithStaticChecks('cosmetic projection', [
+    cosmeticProjectionSource,
+    [3],
+    'background:0,background player sparkle:1,background goal:2,\n',
+]);
+
+assert.strictEqual(cosmeticProjection.cosmeticObjectCount, 1, 'cosmetic fixture should have one cosmetic object');
+assert.strictEqual(
+    cosmeticProjection.cosmeticProjectionChecks,
+    1,
+    'cosmetic checks should compare final projected replay states'
+);
+
 console.log('run_static_analysis_runtime_contracts_node_test: ok');
