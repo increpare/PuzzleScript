@@ -50,7 +50,7 @@ function usage() {
     return [
         'Usage: node src/tests/run_static_analysis_runtime_contracts_node.js [--filter NAME]',
         '',
-        'Replays src/tests/resources/testdata.js and checks static object occupancy invariants.',
+        'Replays src/tests/resources/testdata.js and checks static-analysis runtime contracts.',
     ].join('\n');
 }
 
@@ -106,12 +106,19 @@ function staticContractForSource(source, testName) {
         }
         return {
             objectNames: [],
+            staticLayerContracts: [],
             constantQuantityObjectNames: [],
             quantityContracts: [],
             unavailableReason: `${report.status}: ${expected.diagnostic}`,
         };
     }
     const objects = ((report.ps_tagged && report.ps_tagged.objects) || []);
+    const staticLayerContracts = ((report.ps_tagged && report.ps_tagged.collision_layers) || [])
+        .filter(layer => layer.tags && layer.tags.static === true)
+        .map(layer => ({
+            layerId: layer.id,
+            objectNames: layer.objects.slice(),
+        }));
     const quantityContracts = objects
         .filter(object => object.tags && object.tags.quantity)
         .map(object => ({
@@ -124,6 +131,7 @@ function staticContractForSource(source, testName) {
         objectNames: objects
             .filter(object => object.tags && object.tags.static === true)
             .map(object => object.name),
+        staticLayerContracts,
         constantQuantityObjectNames: quantityContracts
             .filter(contract => contract.neverIncreases && contract.neverDecreases)
             .map(contract => contract.objectName),
@@ -195,6 +203,38 @@ function snapshotStaticObjects(objectNames) {
     return snapshots;
 }
 
+function layerOccupancySnapshot(layerContract) {
+    if (!canSnapshotBoard()) {
+        throw new Error(`cannot snapshot layer ${layerContract.layerId}: no active board level`);
+    }
+    const layerObjects = layerContract.objectNames.map(objectName => {
+        const runtimeName = engineObjectName(objectName);
+        return {
+            displayName: objectName,
+            objectId: state.objects[runtimeName].id,
+        };
+    });
+    const cells = [];
+    for (let cellIndex = 0; cellIndex < level.n_tiles; cellIndex++) {
+        const cell = level.getCell(cellIndex);
+        cells.push(layerObjects
+            .filter(object => cell.get(object.objectId))
+            .map(object => object.displayName)
+            .sort()
+            .join('|'));
+    }
+    return cells;
+}
+
+function snapshotStaticLayers(layerContracts) {
+    const snapshots = new Map();
+    if (!canSnapshotBoard()) return snapshots;
+    for (const layerContract of layerContracts) {
+        snapshots.set(layerContract.layerId, layerOccupancySnapshot(layerContract));
+    }
+    return snapshots;
+}
+
 function objectCountSnapshot(displayName) {
     return objectOccupancySnapshot(displayName).reduce((sum, present) => sum + present, 0);
 }
@@ -219,6 +259,27 @@ function firstSnapshotDifference(beforeSnapshots, objectNames) {
             if (beforeValue !== afterValue) {
                 return {
                     objectName,
+                    cellIndex,
+                    before: beforeValue,
+                    after: afterValue,
+                };
+            }
+        }
+    }
+    return null;
+}
+
+function firstLayerSnapshotDifference(beforeSnapshots, layerContracts) {
+    for (const layerContract of layerContracts) {
+        const before = beforeSnapshots.get(layerContract.layerId) || [];
+        const after = layerOccupancySnapshot(layerContract);
+        const length = Math.max(before.length, after.length);
+        for (let cellIndex = 0; cellIndex < length; cellIndex++) {
+            const beforeValue = before[cellIndex] || '';
+            const afterValue = after[cellIndex] || '';
+            if (beforeValue !== afterValue) {
+                return {
+                    layerId: layerContract.layerId,
                     cellIndex,
                     before: beforeValue,
                     after: afterValue,
@@ -318,6 +379,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const expectedSounds = dataarray[5] === undefined ? null : dataarray[5];
     const staticContract = staticContractForSource(source, testName);
     const staticObjects = staticContract.objectNames;
+    const staticLayerContracts = staticContract.staticLayerContracts;
     const constantQuantityObjects = staticContract.constantQuantityObjectNames;
     const quantityContracts = staticContract.quantityContracts;
     const countedObjects = quantityObjectNames(quantityContracts);
@@ -328,6 +390,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     lazyFunctionGeneration = false;
 
     let objectBoundaryChecks = 0;
+    let layerBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
     let restartBoundaryTriggered = false;
     const previousDoRestart = global.DoRestart;
@@ -341,7 +404,8 @@ function runSimulationWithStaticChecks(testName, dataarray) {
         compileSimulationSource(testName, source, targetLevel, randomSeed);
 
         let currentIdentity = boardIdentity();
-        let snapshots = snapshotStaticObjects(staticObjects);
+        let objectSnapshots = snapshotStaticObjects(staticObjects);
+        let layerSnapshots = snapshotStaticLayers(staticLayerContracts);
         let countSnapshots = snapshotObjectCounts(countedObjects);
 
         for (let inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
@@ -359,12 +423,13 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
             if (resetBoundary) {
                 currentIdentity = nextIdentity;
-                snapshots = snapshotStaticObjects(staticObjects);
+                objectSnapshots = snapshotStaticObjects(staticObjects);
+                layerSnapshots = snapshotStaticLayers(staticLayerContracts);
                 countSnapshots = snapshotObjectCounts(countedObjects);
                 continue;
             }
 
-            const diff = firstSnapshotDifference(snapshots, staticObjects);
+            const diff = firstSnapshotDifference(objectSnapshots, staticObjects);
             if (diff) {
                 throw new Error([
                     `${testName}: static object occupancy changed`,
@@ -373,6 +438,18 @@ function runSimulationWithStaticChecks(testName, dataarray) {
                     `  cell: ${diff.cellIndex}`,
                     `  before: ${diff.before}`,
                     `  after: ${diff.after}`,
+                ].join('\n'));
+            }
+
+            const layerDiff = firstLayerSnapshotDifference(layerSnapshots, staticLayerContracts);
+            if (layerDiff) {
+                throw new Error([
+                    `${testName}: static layer occupancy changed`,
+                    `  input ${inputIndex}: ${tokenLabel(inputToken)}`,
+                    `  layer: ${layerDiff.layerId}`,
+                    `  cell: ${layerDiff.cellIndex}`,
+                    `  before: ${layerDiff.before}`,
+                    `  after: ${layerDiff.after}`,
                 ].join('\n'));
             }
 
@@ -389,6 +466,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
             }
 
             objectBoundaryChecks += staticObjects.length;
+            layerBoundaryChecks += staticLayerContracts.length;
             quantityBoundaryChecks += quantityClaimCount(quantityContracts);
             countSnapshots = snapshotObjectCounts(countedObjects);
             currentIdentity = nextIdentity;
@@ -398,8 +476,10 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
         return {
             staticObjectCount: staticObjects.length,
+            staticLayerCount: staticLayerContracts.length,
             constantQuantityObjectCount: constantQuantityObjects.length,
             objectBoundaryChecks,
+            layerBoundaryChecks,
             quantityBoundaryChecks,
             analysisUnavailableReason: staticContract.unavailableReason,
         };
@@ -429,8 +509,10 @@ function runAll(options = {}) {
     const failures = [];
     let caseCount = 0;
     let casesWithStaticObjects = 0;
+    let casesWithStaticLayers = 0;
     let casesWithConstantQuantityObjects = 0;
     let objectBoundaryChecks = 0;
+    let layerBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
     let analysisUnavailableCount = 0;
     const entries = global.testdata.filter(entry => testMatchesFilter(entry[0], options.filter || null));
@@ -454,10 +536,14 @@ function runAll(options = {}) {
             if (result.staticObjectCount > 0) {
                 casesWithStaticObjects++;
             }
+            if (result.staticLayerCount > 0) {
+                casesWithStaticLayers++;
+            }
             if (result.constantQuantityObjectCount > 0) {
                 casesWithConstantQuantityObjects++;
             }
             objectBoundaryChecks += result.objectBoundaryChecks;
+            layerBoundaryChecks += result.layerBoundaryChecks;
             quantityBoundaryChecks += result.quantityBoundaryChecks;
             if (result.analysisUnavailableReason) {
                 analysisUnavailableCount++;
@@ -472,8 +558,10 @@ function runAll(options = {}) {
         ok: failures.length === 0,
         caseCount,
         casesWithStaticObjects,
+        casesWithStaticLayers,
         casesWithConstantQuantityObjects,
         objectBoundaryChecks,
+        layerBoundaryChecks,
         quantityBoundaryChecks,
         analysisUnavailableCount,
         failures,
@@ -497,7 +585,7 @@ function main() {
     }
 
     console.log(
-        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks)`
+        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithStaticLayers} with static layers, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.layerBoundaryChecks} layer-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks)`
     );
     return 0;
 }
@@ -516,13 +604,16 @@ module.exports = {
     MAX_AGAIN_DRAIN_STEPS,
     boardIdentity,
     engineObjectName,
+    firstLayerSnapshotDifference,
     firstQuantityDifference,
     firstSnapshotDifference,
+    layerOccupancySnapshot,
     objectCountSnapshot,
     parseArgs,
     runAll,
     runSimulationWithStaticChecks,
     snapshotObjectCounts,
+    snapshotStaticLayers,
     snapshotStaticObjects,
     staticContractForSource,
 };

@@ -16,10 +16,15 @@ assert.ok(sokoban, 'sokoban fixture should be available');
 const result = runSimulationWithStaticChecks(sokoban[0], sokoban[1]);
 
 assert.strictEqual(result.staticObjectCount, 3, 'sokoban should have three static objects');
+assert.strictEqual(result.staticLayerCount, 2, 'sokoban should have two static layers');
 assert.strictEqual(result.constantQuantityObjectCount, 5, 'sokoban should have five constant-quantity objects');
 assert.ok(
     result.quantityBoundaryChecks > result.objectBoundaryChecks,
     'quantity checks should include movable constant-quantity objects'
+);
+assert.ok(
+    result.layerBoundaryChecks > 0,
+    'layer checks should include static collision layers'
 );
 
 const restartBoundarySource = [
