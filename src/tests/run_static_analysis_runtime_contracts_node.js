@@ -86,32 +86,50 @@ function drainAgain(context) {
     }
 }
 
+function expectedAnalysisUnavailable(report, testName, sourcePath) {
+    if (report.status === 'ok') return null;
+
+    const expected = ANALYSIS_UNAVAILABLE_TESTS.get(testName);
+    if (!expected) {
+        throw new Error(`${sourcePath}: static analysis status ${report.status}`);
+    }
+    if (report.status !== expected.status) {
+        throw new Error(`${sourcePath}: static analysis status ${report.status}, expected ${expected.status}`);
+    }
+    const diagnostics = diagnosticText(report.errors);
+    if (!diagnostics.includes(expected.diagnostic)) {
+        throw new Error(`${sourcePath}: static analysis diagnostic changed; expected ${JSON.stringify(expected.diagnostic)}`);
+    }
+    return `${report.status}: ${expected.diagnostic}`;
+}
+
 function staticContractForSource(source, testName) {
     const sourcePath = `testdata:${testName}`;
-    const report = analyzeSource(source, {
+    const invariantReport = analyzeSource(source, {
         sourcePath,
         familyFilter: 'count_layer_invariants',
     });
-    if (report.status !== 'ok') {
-        const expected = ANALYSIS_UNAVAILABLE_TESTS.get(testName);
-        if (!expected) {
-            throw new Error(`${sourcePath}: static analysis status ${report.status}`);
-        }
-        if (report.status !== expected.status) {
-            throw new Error(`${sourcePath}: static analysis status ${report.status}, expected ${expected.status}`);
-        }
-        const diagnostics = diagnosticText(report.errors);
-        if (!diagnostics.includes(expected.diagnostic)) {
-            throw new Error(`${sourcePath}: static analysis diagnostic changed; expected ${JSON.stringify(expected.diagnostic)}`);
-        }
+    const unavailableReason = expectedAnalysisUnavailable(invariantReport, testName, sourcePath);
+    if (unavailableReason) {
         return {
             objectNames: [],
             constantQuantityObjectNames: [],
             quantityContracts: [],
-            unavailableReason: `${report.status}: ${expected.diagnostic}`,
+            actionNoopProved: false,
+            unavailableReason,
         };
     }
-    const objects = ((report.ps_tagged && report.ps_tagged.objects) || []);
+
+    const movementReport = analyzeSource(source, {
+        sourcePath,
+        familyFilter: 'movement_action',
+    });
+    const movementUnavailableReason = expectedAnalysisUnavailable(movementReport, testName, sourcePath);
+    if (movementUnavailableReason) {
+        throw new Error(`${sourcePath}: movement/action analysis unavailable after invariant analysis succeeded: ${movementUnavailableReason}`);
+    }
+
+    const objects = ((invariantReport.ps_tagged && invariantReport.ps_tagged.objects) || []);
     const quantityContracts = objects
         .filter(object => object.tags && object.tags.quantity)
         .map(object => ({
@@ -128,6 +146,8 @@ function staticContractForSource(source, testName) {
             .filter(contract => contract.neverIncreases && contract.neverDecreases)
             .map(contract => contract.objectName),
         quantityContracts,
+        actionNoopProved: ((movementReport.facts && movementReport.facts.movement_action) || [])
+            .some(fact => fact.id === 'action_noop' && fact.status === 'proved'),
         unavailableReason: null,
     };
 }
@@ -266,6 +286,156 @@ function quantityObjectNames(quantityContracts) {
     return quantityContracts.map(contract => contract.objectName);
 }
 
+function bitVecArraySnapshot(items) {
+    return Array.from(items || [], item => {
+        if (item && item.data) {
+            return Array.from(item.data);
+        }
+        return item;
+    });
+}
+
+function actionNoopStateSnapshot() {
+    // The static action_noop fact is about solver-visible puzzle state, not
+    // residual UI text left by message/cancel commands in test fixtures.
+    return {
+        board: boardIdentity(),
+        curlevel: typeof curlevel === 'number' ? curlevel : null,
+        curlevelTarget: curlevelTarget === null ? null : JSON.stringify(curlevelTarget),
+        winning: Boolean(winning),
+        againing: Boolean(againing),
+        textMode: Boolean(textMode),
+        titleScreen: Boolean(titleScreen),
+        objects: Array.from(level.objects || []),
+        movements: Array.from(level.movements || []),
+        rigidGroupIndexMask: bitVecArraySnapshot(level.rigidGroupIndexMask),
+        rigidMovementAppliedMask: bitVecArraySnapshot(level.rigidMovementAppliedMask),
+    };
+}
+
+function cloneRandomGenerator(generator) {
+    if (!generator) return generator;
+    const clone = new RNG(generator.seed);
+    clone._normal = generator._normal;
+    if (generator._state) {
+        clone._state = new RC4('');
+        clone._state.s = generator._state.s.slice();
+        clone._state.i = generator._state.i;
+        clone._state.j = generator._state.j;
+    } else {
+        clone._state = null;
+        clone.uniform = generator.uniform;
+        clone.nextByte = generator.nextByte;
+    }
+    return clone;
+}
+
+function captureRuntimeProbeState() {
+    return {
+        levelState: backupLevel(),
+        commandQueue: (level.commandQueue || []).slice(),
+        commandQueueSourceRules: (level.commandQueueSourceRules || []).slice(),
+        backups: backups.slice(),
+        restartTarget,
+        RandomGen: cloneRandomGenerator(RandomGen),
+        curlevel,
+        curlevelTarget,
+        hasUsedCheckpoint,
+        levelEditorOpened,
+        ignoreNotJustPressedAction,
+        textMode,
+        winning,
+        againing,
+        timer,
+        autotick,
+        oldflickscreendat: oldflickscreendat.concat([]),
+        restarting,
+        messageselected,
+        messagetext,
+        titleScreen,
+        soundHistory: soundHistory.slice(),
+    };
+}
+
+function restoreRuntimeProbeState(snapshot) {
+    restoreLevel(snapshot.levelState);
+    level.commandQueue = snapshot.commandQueue.slice();
+    level.commandQueueSourceRules = snapshot.commandQueueSourceRules.slice();
+    backups = snapshot.backups;
+    restartTarget = snapshot.restartTarget;
+    RandomGen = snapshot.RandomGen;
+    curlevel = snapshot.curlevel;
+    curlevelTarget = snapshot.curlevelTarget;
+    hasUsedCheckpoint = snapshot.hasUsedCheckpoint;
+    levelEditorOpened = snapshot.levelEditorOpened;
+    ignoreNotJustPressedAction = snapshot.ignoreNotJustPressedAction;
+    textMode = snapshot.textMode;
+    winning = snapshot.winning;
+    againing = snapshot.againing;
+    timer = snapshot.timer;
+    autotick = snapshot.autotick;
+    oldflickscreendat = snapshot.oldflickscreendat.concat([]);
+    restarting = snapshot.restarting;
+    messageselected = snapshot.messageselected;
+    messagetext = snapshot.messagetext;
+    titleScreen = snapshot.titleScreen;
+    soundHistory = snapshot.soundHistory;
+}
+
+function firstArrayDifference(before, after) {
+    if (!Array.isArray(before) || !Array.isArray(after)) return null;
+    const length = Math.max(before.length, after.length);
+    for (let index = 0; index < length; index++) {
+        const beforeValue = before[index];
+        const afterValue = after[index];
+        if (JSON.stringify(beforeValue) !== JSON.stringify(afterValue)) {
+            return { index, before: beforeValue, after: afterValue };
+        }
+    }
+    return null;
+}
+
+function firstActionNoopDifference(before, after, modified) {
+    if (modified !== false) {
+        return {
+            field: 'modified',
+            before: false,
+            after: modified,
+        };
+    }
+    for (const key of Object.keys(before)) {
+        if (JSON.stringify(before[key]) === JSON.stringify(after[key])) continue;
+        const arrayDiff = firstArrayDifference(before[key], after[key]);
+        if (arrayDiff) {
+            return {
+                field: key,
+                index: arrayDiff.index,
+                before: arrayDiff.before,
+                after: arrayDiff.after,
+            };
+        }
+        return {
+            field: key,
+            before: before[key],
+            after: after[key],
+        };
+    }
+    return null;
+}
+
+function firstActionNoopProbeDifference(testName, label) {
+    const before = actionNoopStateSnapshot();
+    const runtimeState = captureRuntimeProbeState();
+    let modified;
+    try {
+        modified = processInput(4);
+        drainAgain(`${testName}: action-noop probe ${label}`);
+        return firstActionNoopDifference(before, actionNoopStateSnapshot(), modified);
+    } finally {
+        restoreRuntimeProbeState(runtimeState);
+    }
+}
+
 function executeInputToken(inputToken) {
     if (inputToken === 'undo') {
         DoUndo(false, true);
@@ -321,6 +491,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const constantQuantityObjects = staticContract.constantQuantityObjectNames;
     const quantityContracts = staticContract.quantityContracts;
     const countedObjects = quantityObjectNames(quantityContracts);
+    const actionNoopProved = staticContract.actionNoopProved;
 
     const previousUnitTesting = unitTesting;
     const previousLazyFunctionGeneration = lazyFunctionGeneration;
@@ -329,6 +500,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let actionNoopBoundaryChecks = 0;
     let restartBoundaryTriggered = false;
     const previousDoRestart = global.DoRestart;
     if (typeof previousDoRestart === 'function') {
@@ -390,6 +562,22 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
             objectBoundaryChecks += staticObjects.length;
             quantityBoundaryChecks += quantityClaimCount(quantityContracts);
+            if (actionNoopProved) {
+                const restartBoundaryBeforeProbe = restartBoundaryTriggered;
+                const actionDiff = firstActionNoopProbeDifference(testName, `input ${inputIndex} ${tokenLabel(inputToken)}`);
+                restartBoundaryTriggered = restartBoundaryBeforeProbe;
+                if (actionDiff) {
+                    const location = actionDiff.index === undefined ? '' : `  index: ${actionDiff.index}\n`;
+                    throw new Error([
+                        `${testName}: action-noop claim violated`,
+                        `  input ${inputIndex}: ${tokenLabel(inputToken)}`,
+                        `  field: ${actionDiff.field}`,
+                        location + `  before: ${JSON.stringify(actionDiff.before)}`,
+                        `  after: ${JSON.stringify(actionDiff.after)}`,
+                    ].join('\n'));
+                }
+                actionNoopBoundaryChecks++;
+            }
             countSnapshots = snapshotObjectCounts(countedObjects);
             currentIdentity = nextIdentity;
         }
@@ -401,6 +589,8 @@ function runSimulationWithStaticChecks(testName, dataarray) {
             constantQuantityObjectCount: constantQuantityObjects.length,
             objectBoundaryChecks,
             quantityBoundaryChecks,
+            actionNoopProved,
+            actionNoopBoundaryChecks,
             analysisUnavailableReason: staticContract.unavailableReason,
         };
     } finally {
@@ -430,8 +620,10 @@ function runAll(options = {}) {
     let caseCount = 0;
     let casesWithStaticObjects = 0;
     let casesWithConstantQuantityObjects = 0;
+    let casesWithActionNoop = 0;
     let objectBoundaryChecks = 0;
     let quantityBoundaryChecks = 0;
+    let actionNoopBoundaryChecks = 0;
     let analysisUnavailableCount = 0;
     const entries = global.testdata.filter(entry => testMatchesFilter(entry[0], options.filter || null));
 
@@ -457,8 +649,12 @@ function runAll(options = {}) {
             if (result.constantQuantityObjectCount > 0) {
                 casesWithConstantQuantityObjects++;
             }
+            if (result.actionNoopProved) {
+                casesWithActionNoop++;
+            }
             objectBoundaryChecks += result.objectBoundaryChecks;
             quantityBoundaryChecks += result.quantityBoundaryChecks;
+            actionNoopBoundaryChecks += result.actionNoopBoundaryChecks;
             if (result.analysisUnavailableReason) {
                 analysisUnavailableCount++;
                 progressLog(options, `static_analysis_runtime_contracts:   static analysis unavailable: ${result.analysisUnavailableReason}`);
@@ -473,8 +669,10 @@ function runAll(options = {}) {
         caseCount,
         casesWithStaticObjects,
         casesWithConstantQuantityObjects,
+        casesWithActionNoop,
         objectBoundaryChecks,
         quantityBoundaryChecks,
+        actionNoopBoundaryChecks,
         analysisUnavailableCount,
         failures,
     };
@@ -497,7 +695,7 @@ function main() {
     }
 
     console.log(
-        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks)`
+        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.casesWithActionNoop} with action-noop, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks, ${result.actionNoopBoundaryChecks} action-noop-boundary checks)`
     );
     return 0;
 }
@@ -516,6 +714,7 @@ module.exports = {
     MAX_AGAIN_DRAIN_STEPS,
     boardIdentity,
     engineObjectName,
+    firstActionNoopDifference,
     firstQuantityDifference,
     firstSnapshotDifference,
     objectCountSnapshot,
