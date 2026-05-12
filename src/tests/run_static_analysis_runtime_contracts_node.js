@@ -106,12 +106,17 @@ function staticContractForSource(source, testName) {
         }
         return {
             objectNames: [],
+            countInvariantObjectNames: [],
             unavailableReason: `${report.status}: ${expected.diagnostic}`,
         };
     }
+    const objects = ((report.ps_tagged && report.ps_tagged.objects) || []);
     return {
-        objectNames: ((report.ps_tagged && report.ps_tagged.objects) || [])
+        objectNames: objects
             .filter(object => object.tags && object.tags.static === true)
+            .map(object => object.name),
+        countInvariantObjectNames: objects
+            .filter(object => object.tags && object.tags.count_invariant === true)
             .map(object => object.name),
         unavailableReason: null,
     };
@@ -180,6 +185,19 @@ function snapshotStaticObjects(objectNames) {
     return snapshots;
 }
 
+function objectCountSnapshot(displayName) {
+    return objectOccupancySnapshot(displayName).reduce((sum, present) => sum + present, 0);
+}
+
+function snapshotObjectCounts(objectNames) {
+    const snapshots = new Map();
+    if (!canSnapshotBoard()) return snapshots;
+    for (const objectName of objectNames) {
+        snapshots.set(objectName, objectCountSnapshot(objectName));
+    }
+    return snapshots;
+}
+
 function firstSnapshotDifference(beforeSnapshots, objectNames) {
     for (const objectName of objectNames) {
         const before = beforeSnapshots.get(objectName) || [];
@@ -196,6 +214,21 @@ function firstSnapshotDifference(beforeSnapshots, objectNames) {
                     after: afterValue,
                 };
             }
+        }
+    }
+    return null;
+}
+
+function firstCountDifference(beforeCounts, objectNames) {
+    for (const objectName of objectNames) {
+        const before = beforeCounts.get(objectName) || 0;
+        const after = objectCountSnapshot(objectName);
+        if (before !== after) {
+            return {
+                objectName,
+                before,
+                after,
+            };
         }
     }
     return null;
@@ -253,6 +286,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const expectedSounds = dataarray[5] === undefined ? null : dataarray[5];
     const staticContract = staticContractForSource(source, testName);
     const staticObjects = staticContract.objectNames;
+    const countInvariantObjects = staticContract.countInvariantObjectNames;
 
     const previousUnitTesting = unitTesting;
     const previousLazyFunctionGeneration = lazyFunctionGeneration;
@@ -260,11 +294,13 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     lazyFunctionGeneration = false;
 
     let objectBoundaryChecks = 0;
+    let countBoundaryChecks = 0;
     try {
         compileSimulationSource(testName, source, targetLevel, randomSeed);
 
         let currentIdentity = boardIdentity();
         let snapshots = snapshotStaticObjects(staticObjects);
+        let countSnapshots = snapshotObjectCounts(countInvariantObjects);
 
         for (let inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
             const inputToken = inputs[inputIndex];
@@ -280,6 +316,7 @@ function runSimulationWithStaticChecks(testName, dataarray) {
             if (resetBoundary) {
                 currentIdentity = nextIdentity;
                 snapshots = snapshotStaticObjects(staticObjects);
+                countSnapshots = snapshotObjectCounts(countInvariantObjects);
                 continue;
             }
 
@@ -295,7 +332,19 @@ function runSimulationWithStaticChecks(testName, dataarray) {
                 ].join('\n'));
             }
 
+            const countDiff = firstCountDifference(countSnapshots, countInvariantObjects);
+            if (countDiff) {
+                throw new Error([
+                    `${testName}: count-invariant object count changed`,
+                    `  input ${inputIndex}: ${tokenLabel(inputToken)}`,
+                    `  object: ${countDiff.objectName}`,
+                    `  before: ${countDiff.before}`,
+                    `  after: ${countDiff.after}`,
+                ].join('\n'));
+            }
+
             objectBoundaryChecks += staticObjects.length;
+            countBoundaryChecks += countInvariantObjects.length;
             currentIdentity = nextIdentity;
         }
 
@@ -303,7 +352,9 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
         return {
             staticObjectCount: staticObjects.length,
+            countInvariantObjectCount: countInvariantObjects.length,
             objectBoundaryChecks,
+            countBoundaryChecks,
             analysisUnavailableReason: staticContract.unavailableReason,
         };
     } finally {
@@ -329,7 +380,9 @@ function runAll(options = {}) {
     const failures = [];
     let caseCount = 0;
     let casesWithStaticObjects = 0;
+    let casesWithCountInvariantObjects = 0;
     let objectBoundaryChecks = 0;
+    let countBoundaryChecks = 0;
     let analysisUnavailableCount = 0;
     const entries = global.testdata.filter(entry => testMatchesFilter(entry[0], options.filter || null));
 
@@ -352,7 +405,11 @@ function runAll(options = {}) {
             if (result.staticObjectCount > 0) {
                 casesWithStaticObjects++;
             }
+            if (result.countInvariantObjectCount > 0) {
+                casesWithCountInvariantObjects++;
+            }
             objectBoundaryChecks += result.objectBoundaryChecks;
+            countBoundaryChecks += result.countBoundaryChecks;
             if (result.analysisUnavailableReason) {
                 analysisUnavailableCount++;
                 progressLog(options, `static_analysis_runtime_contracts:   static analysis unavailable: ${result.analysisUnavailableReason}`);
@@ -366,7 +423,9 @@ function runAll(options = {}) {
         ok: failures.length === 0,
         caseCount,
         casesWithStaticObjects,
+        casesWithCountInvariantObjects,
         objectBoundaryChecks,
+        countBoundaryChecks,
         analysisUnavailableCount,
         failures,
     };
@@ -389,7 +448,7 @@ function main() {
     }
 
     console.log(
-        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.objectBoundaryChecks} object-boundary checks)`
+        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithCountInvariantObjects} with count-invariant objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.countBoundaryChecks} count-boundary checks)`
     );
     return 0;
 }
@@ -408,10 +467,13 @@ module.exports = {
     MAX_AGAIN_DRAIN_STEPS,
     boardIdentity,
     engineObjectName,
+    firstCountDifference,
     firstSnapshotDifference,
+    objectCountSnapshot,
     parseArgs,
     runAll,
     runSimulationWithStaticChecks,
+    snapshotObjectCounts,
     snapshotStaticObjects,
     staticContractForSource,
 };

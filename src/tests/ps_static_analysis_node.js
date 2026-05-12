@@ -1512,6 +1512,26 @@ assert.strictEqual(andAggregateMovementWall.tags.count_invariant, true, 'and-agg
 assert.strictEqual(andAggregateMovementWall.tags.static, false, 'and-aggregate movement mentioning wall should reject wall static');
 assert.ok(andAggregateMovementWallFact.blockers.includes('object_may_receive_movement'));
 
+const STATIC_PROPERTY_ABSENT_OVERWRITE_GAME = STATIC_OBJECT_GAME.replace(
+    '[ > PlayerObject ] -> [ > PlayerObject ]',
+    '[ Solid ] -> [ Solid no Wall ]'
+);
+const staticPropertyAbsentOverwrite = analyzeSource(STATIC_PROPERTY_ABSENT_OVERWRITE_GAME, { sourcePath: 'static_property_absent_overwrite.txt' });
+const propertyAbsentOverwriteWall = staticPropertyAbsentOverwrite.ps_tagged.objects.find(object => object.name === 'Wall');
+const propertyAbsentOverwriteWallCount = staticPropertyAbsentOverwrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_count_preserved');
+assert.strictEqual(propertyAbsentOverwriteWall.tags.count_invariant, false, 'explicit RHS absence should reject count preservation even when a property is also present');
+assert.ok(propertyAbsentOverwriteWallCount.blockers.includes('object_written_by_solver_active_rule'));
+
+const STATIC_PROPERTY_TO_OBJECT_GAME = STATIC_OBJECT_GAME.replace(
+    '[ > PlayerObject ] -> [ > PlayerObject ]',
+    '[ Solid ] -> [ Crate ]'
+);
+const staticPropertyToObject = analyzeSource(STATIC_PROPERTY_TO_OBJECT_GAME, { sourcePath: 'static_property_to_object.txt' });
+const propertyToObjectWall = staticPropertyToObject.ps_tagged.objects.find(object => object.name === 'Wall');
+const propertyToObjectCrate = staticPropertyToObject.ps_tagged.objects.find(object => object.name === 'Crate');
+assert.strictEqual(propertyToObjectWall.tags.count_invariant, false, 'property-to-object rewrite can destroy individual property members');
+assert.strictEqual(propertyToObjectCrate.tags.count_invariant, false, 'property-to-object rewrite can create the selected concrete object');
+
 const ABSENT_GUARD_ADJACENT_MOVE_GAME = STATIC_OBJECT_GAME
     .replace('Solid = Wall or Crate', 'Solid = Wall or Crate\nObstacle = PlayerObject or Wall or Crate')
     .replace('[ > PlayerObject ] -> [ > PlayerObject ]', '[ > Crate | no Obstacle ] -> [ | > Crate ]');

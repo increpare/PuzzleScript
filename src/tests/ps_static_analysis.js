@@ -714,54 +714,7 @@ function ruleMayDestroyObject(psTagged, rule, objectName) {
 }
 
 function ruleMayChangeObjectCount(psTagged, rule, objectName) {
-    if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return false;
-
-    let guaranteedCreates = 0;
-    let guaranteedDestroys = 0;
-    const objectLayer = layerForObject(psTagged, objectName);
-    const rowCount = Math.max(rule.lhs.length, rule.rhs.length);
-    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-        const lhsRow = rule.lhs[rowIndex] || [];
-        const rhsRow = rule.rhs[rowIndex] || [];
-        const cellCount = maxCellsInRows(lhsRow, rhsRow);
-        for (let cellIndex = 0; cellIndex < cellCount; cellIndex++) {
-            const lhsCell = lhsRow[cellIndex] || [];
-            const rhsCell = rhsRow[cellIndex] || [];
-            const lhsPresent = presentObjectSet(lhsCell);
-            const lhsAbsent = absentObjectSet(lhsCell);
-            const rhsCellPresent = presentObjectSet(rhsCell);
-            const rhsAbsent = absentObjectSet(rhsCell);
-            const lhsHasObject = lhsPresent.has(objectName);
-            const rhsHasObject = rhsCellPresent.has(objectName);
-            const couldContainObject = cellCouldContainObjectBefore(psTagged, lhsPresent, lhsAbsent, objectName);
-
-            if (rhsCell.some(term => term.kind === 'random_object' && termObjects(term).includes(objectName))) {
-                return true;
-            }
-
-            if (rhsHasObject && !lhsHasObject) {
-                if (couldContainObject) return true;
-                guaranteedCreates++;
-            }
-            if (lhsHasObject && !rhsHasObject) {
-                guaranteedDestroys++;
-            }
-            if (!lhsHasObject && !rhsHasObject && rhsAbsent.has(objectName) && couldContainObject) {
-                return true;
-            }
-            if (!rhsHasObject && couldContainObject) {
-                const writesSameLayerObject = rhsCell.some(term =>
-                    (term.kind === 'present' || term.kind === 'random_object')
-                    && termObjects(term).some(termObject =>
-                        termObject !== objectName && layerForObject(psTagged, termObject) === objectLayer
-                    )
-                );
-                if (writesSameLayerObject) return true;
-            }
-        }
-    }
-
-    return guaranteedCreates !== guaranteedDestroys;
+    return ruleCountChangedObjects(psTagged, rule).has(objectName);
 }
 
 function incrementCount(map, objectName) {
@@ -784,11 +737,15 @@ function ruleCountChangedObjects(psTagged, rule) {
             const rhsCell = rhsRow[cellIndex] || [];
             const lhsPresent = presentObjectSet(lhsCell);
             const lhsAbsent = absentObjectSet(lhsCell);
-            const rhsCellPresent = presentObjectSet(rhsCell);
             const rhsAbsent = absentObjectSet(rhsCell);
+            const lhsRequiredPresent = requiredPresentObjectSet(lhsCell);
+            const rhsRequiredPresent = requiredPresentObjectSet(rhsCell);
+            const rhsInferredPresent = inferredRhsPropertyObjectSet(lhsCell, rhsCell);
             const possibleCellObjects = new Set();
             addValues(possibleCellObjects, lhsPresent);
-            addValues(possibleCellObjects, rhsCellPresent);
+            addValues(possibleCellObjects, lhsRequiredPresent);
+            addValues(possibleCellObjects, rhsRequiredPresent);
+            addValues(possibleCellObjects, rhsInferredPresent);
             addValues(possibleCellObjects, rhsAbsent);
 
             for (const term of rhsCell) {
@@ -800,27 +757,35 @@ function ruleCountChangedObjects(psTagged, rule) {
             }
 
             for (const objectName of possibleCellObjects) {
-                const lhsHasObject = lhsPresent.has(objectName);
-                const rhsHasObject = rhsCellPresent.has(objectName);
+                const lhsGuaranteesObject = lhsRequiredPresent.has(objectName);
+                const rhsInferredObject = rhsInferredPresent.has(objectName);
+                const rhsPreservesObject = !rhsAbsent.has(objectName)
+                    && (rhsRequiredPresent.has(objectName) || rhsInferredObject);
                 const couldContainObject = cellCouldContainObjectBefore(psTagged, lhsPresent, lhsAbsent, objectName);
 
-                if (rhsHasObject && !lhsHasObject) {
-                    if (couldContainObject) {
-                        changed.add(objectName);
-                    } else {
+                if (rhsPreservesObject) {
+                    if (!couldContainObject) {
                         incrementCount(guaranteedCreates, objectName);
+                    } else if (!lhsGuaranteesObject && !rhsInferredObject) {
+                        changed.add(objectName);
                     }
+                    continue;
                 }
-                if (lhsHasObject && !rhsHasObject) {
-                    incrementCount(guaranteedDestroys, objectName);
-                }
-                if (!lhsHasObject && !rhsHasObject && rhsAbsent.has(objectName) && couldContainObject) {
-                    changed.add(objectName);
-                }
-                if (!rhsHasObject && couldContainObject) {
+
+                if (couldContainObject) {
+                    if (lhsGuaranteesObject) {
+                        incrementCount(guaranteedDestroys, objectName);
+                    } else if (lhsPresent.has(objectName) || rhsAbsent.has(objectName)) {
+                        changed.add(objectName);
+                    }
+
                     const objectLayer = layerForObject(psTagged, objectName);
                     const writesSameLayerObject = rhsCell.some(term =>
                         (term.kind === 'present' || term.kind === 'random_object')
+                        && !(term.kind === 'present'
+                            && term.ref
+                            && term.ref.type === 'object_set'
+                            && termObjects(term).every(termObject => rhsInferredPresent.has(termObject)))
                         && termObjects(term).some(termObject =>
                             termObject !== objectName && layerForObject(psTagged, termObject) === objectLayer
                         )
