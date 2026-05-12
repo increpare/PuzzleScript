@@ -1778,7 +1778,11 @@ function factDerivers() {
 function deriveFacts(psTagged, familyFilter) {
     const derivers = factDerivers();
     if (familyFilter) {
-        return { [familyFilter]: derivers[familyFilter] ? derivers[familyFilter](psTagged) : [] };
+        const familyNames = Array.isArray(familyFilter) ? familyFilter : [familyFilter];
+        return Object.fromEntries(familyNames.map(family => [
+            family,
+            derivers[family] ? derivers[family](psTagged) : [],
+        ]));
     }
 
     return Object.fromEntries(Object.entries(derivers).map(([family, derive]) => [
