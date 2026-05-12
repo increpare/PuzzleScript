@@ -1,0 +1,53 @@
+title Static Analysis Object Tag Quantity Dynamic
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Alpha
+red
+
+========
+LEGEND
+========
+
+. = Background
+P = Player
+A = Alpha
+
+========
+SOUNDS
+========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Alpha
+
+=====
+RULES
+=====
+
+[ Player ] -> [ Player Alpha ]
+[ Alpha ] -> []
+
+=============
+WINCONDITIONS
+=============
+
+Some Player
+
+======
+LEVELS
+======
+
+P.

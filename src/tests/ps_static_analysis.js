@@ -727,9 +727,12 @@ function incrementCount(map, objectName) {
     map.set(objectName, (map.get(objectName) || 0) + 1);
 }
 
-function ruleCountChangedObjects(psTagged, rule) {
-    const changed = new Set();
-    if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return changed;
+function ruleCountEffectObjects(psTagged, rule) {
+    const effects = {
+        increases: new Set(),
+        decreases: new Set(),
+    };
+    if (!rule.tags.solver_state_active || !rule.tags.object_mutating) return effects;
 
     const guaranteedCreates = new Map();
     const guaranteedDestroys = new Map();
@@ -759,7 +762,7 @@ function ruleCountChangedObjects(psTagged, rule) {
                 addValues(possibleCellObjects, termObjects(term).flatMap(objectName =>
                     layerObjectsForObject(psTagged, objectName)
                 ));
-                if (term.kind === 'random_object') addValues(changed, termObjects(term));
+                if (term.kind === 'random_object') addValues(effects.increases, termObjects(term));
             }
 
             for (const objectName of possibleCellObjects) {
@@ -773,7 +776,7 @@ function ruleCountChangedObjects(psTagged, rule) {
                     if (!couldContainObject) {
                         incrementCount(guaranteedCreates, objectName);
                     } else if (!lhsGuaranteesObject && !rhsInferredObject) {
-                        changed.add(objectName);
+                        effects.increases.add(objectName);
                     }
                     continue;
                 }
@@ -782,7 +785,7 @@ function ruleCountChangedObjects(psTagged, rule) {
                     if (lhsGuaranteesObject) {
                         incrementCount(guaranteedDestroys, objectName);
                     } else if (lhsPresent.has(objectName) || rhsAbsent.has(objectName)) {
-                        changed.add(objectName);
+                        effects.decreases.add(objectName);
                     }
 
                     const objectLayer = layerForObject(psTagged, objectName);
@@ -796,7 +799,7 @@ function ruleCountChangedObjects(psTagged, rule) {
                             termObject !== objectName && layerForObject(psTagged, termObject) === objectLayer
                         )
                     );
-                    if (writesSameLayerObject) changed.add(objectName);
+                    if (writesSameLayerObject) effects.decreases.add(objectName);
                 }
             }
         }
@@ -805,11 +808,19 @@ function ruleCountChangedObjects(psTagged, rule) {
     const guaranteedObjects = new Set(guaranteedCreates.keys());
     addValues(guaranteedObjects, guaranteedDestroys.keys());
     for (const objectName of guaranteedObjects) {
-        if ((guaranteedCreates.get(objectName) || 0) !== (guaranteedDestroys.get(objectName) || 0)) {
-            changed.add(objectName);
-        }
+        const createCount = guaranteedCreates.get(objectName) || 0;
+        const destroyCount = guaranteedDestroys.get(objectName) || 0;
+        if (createCount > destroyCount) effects.increases.add(objectName);
+        if (destroyCount > createCount) effects.decreases.add(objectName);
     }
 
+    return effects;
+}
+
+function ruleCountChangedObjects(psTagged, rule) {
+    const effects = ruleCountEffectObjects(psTagged, rule);
+    const changed = new Set(effects.increases);
+    addValues(changed, effects.decreases);
     return changed;
 }
 
@@ -864,6 +875,8 @@ function buildCountLayerRuleIndex(psTagged, activeRules) {
     const movementRulesByObject = new Map();
     const layerCreateOverwritersByObject = new Map();
     const countChangersByObject = new Map();
+    const countIncreasersByObject = new Map();
+    const countDecreasersByObject = new Map();
 
     for (const rule of activeRules) {
         const writes = ruleFlowWrites(psTagged, rule);
@@ -889,9 +902,14 @@ function buildCountLayerRuleIndex(psTagged, activeRules) {
             }
         }
 
-        for (const objectName of ruleCountChangedObjects(psTagged, rule)) {
+        const countEffects = ruleCountEffectObjects(psTagged, rule);
+        const countChangedObjects = new Set(countEffects.increases);
+        addValues(countChangedObjects, countEffects.decreases);
+        for (const objectName of countChangedObjects) {
             addRuleForObject(countChangersByObject, objectName, rule);
         }
+        for (const objectName of countEffects.increases) addRuleForObject(countIncreasersByObject, objectName, rule);
+        for (const objectName of countEffects.decreases) addRuleForObject(countDecreasersByObject, objectName, rule);
 
         const movementObjects = new Set();
         for (const term of rule.summary.lhs_terms.concat(rule.summary.rhs_terms)) {
@@ -907,6 +925,8 @@ function buildCountLayerRuleIndex(psTagged, activeRules) {
         movementRulesByObject,
         layerCreateOverwritersByObject,
         countChangersByObject,
+        countIncreasersByObject,
+        countDecreasersByObject,
     };
 }
 
@@ -918,6 +938,8 @@ function deriveCountLayerInvariantFacts(psTagged) {
     for (const object of psTagged.objects) {
         const writers = rulesForObject(ruleIndex.writersByObject, object.name);
         const countChangers = rulesForObject(ruleIndex.countChangersByObject, object.name);
+        const countIncreasers = rulesForObject(ruleIndex.countIncreasersByObject, object.name);
+        const countDecreasers = rulesForObject(ruleIndex.countDecreasersByObject, object.name);
         const creators = rulesForObject(ruleIndex.creatorsByObject, object.name);
         const destroyers = rulesForObject(ruleIndex.destroyersByObject, object.name);
         const movementRules = rulesForObject(ruleIndex.movementRulesByObject, object.name);
@@ -928,7 +950,10 @@ function deriveCountLayerInvariantFacts(psTagged) {
         if (movementRules.length > 0 || playerObjects.has(object.name)) staticBlockers.push('object_may_receive_movement');
         object.tags.may_be_created = creators.length > 0;
         object.tags.may_be_destroyed = destroyers.length > 0;
-        object.tags.count_invariant = countChangers.length === 0;
+        object.tags.quantity = {
+            never_increases: countIncreasers.length === 0,
+            never_decreases: countDecreasers.length === 0,
+        };
         object.tags.static = staticBlockers.length === 0;
         results.push(fact('count_layer_invariants', `object_${object.name}_count_preserved`, countChangers.length === 0 ? 'proved' : 'rejected', {
             subjects: { objects: [object.name] },

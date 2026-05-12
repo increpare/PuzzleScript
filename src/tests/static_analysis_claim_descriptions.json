@@ -76,10 +76,16 @@
                 "specification": "An object is temporary when it is absent from initial levels and win conditions, every instance is created by solver-active rules, every creator is followed by an unconditional late cleanup clear, and no creator or clearer is rigid or has again taint."
               },
               {
-                "name": "count_invariant",
+                "name": "quantity_never_increases",
                 "type": "boolean",
-                "description": "No solver-active rule changes the total board count of this object.",
-                "specification": "An object has count_invariant when no solver-active, object-mutating rule may change the total count of that object across all board cells. Relocation is count-neutral; unbalanced creation, destruction, random writes, uncertain same-layer overwrite, and uncertain explicit erasure are not."
+                "description": "No solver-active rule increases the total board count of this object.",
+                "specification": "An object has quantity_never_increases when no solver-active, object-mutating rule may increase the total count of that object across all board cells. Relocation is count-neutral; unbalanced creation, random writes, and uncertain same-layer creation reject this claim."
+              },
+              {
+                "name": "quantity_never_decreases",
+                "type": "boolean",
+                "description": "No solver-active rule decreases the total board count of this object.",
+                "specification": "An object has quantity_never_decreases when no solver-active, object-mutating rule may decrease the total count of that object across all board cells. Relocation is count-neutral; unbalanced destruction, explicit erasure, and uncertain same-layer overwrite reject this claim."
               }
             ]
           }

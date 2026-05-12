@@ -167,6 +167,12 @@ function deriveObjectTagValue(report, object, tagName) {
     if (tagName === 'destroyed_by_rules') {
         return !!((object.tags || {}).may_be_destroyed);
     }
+    if (tagName === 'quantity_never_increases') {
+        return !!(object.tags && object.tags.quantity && object.tags.quantity.never_increases);
+    }
+    if (tagName === 'quantity_never_decreases') {
+        return !!(object.tags && object.tags.quantity && object.tags.quantity.never_decreases);
+    }
     return !!((object.tags || {})[tagName]);
 }
 

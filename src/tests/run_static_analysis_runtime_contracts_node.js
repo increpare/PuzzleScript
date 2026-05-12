@@ -106,18 +106,28 @@ function staticContractForSource(source, testName) {
         }
         return {
             objectNames: [],
-            countInvariantObjectNames: [],
+            constantQuantityObjectNames: [],
+            quantityContracts: [],
             unavailableReason: `${report.status}: ${expected.diagnostic}`,
         };
     }
     const objects = ((report.ps_tagged && report.ps_tagged.objects) || []);
+    const quantityContracts = objects
+        .filter(object => object.tags && object.tags.quantity)
+        .map(object => ({
+            objectName: object.name,
+            neverIncreases: object.tags.quantity.never_increases === true,
+            neverDecreases: object.tags.quantity.never_decreases === true,
+        }))
+        .filter(contract => contract.neverIncreases || contract.neverDecreases);
     return {
         objectNames: objects
             .filter(object => object.tags && object.tags.static === true)
             .map(object => object.name),
-        countInvariantObjectNames: objects
-            .filter(object => object.tags && object.tags.count_invariant === true)
-            .map(object => object.name),
+        constantQuantityObjectNames: quantityContracts
+            .filter(contract => contract.neverIncreases && contract.neverDecreases)
+            .map(contract => contract.objectName),
+        quantityContracts,
         unavailableReason: null,
     };
 }
@@ -219,19 +229,41 @@ function firstSnapshotDifference(beforeSnapshots, objectNames) {
     return null;
 }
 
-function firstCountDifference(beforeCounts, objectNames) {
-    for (const objectName of objectNames) {
-        const before = beforeCounts.get(objectName) || 0;
-        const after = objectCountSnapshot(objectName);
-        if (before !== after) {
+function firstQuantityDifference(beforeCounts, quantityContracts) {
+    for (const contract of quantityContracts) {
+        const before = beforeCounts.get(contract.objectName) || 0;
+        const after = objectCountSnapshot(contract.objectName);
+        if (contract.neverIncreases && after > before) {
             return {
-                objectName,
+                objectName: contract.objectName,
                 before,
                 after,
+                claim: 'quantity.never_increases',
+            };
+        }
+        if (contract.neverDecreases && after < before) {
+            return {
+                objectName: contract.objectName,
+                before,
+                after,
+                claim: 'quantity.never_decreases',
             };
         }
     }
     return null;
+}
+
+function quantityClaimCount(quantityContracts) {
+    let count = 0;
+    for (const contract of quantityContracts) {
+        if (contract.neverIncreases) count++;
+        if (contract.neverDecreases) count++;
+    }
+    return count;
+}
+
+function quantityObjectNames(quantityContracts) {
+    return quantityContracts.map(contract => contract.objectName);
 }
 
 function executeInputToken(inputToken) {
@@ -286,7 +318,9 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     const expectedSounds = dataarray[5] === undefined ? null : dataarray[5];
     const staticContract = staticContractForSource(source, testName);
     const staticObjects = staticContract.objectNames;
-    const countInvariantObjects = staticContract.countInvariantObjectNames;
+    const constantQuantityObjects = staticContract.constantQuantityObjectNames;
+    const quantityContracts = staticContract.quantityContracts;
+    const countedObjects = quantityObjectNames(quantityContracts);
 
     const previousUnitTesting = unitTesting;
     const previousLazyFunctionGeneration = lazyFunctionGeneration;
@@ -294,29 +328,39 @@ function runSimulationWithStaticChecks(testName, dataarray) {
     lazyFunctionGeneration = false;
 
     let objectBoundaryChecks = 0;
-    let countBoundaryChecks = 0;
+    let quantityBoundaryChecks = 0;
+    let restartBoundaryTriggered = false;
+    const previousDoRestart = global.DoRestart;
+    if (typeof previousDoRestart === 'function') {
+        global.DoRestart = function (...args) {
+            restartBoundaryTriggered = true;
+            return previousDoRestart.apply(this, args);
+        };
+    }
     try {
         compileSimulationSource(testName, source, targetLevel, randomSeed);
 
         let currentIdentity = boardIdentity();
         let snapshots = snapshotStaticObjects(staticObjects);
-        let countSnapshots = snapshotObjectCounts(countInvariantObjects);
+        let countSnapshots = snapshotObjectCounts(countedObjects);
 
         for (let inputIndex = 0; inputIndex < inputs.length; inputIndex++) {
             const inputToken = inputs[inputIndex];
+            restartBoundaryTriggered = false;
             const result = executeInputToken(inputToken);
             drainAgain(`${testName}: input ${inputIndex} ${tokenLabel(inputToken)}`);
 
             const nextIdentity = boardIdentity();
             const resetBoundary =
                 result.resetsSnapshot
+                || restartBoundaryTriggered
                 || !sameBoardIdentity(currentIdentity, nextIdentity)
                 || !canSnapshotBoard();
 
             if (resetBoundary) {
                 currentIdentity = nextIdentity;
                 snapshots = snapshotStaticObjects(staticObjects);
-                countSnapshots = snapshotObjectCounts(countInvariantObjects);
+                countSnapshots = snapshotObjectCounts(countedObjects);
                 continue;
             }
 
@@ -332,11 +376,12 @@ function runSimulationWithStaticChecks(testName, dataarray) {
                 ].join('\n'));
             }
 
-            const countDiff = firstCountDifference(countSnapshots, countInvariantObjects);
+            const countDiff = firstQuantityDifference(countSnapshots, quantityContracts);
             if (countDiff) {
                 throw new Error([
-                    `${testName}: count-invariant object count changed`,
+                    `${testName}: quantity monotonicity claim violated`,
                     `  input ${inputIndex}: ${tokenLabel(inputToken)}`,
+                    `  claim: ${countDiff.claim}`,
                     `  object: ${countDiff.objectName}`,
                     `  before: ${countDiff.before}`,
                     `  after: ${countDiff.after}`,
@@ -344,7 +389,8 @@ function runSimulationWithStaticChecks(testName, dataarray) {
             }
 
             objectBoundaryChecks += staticObjects.length;
-            countBoundaryChecks += countInvariantObjects.length;
+            quantityBoundaryChecks += quantityClaimCount(quantityContracts);
+            countSnapshots = snapshotObjectCounts(countedObjects);
             currentIdentity = nextIdentity;
         }
 
@@ -352,12 +398,15 @@ function runSimulationWithStaticChecks(testName, dataarray) {
 
         return {
             staticObjectCount: staticObjects.length,
-            countInvariantObjectCount: countInvariantObjects.length,
+            constantQuantityObjectCount: constantQuantityObjects.length,
             objectBoundaryChecks,
-            countBoundaryChecks,
+            quantityBoundaryChecks,
             analysisUnavailableReason: staticContract.unavailableReason,
         };
     } finally {
+        if (typeof previousDoRestart === 'function') {
+            global.DoRestart = previousDoRestart;
+        }
         unitTesting = previousUnitTesting;
         lazyFunctionGeneration = previousLazyFunctionGeneration;
     }
@@ -380,9 +429,9 @@ function runAll(options = {}) {
     const failures = [];
     let caseCount = 0;
     let casesWithStaticObjects = 0;
-    let casesWithCountInvariantObjects = 0;
+    let casesWithConstantQuantityObjects = 0;
     let objectBoundaryChecks = 0;
-    let countBoundaryChecks = 0;
+    let quantityBoundaryChecks = 0;
     let analysisUnavailableCount = 0;
     const entries = global.testdata.filter(entry => testMatchesFilter(entry[0], options.filter || null));
 
@@ -405,11 +454,11 @@ function runAll(options = {}) {
             if (result.staticObjectCount > 0) {
                 casesWithStaticObjects++;
             }
-            if (result.countInvariantObjectCount > 0) {
-                casesWithCountInvariantObjects++;
+            if (result.constantQuantityObjectCount > 0) {
+                casesWithConstantQuantityObjects++;
             }
             objectBoundaryChecks += result.objectBoundaryChecks;
-            countBoundaryChecks += result.countBoundaryChecks;
+            quantityBoundaryChecks += result.quantityBoundaryChecks;
             if (result.analysisUnavailableReason) {
                 analysisUnavailableCount++;
                 progressLog(options, `static_analysis_runtime_contracts:   static analysis unavailable: ${result.analysisUnavailableReason}`);
@@ -423,9 +472,9 @@ function runAll(options = {}) {
         ok: failures.length === 0,
         caseCount,
         casesWithStaticObjects,
-        casesWithCountInvariantObjects,
+        casesWithConstantQuantityObjects,
         objectBoundaryChecks,
-        countBoundaryChecks,
+        quantityBoundaryChecks,
         analysisUnavailableCount,
         failures,
     };
@@ -448,7 +497,7 @@ function main() {
     }
 
     console.log(
-        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithCountInvariantObjects} with count-invariant objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.countBoundaryChecks} count-boundary checks)`
+        `static_analysis_runtime_contracts: ok (${result.caseCount} cases, ${result.analysisUnavailableCount} analysis-unavailable, ${result.casesWithStaticObjects} with static objects, ${result.casesWithConstantQuantityObjects} with constant-quantity objects, ${result.objectBoundaryChecks} object-boundary checks, ${result.quantityBoundaryChecks} quantity-boundary checks)`
     );
     return 0;
 }
@@ -467,7 +516,7 @@ module.exports = {
     MAX_AGAIN_DRAIN_STEPS,
     boardIdentity,
     engineObjectName,
-    firstCountDifference,
+    firstQuantityDifference,
     firstSnapshotDifference,
     objectCountSnapshot,
     parseArgs,

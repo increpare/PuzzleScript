@@ -16,10 +16,71 @@ assert.ok(sokoban, 'sokoban fixture should be available');
 const result = runSimulationWithStaticChecks(sokoban[0], sokoban[1]);
 
 assert.strictEqual(result.staticObjectCount, 3, 'sokoban should have three static objects');
-assert.strictEqual(result.countInvariantObjectCount, 5, 'sokoban should have five count-invariant objects');
+assert.strictEqual(result.constantQuantityObjectCount, 5, 'sokoban should have five constant-quantity objects');
 assert.ok(
-    result.countBoundaryChecks > result.objectBoundaryChecks,
-    'count-invariant checks should include movable count-preserved objects'
+    result.quantityBoundaryChecks > result.objectBoundaryChecks,
+    'quantity checks should include movable constant-quantity objects'
+);
+
+const restartBoundarySource = [
+    '========',
+    'OBJECTS',
+    '========',
+    '',
+    'Background',
+    'Black',
+    '',
+    'Player',
+    'Pink',
+    '',
+    'Marker',
+    'Yellow',
+    '',
+    '=======',
+    'LEGEND',
+    '=======',
+    '',
+    'X = Player and Marker',
+    '',
+    '======',
+    'SOUNDS',
+    '======',
+    '',
+    '================',
+    'COLLISIONLAYERS',
+    '================',
+    '',
+    'Background',
+    'Player',
+    'Marker',
+    '',
+    '======',
+    'RULES',
+    '======',
+    '',
+    '[ action Player Marker ] -> [ Player ]',
+    '[ action Player no Marker ] -> restart',
+    '',
+    '==============',
+    'WINCONDITIONS',
+    '==============',
+    '',
+    '=======',
+    'LEVELS',
+    '=======',
+    '',
+    'X',
+].join('\n');
+
+const restartBoundary = runSimulationWithStaticChecks('quantity semantic restart boundary', [
+    restartBoundarySource,
+    [4, 4],
+    'background marker player:0,\n',
+]);
+
+assert.ok(
+    restartBoundary.quantityBoundaryChecks > 0,
+    'semantic restart regression should exercise quantity contract checks before restart'
 );
 
 console.log('run_static_analysis_runtime_contracts_node_test: ok');

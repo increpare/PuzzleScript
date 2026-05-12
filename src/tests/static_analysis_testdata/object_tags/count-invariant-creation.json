@@ -3,11 +3,13 @@
   "objectTag": [
     {
       "object": "Crate",
-      "count_invariant": false
+      "quantity_never_increases": true,
+      "quantity_never_decreases": false
     },
     {
       "object": "Alpha",
-      "count_invariant": false
+      "quantity_never_increases": false,
+      "quantity_never_decreases": true
     }
   ]
 }

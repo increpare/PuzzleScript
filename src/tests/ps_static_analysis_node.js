@@ -861,6 +861,104 @@ const countFacts = report.facts.count_layer_invariants;
 assert.ok(countFacts.some(item => item.id === 'object_Hero_count_preserved'), 'Hero count fact should exist');
 assert.ok(countFacts.some(item => item.id === 'layer_0_static'), 'Background layer static fact should exist');
 
+function assertQuantity(tags, expected, message) {
+    assert.deepStrictEqual(tags.quantity, expected, message);
+}
+
+function objectTags(report, objectName) {
+    const object = report.ps_tagged.objects.find(item => item.name === objectName);
+    assert.ok(object, `${objectName} should exist in ps_tagged objects`);
+    return object.tags;
+}
+
+function assertObjectQuantity(report, objectName, expected, message) {
+    assertQuantity(objectTags(report, objectName), expected, message);
+}
+
+const QUANTITY_MATRIX_GAME = `
+title Quantity Matrix
+========
+OBJECTS
+========
+Background
+black
+Player
+white
+Alpha
+red
+Beta
+blue
+${'========'}
+LEGEND
+${'========'}
+. = Background
+P = Player
+A = Alpha
+B = Beta
+${'========'}
+SOUNDS
+${'========'}
+================
+COLLISIONLAYERS
+================
+Background
+Player
+Alpha, Beta
+=====
+RULES
+=====
+__RULES__
+=============
+WINCONDITIONS
+=============
+Some Player
+======
+LEVELS
+======
+PA.
+`;
+
+function analyzeQuantityRules(ruleSource, sourcePath) {
+    return analyzeSource(QUANTITY_MATRIX_GAME.replace('__RULES__', ruleSource), { sourcePath });
+}
+
+const quantityCreation = analyzeQuantityRules('[ Player ] -> [ Player Alpha ]', 'quantity_creation.txt');
+assertObjectQuantity(quantityCreation, 'Alpha', {
+    never_increases: false,
+    never_decreases: true,
+}, 'creating Alpha should only reject never_increases');
+
+const quantityDestruction = analyzeQuantityRules('[ Alpha ] -> []', 'quantity_destruction.txt');
+assertObjectQuantity(quantityDestruction, 'Alpha', {
+    never_increases: true,
+    never_decreases: false,
+}, 'destroying Alpha should only reject never_decreases');
+
+const quantityDynamic = analyzeQuantityRules([
+    '[ Player ] -> [ Player Alpha ]',
+    '[ Alpha ] -> []',
+].join('\n'), 'quantity_dynamic.txt');
+assertObjectQuantity(quantityDynamic, 'Alpha', {
+    never_increases: false,
+    never_decreases: false,
+}, 'independent creation and destruction should reject both quantity monotonicity claims');
+
+const quantityBalancedRelocation = analyzeQuantityRules('[ Alpha | no Alpha ] -> [ | Alpha ]', 'quantity_balanced_relocation.txt');
+assertObjectQuantity(quantityBalancedRelocation, 'Alpha', {
+    never_increases: true,
+    never_decreases: true,
+}, 'balanced remove-and-add relocation should preserve Alpha quantity');
+
+const quantitySameLayerOverwrite = analyzeQuantityRules('[ Player ] -> [ Player Beta ]', 'quantity_same_layer_overwrite.txt');
+assertObjectQuantity(quantitySameLayerOverwrite, 'Alpha', {
+    never_increases: true,
+    never_decreases: false,
+}, 'writing Beta on the same collision layer can decrease Alpha');
+assertObjectQuantity(quantitySameLayerOverwrite, 'Beta', {
+    never_increases: false,
+    never_decreases: true,
+}, 'writing Beta on the same collision layer can increase Beta');
+
 const randomGoalCount = randomObject.facts.count_layer_invariants.find(item => item.id === 'object_Goal_count_preserved');
 const randomHeroCount = randomObject.facts.count_layer_invariants.find(item => item.id === 'object_Hero_count_preserved');
 const randomHeroLayer = randomObject.facts.count_layer_invariants.find(item => item.id === 'layer_1_static');
@@ -868,7 +966,7 @@ const randomGoalTags = randomObject.ps_tagged.objects.find(object => object.name
 assert.strictEqual(randomGoalCount.status, 'rejected', 'random RHS object writes should reject target count preservation');
 assert.strictEqual(randomHeroCount.status, 'rejected', 'random same-layer writes should reject sibling count preservation');
 assert.ok(randomGoalCount.blockers.includes('object_written_by_solver_active_rule'));
-assert.strictEqual(randomGoalTags.count_invariant, false);
+assertQuantity(randomGoalTags, { never_increases: false, never_decreases: true });
 assert.strictEqual(randomHeroLayer.status, 'candidate', 'random same-layer writes should not prove layer static');
 assert.ok(randomHeroLayer.blockers.includes('layer_objects_may_change'));
 
@@ -880,7 +978,7 @@ assert.strictEqual(goalCount.status, 'rejected');
 assert.ok(goalCount.blockers.includes('object_written_by_solver_active_rule'));
 assert.strictEqual(spawnedGoalTags.may_be_created, true);
 assert.strictEqual(spawnedGoalTags.may_be_destroyed, false, 'spawning an object should not also mark it destroyed');
-assert.strictEqual(spawnedGoalTags.count_invariant, false);
+assertQuantity(spawnedGoalTags, { never_increases: false, never_decreases: true });
 
 const DESTROY_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ Hero ] -> []');
 const destroyReport = analyzeSource(DESTROY_GAME, { sourcePath: 'destroy.txt' });
@@ -889,7 +987,7 @@ const destroyedHeroTags = destroyReport.ps_tagged.objects.find(object => object.
 assert.strictEqual(heroDestroyCount.status, 'rejected', 'deleting an object to an empty RHS should reject count preservation');
 assert.strictEqual(destroyedHeroTags.may_be_created, false, 'deleting an object should not also mark it created');
 assert.strictEqual(destroyedHeroTags.may_be_destroyed, true);
-assert.strictEqual(destroyedHeroTags.count_invariant, false);
+assertQuantity(destroyedHeroTags, { never_increases: true, never_decreases: false });
 
 const LAYER_OVERWRITE_GAME = SIMPLE_GAME.replace('[ > Hero ] -> [ > Hero ]', '[ no Goal ] -> [ Goal ]');
 const layerOverwriteReport = analyzeSource(LAYER_OVERWRITE_GAME, { sourcePath: 'layer_overwrite.txt' });
@@ -954,7 +1052,10 @@ const staticWallFact = staticObject.facts.count_layer_invariants.find(item => it
 const staticPlayerLayerFact = staticObject.facts.count_layer_invariants.find(item => item.id === 'layer_1_static');
 assert.strictEqual(staticWall.tags.static, true, 'unwritten, unmoved wall should be tagged static');
 assert.strictEqual(staticWallFact.status, 'proved', 'unwritten, unmoved wall should have a proved static fact');
-assert.strictEqual(staticPlayer.tags.count_invariant, true, 'player object count can be invariant');
+assertQuantity(staticPlayer.tags, {
+    never_increases: true,
+    never_decreases: true,
+}, 'player object quantity should expose direct monotonicity claims');
 assert.strictEqual(staticPlayer.tags.static, false, 'player object is not static because input applies movement');
 assert.strictEqual(staticPlayerLayerFact.status, 'candidate', 'a layer containing a moving player is not proved static');
 assert.ok(staticPlayerLayerFact.blockers.includes('layer_contains_nonstatic_object'));
@@ -992,7 +1093,7 @@ const aggregateWriteWall = staticAggregateWrite.ps_tagged.objects.find(object =>
 const aggregateWriteWallFact = staticAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
 const aggregateWriteWallCount = staticAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_count_preserved');
 assert.strictEqual(aggregateWriteWall.tags.static, false, 'aggregate deletion mentioning wall should reject wall static');
-assert.strictEqual(aggregateWriteWall.tags.count_invariant, false, 'aggregate deletion mentioning wall should reject wall count preservation');
+assertQuantity(aggregateWriteWall.tags, { never_increases: true, never_decreases: false }, 'aggregate deletion mentioning wall should reject wall count preservation');
 assert.ok(aggregateWriteWallFact.blockers.includes('object_written_by_solver_active_rule'));
 assert.ok(aggregateWriteWallCount.blockers.includes('object_written_by_solver_active_rule'));
 
@@ -1004,7 +1105,7 @@ const andAggregateWriteWall = staticAndAggregateWrite.ps_tagged.objects.find(obj
 const andAggregateWriteWallFact = staticAndAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
 const andAggregateWriteWallCount = staticAndAggregateWrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_count_preserved');
 assert.strictEqual(andAggregateWriteWall.tags.static, false, 'and-aggregate deletion mentioning wall should reject wall static');
-assert.strictEqual(andAggregateWriteWall.tags.count_invariant, false, 'and-aggregate deletion mentioning wall should reject wall count preservation');
+assertQuantity(andAggregateWriteWall.tags, { never_increases: true, never_decreases: false }, 'and-aggregate deletion mentioning wall should reject wall count preservation');
 assert.ok(andAggregateWriteWallFact.blockers.includes('object_written_by_solver_active_rule'));
 assert.ok(andAggregateWriteWallCount.blockers.includes('object_written_by_solver_active_rule'));
 
@@ -1015,7 +1116,7 @@ const STATIC_AGGREGATE_MOVEMENT_GAME = STATIC_OBJECT_GAME.replace(
 const staticAggregateMovement = analyzeSource(STATIC_AGGREGATE_MOVEMENT_GAME, { sourcePath: 'static_aggregate_movement.txt' });
 const aggregateMovementWall = staticAggregateMovement.ps_tagged.objects.find(object => object.name === 'Wall');
 const aggregateMovementWallFact = staticAggregateMovement.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
-assert.strictEqual(aggregateMovementWall.tags.count_invariant, true, 'aggregate movement preserves wall count');
+assertQuantity(aggregateMovementWall.tags, { never_increases: true, never_decreases: true }, 'aggregate movement preserves wall count');
 assert.strictEqual(aggregateMovementWall.tags.static, false, 'aggregate movement mentioning wall should reject wall static');
 assert.ok(aggregateMovementWallFact.blockers.includes('object_may_receive_movement'));
 
@@ -1025,7 +1126,7 @@ const STATIC_AND_AGGREGATE_MOVEMENT_GAME = STATIC_OBJECT_GAME
 const staticAndAggregateMovement = analyzeSource(STATIC_AND_AGGREGATE_MOVEMENT_GAME, { sourcePath: 'static_and_aggregate_movement.txt' });
 const andAggregateMovementWall = staticAndAggregateMovement.ps_tagged.objects.find(object => object.name === 'Wall');
 const andAggregateMovementWallFact = staticAndAggregateMovement.facts.count_layer_invariants.find(item => item.id === 'object_Wall_static');
-assert.strictEqual(andAggregateMovementWall.tags.count_invariant, true, 'and-aggregate movement preserves wall count');
+assertQuantity(andAggregateMovementWall.tags, { never_increases: true, never_decreases: true }, 'and-aggregate movement preserves wall count');
 assert.strictEqual(andAggregateMovementWall.tags.static, false, 'and-aggregate movement mentioning wall should reject wall static');
 assert.ok(andAggregateMovementWallFact.blockers.includes('object_may_receive_movement'));
 
@@ -1036,7 +1137,7 @@ const STATIC_PROPERTY_ABSENT_OVERWRITE_GAME = STATIC_OBJECT_GAME.replace(
 const staticPropertyAbsentOverwrite = analyzeSource(STATIC_PROPERTY_ABSENT_OVERWRITE_GAME, { sourcePath: 'static_property_absent_overwrite.txt' });
 const propertyAbsentOverwriteWall = staticPropertyAbsentOverwrite.ps_tagged.objects.find(object => object.name === 'Wall');
 const propertyAbsentOverwriteWallCount = staticPropertyAbsentOverwrite.facts.count_layer_invariants.find(item => item.id === 'object_Wall_count_preserved');
-assert.strictEqual(propertyAbsentOverwriteWall.tags.count_invariant, false, 'explicit RHS absence should reject count preservation even when a property is also present');
+assertQuantity(propertyAbsentOverwriteWall.tags, { never_increases: true, never_decreases: false }, 'explicit RHS absence should reject count preservation even when a property is also present');
 assert.ok(propertyAbsentOverwriteWallCount.blockers.includes('object_written_by_solver_active_rule'));
 
 const STATIC_PROPERTY_TO_OBJECT_GAME = STATIC_OBJECT_GAME.replace(
@@ -1046,8 +1147,8 @@ const STATIC_PROPERTY_TO_OBJECT_GAME = STATIC_OBJECT_GAME.replace(
 const staticPropertyToObject = analyzeSource(STATIC_PROPERTY_TO_OBJECT_GAME, { sourcePath: 'static_property_to_object.txt' });
 const propertyToObjectWall = staticPropertyToObject.ps_tagged.objects.find(object => object.name === 'Wall');
 const propertyToObjectCrate = staticPropertyToObject.ps_tagged.objects.find(object => object.name === 'Crate');
-assert.strictEqual(propertyToObjectWall.tags.count_invariant, false, 'property-to-object rewrite can destroy individual property members');
-assert.strictEqual(propertyToObjectCrate.tags.count_invariant, false, 'property-to-object rewrite can create the selected concrete object');
+assertQuantity(propertyToObjectWall.tags, { never_increases: true, never_decreases: false }, 'property-to-object rewrite can destroy individual property members');
+assertQuantity(propertyToObjectCrate.tags, { never_increases: false, never_decreases: true }, 'property-to-object rewrite can create the selected concrete object');
 
 const ABSENT_GUARD_ADJACENT_MOVE_GAME = STATIC_OBJECT_GAME
     .replace('Solid = Wall or Crate', 'Solid = Wall or Crate\nObstacle = PlayerObject or Wall or Crate')
@@ -1386,29 +1487,34 @@ function layerOccupancySnapshot(layerId) {
     return snapshots;
 }
 
-function assertCountInvariantsPreservedAfterReplay(source, inputs, options = {}) {
-    const analysis = analyzeSource(source, { sourcePath: options.sourcePath || 'count_runtime.txt' });
+function assertConstantQuantityPreservedAfterReplay(source, inputs, options = {}) {
+    const analysis = analyzeSource(source, { sourcePath: options.sourcePath || 'quantity_runtime.txt' });
     const transientObjects = new Set(analysis.facts.transient_boundary
         .filter(item => item.status === 'proved')
         .map(item => item.subjects.objects[0]));
-    const countInvariantObjects = analysis.ps_tagged.objects
-        .filter(object => object.tags.count_invariant && !transientObjects.has(object.name))
+    const constantQuantityObjects = analysis.ps_tagged.objects
+        .filter(object =>
+            object.tags.quantity
+            && object.tags.quantity.never_increases
+            && object.tags.quantity.never_decreases
+            && !transientObjects.has(object.name)
+        )
         .map(object => object.name);
-    assert.ok(countInvariantObjects.length > 0, 'runtime fixture should prove count-invariant objects');
+    assert.ok(constantQuantityObjects.length > 0, 'runtime fixture should prove constant-quantity objects');
     for (const objectName of options.expectedObjects || []) {
         assert.ok(
-            countInvariantObjects.includes(objectName),
-            `${objectName} should be included in the count-invariant replay set`
+            constantQuantityObjects.includes(objectName),
+            `${objectName} should be included in the constant-quantity replay set`
         );
     }
 
     withRuntimeSource(source, () => {
-        const before = new Map(countInvariantObjects.map(objectName => [
+        const before = new Map(constantQuantityObjects.map(objectName => [
             objectName,
             runtimeObjectCount(objectName),
         ]));
         const assertCountsUnchanged = label => {
-            for (const objectName of countInvariantObjects) {
+            for (const objectName of constantQuantityObjects) {
                 assert.strictEqual(
                     runtimeObjectCount(objectName),
                     before.get(objectName),
@@ -1421,7 +1527,7 @@ function assertCountInvariantsPreservedAfterReplay(source, inputs, options = {})
             assertCountsUnchanged(`turn ${turnIndex} ${boundary}`);
         });
         if (options.expectWinning) {
-            assert.strictEqual(winning, true, 'known replay should solve while count invariants hold');
+            assert.strictEqual(winning, true, 'known replay should solve while constant quantities hold');
         }
     }, { levelIndex: options.levelIndex || 0 });
 }
@@ -1744,8 +1850,8 @@ function assertOneMoveStaticReplay() {
     });
 }
 
-function assertOneMoveCountInvariantReplay() {
-    assertCountInvariantsPreservedAfterReplay(
+function assertOneMoveConstantQuantityReplay() {
+    assertConstantQuantityPreservedAfterReplay(
         solverTestSource('one_move.txt'),
         inputsForTokens(['right']),
         {
@@ -1756,8 +1862,8 @@ function assertOneMoveCountInvariantReplay() {
     );
 }
 
-function assertCratesMoveCountInvariantReplay() {
-    assertCountInvariantsPreservedAfterReplay(
+function assertCratesMoveConstantQuantityReplay() {
+    assertConstantQuantityPreservedAfterReplay(
         solverTestSource('Crates move when you move.txt'),
         inputsForTokens(['up', 'up', 'up', 'left', 'down', 'right', 'right', 'down', 'down']),
         {
@@ -1880,8 +1986,8 @@ assertStaticLayersUnchangedAfterReplay(STATIC_OBJECT_GAME.replace('Some Player',
 assertLimerickMergeabilityReplay();
 assertAtlasTransientReplay();
 assertOneMoveStaticReplay();
-assertOneMoveCountInvariantReplay();
-assertCratesMoveCountInvariantReplay();
+assertOneMoveConstantQuantityReplay();
+assertCratesMoveConstantQuantityReplay();
 assertOneMoveActionNoopReplay();
 assertCastleClosetActionNoopRejected();
 assertPushRulegroupFlowReplay();
