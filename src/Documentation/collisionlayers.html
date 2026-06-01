@@ -84,11 +84,24 @@ A puzzlescript file is divided into 8 sections:
     <p>
     Objects can be placed on different layers:
     <p>
-    <pre><code>Background
+    <pre><code>================
+COLLISIONLAYERS
+================
+Background
 Target
 Player, Wall, Crate</code></pre>
     <p>
-The main purpose of layers is in resolving movements: two objects on the same layer cannot coexist in a single cell.  The order of layers also determines in what order things are drawn.
+The collision layers are defined from back to front, each new line is a separate collision layer.
+The main purpose of layers is in resolving movements: 
+Objects placed in the same collisionlayer can interact with each other through the <a href="rules101.html">rules</a> (collide, push, pull) but two objects on the same layer cannot coexist in a single cell.
+<p>
+By placing objects in different layers, two (or more) object types can exist in the same grid location, without one overwriting or removing the other.
+In SokoBan this is typically used for the crates and the targets where the crates need to be placed.
+Other example cases for separate CollisionLayers are: a Player that can climb Ladder tiles, a Train that can ride Rails, a Lightray that can overlap Ground tiles, and so on.
+<p>
+<img src="images/collisionlayers.png">
+<p>
+Besides movement handling, the order of layers also determines in what order things are drawn.
 <p>
 The Background layer is a special layer.  Every game must have one.  Every tile must have a background tile.  However, by defining 
 <p><pre><code>Background = Background1 or Background2</code></pre><p>
