@@ -84,15 +84,34 @@ A puzzlescript file is divided into 8 sections:
     <p>
     Objects can be placed on different layers:
     <p>
-    <pre><code>Background
+    <pre><code>================
+COLLISIONLAYERS
+================
+Background
 Target
 Player, Wall, Crate</code></pre>
-    <p>
-The main purpose of layers is in resolving movements: two objects on the same layer cannot coexist in a single cell.  The order of layers also determines in what order things are drawn.
 <p>
-The Background layer is a special layer.  Every game must have one.  Every tile must have a background tile.  However, by defining 
+By placing objects in different layers, two (or more) objects can exist in the same cell, without one overwriting or removing the other. 
+<p>
+<img src="images/collisionlayers.png" width="600px">
+<p>
+The main purpose of layers is in resolving movements: if one object is trying to move onto a space occupied by another object in the same layer, its movement is blocked unless that object is going to move away from it (i.e. it also has a movement on it right now and there's somewhere for it to go to that's not blocked).
+<p>
+Two objects from the same layer cannot coexist on the same cell (e.g. in the above set-up, if you create a <b>Player</b> where a <b>Crate</b> was before, the latter will be removed).
+<p>
+The order of layers also determines in what order things are drawn - from back to front.
+<p>
+<h3>The Background Layer</h3>
+<p>
+The background layer is a special layer, consisting of a single '<b>Background</b>' object (or property).  Every game must have one.
+<p>
+Every cell <em>must</em> contain some object from the background layer.
+<p>
+By defining 
 <p><pre><code>Background = Background1 or Background2</code></pre><p>
-in the <a href="legend.html">legend</a>, you can have several tile types on the background layer. Every tile must have a background tile. If you don't specify one explicitly for a tile, it is inferred based on what other background tiles are used in the level it's in.
+in the <a href="legend.html">legend</a>, you can have several possible background objects.
+<p>
+If a background object isn't present in a cell for whatever reason, it is inferred based on what other background objects are used in the level it's in (e.g. if the level only uses <b>Grass</b> as its background, a cell lacking a background will have <b>Grass</b> added to it automatically).
 <p>
     </div><!-- /.container -->
 
