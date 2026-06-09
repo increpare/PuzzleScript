@@ -25,6 +25,21 @@ for post-launch credits, check out activty on github.com/increpare/PuzzleScript
 
 const MAX_ERRORS_FOR_REAL = 100;
 
+//hoisted out of the tokenizer so they're not re-allocated per token
+const reg_whitespace_equals_line = /^[\p{Z}\s=]*$/u;
+const reg_objectname_midline = /[^\p{Z}\s\()]+[\p{Z}\s]*/u;
+const reg_legend_lhs_name = /[^=\p{Z}\s\(]*(\p{Z}\s)*/u;
+const reg_equals_sign = /=/u;
+const reg_whitespace_only = /[\p{Z}\s]*/u;
+const reg_rule_arrow = /[\p{Z}\s]*->[\p{Z}\s]*/u;
+const reg_rule_part = /[^\[\|\]\p{Z}\s]*/u;
+const reg_single_word = /[\p{Z}\s]*[\p{L}\p{N}_]+[\p{Z}\s]*/u;
+const reg_message_verb = /[\p{Z}\s]*message\b[\p{Z}\s]*/u;
+const reg_message_verb_nospace = /[\p{Z}\s]*message[\p{Z}\s]*/u;
+const reg_hexcolor = /#[0-9a-fA-F]+/;
+const metadata_with_value = ['title', 'author', 'homepage', 'background_color', 'text_color', 'key_repeat_interval', 'realtime_interval', 'again_interval', 'flickscreen', 'zoomscreen', 'color_palette', 'youtube'];
+const metadata_no_value = ['run_rules_on_level_start', 'norepeat_action', 'require_player_movement', 'debug', 'verbose_logging', 'throttle_movement', 'noundo', 'noaction', 'norestart', 'scanline'];
+
 let compiling = false;
 let errorStrings = [];//also stores warning strings
 let errorCount = 0;//only counts errors
@@ -49,101 +64,65 @@ function buildErrorHtml(lineNumber, str, className) {
     return '<a onclick="jumpToLine(' + ln + ');"  href="javascript:void(0);"><span class="errorTextLineNumber"> line ' + ln + '</span></a> : ' + '<span class="' + c + '">' + str + '</span>';
 }
 
-function logErrorCacheable(str, lineNumber, urgent) {
+function logIssue(str, lineNumber, urgent, className, countsAsError, printUrgent) {
     if (compiling || urgent) {
-        if (lineNumber === undefined) {
-            return logErrorNoLine(str, urgent);
-        }
-        const errorString = buildErrorHtml(lineNumber, str, 'errorText');
+        const errorString = buildErrorHtml(lineNumber, str, className);
         if (errorStrings.includes(errorString) && !urgent) {
             //do nothing, duplicate error
         } else {
-            consolePrint(errorString);
+            consolePrint(errorString, printUrgent);
             errorStrings.push(errorString);
-            errorCount++;
+            if (countsAsError) {
+                errorCount++;
+            }
             if (errorStrings.length > MAX_ERRORS_FOR_REAL) {
                 TooManyErrors();
             }
         }
     }
+}
+
+function logErrorCacheable(str, lineNumber, urgent) {
+    if (lineNumber === undefined) {
+        return logErrorNoLine(str, urgent);
+    }
+    logIssue(str, lineNumber, urgent, 'errorText', true, false);
 }
 
 function logError(str, lineNumber, urgent) {
-    if (compiling || urgent) {
-        if (lineNumber === undefined) {
-            return logErrorNoLine(str, urgent);
-        }
-        const errorString = buildErrorHtml(lineNumber, str, 'errorText')
-        if (errorStrings.includes(errorString) && !urgent) {
-            //do nothing, duplicate error
-        } else {
-            consolePrint(errorString, true);
-            errorStrings.push(errorString);
-            errorCount++;
-            if (errorStrings.length > MAX_ERRORS_FOR_REAL) {
-                TooManyErrors();
-            }
-        }
+    if (lineNumber === undefined) {
+        return logErrorNoLine(str, urgent);
     }
+    logIssue(str, lineNumber, urgent, 'errorText', true, true);
 }
 
 function logWarning(str, lineNumber, urgent) {
-    if (compiling || urgent) {
-        if (lineNumber === undefined) {
-            return logWarningNoLine(str, urgent);
-        }
-        const errorString = buildErrorHtml(lineNumber, str, 'warningText');
-        if (errorStrings.includes(errorString) && !urgent) {
-            //do nothing, duplicate error
-        } else {
-            consolePrint(errorString, true);
-            errorStrings.push(errorString);
-            if (errorStrings.length > MAX_ERRORS_FOR_REAL) {
-                TooManyErrors();
-            }
-        }
+    if (lineNumber === undefined) {
+        return logWarningNoLine(str, urgent);
     }
+    logIssue(str, lineNumber, urgent, 'warningText', false, true);
 }
 
 function logWarningNoLine(str, urgent) {
-    if (compiling || urgent) {
-        const errorString = '<span class="warningText">' + str + '</span>';
-        if (errorStrings.includes(errorString) && !urgent) {
-            //do nothing, duplicate error
-        } else {
-            consolePrint(errorString, true);
-            errorStrings.push(errorString);
-            errorCount++; // Note: arguably a bug (warnings incrementing errorCount), but test expectations depend on it
-            if (errorStrings.length > MAX_ERRORS_FOR_REAL) {
-                TooManyErrors();
-            }
-        }
-    }
+    // countsAsError: arguably a bug (warnings incrementing errorCount), but test expectations depend on it
+    logIssue(str, undefined, urgent, 'warningText', true, true);
 }
 
-
 function logErrorNoLine(str, urgent) {
-    if (compiling || urgent) {
-        const errorString = '<span class="errorText">' + str + '</span>';
-        if (errorStrings.includes(errorString) && !urgent) {
-            //do nothing, duplicate error
-        } else {
-            consolePrint(errorString, true);
-            errorStrings.push(errorString);
-            errorCount++;
-            if (errorStrings.length > MAX_ERRORS_FOR_REAL) {
-                TooManyErrors();
-            }
+    logIssue(str, undefined, urgent, 'errorText', true, true);
+}
+
+function pushNewBlankLevel(state) {
+    if (state.section === 'levels') {
+        if (state.levels[state.levels.length - 1].length > 0) {
+            state.levels.push([]);
         }
     }
 }
 
 function blankLineHandle(state) {
-    if (state.section === 'levels') {
-        if (state.levels[state.levels.length - 1].length > 0) {
-            state.levels.push([]);
-        }
-    } else if (state.section === 'objects') {
+    pushNewBlankLevel(state);
+    if (state.section === 'objects') {
         state.objects_section = 0;
     }
 }
@@ -176,35 +155,66 @@ function wordAlreadyDeclared(state, n) {
     return null;
 }
 
+//looks up what the legend knows about a name, following synonym chains.
+//returns [{type: ]'object'/'aggregate'/'property'/'undeclared', name, entry}, where
+//name is the (lowercased) end of the synonym chain and entry is the matched
+//legend entry for aggregates/properties.
+function lookupLegendName(state, n) {
+    n = n.toLowerCase();
+    if (n in state.objects) {
+        return { type: 'object', name: n };
+    }
+    for (let i = 0; i < state.legend_synonyms.length; i++) {
+        let a = state.legend_synonyms[i];
+        if (a[0] === n) {
+            return lookupLegendName(state, a[1]);
+        }
+    }
+    for (let i = 0; i < state.legend_aggregates.length; i++) {
+        let a = state.legend_aggregates[i];
+        if (a[0] === n) {
+            return { type: 'aggregate', name: n, entry: a };
+        }
+    }
+    for (let i = 0; i < state.legend_properties.length; i++) {
+        let a = state.legend_properties[i];
+        if (a[0] === n) {
+            return { type: 'property', name: n, entry: a };
+        }
+    }
+    return { type: 'undeclared', name: n };
+}
 
+//flattens a property entry to objects, skipping self-references
+//(an error for those is emitted elsewhere - cf 'You can't define object' / #789)
+function flattenPropertyEntry(n, a, substitutor) {
+    let result = [];
+    for (let j = 1; j < a.length; j++) {
+        if (a[j] !== n) {
+            result.push(...substitutor(a[j]));
+        }
+    }
+    return result;
+}
+
+
+
+//syntax-highlighting token class for a named colour, or null if it's not one
+function colorNameToken(candcol) {
+    if (candcol in colorPalettes.arnecolors) {
+        return 'COLOR COLOR-' + candcol.toUpperCase();
+    } else if (candcol === "transparent") {
+        return 'COLOR FADECOLOR';
+    }
+    return null;
+}
 
 let codeMirrorFn = function () {
 
     function checkNameDefined(state, candname) {
-        const key = candname.toLowerCase();
-        if (state.objects[key] !== undefined) {
-            return;
+        if (wordAlreadyDeclared(state, candname) === null) {
+            logError(`You're talking about ${candname.toUpperCase()} but it's not defined anywhere.`, state.lineNumber);
         }
-        for (let i = 0; i < state.legend_synonyms.length; i++) {
-            let entry = state.legend_synonyms[i];
-            if (entry[0] === candname) {
-                return;
-            }
-        }
-        for (let i = 0; i < state.legend_aggregates.length; i++) {
-            let entry = state.legend_aggregates[i];
-            if (entry[0] === candname) {
-                return;
-            }
-        }
-        for (let i = 0; i < state.legend_properties.length; i++) {
-            let entry = state.legend_properties[i];
-            if (entry[0] === candname) {
-                return;
-            }
-        }
-
-        logError(`You're talking about ${candname.toUpperCase()} but it's not defined anywhere.`, state.lineNumber);
     }
 
     function registerOriginalCaseName(state, candname, mixedCase, lineNumber) {
@@ -298,32 +308,20 @@ let codeMirrorFn = function () {
             } else if (splits[3] === 'and') {
                 //AGGREGATE
                 let substitutor = function (n) {
-                    n = n.toLowerCase();
-                    if (n in state.objects) {
-                        return [n];
-                    }
-                    for (let i = 0; i < state.legend_synonyms.length; i++) {
-                        let a = state.legend_synonyms[i];
-                        if (a[0] === n) {
-                            return substitutor(a[1]);
-                        }
-                    }
-                    for (let i = 0; i < state.legend_aggregates.length; i++) {
-                        let a = state.legend_aggregates[i];
-                        if (a[0] === n) {
-                            return a.slice(1).map(substitutor).flat();
-                        }
-                    }
-                    for (let i = 0; i < state.legend_properties.length; i++) {
-                        let a = state.legend_properties[i];
-                        if (a[0] === n) {
+                    const found = lookupLegendName(state, n);
+                    switch (found.type) {
+                        case 'object':
+                            return [found.name];
+                        case 'aggregate':
+                            return found.entry.slice(1).map(substitutor).flat();
+                        case 'property':
                             logError("Cannot define an aggregate (using 'and') in terms of properties (something that uses 'or').", state.lineNumber);
                             ok = false;
-                            return [n];
-                        }
+                            return [found.name];
+                        default:
+                            //seems like this shouldn't be reachable?
+                            return [found.name];
                     }
-                    //seems like this shouldn't be reachable?
-                    return [n];
                 };
 
                 let newlegend = [splits[0], ...substitutor(splits[2]), ...substitutor(splits[4])];
@@ -339,43 +337,19 @@ let codeMirrorFn = function () {
                 let malformed = false;
 
                 let substitutor = function (n) {
-
-                    n = n.toLowerCase();
-                    if (n in state.objects) {
-                        return [n];
-                    }
-
-                    for (let i = 0; i < state.legend_synonyms.length; i++) {
-                        let a = state.legend_synonyms[i];
-                        if (a[0] === n) {
-                            return substitutor(a[1]);
-                        }
-                    }
-                    for (let i = 0; i < state.legend_aggregates.length; i++) {
-                        let a = state.legend_aggregates[i];
-                        if (a[0] === n) {
-                            logError(`Cannot define a property (something defined in terms of 'or') in terms of an aggregate (something that uses 'and').  In this case, you can't define "${splits[0]}" in terms of "${n}".`, state.lineNumber);
+                    const found = lookupLegendName(state, n);
+                    switch (found.type) {
+                        case 'object':
+                            return [found.name];
+                        case 'aggregate':
+                            logError(`Cannot define a property (something defined in terms of 'or') in terms of an aggregate (something that uses 'and').  In this case, you can't define "${splits[0]}" in terms of "${found.name}".`, state.lineNumber);
                             malformed = true;
                             return [];
-                        }
+                        case 'property':
+                            return flattenPropertyEntry(found.name, found.entry, substitutor);
+                        default:
+                            return [found.name];
                     }
-                    for (let i = 0; i < state.legend_properties.length; i++) {
-                        let a = state.legend_properties[i];
-                        if (a[0] === n) {
-                            let result = [];
-                            for (let j = 1; j < a.length; j++) {
-                                /*
-                                    //error here superfluous when a[j] === n, because it's detected elsewhere (cf 'You can't define object' / #789)
-                                    //logError('Error, recursive definition found for '+n+'.', state.lineNumber);     
-                                */
-                                if (a[j] !== n) {
-                                    result.push(...substitutor(a[j]));
-                                }
-                            }
-                            return result;
-                        }
-                    }
-                    return [n];
                 };
 
                 for (let i = 5; i < splits.length; i += 2) {
@@ -539,11 +513,7 @@ let codeMirrorFn = function () {
             return nstate;
         },
         blankLine: function (state) {
-            if (state.section === 'levels') {
-                if (state.levels[state.levels.length - 1].length > 0) {
-                    state.levels.push([]);
-                }
-            }
+            pushNewBlankLevel(state);
         },
         token: function (stream, state) {
             let mixedCase = stream.string;
@@ -636,8 +606,7 @@ let codeMirrorFn = function () {
             let shouldmatchequals = true;
             if (sol && state.section === "levels") {
                 let linestring = stream.string.substring(stream.pos);
-                const reg_matchall_whitespace_equals = /^[\p{Z}\s=]*$/u;
-                if (!reg_matchall_whitespace_equals.test(linestring)) {
+                if (!reg_whitespace_equals_line.test(linestring)) {
                     shouldmatchequals = false;
                 }
             }
@@ -667,69 +636,34 @@ let codeMirrorFn = function () {
                             logError('section "' + state.section.toUpperCase() + '" must be the first section', state.lineNumber);
                         }
                     } else if (!state.visitedSections.includes(sectionNames[sectionIndex - 1])) {
-                        if (sectionIndex === -1) {
-                            //honestly not sure how I could get here.
-                            logError('no such section as "' + state.section.toUpperCase() + '".', state.lineNumber);
-                        } else {
-                            logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '" (or it could be that the section "' + sectionNames[sectionIndex - 1].toUpperCase() + `"is just missing totally.  You have to include all section headings, even if the section itself is empty).`, state.lineNumber);
-                        }
+                        logError('section "' + state.section.toUpperCase() + '" is out of order, must follow  "' + sectionNames[sectionIndex - 1].toUpperCase() + '" (or it could be that the section "' + sectionNames[sectionIndex - 1].toUpperCase() + `"is just missing totally.  You have to include all section headings, even if the section itself is empty).`, state.lineNumber);
                     }
 
                     if (state.section === 'sounds') {
-                        //populate names from rules
+                        //populate names from objects and legends
                         for (let n in state.objects) {
                             if (state.objects.hasOwnProperty(n)) {
-                                /*                                if (state.names.indexOf(n)!==-1) {
-                                                                logError('Object "'+n+'" has been declared to be multiple different things',state.objects[n].lineNumber);
-                                                            }*/
                                 state.names.add(n);
                             }
                         }
-                        //populate names from legends
-                        for (let i = 0; i < state.legend_synonyms.length; i++) {
-                            let n = state.legend_synonyms[i][0];
-                            /*
-                            if (state.names.indexOf(n)!==-1) {
-                                logError('Object "'+n+'" has been declared to be multiple different things',state.legend_synonyms[i].lineNumber);
+                        for (const legendArray of [state.legend_synonyms, state.legend_aggregates, state.legend_properties]) {
+                            for (let i = 0; i < legendArray.length; i++) {
+                                state.names.add(legendArray[i][0]);
                             }
-                            */
-                            state.names.add(n);
-                        }
-                        for (let i = 0; i < state.legend_aggregates.length; i++) {
-                            let n = state.legend_aggregates[i][0];
-                            /*
-                            if (state.names.indexOf(n)!==-1) {
-                                logError('Object "'+n+'" has been declared to be multiple different things',state.legend_aggregates[i].lineNumber);
-                            }
-                            */
-                            state.names.add(n);
-                        }
-                        for (let i = 0; i < state.legend_properties.length; i++) {
-                            let n = state.legend_properties[i][0];
-                            /*
-                            if (state.names.indexOf(n)!==-1) {
-                                logError('Object "'+n+'" has been declared to be multiple different things',state.legend_properties[i].lineNumber);
-                            }
-                            */
-                            state.names.add(n);
                         }
                     }
                     else if (state.section === 'levels') {
-                        //populate character abbreviations
+                        //populate character abbreviations (properties are ambiguous, so they're not included)
                         for (let n in state.objects) {
                             if (state.objects.hasOwnProperty(n) && n.length === 1) {
                                 state.abbrevNames.add(n);
                             }
                         }
-
-                        for (let i = 0; i < state.legend_synonyms.length; i++) {
-                            if (state.legend_synonyms[i][0].length === 1) {
-                                state.abbrevNames.add(state.legend_synonyms[i][0]);
-                            }
-                        }
-                        for (let i = 0; i < state.legend_aggregates.length; i++) {
-                            if (state.legend_aggregates[i][0].length === 1) {
-                                state.abbrevNames.add(state.legend_aggregates[i][0]);
+                        for (const legendArray of [state.legend_synonyms, state.legend_aggregates]) {
+                            for (let i = 0; i < legendArray.length; i++) {
+                                if (legendArray[i][0].length === 1) {
+                                    state.abbrevNames.add(legendArray[i][0]);
+                                }
                             }
                         }
                     }
@@ -756,7 +690,7 @@ let codeMirrorFn = function () {
                     {
                         let tryParseName = function () {
                             //LOOK FOR NAME
-                            let match_name = sol ? stream.match(reg_name, true) : stream.match(/[^\p{Z}\s\()]+[\p{Z}\s]*/u, true);
+                            let match_name = sol ? stream.match(reg_name, true) : stream.match(reg_objectname_midline, true);
                             if (match_name == null) {
                                 stream.match(reg_notcommentstart, true);
                                 if (stream.pos > 0) {
@@ -833,13 +767,7 @@ let codeMirrorFn = function () {
                                         }
 
                                         let candcol = match_color[0].trim().toLowerCase();
-                                        if (candcol in colorPalettes.arnecolors) {
-                                            return 'COLOR COLOR-' + candcol.toUpperCase();
-                                        } else if (candcol === "transparent") {
-                                            return 'COLOR FADECOLOR';
-                                        } else {
-                                            return 'MULTICOLOR' + match_color[0];
-                                        }
+                                        return colorNameToken(candcol) || ('MULTICOLOR' + match_color[0]);
                                     }
                                 }
                             case 3:
@@ -894,7 +822,7 @@ let codeMirrorFn = function () {
                         let resultToken = "";
                         let match_name = null;
                         if (state.tokenIndex === 0) {
-                            match_name = stream.match(/[^=\p{Z}\s\(]*(\p{Z}\s)*/u, true);
+                            match_name = stream.match(reg_legend_lhs_name, true);
                             let new_name = match_name[0].trim();
 
                             if (wordAlreadyDeclared(state, new_name)) {
@@ -906,14 +834,13 @@ let codeMirrorFn = function () {
                             //if name already declared, we have a problem                            
                             state.tokenIndex++;
                         } else if (state.tokenIndex === 1) {
-                            match_name = stream.match(/=/u, true);
+                            match_name = stream.match(reg_equals_sign, true);
                             if (match_name === null || match_name[0].trim() !== "=") {
                                 logError(`In the legend, define new items using the equals symbol - declarations must look like "A = B", "A = B or C [ or D ...]", "A = B and C [ and D ...]".`, state.lineNumber);
                                 stream.match(reg_notcommentstart, true);
-                                resultToken = 'ERROR';
                                 match_name = ["ERROR"];//just to reduce the chance of crashes
                             }
-                            stream.match(/[\p{Z}\s]*/u, true);
+                            stream.match(reg_whitespace_only, true);
                             state.tokenIndex++;
                             resultToken = 'ASSIGNMENT';
                         } else if (state.tokenIndex >= 3 && ((state.tokenIndex % 2) === 1)) {
@@ -985,14 +912,11 @@ let codeMirrorFn = function () {
                         if (state.current_line_wip_array.length > 0 && state.current_line_wip_array[state.current_line_wip_array.length - 1] === 'ERROR') {
                             // match=stream.match(reg_notcommentstart, true);
                             //if there was an error earlier on the line just try to do greedy matching here
-                            let match = null;
 
                             //events
-                            if (match === null) {
-                                match = stream.match(reg_soundevents, true);
-                                if (match !== null) {
-                                    tokentype = 'SOUNDEVENT';
-                                }
+                            let match = stream.match(reg_soundevents, true);
+                            if (match !== null) {
+                                tokentype = 'SOUNDEVENT';
                             }
 
                             //verbs
@@ -1184,40 +1108,19 @@ let codeMirrorFn = function () {
                             let candname = match_name[0].trim();
 
                             let substitutor = function (n) {
-                                n = n.toLowerCase();
-                                if (n in state.objects) {
-                                    return [n];
-                                }
-
-
-                                for (let i = 0; i < state.legend_synonyms.length; i++) {
-                                    let a = state.legend_synonyms[i];
-                                    if (a[0] === n) {
-                                        return substitutor(a[1]);
-                                    }
-                                }
-
-                                for (let i = 0; i < state.legend_aggregates.length; i++) {
-                                    let a = state.legend_aggregates[i];
-                                    if (a[0] === n) {
-                                        logError('"' + n + '" is an aggregate (defined using "and"), and cannot be added to a single layer because its constituent objects must be able to coexist.', state.lineNumber);
+                                const found = lookupLegendName(state, n);
+                                switch (found.type) {
+                                    case 'object':
+                                        return [found.name];
+                                    case 'aggregate':
+                                        logError('"' + found.name + '" is an aggregate (defined using "and"), and cannot be added to a single layer because its constituent objects must be able to coexist.', state.lineNumber);
                                         return [];
-                                    }
+                                    case 'property':
+                                        return flattenPropertyEntry(found.name, found.entry, substitutor);
+                                    default:
+                                        logError('Cannot add "' + candname.toUpperCase() + '" to a collision layer; it has not been declared.', state.lineNumber);
+                                        return [];
                                 }
-                                for (let i = 0; i < state.legend_properties.length; i++) {
-                                    let a = state.legend_properties[i];
-                                    if (a[0] === n) {
-                                        let result = [];
-                                        for (let j = 1; j < a.length; j++) {
-                                            if (a[j] !== n) {
-                                                result.push(...substitutor(a[j]));
-                                            }
-                                        }
-                                        return result;
-                                    }
-                                }
-                                logError('Cannot add "' + candname.toUpperCase() + '" to a collision layer; it has not been declared.', state.lineNumber);
-                                return [];
                             };
                             if (candname === 'background') {
                                 if (state.collisionLayers.length > 0 && state.collisionLayers[state.collisionLayers.length - 1].length > 0) {
@@ -1291,7 +1194,7 @@ let codeMirrorFn = function () {
                             stream.skipToEnd();
                             return 'MESSAGE';
                         }
-                        if (stream.match(/[\p{Z}\s]*->[\p{Z}\s]*/u, true)) {
+                        if (stream.match(reg_rule_arrow, true)) {
                             state.arrow_passed = true;
                             return 'ARROW';
                         }
@@ -1313,18 +1216,18 @@ let codeMirrorFn = function () {
                                 state.tokenIndex = 1;
                             }
                             stream.next();
-                            stream.match(/[\p{Z}\s]*/u, true);
+                            stream.match(reg_whitespace_only, true);
                             return 'BRACKET';
                         } else {
-                            let m = stream.match(/[^\[\|\]\p{Z}\s]*/u, true)[0].trim();
+                            let m = stream.match(reg_rule_part, true)[0].trim();
 
                             if (state.tokenIndex === 0 && reg_loopmarker.exec(m)) {
                                 return 'BRACKET';
                             } else if (state.tokenIndex === 0 && reg_ruledirectionindicators.exec(m)) {
-                                stream.match(/[\p{Z}\s]*/u, true);
+                                stream.match(reg_whitespace_only, true);
                                 return 'DIRECTION';
                             } else if (state.tokenIndex === 1 && reg_directions.exec(m)) {
-                                stream.match(/[\p{Z}\s]*/u, true);
+                                stream.match(reg_whitespace_only, true);
                                 return 'DIRECTION';
                             } else {
                                 if (state.names.has(m)) {
@@ -1332,7 +1235,7 @@ let codeMirrorFn = function () {
                                         logError('Objects cannot appear outside of square brackets in rules, only directions can.', state.lineNumber);
                                         return 'ERROR';
                                     } else {
-                                        stream.match(/[\p{Z}\s]*/u, true);
+                                        stream.match(reg_whitespace_only, true);
                                         return 'NAME';
                                     }
                                 } else if (m === '...') {
@@ -1368,7 +1271,7 @@ let codeMirrorFn = function () {
                         }
                         state.tokenIndex++;
 
-                        let match = stream.match(/[\p{Z}\s]*[\p{L}\p{N}_]+[\p{Z}\s]*/u);
+                        let match = stream.match(reg_single_word);
                         if (match === null) {
                             logError('incorrect format of win condition.', state.lineNumber);
                             stream.match(reg_notcommentstart, true);
@@ -1410,23 +1313,17 @@ let codeMirrorFn = function () {
                 case 'levels':
                     {
                         if (sol) {
-                            if (stream.match(/[\p{Z}\s]*message\b[\p{Z}\s]*/u, true)) {
-                                state.tokenIndex = -4;//-4/2 = message/level
-                                let newdat = ['\n', mixedCase.slice(stream.pos).trim(), state.lineNumber];
-                                if (state.levels[state.levels.length - 1].length === 0) {
-                                    state.levels.splice(state.levels.length - 1, 0, newdat);
-                                } else {
-                                    state.levels.push(newdat);
-                                }
-                                return 'MESSAGE_VERB';//a duplicate of the previous section as a legacy thing for #589 
-                            } else if (stream.match(/[\p{Z}\s]*message[\p{Z}\s]*/u, true)) {//duplicating previous section because of #589
+                            let message_match = stream.match(reg_message_verb, true);
+                            if (message_match === null && stream.match(reg_message_verb_nospace, true)) {//tolerate a missing space after 'message' as a legacy thing for #589
                                 logWarning("You probably meant to put a space after 'message' innit.  That's ok, I'll still interpret it as a message, but you probably want to put a space there.", state.lineNumber);
+                                message_match = true;
+                            }
+                            if (message_match) {
                                 state.tokenIndex = -4;//-4/2 = message/level
                                 let newdat = ['\n', mixedCase.slice(stream.pos).trim(), state.lineNumber];
                                 if (state.levels[state.levels.length - 1].length === 0) {
                                     state.levels.splice(state.levels.length - 1, 0, newdat);
                                 } else {
-                                    //don't seem to ever reach this.
                                     state.levels.push(newdat);
                                 }
                                 return 'MESSAGE_VERB';
@@ -1484,11 +1381,11 @@ let codeMirrorFn = function () {
                             state.tokenIndex = 0;
                         }
                         if (state.tokenIndex === 0) {
-                            let match = stream.match(/[\p{Z}\s]*[\p{L}\p{N}_]+[\p{Z}\s]*/u);
+                            let match = stream.match(reg_single_word);
                             if (match !== null) {
                                 let token = match[0].trim();
                                 if (sol) {
-                                    if (['title', 'author', 'homepage', 'background_color', 'text_color', 'key_repeat_interval', 'realtime_interval', 'again_interval', 'flickscreen', 'zoomscreen', 'color_palette', 'youtube'].includes(token)) {
+                                    if (metadata_with_value.includes(token)) {
 
                                         if (token === 'author' || token === 'homepage' || token === 'title') {
                                             stream.string = mixedCase;
@@ -1513,7 +1410,7 @@ let codeMirrorFn = function () {
                                         }
                                         state.tokenIndex = 1;
                                         return 'METADATA';
-                                    } else if (['run_rules_on_level_start', 'norepeat_action', 'require_player_movement', 'debug', 'verbose_logging', 'throttle_movement', 'noundo', 'noaction', 'norestart', 'scanline'].includes(token)) {
+                                    } else if (metadata_no_value.includes(token)) {
                                         state.metadata.push(token);
                                         state.metadata.push("true");
                                         state.tokenIndex = -1;
@@ -1531,10 +1428,6 @@ let codeMirrorFn = function () {
                                         logError('Unrecognised stuff in the prelude.', state.lineNumber);
                                         return 'ERROR';
                                     }
-                                } else if (state.tokenIndex === -1) {
-                                    //no idea how to get here. covered with a similar error message above.
-                                    logError('MetaData "' + token + '" has no parameters.', state.lineNumber);
-                                    return 'ERROR';
                                 }
                                 return 'METADATA';
                             } else {
@@ -1554,12 +1447,11 @@ let codeMirrorFn = function () {
                             }
                             if (key === "background_color" || key === "text_color") {
                                 let candcol = val.trim().toLowerCase();
-                                if (candcol in colorPalettes.arnecolors) {
-                                    return 'COLOR COLOR-' + candcol.toUpperCase();
-                                } else if (candcol === "transparent") {
-                                    return 'COLOR FADECOLOR';
+                                const namedColorToken = colorNameToken(candcol);
+                                if (namedColorToken !== null) {
+                                    return namedColorToken;
                                 } else if ((candcol.length === 4) || (candcol.length === 7)) {
-                                    let color = candcol.match(/#[0-9a-fA-F]+/);
+                                    let color = candcol.match(reg_hexcolor);
                                     if (color !== null) {
                                         return 'MULTICOLOR' + color[0];
                                     }

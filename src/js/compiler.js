@@ -40,8 +40,54 @@ function generateSpriteMatrix(dat) {
     return result;
 }
 
+function spriteMatrixIs5x5(spritematrix) {
+    if (spritematrix.length !== 5) {
+        return false;
+    }
+    for (let i = 0; i < 5; i++) {
+        if (spritematrix[i].length !== 5) {
+            return false;
+        }
+    }
+    return true;
+}
+
 let debugMode;
 let colorPalette;
+
+//substitutes synonyms and splices in same-kind references in each entry of dict
+//(properties expand properties, aggregates expand aggregates); a cross-kind
+//reference (in conflictingDict) is an error.  Returns whether anything changed.
+function expandLegendDictEntries(dict, synonymsDict, conflictingDict, kindName, conflictingKindName) {
+    let modified = false;
+    const dict_keys = Object.keys(dict);
+    const dict_keys_l = dict_keys.length;
+    for (let k_i = 0; k_i < dict_keys_l; k_i++) {
+        const n = dict_keys[k_i];
+        let values = dict[n];
+        for (let i = 0; i < values.length; i++) {
+            let value = values[i];
+            if (value in synonymsDict) {
+                values[i] = synonymsDict[value];
+                modified = true;
+            } else if (value in dict) {
+                values.splice(i, 1);
+                let newvalues = dict[value];
+                for (let j = 0; j < newvalues.length; j++) {
+                    let newvalue = newvalues[j];
+                    if (values.indexOf(newvalue) === -1) {
+                        values.push(newvalue);
+                    }
+                }
+                modified = true;
+            }
+            if (value in conflictingDict) {
+                logError('Trying to define ' + kindName + ' "' + n.toUpperCase() + '" in terms of ' + conflictingKindName + ' "' + value.toUpperCase() + '".');
+            }
+        }
+    }
+    return modified;
+}
 
 function generateExtraMembers(state) {
 
@@ -150,7 +196,7 @@ function generateExtraMembers(state) {
                 [0, 0, 0, 0, 0]
             ];
         } else {
-            if (o.spritematrix.length !== 5 || o.spritematrix[0].length !== 5 || o.spritematrix[1].length !== 5 || o.spritematrix[2].length !== 5 || o.spritematrix[3].length !== 5 || o.spritematrix[4].length !== 5) {
+            if (!spriteMatrixIs5x5(o.spritematrix)) {
                 logWarning("Sprite graphics must be 5 wide and 5 high exactly.", o.lineNumber);
             }
             o.spritematrix = generateSpriteMatrix(o.spritematrix);
@@ -171,7 +217,7 @@ function generateExtraMembers(state) {
             let dat = state.legend_synonyms[i];
             let key = dat[0];
             let val = dat[1];
-            if ((!(key in glyphDict) || (glyphDict[key] === undefined)) && (glyphDict[val] !== undefined)) {
+            if ((glyphDict[key] === undefined) && (glyphDict[val] !== undefined)) {
                 added = true;
                 glyphDict[key] = glyphDict[val];
                 glyphOrder.push([dat.lineNumber, key]);
@@ -191,7 +237,7 @@ function generateExtraMembers(state) {
                     break;
                 }
             }
-            if ((!(key in glyphDict) || (glyphDict[key] === undefined)) && allVallsFound) {
+            if ((glyphDict[key] === undefined) && allVallsFound) {
                 let mask = blankMask.concat([]);
 
                 for (let j = 1; j < dat.length; j++) {
@@ -208,13 +254,11 @@ function generateExtraMembers(state) {
                         } else {
                             let n1 = n.toUpperCase();
                             let n2 = state.idDict[mask[o.layer]].toUpperCase();
-                            // if (n1 !== n2) {
                             logError(
                                 'Trying to create an aggregate object (something defined in the LEGEND section using AND) with both "' +
                                 n1 + '" and "' + n2 + '", which are on the same layer and therefore can\'t coexist.',
                                 dat.lineNumber
                             );
-                            // }
                         }
                     }
                 }
@@ -284,59 +328,8 @@ function generateExtraMembers(state) {
             }            
         }
 
-        const propertiesDict_keys = Object.keys(propertiesDict);
-        const propertiesDict_keys_l = propertiesDict_keys.length;
-        for (let k_i = 0; k_i < propertiesDict_keys_l; k_i++) {
-            const n = propertiesDict_keys[k_i];
-            let values = propertiesDict[n];
-            for (let i = 0; i < values.length; i++) {
-                let value = values[i];
-                if (value in synonymsDict) {
-                    values[i] = synonymsDict[value];
-                    modified = true;
-                } else if (value in propertiesDict) {
-                    values.splice(i, 1);
-                    let newvalues = propertiesDict[value];
-                    for (let j = 0; j < newvalues.length; j++) {
-                        let newvalue = newvalues[j];
-                        if (values.indexOf(newvalue) === -1) {
-                            values.push(newvalue);
-                        }
-                    }
-                    modified = true;
-                }
-                if (value in aggregatesDict) {
-                    logError('Trying to define property "' + n.toUpperCase() + '" in terms of aggregate "' + value.toUpperCase() + '".');
-                }
-            }        
-        }
-
-        const aggregatesDict_keys = Object.keys(aggregatesDict);
-        const aggregatesDict_keys_l = aggregatesDict_keys.length;
-        for (let k_i = 0; k_i < aggregatesDict_keys_l; k_i++) {
-            const n = aggregatesDict_keys[k_i];
-            let values = aggregatesDict[n];
-            for (let i = 0; i < values.length; i++) {
-                let value = values[i];
-                if (value in synonymsDict) {
-                    values[i] = synonymsDict[value];
-                    modified = true;
-                } else if (value in aggregatesDict) {
-                    values.splice(i, 1);
-                    let newvalues = aggregatesDict[value];
-                    for (let j = 0; j < newvalues.length; j++) {
-                        let newvalue = newvalues[j];
-                        if (values.indexOf(newvalue) === -1) {
-                            values.push(newvalue);
-                        }
-                    }
-                    modified = true;
-                }
-                if (value in propertiesDict) {
-                    logError('Trying to define aggregate "' + n.toUpperCase() + '" in terms of property "' + value.toUpperCase() + '".');
-                }
-            }        
-        }
+        modified = expandLegendDictEntries(propertiesDict, synonymsDict, aggregatesDict, "property", "aggregate") || modified;
+        modified = expandLegendDictEntries(aggregatesDict, synonymsDict, propertiesDict, "aggregate", "property") || modified;
     }
 
     /* determine which properties specify objects all on one layer */
@@ -415,29 +408,37 @@ function levelFromString(state, level) {
     let o = new Level(level[0], level[1].length, level.length - 1, state.collisionLayers.length, null);
     o.objects = new Int32Array(o.width * o.height * STRIDE_OBJ);
 
+    //a level typically reuses few distinct glyphs, so build each glyph's bitvec on demand
+    //(building masks for every declared glyph eagerly at compile time measured slower -
+    //a game declares far more glyphs than any one of its levels uses)
+    let glyphMaskCache = {};
     for (let i = 0; i < o.width; i++) {
         for (let j = 0; j < o.height; j++) {
             let ch = level[j + 1].charAt(i);
             if (ch.length === 0) {
                 ch = level[j + 1].charAt(level[j + 1].length - 1);
             }
-            let mask = state.glyphDict[ch];
 
-            if (mask === undefined) {
-                if (state.propertiesDict[ch] === undefined) {
-                    logError('Error, symbol "' + ch + '", used in map, not found.', level[0] + j);
-                } else {
-                    logError('Error, symbol "' + ch + '" is defined using OR, and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of AND?', level[0] + j);
-                }
-                return o;
-            }
+            let maskint = glyphMaskCache[ch];
+            if (maskint === undefined) {
+                let mask = state.glyphDict[ch];
 
-            let maskint = new BitVec(STRIDE_OBJ);
-            mask = mask.concat([]);
-            for (let z = 0; z < o.layerCount; z++) {
-                if (mask[z] >= 0) {
-                    maskint.ibitset(mask[z]);
+                if (mask === undefined) {
+                    if (state.propertiesDict[ch] === undefined) {
+                        logError('Error, symbol "' + ch + '", used in map, not found.', level[0] + j);
+                    } else {
+                        logError('Error, symbol "' + ch + '" is defined using OR, and therefore ambiguous - it cannot be used in a map. Did you mean to define it in terms of AND?', level[0] + j);
+                    }
+                    return o;
                 }
+
+                maskint = new BitVec(STRIDE_OBJ);
+                for (let z = 0; z < o.layerCount; z++) {
+                    if (mask[z] >= 0) {
+                        maskint.ibitset(mask[z]);
+                    }
+                }
+                glyphMaskCache[ch] = maskint;
             }
             for (let w = 0; w < STRIDE_OBJ; ++w) {
                 o.objects[STRIDE_OBJ * (i * o.height + j) + w] = maskint.data[w];
@@ -486,30 +487,31 @@ function levelsToArray(state) {
     state.levels = processedLevels;
 }
 
+function cellRowHasRelativeDir(cellRow) {
+    for (let j = 0; j < cellRow.length; j++) {
+        let cell = cellRow[j];
+        for (let k = 0; k < cell.length; k += 2) {
+            if (relativeDirections.indexOf(cell[k]) >= 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function directionalRule(rule) {
     for (let i = 0; i < rule.lhs.length; i++) {
         let cellRow = rule.lhs[i];
         if (cellRow.length > 1) {
             return true;
         }
-        for (let j = 0; j < cellRow.length; j++) {
-            let cell = cellRow[j];
-            for (let k = 0; k < cell.length; k += 2) {
-                if (relativeDirections.indexOf(cell[k]) >= 0) {
-                    return true;
-                }
-            }
+        if (cellRowHasRelativeDir(cellRow)) {
+            return true;
         }
     }
     for (let i = 0; i < rule.rhs.length; i++) {
-        let cellRow = rule.rhs[i];
-        for (let j = 0; j < cellRow.length; j++) {
-            let cell = cellRow[j];
-            for (let k = 0; k < cell.length; k += 2) {
-                if (relativeDirections.indexOf(cell[k]) >= 0) {
-                    return true;
-                }
-            }
+        if (cellRowHasRelativeDir(rule.rhs[i])) {
+            return true;
         }
     }
     return false;
@@ -884,7 +886,9 @@ First, let's check for 'X no X' on the RHS.
     //first, find a list of layers where we *know* something has to be
     let required_layers = new BitVec(Math.ceil(LAYER_COUNT/32)|0);
     let required_objects = new BitVec(STRIDE_OBJ);
-    
+    let objects_present_mask = new BitVec(STRIDE_OBJ);
+    let no_object_layer_mask = new BitVec(Math.ceil(LAYER_COUNT/32)|0);
+
     const rules_l = rules.length;
     for (let i=0;i<rules_l;i++){
         let rule = rules[i];
@@ -898,28 +902,15 @@ First, let's check for 'X no X' on the RHS.
             for (let k=0;k<rhs_group_len;k++){
                 let cell = rhs_group[k];
                 let objects_present = [];
-                let objects_present_mask = new BitVec(STRIDE_OBJ);
+                objects_present_mask.setZero();
                 for (let l=0;l<cell.length;l+=2){
                     let item = cell[l];
                     if (!item.startsWith("no")){
                         let no_name = cell[l+1];
+                        //properties (single-layer or not) are deliberately not added to the present mask
                         if (state.objects.hasOwnProperty(no_name)){
                             objects_present.push(no_name);
                             objects_present_mask.ibitset(state.objects[no_name].id);
-                        } else if (state.propertiesSingleLayer.hasOwnProperty(no_name)){
-                            // objects_present.push(no_name);
-                            // let property_obs = state.propertiesDict[no_name];
-                            // for (let m=0;m<property_obs.length;m++){
-                            //     let ob_data = state.objects[property_obs[m]];
-                            //     objects_present_mask.ibitset(ob_data.id);
-                            // }
-                        } else if (state.propertiesDict.hasOwnProperty(no_name)){
-                            // this is more complicated a case, right?
-                            // let property_obs = state.propertiesDict[no_name];
-                            // for (let m=0;m<property_obs.length;m++){
-                            //     let ob_data = state.objects[property_obs[m]];
-                            //     objects_present_mask.ibitset(ob_data.id);
-                            // }
                         }
                     }
                 }
@@ -1030,7 +1021,7 @@ First, let's check for 'X no X' on the RHS.
                             continue;//error, should have been caught earlier - e.g. You cannot use 'no' to exclude the aggregate objec
                         }
                         let no_object_mask = state.objectMasks[no_name];
-                        let no_object_layer_mask = new BitVec(Math.ceil(LAYER_COUNT/32)|0);                        
+                        no_object_layer_mask.setZero();
                         for (let m=0;m<state.layerMasks.length;m++){
                             if (state.layerMasks[m].anyBitsInCommon(no_object_mask)){
                                 no_object_layer_mask.ibitset(m);
@@ -1089,22 +1080,11 @@ function rulesToArray(state) {
         let rule = rules[i];
         let ruledirs = rule.directions;
         for (let j = 0; j < ruledirs.length; j++) {
+            //processRuleString already expanded direction aggregates, so dir is always concrete here
             let dir = ruledirs[j];
-            // The following block is never getting hit by any tests. 
-            // Presumably in the past it was used to expand out rules with
-            // multiple directions, but now that's done somewhere else.
-            if (dir in directionaggregates && directionalRule(rule)) {
-                let dirs = directionaggregates[dir];
-                for (let k = 0; k < dirs.length; k++) {
-                    let modifiedrule = deepCloneRule(rule);
-                    modifiedrule.direction = dirs[k];
-                    rules2.push(modifiedrule);
-                }
-            } else {
-                let modifiedrule = deepCloneRule(rule);
-                modifiedrule.direction = dir;
-                rules2.push(modifiedrule);
-            }
+            let modifiedrule = deepCloneRule(rule);
+            modifiedrule.direction = dir;
+            rules2.push(modifiedrule);
         }
     }
 
@@ -1271,6 +1251,18 @@ function expandNoPrefixedProperties(state, cell) {
     return expanded;
 }
 
+//entries are flat arrays, so a per-entry slice is a deep-enough copy
+function cloneReplacementDict(src) {
+    const result = {};
+    const keys = Object.keys(src);
+    const keys_l = keys.length;
+    for (let k_i = 0; k_i < keys_l; k_i++) {
+        const key = keys[k_i];
+        result[key] = src[key].slice();
+    }
+    return result;
+}
+
 function concretizePropertyRule(state, rule, lineNumber) {
 
     //step 1, rephrase rule to change "no flying" to "no cat no bat"
@@ -1338,16 +1330,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
                         for (let l = 0; l < aliases.length; l++) {
                             let concreteType = aliases[l];
                             let newrule = deepCloneRule(cur_rule);
-                            newrule.propertyReplacement = {};
-                            if (cur_rule.propertyReplacement){
-                                const cur_rule_propertyReplacement_keys = Object.keys(cur_rule.propertyReplacement);
-                                const cur_rule_propertyReplacement_keys_l = cur_rule_propertyReplacement_keys.length;
-                                for (let k_i = 0; k_i < cur_rule_propertyReplacement_keys_l; k_i++) {
-                                    const prop = cur_rule_propertyReplacement_keys[k_i];
-                                    const propDat = cur_rule.propertyReplacement[prop];
-                                    newrule.propertyReplacement[prop] = [propDat[0], propDat[1]];                                
-                                }
-                            }
+                            newrule.propertyReplacement = cur_rule.propertyReplacement ? cloneReplacementDict(cur_rule.propertyReplacement) : {};
 
                             concretizePropertyInCell(newrule.lhs[j][k], property, concreteType);
                             if (newrule.rhs.length > 0) {
@@ -1392,8 +1375,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
                 for (let j = 0; j < cur_rule.rhs.length; j++) {
                     let cellRow_rhs = cur_rule.rhs[j];
                     for (let k = 0; k < cellRow_rhs.length; k++) {
-                        let cell = cellRow_rhs[k];
-                        concretizePropertyInCell(cell, property, concreteType);
+                        concretizePropertyInCell(cellRow_rhs[k], property, concreteType);
                     }
                 }
             }
@@ -1494,28 +1476,8 @@ function concretizeMovingRule(state, rule, lineNumber) {
                             let newrule = deepCloneRule(cur_rule);
 
                             //deep copy replacements
-                            newrule.movingReplacement = {};
-
-                            if(cur_rule.movingReplacement){
-                                const cur_rule_movingReplacement_keys = Object.keys(cur_rule.movingReplacement);
-                                const cur_rule_movingReplacement_keys_l = cur_rule_movingReplacement_keys.length;
-                                for (let k_i = 0; k_i < cur_rule_movingReplacement_keys_l; k_i++) {
-                                    const moveTerm = cur_rule_movingReplacement_keys[k_i];
-                                    let moveDat = cur_rule.movingReplacement[moveTerm];
-                                    newrule.movingReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2], moveDat[3], moveDat[4], moveDat[5]];                            
-                                }
-                            }
-
-                            newrule.aggregateDirReplacement = {};
-                            if (cur_rule.aggregateDirReplacement){
-                                const cur_rule_aggregateDirReplacement_keys = Object.keys(cur_rule.aggregateDirReplacement);
-                                const cur_rule_aggregateDirReplacement_keys_l = cur_rule_aggregateDirReplacement_keys.length;
-                                for (let k_i = 0; k_i < cur_rule_aggregateDirReplacement_keys_l; k_i++) {
-                                    const moveTerm = cur_rule_aggregateDirReplacement_keys[k_i];
-                                    let moveDat = cur_rule.aggregateDirReplacement[moveTerm];
-                                    newrule.aggregateDirReplacement[moveTerm] = [moveDat[0], moveDat[1], moveDat[2]];                            
-                                }
-                            }
+                            newrule.movingReplacement = cur_rule.movingReplacement ? cloneReplacementDict(cur_rule.movingReplacement) : {};
+                            newrule.aggregateDirReplacement = cur_rule.aggregateDirReplacement ? cloneReplacementDict(cur_rule.aggregateDirReplacement) : {};
 
                             concretizeMovingInCell(newrule.lhs[j][k], ambiguous_dir, cand_name, concreteDirection);
                             if (newrule.rhs.length > 0) {
@@ -1559,26 +1521,23 @@ function concretizeMovingRule(state, rule, lineNumber) {
         //for each property replacement in that rule
 
         const cur_rule_movingReplacement_keys = Object.keys(cur_rule.movingReplacement);
-        if (cur_rule.movingReplacement){
-            const cur_rule_movingReplacement_keys_l = cur_rule_movingReplacement_keys.length;
-            for (let k_i = 0; k_i < cur_rule_movingReplacement_keys_l; k_i++) {
-                const moveTerm = cur_rule_movingReplacement_keys[k_i];
-                let replacementInfo = cur_rule.movingReplacement[moveTerm];
-                let concreteMovement = replacementInfo[0];
-                let occurrenceCount = replacementInfo[1];
-                let ambiguousMovement = replacementInfo[2];
-                let ambiguousMovement_attachedObject = replacementInfo[3];
+        const cur_rule_movingReplacement_keys_l = cur_rule_movingReplacement_keys.length;
+        for (let k_i = 0; k_i < cur_rule_movingReplacement_keys_l; k_i++) {
+            const moveTerm = cur_rule_movingReplacement_keys[k_i];
+            let replacementInfo = cur_rule.movingReplacement[moveTerm];
+            let concreteMovement = replacementInfo[0];
+            let occurrenceCount = replacementInfo[1];
+            let ambiguousMovement = replacementInfo[2];
+            let ambiguousMovement_attachedObject = replacementInfo[3];
 
-                if (occurrenceCount === 1) {
-                    //do the replacement
-                    for (let j = 0; j < cur_rule.rhs.length; j++) {
-                        let cellRow_rhs = cur_rule.rhs[j];
-                        for (let k = 0; k < cellRow_rhs.length; k++) {
-                            let cell = cellRow_rhs[k];
-                            concretizeMovingInCell(cell, ambiguousMovement, ambiguousMovement_attachedObject, concreteMovement);
-                        }
+            if (occurrenceCount === 1) {
+                //do the replacement
+                for (let j = 0; j < cur_rule.rhs.length; j++) {
+                    let cellRow_rhs = cur_rule.rhs[j];
+                    for (let k = 0; k < cellRow_rhs.length; k++) {
+                        concretizeMovingInCell(cellRow_rhs[k], ambiguousMovement, ambiguousMovement_attachedObject, concreteMovement);
                     }
-                }        
+                }
             }
         }
 
@@ -1606,17 +1565,14 @@ function concretizeMovingRule(state, rule, lineNumber) {
         for (let k_i = 0; k_i < ambiguous_movement_names_dict_keys_l; k_i++) {
             const ambiguousMovement = ambiguous_movement_names_dict_keys[k_i];
             //further replacements - if a movement word appears once on the left, can use to disambiguate remaining ones on the right
-            if (ambiguousMovement !== "INVALID") {
-                let concreteMovement = ambiguous_movement_names_dict[ambiguousMovement];
-                if (concreteMovement === "INVALID") {
-                    continue;
-                }
-                for (let j = 0; j < cur_rule.rhs.length; j++) {
-                    let cellRow_rhs = cur_rule.rhs[j];
-                    for (let k = 0; k < cellRow_rhs.length; k++) {
-                        let cell = cellRow_rhs[k];
-                        concretizeMovingInCellByAmbiguousMovementName(cell, ambiguousMovement, concreteMovement);
-                    }
+            let concreteMovement = ambiguous_movement_names_dict[ambiguousMovement];
+            if (concreteMovement === "INVALID") {
+                continue;
+            }
+            for (let j = 0; j < cur_rule.rhs.length; j++) {
+                let cellRow_rhs = cur_rule.rhs[j];
+                for (let k = 0; k < cellRow_rhs.length; k++) {
+                    concretizeMovingInCellByAmbiguousMovementName(cellRow_rhs[k], ambiguousMovement, concreteMovement);
                 }
             }
         }
@@ -2195,7 +2151,6 @@ function arrangeRulesByGroupNumber(state) {
 function generateRigidGroupList(state) {
     let rigidGroupIndex_to_GroupIndex = [];
     let groupIndex_to_RigidGroupIndex = [];
-    let groupNumber_to_GroupIndex = [];
     let groupNumber_to_RigidGroupIndex = [];
     let rigidGroups = [];
     for (let i = 0; i < state.rules.length; i++) {
@@ -2210,7 +2165,6 @@ function generateRigidGroupList(state) {
         rigidGroups[i] = rigidFound;
         if (rigidFound) {
             let groupNumber = ruleset[0].groupNumber;
-            groupNumber_to_GroupIndex[groupNumber] = i;
             let rigid_group_index = rigidGroupIndex_to_GroupIndex.length;
             groupIndex_to_RigidGroupIndex[i] = rigid_group_index;
             groupNumber_to_RigidGroupIndex[groupNumber] = rigid_group_index;
@@ -2228,22 +2182,11 @@ function generateRigidGroupList(state) {
     state.groupIndex_to_RigidGroupIndex = groupIndex_to_RigidGroupIndex;
 }
 
-function legendContainsName(legendArray, name) {
-    if (legendArray === undefined) return false;
-    for (let i = 0; i < legendArray.length; i++) {
-        if (legendArray[i][0] === name) return true;
-    }
-    return false;
-}
-
 function isObjectDefined(state, name) {
-    return name in state.objects ||
+    return wordAlreadyDeclared(state, name) !== null ||
         (state.aggregatesDict !== undefined && (name in state.aggregatesDict)) ||
         (state.propertiesDict !== undefined && (name in state.propertiesDict)) ||
-        (state.synonymsDict !== undefined && (name in state.synonymsDict)) ||
-        legendContainsName(state.legend_aggregates, name) ||
-        legendContainsName(state.legend_properties, name) ||
-        legendContainsName(state.legend_synonyms, name);
+        (state.synonymsDict !== undefined && (name in state.synonymsDict));
 }
 
 function getMaskFromName(state, name) {
@@ -2379,7 +2322,8 @@ function checkObjectsAreLayered(state) {
 }
 
 function isInt(value) {
-    return !isNaN(value) && (function (x) { return (x | 0) === x; })(parseFloat(value))
+    const x = parseFloat(value);
+    return !isNaN(value) && (x | 0) === x;
 }
 
 function twiddleMetaData(state) {
@@ -2595,11 +2539,9 @@ function printRules(state) {
             // we should skip past them
             // (e.g. https://www.puzzlescript.net/editor.html?hack=7e521a3c8d22f5dc5643ad5852f6cd22)
             if (loopIndex + 1 < state.loops.length) {
-                let nextLoop = state.loops[loopIndex + 1];
                 let loopEnd = state.loops[loopIndex + 2];
                 while (loopIndex + 1 < state.loops.length && loopEnd[0] < rule.lineNumber) {
                     loopIndex += 2;
-                    nextLoop = state.loops[loopIndex + 1];
                     loopEnd = state.loops[loopIndex + 2];
                 }
             }
@@ -3027,7 +2969,7 @@ function loadFile(str) {
     generateMasks(state);
     levelsToArray(state);
     rulesToArray(state);
-    if (state.invalid > 0) {
+    if (state.invalid) {
         return null;
     }
 
@@ -3079,8 +3021,8 @@ function loadFile(str) {
 
 
 function addSpecializedFunctions(state) {
-    const OBJECT_SIZE = Math.ceil(state.objectCount / 32);
-    const MOVEMENT_SIZE = Math.ceil(state.collisionLayers.length / 5);
+    const OBJECT_SIZE = state.STRIDE_OBJ;
+    const MOVEMENT_SIZE = state.STRIDE_MOV;
     state.moveEntitiesAtIndex = generate_moveEntitiesAtIndex(OBJECT_SIZE, MOVEMENT_SIZE);
     state.calculateRowColMasks = generate_calculateRowColMasks(OBJECT_SIZE, MOVEMENT_SIZE);
     state.resolveMovements = generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE,state);
@@ -3142,19 +3084,13 @@ function compile(command, text, randomseed) {
 
 
     if (errorCount > 0) {
-        if (IDE === false) {
-            if (state === null) {
-                consoleError('<span class="systemMessage">Errors detected during compilation; I can\'t salvage anything playable from it.  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
-            } else {
-                consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly. If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.</span>');
-            }
-        } else {
-            if (state === null) {
-                consoleError('<span class="systemMessage">Errors detected during compilation; I can\'t salvage anything playable from it.</span>');
-            } else {
-                consoleError('<span class="systemMessage">Errors detected during compilation; the game may not work correctly.</span>');
-            }
-        }
+        const summary = state === null
+            ? 'Errors detected during compilation; I can\'t salvage anything playable from it.'
+            : 'Errors detected during compilation; the game may not work correctly.';
+        const advice = IDE === false
+            ? '  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.'
+            : '';
+        consoleError('<span class="systemMessage">' + summary + advice + '</span>');
         if (errorCount > MAX_ERRORS) {
             return;
         }
