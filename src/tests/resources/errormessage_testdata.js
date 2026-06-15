@@ -1122,4 +1122,12 @@ var errormessage_testdata = [
         "fixes #1163 (Vertical tab can cause compiler to hang)",
         ["RULES\n¸\u000b\n",["line 1 : section \"RULES\" is out of order, must follow \"COLLISIONLAYERS\" (or it could be that the section \"COLLISIONLAYERS\"is just missing totally. You have to include all section headings, even if the section itself is empty).","line 2 : Name \"¸\", referred to in a rule, does not exist.","Error, didn't find any object called player, either in the objects section, or the legends section. There must be a player!","Error, didn't find any object called background, either in the objects section, or the legends section. There must be a background!","No collision layers defined. All objects need to be in collision layers."],5]
     ],
+    [
+        "Property inferred overwrite regression in puzzlescript-labs",
+        ["title Property inferred overwrite\n========\nOBJECTS\n========\nBackground\nblack\nPlayer\nwhite\nObjA\nred\nObjB\nblue\n========\nLEGEND\n========\n. = Background\nP = Player\nx = ObjA\ny = ObjB\nThing = ObjA or ObjB\n========\nSOUNDS\n========\n================\nCOLLISIONLAYERS\n================\nBackground\nPlayer\nObjA\nObjB\n=====\nRULES\n=====\n[ Thing ] -> [ Thing ObjA ]\n=============\nWINCONDITIONS\n=============\nSome Player\n======\nLEVELS\n======\nPy\n\n",["line 36 : Rule matches object types that can't overlap: \"OBJA\" and \"OBJA\"."],1]
+    ],
+    [
+        "Property inferred overwrite regression in puzzlescript-labs",
+        ["title Property inferred overwrite\n========\nOBJECTS\n========\nBackground\nblack\nPlayer\nwhite\nObjA\nred\nObjB\nblue\n========\nLEGEND\n========\n. = Background\nP = Player\nx = ObjA\ny = ObjB\nThing = ObjA or ObjB\n========\nSOUNDS\n========\n================\nCOLLISIONLAYERS\n================\nBackground\nPlayer\nObjA\nObjB\n=====\nRULES\n=====\n[ Thing ] -> [ ObjA Thing ]\n=============\nWINCONDITIONS\n=============\nSome Player\n======\nLEVELS\n======\nPy\n\n",["line 34 : Rule matches object types that can't overlap: \"OBJA\" and \"OBJA\"."],1]
+    ],
 ];    
