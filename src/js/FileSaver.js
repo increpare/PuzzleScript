@@ -14,4 +14,6 @@ function saveAs(text, type, filename) {
     element.click();
 
     document.body.removeChild(element);
+
+    URL.revokeObjectURL(url);
 }
