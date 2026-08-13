@@ -1,6 +1,7 @@
 'use strict';
 
 const MINIMUM_COLOR_CONTRAST_RATIO = 2.361;
+const MAXIMUM_SIMILAR_COLOR_DISTANCE = 100;
 
 function parseHexColor(hexColor) {
 	hexColor = hexColor.trim();
@@ -41,6 +42,12 @@ function contrastRatio(firstColor, secondColor) {
 	return (lighter + 0.05) / (darker + 0.05);
 }
 
+function colorsAreSimilar(firstColor, secondColor, maximumDistance) {
+	const distanceSquared = firstColor.reduce((distance, channel, index) =>
+		distance + Math.pow(channel - secondColor[index], 2), 0);
+	return distanceSquared < Math.pow(maximumDistance, 2);
+}
+
 function updateFocusBorderColour(backgroundColor) {
 	const gamePanel = document.getElementById("righttophalf");
 	if (gamePanel === null) {
@@ -48,16 +55,12 @@ function updateFocusBorderColour(backgroundColor) {
 	}
 
 	const orange = parseHexColor("#FFA500");
-	const green = parseHexColor("#1DC116");
 	const background = parseHexColor(backgroundColor);
 	let focusColour = "orange";
 
-	if (background !== null) {
-		const orangeContrast = contrastRatio(background, orange);
-		const greenContrast = contrastRatio(background, green);
-		if (orangeContrast < MINIMUM_COLOR_CONTRAST_RATIO && greenContrast > orangeContrast) {
-			focusColour = "#1DC116";
-		}
+	if (background !== null &&
+		colorsAreSimilar(background, orange, MAXIMUM_SIMILAR_COLOR_DISTANCE)) {
+		focusColour = "#1DC116";
 	}
 
 	gamePanel.style.setProperty("--focus-border-colour", focusColour);
