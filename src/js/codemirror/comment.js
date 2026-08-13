@@ -111,7 +111,7 @@
         for (var i = start; i <= end; ++i) {
           var line = lines[i - start];
           var pos_s = line.indexOf(commentStart), endPos_s = pos_s + commentStart.length;
-          var pos_e = line.indexOf(commentEnd), endPos_e = pos_e + commentEnd.length;
+          var pos_e = line.lastIndexOf(commentEnd), endPos_e = pos_e + commentEnd.length;
 
           if (pos_s < 0 || pos_e < 0) continue;
 
