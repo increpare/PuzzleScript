@@ -50,8 +50,7 @@ function runTest(dataarray,testname) {
 			}
 		}
 	} catch (error) {
-		//send error to QUnit
-		QUnit.push(false,false,false,error.message+"\n"+error.stack);
+		PuzzleScriptTestAssertions.push(false,false,false,error.message+"\n"+error.stack);
 		console.error(error);
 		return false;
 	} finally {
@@ -64,7 +63,7 @@ function runTest(dataarray,testname) {
 	var success=true;
 	if (levelString !== dataarray[2]) {
 		success=false;
-		QUnit.assert.equal(levelString,dataarray[2],"Resulting level state is not the expected one.");
+		PuzzleScriptTestAssertions.equal(levelString,dataarray[2],"Resulting level state is not the expected one.");
 	}
 
 	if (audio_output!==null){
@@ -73,7 +72,7 @@ function runTest(dataarray,testname) {
 		var audio_expected = audio_output.join(";");
 		if (audio_recorded!=audio_expected){			
 			success=false;
-			QUnit.assert.equal(audio_recorded,audio_expected,"Audio output is not as expected");
+			PuzzleScriptTestAssertions.equal(audio_recorded,audio_expected,"Audio output is not as expected");
 		}
 	}
 	if (success) {
@@ -101,7 +100,7 @@ function runCompilationTest(dataarray,testname) {
 	try{
 		compile(["restart"],levelString);
 	} catch (error){
-		QUnit.push(false,false,false,error.message+"\n"+error.stack);
+		PuzzleScriptTestAssertions.push(false,false,false,error.message+"\n"+error.stack);
 		console.error(error);
 	}
 
@@ -110,10 +109,7 @@ function runCompilationTest(dataarray,testname) {
 	lazyFunctionGeneration=false;
 
 	var strippedErrorStrings = errorStrings.map(stripHTMLTags);
-	if (errorCount!==recordedErrorCount){
-		return false;
-	}
-
+	var errorCountMatches = errorCount === recordedErrorCount;
 	var i_recorded=0;
 	var i_simulated=0;
 	for (i_simulated=0;i_simulated<strippedErrorStrings.length && i_recorded<recordedErrorStrings.length;i_simulated++){
@@ -124,10 +120,15 @@ function runCompilationTest(dataarray,testname) {
 		}
 	}
 
-	if (i_recorded<recordedErrorStrings.length){
+	var messagesMatch = i_recorded === recordedErrorStrings.length;
+	if (!errorCountMatches || !messagesMatch){
 		var simulated_summary = strippedErrorStrings.join("\n");
 		var recorded_summary = recordedErrorStrings.join("\n");
-		QUnit.assert.equal(simulated_summary,recorded_summary)
+		if (simulated_summary === recorded_summary) {
+			simulated_summary = "Error count: " + errorCount + "\n" + simulated_summary;
+			recorded_summary = "Error count: " + recordedErrorCount + "\n" + recorded_summary;
+		}
+		PuzzleScriptTestAssertions.equal(simulated_summary,recorded_summary);
 		return false;
 	}
 	return true;

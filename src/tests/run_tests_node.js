@@ -86,9 +86,9 @@ global.inputString = '';
 global.outputString = '';
 global.editor = { getValue() { return global.levelString; } };
 
-global.QUnit = {
+global.PuzzleScriptTestAssertions = {
     push() {},
-    assert: { equal() {} }
+    equal() {}
 };
 
 global.UnitTestingThrow = function(error) {

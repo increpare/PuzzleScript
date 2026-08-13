@@ -34,6 +34,6 @@ function addToDebugTimeline(level, lineNumber){}
 
 function UnitTestingThrow(error){
 
-	QUnit.push(false,false,false,error.message+"\n"+error.stack);
+	PuzzleScriptTestAssertions.push(false,false,false,error.message+"\n"+error.stack);
 	console.error(error);
 }
