@@ -3130,6 +3130,9 @@ function compile(command, text, randomseed) {
 
     if (state !== null) {//otherwise error
         setGameState(state, command, randomseed);
+        if (IDE) {
+            updateFocusBorderColour(state.bgcolor);
+        }
     }
 
     clearInputHistory();

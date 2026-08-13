@@ -3,6 +3,10 @@
 function runClick() {
 	clearConsole();
 	compile(["restart"]);
+	if (gameCanvasCanReceiveInput()) {
+		canvas.focus();
+		editor.display.input.blur();
+	}
 }
 
 function dateToReadable(title,time) {
@@ -342,6 +346,10 @@ function githubLogOut(){
 
 function rebuildClick() {
 	compile(["rebuild"]);
+	if (gameCanvasCanReceiveInput()) {
+		canvas.focus();
+		editor.display.input.blur();
+	}
 }
 
 function post_to_url(path, params, method) {

@@ -17,6 +17,24 @@
   touch-action: none;
 } 
 
+#gameCanvas:focus {
+  outline: none;
+}
+
+#righttophalf {
+  --focus-border-colour: orange;
+}
+
+#righttophalf:focus-within::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--focus-border-colour);
+  box-sizing: border-box;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .tapFocusIndicator {
     color: light-dark(black,white);
     position: absolute;

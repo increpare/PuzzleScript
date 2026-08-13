@@ -96,12 +96,35 @@ function showContinueOptionOnTitleScreen() {
 	return (curlevel > 0 || curlevelTarget !== null) && (curlevel in state.levels);
 }
 
+function hasLoadedGame() {
+	return state !== introstate && state.levels.length > 0;
+}
+
+function gameCanvasCanReceiveInput() {
+	return !IDE || (canvas !== null && hasLoadedGame());
+}
+
+function setGameCanvasFocusable(focusable) {
+	if (!IDE || canvas === null) {
+		return;
+	}
+	if (focusable) {
+		canvas.setAttribute("tabindex", "-1");
+	} else {
+		canvas.blur();
+		canvas.removeAttribute("tabindex");
+		lastDownTarget = null;
+		keybuffer = [];
+	}
+}
+
 function unloadGame() {
 	if (levelEditorOpened){
 		printLevel();
 	}
 	levelEditorOpened = false;
 	state = introstate;
+	setGameCanvasFocusable(hasLoadedGame());
 	level = new Level(0, 5, 5, 2, null);
 	level.objects = new Int32Array(0);
 	generateTitleScreen();
@@ -740,6 +763,7 @@ function setGameState(_state, command, randomseed) {
 	RandomGen = new RNG(randomseed);
 
 	state = _state;
+	setGameCanvasFocusable(hasLoadedGame());
 
 	if (command[0] !== "rebuild") {
 		backups = [];

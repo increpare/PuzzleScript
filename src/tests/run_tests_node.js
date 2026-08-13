@@ -112,6 +112,7 @@ const sourceFiles = [
     'js/riffwave.js',
     'js/sfxr.js',
     'js/codemirror/stringstream.js',
+    'js/colorhelpers.js',
     'js/colors.js',
     'js/engine.js',
     'js/parser.js',
