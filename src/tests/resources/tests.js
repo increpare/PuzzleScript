@@ -2,11 +2,14 @@
 
 var inputVals = {0 : "U",1: "L",2:"D",3:"R",4:"A",tick:"T",undo:" UNDO ",restart:" RESTART "};
 
+QUnit.config.puzzleScriptTestSources = [];
+
 function testFunction(td) {
 
 }
 
 for (var i=0;i<testdata.length;i++) {
+	QUnit.config.puzzleScriptTestSources.push(testdata[i][1][0]);
 	test(
 		testdata[i][0], 
 		function(num){
@@ -44,6 +47,7 @@ for (var i=0;i<testdata.length;i++) {
 
 
 for (var i=0;i<errormessage_testdata.length;i++) {
+	QUnit.config.puzzleScriptTestSources.push(errormessage_testdata[i][1][0]);
 	test(
 		"🐛"+errormessage_testdata[i][0], 
 		function(num){

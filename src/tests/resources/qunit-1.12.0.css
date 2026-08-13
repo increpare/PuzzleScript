@@ -152,6 +152,67 @@
 	word-wrap: break-word;
 }
 
+#qunit-tests .qunit-copy-button {
+	position: absolute;
+	top: 0.5em;
+	right: 1.75em;
+	z-index: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.5em;
+	height: 2.5em;
+	margin: 0;
+	padding: 0.45em;
+	border: 1px solid #0d3349;
+	border-radius: 5px;
+	color: #fff;
+	background-color: #2b81af;
+	background-image: url("qunit-copy.svg");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 1.35em 1.35em;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+	cursor: pointer;
+}
+
+#qunit-tests .qunit-copy-button-copied {
+	background-image: url("qunit-copy-success.svg");
+}
+
+#qunit-tests .qunit-copy-button-failed {
+	background-image: url("qunit-copy-failed.svg");
+}
+
+#qunit-tests .qunit-copy-button:hover,
+#qunit-tests .qunit-copy-button:focus {
+	border-color: #000;
+	color: #fff;
+	background-color: #0d3349;
+	outline: none;
+	box-shadow: 0 0 0 2px rgba(43, 129, 175, 0.35);
+}
+
+#qunit-tests .puzzlescript-test-source-panel {
+	position: relative;
+	margin: 0 0 0.75em;
+	border: 1px solid #8297a3;
+	border-radius: 5px;
+	background: #f7fafb;
+	overflow: hidden;
+}
+
+#qunit-tests pre.puzzlescript-test-source {
+	max-height: 24em;
+	padding: 0.85em 5em 0.85em 1em;
+	color: #0d3349;
+	background: #f7fafb;
+	overflow: auto;
+	white-space: pre;
+	word-wrap: normal;
+	line-height: 1.35;
+}
+
 #qunit-tests del {
 	background-color: #e0f2be;
 	color: #374e0c;

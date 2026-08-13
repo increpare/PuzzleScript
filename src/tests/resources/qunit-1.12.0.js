@@ -92,6 +92,158 @@ function Test( settings ) {
 
 Test.count = 0;
 
+function setPuzzleScriptCopyButtonState( button, state ) {
+	var text = state === "copied" ? "Copied" : state === "failed" ? "Copy failed" : "Copy text";
+
+	button.className = "qunit-copy-button qunit-copy-button-" + state;
+	button.setAttribute( "title", text );
+	button.setAttribute( "aria-label", text );
+}
+
+function findPuzzleScriptSourceMessage( panel, source ) {
+	var messages = panel.querySelectorAll( ".test-message" ),
+		i;
+
+	for ( i = 0; i < messages.length; i++ ) {
+		if ( messages[ i ].textContent.indexOf( source ) !== -1 ) {
+			return messages[ i ];
+		}
+	}
+	return null;
+}
+
+function removePuzzleScriptSourceFromMessage( message, source ) {
+	var messageText = message.textContent,
+		sourceStart = messageText.indexOf( source ),
+		prefix = messageText.substring( 0, sourceStart ),
+		remainder = messageText.substring( sourceStart + source.length ).replace( /^\s+/, "" );
+
+	while ( message.firstChild ) {
+		message.removeChild( message.firstChild );
+	}
+	message.appendChild( document.createTextNode( prefix + remainder ) );
+}
+
+function createPuzzleScriptSourcePanel( source ) {
+	var sourcePanel = document.createElement( "div" ),
+		sourceElement = document.createElement( "pre" );
+
+	sourcePanel.className = "puzzlescript-test-source-panel";
+	sourceElement.className = "puzzlescript-test-source";
+	sourceElement.appendChild( document.createTextNode( source ) );
+	sourcePanel.appendChild( sourceElement );
+	return {
+		panel: sourcePanel,
+		source: sourceElement
+	};
+}
+
+function selectPuzzleScriptSource( sourceElement ) {
+	var selection = window.getSelection(),
+		range = document.createRange();
+
+	range.selectNodeContents( sourceElement );
+	selection.removeAllRanges();
+	selection.addRange( range );
+}
+
+function legacyCopyPuzzleScriptSource() {
+	try {
+		return document.execCommand( "copy" );
+	} catch ( error ) {
+		return false;
+	}
+}
+
+function copyPuzzleScriptSource( source ) {
+	var clipboard = window.navigator && window.navigator.clipboard,
+		request;
+
+	if ( clipboard && typeof clipboard.writeText === "function" ) {
+		try {
+			request = clipboard.writeText( source );
+			if ( request && typeof request.then === "function" ) {
+				return request.then(function() {
+					return true;
+				}, function() {
+					return legacyCopyPuzzleScriptSource();
+				});
+			}
+			return true;
+		} catch ( error ) {
+			return legacyCopyPuzzleScriptSource();
+		}
+	}
+	return legacyCopyPuzzleScriptSource();
+}
+
+function createPuzzleScriptCopyButton() {
+	var button = document.createElement( "button" );
+
+	button.className = "qunit-copy-button";
+	button.setAttribute( "type", "button" );
+	button.setAttribute( "aria-live", "polite" );
+	setPuzzleScriptCopyButtonState( button, "ready" );
+	return button;
+}
+
+function addPuzzleScriptCopyButton( panel, assertionList, source ) {
+	var message, sourcePanel, sourceElement, assertion, button;
+
+	if ( !source ) {
+		return;
+	}
+
+	message = findPuzzleScriptSourceMessage( panel, source );
+	assertion = message ? message.parentNode : assertionList.lastChild;
+	if ( !assertion ) {
+		assertion = document.createElement( "li" );
+		assertion.className = "fail";
+		assertionList.appendChild( assertion );
+	}
+	if ( message ) {
+		removePuzzleScriptSourceFromMessage( message, source );
+	}
+
+	sourcePanel = createPuzzleScriptSourcePanel( source );
+	sourceElement = sourcePanel.source;
+	assertion.insertBefore( sourcePanel.panel, assertion.firstChild );
+	button = createPuzzleScriptCopyButton();
+	addEvent( button, "click", function( event ) {
+		var result,
+			finish = function( copied ) {
+				setPuzzleScriptCopyButtonState( button, copied ? "copied" : "failed" );
+				if ( !copied && window.console && window.console.warn ) {
+					window.console.warn( "Could not copy the PuzzleScript source; it remains selected for manual copying." );
+				}
+				setTimeout(function() {
+					setPuzzleScriptCopyButtonState( button, "ready" );
+				}, 2000 );
+			};
+
+		event = event || window.event;
+		if ( event.stopPropagation ) {
+			event.stopPropagation();
+		} else {
+			event.cancelBubble = true;
+		}
+		if ( hasClass( assertionList, "qunit-collapsed" ) ) {
+			removeClass( assertionList, "qunit-collapsed" );
+		}
+		selectPuzzleScriptSource( sourceElement );
+		result = copyPuzzleScriptSource( source );
+		if ( result && typeof result.then === "function" ) {
+			result.then( finish, function() {
+				finish( false );
+			});
+		} else {
+			finish( result );
+		}
+	});
+
+	sourcePanel.panel.insertBefore( button, sourceElement );
+}
+
 Test.prototype = {
 	init: function() {
 		var a, b, li,
@@ -320,6 +472,9 @@ Test.prototype = {
 			li.appendChild( a );
 			li.appendChild( time );
 			li.appendChild( ol );
+			if ( config.puzzleScriptTestSources ) {
+				addPuzzleScriptCopyButton( li, ol, config.puzzleScriptTestSources[ this.testNumber - 1 ] );
+			}
 
 		} else {
 			for ( i = 0; i < this.assertions.length; i++ ) {
