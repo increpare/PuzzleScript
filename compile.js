@@ -170,6 +170,7 @@ ncp("./src", "./bin/", function (err) {
                 "./src/js/sfxr.js",
                 "./src/js/colorhelpers.js",
                 "./src/js/codemirror/codemirror.js",
+                "./src/js/codemirror/panel.js",
                 "./src/js/codemirror/active-line.js",
                 "./src/js/codemirror/dialog.js",
                 "./src/js/codemirror/searchcursor.js",

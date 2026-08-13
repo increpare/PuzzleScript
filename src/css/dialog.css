@@ -30,3 +30,113 @@
 .CodeMirror-dialog button {
   font-size: 70%;
 }
+
+.CodeMirror-dialog.CodeMirror-search-dialog {
+  position: static;
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  background: light-dark(#f4f4f4, #0F192A);
+  color: light-dark(#848484, #D1EDFF);
+  font-family: 'Consolas', 'Lucida Console', monospace;
+  font-size: inherit;
+  line-height: 1;
+}
+
+.CodeMirror-dialog-top.CodeMirror-search-dialog {
+  border-bottom: 2px solid light-dark(#999999, #555555);
+}
+
+.CodeMirror-dialog-bottom.CodeMirror-search-dialog {
+  border-top: 2px solid light-dark(#999999, #555555);
+}
+
+.CodeMirror-search-panel {
+  position: relative;
+  padding: 2px 6px 4px;
+}
+
+.CodeMirror-search-panel::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.CodeMirror-search-panel input,
+.CodeMirror-search-panel button,
+.CodeMirror-search-panel label {
+  margin: .2em .6em .2em 0;
+}
+
+.CodeMirror-search-panel input[type=checkbox] {
+  width: auto;
+  margin-right: .2em;
+}
+
+.CodeMirror-search-panel label {
+  font: inherit;
+  white-space: pre;
+}
+
+.CodeMirror-search-panel .CodeMirror-search-options {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.CodeMirror-search-panel .CodeMirror-search-field {
+  vertical-align: middle;
+  box-sizing: border-box;
+  width: 20em;
+  border: 1px solid currentColor;
+  padding: .2em .5em;
+  font: inherit;
+}
+
+.CodeMirror-search-panel button:not([name=close]) {
+  -webkit-appearance: none;
+  appearance: none;
+  vertical-align: middle;
+  padding: .2em 1em;
+  border: 1px solid currentColor;
+  border-radius: 0;
+  color: light-dark(#f75500, #e06f8b);
+  background: transparent;
+  font: inherit;
+}
+
+.CodeMirror-search-panel button:not([name=close]):hover {
+  color: #203040;
+  background: light-dark(#f75500, #e06f8b);
+}
+
+.CodeMirror-search-panel button:not([name=close]):active {
+  color: #203040;
+  border-color: light-dark(#d94b00, #c95973);
+  background: light-dark(#d94b00, #c95973);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .45);
+}
+
+.CodeMirror-search-panel button:focus {
+  outline: 1px solid light-dark(#000, #fff);
+  outline-offset: 2px;
+}
+
+.CodeMirror-search-panel button[name=close] {
+  -webkit-appearance: none;
+  appearance: none;
+  position: static;
+  float: right;
+  border: 0;
+  padding: 0;
+  margin: .2em 0 0;
+  background: inherit;
+  color: light-dark(#f75500, #e06f8b);
+  cursor: pointer;
+  font: inherit;
+  font-size: 150%;
+  line-height: 1;
+}
+
+.CodeMirror-search-panel button[name=close]:focus {
+  outline-offset: -1px;
+}
