@@ -315,7 +315,7 @@ function generateTitleScreen() {
 	for (let i=0;i<layout_rows.menu_options.length;i++){
 
 		let cur_row = layout_rows.menu_options[i];
-		if (cur_row.indexOf('---') !== -1){
+		if (cur_row.includes('---')){
 			selection_row = titleImage.length;
 		}
 
@@ -1377,7 +1377,7 @@ function repositionEntitiesOnLayer(positionIndex, layer, dirMask) {
 		if (objectMask.anyBitsInCommon(sourceMask)) {
 			let movementMask = level.getMovements(positionIndex);
 			let directionMask = o.directionMask;
-			if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CanMove.indexOf(o.seed) === -1) {
+			if (movementMask.anyBitsInCommon(directionMask) && !seedsToPlay_CanMove.includes(o.seed)) {
 				seedsToPlay_CanMove.push(o.seed);
 			}
 		}
@@ -2372,8 +2372,8 @@ Rule.prototype.queueCommands = function () {
 	}
 
 	//commandQueue is an array of strings, message.commands is an array of array of strings (For messagetext parameter), so I search through them differently
-	let preexisting_cancel = level.commandQueue.indexOf("cancel") >= 0;
-	let preexisting_restart = level.commandQueue.indexOf("restart") >= 0;
+	let preexisting_cancel = level.commandQueue.includes("cancel");
+	let preexisting_restart = level.commandQueue.includes("restart");
 
 	let currule_cancel = false;
 	let currule_restart = false;
@@ -2406,7 +2406,7 @@ Rule.prototype.queueCommands = function () {
 	for (let i = 0; i < this.commands.length; i++) {
 		const command = this.commands[i];
 		let already = false;
-		if (level.commandQueue.indexOf(command[0]) >= 0) {
+		if (level.commandQueue.includes(command[0])) {
 			continue;
 		}
 		level.commandQueue.push(command[0]);
@@ -2631,7 +2631,7 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE,state) {
 		
 					if (${ANY_BITS_IN_COMMON("cellMask", "objectMask", OBJECT_SIZE)} 
 					&& ${ANY_BITS_IN_COMMON("o.directionMask","movementMask", MOVEMENT_SIZE)} 
-					&& seedsToPlay_CantMove.indexOf(o.seed)===-1) {
+					&& !seedsToPlay_CantMove.includes(o.seed)) {
 						seedsToPlay_CantMove.push(o.seed);
 					}
 				}
@@ -2990,7 +2990,7 @@ function checkWin(dontDoWin) {
 		dontDoWin = true;
 	}
 
-	if (level.commandQueue.indexOf('win') >= 0) {
+	if (level.commandQueue.includes('win')) {
 		if (runrulesonlevelstart_phase) {
 			consolePrint("Win Condition Satisfied (However this is in the run_rules_on_level_start rule pass, so I'm going to ignore it for you.  Why would you want to complete a level before it's already started?!)");
 		} else {

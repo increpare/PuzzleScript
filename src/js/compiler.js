@@ -75,7 +75,7 @@ function expandLegendDictEntries(dict, synonymsDict, conflictingDict, kindName, 
                 let newvalues = dict[value];
                 for (let j = 0; j < newvalues.length; j++) {
                     let newvalue = newvalues[j];
-                    if (values.indexOf(newvalue) === -1) {
+                    if (!values.includes(newvalue)) {
                         values.push(newvalue);
                     }
                 }
@@ -491,7 +491,7 @@ function cellRowHasRelativeDir(cellRow) {
     for (let j = 0; j < cellRow.length; j++) {
         let cell = cellRow[j];
         for (let k = 0; k < cell.length; k += 2) {
-            if (relativeDirections.indexOf(cell[k]) >= 0) {
+            if (relativeDirections.includes(cell[k])) {
                 return true;
             }
         }
@@ -562,7 +562,7 @@ function processRuleString(rule, state, curRules) {
     let lineNumber = rule[1];
     let origLine = rule[2];
 
-    if (String(origLine).indexOf('(') >= 0 && String(line).indexOf('->') === -1) {
+    if (String(origLine).includes('(') && !String(line).includes('->')) {
         logError("You can't have comments inside rules, sorry. In PuzzleScript, '(' starts a comment, so everything after the first '(' on this line was ignored before your rule was parsed.", lineNumber);
         return null;
     }
@@ -616,7 +616,7 @@ function processRuleString(rule, state, curRules) {
         }
     }
 
-    if (tokens.indexOf('->') === -1) {
+    if (!tokens.includes('->')) {
         logError("A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird", lineNumber);
     }
 
@@ -656,9 +656,9 @@ function processRuleString(rule, state, curRules) {
                             logError(`A rule-group can only be marked random by the opening rule in the group (aka, a '+' and 'random' can't appear as rule modifiers on the same line).  Why? Well, you see "random" isn't a property of individual rules, but of whole rule groups.  It indicates that a single possible application of some rule from the whole group should be applied at random.`, lineNumber)
                         }
 
-                    } else if (simpleAbsoluteDirections.indexOf(token) >= 0) {
+                    } else if (simpleAbsoluteDirections.includes(token)) {
                         directions.push(token);
-                    } else if (simpleRelativeDirections.indexOf(token) >= 0) {
+                    } else if (simpleRelativeDirections.includes(token)) {
                         logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
                     } else if (token === '[') {
                         if (directions.length === 0) {
@@ -778,7 +778,7 @@ function processRuleString(rule, state, curRules) {
                             curcell.push(token);
                             curcell.push(token);
                         }
-                    } else if (commandwords.indexOf(token) >= 0) {
+                    } else if (commandwords.includes(token)) {
                         if (rhs === false) {
                             logError("Commands should only appear at the end of rules, not in or before the pattern-detection/-replacement sections.", lineNumber);
                         } else if (incellrow || rightBracketToRightOf(tokens, i)) {//only a warning for legacy support reasons.
@@ -794,7 +794,7 @@ function processRuleString(rule, state, curRules) {
                             commands.push([token, messageStr]);
                             i = tokens.length;
                         } else {
-                            if (commandwords_sfx.indexOf(token) >= 0) {
+                            if (commandwords_sfx.includes(token)) {
                                 //check defined
                                 let found = false;
                                 for (let j = 0; j < state.sounds.length; j++) {
@@ -1301,7 +1301,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
             let properties_r = getPropertiesFromCell(state, row_r[k]);
             for (let prop_n = 0; prop_n < properties_r.length; prop_n++) {
                 let property = properties_r[prop_n];
-                if (properties_l.indexOf(property) === -1) {
+                if (!properties_l.includes(property)) {
                     ambiguousProperties[property] = true;
                 }
             }
@@ -1445,11 +1445,11 @@ function makeSpawnedObjectsStationary(state, rule, lineNumber) {
                     continue;
                 }
                 let name = cell[l + 1];
-                if (name in state.propertiesDict || objects_l.indexOf(name) >= 0) {
+                if (name in state.propertiesDict || objects_l.includes(name)) {
                     continue;
                 }
                 let r_layer = state.objects[name].layer;
-                if (layers.indexOf(r_layer) === -1) {
+                if (!layers.includes(r_layer)) {
                     cell[l] = 'stationary';
                 }
             }
