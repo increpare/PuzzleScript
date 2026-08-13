@@ -420,6 +420,14 @@ function onKeyDown(event) {
 		toggleMute();
 	}
 
+	if (IDE && event.keyCode === 9 &&
+		(lastDownTarget === canvas || (window.Mobile && (lastDownTarget === window.Mobile.focusIndicator)))) {//tab
+		editor.focus();
+		lastDownTarget = editor.getInputField();
+		prevent(event);
+		return;
+	}
+
 
 	if (keybuffer.indexOf(event.keyCode) >= 0) {
 		return;
