@@ -52,7 +52,9 @@
   }
 
   function queryCaseInsensitive(query) {
-    return typeof query == "string" && query == query.toLowerCase();
+    //PUZZLESCRIPT is case-insensitive
+    return true;
+    // return typeof query == "string" && query == query.toLowerCase();
   }
 
   function getSearchCursor(cm, query, pos) {
