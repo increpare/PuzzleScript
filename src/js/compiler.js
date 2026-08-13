@@ -1706,27 +1706,18 @@ function absolutifyRuleCell(forward, cell) {
         }
     }
 }
-/*
-    direction mask
-    UP parseInt('%1', 2);
-    DOWN parseInt('0', 2);
-    LEFT parseInt('0', 2);
-    RIGHT parseInt('0', 2);
-    ?  parseInt('', 2);
-
-*/
 
 const dirMasks = {
-    'up': parseInt('00001', 2),
-    'down': parseInt('00010', 2),
-    'left': parseInt('00100', 2),
-    'right': parseInt('01000', 2),
-    'moving': parseInt('01111', 2),
-    'no': parseInt('00011', 2),
-    'randomdir': parseInt('00101', 2),
-    'random': parseInt('10010', 2),
-    'action': parseInt('10000', 2),
-    '': parseInt('00000', 2)
+    'up': 0b00001,
+    'down': 0b00010,
+    'left': 0b00100,
+    'right': 0b01000,
+    'moving': 0b01111,
+    'no': 0b00011,
+    'randomdir': 0b00101,
+    'random': 0b10010,
+    'action': 0b10000,
+    '': 0b00000
 };
 
 function getOverlapObjectNames(state, objects1,objects2){
@@ -2690,14 +2681,14 @@ function generateLoopPoints(state) {
 }
 
 let soundDirectionIndicatorMasks = {
-    'up': parseInt('00001', 2),
-    'down': parseInt('00010', 2),
-    'left': parseInt('00100', 2),
-    'right': parseInt('01000', 2),
-    'horizontal': parseInt('01100', 2),
-    'vertical': parseInt('00011', 2),
-    'orthogonal': parseInt('01111', 2),
-    '___action____': parseInt('10000', 2)
+    'up': 0b00001,
+    'down': 0b00010,
+    'left': 0b00100,
+    'right': 0b01000,
+    'horizontal': 0b01100,
+    'vertical': 0b00011,
+    'orthogonal': 0b01111,
+    '___action____': 0b10000
 };
 
 function generateSoundData(state) {
