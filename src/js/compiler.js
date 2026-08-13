@@ -757,7 +757,7 @@ function processRuleString(rule, state, curRules) {
                                     if (existingDir === 'no' && newDir === 'no') {
                                         logWarning(`I notice that you have NO ${token.toUpperCase()} more than once in a single cell. That's redundant innit.`, lineNumber);
                                     } else {
-                                        logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs multiple times).`, lineNumber);
+                                        logError(`You cannot specify the same object more than once in a single cell (in this case ${token.toUpperCase()} occurs multiple times).`, lineNumber);
                                         if (token in state.propertiesDict){
                                             logWarningNoLine(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
                                         }
