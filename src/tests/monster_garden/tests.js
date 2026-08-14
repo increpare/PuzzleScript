@@ -1182,6 +1182,60 @@ P
     assert.strictEqual(result.kind, 'compiler-error', JSON.stringify(result));
 });
 
+test('a background property of missing objects should error instead of crashing (calcBackgroundMask)', function() {
+    const result = workerResult({
+        source: `title background property of missing objects
+========
+OBJECTS
+========
+
+LowPlayerTop
+white
+
+LowPlayer
+black
+
+=======
+LEGEND
+=======
+
+P = LowPlayer
+Background = LowFloor or Wall
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+LowPlayerTop
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+P
+`,
+        inputs: [],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.notStrictEqual(result.kind, 'crash', JSON.stringify(result));
+    assert.strictEqual(result.kind, 'compiler-error', JSON.stringify(result));
+});
+
 test('a compiled game with fewer levels than job.level is ok, not a crash', function() {
     const result = workerResult({
         source: SAMPLE,

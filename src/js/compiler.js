@@ -464,7 +464,7 @@ function levelFromString(state, level) {
     const levelBackgroundMask = o.calcBackgroundMask(state);
     for (let i = 0; i < o.n_tiles; i++) {
         let cell = o.getCell(i);
-        if (!backgroundLayerMask.anyBitsInCommon(cell)) {
+        if (!backgroundLayerMask || !backgroundLayerMask.anyBitsInCommon(cell)) {
             cell.ior(levelBackgroundMask);
             o.setCell(i, cell);
         }
