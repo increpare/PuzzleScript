@@ -155,7 +155,7 @@ async function main() {
                 level: mutant.level,
                 randomSeed: mutant.randomSeed,
                 replay: options.replay,
-                maxInputs: options.maxInputs,
+                maxInputs: garden.trialMaxInputs(options, mutant.inputs),
                 timeoutMs: options.timeoutMs,
                 originalResult: result,
                 minimizedResult: minimized.result,
