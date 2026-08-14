@@ -1289,6 +1289,67 @@ P
     assert(parsed.errorCount > 0, JSON.stringify(parsed));
 });
 
+test('replaying a looping rule group does not accumulate runtime errors in the fingerprint', function() {
+    const result = workerResult({
+        source: `title Loop Fingerprint
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+gray
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate
+
+======
+RULES
+======
+
+[ Player ] -> [ Crate ]
++ [ Crate ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+P
+`,
+        inputs: [0],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: true,
+        maxInputs: 8
+    });
+    assert.notStrictEqual(result.kind, 'replay-divergence', JSON.stringify(result));
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
+});
+
 test('replay after winning onto a differently sized level does not crash', function() {
     const result = workerResult({
         source: `title Size Change

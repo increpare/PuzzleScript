@@ -174,7 +174,9 @@ function snapshotEngine() {
         n_tiles: level ? level.n_tiles : 0,
         objects: level && level.objects ? new Int32Array(level.objects) : null,
         movements: level && level.movements ? new Int32Array(level.movements) : null,
-        storage: Object.assign({}, _storage)
+        storage: Object.assign({}, _storage),
+        errorCount: global.errorCount,
+        errorStrings: (global.errorStrings || []).slice()
     };
 }
 
@@ -214,6 +216,8 @@ function restoreEngine(snap) {
     Object.keys(snap.storage).forEach(function(key) {
         _storage[key] = snap.storage[key];
     });
+    global.errorCount = snap.errorCount;
+    global.errorStrings = (snap.errorStrings || []).slice();
 }
 
 function checkPlayableInvariants(job) {
