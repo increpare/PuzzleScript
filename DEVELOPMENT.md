@@ -69,10 +69,20 @@ normal test suite.
     node src/tests/monster_garden/tests.js
     node src/tests/monster_garden/run.js --list-mutators
     node src/tests/monster_garden/run.js --seed 12345 --count 20
+    node src/tests/monster_garden/run.js --forever --seed 12345
 
 A fixed seed reproduces the same mutants. `--list-mutators` prints all thirteen
 names, including `duplicate-rule-line`, `swap-object-colors`, `nudge-level-cell`,
 and `flip-win-quantifier`.
+
+`--forever` runs until interrupted and cannot be combined with `--count`.
+Ctrl+C finishes the current trial and exits 0; a second Ctrl+C kills the
+worker. This applies to `--forever` only (batch `--count` still uses the
+default interrupt). `<output>/tally.json` is rewritten after every trial
+(batch and forever). `cat` it while the process runs. Fields include seed,
+forever, trials, saved, counts, lastTrial, lastSaved. If stderr is a TTY, a
+`\r` status line shows trials/saved/interesting counts. `--timeout-ms` still
+bounds each worker (default 2s).
 
 `--extra-inputs N` (default 0, by omitting the flag) leaves the recorded tape
 unchanged. When N is greater than 0, extras are appended after `--max-inputs`
