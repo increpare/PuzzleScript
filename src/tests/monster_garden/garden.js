@@ -1019,6 +1019,7 @@ function parseArguments(argv, options) {
     const result = {
         seed: typeof now === 'function' ? now() : now,
         count: 100,
+        forever: false,
         timeoutMs: 2000,
         shrink: true,
         replay: true,
@@ -1032,6 +1033,8 @@ function parseArguments(argv, options) {
         listMutators: false
     };
     const names = mutators.map(function(mutator) { return mutator.name; });
+    let sawCount = false;
+    let sawForever = false;
     for (let i = 0; i < argv.length; i++) {
         const arg = argv[i];
         switch (arg) {
@@ -1049,8 +1052,13 @@ function parseArguments(argv, options) {
                 break;
             }
             case '--count':
+                sawCount = true;
                 result.count = needPositiveInt(argv, i, 'count');
                 i++;
+                break;
+            case '--forever':
+                sawForever = true;
+                result.forever = true;
                 break;
             case '--timeout-ms': {
                 const value = needPositiveInt(argv, i, 'timeout-ms');
@@ -1113,6 +1121,9 @@ function parseArguments(argv, options) {
             default:
                 throw new Error('Unknown option: ' + arg);
         }
+    }
+    if (sawCount && sawForever) {
+        throw new Error('--forever cannot be combined with --count');
     }
     return result;
 }

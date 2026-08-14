@@ -266,6 +266,7 @@ test('arguments have reproducible defaults and reject unsafe numeric values', fu
     const defaults = garden.parseArguments([], { now: function() { return 98765; } });
     assert.strictEqual(defaults.seed, 98765);
     assert.strictEqual(defaults.count, 100);
+    assert.strictEqual(defaults.forever, false);
     assert.strictEqual(defaults.timeoutMs, 2000);
     assert.strictEqual(defaults.shrink, true);
     assert.strictEqual(defaults.replay, true);
@@ -304,6 +305,18 @@ test('arguments have reproducible defaults and reject unsafe numeric values', fu
     assert.throws(function() { garden.parseArguments(['--seed', '']); }, /seed/);
     assert.throws(function() { garden.parseArguments(['--seed', '4294967296']); }, /seed/);
     assert.strictEqual(garden.parseArguments(['--seed', '4294967295']).seed, 4294967295);
+});
+
+test('--forever cannot be combined with --count', function() {
+    assert.strictEqual(garden.parseArguments([]).forever, false);
+    assert.strictEqual(garden.parseArguments(['--forever']).forever, true);
+    assert.strictEqual(garden.parseArguments(['--forever']).count, 100);
+    assert.throws(function() {
+        garden.parseArguments(['--forever', '--count', '3']);
+    }, /forever/);
+    assert.throws(function() {
+        garden.parseArguments(['--count', '3', '--forever']);
+    }, /forever/);
 });
 
 test('extra inputs are generated deterministically and appended after the truncated prefix', function() {
