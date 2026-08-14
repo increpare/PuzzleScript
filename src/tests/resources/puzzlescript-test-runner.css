@@ -467,11 +467,20 @@ a {
 .diff__value,
 .test-output__value,
 .test-error__content {
-	min-width: max-content;
 	margin: 0;
 	padding: .75rem .9rem;
 	color: #35404c;
 	font: .75rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.diff__value {
+	min-width: max-content;
+}
+
+.test-output__value {
+	min-width: 0;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
 }
 
 .diff__line {
