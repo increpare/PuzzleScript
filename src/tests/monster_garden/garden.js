@@ -992,9 +992,21 @@ function mutationChangedJob(applied, fixture) {
     return false;
 }
 
+const RANDOMNESS_RE = /\brandom(dir)?\b/i;
+
 function mutateFixture(fixture, rng, mutatorNames, options) {
+    // Randomness draws from object sets whose iteration order depends on bit
+    // assignment, so a reordering mutation can legitimately change a draw.
+    // Equivalence cannot be asserted for those fixtures.
+    const usesRandomness = RANDOMNESS_RE.test(fixture.source || '');
     const allowed = mutators.filter(function(mutator) {
-        return !mutatorNames || mutatorNames.indexOf(mutator.name) >= 0;
+        if (mutatorNames && mutatorNames.indexOf(mutator.name) < 0) {
+            return false;
+        }
+        if (mutator.equivalence && usesRandomness) {
+            return false;
+        }
+        return true;
     });
     if (allowed.length === 0) {
         throw new Error('inapplicable mutation: no mutators selected');
@@ -1012,6 +1024,7 @@ function mutateFixture(fixture, rng, mutatorNames, options) {
                 kind: fixture.kind,
                 source: applied.source,
                 detail: applied.detail,
+                equivalenceContext: applied.equivalenceContext || null,
                 inputs: applied.inputs || fixture.inputs,
                 level: applied.level !== undefined ? applied.level : fixture.level,
                 randomSeed: applied.randomSeed !== undefined ? applied.randomSeed : fixture.randomSeed,

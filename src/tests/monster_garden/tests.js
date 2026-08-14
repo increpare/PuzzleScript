@@ -245,6 +245,66 @@ test('equivalence-break is a known, interesting result kind', function() {
     assert.strictEqual(garden.isInteresting({ kind: 'equivalence-break' }), true);
 });
 
+test('semantics-preserving mutators are skipped on fixtures that use randomness', function() {
+    const randomFixture = {
+        name: 'randomish',
+        source: 'title T\n\n======\nRULES\n======\n\n[ Player ] -> [ randomDir Player ]\n',
+        inputs: [],
+        level: 0,
+        randomSeed: null
+    };
+    const plainFixture = Object.assign({}, randomFixture, {
+        source: 'title T\n\n======\nRULES\n======\n\n[ Player ] -> [ > Player ]\n'
+    });
+    const preserving = {
+        name: 'fake-preserving',
+        equivalence: 'full',
+        apply: function(source) { return { source: source + 'author A\n', detail: 'edited' }; }
+    };
+    const saved = garden.mutators.slice();
+    garden.mutators.length = 0;
+    garden.mutators.push(preserving);
+    try {
+        assert.throws(function() {
+            garden.mutateFixture(randomFixture, new garden.Random(7), null, { maxAttempts: 4 });
+        }, /inapplicable/, 'a random fixture must offer no semantics-preserving mutator');
+        const ok = garden.mutateFixture(plainFixture, new garden.Random(7), null, { maxAttempts: 4 });
+        assert.strictEqual(ok.mutator, 'fake-preserving');
+    } finally {
+        garden.mutators.length = 0;
+        for (let i = 0; i < saved.length; i++) {
+            garden.mutators.push(saved[i]);
+        }
+    }
+});
+
+test('mutateFixture carries equivalenceContext through to the mutant', function() {
+    const fixture = { name: 'f', source: 'title T\n', inputs: [], level: 0, randomSeed: null };
+    const fake = [{
+        name: 'fake-preserving',
+        equivalence: 'board',
+        apply: function(source) {
+            return {
+                source: source + 'author A\n',
+                detail: 'renamed',
+                equivalenceContext: { renames: { New: 'Old' } }
+            };
+        }
+    }];
+    const saved = garden.mutators.slice();
+    garden.mutators.length = 0;
+    garden.mutators.push(fake[0]);
+    try {
+        const mutant = garden.mutateFixture(fixture, new garden.Random(3), null, { maxAttempts: 2 });
+        assert.deepStrictEqual(mutant.equivalenceContext, { renames: { New: 'Old' } });
+    } finally {
+        garden.mutators.length = 0;
+        for (let i = 0; i < saved.length; i++) {
+            garden.mutators.push(saved[i]);
+        }
+    }
+});
+
 function mutatorChangedJob(result, source, fixture) {
     if (!result) {
         return false;
