@@ -280,6 +280,125 @@ function unterminatedComment(source, rng) {
     };
 }
 
+function duplicateRuleLine(source, rng) {
+    return mutateSection(source, 'RULES', function(body) {
+        const lines = body.split('\n');
+        const indexes = [];
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i].indexOf('->') >= 0) {
+                indexes.push(i);
+            }
+        }
+        if (indexes.length === 0) {
+            return null;
+        }
+        const index = indexes[rng.integer(indexes.length)];
+        lines.splice(index + 1, 0, lines[index]);
+        return {
+            source: lines.join('\n'),
+            detail: 'duplicated rule line ' + (index + 1)
+        };
+    });
+}
+
+function swapObjectColors(source, rng) {
+    return mutateSection(source, 'OBJECTS', function(body) {
+        const marks = marksIn(body, /\b(black|white|gray|grey|red|green|blue|yellow|pink|orange|brown|purple)\b/i);
+        if (marks.length < 2) {
+            return null;
+        }
+        const first = rng.integer(marks.length);
+        let second = rng.integer(marks.length - 1);
+        if (second >= first) {
+            second++;
+        }
+        const earlier = first < second ? marks[first] : marks[second];
+        const later = first < second ? marks[second] : marks[first];
+        let next = replaceRange(body, later.index, later.index + later.text.length, earlier.text);
+        next = replaceRange(next, earlier.index, earlier.index + earlier.text.length, later.text);
+        return {
+            source: next,
+            detail: 'swapped ' + earlier.text + ' and ' + later.text
+        };
+    });
+}
+
+function legendMapKeys(source) {
+    const legend = findSection(source, 'LEGEND');
+    if (!legend) {
+        return [];
+    }
+    const keys = [];
+    const body = legend.lines.slice(legend.start, legend.end);
+    for (let i = 0; i < body.length; i++) {
+        const match = body[i].match(/^([^\s=])\s*=/);
+        if (match && keys.indexOf(match[1]) < 0) {
+            keys.push(match[1]);
+        }
+    }
+    return keys;
+}
+
+function nudgeLevelCell(source, rng) {
+    const keys = legendMapKeys(source);
+    if (keys.length < 2) {
+        return null;
+    }
+    return mutateSection(source, 'LEVELS', function(body) {
+        const lines = body.split('\n');
+        const cells = [];
+        for (let i = 0; i < lines.length; i++) {
+            if (/^\s*message\b/i.test(lines[i])) {
+                continue;
+            }
+            for (let j = 0; j < lines[i].length; j++) {
+                if (keys.indexOf(lines[i][j]) >= 0) {
+                    cells.push({ line: i, col: j, ch: lines[i][j] });
+                }
+            }
+        }
+        if (cells.length === 0) {
+            return null;
+        }
+        const cell = cells[rng.integer(cells.length)];
+        const others = keys.filter(function(key) { return key !== cell.ch; });
+        const replacement = others[rng.integer(others.length)];
+        const chars = lines[cell.line].split('');
+        chars[cell.col] = replacement;
+        lines[cell.line] = chars.join('');
+        return {
+            source: lines.join('\n'),
+            detail: 'nudged ' + cell.ch + ' to ' + replacement
+        };
+    });
+}
+
+function flipWinQuantifier(source) {
+    return mutateSection(source, 'WINCONDITIONS', function(body) {
+        const allMatch = /\ball\b/i.exec(body);
+        const someMatch = /\bsome\b/i.exec(body);
+        if (!allMatch && !someMatch) {
+            return null;
+        }
+        let from;
+        let to;
+        let index;
+        if (allMatch && (!someMatch || allMatch.index <= someMatch.index)) {
+            from = allMatch[0];
+            to = 'some';
+            index = allMatch.index;
+        } else {
+            from = someMatch[0];
+            to = 'all';
+            index = someMatch.index;
+        }
+        return {
+            source: replaceRange(body, index, index + from.length, to),
+            detail: 'flipped ' + from + ' to ' + to
+        };
+    });
+}
+
 const mutators = [
     { name: 'delete-rule-punctuation', apply: deleteRulePunctuation },
     { name: 'duplicate-rule-punctuation', apply: duplicateRulePunctuation },
@@ -289,7 +408,11 @@ const mutators = [
     { name: 'legend-cycle', apply: legendCycle },
     { name: 'swap-sections', apply: swapSections },
     { name: 'odd-whitespace', apply: oddWhitespace },
-    { name: 'unterminated-comment', apply: unterminatedComment }
+    { name: 'unterminated-comment', apply: unterminatedComment },
+    { name: 'duplicate-rule-line', apply: duplicateRuleLine },
+    { name: 'swap-object-colors', apply: swapObjectColors },
+    { name: 'nudge-level-cell', apply: nudgeLevelCell },
+    { name: 'flip-win-quantifier', apply: flipWinQuantifier }
 ];
 
 function mutateFixture(fixture, rng, mutatorNames, options) {

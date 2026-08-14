@@ -124,14 +124,29 @@ test('every named mutator either changes a suitable source or reports inapplicab
         'legend-cycle',
         'swap-sections',
         'odd-whitespace',
-        'unterminated-comment'
+        'unterminated-comment',
+        'duplicate-rule-line',
+        'swap-object-colors',
+        'nudge-level-cell',
+        'flip-win-quantifier'
     ];
     assert.deepStrictEqual(garden.mutators.map(function(mutator) { return mutator.name; }), expected);
 
+    const winSource = SAMPLE.replace(
+        '==============\nWINCONDITIONS\n==============\n\n',
+        '==============\nWINCONDITIONS\n==============\n\nall crate on target\n\n'
+    );
+
     for (let i = 0; i < garden.mutators.length; i++) {
-        const result = garden.mutators[i].apply(SAMPLE, new garden.Random(100 + i));
-        assert(result, garden.mutators[i].name + ' should apply to the sample');
-        assert.notStrictEqual(result.source, SAMPLE, garden.mutators[i].name + ' should change the source');
+        const mutator = garden.mutators[i];
+        let source = SAMPLE;
+        let result = mutator.apply(source, new garden.Random(100 + i));
+        if (!result) {
+            source = winSource;
+            result = mutator.apply(source, new garden.Random(100 + i));
+        }
+        assert(result, mutator.name + ' should apply to a suitable source');
+        assert.notStrictEqual(result.source, source, mutator.name + ' should change the source');
         assert.strictEqual(typeof result.detail, 'string');
         assert(result.detail.length > 0);
     }
@@ -684,6 +699,35 @@ test('the worker compiles a valid sample and returns a stable ok fingerprint', f
     assert(Array.isArray(parsed.objects));
     assert.strictEqual(first.errorCount, 0);
     assert.deepStrictEqual(first, second);
+});
+
+test('structure-aware mutators usually keep a compiling sample compiling', function() {
+    const names = ['duplicate-rule-line', 'swap-object-colors', 'nudge-level-cell', 'flip-win-quantifier'];
+    names.forEach(function(name) {
+        const mutator = garden.mutators.find(function(item) { return item.name === name; });
+        assert(mutator, name);
+        const rng = new garden.Random(7);
+        let source = SAMPLE;
+        let applied = mutator.apply(source, rng);
+        if (!applied) {
+            source = SAMPLE.replace(
+                '==============\nWINCONDITIONS\n==============\n\n',
+                '==============\nWINCONDITIONS\n==============\n\nall crate on target\n\n'
+            );
+            applied = mutator.apply(source, new garden.Random(7));
+        }
+        assert(applied);
+        assert.notStrictEqual(applied.source, source);
+        const result = workerResult({
+            source: applied.source,
+            inputs: [0],
+            level: 0,
+            randomSeed: 'garden-seed',
+            replay: false,
+            maxInputs: 8
+        });
+        assert.notStrictEqual(result.kind, 'crash', name + ' ' + JSON.stringify(result));
+    });
 });
 
 test('a compiled game with fewer levels than job.level is ok, not a crash', function() {
