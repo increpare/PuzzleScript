@@ -264,6 +264,81 @@ test('artifact names and regression fixtures are copy-pasteable and path-safe', 
     );
 });
 
+function runWorkerSync(job, timeoutMs) {
+    return spawnSync(process.execPath, [path.join(__dirname, 'worker.js')], {
+        input: JSON.stringify(job),
+        encoding: 'utf8',
+        timeout: timeoutMs || 20000
+    });
+}
+
+function workerResult(job) {
+    const child = runWorkerSync(job);
+    assert.strictEqual(child.error, undefined, child.stderr);
+    const line = child.stdout.trim().split('\n').pop();
+    return JSON.parse(line);
+}
+
+test('the worker compiles a valid sample and returns a stable ok fingerprint', function() {
+    const job = {
+        source: SAMPLE,
+        inputs: [0, 3],
+        level: 0,
+        randomSeed: null,
+        replay: false,
+        maxInputs: 8
+    };
+    const first = workerResult(job);
+    const second = workerResult(job);
+    assert.strictEqual(first.kind, 'ok', JSON.stringify(first));
+    assert.strictEqual(first.error, null);
+    assert.strictEqual(typeof first.fingerprint, 'string');
+    assert(first.fingerprint.indexOf('\n') >= 0);
+    assert.strictEqual(first.errorCount, 0);
+    assert.deepStrictEqual(first, second);
+});
+
+test('the worker treats compile diagnostics as compiler-error, not a crash', function() {
+    const result = workerResult({
+        source: `title No Background
+=======
+OBJECTS
+=======
+
+Player
+white
+
+=======
+LEGEND
+=======
+P = Player
+`,
+        inputs: [0],
+        level: 0,
+        randomSeed: null,
+        replay: true,
+        maxInputs: 8
+    });
+    assert.strictEqual(result.kind, 'compiler-error', JSON.stringify(result));
+    assert.strictEqual(result.error, null);
+    assert(result.errorCount > 0);
+    assert.strictEqual(result.fingerprint, 'compiler-error:' + result.errorCount);
+});
+
+test('the worker reports a crash when execution throws', function() {
+    const result = workerResult({
+        source: SAMPLE,
+        inputs: ['not-a-command'],
+        level: 0,
+        randomSeed: null,
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(result.kind, 'crash', JSON.stringify(result));
+    assert.strictEqual(typeof result.error.name, 'string');
+    assert.strictEqual(typeof result.error.message, 'string');
+});
+
 async function main() {
     let passed = 0;
     for (let i = 0; i < tests.length; i++) {
