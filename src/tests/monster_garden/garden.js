@@ -353,6 +353,7 @@ function parseArguments(argv, options) {
         shrink: true,
         replay: true,
         maxInputs: 8,
+        extraInputs: 0,
         shrinkBudget: 200,
         maxAttempts: 8,
         output: '.build/monster_garden',
@@ -424,6 +425,10 @@ function parseArguments(argv, options) {
                 result.maxInputs = needPositiveInt(argv, i, 'max-inputs');
                 i++;
                 break;
+            case '--extra-inputs':
+                result.extraInputs = needPositiveInt(argv, i, 'extra-inputs');
+                i++;
+                break;
             case '--shrink-budget':
                 result.shrinkBudget = needPositiveInt(argv, i, 'shrink-budget');
                 i++;
@@ -440,6 +445,19 @@ function parseArguments(argv, options) {
         }
     }
     return result;
+}
+
+const EXTRA_INPUT_CHOICES = [0, 1, 2, 3, 4, 'tick'];
+
+function extendInputs(recorded, rng, options) {
+    const maxInputs = options && options.maxInputs ? options.maxInputs : recorded.length;
+    const extraInputs = options && options.extraInputs ? options.extraInputs : 0;
+    const prefix = (recorded || []).slice(0, maxInputs);
+    const extras = [];
+    for (let i = 0; i < extraInputs; i++) {
+        extras.push(rng.pick(EXTRA_INPUT_CHOICES));
+    }
+    return prefix.concat(extras);
 }
 
 function clip(value, n) {
@@ -836,6 +854,7 @@ module.exports = {
     mutateFixture: mutateFixture,
     isInapplicableMutation: isInapplicableMutation,
     parseArguments: parseArguments,
+    extendInputs: extendInputs,
     failureSignature: failureSignature,
     checkLevelInvariants: checkLevelInvariants,
     isInteresting: isInteresting,

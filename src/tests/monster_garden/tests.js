@@ -215,6 +215,22 @@ test('arguments have reproducible defaults and reject unsafe numeric values', fu
     assert.strictEqual(garden.parseArguments(['--seed', '4294967295']).seed, 4294967295);
 });
 
+test('extra inputs are generated deterministically and appended after the truncated prefix', function() {
+    assert.strictEqual(garden.parseArguments([]).extraInputs, 0);
+    assert.throws(function() { garden.parseArguments(['--extra-inputs', '0']); }, /extra-inputs/);
+    const rng = new garden.Random(1);
+    const recorded = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+    const first = garden.extendInputs(recorded, rng, { maxInputs: 8, extraInputs: 3 });
+    const rng2 = new garden.Random(1);
+    const second = garden.extendInputs(recorded, rng2, { maxInputs: 8, extraInputs: 3 });
+    assert.deepStrictEqual(first, second);
+    assert.strictEqual(first.length, 11);
+    assert.deepStrictEqual(first.slice(0, 8), recorded.slice(0, 8));
+    first.slice(8).forEach(function(value) {
+        assert.notStrictEqual([0, 1, 2, 3, 4, 'tick'].indexOf(value), -1);
+    });
+});
+
 test('only inapplicable mutation errors are skippable', function() {
     assert.strictEqual(garden.isInapplicableMutation(new Error('inapplicable mutation after 2 attempts')), true);
     assert.strictEqual(garden.isInapplicableMutation(new TypeError('mutator exploded')), false);

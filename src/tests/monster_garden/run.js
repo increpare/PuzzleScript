@@ -41,7 +41,7 @@ async function evaluateMutant(mutant, options) {
         level: mutant.level,
         randomSeed: mutant.randomSeed,
         replay: options.replay,
-        maxInputs: options.maxInputs
+        maxInputs: (mutant.inputs || []).length
     };
     const result = await garden.runChild(
         process.execPath,
@@ -98,6 +98,10 @@ async function main() {
     let artifactIndex = 0;
     for (let i = 0; i < options.count; i++) {
         const fixture = corpus[rng.integer(corpus.length)];
+        const executedInputs = garden.extendInputs(fixture.inputs, rng, {
+            maxInputs: options.maxInputs,
+            extraInputs: options.extraInputs
+        });
         let mutant;
         try {
             mutant = garden.mutateFixture(fixture, rng, allowedMutators(options.mutators), {
@@ -110,9 +114,10 @@ async function main() {
             counts.skipped++;
             continue;
         }
+        mutant.inputs = executedInputs;
         const baseline = await evaluateMutant({
             source: fixture.source,
-            inputs: fixture.inputs,
+            inputs: executedInputs,
             level: fixture.level,
             randomSeed: fixture.randomSeed
         }, options);
