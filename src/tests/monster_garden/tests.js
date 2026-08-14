@@ -1597,6 +1597,24 @@ P*O
     assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
 });
 
+test('an aggregate Background with no assigned objects is a compiler-error, not a crash', function() {
+    const result = workerResult({
+        source: `LEGEND
+Background = Player and Wall
+COLLISIONLAYERS
+player
+`,
+        inputs: [],
+        level: 0,
+        randomSeed: null,
+        replay: true,
+        maxInputs: 8
+    });
+    assert.notStrictEqual(result.kind, 'crash', JSON.stringify(result));
+    assert.strictEqual(result.kind, 'compiler-error', JSON.stringify(result));
+    assert(result.errorCount > 0);
+});
+
 test('the worker treats compile diagnostics as compiler-error, not a crash', function() {
     const result = workerResult({
         source: `title No Background

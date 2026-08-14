@@ -395,8 +395,10 @@ function generateExtraMembers(state) {
             }
         } else if ('background' in state.aggregatesDict) {
             let o = state.objects[state.idDict[0]];
-            backgroundid = o.id;
-            backgroundlayer = o.layer;
+            if (o != null) {
+                backgroundid = o.id;
+                backgroundlayer = o.layer;
+            }
             let lineNumber = state.original_line_numbers['background'];
             logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').", lineNumber);
         } else {
