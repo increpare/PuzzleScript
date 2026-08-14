@@ -753,6 +753,43 @@ test('writeArtifacts restores dest if the replacement rename fails', function() 
     assert.deepStrictEqual(leftovers, []);
 });
 
+test('writeTally replaces tally.json atomically and payload fields are stable', function() {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'monster-garden-tally-'));
+    const counts = {
+        ok: 1, 'compiler-error': 0, 'compiler-warning': 0, crash: 2,
+        timeout: 0, invariant: 0, nondeterministic: 0, 'replay-divergence': 0,
+        'semantic-mismatch': 0, baseline: 0, skipped: 0
+    };
+    const payload = garden.tallyPayload({
+        seed: 9,
+        forever: true,
+        trials: 4,
+        saved: 2,
+        counts: counts,
+        lastTrial: { index: 4, tally: 'crash', mutator: 'legend-cycle', fixtureName: 'sokoban' },
+        lastSaved: { dir: 'crash-demo-s9_0002', signature: 'crash:TypeError:x', kind: 'crash' }
+    }, function() { return '2026-08-14T12:00:00.000Z'; });
+    garden.writeTally(dir, payload);
+    garden.writeTally(dir, payload);
+    const names = fs.readdirSync(dir);
+    assert.deepStrictEqual(names.filter(function(name) {
+        return name !== 'tally.json';
+    }), []);
+    const parsed = JSON.parse(fs.readFileSync(path.join(dir, 'tally.json'), 'utf8'));
+    assert.strictEqual(parsed.seed, 9);
+    assert.strictEqual(parsed.forever, true);
+    assert.strictEqual(parsed.trials, 4);
+    assert.strictEqual(parsed.saved, 2);
+    assert.strictEqual(parsed.updatedAt, '2026-08-14T12:00:00.000Z');
+    assert.deepStrictEqual(parsed.counts, counts);
+    assert.strictEqual(parsed.lastTrial.mutator, 'legend-cycle');
+    assert.strictEqual(parsed.lastSaved.kind, 'crash');
+    assert.strictEqual(
+        garden.formatForeverStatus(counts, 4, 2),
+        'trials=4 saved=2 crash=2 timeout=0 invariant=0 nondeterministic=0 replay-divergence=0 semantic-mismatch=0'
+    );
+});
+
 function runWorkerSync(job, timeoutMs) {
     return spawnSync(process.execPath, [path.join(__dirname, 'worker.js')], {
         input: JSON.stringify(job),

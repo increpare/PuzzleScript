@@ -1563,6 +1563,46 @@ function writeArtifacts(outputDir, dirName, files) {
     }
 }
 
+function tallyPayload(fields, now) {
+    const stamp = now === undefined ? function() { return new Date().toISOString(); } : now;
+    return {
+        seed: fields.seed,
+        forever: !!fields.forever,
+        trials: fields.trials,
+        saved: fields.saved,
+        counts: fields.counts,
+        lastTrial: fields.lastTrial,
+        lastSaved: fields.lastSaved == null ? null : fields.lastSaved,
+        updatedAt: typeof stamp === 'function' ? stamp() : stamp
+    };
+}
+
+function writeTally(outputDir, payload) {
+    fs.mkdirSync(outputDir, { recursive: true });
+    const dest = path.join(outputDir, 'tally.json');
+    const tmp = path.join(outputDir, '.tally.json.' + process.pid + '.tmp');
+    try {
+        fs.writeFileSync(tmp, JSON.stringify(payload, null, 2) + '\n');
+        fs.renameSync(tmp, dest);
+    } catch (error) {
+        if (fs.existsSync(tmp)) {
+            fs.unlinkSync(tmp);
+        }
+        throw error;
+    }
+}
+
+function formatForeverStatus(counts, trials, saved) {
+    return 'trials=' + trials +
+        ' saved=' + saved +
+        ' crash=' + (counts.crash || 0) +
+        ' timeout=' + (counts.timeout || 0) +
+        ' invariant=' + (counts.invariant || 0) +
+        ' nondeterministic=' + (counts.nondeterministic || 0) +
+        ' replay-divergence=' + (counts['replay-divergence'] || 0) +
+        ' semantic-mismatch=' + (counts['semantic-mismatch'] || 0);
+}
+
 module.exports = {
     Random: Random,
     loadCorpus: loadCorpus,
@@ -1584,6 +1624,9 @@ module.exports = {
     artifactDirName: artifactDirName,
     formatRegression: formatRegression,
     writeArtifacts: writeArtifacts,
+    tallyPayload: tallyPayload,
+    writeTally: writeTally,
+    formatForeverStatus: formatForeverStatus,
     runChild: runChild,
     KNOWN_RESULT_KINDS: KNOWN_RESULT_KINDS
 };
