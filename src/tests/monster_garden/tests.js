@@ -339,6 +339,51 @@ test('the worker reports a crash when execution throws', function() {
     assert.strictEqual(typeof result.error.message, 'string');
 });
 
+test('the parent classifies a hung child as timeout', function() {
+    const hung = path.join(os.tmpdir(), 'monster-garden-hang.js');
+    fs.writeFileSync(hung, 'setTimeout(function() {}, 100000);\n');
+    return garden.runChild(process.execPath, [hung], '', 80).then(function(result) {
+        assert.strictEqual(result.kind, 'timeout');
+    });
+});
+
+test('run.js --list-mutators prints every mutator and exits 0', function() {
+    const child = spawnSync(process.execPath, [path.join(__dirname, 'run.js'), '--list-mutators'], {
+        encoding: 'utf8'
+    });
+    assert.strictEqual(child.status, 0, child.stderr);
+    garden.mutators.forEach(function(mutator) {
+        assert(child.stdout.indexOf(mutator.name) >= 0, mutator.name);
+    });
+});
+
+test('run.js rejects malformed options with a nonzero exit', function() {
+    const child = spawnSync(process.execPath, [path.join(__dirname, 'run.js'), '--count', '0'], {
+        encoding: 'utf8'
+    });
+    assert.notStrictEqual(child.status, 0);
+    assert(/count/.test(child.stderr));
+});
+
+test('a one-mutant CLI run is deterministic and writes no artifacts for healthy output', function() {
+    const output = fs.mkdtempSync(path.join(os.tmpdir(), 'monster-garden-'));
+    const args = [
+        path.join(__dirname, 'run.js'),
+        '--seed', '12345',
+        '--count', '1',
+        '--no-shrink',
+        '--no-replay',
+        '--timeout-ms', '20000',
+        '--output', output
+    ];
+    const first = spawnSync(process.execPath, args, { encoding: 'utf8' });
+    const second = spawnSync(process.execPath, args, { encoding: 'utf8' });
+    assert.strictEqual(first.status, 0, first.stderr + first.stdout);
+    assert.strictEqual(second.status, 0, second.stderr + second.stdout);
+    assert.strictEqual(first.stdout, second.stdout);
+    assert.strictEqual(fs.readdirSync(output).length, 0);
+});
+
 async function main() {
     let passed = 0;
     for (let i = 0; i < tests.length; i++) {

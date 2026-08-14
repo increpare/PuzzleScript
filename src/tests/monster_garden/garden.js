@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { spawn } = require('child_process');
 
 function Random(seed) {
     this._state = seed >>> 0;
@@ -485,6 +486,47 @@ function formatRegression(name, source) {
     return '[\n    ' + JSON.stringify(name) + ',\n    [' + JSON.stringify(source) + ', [], ""]\n],\n';
 }
 
+function runChild(command, args, stdin, timeoutMs) {
+    return new Promise(function(resolve) {
+        const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'pipe'] });
+        let stdout = '';
+        let stderr = '';
+        let timedOut = false;
+        const timer = setTimeout(function() {
+            timedOut = true;
+            child.kill('SIGKILL');
+        }, timeoutMs);
+        child.stdout.on('data', function(chunk) { stdout += chunk; });
+        child.stderr.on('data', function(chunk) { stderr += chunk; });
+        child.on('close', function() {
+            clearTimeout(timer);
+            if (timedOut) {
+                resolve({
+                    kind: 'timeout',
+                    error: null,
+                    fingerprint: '',
+                    detail: 'timeout',
+                    errorCount: 0
+                });
+                return;
+            }
+            try {
+                resolve(JSON.parse(stdout.trim().split('\n').pop()));
+            } catch (error) {
+                resolve({
+                    kind: 'crash',
+                    error: { name: 'ChildOutputError', message: (stdout || stderr || error.message).split('\n')[0] },
+                    fingerprint: '',
+                    detail: stderr,
+                    errorCount: 0
+                });
+            }
+        });
+        child.stdin.write(stdin);
+        child.stdin.end();
+    });
+}
+
 function writeArtifacts(outputDir, dirName, files) {
     const tmp = path.join(outputDir, dirName + '.tmp');
     const dest = path.join(outputDir, dirName);
@@ -511,5 +553,6 @@ module.exports = {
     shrinkSource: shrinkSource,
     artifactDirName: artifactDirName,
     formatRegression: formatRegression,
-    writeArtifacts: writeArtifacts
+    writeArtifacts: writeArtifacts,
+    runChild: runChild
 };
