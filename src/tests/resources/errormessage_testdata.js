@@ -1159,4 +1159,8 @@ var errormessage_testdata = [
         "RHS longer than LHS with 'no' should error instead of crashing (lhs_cell.length)",
         ["title rhs longer than lhs\nauthor test\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nPlayer\nwhite\n\nCrate\norange\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n* = Crate\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Crate\n\n======\nRULES\n======\n\n[ > Player ] -> [ > Player | no Crate ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP\n",["line 40 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells)."],1]
     ],
+    [
+        "no aggregate on the RHS should error instead of crashing (anyBitsInCommon)",
+        ["title no aggregate on RHS\nauthor test\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nPlayer\nwhite\n\nTarget\nblue\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\nO = Target\nBoth = Player and Target\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer\n\n======\nRULES\n======\n\n[ Player ] -> [ Player no Both ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP\n",["line 42 : You cannot use 'no' to exclude the aggregate object BOTH (defined using 'AND'), only regular objects, or properties (objects defined using 'OR'). If you want to do this, you'll have to write it out yourself the long way."],1]
+    ],
 ];    
