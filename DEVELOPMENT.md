@@ -70,14 +70,29 @@ normal test suite.
     node src/tests/monster_garden/run.js --list-mutators
     node src/tests/monster_garden/run.js --seed 12345 --count 20
 
-A fixed seed reproduces the same mutants. Before blaming a mutation, the garden
-preflights the unmutated fixture with the same inputs, level, and random seed.
-If that baseline already fails the same way, the tally is `baseline` and no
-artifact is saved. Only a different interesting mutant is attributed to the
-mutator.
+A fixed seed reproduces the same mutants. `--list-mutators` prints all thirteen
+names, including `duplicate-rule-line`, `swap-object-colors`, `nudge-level-cell`,
+and `flip-win-quantifier`.
+
+`--extra-inputs N` (default 0, by omitting the flag) leaves the recorded tape
+unchanged. When N is greater than 0, extras are appended after `--max-inputs`
+truncation of the recorded prefix. They are generated once per trial before
+mutate; the same sequence is used for baseline preflight and the mutant.
+
+Before blaming a mutation, the garden preflights the unmutated fixture with the
+same inputs, level, and random seed. Recorded `expectedOutput` is checked only
+on that unmutated baseline, and only when `--extra-inputs` is 0 and the
+fixture's recorded input list is no longer than `--max-inputs`. Compiler-message
+oracles are also sent only on that baseline. Mutants are not scored against
+recorded output or messages. If the baseline already fails the same way, the
+tally is `baseline` and no artifact is saved. A baseline oracle miss is
+`semantic-mismatch` (and tallied as `baseline` when the mutant matches). Only a
+different interesting mutant is attributed to the mutator.
 
 Interesting cases are written under `.build/monster_garden/` as `original.txt`,
-`minimized.txt`, `report.json`, and `regression.js`. `report.json` includes
-`inputs`, `level`, `randomSeed`, `originalResult`, and `minimizedResult`. Paste
-`regression.js` into `testdata.js` or `errormessage_testdata.js` only after you
-have confirmed it is a real defect.
+`minimized.txt`, `report.json`, and `regression.js`. Top-level `report.json`
+includes `inputs`, `level`, `randomSeed`, `originalResult`, `minimizedResult`,
+`baselineKind`, and `baselineSignature`. `engineSeed` is on the worker result
+objects inside `originalResult` / `minimizedResult`. `regression.js` includes
+the executed inputs, level, and seed. Paste `regression.js` into `testdata.js`
+or `errormessage_testdata.js` only after you have confirmed it is a real defect.
