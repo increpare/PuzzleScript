@@ -442,15 +442,25 @@ function parseArguments(argv, options) {
     return result;
 }
 
+function clip(value, n) {
+    return String(value == null ? '' : value).slice(0, n || 80);
+}
+
 function failureSignature(result) {
+    if (!result || !result.kind) {
+        return 'unknown';
+    }
+    if (result.kind === 'timeout') {
+        return 'timeout';
+    }
     if (result.kind === 'crash' && result.error) {
         const message = String(result.error.message || '').split('\n')[0];
         return 'crash:' + result.error.name + ':' + message;
     }
-    if (result.kind === 'invariant') {
-        return 'invariant:' + String(result.detail || '');
+    if (result.kind === 'invariant' || result.kind === 'semantic-mismatch') {
+        return result.kind + ':' + clip(result.detail) + ':' + clip(result.fingerprint);
     }
-    return String(result.kind);
+    return result.kind + ':' + clip(result.fingerprint) + ':' + clip(result.detail);
 }
 
 function checkLevelInvariants(level, strideObj, strideMov) {
@@ -500,6 +510,53 @@ function shrinkSource(source, keep, budget) {
         }
     }
     return { source: current.join('\n'), steps: budget - remaining };
+}
+
+async function shrinkInteresting(mutant, originalResult, options) {
+    const signature = failureSignature(originalResult);
+    if (!options.shrink || originalResult.kind === 'timeout') {
+        return { source: mutant.source, steps: 0, signature: signature, result: originalResult };
+    }
+    let current = mutant.source.split('\n');
+    let steps = 0;
+    let remaining = options.shrinkBudget;
+    let changed = true;
+    while (changed && remaining > 0) {
+        changed = false;
+        let i = 0;
+        while (i < current.length && remaining > 0) {
+            const candidateSource = current.slice(0, i).concat(current.slice(i + 1)).join('\n');
+            remaining--;
+            steps++;
+            const next = await options.evaluate({
+                source: candidateSource,
+                inputs: mutant.inputs,
+                level: mutant.level,
+                randomSeed: mutant.randomSeed
+            });
+            if (failureSignature(next) === signature) {
+                current = candidateSource.split('\n');
+                changed = true;
+            } else {
+                i++;
+            }
+        }
+    }
+    let minimizedSource = current.join('\n');
+    if (mutant.source.endsWith('\n') && !minimizedSource.endsWith('\n')) {
+        minimizedSource += '\n';
+    }
+    const verified = await options.evaluate({
+        source: minimizedSource,
+        inputs: mutant.inputs,
+        level: mutant.level,
+        randomSeed: mutant.randomSeed
+    });
+    steps++;
+    if (failureSignature(verified) !== signature) {
+        return { source: mutant.source, steps: steps, signature: signature, result: originalResult };
+    }
+    return { source: minimizedSource, steps: steps, signature: signature, result: verified };
 }
 
 function artifactDirName(signature, seed, index) {
@@ -670,6 +727,7 @@ module.exports = {
     checkLevelInvariants: checkLevelInvariants,
     isInteresting: isInteresting,
     shrinkSource: shrinkSource,
+    shrinkInteresting: shrinkInteresting,
     artifactDirName: artifactDirName,
     formatRegression: formatRegression,
     writeArtifacts: writeArtifacts,

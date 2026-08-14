@@ -41,36 +41,11 @@ async function evaluateMutant(mutant, options) {
 }
 
 async function shrinkMutant(mutant, result, options) {
-    const signature = garden.failureSignature(result);
-    if (!options.shrink) {
-        return { source: mutant.source, steps: 0, signature: signature };
-    }
-    let current = mutant.source.split('\n');
-    let steps = 0;
-    let remaining = options.shrinkBudget;
-    let changed = true;
-    while (changed && remaining > 0) {
-        changed = false;
-        let i = 0;
-        while (i < current.length && remaining > 0) {
-            const candidateSource = current.slice(0, i).concat(current.slice(i + 1)).join('\n');
-            remaining--;
-            steps++;
-            const next = await evaluateMutant({
-                source: candidateSource,
-                inputs: mutant.inputs,
-                level: mutant.level,
-                randomSeed: mutant.randomSeed
-            }, options);
-            if (garden.failureSignature(next) === signature) {
-                current = candidateSource.split('\n');
-                changed = true;
-            } else {
-                i++;
-            }
+    return garden.shrinkInteresting(mutant, result, Object.assign({}, options, {
+        evaluate: function(partial) {
+            return evaluateMutant(Object.assign({}, mutant, partial), options);
         }
-    }
-    return { source: current.join('\n'), steps: steps, signature: signature };
+    }));
 }
 
 async function main() {
