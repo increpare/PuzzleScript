@@ -1486,6 +1486,9 @@ Rule.prototype.generate_all_MatchFunctions = function(){
 
 let CACHE_RULE_CELLROWMATCHESFUNCTION = {}
 Rule.prototype.generateCellRowMatchesFunction = function (cellRow, ellipsisCount) {
+	if (!cellRow || cellRow.length === 0 || typeof cellRow[0].generateMatchString !== 'function') {
+		return function() { return false; };
+	}
 	if (ellipsisCount === 0) {
 		let cr_l = cellRow.length;
 

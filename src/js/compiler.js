@@ -378,20 +378,27 @@ function generateExtraMembers(state) {
             let backgrounddef = state.propertiesDict['background'];
             let n = backgrounddef[0];
             let o = state.objects[n];
-            backgroundid = o.id;
-            backgroundlayer = o.layer;
-            for (let i = 1; i < backgrounddef.length; i++) {
-                let nnew = backgrounddef[i];
-                let onew = state.objects[nnew];
-                if (onew.layer !== backgroundlayer) {
-                    let lineNumber = state.original_line_numbers['background'];
-                    logError('Background objects must be on the same layer', lineNumber);
+            if (o) {
+                backgroundid = o.id;
+                backgroundlayer = o.layer;
+                for (let i = 1; i < backgrounddef.length; i++) {
+                    let nnew = backgrounddef[i];
+                    let onew = state.objects[nnew];
+                    if (!onew) {
+                        continue;
+                    }
+                    if (onew.layer !== backgroundlayer) {
+                        let lineNumber = state.original_line_numbers['background'];
+                        logError('Background objects must be on the same layer', lineNumber);
+                    }
                 }
             }
         } else if ('background' in state.aggregatesDict) {
             let o = state.objects[state.idDict[0]];
-            backgroundid = o.id;
-            backgroundlayer = o.layer;
+            if (o != null) {
+                backgroundid = o.id;
+                backgroundlayer = o.layer;
+            }
             let lineNumber = state.original_line_numbers['background'];
             logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').", lineNumber);
         } else {
@@ -459,7 +466,7 @@ function levelFromString(state, level) {
     const levelBackgroundMask = o.calcBackgroundMask(state);
     for (let i = 0; i < o.n_tiles; i++) {
         let cell = o.getCell(i);
-        if (!backgroundLayerMask.anyBitsInCommon(cell)) {
+        if (!backgroundLayerMask || !backgroundLayerMask.anyBitsInCommon(cell)) {
             cell.ior(levelBackgroundMask);
             o.setCell(i, cell);
         }
@@ -654,6 +661,8 @@ function processRuleString(rule, state, curRules) {
                         } else {
                             logError('Two "+"s (the "append to previous rule group" symbol) applied to the same rule.', lineNumber);
                         }
+                    } else if (relativeDirections.includes(token)) {
+                        logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
                     } else if (token in directionaggregates) {
                         directions = directions.concat(directionaggregates[token]);
                     } else if (token === 'late') {
@@ -1016,6 +1025,9 @@ First, let's check for 'X no X' on the RHS.
                         for (let m=0;m<property_obs_len;m++){
                             const object_name = property_obs[m];
                             const object_data = state.objects[object_name];
+                            if (!object_data) {
+                                continue;
+                            }
                             required_objects.ibitset(object_data.id);
                         }
                         occupier[layer]=entity_name;
@@ -1029,6 +1041,9 @@ First, let's check for 'X no X' on the RHS.
                         let aggregate_obs = state.aggregatesDict[entity_name];
                         for (let m=0;m<aggregate_obs.length;m++){
                             let object_info = state.objects[aggregate_obs[m]];
+                            if (!object_info) {
+                                continue;
+                            }
                             let layer = object_info.layer;
                             let ob_id = object_info.id;
                             required_layers.ibitset(layer);
@@ -1455,7 +1470,13 @@ function makeSpawnedObjectsStationary(state, rule, lineNumber) {
 
             //this is super intricate. uff. 
             let objects_l = getPossibleObjectsFromCell(state, row_l[k]);
-            let layers = objects_l.map(n => state.objects[n].layer);
+            let layers = [];
+            for (let oi = 0; oi < objects_l.length; oi++) {
+                const leftObj = state.objects[objects_l[oi]];
+                if (leftObj) {
+                    layers.push(leftObj.layer);
+                }
+            }
             for (let l = 0; l < cell.length; l += 2) {
                 let dir = cell[l];
                 if (dir !== "") {
@@ -1465,7 +1486,11 @@ function makeSpawnedObjectsStationary(state, rule, lineNumber) {
                 if (name in state.propertiesDict || objects_l.includes(name)) {
                     continue;
                 }
-                let r_layer = state.objects[name].layer;
+                let rhsObj = state.objects[name];
+                if (!rhsObj) {
+                    continue;
+                }
+                let r_layer = rhsObj.layer;
                 if (!layers.includes(r_layer)) {
                     cell[l] = 'stationary';
                 }
@@ -1788,6 +1813,7 @@ function rulesToMask(state) {
                         }
                         if (colIndex === 0 || colIndex === cellrow_l.length - 1) {
                             logError("There's no point in putting an ellipsis at the very start or the end of a rule", rule.lineNumber);
+                            rule.ellipsisAtEdge = true;
                         }
                         if (rule.rhs.length > 0) {
                             const rhscell = cellrow_r[colIndex];
@@ -1811,6 +1837,7 @@ function rulesToMask(state) {
 
                     if (typeof layerIndex === "undefined") {
                         logError(`Oops! ${object_name.toUpperCase()} not assigned to a layer.`, rule.lineNumber);
+                        continue;
                     }
 
                     if (object_dir === 'no') {
@@ -1917,7 +1944,11 @@ function rulesToMask(state) {
                             }
 
                             for (const subobject of values) {
-                                const layerIndex = state.objects[subobject].layer | 0;
+                                const sub = state.objects[subobject];
+                                if (!sub || sub.layer === undefined) {
+                                    continue;
+                                }
+                                const layerIndex = sub.layer | 0;
                                 const existingname = layersUsed_r[layerIndex];
                                 
                                 if (existingname !== null) {
@@ -1937,6 +1968,11 @@ function rulesToMask(state) {
                     const object = state.objects[object_name];
                     const objectMask = state.objectMasks[object_name];
                     const layerIndex = object ? (object.layer | 0) : state.propertiesSingleLayer[object_name];
+
+                    if (typeof layerIndex === "undefined") {
+                        logError(`Oops! ${object_name.toUpperCase()} not assigned to a layer.`, rule.lineNumber);
+                        continue;
+                    }
 
                     if (object_dir === 'no') {
                         rhsBitVectors.objectsClear.ior(objectMask);
@@ -2012,6 +2048,11 @@ function rulesToMask(state) {
                 }
             }
         }
+        if (rule.ellipsisAtEdge) {
+            state.rules.splice(ruleIndex, 1);
+            ruleIndex--;
+            continue outerloop;
+        }
     }
 }
 
@@ -2042,7 +2083,11 @@ function collapseRules(groups) {
                 ellipses.push(0);
             }
 
-            newrule[0] = dirMasks[oldrule.direction];
+            const dirMask = dirMasks[oldrule.direction];
+            if (dirMask === undefined) {
+                continue;
+            }
+            newrule[0] = dirMask;
             for (let j = 0; j < oldrule.lhs.length; j++) {
                 const cellrow_l = oldrule.lhs[j];
                 for (let k = 0; k < cellrow_l.length; k++) {
@@ -2208,37 +2253,37 @@ function isObjectDefined(state, name) {
         (state.synonymsDict !== undefined && (name in state.synonymsDict));
 }
 
+function bitsetObjectId(objectMask, o) {
+    if (o == null) {
+        return;
+    }
+    objectMask.ibitset(o.id);
+}
+
 function getMaskFromName(state, name) {
     const objectMask = new BitVec(STRIDE_OBJ);
     let aggregate = false;
     if (name in state.objects) {
-        const o = state.objects[name];
-        objectMask.ibitset(o.id);
+        bitsetObjectId(objectMask, state.objects[name]);
     }
 
     if (name in state.aggregatesDict) {
         const objectnames = state.aggregatesDict[name];
         aggregate = true;
         for (let i = 0; i < objectnames.length; i++) {
-            const n = objectnames[i];
-            const o = state.objects[n];
-            objectMask.ibitset(o.id);
+            bitsetObjectId(objectMask, state.objects[objectnames[i]]);
         }
     }
 
     if (name in state.propertiesDict) {
         const objectnames = state.propertiesDict[name];
         for (let i = 0; i < objectnames.length; i++) {
-            const n = objectnames[i];
-            const o = state.objects[n];
-            objectMask.ibitset(o.id);
+            bitsetObjectId(objectMask, state.objects[objectnames[i]]);
         }
     }
 
     if (name in state.synonymsDict) {
-        const n = state.synonymsDict[name];
-        const o = state.objects[n];
-        objectMask.ibitset(o.id);
+        bitsetObjectId(objectMask, state.objects[state.synonymsDict[name]]);
     }
 
     if (objectMask.iszero()) {
@@ -2319,8 +2364,9 @@ function generateMasks(state) {
         let aggregateMask = new BitVec(STRIDE_OBJ);
         for (let i = 0; i < objectnames.length; i++) {
             let n = objectnames[i];
-            let o = state.objects[n];
-            aggregateMask.ior(objectMask[n]);
+            if (objectMask[n]) {
+                aggregateMask.ior(objectMask[n]);
+            }
         }
         state.aggregateMasks[aggregateName] = aggregateMask;
     }
@@ -2414,7 +2460,7 @@ function lookupWinConditionMask(state, name, lineNumber) {
         return { aggregate: true, mask: state.aggregateMasks[name] };
     } else {
         logError('Unwelcome term "' + name + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
-        return { aggregate: false, mask: 0 };
+        return null;
     }
 }
 
@@ -2451,6 +2497,9 @@ function processWinConditions(state) {
         }
         let r1 = lookupWinConditionMask(state, n1, lineNumber);
         let r2 = lookupWinConditionMask(state, n2, lineNumber);
+        if (!r1 || !r2) {
+            continue;
+        }
         let newcondition = [num, r1.mask, r2.mask, lineNumber, r1.aggregate, r2.aggregate];
         newconditions.push(newcondition);
     }
@@ -2790,6 +2839,7 @@ function generateSoundData(state) {
 
             if (target in state.aggregatesDict) {
                 logError('cannot assign sound events to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("' + target + '").', lineNumber);
+                continue;
             } else if (target in state.objectMasks) {
 
             } else {
@@ -2839,14 +2889,13 @@ function generateSoundData(state) {
                 for (let j = 0; j < targets.length; j++) {
                     let targetName = targets[j];
                     let targetDat = state.objects[targetName];
-                    let targetLayer = targetDat.layer;
-                    let this_object_mask = new BitVec(STRIDE_OBJ);
-                    this_object_mask.ibitset(targetDat.id)
-
-                    //if not found, continue - probably from the error ""aggr" is an aggregate (defined using "and"), and cannot be added to a single layer because its constituent objects must be able to coexist."
-                    if (targetLayer === undefined) {
+                    if (!targetDat || targetDat.layer === undefined) {
                         continue;
                     }
+                    let targetLayer = targetDat.layer;
+                    let this_object_mask = new BitVec(STRIDE_OBJ);
+                    this_object_mask.ibitset(targetDat.id);
+
                     let shiftedDirectionMask = new BitVec(STRIDE_MOV);
                     shiftedDirectionMask.ishiftor(directionMask, 5 * targetLayer);
 
