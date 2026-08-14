@@ -463,22 +463,83 @@ function failureSignature(result) {
     return result.kind + ':' + clip(result.fingerprint) + ':' + clip(result.detail);
 }
 
-function checkLevelInvariants(level, strideObj, strideMov) {
+function isIntArrayLike(value, length) {
+    return value && typeof value.length === 'number' && value.length === length;
+}
+
+function checkLevelInvariants(level, strideObj, strideMov, state) {
+    if (!(strideObj > 0) || !(strideMov > 0) || !Number.isInteger(strideObj) || !Number.isInteger(strideMov)) {
+        return 'strides are invalid';
+    }
     if (!level || typeof level !== 'object') {
         return 'level is missing';
     }
-    if (!(level.width > 0) || !(level.height > 0)) {
+    if (!Number.isInteger(level.width) || !Number.isInteger(level.height) || !(level.width > 0) || !(level.height > 0)) {
         return 'level dimensions are invalid';
     }
     if (level.n_tiles !== level.width * level.height) {
         return 'n_tiles does not match width*height';
     }
     const expectedObjects = level.n_tiles * strideObj;
-    if (!level.objects || level.objects.length !== expectedObjects) {
+    if (!isIntArrayLike(level.objects, expectedObjects)) {
         return 'objects length is ' + (level.objects && level.objects.length) + ' expected ' + expectedObjects;
     }
-    if (level.movements && level.movements.length !== level.n_tiles * strideMov) {
-        return 'movements length is ' + level.movements.length + ' expected ' + (level.n_tiles * strideMov);
+    const expectedMovements = level.n_tiles * strideMov;
+    if (!isIntArrayLike(level.movements, expectedMovements)) {
+        return 'movements length is ' + (level.movements && level.movements.length) + ' expected ' + expectedMovements;
+    }
+    if (level.commandQueue && level.commandQueue.length) {
+        return 'commandQueue is not empty';
+    }
+    if (level.rowCellContents && level.rowCellContents.length !== level.height) {
+        return 'rowCellContents length is invalid';
+    }
+    if (level.colCellContents && level.colCellContents.length !== level.width) {
+        return 'colCellContents length is invalid';
+    }
+    if (state && state.rigid) {
+        if (!level.rigidMovementAppliedMask || level.rigidMovementAppliedMask.length !== level.n_tiles) {
+            return 'rigidMovementAppliedMask length is invalid';
+        }
+        if (!level.rigidGroupIndexMask || level.rigidGroupIndexMask.length !== level.n_tiles) {
+            return 'rigidGroupIndexMask length is invalid';
+        }
+    }
+    if (state && state.idDict) {
+        const objectCount = Object.keys(state.idDict).length;
+        const maxBit = objectCount;
+        for (let tile = 0; tile < level.n_tiles; tile++) {
+            for (let word = 0; word < strideObj; word++) {
+                const bits = level.objects[tile * strideObj + word];
+                for (let bit = 0; bit < 32; bit++) {
+                    const abs = word * 32 + bit;
+                    if (abs >= maxBit && (bits & (1 << bit))) {
+                        return 'object bit ' + abs + ' is set but idDict has ' + maxBit + ' entries';
+                    }
+                }
+            }
+        }
+    }
+    const layerMasks = state && (state.layerMasks || state.collisionMasks);
+    if (layerMasks && layerMasks.length) {
+        for (let tile = 0; tile < level.n_tiles; tile++) {
+            for (let layer = 0; layer < layerMasks.length; layer++) {
+                const mask = layerMasks[layer];
+                if (!mask || !mask.data) {
+                    continue;
+                }
+                let count = 0;
+                for (let word = 0; word < strideObj; word++) {
+                    const bits = level.objects[tile * strideObj + word] & mask.data[word];
+                    if (bits) {
+                        count += bits.toString(2).replace(/0/g, '').length;
+                    }
+                }
+                if (count > 1) {
+                    return 'collision layer ' + layer + ' has ' + count + ' objects at tile ' + tile;
+                }
+            }
+        }
     }
     return null;
 }

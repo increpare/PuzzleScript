@@ -318,20 +318,31 @@ test('level invariants accept a well-formed level and name the first broken fiel
         width: 2,
         height: 3,
         n_tiles: 6,
-        objects: { length: 12 },
-        movements: { length: 6 }
+        objects: new Int32Array(12),
+        movements: new Int32Array(6),
+        commandQueue: [],
+        rowCellContents: [0, 0, 0],
+        colCellContents: [0, 0]
     };
     assert.strictEqual(garden.checkLevelInvariants(good, 2, 1), null);
+    assert(/stride/.test(garden.checkLevelInvariants(good, 0, 1)));
     assert(/missing/.test(garden.checkLevelInvariants(null, 2, 1)));
-    assert(/dimensions/.test(garden.checkLevelInvariants({ width: 0, height: 3, n_tiles: 0, objects: { length: 0 } }, 2, 1)));
+    assert(/dimensions/.test(garden.checkLevelInvariants({
+        width: 0, height: 3, n_tiles: 0, objects: new Int32Array(0), movements: new Int32Array(0)
+    }, 2, 1)));
     assert(/n_tiles/.test(garden.checkLevelInvariants({
-        width: 2, height: 3, n_tiles: 5, objects: { length: 10 }
+        width: 2, height: 3, n_tiles: 5, objects: new Int32Array(10), movements: new Int32Array(5)
     }, 2, 1)));
     assert(/objects/.test(garden.checkLevelInvariants({
-        width: 2, height: 3, n_tiles: 6, objects: { length: 5 }
+        width: 2, height: 3, n_tiles: 6, objects: new Int32Array(5), movements: new Int32Array(6)
     }, 2, 1)));
     assert(/movements/.test(garden.checkLevelInvariants({
-        width: 2, height: 3, n_tiles: 6, objects: { length: 12 }, movements: { length: 2 }
+        width: 2, height: 3, n_tiles: 6, objects: new Int32Array(12)
+    }, 2, 1)));
+    assert(/commandQueue/.test(garden.checkLevelInvariants({
+        width: 2, height: 3, n_tiles: 6,
+        objects: new Int32Array(12), movements: new Int32Array(6),
+        commandQueue: ['win']
     }, 2, 1)));
 });
 
