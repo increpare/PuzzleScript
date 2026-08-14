@@ -22,6 +22,18 @@ function allowedMutators(option) {
     return option || garden.mutators.map(function(mutator) { return mutator.name; });
 }
 
+function readGitRev() {
+    try {
+        return require('child_process').execSync('git rev-parse HEAD', {
+            cwd: __dirname,
+            encoding: 'utf8',
+            stdio: ['ignore', 'pipe', 'ignore']
+        }).trim();
+    } catch (error) {
+        return '';
+    }
+}
+
 async function evaluateMutant(mutant, options) {
     const job = {
         source: mutant.source,
@@ -112,17 +124,30 @@ async function main() {
             'minimized.txt': minimized.source,
             'report.json': JSON.stringify({
                 seed: options.seed,
+                campaignIndex: i,
+                gitRev: readGitRev(),
                 fixtureName: mutant.fixtureName,
+                corpusIndex: mutant.corpusIndex,
                 fixtureIndex: mutant.fixtureIndex,
+                fixtureKind: mutant.kind,
                 mutator: mutant.mutator,
                 detail: mutant.detail,
-                result: result,
+                attempt: mutant.attempt,
+                inputs: mutant.inputs,
+                level: mutant.level,
+                randomSeed: mutant.randomSeed,
+                replay: options.replay,
+                maxInputs: options.maxInputs,
+                timeoutMs: options.timeoutMs,
+                originalResult: result,
+                minimizedResult: minimized.result,
                 signature: minimized.signature,
                 shrinkSteps: minimized.steps
             }, null, 2) + '\n',
             'regression.js': garden.formatRegression(
                 'monster garden ' + options.seed + ' ' + artifactIndex,
-                minimized.source
+                minimized.source,
+                { inputs: mutant.inputs, level: mutant.level, randomSeed: mutant.randomSeed }
             )
         });
     }

@@ -361,11 +361,35 @@ test('artifact names and regression fixtures are copy-pasteable and path-safe', 
     const name = garden.artifactDirName('crash:TypeError:bad thing / \\ : *', 99, 3);
     assert.strictEqual(name, 'crash-TypeError-bad-thing-s99_0003');
     assert(!/[\/\\:*]/.test(name));
-    const snippet = garden.formatRegression('monster garden 99 3', 'title "X"\nline\n');
+    const snippet = garden.formatRegression('monster garden 99 3', 'title "X"\nline\n', {
+        inputs: [2, 3],
+        level: 4,
+        randomSeed: '1397263843369.0808'
+    });
     assert.strictEqual(
         snippet,
-        '[\n    "monster garden 99 3",\n    ["title \\"X\\"\\nline\\n", [], ""]\n],\n'
+        '[\n    "monster garden 99 3",\n    ["title \\"X\\"\\nline\\n", [2,3], "", 4, "1397263843369.0808"]\n],\n'
     );
+});
+
+test('writeArtifacts uses a unique temp directory and leaves dest intact until rename', function() {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'monster-garden-art-'));
+    const destName = 'crash-demo-s1_0001';
+    const dest = path.join(root, destName);
+    fs.mkdirSync(dest);
+    fs.writeFileSync(path.join(dest, 'report.json'), '{"old":true}\n');
+    const written = garden.writeArtifacts(root, destName, {
+        'report.json': '{"new":true}\n',
+        'original.txt': 'src\n'
+    });
+    assert.strictEqual(written, dest);
+    assert.strictEqual(fs.readFileSync(path.join(dest, 'report.json'), 'utf8'), '{"new":true}\n');
+    const leftovers = fs.readdirSync(root).filter(function(name) {
+        return name.indexOf('.tmp') >= 0 || name.indexOf(destName + '-') === 0;
+    });
+    leftovers.forEach(function(name) {
+        assert.notStrictEqual(name, destName + '.tmp');
+    });
 });
 
 function runWorkerSync(job, timeoutMs) {

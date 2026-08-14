@@ -570,8 +570,14 @@ function artifactDirName(signature, seed, index) {
     return (safe || 'monster') + '-s' + seed + '_' + String(index).padStart(4, '0');
 }
 
-function formatRegression(name, source) {
-    return '[\n    ' + JSON.stringify(name) + ',\n    [' + JSON.stringify(source) + ', [], ""]\n],\n';
+function formatRegression(name, source, job) {
+    job = job || {};
+    const inputs = job.inputs || [];
+    const level = job.level == null ? 0 : job.level;
+    const seed = job.randomSeed == null ? null : job.randomSeed;
+    return '[\n    ' + JSON.stringify(name) + ',\n    [' +
+        JSON.stringify(source) + ', ' + JSON.stringify(inputs) + ', "", ' +
+        JSON.stringify(level) + ', ' + JSON.stringify(seed) + ']\n],\n';
 }
 
 const KNOWN_RESULT_KINDS = [
@@ -706,16 +712,25 @@ function runChild(command, args, stdin, timeoutMs) {
 }
 
 function writeArtifacts(outputDir, dirName, files) {
-    const tmp = path.join(outputDir, dirName + '.tmp');
+    fs.mkdirSync(outputDir, { recursive: true });
+    const tmp = fs.mkdtempSync(path.join(outputDir, '.' + dirName + '-'));
     const dest = path.join(outputDir, dirName);
-    fs.rmSync(tmp, { recursive: true, force: true });
-    fs.mkdirSync(tmp, { recursive: true });
     const names = Object.keys(files);
     for (let i = 0; i < names.length; i++) {
         fs.writeFileSync(path.join(tmp, names[i]), files[names[i]]);
     }
-    fs.rmSync(dest, { recursive: true, force: true });
-    fs.renameSync(tmp, dest);
+    try {
+        fs.renameSync(tmp, dest);
+    } catch (error) {
+        if (error.code !== 'ENOTEMPTY' && error.code !== 'EEXIST') {
+            fs.rmSync(tmp, { recursive: true, force: true });
+            throw error;
+        }
+        const bak = fs.mkdtempSync(path.join(outputDir, '.' + dirName + '-old-'));
+        fs.renameSync(dest, bak);
+        fs.renameSync(tmp, dest);
+        fs.rmSync(bak, { recursive: true, force: true });
+    }
     return dest;
 }
 
