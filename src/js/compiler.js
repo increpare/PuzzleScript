@@ -1455,7 +1455,13 @@ function makeSpawnedObjectsStationary(state, rule, lineNumber) {
 
             //this is super intricate. uff. 
             let objects_l = getPossibleObjectsFromCell(state, row_l[k]);
-            let layers = objects_l.map(n => state.objects[n].layer);
+            let layers = [];
+            for (let oi = 0; oi < objects_l.length; oi++) {
+                const leftObj = state.objects[objects_l[oi]];
+                if (leftObj) {
+                    layers.push(leftObj.layer);
+                }
+            }
             for (let l = 0; l < cell.length; l += 2) {
                 let dir = cell[l];
                 if (dir !== "") {
@@ -1465,7 +1471,11 @@ function makeSpawnedObjectsStationary(state, rule, lineNumber) {
                 if (name in state.propertiesDict || objects_l.includes(name)) {
                     continue;
                 }
-                let r_layer = state.objects[name].layer;
+                let rhsObj = state.objects[name];
+                if (!rhsObj) {
+                    continue;
+                }
+                let r_layer = rhsObj.layer;
                 if (!layers.includes(r_layer)) {
                     cell[l] = 'stationary';
                 }
@@ -1811,6 +1821,7 @@ function rulesToMask(state) {
 
                     if (typeof layerIndex === "undefined") {
                         logError(`Oops! ${object_name.toUpperCase()} not assigned to a layer.`, rule.lineNumber);
+                        continue;
                     }
 
                     if (object_dir === 'no') {
@@ -1937,6 +1948,11 @@ function rulesToMask(state) {
                     const object = state.objects[object_name];
                     const objectMask = state.objectMasks[object_name];
                     const layerIndex = object ? (object.layer | 0) : state.propertiesSingleLayer[object_name];
+
+                    if (typeof layerIndex === "undefined") {
+                        logError(`Oops! ${object_name.toUpperCase()} not assigned to a layer.`, rule.lineNumber);
+                        continue;
+                    }
 
                     if (object_dir === 'no') {
                         rhsBitVectors.objectsClear.ior(objectMask);
