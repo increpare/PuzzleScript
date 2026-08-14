@@ -310,8 +310,8 @@ function stripInternalFields(result) {
 
 function runJob(job) {
     try {
-        validateJob(job);
         job.engineSeed = canonicalEngineSeed(job);
+        validateJob(job);
         const first = runOnce(job);
         if (first.kind !== 'ok') {
             return stripInternalFields(first);

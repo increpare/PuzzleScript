@@ -636,6 +636,7 @@ test('the worker echoes a canonical engineSeed and rejects a non-integer level',
         maxInputs: 8
     });
     assert.strictEqual(badLevel.kind, 'crash', JSON.stringify(badLevel));
+    assert.strictEqual(badLevel.engineSeed, 'garden-seed');
 });
 
 test('warning-only compiles are compiler-warning, not ok', function() {
