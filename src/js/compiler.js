@@ -2350,8 +2350,9 @@ function generateMasks(state) {
         let aggregateMask = new BitVec(STRIDE_OBJ);
         for (let i = 0; i < objectnames.length; i++) {
             let n = objectnames[i];
-            let o = state.objects[n];
-            aggregateMask.ior(objectMask[n]);
+            if (objectMask[n]) {
+                aggregateMask.ior(objectMask[n]);
+            }
         }
         state.aggregateMasks[aggregateName] = aggregateMask;
     }

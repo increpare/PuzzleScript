@@ -1197,6 +1197,10 @@ var errormessage_testdata = [
     ],
     [
         "movement on an undefined name should error instead of crashing (generateMatchString)",
-        ["title movement on missing name should error instead of crashing\nauthor test\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nPlayer\nwhite\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer\n\n======\nRULES\n======\n\n[ > MissingName ] -> cancel\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP\n",["line 36 : Name \"missingname\", referred to in a rule, does not exist.","line 36 : Error, malformed cell rule - was looking for cell contents, but found \"missingname\".  What am I supposed to do with this, eh, please tell me that.","line 36 : In a rule, if you specify a movement, it has to act on an object."],3]
+        ["title movement on missing name should error instead of crashing\nauthor test\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nPlayer\nwhite\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer\n\n======\nRULES\n======\n\n[ > MissingName ] -> cancel\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP\n",        ["line 36 : Name \"missingname\", referred to in a rule, does not exist.","line 36 : Error, malformed cell rule - was looking for cell contents, but found \"missingname\".  What am I supposed to do with this, eh, please tell me that.","line 36 : In a rule, if you specify a movement, it has to act on an object."],3]
     ],
-];    
+    [
+        "aggregate of missing objects should error instead of crashing (generateMasks ior)",
+        ["title aggregate of missing objects should error instead of crashing\nauthor test\n\n========\nOBJECTS\n========\n\nPlayer\nwhite\n\n=======\nLEGEND\n=======\n\nP = Player\nBackground = Black and White\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nPlayer\n\n======\nRULES\n======\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP\n",["line 16 : You're talking about BLACK but it's not defined anywhere.","line 16 : You're talking about WHITE but it's not defined anywhere.","line 16 : background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or')."],3]
+    ],
+];   
