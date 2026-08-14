@@ -1401,9 +1401,12 @@ function decodeBuffers(chunks) {
     return Buffer.concat(chunks).toString('utf8');
 }
 
-function runChild(command, args, stdin, timeoutMs) {
+function runChild(command, args, stdin, timeoutMs, onSpawn) {
     return new Promise(function(resolve) {
         const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'pipe'] });
+        if (typeof onSpawn === 'function') {
+            onSpawn(child);
+        }
         const stdoutChunks = [];
         const stderrChunks = [];
         let timedOut = false;

@@ -1590,6 +1590,21 @@ test('runChild prefers a finished ok result over a late timeout', function() {
     });
 });
 
+test('runChild onSpawn receives the live child process', function() {
+    const payload = JSON.stringify({
+        kind: 'ok', error: null, fingerprint: 'x', detail: '', errorCount: 0
+    });
+    let seen = null;
+    return garden.runChild('/bin/echo', [payload], '{}', 2000, function(child) {
+        seen = child;
+        assert.strictEqual(typeof child.pid, 'number');
+        assert.strictEqual(typeof child.kill, 'function');
+    }).then(function(result) {
+        assert(seen);
+        assert.strictEqual(result.kind, 'ok');
+    });
+});
+
 test('run.js --list-mutators prints every mutator and exits 0', function() {
     const child = spawnSync(process.execPath, [path.join(__dirname, 'run.js'), '--list-mutators'], {
         encoding: 'utf8'
