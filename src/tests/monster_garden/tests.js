@@ -1896,6 +1896,45 @@ test('run.js --forever stops on SIGINT and writes tally.json', function() {
     });
 });
 
+test('run.js --count exits on the first SIGINT', function() {
+    const output = fs.mkdtempSync(path.join(os.tmpdir(), 'monster-garden-count-int-'));
+    const child = spawn(process.execPath, [
+        path.join(__dirname, 'run.js'),
+        '--seed', '1',
+        '--count', '100',
+        '--no-shrink',
+        '--no-replay',
+        '--timeout-ms', '20000',
+        '--output', output
+    ]);
+    let signalled = false;
+    child.stdout.on('data', function() {
+        if (!signalled) {
+            signalled = true;
+            child.kill('SIGINT');
+        }
+    });
+    return new Promise(function(resolve, reject) {
+        const timer = setTimeout(function() {
+            child.kill('SIGKILL');
+            reject(new Error('--count did not exit on first SIGINT'));
+        }, 15000);
+        child.on('error', function(error) {
+            clearTimeout(timer);
+            reject(error);
+        });
+        child.on('close', function(code, signal) {
+            clearTimeout(timer);
+            try {
+                assert.notStrictEqual(signal, 'SIGKILL');
+                resolve();
+            } catch (error) {
+                reject(error);
+            }
+        });
+    });
+});
+
 async function main() {
     let passed = 0;
     for (let i = 0; i < tests.length; i++) {

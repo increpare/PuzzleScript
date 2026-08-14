@@ -150,8 +150,10 @@ async function main() {
         stopRequested = true;
     }
 
-    process.on('SIGINT', onSignal);
-    process.on('SIGTERM', onSignal);
+    if (options.forever) {
+        process.on('SIGINT', onSignal);
+        process.on('SIGTERM', onSignal);
+    }
 
     for (let i = 0; options.forever ? !stopRequested : i < options.count; i++) {
         const fixture = corpus[rng.integer(corpus.length)];
