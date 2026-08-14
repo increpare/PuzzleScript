@@ -2806,6 +2806,7 @@ function generateSoundData(state) {
 
             if (target in state.aggregatesDict) {
                 logError('cannot assign sound events to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("' + target + '").', lineNumber);
+                continue;
             } else if (target in state.objectMasks) {
 
             } else {
@@ -2855,14 +2856,13 @@ function generateSoundData(state) {
                 for (let j = 0; j < targets.length; j++) {
                     let targetName = targets[j];
                     let targetDat = state.objects[targetName];
-                    let targetLayer = targetDat.layer;
-                    let this_object_mask = new BitVec(STRIDE_OBJ);
-                    this_object_mask.ibitset(targetDat.id)
-
-                    //if not found, continue - probably from the error ""aggr" is an aggregate (defined using "and"), and cannot be added to a single layer because its constituent objects must be able to coexist."
-                    if (targetLayer === undefined) {
+                    if (!targetDat || targetDat.layer === undefined) {
                         continue;
                     }
+                    let targetLayer = targetDat.layer;
+                    let this_object_mask = new BitVec(STRIDE_OBJ);
+                    this_object_mask.ibitset(targetDat.id);
+
                     let shiftedDirectionMask = new BitVec(STRIDE_MOV);
                     shiftedDirectionMask.ishiftor(directionMask, 5 * targetLayer);
 
