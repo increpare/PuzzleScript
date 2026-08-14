@@ -140,6 +140,106 @@ test('sectionBlocks returns no blocks for a section that is only a header', func
     assert.deepStrictEqual(parsed.blocks, []);
 });
 
+test('normaliseBoardNames maps names back and re-sorts each cell', function() {
+    const board = 'CrateRenamed Player:0,1,\nBackground:1,0,\n';
+    const normalised = garden.normaliseBoardNames(board, { CrateRenamed: 'Crate' });
+    assert.strictEqual(normalised, 'Crate Player:0,1,\nBackground:1,0,\n');
+});
+
+test('normaliseBoardNames re-sorts when the new name sorts differently', function() {
+    const board = 'Player Zebra:0,\n';
+    const normalised = garden.normaliseBoardNames(board, { Zebra: 'Crate' });
+    assert.strictEqual(normalised, 'Crate Player:0,\n');
+});
+
+test('normaliseBoardNames leaves empty cells alone', function() {
+    assert.strictEqual(garden.normaliseBoardNames(':0,0,\n', { A: 'B' }), ':0,0,\n');
+});
+
+test('compareEquivalence ignores mutators that do not declare equivalence', function() {
+    const plain = { name: 'plain', apply: function() { return null; } };
+    const result = garden.compareEquivalence(
+        plain,
+        { kind: 'ok', fingerprint: 'a' },
+        { kind: 'ok', fingerprint: 'b' },
+        null
+    );
+    assert.strictEqual(result, null);
+});
+
+test('compareEquivalence makes no claim when the baseline is unhealthy', function() {
+    const mutator = { name: 'm', equivalence: 'full', apply: function() { return null; } };
+    const result = garden.compareEquivalence(
+        mutator,
+        { kind: 'crash', fingerprint: 'a' },
+        { kind: 'ok', fingerprint: 'b' },
+        null
+    );
+    assert.strictEqual(result, null);
+});
+
+test('compareEquivalence reports a full-fingerprint divergence', function() {
+    const mutator = { name: 'm', equivalence: 'full', apply: function() { return null; } };
+    assert.strictEqual(garden.compareEquivalence(
+        mutator, { kind: 'ok', fingerprint: 'a' }, { kind: 'ok', fingerprint: 'a' }, null
+    ), null);
+    const broken = garden.compareEquivalence(
+        mutator, { kind: 'ok', fingerprint: 'a' }, { kind: 'ok', fingerprint: 'b' }, null
+    );
+    assert(broken);
+    assert.strictEqual(broken.detail, 'fingerprint differs');
+});
+
+test('compareEquivalence compares only the board for board-level mutators', function() {
+    const mutator = { name: 'm', equivalence: 'board', apply: function() { return null; } };
+    const baseline = { kind: 'ok', fingerprint: JSON.stringify({ board: 'Crate:0,\n', curlevel: 0 }) };
+    const sameBoard = { kind: 'ok', fingerprint: JSON.stringify({ board: 'Crate:0,\n', curlevel: 9 }) };
+    assert.strictEqual(garden.compareEquivalence(mutator, baseline, sameBoard, null), null);
+    const otherBoard = { kind: 'ok', fingerprint: JSON.stringify({ board: 'Player:0,\n', curlevel: 0 }) };
+    const broken = garden.compareEquivalence(mutator, baseline, otherBoard, null);
+    assert(broken);
+    assert.strictEqual(broken.detail, 'board differs');
+});
+
+test('compareEquivalence applies the rename normaliser before comparing boards', function() {
+    const mutator = {
+        name: 'm',
+        equivalence: 'board',
+        normalise: garden.normaliseBoardNames,
+        apply: function() { return null; }
+    };
+    const baseline = { kind: 'ok', fingerprint: JSON.stringify({ board: 'Crate Player:0,\n' }) };
+    const renamed = { kind: 'ok', fingerprint: JSON.stringify({ board: 'CrateRenamed Player:0,\n' }) };
+    const context = { renames: { CrateRenamed: 'Crate' } };
+    assert.strictEqual(garden.compareEquivalence(mutator, baseline, renamed, context), null);
+});
+
+test('compareEquivalence treats a compiler error on a valid transformation as a break', function() {
+    const mutator = { name: 'm', equivalence: 'full', apply: function() { return null; } };
+    const broken = garden.compareEquivalence(
+        mutator, { kind: 'ok', fingerprint: 'a' }, { kind: 'compiler-error', fingerprint: 'x' }, null
+    );
+    assert(broken);
+    assert(/compiler-error/.test(broken.detail));
+});
+
+test('compareEquivalence does not treat a new warning or a crash as a break', function() {
+    const mutator = { name: 'm', equivalence: 'full', apply: function() { return null; } };
+    assert.strictEqual(garden.compareEquivalence(
+        mutator, { kind: 'ok', fingerprint: 'a' }, { kind: 'compiler-warning', fingerprint: 'x' }, null
+    ), null);
+    assert.strictEqual(garden.compareEquivalence(
+        mutator, { kind: 'ok', fingerprint: 'a' }, { kind: 'crash', fingerprint: 'x' }, null
+    ), null);
+});
+
+test('compareEquivalence makes no claim when a board is missing from a fingerprint', function() {
+    const mutator = { name: 'm', equivalence: 'board', apply: function() { return null; } };
+    const baseline = { kind: 'ok', fingerprint: JSON.stringify({ levelCount: 2 }) };
+    const mutant = { kind: 'ok', fingerprint: JSON.stringify({ board: 'Crate:0,\n' }) };
+    assert.strictEqual(garden.compareEquivalence(mutator, baseline, mutant, null), null);
+});
+
 function mutatorChangedJob(result, source, fixture) {
     if (!result) {
         return false;

@@ -1289,6 +1289,76 @@ function checkLevelInvariants(level, strideObj, strideMov, state) {
     return null;
 }
 
+function normaliseBoardNames(board, renames) {
+    if (!renames) {
+        return String(board);
+    }
+    return String(board).replace(/([^,:\n]*):/g, function(match, names) {
+        if (names === '') {
+            return match;
+        }
+        const mapped = names.split(' ').map(function(name) {
+            return Object.prototype.hasOwnProperty.call(renames, name) ? renames[name] : name;
+        });
+        mapped.sort();
+        return mapped.join(' ') + ':';
+    });
+}
+
+function fingerprintBoard(result) {
+    if (!result || typeof result.fingerprint !== 'string') {
+        return null;
+    }
+    let parsed;
+    try {
+        parsed = JSON.parse(result.fingerprint);
+    } catch (error) {
+        return null;
+    }
+    if (!parsed || typeof parsed.board !== 'string') {
+        return null;
+    }
+    return parsed.board;
+}
+
+// A crash, timeout or invariant is already interesting on its own, so this only
+// speaks about the two cases the other classifiers cannot see: a clean run that
+// answers differently, and a valid transformation that stops compiling. A new
+// warning is not a break, because mutators that add declarations can legitimately
+// provoke one.
+function compareEquivalence(mutator, baseline, mutantResult, context) {
+    if (!mutator || !mutator.equivalence || !baseline || !mutantResult) {
+        return null;
+    }
+    if (baseline.kind !== 'ok') {
+        return null;
+    }
+    if (mutantResult.kind === 'compiler-error') {
+        return { detail: 'semantics-preserving mutation produced compiler-error' };
+    }
+    if (mutantResult.kind !== 'ok') {
+        return null;
+    }
+    if (mutator.equivalence === 'full') {
+        if (mutantResult.fingerprint !== baseline.fingerprint) {
+            return { detail: 'fingerprint differs' };
+        }
+        return null;
+    }
+    const baselineBoard = fingerprintBoard(baseline);
+    let mutantBoard = fingerprintBoard(mutantResult);
+    if (baselineBoard === null || mutantBoard === null) {
+        return null;
+    }
+    if (mutator.normalise) {
+        mutantBoard = mutator.normalise(mutantBoard, context && context.renames);
+    }
+    if (mutantBoard !== baselineBoard) {
+        return { detail: 'board differs' };
+    }
+    return null;
+}
+
 function isInteresting(result) {
     return result.kind === 'crash'
         || result.kind === 'timeout'
@@ -1650,6 +1720,8 @@ module.exports = {
     failureSignature: failureSignature,
     checkLevelInvariants: checkLevelInvariants,
     isInteresting: isInteresting,
+    normaliseBoardNames: normaliseBoardNames,
+    compareEquivalence: compareEquivalence,
     baselineOracleFields: baselineOracleFields,
     isHealthyKind: isHealthyKind,
     attributeMonster: attributeMonster,
