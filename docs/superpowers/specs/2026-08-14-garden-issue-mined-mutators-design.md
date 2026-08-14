@@ -121,11 +121,23 @@ since it depends on the partition of cells rather than on names.
 | `inline-legend-synonym` | Replace uses of a simple `A = B` alias with `B` | `full` |
 | `add-legend-alias` | Introduce an alias and route some references through it | `full` |
 | `add-unreachable-rule` | Declare an object placed in no level, add a rule matching only it | `full` |
-| `comment-reflow` | Insert valid comments, blank lines and indentation | `full` |
-| `append-unreached-level` | Add a level after the one under test | `full` |
+| `comment-reflow` | Insert a valid comment inside a rule's brackets | `full` |
 
 `comment-reflow` is the legal counterpart to `odd-whitespace`, which injects
-whitespace that must be rejected.
+whitespace that must be rejected. Placing the comment inside the brackets also
+probes issue #1128, "bad error if parenthetical inside rule".
+
+`rename-object` must never rename `Background` or `Player`. The engine requires
+both, so renaming either breaks the game and every resulting hit would be noise.
+
+`inline-legend-synonym` replaces the alias definition with a blank line rather
+than deleting it, so the mutant stays line-aligned with the fixture and paired
+shrinking applies.
+
+`append-unreached-level` was considered and rejected. Winning a level advances
+`curlevel`, so appending a level after the last one changes what happens when
+the player wins it, from game-over to level-advance. It is not reliably
+semantics-preserving.
 
 `rename-object` is the most likely to pay out. It drags the whole symbol table
 through a transformation that must be invisible, and #824, #821 and #789 all
@@ -178,7 +190,7 @@ source, so the pair can be reproduced.
 
 ## Testing
 
-- Determinism and applicability tests for each of the 17 new mutators, in the
+- Determinism and applicability tests for each of the 16 new mutators, in the
   existing `tests.js` style: a fixed seed produces a fixed mutation, and a fixture
   with no target returns `null`.
 - Unit tests for the equivalence comparator: identical fingerprints yield no
