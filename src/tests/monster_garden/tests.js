@@ -499,6 +499,21 @@ test('only causal mutants are attributed when the unmutated fixture already fail
     assert.strictEqual(garden.attributeMonster({
         kind: 'compiler-warning', error: null, fingerprint: 'compiler-warning:1', detail: '', errorCount: 1
     }, { kind: 'ok', error: null, fingerprint: 'f', detail: '', errorCount: 0 }).save, false);
+    const oracleMiss = garden.attributeMonster({
+        kind: 'semantic-mismatch',
+        error: null,
+        fingerprint: 'diag',
+        detail: 'expectedOutput',
+        errorCount: 0
+    }, {
+        kind: 'ok',
+        error: null,
+        fingerprint: 'play',
+        detail: '',
+        errorCount: 0
+    });
+    assert.strictEqual(oracleMiss.save, false);
+    assert.strictEqual(oracleMiss.tally, 'baseline');
     assert.strictEqual(garden.isHealthyKind('ok'), true);
     assert.strictEqual(garden.isHealthyKind('compiler-error'), true);
     assert.strictEqual(garden.isHealthyKind('compiler-warning'), true);

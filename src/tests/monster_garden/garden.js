@@ -613,7 +613,10 @@ function attributeMonster(baseline, mutantResult) {
     if (failureSignature(baseline) === failureSignature(mutantResult)) {
         return { save: false, tally: 'baseline', baseline: true };
     }
-    return { save: isInteresting(mutantResult), tally: mutantResult.kind, baseline: true };
+    if (!isInteresting(mutantResult)) {
+        return { save: false, tally: 'baseline', baseline: true };
+    }
+    return { save: true, tally: mutantResult.kind, baseline: true };
 }
 
 function shrinkSource(source, keep, budget) {
