@@ -602,7 +602,60 @@ P = Player
     assert.strictEqual(result.kind, 'compiler-error', JSON.stringify(result));
     assert.strictEqual(result.error, null);
     assert(result.errorCount > 0);
-    assert.strictEqual(result.fingerprint, 'compiler-error:' + result.errorCount);
+    assert(result.fingerprint.indexOf('compiler-error:' + result.errorCount + ':') === 0);
+});
+
+test('the worker echoes a canonical engineSeed and rejects a non-integer level', function() {
+    const withSeed = workerResult({
+        source: SAMPLE,
+        inputs: [],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(withSeed.kind, 'ok', JSON.stringify(withSeed));
+    assert.strictEqual(withSeed.engineSeed, 'garden-seed');
+    const invented = workerResult({
+        source: SAMPLE,
+        inputs: [],
+        level: 0,
+        randomSeed: null,
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(invented.kind, 'ok', JSON.stringify(invented));
+    assert.strictEqual(typeof invented.engineSeed, 'string');
+    assert(invented.engineSeed.length > 0);
+    const badLevel = workerResult({
+        source: SAMPLE,
+        inputs: [],
+        level: '0',
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(badLevel.kind, 'crash', JSON.stringify(badLevel));
+});
+
+test('warning-only compiles are compiler-warning, not ok', function() {
+    const corpus = garden.loadCorpus(path.join(__dirname, '..', 'resources'));
+    const warning = corpus.find(function(item) {
+        return item.kind === 'compiler-message' && item.expectedErrorCount === 0;
+    });
+    assert(warning, 'need a warning-only compiler-message fixture');
+    const result = workerResult({
+        source: warning.source,
+        inputs: [],
+        level: 0,
+        randomSeed: null,
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(result.kind, 'compiler-warning', JSON.stringify(result));
+    assert.strictEqual(result.errorCount, 0);
+    assert(Array.isArray(result.errorStrings));
+    assert(result.errorStrings.length > 0);
 });
 
 test('the worker reports a crash when execution throws', function() {

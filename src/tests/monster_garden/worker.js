@@ -87,6 +87,13 @@ allCode += '\n' + [
     '    errorCount: { get: function() { return errorCount; }, set: function(v) { errorCount = v; }, configurable: true },',
     '    errorStrings: { get: function() { return errorStrings; }, set: function(v) { errorStrings = v; }, configurable: true },',
     '    level: { get: function() { return level; }, set: function(v) { level = v; }, configurable: true },',
+    '    curlevel: { get: function() { return curlevel; }, set: function(v) { curlevel = v; }, configurable: true },',
+    '    curlevelTarget: { get: function() { return curlevelTarget; }, set: function(v) { curlevelTarget = v; }, configurable: true },',
+    '    winning: { get: function() { return winning; }, set: function(v) { winning = v; }, configurable: true },',
+    '    messageselected: { get: function() { return messageselected; }, set: function(v) { messageselected = v; }, configurable: true },',
+    '    messagetext: { get: function() { return messagetext; }, set: function(v) { messagetext = v; }, configurable: true },',
+    '    hasUsedCheckpoint: { get: function() { return hasUsedCheckpoint; }, set: function(v) { hasUsedCheckpoint = v; }, configurable: true },',
+    '    loadedLevelSeed: { get: function() { return loadedLevelSeed; }, set: function(v) { loadedLevelSeed = v; }, configurable: true },',
     '    againing: { get: function() { return againing; }, set: function(v) { againing = v; }, configurable: true },',
     '    backups: { get: function() { return backups; }, set: function(v) { backups = v; }, configurable: true },',
     '    RandomGen: { get: function() { return RandomGen; }, set: function(v) { RandomGen = v; }, configurable: true },',
@@ -156,7 +163,38 @@ function isTextOrMessageLevel(job) {
     }
     const levels = global.state && global.state.levels;
     const selected = levels && job && levels[job.level];
-    return !!(selected && selected.message !== undefined);
+    return !!(selected && Object.prototype.hasOwnProperty.call(selected, 'message'));
+}
+
+function canonicalEngineSeed(job) {
+    if (job.engineSeed != null && String(job.engineSeed).length > 0) {
+        return String(job.engineSeed);
+    }
+    if (job.randomSeed != null && String(job.randomSeed).length > 0) {
+        return String(job.randomSeed);
+    }
+    return 'garden-' + String(job.level) + '-' + String((job.inputs || []).length);
+}
+
+function validateJob(job) {
+    if (!Number.isInteger(job.level)) {
+        throw new Error('job.level must be an integer');
+    }
+}
+
+function compilerDiagnosticKind() {
+    if (global.errorCount > 0) {
+        return 'compiler-error';
+    }
+    if (global.errorStrings && global.errorStrings.length > 0) {
+        return 'compiler-warning';
+    }
+    return null;
+}
+
+function withEngineSeed(job, result) {
+    result.engineSeed = job.engineSeed;
+    return result;
 }
 
 function applyInputs(inputs) {
@@ -191,22 +229,32 @@ function runOnce(job) {
         global.errorStrings = [];
         global.errorCount = 0;
     }
-    global.compile(['loadLevel', job.level], job.source, job.randomSeed);
-    const errorCount = global.errorCount;
-    if (errorCount > 0) {
-        return {
-            kind: 'compiler-error',
+    global.compile(['loadLevel', job.level], job.source, job.engineSeed);
+    const diagnosticKind = compilerDiagnosticKind();
+    if (diagnosticKind) {
+        const errorCount = global.errorCount;
+        const errorStrings = (global.errorStrings || []).slice();
+        return withEngineSeed(job, {
+            kind: diagnosticKind,
             error: null,
-            fingerprint: 'compiler-error:' + errorCount,
+            fingerprint: diagnosticKind + ':' + errorCount + ':' + JSON.stringify(errorStrings),
             detail: '',
-            errorCount: errorCount
-        };
+            errorCount: errorCount,
+            errorStrings: errorStrings
+        });
     }
+    if (!global.state || !Array.isArray(global.state.levels)) {
+        throw new Error('compile produced no state.levels');
+    }
+    if (job.level < 0 || job.level >= global.state.levels.length) {
+        throw new Error('job.level ' + job.level + ' is out of range');
+    }
+    const errorCount = global.errorCount;
     drainAgain();
     const undoBaseline = backupsLength();
     const rngBaseline = snapshotRng();
     if (isTextOrMessageLevel(job)) {
-        return {
+        return withEngineSeed(job, {
             kind: 'ok',
             error: null,
             fingerprint: fingerprintAfter(errorCount),
@@ -215,31 +263,31 @@ function runOnce(job) {
             prefixLength: 0,
             undoBaseline: undoBaseline,
             rngBaseline: rngBaseline
-        };
+        });
     }
     const broken = garden.checkLevelInvariants(global.level, global.STRIDE_OBJ, global.STRIDE_MOV);
     if (broken) {
-        return {
+        return withEngineSeed(job, {
             kind: 'invariant',
             error: null,
             fingerprint: fingerprintAfter(errorCount),
             detail: broken,
             errorCount: errorCount
-        };
+        });
     }
     const prefix = (job.inputs || []).slice(0, job.maxInputs);
     applyInputs(prefix);
     const afterExec = garden.checkLevelInvariants(global.level, global.STRIDE_OBJ, global.STRIDE_MOV);
     if (afterExec) {
-        return {
+        return withEngineSeed(job, {
             kind: 'invariant',
             error: null,
             fingerprint: fingerprintAfter(errorCount),
             detail: afterExec,
             errorCount: errorCount
-        };
+        });
     }
-    return {
+    return withEngineSeed(job, {
         kind: 'ok',
         error: null,
         fingerprint: fingerprintAfter(errorCount),
@@ -248,7 +296,7 @@ function runOnce(job) {
         prefixLength: prefix.length,
         undoBaseline: undoBaseline,
         rngBaseline: rngBaseline
-    };
+    });
 }
 
 function stripInternalFields(result) {
@@ -262,6 +310,8 @@ function stripInternalFields(result) {
 
 function runJob(job) {
     try {
+        validateJob(job);
+        job.engineSeed = canonicalEngineSeed(job);
         const first = runOnce(job);
         if (first.kind !== 'ok') {
             return stripInternalFields(first);
@@ -273,13 +323,13 @@ function runJob(job) {
             applyInputs(prefix);
             const replayed = fingerprintAfter(global.errorCount);
             if (replayed !== first.fingerprint) {
-                return {
+                return withEngineSeed(job, {
                     kind: 'replay-divergence',
                     error: null,
                     fingerprint: first.fingerprint,
                     detail: replayed,
                     errorCount: first.errorCount
-                };
+                });
             }
         }
         const second = runOnce(job);
@@ -287,32 +337,36 @@ function runJob(job) {
             if (second.kind === 'crash' || second.kind === 'invariant' || second.kind === 'replay-divergence') {
                 return stripInternalFields(second);
             }
-            return {
+            return withEngineSeed(job, {
                 kind: 'nondeterministic',
                 error: null,
                 fingerprint: first.fingerprint,
                 detail: second.kind,
                 errorCount: first.errorCount
-            };
+            });
         }
         if (second.fingerprint !== first.fingerprint) {
-            return {
+            return withEngineSeed(job, {
                 kind: 'nondeterministic',
                 error: null,
                 fingerprint: first.fingerprint,
                 detail: second.fingerprint,
                 errorCount: first.errorCount
-            };
+            });
         }
         return stripInternalFields(first);
     } catch (error) {
-        return {
+        const result = {
             kind: 'crash',
             error: { name: error.name, message: String(error.message || error) },
             fingerprint: '',
             detail: '',
             errorCount: typeof global.errorCount === 'number' ? global.errorCount : 0
         };
+        if (job) {
+            result.engineSeed = job.engineSeed;
+        }
+        return result;
     }
 }
 
