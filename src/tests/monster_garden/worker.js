@@ -163,6 +163,9 @@ function snapshotEngine() {
         hasUsedCheckpoint: global.hasUsedCheckpoint,
         backups: (global.backups || []).slice(),
         rng: snapshotRng(),
+        width: level ? level.width : 0,
+        height: level ? level.height : 0,
+        n_tiles: level ? level.n_tiles : 0,
         objects: level && level.objects ? new Int32Array(level.objects) : null,
         movements: level && level.movements ? new Int32Array(level.movements) : null,
         storage: Object.assign({}, _storage)
@@ -183,11 +186,20 @@ function restoreEngine(snap) {
     global.hasUsedCheckpoint = snap.hasUsedCheckpoint;
     global.backups = snap.backups.slice();
     restoreRng(snap.rng);
-    if (global.level && snap.objects) {
-        global.level.objects.set(snap.objects);
-    }
-    if (global.level && snap.movements && global.level.movements) {
-        global.level.movements.set(snap.movements);
+    if (global.level) {
+        const sizeChanged = global.level.width !== snap.width || global.level.height !== snap.height;
+        global.level.width = snap.width;
+        global.level.height = snap.height;
+        global.level.n_tiles = snap.n_tiles != null ? snap.n_tiles : snap.width * snap.height;
+        if (sizeChanged && typeof global.RebuildLevelArrays === 'function') {
+            global.RebuildLevelArrays();
+        }
+        if (snap.objects) {
+            global.level.objects = new Int32Array(snap.objects);
+        }
+        if (snap.movements) {
+            global.level.movements = new Int32Array(snap.movements);
+        }
     }
     const keys = Object.keys(_storage);
     for (let i = 0; i < keys.length; i++) {
@@ -284,10 +296,8 @@ function applyInputs(inputs, job) {
 }
 
 function fingerprintAfter(job) {
-    const diagnostic = compilerDiagnosticKind();
-    if (diagnostic) {
-        return diagnostic + ':' + global.errorCount + ':' + JSON.stringify(global.errorStrings || []);
-    }
+    // Play fingerprints stay JSON even if runtime logError filled errorCount.
+    // Compile-time diagnostic fingerprints are built only in the runOnce early-return.
     const message = isTextOrMessageLevel(job);
     return JSON.stringify({
         errorCount: global.errorCount,

@@ -611,6 +611,136 @@ test('invariants are checked after each input', function() {
     assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
 });
 
+test('play fingerprints stay JSON after a compile-success runtime error', function() {
+    const result = workerResult({
+        source: `title Loop Fingerprint
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+gray
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate
+
+======
+RULES
+======
+
+[ Player ] -> [ Crate ]
++ [ Crate ] -> [ Player ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+P
+`,
+        inputs: [0],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
+    assert.notStrictEqual(result.fingerprint.indexOf('compiler-error:'), 0, result.fingerprint.slice(0, 80));
+    const parsed = JSON.parse(result.fingerprint);
+    assert.strictEqual(typeof parsed.board, 'string');
+    assert(parsed.errorCount > 0, JSON.stringify(parsed));
+});
+
+test('replay after winning onto a differently sized level does not crash', function() {
+    const result = workerResult({
+        source: `title Size Change
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+======
+RULES
+======
+
+[ Player ] -> [ Player ] win
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+P...
+
+P.
+`,
+        inputs: [0],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: true,
+        maxInputs: 8
+    });
+    assert.notStrictEqual(result.kind, 'crash', JSON.stringify(result));
+    // nextLevel reseeds RNG from Date.now(), so replay can diverge on rng
+    // after a size-changing win. Restore must still not RangeError.
+    assert.ok(
+        result.kind === 'ok' || result.kind === 'replay-divergence',
+        JSON.stringify(result)
+    );
+    const parsed = JSON.parse(result.fingerprint);
+    assert.strictEqual(typeof parsed.board, 'string');
+});
+
 test('the worker treats compile diagnostics as compiler-error, not a crash', function() {
     const result = workerResult({
         source: `title No Background
