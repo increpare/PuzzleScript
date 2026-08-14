@@ -583,7 +583,23 @@ function isInteresting(result) {
         || result.kind === 'timeout'
         || result.kind === 'invariant'
         || result.kind === 'nondeterministic'
-        || result.kind === 'replay-divergence';
+        || result.kind === 'replay-divergence'
+        || result.kind === 'semantic-mismatch';
+}
+
+function baselineOracleFields(fixture, options) {
+    if (fixture.kind === 'compiler-message') {
+        return {
+            expectedErrors: fixture.expectedErrors,
+            expectedErrorCount: fixture.expectedErrorCount
+        };
+    }
+    if (options && options.extraInputs === 0
+        && fixture.inputs && fixture.inputs.length <= options.maxInputs
+        && typeof fixture.expectedOutput === 'string') {
+        return { expectedOutput: fixture.expectedOutput };
+    }
+    return {};
 }
 
 function isHealthyKind(kind) {
@@ -876,6 +892,7 @@ module.exports = {
     failureSignature: failureSignature,
     checkLevelInvariants: checkLevelInvariants,
     isInteresting: isInteresting,
+    baselineOracleFields: baselineOracleFields,
     isHealthyKind: isHealthyKind,
     attributeMonster: attributeMonster,
     shrinkSource: shrinkSource,

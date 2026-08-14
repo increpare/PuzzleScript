@@ -34,7 +34,7 @@ function readGitRev() {
     }
 }
 
-async function evaluateMutant(mutant, options) {
+async function evaluateMutant(mutant, options, oracle) {
     const job = {
         source: mutant.source,
         inputs: mutant.inputs,
@@ -43,6 +43,9 @@ async function evaluateMutant(mutant, options) {
         replay: options.replay,
         maxInputs: garden.trialMaxInputs(options, mutant.inputs)
     };
+    if (oracle) {
+        Object.assign(job, oracle);
+    }
     const result = await garden.runChild(
         process.execPath,
         [workerPath],
@@ -120,7 +123,7 @@ async function main() {
             inputs: executedInputs,
             level: fixture.level,
             randomSeed: fixture.randomSeed
-        }, options);
+        }, options, garden.baselineOracleFields(fixture, options));
         const result = await evaluateMutant(mutant, options);
         const attributed = garden.attributeMonster(baseline, result);
         counts[attributed.tally] = (counts[attributed.tally] || 0) + 1;

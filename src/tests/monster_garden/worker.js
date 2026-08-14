@@ -264,6 +264,57 @@ function compilerDiagnosticKind() {
     return null;
 }
 
+function stripErrorTags(text) {
+    return String(text).replace(/<[^>]+>/g, '');
+}
+
+function diagnosticFingerprint(diagnosticKind) {
+    const errorCount = global.errorCount;
+    const errorStrings = (global.errorStrings || []).slice();
+    return (diagnosticKind || 'ok') + ':' + errorCount + ':' + JSON.stringify(errorStrings);
+}
+
+function checkErrorOracle(job, diagnosticKind) {
+    if (job.expectedErrorCount == null && !job.expectedErrors) {
+        return null;
+    }
+    const errorCount = global.errorCount;
+    const errorStrings = (global.errorStrings || []).slice();
+    const stripped = errorStrings.map(stripErrorTags);
+    if (job.expectedErrorCount != null && errorCount !== job.expectedErrorCount) {
+        return withEngineSeed(job, {
+            kind: 'semantic-mismatch',
+            error: null,
+            fingerprint: diagnosticFingerprint(diagnosticKind),
+            detail: 'errorCount ' + errorCount + ' != ' + job.expectedErrorCount,
+            errorCount: errorCount,
+            errorStrings: errorStrings
+        });
+    }
+    const expected = job.expectedErrors || [];
+    for (let i = 0; i < expected.length; i++) {
+        const needle = expected[i];
+        let found = false;
+        for (let j = 0; j < stripped.length; j++) {
+            if (stripped[j] === needle || stripped[j].indexOf(needle) >= 0) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            return withEngineSeed(job, {
+                kind: 'semantic-mismatch',
+                error: null,
+                fingerprint: diagnosticFingerprint(diagnosticKind),
+                detail: needle,
+                errorCount: errorCount,
+                errorStrings: errorStrings
+            });
+        }
+    }
+    return null;
+}
+
 function withEngineSeed(job, result) {
     result.engineSeed = job.engineSeed;
     return result;
@@ -328,6 +379,10 @@ function runOnce(job) {
     }
     global.compile(['loadLevel', job.level], job.source, job.engineSeed);
     const diagnosticKind = compilerDiagnosticKind();
+    const oracleMismatch = checkErrorOracle(job, diagnosticKind);
+    if (oracleMismatch) {
+        return oracleMismatch;
+    }
     if (diagnosticKind) {
         const errorCount = global.errorCount;
         const errorStrings = (global.errorStrings || []).slice();
@@ -389,6 +444,18 @@ function runOnce(job) {
             detail: afterExec,
             errorCount: errorCount
         });
+    }
+    if (typeof job.expectedOutput === 'string' && !isTextOrMessageLevel(job)) {
+        const board = global.convertLevelToString();
+        if (board !== job.expectedOutput) {
+            return withEngineSeed(job, {
+                kind: 'semantic-mismatch',
+                error: null,
+                fingerprint: fingerprintAfter(job),
+                detail: 'expectedOutput',
+                errorCount: errorCount
+            });
+        }
     }
     return withEngineSeed(job, {
         kind: 'ok',

@@ -416,6 +416,58 @@ test('only crashes, timeouts, invariants, nondeterminism, and replay divergence 
     assert.strictEqual(garden.isInteresting({ kind: 'replay-divergence' }), true);
 });
 
+test('semantic-mismatch is interesting and baseline oracle fields are gated', function() {
+    assert.strictEqual(garden.isInteresting({ kind: 'semantic-mismatch' }), true);
+
+    const simulation = {
+        kind: 'simulation',
+        expectedOutput: 'board',
+        expectedErrors: null,
+        expectedErrorCount: null,
+        inputs: [0, 1, 2]
+    };
+    assert.deepStrictEqual(
+        garden.baselineOracleFields(simulation, { extraInputs: 0, maxInputs: 8 }),
+        { expectedOutput: 'board' }
+    );
+    assert.deepStrictEqual(
+        garden.baselineOracleFields(simulation, { extraInputs: 0, maxInputs: 3 }),
+        { expectedOutput: 'board' }
+    );
+    assert.deepStrictEqual(
+        garden.baselineOracleFields(simulation, { extraInputs: 0, maxInputs: 2 }),
+        {}
+    );
+    assert.deepStrictEqual(
+        garden.baselineOracleFields(simulation, { extraInputs: 3, maxInputs: 8 }),
+        {}
+    );
+    assert.deepStrictEqual(
+        garden.baselineOracleFields({
+            kind: 'simulation',
+            expectedOutput: null,
+            inputs: [0]
+        }, { extraInputs: 0, maxInputs: 8 }),
+        {}
+    );
+
+    const compiler = {
+        kind: 'compiler-message',
+        expectedErrors: ['msg'],
+        expectedErrorCount: 1,
+        expectedOutput: null,
+        inputs: []
+    };
+    assert.deepStrictEqual(
+        garden.baselineOracleFields(compiler, { extraInputs: 3, maxInputs: 8 }),
+        { expectedErrors: ['msg'], expectedErrorCount: 1 }
+    );
+    assert.deepStrictEqual(
+        garden.baselineOracleFields(compiler, { extraInputs: 0, maxInputs: 8 }),
+        { expectedErrors: ['msg'], expectedErrorCount: 1 }
+    );
+});
+
 test('only causal mutants are attributed when the unmutated fixture already fails', function() {
     const baseline = {
         kind: 'replay-divergence',
@@ -838,6 +890,67 @@ test('the worker echoes a canonical engineSeed and rejects a non-integer level',
     });
     assert.strictEqual(badLevel.kind, 'crash', JSON.stringify(badLevel));
     assert.strictEqual(badLevel.engineSeed, 'garden-seed');
+});
+
+test('expectedOutput mismatches are semantic-mismatch', function() {
+    const ok = workerResult({
+        source: SAMPLE,
+        inputs: [0],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(ok.kind, 'ok', JSON.stringify(ok));
+    const parsed = JSON.parse(ok.fingerprint);
+    const mismatch = workerResult({
+        source: SAMPLE,
+        inputs: [0],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8,
+        expectedOutput: 'not-the-board'
+    });
+    assert.strictEqual(mismatch.kind, 'semantic-mismatch', JSON.stringify(mismatch));
+    const match = workerResult({
+        source: SAMPLE,
+        inputs: [0],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8,
+        expectedOutput: parsed.board
+    });
+    assert.strictEqual(match.kind, 'ok', JSON.stringify(match));
+});
+
+test('compiler-message oracles compare stripped messages', function() {
+    const corpus = garden.loadCorpus(path.join(__dirname, '..', 'resources'));
+    const item = corpus.find(function(row) { return row.name === 'Background missing'; });
+    assert(item);
+    const match = workerResult({
+        source: item.source,
+        inputs: [],
+        level: 0,
+        randomSeed: null,
+        replay: false,
+        maxInputs: 8,
+        expectedErrors: item.expectedErrors,
+        expectedErrorCount: item.expectedErrorCount
+    });
+    assert.strictEqual(match.kind, 'compiler-error', JSON.stringify(match));
+    const mismatch = workerResult({
+        source: item.source,
+        inputs: [],
+        level: 0,
+        randomSeed: null,
+        replay: false,
+        maxInputs: 8,
+        expectedErrors: ['this message is not produced'],
+        expectedErrorCount: 2
+    });
+    assert.strictEqual(mismatch.kind, 'semantic-mismatch', JSON.stringify(mismatch));
 });
 
 test('warning-only compiles are compiler-warning, not ok', function() {
