@@ -932,6 +932,9 @@ First, let's check for 'X no X' on the RHS.
                     if (item.startsWith("no")){
                         let no_name = cell[l+1];
                         let no_name_mask = state.objectMasks[no_name];
+                        if (!no_name_mask) {
+                            continue;//error, will be caught later as "You cannot use 'no' to exclude the aggregate object"
+                        }
 
                         //if no_name overlaps with any objects_present, then we have a problem.
                         if (no_name_mask.anyBitsInCommon(objects_present_mask)){
