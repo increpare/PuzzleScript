@@ -1585,7 +1585,7 @@ LEVELS
 
 P*O
 
-P.
+*P
 `,
         inputs: [1, 'restart', 3],
         level: 0,

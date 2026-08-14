@@ -104,7 +104,8 @@ allCode += '\n' + [
     '    titleScreen: { get: function() { return titleScreen; }, set: function(v) { titleScreen = v; }, configurable: true },',
     '    state: { get: function() { return state; }, set: function(v) { state = v; }, configurable: true },',
     '    STRIDE_OBJ: { get: function() { return STRIDE_OBJ; }, set: function(v) { STRIDE_OBJ = v; }, configurable: true },',
-    '    STRIDE_MOV: { get: function() { return STRIDE_MOV; }, set: function(v) { STRIDE_MOV = v; }, configurable: true }',
+    '    STRIDE_MOV: { get: function() { return STRIDE_MOV; }, set: function(v) { STRIDE_MOV = v; }, configurable: true },',
+    '    restartTarget: { get: function() { return restartTarget; }, set: function(v) { restartTarget = v; }, configurable: true }',
     '});'
 ].join('\n') + '\n';
 vm.runInThisContext(allCode, { filename: 'monster_garden_worker.js' });
@@ -132,6 +133,24 @@ function resetWorkerRuntime() {
     global.titleScreen = true;
     global.hasUsedCheckpoint = false;
     global.curlevelTarget = null;
+}
+
+function cloneRestartTarget(target) {
+    if (!target) {
+        return null;
+    }
+    const cloned = {
+        width: target.width,
+        height: target.height,
+        oldflickscreendat: (target.oldflickscreendat || []).slice()
+    };
+    if (target.hasOwnProperty('diff')) {
+        cloned.diff = target.diff;
+    }
+    if (target.dat) {
+        cloned.dat = target.dat instanceof Int32Array ? new Int32Array(target.dat) : Array.from(target.dat);
+    }
+    return cloned;
 }
 
 function snapshotRng() {
@@ -179,7 +198,8 @@ function snapshotEngine() {
         movements: level && level.movements ? new Int32Array(level.movements) : null,
         storage: Object.assign({}, _storage),
         errorCount: global.errorCount,
-        errorStrings: (global.errorStrings || []).slice()
+        errorStrings: (global.errorStrings || []).slice(),
+        restartTarget: cloneRestartTarget(global.restartTarget)
     };
 }
 
@@ -221,6 +241,7 @@ function restoreEngine(snap) {
     });
     global.errorCount = snap.errorCount;
     global.errorStrings = (snap.errorStrings || []).slice();
+    global.restartTarget = cloneRestartTarget(snap.restartTarget);
 }
 
 function checkPlayableInvariants(job) {
