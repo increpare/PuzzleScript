@@ -122,7 +122,38 @@ async function main() {
     };
     let artifactIndex = 0;
     let lastSaved = null;
-    for (let i = 0; i < options.count; i++) {
+    let stopRequested = false;
+    let finishing = false;
+
+    function finishCampaign() {
+        if (finishing) {
+            return;
+        }
+        finishing = true;
+        if (process.stderr.isTTY) {
+            process.stderr.write('\n');
+        }
+        process.stdout.write(JSON.stringify(counts) + '\n');
+    }
+
+    function onSignal() {
+        if (stopRequested) {
+            if (currentChild) {
+                try {
+                    currentChild.kill('SIGKILL');
+                } catch (error) {}
+            }
+            finishCampaign();
+            process.exit(0);
+            return;
+        }
+        stopRequested = true;
+    }
+
+    process.on('SIGINT', onSignal);
+    process.on('SIGTERM', onSignal);
+
+    for (let i = 0; options.forever ? !stopRequested : i < options.count; i++) {
         const fixture = corpus[rng.integer(corpus.length)];
         const executedInputs = garden.prepareTrialInputs(fixture.inputs, rng, {
             maxInputs: options.maxInputs,
@@ -211,10 +242,7 @@ async function main() {
         lastSaved = { dir: dirName, signature: minimized.signature, kind: result.kind };
         publishTally(options, counts, i, artifactIndex, lastTrial, lastSaved);
     }
-    if (process.stderr.isTTY) {
-        process.stderr.write('\n');
-    }
-    process.stdout.write(JSON.stringify(counts) + '\n');
+    finishCampaign();
 }
 
 main().catch(function(error) {

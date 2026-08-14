@@ -5,7 +5,7 @@ const assert = require('assert');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { spawnSync } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 
 const garden = require('./garden');
 
@@ -1780,6 +1780,59 @@ test('a one-mutant CLI run is deterministic and writes no artifacts for healthy 
     assert.strictEqual(typeof tally.counts.ok, 'number');
     assert(tally.lastTrial);
     assert.strictEqual(tally.lastTrial.index, 1);
+});
+
+test('run.js --forever stops on SIGINT and writes tally.json', function() {
+    const output = fs.mkdtempSync(path.join(os.tmpdir(), 'monster-garden-forever-'));
+    const child = spawn(process.execPath, [
+        path.join(__dirname, 'run.js'),
+        '--forever',
+        '--seed', '1',
+        '--no-shrink',
+        '--no-replay',
+        '--timeout-ms', '20000',
+        '--output', output
+    ]);
+    let stdout = '';
+    let signalled = false;
+    child.stdout.on('data', function(chunk) {
+        stdout += chunk.toString();
+        if (!signalled && stdout.indexOf('#') >= 0) {
+            signalled = true;
+            child.kill('SIGINT');
+        }
+    });
+    return new Promise(function(resolve, reject) {
+        const timer = setTimeout(function() {
+            child.kill('SIGKILL');
+            reject(new Error('forever process did not exit after SIGINT; stdout=' + stdout.slice(0, 200)));
+        }, 30000);
+        child.on('error', function(error) {
+            clearTimeout(timer);
+            reject(error);
+        });
+        child.on('close', function(code) {
+            clearTimeout(timer);
+            try {
+                assert.strictEqual(code, 0, stdout);
+                assert(signalled);
+                const tallyPath = path.join(output, 'tally.json');
+                assert(fs.existsSync(tallyPath), 'missing tally.json');
+                const tally = JSON.parse(fs.readFileSync(tallyPath, 'utf8'));
+                assert.strictEqual(tally.forever, true);
+                assert.strictEqual(tally.seed, 1);
+                assert(tally.trials >= 1);
+                const lines = stdout.trim().split('\n').filter(Boolean);
+                const summary = JSON.parse(lines[lines.length - 1]);
+                assert.strictEqual(typeof summary.ok, 'number');
+                assert.strictEqual(typeof summary.crash, 'number');
+                assert.strictEqual(typeof summary.skipped, 'number');
+                resolve();
+            } catch (error) {
+                reject(error);
+            }
+        });
+    });
 });
 
 async function main() {
