@@ -129,6 +129,36 @@ function mutateSection(source, sectionName, fn) {
     return { source: lines.join('\n'), detail: next.detail };
 }
 
+function sectionBlocks(body) {
+    const lines = body.split('\n');
+    let i = 0;
+    while (i < lines.length) {
+        const trimmed = lines[i].trim();
+        if (/^=+$/.test(trimmed) || SECTION_NAMES.indexOf(trimmed.toUpperCase()) >= 0) {
+            i++;
+            continue;
+        }
+        break;
+    }
+    const header = lines.slice(0, i);
+    const blocks = [];
+    let current = [];
+    for (; i < lines.length; i++) {
+        if (lines[i].trim() === '') {
+            if (current.length) {
+                blocks.push(current);
+                current = [];
+            }
+            continue;
+        }
+        current.push(lines[i]);
+    }
+    if (current.length) {
+        blocks.push(current);
+    }
+    return { header: header, blocks: blocks };
+}
+
 function deleteRulePunctuation(source, rng) {
     return mutateSection(source, 'RULES', function(body) {
         const marks = marksIn(body, /->|[\[\]|]/);
@@ -1609,6 +1639,7 @@ function formatForeverStatus(counts, trials, saved) {
 module.exports = {
     Random: Random,
     loadCorpus: loadCorpus,
+    sectionBlocks: sectionBlocks,
     mutators: mutators,
     mutateFixture: mutateFixture,
     isInapplicableMutation: isInapplicableMutation,

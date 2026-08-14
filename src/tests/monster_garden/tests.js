@@ -114,6 +114,32 @@ test('corpusIndex is unique even when names and kind-local indexes collide', fun
     }
 });
 
+test('sectionBlocks splits a section body into header and object blocks', function() {
+    const body = [
+        'OBJECTS',
+        '========',
+        '',
+        'Background',
+        'black',
+        '',
+        'Player',
+        'white',
+        'white'
+    ].join('\n');
+    const parsed = garden.sectionBlocks(body);
+    assert.deepStrictEqual(parsed.header, ['OBJECTS', '========']);
+    assert.deepStrictEqual(parsed.blocks, [
+        ['Background', 'black'],
+        ['Player', 'white', 'white']
+    ]);
+});
+
+test('sectionBlocks returns no blocks for a section that is only a header', function() {
+    const parsed = garden.sectionBlocks('SOUNDS\n=========\n\n');
+    assert.deepStrictEqual(parsed.header, ['SOUNDS', '=========']);
+    assert.deepStrictEqual(parsed.blocks, []);
+});
+
 function mutatorChangedJob(result, source, fixture) {
     if (!result) {
         return false;
