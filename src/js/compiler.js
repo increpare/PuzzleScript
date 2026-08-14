@@ -826,6 +826,7 @@ function processRuleString(rule, state, curRules) {
             //ok
         } else {
             logWarning('Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right', lineNumber);
+            return null;
         }
     } else {
         for (let i = 0; i < lhs_cells.length; i++) {
@@ -953,7 +954,10 @@ First, let's check for 'X no X' on the RHS.
                     if (item.startsWith("no")){
                         let no_name = cell[l+1];
                         //look for a 'no X' on the LHS in the same position
-                        const lhs_cell = rule.lhs[j][k];
+                        const lhs_cell = rule.lhs[j] && rule.lhs[j][k];
+                        if (!lhs_cell) {
+                            continue;
+                        }
                         for (let m=0;m<lhs_cell.length;m+=2){
                             if (lhs_cell[m].startsWith("no") && lhs_cell[m+1] === no_name){
                                 //we have a match - remove the 'no X' from the LHS
@@ -1163,7 +1167,7 @@ function rewriteUpLeftRules(rule) {
 
     for (let i = 0; i < rule.lhs.length; i++) {
         rule.lhs[i].reverse();
-        if (rule.rhs.length > 0) {
+        if (rule.rhs[i]) {
             rule.rhs[i].reverse();
         }
     }
@@ -1630,7 +1634,7 @@ function rephraseSynonyms(state, rule) {
         
         for (let j = 0; j < cellrow_l.length; j++) {
             processCell(cellrow_l[j]);
-            if (rule.rhs.length > 0) {
+            if (cellrow_r && cellrow_r[j]) {
                 processCell(cellrow_r[j]);
             }
         }
@@ -3176,5 +3180,4 @@ function qualifyURL(url) {
     a.href = url;
     return a.href;
 }
-
 

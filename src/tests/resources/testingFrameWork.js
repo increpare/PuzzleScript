@@ -97,11 +97,17 @@ function runCompilationTest(dataarray,testname) {
 		errorCount=0;
 	}
 
+	var compileThrew = false;
 	try{
 		compile(["restart"],levelString);
 	} catch (error){
+		compileThrew = true;
 		PuzzleScriptTestAssertions.push(false,false,false,error.message+"\n"+error.stack);
 		console.error(error);
+	}
+
+	if (compileThrew) {
+		return false;
 	}
 
 	
