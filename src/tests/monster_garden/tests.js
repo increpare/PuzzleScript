@@ -240,6 +240,11 @@ test('compareEquivalence makes no claim when a board is missing from a fingerpri
     assert.strictEqual(garden.compareEquivalence(mutator, baseline, mutant, null), null);
 });
 
+test('equivalence-break is a known, interesting result kind', function() {
+    assert(garden.KNOWN_RESULT_KINDS.indexOf('equivalence-break') >= 0);
+    assert.strictEqual(garden.isInteresting({ kind: 'equivalence-break' }), true);
+});
+
 function mutatorChangedJob(result, source, fixture) {
     if (!result) {
         return false;
@@ -912,7 +917,7 @@ test('writeTally replaces tally.json atomically and payload fields are stable', 
     assert.strictEqual(parsed.lastSaved.kind, 'crash');
     assert.strictEqual(
         garden.formatForeverStatus(counts, 4, 2),
-        'trials=4 saved=2 crash=2 timeout=0 invariant=0 nondeterministic=0 replay-divergence=0 semantic-mismatch=0'
+        'trials=4 saved=2 crash=2 timeout=0 invariant=0 nondeterministic=0 replay-divergence=0 semantic-mismatch=0 equivalence-break=0'
     );
 });
 
@@ -1979,7 +1984,8 @@ test('the parent classifies a hung child as timeout', function() {
 
 const KNOWN = [
     'ok', 'compiler-error', 'compiler-warning', 'crash',
-    'invariant', 'nondeterministic', 'replay-divergence', 'semantic-mismatch'
+    'invariant', 'nondeterministic', 'replay-divergence', 'semantic-mismatch',
+    'equivalence-break'
 ];
 
 test('runChild rejects parseable non-results and nonzero exits', function() {

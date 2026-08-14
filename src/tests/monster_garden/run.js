@@ -117,6 +117,7 @@ async function main() {
         nondeterministic: 0,
         'replay-divergence': 0,
         'semantic-mismatch': 0,
+        'equivalence-break': 0,
         baseline: 0,
         skipped: 0
     };

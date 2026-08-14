@@ -1365,7 +1365,8 @@ function isInteresting(result) {
         || result.kind === 'invariant'
         || result.kind === 'nondeterministic'
         || result.kind === 'replay-divergence'
-        || result.kind === 'semantic-mismatch';
+        || result.kind === 'semantic-mismatch'
+        || result.kind === 'equivalence-break';
 }
 
 function baselineOracleFields(fixture, options) {
@@ -1491,7 +1492,8 @@ function formatRegression(name, source, job) {
 
 const KNOWN_RESULT_KINDS = [
     'ok', 'compiler-error', 'compiler-warning', 'crash',
-    'invariant', 'nondeterministic', 'replay-divergence', 'semantic-mismatch'
+    'invariant', 'nondeterministic', 'replay-divergence', 'semantic-mismatch',
+    'equivalence-break'
 ];
 
 function decodeBuffers(chunks) {
@@ -1703,7 +1705,8 @@ function formatForeverStatus(counts, trials, saved) {
         ' invariant=' + (counts.invariant || 0) +
         ' nondeterministic=' + (counts.nondeterministic || 0) +
         ' replay-divergence=' + (counts['replay-divergence'] || 0) +
-        ' semantic-mismatch=' + (counts['semantic-mismatch'] || 0);
+        ' semantic-mismatch=' + (counts['semantic-mismatch'] || 0) +
+        ' equivalence-break=' + (counts['equivalence-break'] || 0);
 }
 
 module.exports = {
