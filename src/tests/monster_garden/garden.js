@@ -534,6 +534,9 @@ function runChild(command, args, stdin, timeoutMs) {
         let timedOut = false;
         let settled = false;
         const timer = setTimeout(function() {
+            if (child.exitCode !== null || child.signalCode !== null) {
+                return;
+            }
             timedOut = true;
             child.kill('SIGKILL');
         }, timeoutMs);
@@ -577,6 +580,30 @@ function runChild(command, args, stdin, timeoutMs) {
         child.on('error', crashFromError);
         child.stdin.on('error', crashFromError);
         child.on('close', function(code, signal) {
+            const stdout = decodeBuffers(stdoutChunks);
+            const stderr = decodeBuffers(stderrChunks);
+            const lines = stdout.split('\n').map(function(line) { return line.trim(); }).filter(Boolean);
+            const hadOutput = lines.length > 0;
+            let parsed;
+            let parseError;
+            if (hadOutput) {
+                try {
+                    parsed = JSON.parse(lines.pop());
+                } catch (error) {
+                    parseError = error;
+                }
+            }
+            const validParsedResult = Boolean(
+                parsed
+                && typeof parsed === 'object'
+                && !Array.isArray(parsed)
+                && KNOWN_RESULT_KINDS.indexOf(parsed.kind) >= 0
+            );
+
+            if (validParsedResult && code === 0) {
+                finish(parsed);
+                return;
+            }
             if (timedOut) {
                 finish({
                     kind: 'timeout',
@@ -587,17 +614,15 @@ function runChild(command, args, stdin, timeoutMs) {
                 });
                 return;
             }
-            const stdout = decodeBuffers(stdoutChunks);
-            const stderr = decodeBuffers(stderrChunks);
-            let parsed;
-            try {
-                const lines = stdout.split('\n').map(function(line) { return line.trim(); }).filter(Boolean);
-                parsed = JSON.parse(lines.pop());
-            } catch (error) {
-                finish(crashResult('ChildOutputError', (stdout || stderr || error.message).split('\n')[0], stderr));
+            if (!hadOutput) {
+                finish(crashResult('ChildOutputError', 'empty worker stdout', stderr));
                 return;
             }
-            if (!parsed || typeof parsed !== 'object' || KNOWN_RESULT_KINDS.indexOf(parsed.kind) < 0) {
+            if (parseError) {
+                finish(crashResult('ChildOutputError', (stdout || stderr || parseError.message).split('\n')[0], stderr));
+                return;
+            }
+            if (!validParsedResult) {
                 finish(crashResult('ChildOutputError', 'invalid worker result', stderr));
                 return;
             }

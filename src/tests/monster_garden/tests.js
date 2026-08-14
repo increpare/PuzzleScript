@@ -469,6 +469,46 @@ test('runChild rejects parseable non-results and nonzero exits', function() {
     }).then(function(result) {
         assert.strictEqual(result.kind, 'crash');
         assert.strictEqual(result.error.message, 'euro € here');
+        const jsonNull = path.join(os.tmpdir(), 'monster-garden-null-json.js');
+        fs.writeFileSync(jsonNull, 'process.stdout.write("null\\n");\n');
+        return garden.runChild(process.execPath, [jsonNull], '{}', 2000);
+    }).then(function(result) {
+        assert.strictEqual(result.kind, 'crash');
+        const silent = path.join(os.tmpdir(), 'monster-garden-empty-stdout.js');
+        fs.writeFileSync(silent, 'process.exit(0);\n');
+        return garden.runChild(process.execPath, [silent], '{}', 2000);
+    }).then(function(result) {
+        assert.strictEqual(result.kind, 'crash');
+        assert.strictEqual(result.error.message, 'empty worker stdout');
+        const array = path.join(os.tmpdir(), 'monster-garden-array-json.js');
+        fs.writeFileSync(array, 'process.stdout.write("[]\\n");\n');
+        return garden.runChild(process.execPath, [array], '{}', 2000);
+    }).then(function(result) {
+        assert.strictEqual(result.kind, 'crash');
+        const workerTimeout = path.join(os.tmpdir(), 'monster-garden-timeout-kind.js');
+        fs.writeFileSync(workerTimeout, 'process.stdout.write(JSON.stringify({kind:"timeout",error:null,fingerprint:"",detail:"timeout",errorCount:0})+"\\n");\n');
+        return garden.runChild(process.execPath, [workerTimeout], '{}', 2000);
+    }).then(function(result) {
+        assert.strictEqual(result.kind, 'crash');
+    });
+});
+
+test('runChild prefers a finished ok result over a late timeout', function() {
+    const payload = JSON.stringify({
+        kind: 'ok', error: null, fingerprint: 'x', detail: '', errorCount: 0
+    });
+    const kinds = [];
+    let chain = Promise.resolve();
+    for (let i = 0; i < 40; i++) {
+        chain = chain.then(function() {
+            return garden.runChild('/bin/echo', [payload], '{}', 1).then(function(result) {
+                kinds.push(result.kind);
+                assert.ok(result.kind === 'ok' || result.kind === 'timeout', result.kind);
+            });
+        });
+    }
+    return chain.then(function() {
+        assert.ok(kinds.indexOf('ok') >= 0, 'expected a finished ok among ' + kinds.join(','));
     });
 });
 
