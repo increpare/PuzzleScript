@@ -453,6 +453,62 @@ test('mutateFixture retries then fails when no mutator applies', function() {
     }, /inapplicable/);
 });
 
+test('shrinkEquivalencePair deletes the same line from both sources', async function() {
+    const mutator = { name: 'm', equivalence: 'full', apply: function() { return null; } };
+    // Line "junk" is irrelevant to the divergence; line "keep" causes it.
+    const evaluate = async function(job) {
+        const diverges = job.source.indexOf('keep') >= 0;
+        if (job.source.indexOf('MUTANT') >= 0) {
+            return { kind: 'ok', fingerprint: diverges ? 'mutant' : 'same' };
+        }
+        return { kind: 'ok', fingerprint: 'same' };
+    };
+    const mutant = {
+        source: 'MUTANT\njunk\nkeep\n',
+        inputs: [],
+        level: 0,
+        randomSeed: null
+    };
+    const result = await garden.shrinkEquivalencePair(
+        mutant,
+        'BASE\njunk\nkeep\n',
+        mutator,
+        { shrink: true, shrinkBudget: 50, evaluate: evaluate }
+    );
+    assert.strictEqual(result.skipped, false);
+    assert.strictEqual(result.source.indexOf('junk'), -1);
+    assert.strictEqual(result.baselineSource.indexOf('junk'), -1);
+    assert(result.source.indexOf('keep') >= 0);
+    assert(result.baselineSource.indexOf('keep') >= 0);
+});
+
+test('shrinkEquivalencePair skips when the mutant is not line-aligned', async function() {
+    const mutator = { name: 'm', equivalence: 'full', apply: function() { return null; } };
+    const mutant = { source: 'a\nb\nc\n', inputs: [], level: 0, randomSeed: null };
+    const result = await garden.shrinkEquivalencePair(
+        mutant,
+        'a\nb\n',
+        mutator,
+        { shrink: true, shrinkBudget: 50, evaluate: async function() { throw new Error('must not evaluate'); } }
+    );
+    assert.strictEqual(result.skipped, true);
+    assert.strictEqual(result.source, 'a\nb\nc\n');
+    assert.strictEqual(result.steps, 0);
+});
+
+test('shrinkEquivalencePair honours the shrink option being off', async function() {
+    const mutator = { name: 'm', equivalence: 'full', apply: function() { return null; } };
+    const mutant = { source: 'a\nb\n', inputs: [], level: 0, randomSeed: null };
+    const result = await garden.shrinkEquivalencePair(
+        mutant,
+        'a\nb\n',
+        mutator,
+        { shrink: false, shrinkBudget: 50, evaluate: async function() { throw new Error('must not evaluate'); } }
+    );
+    assert.strictEqual(result.skipped, true);
+    assert.strictEqual(result.steps, 0);
+});
+
 test('arguments have reproducible defaults and reject unsafe numeric values', function() {
     const defaults = garden.parseArguments([], { now: function() { return 98765; } });
     assert.strictEqual(defaults.seed, 98765);

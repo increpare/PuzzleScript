@@ -1485,6 +1485,73 @@ async function shrinkInteresting(mutant, originalResult, options) {
     return { source: minimizedSource, steps: steps, signature: signature, result: verified };
 }
 
+// An equivalence-break is a relation between two sources, so a line must leave
+// both or neither. That is only meaningful while the mutant stays line-aligned
+// with the fixture; when it is not, shrinking is skipped rather than done wrongly.
+async function shrinkEquivalencePair(mutant, baselineSource, mutator, options) {
+    const unshrunk = {
+        source: mutant.source,
+        baselineSource: baselineSource,
+        steps: 0,
+        skipped: true
+    };
+    if (!options.shrink) {
+        return unshrunk;
+    }
+    let mutantLines = mutant.source.split('\n');
+    let baseLines = baselineSource.split('\n');
+    if (mutantLines.length !== baseLines.length) {
+        return unshrunk;
+    }
+    let steps = 0;
+    let remaining = options.shrinkBudget;
+    let changed = true;
+    while (changed && remaining > 0) {
+        changed = false;
+        let i = 0;
+        while (i < mutantLines.length && remaining > 0) {
+            if (i === mutantLines.length - 1 && mutantLines[i] === '') {
+                break;
+            }
+            const candidateMutant = mutantLines.slice(0, i).concat(mutantLines.slice(i + 1));
+            const candidateBase = baseLines.slice(0, i).concat(baseLines.slice(i + 1));
+            remaining--;
+            steps++;
+            const mutantResult = await options.evaluate({
+                source: candidateMutant.join('\n'),
+                inputs: mutant.inputs,
+                level: mutant.level,
+                randomSeed: mutant.randomSeed
+            });
+            const baselineResult = await options.evaluate({
+                source: candidateBase.join('\n'),
+                inputs: mutant.inputs,
+                level: mutant.level,
+                randomSeed: mutant.randomSeed
+            });
+            const stillBroken = compareEquivalence(
+                mutator,
+                baselineResult,
+                mutantResult,
+                mutant.equivalenceContext
+            );
+            if (stillBroken) {
+                mutantLines = candidateMutant;
+                baseLines = candidateBase;
+                changed = true;
+            } else {
+                i++;
+            }
+        }
+    }
+    return {
+        source: mutantLines.join('\n'),
+        baselineSource: baseLines.join('\n'),
+        steps: steps,
+        skipped: false
+    };
+}
+
 function artifactDirName(signature, seed, index) {
     const safe = String(signature)
         .replace(/[^A-Za-z0-9._-]+/g, '-')
@@ -1743,6 +1810,7 @@ module.exports = {
     attributeMonster: attributeMonster,
     shrinkSource: shrinkSource,
     shrinkInteresting: shrinkInteresting,
+    shrinkEquivalencePair: shrinkEquivalencePair,
     artifactDirName: artifactDirName,
     formatRegression: formatRegression,
     writeArtifacts: writeArtifacts,
