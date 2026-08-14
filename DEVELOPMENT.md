@@ -60,3 +60,17 @@ Recorded play session data (for play session tests - testdata.js):
 ```
 
 If you're at the title screen you won't get the second bit.  The recorded play session records all the input from when the level was loaded up until the moment of generation.  Yeah anyway just paste whichever bit you want as an entry in  `./src/tests/resources/testdata.js` or `./src/tests/resources/errormessage_testdata.js` and you're away.
+
+## Compiler monster garden
+
+Optional local fuzzer for compiler and runtime crashes. It is not part of the
+normal test suite.
+
+    node src/tests/monster_garden/tests.js
+    node src/tests/monster_garden/run.js --list-mutators
+    node src/tests/monster_garden/run.js --seed 12345 --count 20
+
+A fixed seed reproduces the same mutants. Interesting cases are written under
+`.build/monster_garden/` as `original.txt`, `minimized.txt`, `report.json`, and
+`regression.js`. Paste `regression.js` into `testdata.js` or
+`errormessage_testdata.js` only after you have confirmed it is a real defect.
