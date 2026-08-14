@@ -342,8 +342,7 @@ let codeMirrorFn = function () {
                         case 'object':
                             return [found.name];
                         case 'aggregate':
-                            logError(`Cannot define a property (something defined in terms of 'or') in terms of an aggregate (something that uses 'and').  In this case, you can't define "${splits[0]}" in terms of "${found.name}".`, state.lineNumber);
-                            malformed = true;
+                            logError(`Cannot define a property (something defined in terms of 'or') in terms of an aggregate (something that uses 'and').  In this case, you can't define "${splits[0].toUpperCase()}" in terms of "${found.name.toUpperCase()}".`, state.lineNumber);
                             return [];
                         case 'property':
                             return flattenPropertyEntry(found.name, found.entry, substitutor);
@@ -359,14 +358,15 @@ let codeMirrorFn = function () {
                     }
                 }
                 if (!malformed) {
-                    let newlegend = [splits[0], ...substitutor(splits[2]), ...substitutor(splits[4])];
-                    for (let i = 6; i < splits.length; i += 2) {
-                        newlegend.push(splits[i].toLowerCase());
+                    let newlegend = [splits[0]];
+                    for (let i = 2; i < splits.length; i += 2) {
+                        newlegend.push(...substitutor(splits[i]));
                     }
-                    newlegend.lineNumber = state.lineNumber;
-
-                    registerOriginalCaseName(state, newlegend[0], mixedCase, state.lineNumber);
-                    state.legend_properties.push(newlegend);
+                    if (newlegend.length > 1) {
+                        newlegend.lineNumber = state.lineNumber;
+                        registerOriginalCaseName(state, newlegend[0], mixedCase, state.lineNumber);
+                        state.legend_properties.push(newlegend);
+                    }
                 }
             } else {
                 if (ok) {
@@ -1529,4 +1529,3 @@ let codeMirrorFn = function () {
         }
     };
 };
-

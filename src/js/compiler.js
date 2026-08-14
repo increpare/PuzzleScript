@@ -340,14 +340,24 @@ function generateExtraMembers(state) {
         const key = propertiesDict_keys[k_i];
         let values = propertiesDict[key];
         let sameLayer = true;
-        for (let i = 1; i < values.length; i++) {
-            if ((state.objects[values[i - 1]].layer !== state.objects[values[i]].layer)) {
+        for (let i = 0; i < values.length; i++) {
+            const o = state.objects[values[i]];
+            if (!o) {
+                //so this is all legacy/robustness support, following
+                //from the output of "Cannot define a property (something defined in terms of 'or') in terms of an aggregate"
+                sameLayer = false;
+                break;
+            }
+            if (i > 0 && o.layer !== state.objects[values[i - 1]].layer) {
                 sameLayer = false;
                 break;
             }
         }
-        if (sameLayer) {
-            state.propertiesSingleLayer[key] = state.objects[values[0]].layer;        
+        if (sameLayer && values.length > 0) {
+            const first = state.objects[values[0]];
+            if (first) {
+                state.propertiesSingleLayer[key] = first.layer;
+            }
         }
     }
 
@@ -2284,7 +2294,9 @@ function generateMasks(state) {
             let val = new BitVec(STRIDE_OBJ);
             for (let j = 1; j < synprop.length; j++) {
                 let n = synprop[j];
-                val.ior(objectMask[n]);
+                if (objectMask[n]) {
+                    val.ior(objectMask[n]);
+                }
             }
             objectMask[synprop[0]] = val;
         }
