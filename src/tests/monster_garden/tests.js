@@ -1626,6 +1626,11 @@ test('run.js rejects malformed options with a nonzero exit', function() {
     });
     assert.notStrictEqual(oversized.status, 0);
     assert(/timeout-ms/.test(oversized.stderr));
+    const both = spawnSync(process.execPath, [
+        path.join(__dirname, 'run.js'), '--forever', '--count', '3'
+    ], { encoding: 'utf8' });
+    assert.notStrictEqual(both.status, 0);
+    assert(/forever/.test(both.stderr));
 });
 
 test('a one-mutant CLI run is deterministic and writes no artifacts for healthy output', function() {
@@ -1644,7 +1649,15 @@ test('a one-mutant CLI run is deterministic and writes no artifacts for healthy 
     assert.strictEqual(first.status, 0, first.stderr + first.stdout);
     assert.strictEqual(second.status, 0, second.stderr + second.stdout);
     assert.strictEqual(first.stdout, second.stdout);
-    assert.strictEqual(fs.readdirSync(output).length, 0);
+    const names = fs.readdirSync(output).sort();
+    assert.deepStrictEqual(names, ['tally.json']);
+    const tally = JSON.parse(fs.readFileSync(path.join(output, 'tally.json'), 'utf8'));
+    assert.strictEqual(tally.seed, 12345);
+    assert.strictEqual(tally.forever, false);
+    assert.strictEqual(tally.trials, 1);
+    assert.strictEqual(typeof tally.counts.ok, 'number');
+    assert(tally.lastTrial);
+    assert.strictEqual(tally.lastTrial.index, 1);
 });
 
 async function main() {

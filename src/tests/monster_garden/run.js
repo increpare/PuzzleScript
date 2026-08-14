@@ -8,6 +8,8 @@ const garden = require('./garden');
 const workerPath = path.join(__dirname, 'worker.js');
 const resourceDir = path.join(__dirname, '..', 'resources');
 
+let currentChild = null;
+
 function filterCorpus(corpus, fixture) {
     if (!fixture) {
         return corpus;
@@ -46,13 +48,33 @@ async function evaluateMutant(mutant, options, oracle) {
     if (oracle) {
         Object.assign(job, oracle);
     }
-    const result = await garden.runChild(
-        process.execPath,
-        [workerPath],
-        JSON.stringify(job),
-        options.timeoutMs
-    );
-    return result;
+    try {
+        return await garden.runChild(
+            process.execPath,
+            [workerPath],
+            JSON.stringify(job),
+            options.timeoutMs,
+            function(child) { currentChild = child; }
+        );
+    } finally {
+        currentChild = null;
+    }
+}
+
+function publishTally(options, counts, trialIndex, saved, lastTrial, lastSaved) {
+    const payload = garden.tallyPayload({
+        seed: options.seed,
+        forever: options.forever,
+        trials: trialIndex + 1,
+        saved: saved,
+        counts: counts,
+        lastTrial: lastTrial,
+        lastSaved: lastSaved
+    });
+    garden.writeTally(options.output, payload);
+    if (process.stderr.isTTY) {
+        process.stderr.write('\r' + garden.formatForeverStatus(counts, trialIndex + 1, saved));
+    }
 }
 
 async function shrinkMutant(mutant, result, options) {
@@ -99,6 +121,7 @@ async function main() {
         skipped: 0
     };
     let artifactIndex = 0;
+    let lastSaved = null;
     for (let i = 0; i < options.count; i++) {
         const fixture = corpus[rng.integer(corpus.length)];
         const executedInputs = garden.prepareTrialInputs(fixture.inputs, rng, {
@@ -115,6 +138,12 @@ async function main() {
                 throw error;
             }
             counts.skipped++;
+            publishTally(options, counts, i, artifactIndex, {
+                index: i + 1,
+                tally: 'skipped',
+                mutator: null,
+                fixtureName: fixture.name
+            }, lastSaved);
             continue;
         }
         if (JSON.stringify(mutant.inputs || []) === JSON.stringify(fixture.inputs || [])) {
@@ -132,7 +161,14 @@ async function main() {
         process.stdout.write(
             '#' + (i + 1) + ' ' + attributed.tally + ' ' + mutant.mutator + ' ' + mutant.fixtureName + '\n'
         );
+        const lastTrial = {
+            index: i + 1,
+            tally: attributed.tally,
+            mutator: mutant.mutator,
+            fixtureName: mutant.fixtureName
+        };
         if (!attributed.save) {
+            publishTally(options, counts, i, artifactIndex, lastTrial, lastSaved);
             continue;
         }
         const minimized = await shrinkMutant(mutant, result, options);
@@ -172,6 +208,11 @@ async function main() {
                 { inputs: mutant.inputs, level: mutant.level, randomSeed: mutant.randomSeed }
             )
         });
+        lastSaved = { dir: dirName, signature: minimized.signature, kind: result.kind };
+        publishTally(options, counts, i, artifactIndex, lastTrial, lastSaved);
+    }
+    if (process.stderr.isTTY) {
+        process.stderr.write('\n');
     }
     process.stdout.write(JSON.stringify(counts) + '\n');
 }
