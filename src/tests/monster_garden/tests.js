@@ -447,6 +447,31 @@ test('the parent classifies a hung child as timeout', function() {
     });
 });
 
+const KNOWN = [
+    'ok', 'compiler-error', 'compiler-warning', 'crash',
+    'invariant', 'nondeterministic', 'replay-divergence', 'semantic-mismatch'
+];
+
+test('runChild rejects parseable non-results and nonzero exits', function() {
+    assert.deepStrictEqual(garden.KNOWN_RESULT_KINDS, KNOWN);
+    const empty = path.join(os.tmpdir(), 'monster-garden-empty-json.js');
+    fs.writeFileSync(empty, 'process.stdout.write("{}\\n"); process.exit(0);\n');
+    return garden.runChild(process.execPath, [empty], '{}', 2000).then(function(result) {
+        assert.strictEqual(result.kind, 'crash');
+        const liar = path.join(os.tmpdir(), 'monster-garden-ok-nonzero.js');
+        fs.writeFileSync(liar, 'process.stdout.write(JSON.stringify({kind:"ok",error:null,fingerprint:"x",detail:"",errorCount:0})+"\\n"); process.exit(73);\n');
+        return garden.runChild(process.execPath, [liar], '{}', 2000);
+    }).then(function(result) {
+        assert.strictEqual(result.kind, 'crash');
+        const euro = path.join(os.tmpdir(), 'monster-garden-utf8.js');
+        fs.writeFileSync(euro, 'process.stdout.write(JSON.stringify({kind:"crash",error:{name:"Error",message:"euro € here"},fingerprint:"",detail:"",errorCount:0})+"\\n");\n');
+        return garden.runChild(process.execPath, [euro], '{}', 2000);
+    }).then(function(result) {
+        assert.strictEqual(result.kind, 'crash');
+        assert.strictEqual(result.error.message, 'euro € here');
+    });
+});
+
 test('run.js --list-mutators prints every mutator and exits 0', function() {
     const child = spawnSync(process.execPath, [path.join(__dirname, 'run.js'), '--list-mutators'], {
         encoding: 'utf8'

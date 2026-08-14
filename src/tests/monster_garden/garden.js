@@ -514,11 +514,23 @@ function formatRegression(name, source) {
     return '[\n    ' + JSON.stringify(name) + ',\n    [' + JSON.stringify(source) + ', [], ""]\n],\n';
 }
 
+const KNOWN_RESULT_KINDS = [
+    'ok', 'compiler-error', 'compiler-warning', 'crash',
+    'invariant', 'nondeterministic', 'replay-divergence', 'semantic-mismatch'
+];
+
+function decodeBuffers(chunks) {
+    if (!chunks.length) {
+        return '';
+    }
+    return Buffer.concat(chunks).toString('utf8');
+}
+
 function runChild(command, args, stdin, timeoutMs) {
     return new Promise(function(resolve) {
         const child = spawn(command, args, { stdio: ['pipe', 'pipe', 'pipe'] });
-        let stdout = '';
-        let stderr = '';
+        const stdoutChunks = [];
+        const stderrChunks = [];
         let timedOut = false;
         let settled = false;
         const timer = setTimeout(function() {
@@ -535,6 +547,16 @@ function runChild(command, args, stdin, timeoutMs) {
             resolve(result);
         }
 
+        function crashResult(name, message, detail) {
+            return {
+                kind: 'crash',
+                error: { name: name, message: String(message || '').split('\n')[0] },
+                fingerprint: '',
+                detail: detail || '',
+                errorCount: 0
+            };
+        }
+
         function crashFromError(error) {
             if (timedOut) {
                 finish({
@@ -547,20 +569,14 @@ function runChild(command, args, stdin, timeoutMs) {
                 return;
             }
             const message = error && error.message ? error.message : 'spawn failed';
-            finish({
-                kind: 'crash',
-                error: { name: (error && error.name) || 'ChildError', message: message.split('\n')[0] },
-                fingerprint: '',
-                detail: stderr || message,
-                errorCount: 0
-            });
+            finish(crashResult((error && error.name) || 'ChildError', message, decodeBuffers(stderrChunks) || message));
         }
 
-        child.stdout.on('data', function(chunk) { stdout += chunk; });
-        child.stderr.on('data', function(chunk) { stderr += chunk; });
+        child.stdout.on('data', function(chunk) { stdoutChunks.push(Buffer.from(chunk)); });
+        child.stderr.on('data', function(chunk) { stderrChunks.push(Buffer.from(chunk)); });
         child.on('error', crashFromError);
         child.stdin.on('error', crashFromError);
-        child.on('close', function() {
+        child.on('close', function(code, signal) {
             if (timedOut) {
                 finish({
                     kind: 'timeout',
@@ -571,17 +587,29 @@ function runChild(command, args, stdin, timeoutMs) {
                 });
                 return;
             }
+            const stdout = decodeBuffers(stdoutChunks);
+            const stderr = decodeBuffers(stderrChunks);
+            let parsed;
             try {
-                finish(JSON.parse(stdout.trim().split('\n').pop()));
+                const lines = stdout.split('\n').map(function(line) { return line.trim(); }).filter(Boolean);
+                parsed = JSON.parse(lines.pop());
             } catch (error) {
-                finish({
-                    kind: 'crash',
-                    error: { name: 'ChildOutputError', message: (stdout || stderr || error.message).split('\n')[0] },
-                    fingerprint: '',
-                    detail: stderr,
-                    errorCount: 0
-                });
+                finish(crashResult('ChildOutputError', (stdout || stderr || error.message).split('\n')[0], stderr));
+                return;
             }
+            if (!parsed || typeof parsed !== 'object' || KNOWN_RESULT_KINDS.indexOf(parsed.kind) < 0) {
+                finish(crashResult('ChildOutputError', 'invalid worker result', stderr));
+                return;
+            }
+            if (code && code !== 0 && parsed.kind !== 'crash') {
+                finish(crashResult('ChildExitError', 'worker exited ' + code, stderr));
+                return;
+            }
+            if (signal && signal !== 'SIGKILL') {
+                finish(crashResult('ChildExitError', 'worker signal ' + signal, stderr));
+                return;
+            }
+            finish(parsed);
         });
         try {
             child.stdin.write(stdin);
@@ -620,5 +648,6 @@ module.exports = {
     artifactDirName: artifactDirName,
     formatRegression: formatRegression,
     writeArtifacts: writeArtifacts,
-    runChild: runChild
+    runChild: runChild,
+    KNOWN_RESULT_KINDS: KNOWN_RESULT_KINDS
 };
