@@ -209,6 +209,59 @@ test('failure signatures are stable but distinguish different monsters', functio
     }));
 });
 
+test('level invariants accept a well-formed level and name the first broken field', function() {
+    const good = {
+        width: 2,
+        height: 3,
+        n_tiles: 6,
+        objects: { length: 12 },
+        movements: { length: 6 }
+    };
+    assert.strictEqual(garden.checkLevelInvariants(good, 2, 1), null);
+    assert(/missing/.test(garden.checkLevelInvariants(null, 2, 1)));
+    assert(/dimensions/.test(garden.checkLevelInvariants({ width: 0, height: 3, n_tiles: 0, objects: { length: 0 } }, 2, 1)));
+    assert(/n_tiles/.test(garden.checkLevelInvariants({
+        width: 2, height: 3, n_tiles: 5, objects: { length: 10 }
+    }, 2, 1)));
+    assert(/objects/.test(garden.checkLevelInvariants({
+        width: 2, height: 3, n_tiles: 6, objects: { length: 5 }
+    }, 2, 1)));
+    assert(/movements/.test(garden.checkLevelInvariants({
+        width: 2, height: 3, n_tiles: 6, objects: { length: 12 }, movements: { length: 2 }
+    }, 2, 1)));
+});
+
+test('only crashes, timeouts, invariants, nondeterminism, and replay divergence are interesting', function() {
+    assert.strictEqual(garden.isInteresting({ kind: 'ok' }), false);
+    assert.strictEqual(garden.isInteresting({ kind: 'compiler-error' }), false);
+    assert.strictEqual(garden.isInteresting({ kind: 'crash' }), true);
+    assert.strictEqual(garden.isInteresting({ kind: 'timeout' }), true);
+    assert.strictEqual(garden.isInteresting({ kind: 'invariant' }), true);
+    assert.strictEqual(garden.isInteresting({ kind: 'nondeterministic' }), true);
+    assert.strictEqual(garden.isInteresting({ kind: 'replay-divergence' }), true);
+});
+
+test('line shrinking keeps a deletion only when the signature stays the same', function() {
+    const source = 'keep\nnoise\nkeep\n';
+    const result = garden.shrinkSource(source, function(candidate) {
+        return candidate.indexOf('keep') >= 0 && candidate.indexOf('noise') < 0;
+    }, 20);
+    assert.strictEqual(result.source, 'keep\nkeep\n');
+    assert(result.steps > 0);
+    assert(result.steps <= 20);
+});
+
+test('artifact names and regression fixtures are copy-pasteable and path-safe', function() {
+    const name = garden.artifactDirName('crash:TypeError:bad thing / \\ : *', 99, 3);
+    assert.strictEqual(name, 'crash-TypeError-bad-thing-s99_0003');
+    assert(!/[\/\\:*]/.test(name));
+    const snippet = garden.formatRegression('monster garden 99 3', 'title "X"\nline\n');
+    assert.strictEqual(
+        snippet,
+        '[\n    "monster garden 99 3",\n    ["title \\"X\\"\\nline\\n", [], ""]\n],\n'
+    );
+});
+
 async function main() {
     let passed = 0;
     for (let i = 0; i < tests.length; i++) {

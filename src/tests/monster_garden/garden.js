@@ -424,11 +424,92 @@ function failureSignature(result) {
     return String(result.kind);
 }
 
+function checkLevelInvariants(level, strideObj, strideMov) {
+    if (!level || typeof level !== 'object') {
+        return 'level is missing';
+    }
+    if (!(level.width > 0) || !(level.height > 0)) {
+        return 'level dimensions are invalid';
+    }
+    if (level.n_tiles !== level.width * level.height) {
+        return 'n_tiles does not match width*height';
+    }
+    const expectedObjects = level.n_tiles * strideObj;
+    if (!level.objects || level.objects.length !== expectedObjects) {
+        return 'objects length is ' + (level.objects && level.objects.length) + ' expected ' + expectedObjects;
+    }
+    if (level.movements && level.movements.length !== level.n_tiles * strideMov) {
+        return 'movements length is ' + level.movements.length + ' expected ' + (level.n_tiles * strideMov);
+    }
+    return null;
+}
+
+function isInteresting(result) {
+    return result.kind === 'crash'
+        || result.kind === 'timeout'
+        || result.kind === 'invariant'
+        || result.kind === 'nondeterministic'
+        || result.kind === 'replay-divergence';
+}
+
+function shrinkSource(source, keep, budget) {
+    let current = source.split('\n');
+    let remaining = budget;
+    let i = 0;
+    while (i < current.length && remaining > 0) {
+        const candidate = current.slice(0, i).concat(current.slice(i + 1));
+        remaining--;
+        if (keep(candidate.join('\n'))) {
+            current = candidate;
+            i++;
+        } else {
+            i++;
+        }
+    }
+    let shrunk = current.join('\n');
+    if (source.endsWith('\n') && !shrunk.endsWith('\n')) {
+        shrunk += '\n';
+    }
+    return { source: shrunk, steps: budget - remaining };
+}
+
+function artifactDirName(signature, seed, index) {
+    const safe = String(signature)
+        .replace(/[^A-Za-z0-9._-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 80);
+    return (safe || 'monster') + '-s' + seed + '_' + String(index).padStart(4, '0');
+}
+
+function formatRegression(name, source) {
+    return '[\n    ' + JSON.stringify(name) + ',\n    [' + JSON.stringify(source) + ', [], ""]\n],\n';
+}
+
+function writeArtifacts(outputDir, dirName, files) {
+    const tmp = path.join(outputDir, dirName + '.tmp');
+    const dest = path.join(outputDir, dirName);
+    fs.rmSync(tmp, { recursive: true, force: true });
+    fs.mkdirSync(tmp, { recursive: true });
+    const names = Object.keys(files);
+    for (let i = 0; i < names.length; i++) {
+        fs.writeFileSync(path.join(tmp, names[i]), files[names[i]]);
+    }
+    fs.rmSync(dest, { recursive: true, force: true });
+    fs.renameSync(tmp, dest);
+    return dest;
+}
+
 module.exports = {
     Random: Random,
     loadCorpus: loadCorpus,
     mutators: mutators,
     mutateFixture: mutateFixture,
     parseArguments: parseArguments,
-    failureSignature: failureSignature
+    failureSignature: failureSignature,
+    checkLevelInvariants: checkLevelInvariants,
+    isInteresting: isInteresting,
+    shrinkSource: shrinkSource,
+    artifactDirName: artifactDirName,
+    formatRegression: formatRegression,
+    writeArtifacts: writeArtifacts
 };
