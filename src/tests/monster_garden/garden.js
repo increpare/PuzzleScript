@@ -492,16 +492,49 @@ function runChild(command, args, stdin, timeoutMs) {
         let stdout = '';
         let stderr = '';
         let timedOut = false;
+        let settled = false;
         const timer = setTimeout(function() {
             timedOut = true;
             child.kill('SIGKILL');
         }, timeoutMs);
+
+        function finish(result) {
+            if (settled) {
+                return;
+            }
+            settled = true;
+            clearTimeout(timer);
+            resolve(result);
+        }
+
+        function crashFromError(error) {
+            if (timedOut) {
+                finish({
+                    kind: 'timeout',
+                    error: null,
+                    fingerprint: '',
+                    detail: 'timeout',
+                    errorCount: 0
+                });
+                return;
+            }
+            const message = error && error.message ? error.message : 'spawn failed';
+            finish({
+                kind: 'crash',
+                error: { name: (error && error.name) || 'ChildError', message: message.split('\n')[0] },
+                fingerprint: '',
+                detail: stderr || message,
+                errorCount: 0
+            });
+        }
+
         child.stdout.on('data', function(chunk) { stdout += chunk; });
         child.stderr.on('data', function(chunk) { stderr += chunk; });
+        child.on('error', crashFromError);
+        child.stdin.on('error', crashFromError);
         child.on('close', function() {
-            clearTimeout(timer);
             if (timedOut) {
-                resolve({
+                finish({
                     kind: 'timeout',
                     error: null,
                     fingerprint: '',
@@ -511,9 +544,9 @@ function runChild(command, args, stdin, timeoutMs) {
                 return;
             }
             try {
-                resolve(JSON.parse(stdout.trim().split('\n').pop()));
+                finish(JSON.parse(stdout.trim().split('\n').pop()));
             } catch (error) {
-                resolve({
+                finish({
                     kind: 'crash',
                     error: { name: 'ChildOutputError', message: (stdout || stderr || error.message).split('\n')[0] },
                     fingerprint: '',
@@ -522,8 +555,12 @@ function runChild(command, args, stdin, timeoutMs) {
                 });
             }
         });
-        child.stdin.write(stdin);
-        child.stdin.end();
+        try {
+            child.stdin.write(stdin);
+            child.stdin.end();
+        } catch (error) {
+            crashFromError(error);
+        }
     });
 }
 

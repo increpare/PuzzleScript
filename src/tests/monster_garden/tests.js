@@ -342,7 +342,8 @@ test('the worker reports a crash when execution throws', function() {
 test('the parent classifies a hung child as timeout', function() {
     const hung = path.join(os.tmpdir(), 'monster-garden-hang.js');
     fs.writeFileSync(hung, 'setTimeout(function() {}, 100000);\n');
-    return garden.runChild(process.execPath, [hung], '', 80).then(function(result) {
+    const largeStdin = JSON.stringify({ source: 'x'.repeat(200 * 1024), inputs: [], level: 0 });
+    return garden.runChild(process.execPath, [hung], largeStdin, 80).then(function(result) {
         assert.strictEqual(result.kind, 'timeout');
     });
 });
