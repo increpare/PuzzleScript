@@ -339,6 +339,77 @@ test('the worker reports a crash when execution throws', function() {
     assert.strictEqual(typeof result.error.message, 'string');
 });
 
+test('unmutated legend of zokoban with replay is ok', function() {
+    const corpus = garden.loadCorpus(path.join(__dirname, '..', 'resources'));
+    const zokoban = corpus.find(function(item) { return item.name === 'legend of zokoban'; });
+    assert(zokoban, 'legend of zokoban should be in the simulation corpus');
+    const result = workerResult({
+        source: zokoban.source,
+        inputs: zokoban.inputs,
+        level: zokoban.level,
+        randomSeed: zokoban.randomSeed,
+        replay: true,
+        maxInputs: 8
+    });
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
+});
+
+test('a compiling message-only game is ok, not an invariant failure', function() {
+    const result = workerResult({
+        source: `title Message Only
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+message hello
+`,
+        inputs: [0, 3],
+        level: 0,
+        randomSeed: null,
+        replay: true,
+        maxInputs: 8
+    });
+    assert.notStrictEqual(result.kind, 'invariant', JSON.stringify(result));
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
+});
+
 test('the parent classifies a hung child as timeout', function() {
     const hung = path.join(os.tmpdir(), 'monster-garden-hang.js');
     fs.writeFileSync(hung, 'setTimeout(function() {}, 100000);\n');

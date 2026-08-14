@@ -88,6 +88,11 @@ allCode += '\n' + [
     '    errorStrings: { get: function() { return errorStrings; }, set: function(v) { errorStrings = v; }, configurable: true },',
     '    level: { get: function() { return level; }, set: function(v) { level = v; }, configurable: true },',
     '    againing: { get: function() { return againing; }, set: function(v) { againing = v; }, configurable: true },',
+    '    backups: { get: function() { return backups; }, set: function(v) { backups = v; }, configurable: true },',
+    '    RandomGen: { get: function() { return RandomGen; }, set: function(v) { RandomGen = v; }, configurable: true },',
+    '    textMode: { get: function() { return textMode; }, set: function(v) { textMode = v; }, configurable: true },',
+    '    titleScreen: { get: function() { return titleScreen; }, set: function(v) { titleScreen = v; }, configurable: true },',
+    '    state: { get: function() { return state; }, set: function(v) { state = v; }, configurable: true },',
     '    STRIDE_OBJ: { get: function() { return STRIDE_OBJ; }, set: function(v) { STRIDE_OBJ = v; }, configurable: true },',
     '    STRIDE_MOV: { get: function() { return STRIDE_MOV; }, set: function(v) { STRIDE_MOV = v; }, configurable: true }',
     '});'
@@ -103,6 +108,55 @@ function drainAgain() {
         global.againing = false;
         global.processInput(-1);
     }
+}
+
+function backupsLength() {
+    return (global.backups && global.backups.length) || 0;
+}
+
+function undoToBaseline(baseline) {
+    const target = typeof baseline === 'number' ? baseline : 0;
+    while (backupsLength() > target) {
+        const before = backupsLength();
+        global.DoUndo(true, false);
+        if (backupsLength() >= before) {
+            break;
+        }
+    }
+}
+
+function snapshotRng() {
+    const rng = global.RandomGen;
+    if (!rng || !rng._state || !rng._state.s) {
+        return null;
+    }
+    return {
+        seed: rng.seed,
+        _normal: rng._normal,
+        s: rng._state.s.slice(),
+        i: rng._state.i,
+        j: rng._state.j
+    };
+}
+
+function restoreRng(snap) {
+    if (!snap || !global.RandomGen || !global.RandomGen._state) {
+        return;
+    }
+    global.RandomGen.seed = snap.seed;
+    global.RandomGen._normal = snap._normal;
+    global.RandomGen._state.s = snap.s.slice();
+    global.RandomGen._state.i = snap.i;
+    global.RandomGen._state.j = snap.j;
+}
+
+function isTextOrMessageLevel(job) {
+    if (global.textMode || global.titleScreen) {
+        return true;
+    }
+    const levels = global.state && global.state.levels;
+    const selected = levels && job && levels[job.level];
+    return !!(selected && selected.message !== undefined);
 }
 
 function applyInputs(inputs) {
@@ -148,6 +202,21 @@ function runOnce(job) {
             errorCount: errorCount
         };
     }
+    drainAgain();
+    const undoBaseline = backupsLength();
+    const rngBaseline = snapshotRng();
+    if (isTextOrMessageLevel(job)) {
+        return {
+            kind: 'ok',
+            error: null,
+            fingerprint: fingerprintAfter(errorCount),
+            detail: '',
+            errorCount: errorCount,
+            prefixLength: 0,
+            undoBaseline: undoBaseline,
+            rngBaseline: rngBaseline
+        };
+    }
     const broken = garden.checkLevelInvariants(global.level, global.STRIDE_OBJ, global.STRIDE_MOV);
     if (broken) {
         return {
@@ -176,21 +245,31 @@ function runOnce(job) {
         fingerprint: fingerprintAfter(errorCount),
         detail: '',
         errorCount: errorCount,
-        prefixLength: prefix.length
+        prefixLength: prefix.length,
+        undoBaseline: undoBaseline,
+        rngBaseline: rngBaseline
     };
+}
+
+function stripInternalFields(result) {
+    if (!result) {
+        return result;
+    }
+    delete result.undoBaseline;
+    delete result.rngBaseline;
+    return result;
 }
 
 function runJob(job) {
     try {
         const first = runOnce(job);
         if (first.kind !== 'ok') {
-            return first;
+            return stripInternalFields(first);
         }
         const prefix = (job.inputs || []).slice(0, job.maxInputs);
-        if (job.replay && prefix.length > 0) {
-            for (let i = 0; i < prefix.length; i++) {
-                global.DoUndo(false, true);
-            }
+        if (job.replay && prefix.length > 0 && first.prefixLength > 0) {
+            undoToBaseline(first.undoBaseline);
+            restoreRng(first.rngBaseline);
             applyInputs(prefix);
             const replayed = fingerprintAfter(global.errorCount);
             if (replayed !== first.fingerprint) {
@@ -205,7 +284,16 @@ function runJob(job) {
         }
         const second = runOnce(job);
         if (second.kind !== 'ok') {
-            return second;
+            if (second.kind === 'crash' || second.kind === 'invariant' || second.kind === 'replay-divergence') {
+                return stripInternalFields(second);
+            }
+            return {
+                kind: 'nondeterministic',
+                error: null,
+                fingerprint: first.fingerprint,
+                detail: second.kind,
+                errorCount: first.errorCount
+            };
         }
         if (second.fingerprint !== first.fingerprint) {
             return {
@@ -216,7 +304,7 @@ function runJob(job) {
                 errorCount: first.errorCount
             };
         }
-        return first;
+        return stripInternalFields(first);
     } catch (error) {
         return {
             kind: 'crash',
