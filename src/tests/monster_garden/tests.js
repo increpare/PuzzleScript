@@ -573,9 +573,42 @@ test('the worker compiles a valid sample and returns a stable ok fingerprint', f
     assert.strictEqual(first.kind, 'ok', JSON.stringify(first));
     assert.strictEqual(first.error, null);
     assert.strictEqual(typeof first.fingerprint, 'string');
-    assert(first.fingerprint.indexOf('\n') >= 0);
+    const parsed = JSON.parse(first.fingerprint);
+    assert.strictEqual(parsed.errorCount, 0);
+    assert.strictEqual(typeof parsed.board, 'string');
+    assert(Array.isArray(parsed.objects));
     assert.strictEqual(first.errorCount, 0);
     assert.deepStrictEqual(first, second);
+});
+
+test('ok fingerprints include rng and mode, not only the board string', function() {
+    const result = workerResult({
+        source: SAMPLE,
+        inputs: [0],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
+    const parsed = JSON.parse(result.fingerprint);
+    assert.strictEqual(parsed.errorCount, 0);
+    assert.strictEqual(typeof parsed.board, 'string');
+    assert(Array.isArray(parsed.objects));
+    assert(parsed.rng && typeof parsed.rng.i === 'number');
+    assert.strictEqual(typeof parsed.titleScreen, 'boolean');
+});
+
+test('invariants are checked after each input', function() {
+    const result = workerResult({
+        source: SAMPLE,
+        inputs: [0, 3],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
 });
 
 test('the worker treats compile diagnostics as compiler-error, not a crash', function() {

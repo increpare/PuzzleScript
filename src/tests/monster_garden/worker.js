@@ -110,26 +110,19 @@ function emit(result) {
     process.stdout.write(JSON.stringify(result) + '\n');
 }
 
-function drainAgain() {
-    while (global.againing) {
-        global.againing = false;
-        global.processInput(-1);
+function resetWorkerRuntime() {
+    const keys = Object.keys(_storage);
+    for (let i = 0; i < keys.length; i++) {
+        delete _storage[keys[i]];
     }
-}
-
-function backupsLength() {
-    return (global.backups && global.backups.length) || 0;
-}
-
-function undoToBaseline(baseline) {
-    const target = typeof baseline === 'number' ? baseline : 0;
-    while (backupsLength() > target) {
-        const before = backupsLength();
-        global.DoUndo(true, false);
-        if (backupsLength() >= before) {
-            break;
-        }
-    }
+    global.backups = [];
+    global.againing = false;
+    global.winning = false;
+    global.messageselected = false;
+    global.textMode = true;
+    global.titleScreen = true;
+    global.hasUsedCheckpoint = false;
+    global.curlevelTarget = null;
 }
 
 function snapshotRng() {
@@ -155,6 +148,73 @@ function restoreRng(snap) {
     global.RandomGen._state.s = snap.s.slice();
     global.RandomGen._state.i = snap.i;
     global.RandomGen._state.j = snap.j;
+}
+
+function snapshotEngine() {
+    const level = global.level;
+    return {
+        curlevel: global.curlevel,
+        curlevelTarget: global.curlevelTarget,
+        textMode: global.textMode,
+        titleScreen: global.titleScreen,
+        winning: global.winning,
+        messageselected: global.messageselected,
+        messagetext: global.messagetext,
+        hasUsedCheckpoint: global.hasUsedCheckpoint,
+        backups: (global.backups || []).slice(),
+        rng: snapshotRng(),
+        objects: level && level.objects ? new Int32Array(level.objects) : null,
+        movements: level && level.movements ? new Int32Array(level.movements) : null,
+        storage: Object.assign({}, _storage)
+    };
+}
+
+function restoreEngine(snap) {
+    if (!snap) {
+        return;
+    }
+    global.curlevel = snap.curlevel;
+    global.curlevelTarget = snap.curlevelTarget;
+    global.textMode = snap.textMode;
+    global.titleScreen = snap.titleScreen;
+    global.winning = snap.winning;
+    global.messageselected = snap.messageselected;
+    global.messagetext = snap.messagetext;
+    global.hasUsedCheckpoint = snap.hasUsedCheckpoint;
+    global.backups = snap.backups.slice();
+    restoreRng(snap.rng);
+    if (global.level && snap.objects) {
+        global.level.objects.set(snap.objects);
+    }
+    if (global.level && snap.movements && global.level.movements) {
+        global.level.movements.set(snap.movements);
+    }
+    const keys = Object.keys(_storage);
+    for (let i = 0; i < keys.length; i++) {
+        delete _storage[keys[i]];
+    }
+    Object.keys(snap.storage).forEach(function(key) {
+        _storage[key] = snap.storage[key];
+    });
+}
+
+function checkPlayableInvariants(job) {
+    if (isTextOrMessageLevel(job)) {
+        return null;
+    }
+    return garden.checkLevelInvariants(global.level, global.STRIDE_OBJ, global.STRIDE_MOV, global.state);
+}
+
+function drainAgain(job) {
+    while (global.againing) {
+        global.againing = false;
+        global.processInput(-1);
+        const broken = checkPlayableInvariants(job);
+        if (broken) {
+            return broken;
+        }
+    }
+    return null;
 }
 
 function isTextOrMessageLevel(job) {
@@ -197,7 +257,7 @@ function withEngineSeed(job, result) {
     return result;
 }
 
-function applyInputs(inputs) {
+function applyInputs(inputs, job) {
     for (let i = 0; i < inputs.length; i++) {
         const value = inputs[i];
         if (value === 'undo') {
@@ -211,15 +271,42 @@ function applyInputs(inputs) {
         } else {
             throw new Error('Unknown input: ' + value);
         }
-        drainAgain();
+        const afterInput = checkPlayableInvariants(job);
+        if (afterInput) {
+            return afterInput;
+        }
+        const afterAgain = drainAgain(job);
+        if (afterAgain) {
+            return afterAgain;
+        }
     }
+    return null;
 }
 
-function fingerprintAfter(errorCount) {
-    return String(errorCount) + '\n' + global.convertLevelToString();
+function fingerprintAfter(job) {
+    const diagnostic = compilerDiagnosticKind();
+    if (diagnostic) {
+        return diagnostic + ':' + global.errorCount + ':' + JSON.stringify(global.errorStrings || []);
+    }
+    const message = isTextOrMessageLevel(job);
+    return JSON.stringify({
+        errorCount: global.errorCount,
+        errorStrings: (global.errorStrings || []).slice(),
+        curlevel: global.curlevel,
+        textMode: !!global.textMode,
+        titleScreen: !!global.titleScreen,
+        winning: !!global.winning,
+        messageselected: !!global.messageselected,
+        messagetext: String(global.messagetext || ''),
+        board: message ? null : global.convertLevelToString(),
+        objects: message || !global.level || !global.level.objects ? null : Array.from(global.level.objects),
+        movements: message || !global.level || !global.level.movements ? null : Array.from(global.level.movements),
+        rng: snapshotRng()
+    });
 }
 
 function runOnce(job) {
+    resetWorkerRuntime();
     global.unitTesting = true;
     global.lazyFunctionGeneration = false;
     global.IDE = false;
@@ -250,39 +337,45 @@ function runOnce(job) {
         throw new Error('job.level ' + job.level + ' is out of range');
     }
     const errorCount = global.errorCount;
-    drainAgain();
-    const undoBaseline = backupsLength();
-    const rngBaseline = snapshotRng();
+    const drainBroken = drainAgain(job);
+    if (drainBroken) {
+        return withEngineSeed(job, {
+            kind: 'invariant',
+            error: null,
+            fingerprint: fingerprintAfter(job),
+            detail: drainBroken,
+            errorCount: errorCount
+        });
+    }
+    const engineSnapshot = snapshotEngine();
     if (isTextOrMessageLevel(job)) {
         return withEngineSeed(job, {
             kind: 'ok',
             error: null,
-            fingerprint: fingerprintAfter(errorCount),
+            fingerprint: fingerprintAfter(job),
             detail: '',
             errorCount: errorCount,
             prefixLength: 0,
-            undoBaseline: undoBaseline,
-            rngBaseline: rngBaseline
+            engineSnapshot: engineSnapshot
         });
     }
-    const broken = garden.checkLevelInvariants(global.level, global.STRIDE_OBJ, global.STRIDE_MOV);
+    const broken = checkPlayableInvariants(job);
     if (broken) {
         return withEngineSeed(job, {
             kind: 'invariant',
             error: null,
-            fingerprint: fingerprintAfter(errorCount),
+            fingerprint: fingerprintAfter(job),
             detail: broken,
             errorCount: errorCount
         });
     }
     const prefix = (job.inputs || []).slice(0, job.maxInputs);
-    applyInputs(prefix);
-    const afterExec = garden.checkLevelInvariants(global.level, global.STRIDE_OBJ, global.STRIDE_MOV);
+    const afterExec = applyInputs(prefix, job);
     if (afterExec) {
         return withEngineSeed(job, {
             kind: 'invariant',
             error: null,
-            fingerprint: fingerprintAfter(errorCount),
+            fingerprint: fingerprintAfter(job),
             detail: afterExec,
             errorCount: errorCount
         });
@@ -290,12 +383,11 @@ function runOnce(job) {
     return withEngineSeed(job, {
         kind: 'ok',
         error: null,
-        fingerprint: fingerprintAfter(errorCount),
+        fingerprint: fingerprintAfter(job),
         detail: '',
         errorCount: errorCount,
         prefixLength: prefix.length,
-        undoBaseline: undoBaseline,
-        rngBaseline: rngBaseline
+        engineSnapshot: engineSnapshot
     });
 }
 
@@ -305,6 +397,7 @@ function stripInternalFields(result) {
     }
     delete result.undoBaseline;
     delete result.rngBaseline;
+    delete result.engineSnapshot;
     return result;
 }
 
@@ -318,10 +411,18 @@ function runJob(job) {
         }
         const prefix = (job.inputs || []).slice(0, job.maxInputs);
         if (job.replay && prefix.length > 0 && first.prefixLength > 0) {
-            undoToBaseline(first.undoBaseline);
-            restoreRng(first.rngBaseline);
-            applyInputs(prefix);
-            const replayed = fingerprintAfter(global.errorCount);
+            restoreEngine(first.engineSnapshot);
+            const replayBroken = applyInputs(prefix, job);
+            if (replayBroken) {
+                return withEngineSeed(job, {
+                    kind: 'invariant',
+                    error: null,
+                    fingerprint: fingerprintAfter(job),
+                    detail: replayBroken,
+                    errorCount: global.errorCount
+                });
+            }
+            const replayed = fingerprintAfter(job);
             if (replayed !== first.fingerprint) {
                 return withEngineSeed(job, {
                     kind: 'replay-divergence',
@@ -332,6 +433,7 @@ function runJob(job) {
                 });
             }
         }
+        resetWorkerRuntime();
         const second = runOnce(job);
         if (second.kind !== 'ok') {
             if (second.kind === 'crash' || second.kind === 'invariant' || second.kind === 'replay-divergence') {
