@@ -715,23 +715,43 @@ function writeArtifacts(outputDir, dirName, files) {
     fs.mkdirSync(outputDir, { recursive: true });
     const tmp = fs.mkdtempSync(path.join(outputDir, '.' + dirName + '-'));
     const dest = path.join(outputDir, dirName);
-    const names = Object.keys(files);
-    for (let i = 0; i < names.length; i++) {
-        fs.writeFileSync(path.join(tmp, names[i]), files[names[i]]);
-    }
+    let bak = null;
     try {
-        fs.renameSync(tmp, dest);
-    } catch (error) {
-        if (error.code !== 'ENOTEMPTY' && error.code !== 'EEXIST') {
-            fs.rmSync(tmp, { recursive: true, force: true });
-            throw error;
+        const names = Object.keys(files);
+        for (let i = 0; i < names.length; i++) {
+            fs.writeFileSync(path.join(tmp, names[i]), files[names[i]]);
         }
-        const bak = fs.mkdtempSync(path.join(outputDir, '.' + dirName + '-old-'));
-        fs.renameSync(dest, bak);
-        fs.renameSync(tmp, dest);
-        fs.rmSync(bak, { recursive: true, force: true });
+        try {
+            fs.renameSync(tmp, dest);
+        } catch (error) {
+            if (error.code !== 'ENOTEMPTY' && error.code !== 'EEXIST') {
+                throw error;
+            }
+            bak = fs.mkdtempSync(path.join(outputDir, '.' + dirName + '-old-'));
+            fs.renameSync(dest, bak);
+            try {
+                fs.renameSync(tmp, dest);
+            } catch (renameError) {
+                try {
+                    fs.renameSync(bak, dest);
+                    bak = null;
+                } catch (restoreError) {
+                    // Leave bak in place if dest cannot be restored.
+                }
+                throw renameError;
+            }
+            fs.rmSync(bak, { recursive: true, force: true });
+            bak = null;
+        }
+        return dest;
+    } finally {
+        if (fs.existsSync(tmp)) {
+            fs.rmSync(tmp, { recursive: true, force: true });
+        }
+        if (bak && fs.existsSync(bak) && fs.existsSync(dest)) {
+            fs.rmSync(bak, { recursive: true, force: true });
+        }
     }
-    return dest;
 }
 
 module.exports = {

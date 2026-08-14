@@ -378,18 +378,99 @@ test('writeArtifacts uses a unique temp directory and leaves dest intact until r
     const dest = path.join(root, destName);
     fs.mkdirSync(dest);
     fs.writeFileSync(path.join(dest, 'report.json'), '{"old":true}\n');
-    const written = garden.writeArtifacts(root, destName, {
-        'report.json': '{"new":true}\n',
-        'original.txt': 'src\n'
-    });
+    const origRm = fs.rmSync;
+    const origMkdtemp = fs.mkdtempSync;
+    const removed = [];
+    const prefixes = [];
+    fs.rmSync = function(target, opts) {
+        removed.push(target);
+        return origRm.call(fs, target, opts);
+    };
+    fs.mkdtempSync = function(prefix, opts) {
+        prefixes.push(prefix);
+        return origMkdtemp.call(fs, prefix, opts);
+    };
+    let written;
+    try {
+        written = garden.writeArtifacts(root, destName, {
+            'report.json': '{"new":true}\n',
+            'original.txt': 'src\n'
+        });
+    } finally {
+        fs.rmSync = origRm;
+        fs.mkdtempSync = origMkdtemp;
+    }
     assert.strictEqual(written, dest);
     assert.strictEqual(fs.readFileSync(path.join(dest, 'report.json'), 'utf8'), '{"new":true}\n');
+    assert.strictEqual(fs.readFileSync(path.join(dest, 'original.txt'), 'utf8'), 'src\n');
+    removed.forEach(function(target) {
+        assert.notStrictEqual(path.resolve(target), path.resolve(dest));
+    });
+    assert(prefixes.length > 0);
+    prefixes.forEach(function(prefix) {
+        assert.strictEqual(prefix.indexOf(path.join(root, '.' + destName + '-')), 0);
+    });
+    const names = fs.readdirSync(root);
+    assert.ok(names.indexOf(destName + '.tmp') < 0);
+    names.forEach(function(name) {
+        assert.ok(name.indexOf('.' + destName + '-') !== 0, name);
+    });
+});
+
+test('writeArtifacts cleans unique temp dirs if writing fails', function() {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'monster-garden-art-fail-'));
+    const destName = 'crash-demo-s1_0002';
+    const origWrite = fs.writeFileSync;
+    fs.writeFileSync = function() {
+        throw new Error('disk full');
+    };
+    try {
+        assert.throws(function() {
+            garden.writeArtifacts(root, destName, { 'report.json': '{"new":true}\n' });
+        }, /disk full/);
+    } finally {
+        fs.writeFileSync = origWrite;
+    }
     const leftovers = fs.readdirSync(root).filter(function(name) {
-        return name.indexOf('.tmp') >= 0 || name.indexOf(destName + '-') === 0;
+        return name.indexOf('.' + destName + '-') === 0;
     });
-    leftovers.forEach(function(name) {
-        assert.notStrictEqual(name, destName + '.tmp');
+    assert.deepStrictEqual(leftovers, []);
+});
+
+test('writeArtifacts restores dest if the replacement rename fails', function() {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'monster-garden-art-restore-'));
+    const destName = 'crash-demo-s1_0003';
+    const dest = path.join(root, destName);
+    fs.mkdirSync(dest);
+    fs.writeFileSync(path.join(dest, 'report.json'), '{"old":true}\n');
+    const origRename = fs.renameSync;
+    fs.renameSync = function(from, to) {
+        const fromNames = fs.existsSync(from) ? fs.readdirSync(from) : [];
+        if (path.resolve(to) === path.resolve(dest)
+            && path.resolve(from) !== path.resolve(dest)
+            && fromNames.indexOf('original.txt') >= 0
+            && !fs.existsSync(dest)) {
+            const err = new Error('replacement rename failed');
+            err.code = 'EXDEV';
+            throw err;
+        }
+        return origRename.call(fs, from, to);
+    };
+    try {
+        assert.throws(function() {
+            garden.writeArtifacts(root, destName, {
+                'report.json': '{"new":true}\n',
+                'original.txt': 'src\n'
+            });
+        }, /replacement rename failed/);
+    } finally {
+        fs.renameSync = origRename;
+    }
+    assert.strictEqual(fs.readFileSync(path.join(dest, 'report.json'), 'utf8'), '{"old":true}\n');
+    const leftovers = fs.readdirSync(root).filter(function(name) {
+        return name.indexOf('.' + destName + '-') === 0;
     });
+    assert.deepStrictEqual(leftovers, []);
 });
 
 function runWorkerSync(job, timeoutMs) {
