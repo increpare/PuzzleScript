@@ -893,14 +893,70 @@ P.
         maxInputs: 8
     });
     assert.notStrictEqual(result.kind, 'crash', JSON.stringify(result));
-    // nextLevel reseeds RNG from Date.now(), so replay can diverge on rng
-    // after a size-changing win. Restore must still not RangeError.
-    assert.ok(
-        result.kind === 'ok' || result.kind === 'replay-divergence',
-        JSON.stringify(result)
-    );
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
     const parsed = JSON.parse(result.fingerprint);
     assert.strictEqual(typeof parsed.board, 'string');
+});
+
+test('winning onto the next level then replaying stays ok with a canonical seed', function() {
+    const result = workerResult({
+        source: `title Win Then Replay
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+some Player
+
+=======
+LEVELS
+=======
+
+P
+
+P.
+`,
+        inputs: [0],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: true,
+        maxInputs: 8
+    });
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
+    const parsed = JSON.parse(result.fingerprint);
+    assert.strictEqual(parsed.curlevel, 1);
+    assert.strictEqual(parsed.rng.seed, 'garden-seed');
 });
 
 test('the worker treats compile diagnostics as compiler-error, not a crash', function() {

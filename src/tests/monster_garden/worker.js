@@ -106,6 +106,12 @@ allCode += '\n' + [
 ].join('\n') + '\n';
 vm.runInThisContext(allCode, { filename: 'monster_garden_worker.js' });
 
+const originalLoadLevelFromLevelDat = global.loadLevelFromLevelDat;
+let activeEngineSeed = null;
+global.loadLevelFromLevelDat = function(state, leveldat, randomseed, clearinputhistory) {
+    return originalLoadLevelFromLevelDat(state, leveldat, randomseed || activeEngineSeed, clearinputhistory);
+};
+
 function emit(result) {
     process.stdout.write(JSON.stringify(result) + '\n');
 }
@@ -492,6 +498,7 @@ function stripInternalFields(result) {
 function runJob(job) {
     try {
         job.engineSeed = canonicalEngineSeed(job);
+        activeEngineSeed = job.engineSeed;
         validateJob(job);
         const first = runOnce(job);
         if (first.kind !== 'ok') {
