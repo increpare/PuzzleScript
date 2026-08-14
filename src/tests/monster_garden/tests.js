@@ -189,8 +189,16 @@ test('arguments have reproducible defaults and reject unsafe numeric values', fu
     assert.strictEqual(garden.parseArguments(['--list-mutators']).listMutators, true);
     assert.throws(function() { garden.parseArguments(['--count', '0']); }, /count/);
     assert.throws(function() { garden.parseArguments(['--timeout-ms', '0']); }, /timeout-ms/);
+    assert.throws(function() { garden.parseArguments(['--timeout-ms', '2147483648']); }, /timeout-ms/);
+    assert.strictEqual(garden.parseArguments(['--timeout-ms', '2147483647']).timeoutMs, 2147483647);
     assert.throws(function() { garden.parseArguments(['--wat']); }, /Unknown option/);
     assert.throws(function() { garden.parseArguments(['--mutator', 'imaginary']); }, /Unknown mutator/);
+});
+
+test('only inapplicable mutation errors are skippable', function() {
+    assert.strictEqual(garden.isInapplicableMutation(new Error('inapplicable mutation after 2 attempts')), true);
+    assert.strictEqual(garden.isInapplicableMutation(new TypeError('mutator exploded')), false);
+    assert.strictEqual(garden.isInapplicableMutation(new Error('Cannot read property apply of undefined')), false);
 });
 
 test('failure signatures are stable but distinguish different monsters', function() {
@@ -435,6 +443,11 @@ test('run.js rejects malformed options with a nonzero exit', function() {
     });
     assert.notStrictEqual(child.status, 0);
     assert(/count/.test(child.stderr));
+    const oversized = spawnSync(process.execPath, [path.join(__dirname, 'run.js'), '--timeout-ms', '2147483648'], {
+        encoding: 'utf8'
+    });
+    assert.notStrictEqual(oversized.status, 0);
+    assert(/timeout-ms/.test(oversized.stderr));
 });
 
 test('a one-mutant CLI run is deterministic and writes no artifacts for healthy output', function() {

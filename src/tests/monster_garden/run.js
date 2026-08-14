@@ -114,6 +114,9 @@ async function main() {
                 maxAttempts: options.maxAttempts
             });
         } catch (error) {
+            if (!garden.isInapplicableMutation(error)) {
+                throw error;
+            }
             counts.skipped++;
             continue;
         }

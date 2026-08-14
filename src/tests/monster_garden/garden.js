@@ -313,6 +313,10 @@ function mutateFixture(fixture, rng, mutatorNames, options) {
     throw new Error('inapplicable mutation after ' + maxAttempts + ' attempts');
 }
 
+function isInapplicableMutation(error) {
+    return Boolean(error && /inapplicable/.test(String(error.message)));
+}
+
 function needValue(argv, i, name) {
     if (i + 1 >= argv.length) {
         throw new Error('Missing value for ' + name);
@@ -361,10 +365,15 @@ function parseArguments(argv, options) {
                 result.count = needPositiveInt(argv, i, 'count');
                 i++;
                 break;
-            case '--timeout-ms':
-                result.timeoutMs = needPositiveInt(argv, i, 'timeout-ms');
+            case '--timeout-ms': {
+                const value = needPositiveInt(argv, i, 'timeout-ms');
+                if (value > 2147483647) {
+                    throw new Error('timeout-ms must be a positive integer at most 2147483647');
+                }
+                result.timeoutMs = value;
                 i++;
                 break;
+            }
             case '--fixture':
                 result.fixture = needValue(argv, i, 'fixture');
                 i++;
@@ -583,6 +592,7 @@ module.exports = {
     loadCorpus: loadCorpus,
     mutators: mutators,
     mutateFixture: mutateFixture,
+    isInapplicableMutation: isInapplicableMutation,
     parseArguments: parseArguments,
     failureSignature: failureSignature,
     checkLevelInvariants: checkLevelInvariants,
