@@ -98,6 +98,22 @@ test('the existing simulation and compiler-message fixtures form one corpus', fu
     assert.deepStrictEqual(corpus[simulation.length].inputs, []);
 });
 
+test('corpusIndex is unique even when names and kind-local indexes collide', function() {
+    const corpus = garden.loadCorpus(path.join(__dirname, '..', 'resources'));
+    const indexes = corpus.map(function(item) { return item.corpusIndex; });
+    assert.strictEqual(indexes.length, new Set(indexes).size);
+    corpus.forEach(function(item, i) {
+        assert.strictEqual(item.corpusIndex, i);
+        assert.strictEqual(typeof item.kind, 'string');
+        assert.strictEqual(typeof item.fixtureIndex, 'number');
+    });
+    const icy = corpus.filter(function(item) { return item.name === 'icycrates'; });
+    if (icy.length >= 2) {
+        assert.notStrictEqual(icy[0].kind, icy[1].kind);
+        assert.notStrictEqual(icy[0].corpusIndex, icy[1].corpusIndex);
+    }
+});
+
 test('every named mutator either changes a suitable source or reports inapplicable', function() {
     const expected = [
         'delete-rule-punctuation',

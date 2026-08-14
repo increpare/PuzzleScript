@@ -42,24 +42,32 @@ function loadCorpus(resourceDir) {
         const payload = testdata[i][1];
         corpus.push({
             name: testdata[i][0],
+            corpusIndex: corpus.length,
             fixtureIndex: i,
             kind: 'simulation',
             source: payload[0],
             inputs: payload[1] || [],
             level: payload[3] !== undefined ? payload[3] : 0,
-            randomSeed: payload[4] !== undefined ? payload[4] : null
+            randomSeed: payload[4] !== undefined ? payload[4] : null,
+            expectedOutput: payload[2] !== undefined ? payload[2] : null,
+            expectedErrors: null,
+            expectedErrorCount: null
         });
     }
     for (let i = 0; i < errors.length; i++) {
         const payload = errors[i][1];
         corpus.push({
             name: errors[i][0],
+            corpusIndex: corpus.length,
             fixtureIndex: i,
             kind: 'compiler-message',
             source: payload[0],
             inputs: [],
             level: 0,
-            randomSeed: null
+            randomSeed: null,
+            expectedOutput: null,
+            expectedErrors: payload[1],
+            expectedErrorCount: payload[2]
         });
     }
     return corpus;
@@ -300,12 +308,16 @@ function mutateFixture(fixture, rng, mutatorNames, options) {
                 mutator: mutator.name,
                 fixtureName: fixture.name,
                 fixtureIndex: fixture.fixtureIndex,
+                corpusIndex: fixture.corpusIndex,
                 kind: fixture.kind,
                 source: applied.source,
                 detail: applied.detail,
                 inputs: fixture.inputs,
                 level: fixture.level,
                 randomSeed: fixture.randomSeed,
+                expectedOutput: fixture.expectedOutput,
+                expectedErrors: fixture.expectedErrors,
+                expectedErrorCount: fixture.expectedErrorCount,
                 attempt: attempt
             };
         }
