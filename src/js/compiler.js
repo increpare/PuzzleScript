@@ -659,6 +659,8 @@ function processRuleString(rule, state, curRules) {
                         } else {
                             logError('Two "+"s (the "append to previous rule group" symbol) applied to the same rule.', lineNumber);
                         }
+                    } else if (relativeDirections.includes(token)) {
+                        logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
                     } else if (token in directionaggregates) {
                         directions = directions.concat(directionaggregates[token]);
                     } else if (token === 'late') {
@@ -2073,7 +2075,11 @@ function collapseRules(groups) {
                 ellipses.push(0);
             }
 
-            newrule[0] = dirMasks[oldrule.direction];
+            const dirMask = dirMasks[oldrule.direction];
+            if (dirMask === undefined) {
+                continue;
+            }
+            newrule[0] = dirMask;
             for (let j = 0; j < oldrule.lhs.length; j++) {
                 const cellrow_l = oldrule.lhs[j];
                 for (let k = 0; k < cellrow_l.length; k++) {
@@ -2446,7 +2452,7 @@ function lookupWinConditionMask(state, name, lineNumber) {
         return { aggregate: true, mask: state.aggregateMasks[name] };
     } else {
         logError('Unwelcome term "' + name + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
-        return { aggregate: false, mask: 0 };
+        return null;
     }
 }
 
@@ -2483,6 +2489,9 @@ function processWinConditions(state) {
         }
         let r1 = lookupWinConditionMask(state, n1, lineNumber);
         let r2 = lookupWinConditionMask(state, n2, lineNumber);
+        if (!r1 || !r2) {
+            continue;
+        }
         let newcondition = [num, r1.mask, r2.mask, lineNumber, r1.aggregate, r2.aggregate];
         newconditions.push(newcondition);
     }

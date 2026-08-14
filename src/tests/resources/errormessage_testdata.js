@@ -1203,4 +1203,12 @@ var errormessage_testdata = [
         "aggregate of missing objects should error instead of crashing (generateMasks ior)",
         ["title aggregate of missing objects should error instead of crashing\nauthor test\n\n========\nOBJECTS\n========\n\nPlayer\nwhite\n\n=======\nLEGEND\n=======\n\nP = Player\nBackground = Black and White\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nPlayer\n\n======\nRULES\n======\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP\n",["line 16 : You're talking about BLACK but it's not defined anywhere.","line 16 : You're talking about WHITE but it's not defined anywhere.","line 16 : background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or')."],3]
     ],
+    [
+        "perpendicular as a rule direction should error instead of crashing (delta_index)",
+        ["title perpendicular rule prefix\nauthor test\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nPlayer\nwhite\n\nCrate\norange\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n* = Crate\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Crate\n\n======\nRULES\n======\n\nperpendicular [ > Player | Crate ] -> [ > Player | > Crate ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP*\n",["line 40 : Name \"perpendicular\", referred to in a rule, does not exist.","line 40 : You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions"],2]
+    ],
+    [
+        "a win condition on an undefined name should error instead of crashing (bitsClearInArray)",
+        ["title win on missing name\nauthor test\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nPlayer\nwhite\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer\n\n======\nRULES\n======\n\n==============\nWINCONDITIONS\n==============\n\nall Floop on Player\n\n=======\nLEVELS\n=======\n\nP\n",["line 40 : Error in win condition: \"FLOOP\" is not a valid object name.","line 40 : Unwelcome term \"floop\" found in win condition. I don't know what I'm supposed to do with this."],2]
+    ],
 ];   

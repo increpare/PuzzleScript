@@ -1060,6 +1060,128 @@ test('swap-object-colors returns null when both colors are the same word', funct
     assert.strictEqual(applied, null);
 });
 
+test('perpendicular as a rule direction should error instead of crashing (delta_index)', function() {
+    const result = workerResult({
+        source: `title perpendicular rule prefix
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+orange
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Crate
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Crate
+
+======
+RULES
+======
+
+perpendicular [ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+P*
+`,
+        inputs: [],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.notStrictEqual(result.kind, 'crash', JSON.stringify(result));
+    assert.strictEqual(result.kind, 'compiler-error', JSON.stringify(result));
+});
+
+test('a win condition on an undefined name should error instead of crashing (bitsClearInArray)', function() {
+    const result = workerResult({
+        source: `title win on missing name
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+all Floop on Player
+
+=======
+LEVELS
+=======
+
+P
+`,
+        inputs: [],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.notStrictEqual(result.kind, 'crash', JSON.stringify(result));
+    assert.strictEqual(result.kind, 'compiler-error', JSON.stringify(result));
+});
+
 test('a compiled game with fewer levels than job.level is ok, not a crash', function() {
     const result = workerResult({
         source: SAMPLE,
