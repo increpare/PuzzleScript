@@ -1016,6 +1016,9 @@ First, let's check for 'X no X' on the RHS.
                         for (let m=0;m<property_obs_len;m++){
                             const object_name = property_obs[m];
                             const object_data = state.objects[object_name];
+                            if (!object_data) {
+                                continue;
+                            }
                             required_objects.ibitset(object_data.id);
                         }
                         occupier[layer]=entity_name;
@@ -1029,6 +1032,9 @@ First, let's check for 'X no X' on the RHS.
                         let aggregate_obs = state.aggregatesDict[entity_name];
                         for (let m=0;m<aggregate_obs.length;m++){
                             let object_info = state.objects[aggregate_obs[m]];
+                            if (!object_info) {
+                                continue;
+                            }
                             let layer = object_info.layer;
                             let ob_id = object_info.id;
                             required_layers.ibitset(layer);
@@ -1928,7 +1934,11 @@ function rulesToMask(state) {
                             }
 
                             for (const subobject of values) {
-                                const layerIndex = state.objects[subobject].layer | 0;
+                                const sub = state.objects[subobject];
+                                if (!sub || sub.layer === undefined) {
+                                    continue;
+                                }
+                                const layerIndex = sub.layer | 0;
                                 const existingname = layersUsed_r[layerIndex];
                                 
                                 if (existingname !== null) {
