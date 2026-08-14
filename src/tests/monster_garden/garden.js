@@ -525,7 +525,13 @@ async function shrinkInteresting(mutant, originalResult, options) {
         changed = false;
         let i = 0;
         while (i < current.length && remaining > 0) {
-            const candidateSource = current.slice(0, i).concat(current.slice(i + 1)).join('\n');
+            if (i === current.length - 1 && current[i] === '') {
+                break;
+            }
+            let candidateSource = current.slice(0, i).concat(current.slice(i + 1)).join('\n');
+            if (mutant.source.endsWith('\n') && !candidateSource.endsWith('\n')) {
+                candidateSource += '\n';
+            }
             remaining--;
             steps++;
             const next = await options.evaluate({
@@ -542,10 +548,7 @@ async function shrinkInteresting(mutant, originalResult, options) {
             }
         }
     }
-    let minimizedSource = current.join('\n');
-    if (mutant.source.endsWith('\n') && !minimizedSource.endsWith('\n')) {
-        minimizedSource += '\n';
-    }
+    const minimizedSource = current.join('\n');
     const verified = await options.evaluate({
         source: minimizedSource,
         inputs: mutant.inputs,

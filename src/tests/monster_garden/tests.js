@@ -251,18 +251,7 @@ test('failure signatures distinguish timeouts from parser crashes and include fi
 test('timeouts are not shrunk and a signature change after shrink is reverted', async function() {
     const original = 'keep\nlater-crash\n';
     const mutant = { source: original, inputs: [], level: 0, randomSeed: null };
-    const timeoutResult = { kind: 'timeout', error: null, fingerprint: '', detail: 'timeout', errorCount: 0 };
-    const shrunkTimeout = await garden.shrinkInteresting(mutant, timeoutResult, {
-        shrink: true,
-        shrinkBudget: 20,
-        evaluate: async function() {
-            return { kind: 'compiler-error', error: null, fingerprint: 'compiler-error:1', detail: '', errorCount: 1 };
-        }
-    });
-    assert.strictEqual(shrunkTimeout.source, original);
-    assert.strictEqual(shrunkTimeout.result.kind, 'timeout');
-
-    let calls = 0;
+    const ok = { kind: 'ok', error: null, fingerprint: 'ok', detail: '', errorCount: 0 };
     const crash = {
         kind: 'crash',
         error: { name: 'TypeError', message: 'keep' },
@@ -270,21 +259,58 @@ test('timeouts are not shrunk and a signature change after shrink is reverted', 
         detail: '',
         errorCount: 0
     };
+
+    let timeoutCalls = 0;
+    const timeoutResult = { kind: 'timeout', error: null, fingerprint: '', detail: 'timeout', errorCount: 0 };
+    const shrunkTimeout = await garden.shrinkInteresting(mutant, timeoutResult, {
+        shrink: true,
+        shrinkBudget: 20,
+        evaluate: async function() {
+            timeoutCalls++;
+            return { kind: 'compiler-error', error: null, fingerprint: 'compiler-error:1', detail: '', errorCount: 1 };
+        }
+    });
+    assert.strictEqual(shrunkTimeout.source, original);
+    assert.strictEqual(shrunkTimeout.result.kind, 'timeout');
+    assert.strictEqual(timeoutCalls, 0);
+
+    const shrinkCandidates = [];
     const shrunkCrash = await garden.shrinkInteresting(mutant, crash, {
         shrink: true,
         shrinkBudget: 20,
         evaluate: async function(partial) {
-            calls++;
-            const source = partial.source;
-            if (source.indexOf('keep') >= 0) {
+            shrinkCandidates.push(partial.source);
+            if (partial.source.indexOf('keep') >= 0) {
                 return crash;
             }
-            return { kind: 'ok', error: null, fingerprint: 'ok', detail: '', errorCount: 0 };
+            return ok;
         }
     });
     assert.strictEqual(shrunkCrash.source, 'keep\n');
     assert.strictEqual(shrunkCrash.result.kind, 'crash');
-    assert(calls > 0);
+    assert(shrinkCandidates.length > 0);
+    shrinkCandidates.forEach(function(source) {
+        assert(source.endsWith('\n'), JSON.stringify(source));
+    });
+
+    const seen = Object.create(null);
+    const reverted = await garden.shrinkInteresting(mutant, crash, {
+        shrink: true,
+        shrinkBudget: 20,
+        evaluate: async function(partial) {
+            const source = partial.source;
+            seen[source] = (seen[source] || 0) + 1;
+            if (source.indexOf('later-crash') < 0 && seen[source] > 1) {
+                return ok;
+            }
+            if (source.indexOf('keep') >= 0) {
+                return crash;
+            }
+            return ok;
+        }
+    });
+    assert.strictEqual(reverted.source, original);
+    assert.strictEqual(reverted.result, crash);
 });
 
 test('level invariants accept a well-formed level and name the first broken field', function() {
