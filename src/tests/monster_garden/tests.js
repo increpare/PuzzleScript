@@ -1,0 +1,229 @@
+#!/usr/bin/env node
+'use strict';
+
+const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+const garden = require('./garden');
+
+const tests = [];
+
+function test(name, fn) {
+    tests.push({ name, fn });
+}
+
+const SAMPLE = `title Garden Sample
+flickscreen 5x5
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Wall
+gray
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+Obstacle = Player or Wall
+Together = Player and Background
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Wall
+
+======
+RULES
+======
+
+[ > Player | Wall ] -> [ > Player | > Wall ] again
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+PP
+..
+`;
+
+test('seeded random streams are repeatable and bounded', function() {
+    const first = new garden.Random(123456);
+    const second = new garden.Random(123456);
+    const values = [];
+    for (let i = 0; i < 20; i++) {
+        values.push(first.integer(7));
+    }
+    assert.deepStrictEqual(values, values.map(function() { return second.integer(7); }));
+    assert(values.every(function(value) { return value >= 0 && value < 7; }));
+    assert.throws(function() { first.integer(0); }, /positive/);
+});
+
+test('the existing simulation and compiler-message fixtures form one corpus', function() {
+    const resourceDir = path.join(__dirname, '..', 'resources');
+    const corpus = garden.loadCorpus(resourceDir);
+    const simulation = corpus.filter(function(item) { return item.kind === 'simulation'; });
+    const compiler = corpus.filter(function(item) { return item.kind === 'compiler-message'; });
+    assert(simulation.length > 0);
+    assert(compiler.length > 0);
+    assert.strictEqual(simulation.length + compiler.length, corpus.length);
+    assert.strictEqual(typeof corpus[0].source, 'string');
+    assert(Array.isArray(corpus[0].inputs));
+    assert.strictEqual(corpus[0].fixtureIndex, 0);
+    assert.strictEqual(corpus[0].kind, 'simulation');
+    assert.strictEqual(corpus[simulation.length].kind, 'compiler-message');
+    assert.strictEqual(corpus[simulation.length].fixtureIndex, 0);
+    assert.deepStrictEqual(corpus[simulation.length].inputs, []);
+});
+
+test('every named mutator either changes a suitable source or reports inapplicable', function() {
+    const expected = [
+        'delete-rule-punctuation',
+        'duplicate-rule-punctuation',
+        'swap-legend-operator',
+        'invalid-viewport',
+        'duplicate-rule-command',
+        'legend-cycle',
+        'swap-sections',
+        'odd-whitespace',
+        'unterminated-comment'
+    ];
+    assert.deepStrictEqual(garden.mutators.map(function(mutator) { return mutator.name; }), expected);
+
+    for (let i = 0; i < garden.mutators.length; i++) {
+        const result = garden.mutators[i].apply(SAMPLE, new garden.Random(100 + i));
+        assert(result, garden.mutators[i].name + ' should apply to the sample');
+        assert.notStrictEqual(result.source, SAMPLE, garden.mutators[i].name + ' should change the source');
+        assert.strictEqual(typeof result.detail, 'string');
+        assert(result.detail.length > 0);
+    }
+});
+
+test('mutating a fixture records enough information to reproduce it', function() {
+    const fixture = {
+        name: 'sample',
+        fixtureIndex: 7,
+        kind: 'simulation',
+        source: SAMPLE,
+        inputs: [0, 3],
+        level: 0,
+        randomSeed: null
+    };
+    const first = garden.mutateFixture(fixture, new garden.Random(44), ['legend-cycle']);
+    const second = garden.mutateFixture(fixture, new garden.Random(44), ['legend-cycle']);
+    assert.deepStrictEqual(first, second);
+    assert.strictEqual(first.mutator, 'legend-cycle');
+    assert.strictEqual(first.fixtureName, 'sample');
+    assert.strictEqual(first.fixtureIndex, 7);
+    assert.notStrictEqual(first.source, fixture.source);
+});
+
+test('mutateFixture retries then fails when no mutator applies', function() {
+    const fixture = {
+        name: 'empty',
+        fixtureIndex: 0,
+        kind: 'simulation',
+        source: 'title X\n',
+        inputs: [],
+        level: 0,
+        randomSeed: null
+    };
+    assert.throws(function() {
+        garden.mutateFixture(fixture, new garden.Random(1), ['delete-rule-punctuation'], { maxAttempts: 2 });
+    }, /inapplicable/);
+});
+
+test('arguments have reproducible defaults and reject unsafe numeric values', function() {
+    const defaults = garden.parseArguments([], { now: function() { return 98765; } });
+    assert.strictEqual(defaults.seed, 98765);
+    assert.strictEqual(defaults.count, 100);
+    assert.strictEqual(defaults.timeoutMs, 2000);
+    assert.strictEqual(defaults.shrink, true);
+    assert.strictEqual(defaults.replay, true);
+    assert.strictEqual(defaults.maxInputs, 8);
+    assert.strictEqual(defaults.shrinkBudget, 200);
+    assert.strictEqual(defaults.maxAttempts, 8);
+    assert.strictEqual(defaults.output, '.build/monster_garden');
+    assert.strictEqual(defaults.fixture, null);
+    assert.strictEqual(defaults.mutators, null);
+    assert.strictEqual(defaults.listMutators, false);
+
+    const parsed = garden.parseArguments([
+        '--seed', '42', '--count', '3', '--timeout-ms', '900',
+        '--fixture', 'sokoban', '--mutator', 'legend-cycle,odd-whitespace',
+        '--output', 'somewhere', '--no-shrink', '--no-replay', '--max-inputs', '4',
+        '--shrink-budget', '50', '--max-attempts', '3'
+    ]);
+    assert.strictEqual(parsed.seed, 42);
+    assert.strictEqual(parsed.count, 3);
+    assert.strictEqual(parsed.timeoutMs, 900);
+    assert.deepStrictEqual(parsed.mutators, ['legend-cycle', 'odd-whitespace']);
+    assert.strictEqual(parsed.shrink, false);
+    assert.strictEqual(parsed.replay, false);
+    assert.strictEqual(parsed.maxInputs, 4);
+    assert.strictEqual(parsed.shrinkBudget, 50);
+    assert.strictEqual(parsed.maxAttempts, 3);
+    assert.strictEqual(parsed.listMutators, false);
+    assert.strictEqual(garden.parseArguments(['--list-mutators']).listMutators, true);
+    assert.throws(function() { garden.parseArguments(['--count', '0']); }, /count/);
+    assert.throws(function() { garden.parseArguments(['--timeout-ms', '0']); }, /timeout-ms/);
+    assert.throws(function() { garden.parseArguments(['--wat']); }, /Unknown option/);
+    assert.throws(function() { garden.parseArguments(['--mutator', 'imaginary']); }, /Unknown mutator/);
+});
+
+test('failure signatures are stable but distinguish different monsters', function() {
+    const first = garden.failureSignature({
+        kind: 'crash',
+        error: { name: 'TypeError', message: 'bad thing\nwith stack noise' }
+    });
+    const second = garden.failureSignature({
+        kind: 'crash',
+        error: { name: 'TypeError', message: 'bad thing\nelsewhere' }
+    });
+    assert.strictEqual(first, second);
+    assert.notStrictEqual(first, garden.failureSignature({ kind: 'timeout' }));
+    assert.notStrictEqual(first, garden.failureSignature({
+        kind: 'crash', error: { name: 'RangeError', message: 'bad thing' }
+    }));
+});
+
+async function main() {
+    let passed = 0;
+    for (let i = 0; i < tests.length; i++) {
+        try {
+            await tests[i].fn();
+            passed++;
+            process.stdout.write('.');
+        } catch (error) {
+            process.stdout.write('F');
+            console.error('\n\n' + tests[i].name + '\n' + error.stack);
+        }
+    }
+    console.log('\n' + passed + '/' + tests.length + ' monster garden tests passed');
+    process.exitCode = passed === tests.length ? 0 : 1;
+}
+
+main();
+
