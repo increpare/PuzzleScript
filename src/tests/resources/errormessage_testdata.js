@@ -1191,4 +1191,12 @@ var errormessage_testdata = [
         "mixed and/or property used through random should error instead of crashing (rulesToMask)",
         ["title mixed and/or used with random should error instead of crashing\nauthor test\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nPlayer\nwhite\n\nCrate\norange\n\nWall\ngray\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n* = Crate\n# = Wall\nO = Crate or Wall\nN = Crate or Wall and Player\nN_O = N or O\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer, Crate, Wall\n\n======\nRULES\n======\n\n[ ] -> [ random N_O ]\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP\n",["line 29 : Hey! You can't go mixing ANDs and ORs in a single legend entry.","line 30 : You're talking about N but it's not defined anywhere."],2]
     ],
+    [
+        "background property with a missing member should error instead of crashing (generateExtraMembers layer)",
+        ["title background property missing member should error instead of crashing\nauthor test\n\n========\nOBJECTS\n========\n\nBlack\nblack\n\nPlayer\nwhite\n\n=======\nLEGEND\n=======\n\n. = Black\nP = Player\nBackground = Black or White\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBlack\nPlayer\n\n======\nRULES\n======\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP\n",["line 20 : You're talking about WHITE but it's not defined anywhere."],1]
+    ],
+    [
+        "movement on an undefined name should error instead of crashing (generateMatchString)",
+        ["title movement on missing name should error instead of crashing\nauthor test\n\n========\nOBJECTS\n========\n\nBackground\nblack\n\nPlayer\nwhite\n\n=======\nLEGEND\n=======\n\n. = Background\nP = Player\n\n=======\nSOUNDS\n=======\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nPlayer\n\n======\nRULES\n======\n\n[ > MissingName ] -> cancel\n\n==============\nWINCONDITIONS\n==============\n\n=======\nLEVELS\n=======\n\nP\n",["line 36 : Name \"missingname\", referred to in a rule, does not exist.","line 36 : Error, malformed cell rule - was looking for cell contents, but found \"missingname\".  What am I supposed to do with this, eh, please tell me that.","line 36 : In a rule, if you specify a movement, it has to act on an object."],3]
+    ],
 ];    

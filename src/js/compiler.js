@@ -378,14 +378,19 @@ function generateExtraMembers(state) {
             let backgrounddef = state.propertiesDict['background'];
             let n = backgrounddef[0];
             let o = state.objects[n];
-            backgroundid = o.id;
-            backgroundlayer = o.layer;
-            for (let i = 1; i < backgrounddef.length; i++) {
-                let nnew = backgrounddef[i];
-                let onew = state.objects[nnew];
-                if (onew.layer !== backgroundlayer) {
-                    let lineNumber = state.original_line_numbers['background'];
-                    logError('Background objects must be on the same layer', lineNumber);
+            if (o) {
+                backgroundid = o.id;
+                backgroundlayer = o.layer;
+                for (let i = 1; i < backgrounddef.length; i++) {
+                    let nnew = backgrounddef[i];
+                    let onew = state.objects[nnew];
+                    if (!onew) {
+                        continue;
+                    }
+                    if (onew.layer !== backgroundlayer) {
+                        let lineNumber = state.original_line_numbers['background'];
+                        logError('Background objects must be on the same layer', lineNumber);
+                    }
                 }
             }
         } else if ('background' in state.aggregatesDict) {
