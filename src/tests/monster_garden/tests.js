@@ -193,6 +193,10 @@ test('arguments have reproducible defaults and reject unsafe numeric values', fu
     assert.strictEqual(garden.parseArguments(['--timeout-ms', '2147483647']).timeoutMs, 2147483647);
     assert.throws(function() { garden.parseArguments(['--wat']); }, /Unknown option/);
     assert.throws(function() { garden.parseArguments(['--mutator', 'imaginary']); }, /Unknown mutator/);
+    assert.throws(function() { garden.parseArguments(['--mutator', '']); }, /mutator/);
+    assert.throws(function() { garden.parseArguments(['--seed', '']); }, /seed/);
+    assert.throws(function() { garden.parseArguments(['--seed', '4294967296']); }, /seed/);
+    assert.strictEqual(garden.parseArguments(['--seed', '4294967295']).seed, 4294967295);
 });
 
 test('only inapplicable mutation errors are skippable', function() {

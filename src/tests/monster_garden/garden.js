@@ -353,9 +353,13 @@ function parseArguments(argv, options) {
         const arg = argv[i];
         switch (arg) {
             case '--seed': {
-                const value = Number(needValue(argv, i, 'seed'));
-                if (!Number.isInteger(value) || value < 0) {
+                const raw = needValue(argv, i, 'seed');
+                if (!/^\d+$/.test(raw)) {
                     throw new Error('seed must be a non-negative integer');
+                }
+                const value = Number(raw);
+                if (!Number.isInteger(value) || value < 0 || value > 4294967295) {
+                    throw new Error('seed must be a non-negative integer at most 4294967295');
                 }
                 result.seed = value;
                 i++;
@@ -382,6 +386,9 @@ function parseArguments(argv, options) {
                 const selected = needValue(argv, i, 'mutator').split(',').map(function(name) {
                     return name.trim();
                 }).filter(Boolean);
+                if (selected.length === 0) {
+                    throw new Error('mutator list is empty');
+                }
                 for (let j = 0; j < selected.length; j++) {
                     if (names.indexOf(selected[j]) < 0) {
                         throw new Error('Unknown mutator: ' + selected[j]);
