@@ -532,7 +532,7 @@ function checkLevelInvariants(level, strideObj, strideMov, state) {
                 for (let word = 0; word < strideObj; word++) {
                     const bits = level.objects[tile * strideObj + word] & mask.data[word];
                     if (bits) {
-                        count += bits.toString(2).replace(/0/g, '').length;
+                        count += (bits >>> 0).toString(2).replace(/0/g, '').length;
                     }
                 }
                 if (count > 1) {

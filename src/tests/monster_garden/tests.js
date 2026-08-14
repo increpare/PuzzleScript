@@ -346,6 +346,28 @@ test('level invariants accept a well-formed level and name the first broken fiel
     }, 2, 1)));
 });
 
+test('level occupancy counts a sign-bit object as one occupant', function() {
+    const signBit = 1 << 31;
+    const oneTile = {
+        width: 1,
+        height: 1,
+        n_tiles: 1,
+        objects: new Int32Array([signBit]),
+        movements: new Int32Array(1)
+    };
+    const signMask = { layerMasks: [{ data: new Int32Array([signBit]) }] };
+    assert.strictEqual(garden.checkLevelInvariants(oneTile, 1, 1, signMask), null);
+    const twoBits = {
+        width: 1,
+        height: 1,
+        n_tiles: 1,
+        objects: new Int32Array([signBit | 1]),
+        movements: new Int32Array(1)
+    };
+    const bothBits = { layerMasks: [{ data: new Int32Array([-1]) }] };
+    assert(/collision layer/.test(garden.checkLevelInvariants(twoBits, 1, 1, bothBits)));
+});
+
 test('only crashes, timeouts, invariants, nondeterminism, and replay divergence are interesting', function() {
     assert.strictEqual(garden.isInteresting({ kind: 'ok' }), false);
     assert.strictEqual(garden.isInteresting({ kind: 'compiler-error' }), false);
