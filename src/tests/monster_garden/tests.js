@@ -730,6 +730,210 @@ test('structure-aware mutators usually keep a compiling sample compiling', funct
     });
 });
 
+const NUDGE_L_SOURCE = `title Nudge L
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+=======
+LEGEND
+=======
+
+. = Background
+L = Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+L.
+..
+`;
+
+test('nudge-level-cell never rewrites the LEVELS header', function() {
+    const mutator = garden.mutators.find(function(item) { return item.name === 'nudge-level-cell'; });
+    assert(mutator);
+    let succeeded = 0;
+    for (let seed = 0; seed < 30; seed++) {
+        const applied = mutator.apply(NUDGE_L_SOURCE, new garden.Random(seed));
+        if (!applied) {
+            continue;
+        }
+        succeeded++;
+        const levelsLine = applied.source.split('\n').find(function(line) {
+            return line.trim().toUpperCase() === 'LEVELS';
+        });
+        assert(levelsLine, 'seed ' + seed + ' lost exact LEVELS header');
+        assert.strictEqual(levelsLine.trim().toUpperCase(), 'LEVELS');
+    }
+    assert(succeeded > 0, 'nudge-level-cell should apply at least once');
+});
+
+const SWAP_RED_SOURCE = `title Swap Red
+========
+OBJECTS
+========
+
+Background
+black
+
+Red
+black
+
+Player
+white
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+Red
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+P.
+`;
+
+test('swap-object-colors does not rewrite an object named Red', function() {
+    const mutator = garden.mutators.find(function(item) { return item.name === 'swap-object-colors'; });
+    assert(mutator);
+    let succeeded = 0;
+    for (let seed = 0; seed < 30; seed++) {
+        const applied = mutator.apply(SWAP_RED_SOURCE, new garden.Random(seed));
+        if (!applied) {
+            continue;
+        }
+        succeeded++;
+        const lines = applied.source.split('\n');
+        let i = 0;
+        while (i < lines.length && lines[i].trim().toUpperCase() !== 'OBJECTS') {
+            i++;
+        }
+        const names = [];
+        let wantName = true;
+        for (i = i + 1; i < lines.length; i++) {
+            const trimmed = lines[i].trim();
+            if (trimmed.toUpperCase() === 'LEGEND') {
+                break;
+            }
+            if (trimmed === '' || /^=+$/.test(trimmed)) {
+                if (trimmed === '') {
+                    wantName = true;
+                }
+                continue;
+            }
+            if (wantName) {
+                names.push(trimmed);
+                wantName = false;
+            }
+        }
+        assert(names.indexOf('Red') >= 0, 'seed ' + seed + ' rewrote object name Red');
+        assert(applied.source.split('\n').some(function(line) {
+            return line.trim() === 'Red';
+        }), 'seed ' + seed + ' lost a whole-line Red name');
+    }
+    assert(succeeded > 0, 'swap-object-colors should apply at least once');
+});
+
+const SWAP_BLACK_ONLY_SOURCE = `title Black Only
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player
+
+======
+RULES
+======
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+P.
+`;
+
+test('swap-object-colors returns null when both colors are the same word', function() {
+    const mutator = garden.mutators.find(function(item) { return item.name === 'swap-object-colors'; });
+    assert(mutator);
+    const applied = mutator.apply(SWAP_BLACK_ONLY_SOURCE, new garden.Random(0));
+    assert.strictEqual(applied, null);
+});
+
 test('a compiled game with fewer levels than job.level is ok, not a crash', function() {
     const result = workerResult({
         source: SAMPLE,

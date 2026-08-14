@@ -303,22 +303,47 @@ function duplicateRuleLine(source, rng) {
 
 function swapObjectColors(source, rng) {
     return mutateSection(source, 'OBJECTS', function(body) {
-        const marks = marksIn(body, /\b(black|white|gray|grey|red|green|blue|yellow|pink|orange|brown|purple)\b/i);
-        if (marks.length < 2) {
+        const colorRe = /^\s*(black|white|gray|grey|red|green|blue|yellow|pink|orange|brown|purple)\s*$/i;
+        const lines = body.split('\n');
+        const indexes = [];
+        let wantName = true;
+        for (let i = 0; i < lines.length; i++) {
+            const trimmed = lines[i].trim();
+            if (trimmed === '') {
+                wantName = true;
+                continue;
+            }
+            if (/^=+$/.test(trimmed)) {
+                continue;
+            }
+            if (wantName) {
+                wantName = false;
+                continue;
+            }
+            if (colorRe.test(lines[i])) {
+                indexes.push(i);
+            }
+        }
+        if (indexes.length < 2) {
             return null;
         }
-        const first = rng.integer(marks.length);
-        let second = rng.integer(marks.length - 1);
+        const first = rng.integer(indexes.length);
+        let second = rng.integer(indexes.length - 1);
         if (second >= first) {
             second++;
         }
-        const earlier = first < second ? marks[first] : marks[second];
-        const later = first < second ? marks[second] : marks[first];
-        let next = replaceRange(body, later.index, later.index + later.text.length, earlier.text);
-        next = replaceRange(next, earlier.index, earlier.index + earlier.text.length, later.text);
+        const earlier = indexes[first] < indexes[second] ? indexes[first] : indexes[second];
+        const later = indexes[first] < indexes[second] ? indexes[second] : indexes[first];
+        if (lines[earlier].trim().toLowerCase() === lines[later].trim().toLowerCase()) {
+            return null;
+        }
+        const swapped = lines.slice();
+        const tmp = swapped[earlier];
+        swapped[earlier] = swapped[later];
+        swapped[later] = tmp;
         return {
-            source: next,
-            detail: 'swapped ' + earlier.text + ' and ' + later.text
+            source: swapped.join('\n'),
+            detail: 'swapped ' + lines[earlier].trim() + ' and ' + lines[later].trim()
         };
     });
 }
@@ -348,6 +373,12 @@ function nudgeLevelCell(source, rng) {
         const lines = body.split('\n');
         const cells = [];
         for (let i = 0; i < lines.length; i++) {
+            if (i === 0 || /^\s*LEVELS\s*$/i.test(lines[i])) {
+                continue;
+            }
+            if (/^\s*=+\s*$/.test(lines[i]) || lines[i].trim() === '') {
+                continue;
+            }
             if (/^\s*message\b/i.test(lines[i])) {
                 continue;
             }
