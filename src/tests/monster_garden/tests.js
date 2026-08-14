@@ -1236,6 +1236,77 @@ P
     assert.strictEqual(result.kind, 'compiler-error', JSON.stringify(result));
 });
 
+test('flooding runtime errors should stop logging instead of crashing (TooManyErrors)', function() {
+    const result = workerResult({
+        source: `title flood runtime errors
+========
+OBJECTS
+========
+Background
+black
+Player
+white
+Wall
+gray
+player_1
+red
+player_2
+blue
+player_3
+green
+=======
+LEGEND
+=======
+. = Background
+P = Player
+# = Wall
+=======
+SOUNDS
+=======
+================
+COLLISIONLAYERS
+================
+Background
+Player, Wall
+player_1
+player_2
+player_3
+======
+RULES
+======
+random [ no Player ] -> [ Player ] again
+late right [ Player | Player | Player ] -> [ Player player_1 | Player player_2 | Player player_3 ]
+==============
+WINCONDITIONS
+==============
+=======
+LEVELS
+=======
+################
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#..............#
+#.....P........#
+################
+`,
+        inputs: [0],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: false,
+        maxInputs: 8
+    });
+    assert.notStrictEqual(result.kind, 'crash', JSON.stringify(result));
+});
+
 test('a compiled game with fewer levels than job.level is ok, not a crash', function() {
     const result = workerResult({
         source: SAMPLE,

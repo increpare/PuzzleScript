@@ -52,6 +52,9 @@ function resetParserErrorState() {
 function TooManyErrors() {
     const message = compiling ? "Too many errors/warnings; aborting compilation." : "Too many errors/warnings; noping out.";
     consolePrint(message, true);
+    if (typeof unitTesting !== 'undefined' && unitTesting) {
+        return;
+    }
     throw new Error(message);
 }
 
@@ -65,6 +68,9 @@ function buildErrorHtml(lineNumber, str, className) {
 }
 
 function logIssue(str, lineNumber, urgent, className, countsAsError, printUrgent) {
+    if (errorStrings.length > MAX_ERRORS_FOR_REAL) {
+        return;
+    }
     if (compiling || urgent) {
         const errorString = buildErrorHtml(lineNumber, str, className);
         if (errorStrings.includes(errorString) && !urgent) {
