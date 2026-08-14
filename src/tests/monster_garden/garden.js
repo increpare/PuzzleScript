@@ -455,22 +455,22 @@ function isInteresting(result) {
 function shrinkSource(source, keep, budget) {
     let current = source.split('\n');
     let remaining = budget;
-    let i = 0;
-    while (i < current.length && remaining > 0) {
-        const candidate = current.slice(0, i).concat(current.slice(i + 1));
-        remaining--;
-        if (keep(candidate.join('\n'))) {
-            current = candidate;
-            i++;
-        } else {
-            i++;
+    let changed = true;
+    while (changed && remaining > 0) {
+        changed = false;
+        let i = 0;
+        while (i < current.length && remaining > 0) {
+            const candidate = current.slice(0, i).concat(current.slice(i + 1));
+            remaining--;
+            if (keep(candidate.join('\n'))) {
+                current = candidate;
+                changed = true;
+            } else {
+                i++;
+            }
         }
     }
-    let shrunk = current.join('\n');
-    if (source.endsWith('\n') && !shrunk.endsWith('\n')) {
-        shrunk += '\n';
-    }
-    return { source: shrunk, steps: budget - remaining };
+    return { source: current.join('\n'), steps: budget - remaining };
 }
 
 function artifactDirName(signature, seed, index) {

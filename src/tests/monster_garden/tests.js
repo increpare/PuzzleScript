@@ -244,7 +244,9 @@ test('only crashes, timeouts, invariants, nondeterminism, and replay divergence 
 test('line shrinking keeps a deletion only when the signature stays the same', function() {
     const source = 'keep\nnoise\nkeep\n';
     const result = garden.shrinkSource(source, function(candidate) {
-        return candidate.indexOf('keep') >= 0 && candidate.indexOf('noise') < 0;
+        return candidate.split('\n').filter(function(line) { return line === 'keep'; }).length === 2
+            && candidate.indexOf('noise') < 0
+            && candidate.endsWith('\n');
     }, 20);
     assert.strictEqual(result.source, 'keep\nkeep\n');
     assert(result.steps > 0);
