@@ -430,6 +430,473 @@ function flipWinQuantifier(source) {
     });
 }
 
+function arrowRuleIndexes(body) {
+    const lines = body.split('\n');
+    const indexes = [];
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i].indexOf('->') >= 0) {
+            indexes.push(i);
+        }
+    }
+    return { lines: lines, indexes: indexes };
+}
+
+function mutateArrowRule(source, rng, fn) {
+    return mutateSection(source, 'RULES', function(body) {
+        const found = arrowRuleIndexes(body);
+        if (found.indexes.length === 0) {
+            return null;
+        }
+        const index = found.indexes[rng.integer(found.indexes.length)];
+        const next = fn(found.lines[index], rng);
+        if (!next) {
+            return null;
+        }
+        found.lines[index] = next.line;
+        return { source: found.lines.join('\n'), detail: next.detail };
+    });
+}
+
+function insertRuleLine(source, line) {
+    return mutateSection(source, 'RULES', function(body) {
+        const found = arrowRuleIndexes(body);
+        const lines = body.split('\n');
+        const at = found.indexes.length > 0 ? found.indexes[0] : lines.length;
+        lines.splice(at, 0, line);
+        return { source: lines.join('\n'), detail: 'inserted ' + line };
+    });
+}
+
+const NAUGHTY_STRINGS = [
+    '\u200b',
+    '\ufeff',
+    '\u202e',
+    '\u0301Player',
+    '\u0410',
+    '\u{1D400}',
+    'NaN',
+    'Infinity',
+    'null',
+    'undefined',
+    '__proto__',
+    '%s',
+    '{0}',
+    '........',
+    '\uFF11',
+    '\u000b',
+    '\u2028',
+    'constructor'
+];
+
+const KEYWORD_NAMES = ['^', 'v', 'late', 'no', 'and', 'or', 'random', 'moving', 'win', '...'];
+const PRELUDE_FLAGS = [
+    'noundo',
+    'norestart',
+    'noaction',
+    'scanline',
+    'throttle_movement',
+    'run_rules_on_level_start',
+    'realtime_interval 0',
+    'again_interval -1',
+    'key_repeat_interval 0',
+    'color_palette not-a-palette'
+];
+const NUDGE_INPUT_CHOICES = [0, 1, 2, 3, 4, 'tick', 'undo', 'restart'];
+const POISON_SEEDS = ['', '0', 'NaN', 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'];
+
+function blnsSlot(source, rng) {
+    const naughty = NAUGHTY_STRINGS[rng.integer(NAUGHTY_STRINGS.length)];
+    const title = /^\s*title\s+.+$/im.exec(source);
+    if (title) {
+        return {
+            source: replaceRange(source, title.index, title.index + title[0].length, title[0] + naughty),
+            detail: 'appended naughty string to title'
+        };
+    }
+    return {
+        source: 'title ' + naughty + '\n' + source,
+        detail: 'injected naughty title'
+    };
+}
+
+function keywordAsName(source, rng) {
+    const name = KEYWORD_NAMES[rng.integer(KEYWORD_NAMES.length)];
+    return mutateSection(source, 'OBJECTS', function(body) {
+        return {
+            source: body.replace(/\s*$/, '') + '\n' + name + '\nred\n',
+            detail: 'added object named ' + name
+        };
+    });
+}
+
+function orphanLegendMember(source) {
+    return mutateSection(source, 'LEGEND', function(body) {
+        return {
+            source: body.replace(/\s*$/, '') + '\nGardenGhost = MissingName or Player\n',
+            detail: 'legend member MissingName does not exist'
+        };
+    });
+}
+
+function injectEllipsis(source, rng) {
+    return mutateArrowRule(source, rng, function(line) {
+        const pipe = line.indexOf('|');
+        if (pipe < 0) {
+            const arrow = line.indexOf('->');
+            if (arrow < 0) {
+                return null;
+            }
+            return {
+                line: line.slice(0, arrow) + '| ... ' + line.slice(arrow),
+                detail: 'injected ellipsis before arrow'
+            };
+        }
+        return {
+            line: line.slice(0, pipe + 1) + ' ... ' + line.slice(pipe + 1),
+            detail: 'injected ellipsis after |'
+        };
+    });
+}
+
+function injectNo(source, rng) {
+    return mutateArrowRule(source, rng, function(line) {
+        const bracket = line.indexOf('[');
+        if (bracket < 0) {
+            return null;
+        }
+        return {
+            line: line.slice(0, bracket + 1) + ' no Player ' + line.slice(bracket + 1),
+            detail: 'injected no Player'
+        };
+    });
+}
+
+function injectControlChar(source, rng) {
+    const ch = rng.integer(2) === 0 ? '\u000b' : '\u2028';
+    const marks = marksIn(source, /[A-Za-z]{3,}/);
+    if (marks.length === 0) {
+        return {
+            source: ch + source,
+            detail: 'prefixed a control character'
+        };
+    }
+    const mark = marks[rng.integer(marks.length)];
+    const at = mark.index + Math.floor(mark.text.length / 2);
+    return {
+        source: replaceRange(source, at, at, ch),
+        detail: 'inserted a control character inside ' + mark.text
+    };
+}
+
+function spriteMatrixNoise(source) {
+    return mutateSection(source, 'OBJECTS', function(body) {
+        const lines = body.split('\n');
+        let wantName = true;
+        let colorLine = -1;
+        for (let i = 0; i < lines.length; i++) {
+            const trimmed = lines[i].trim();
+            if (trimmed === '') {
+                wantName = true;
+                continue;
+            }
+            if (wantName) {
+                wantName = false;
+                colorLine = -1;
+                continue;
+            }
+            if (colorLine < 0 && /[A-Za-z#]/.test(trimmed)) {
+                colorLine = i;
+                break;
+            }
+        }
+        if (colorLine < 0) {
+            return null;
+        }
+        lines.splice(colorLine + 1, 0, '0123');
+        return { source: lines.join('\n'), detail: 'inserted a 4-wide sprite row' };
+    });
+}
+
+function duplicateObjectName(source) {
+    return mutateSection(source, 'OBJECTS', function(body) {
+        const lines = body.split('\n');
+        let blockStart = -1;
+        let wantName = true;
+        for (let i = 0; i < lines.length; i++) {
+            const trimmed = lines[i].trim();
+            if (trimmed === '' || /^\s*=+\s*$/.test(trimmed) || trimmed.toUpperCase() === 'OBJECTS') {
+                wantName = true;
+                continue;
+            }
+            if (wantName) {
+                blockStart = i;
+                break;
+            }
+        }
+        if (blockStart < 0) {
+            return null;
+        }
+        let blockEnd = lines.length;
+        for (let i = blockStart + 1; i < lines.length; i++) {
+            if (lines[i].trim() === '') {
+                blockEnd = i;
+                break;
+            }
+        }
+        const block = lines.slice(blockStart, blockEnd);
+        lines.splice(blockEnd, 0, '', ...block);
+        return { source: lines.join('\n'), detail: 'duplicated object ' + lines[blockStart].trim() };
+    });
+}
+
+function caseFlipName(source) {
+    return mutateSection(source, 'OBJECTS', function(body) {
+        const lines = body.split('\n');
+        let wantName = true;
+        for (let i = 0; i < lines.length; i++) {
+            const trimmed = lines[i].trim();
+            if (trimmed === '') {
+                wantName = true;
+                continue;
+            }
+            if (wantName && /[A-Za-z]/.test(trimmed) && trimmed.toUpperCase() !== 'OBJECTS') {
+                const flipped = trimmed === trimmed.toLowerCase() ? trimmed.toUpperCase() : trimmed.toLowerCase();
+                if (flipped === trimmed) {
+                    wantName = false;
+                    continue;
+                }
+                lines[i] = lines[i].replace(trimmed, flipped);
+                return { source: lines.join('\n'), detail: 'case-flipped ' + trimmed };
+            }
+            wantName = false;
+        }
+        return null;
+    });
+}
+
+function layerDrop(source) {
+    return mutateSection(source, 'COLLISIONLAYERS', function(body) {
+        const lines = body.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            if (/,/.test(lines[i]) && /[A-Za-z]/.test(lines[i])) {
+                const parts = lines[i].split(',').map(function(part) { return part.trim(); }).filter(Boolean);
+                if (parts.length < 2) {
+                    continue;
+                }
+                const dropped = parts.shift();
+                lines[i] = parts.join(', ');
+                return { source: lines.join('\n'), detail: 'dropped ' + dropped + ' from a collision layer' };
+            }
+        }
+        return null;
+    });
+}
+
+function layerDoubleBook(source) {
+    return mutateSection(source, 'COLLISIONLAYERS', function(body) {
+        const names = [];
+        const lines = body.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            const parts = lines[i].split(',');
+            for (let j = 0; j < parts.length; j++) {
+                const name = parts[j].trim();
+                if (name && name.toUpperCase() !== 'COLLISIONLAYERS' && !/^=+$/.test(name)) {
+                    names.push(name);
+                }
+            }
+        }
+        if (names.length === 0) {
+            return null;
+        }
+        const name = names[names.length - 1];
+        return {
+            source: body.replace(/\s*$/, '') + '\n' + name + '\n',
+            detail: 'duplicated ' + name + ' onto a second layer'
+        };
+    });
+}
+
+function backgroundAsAggregate(source) {
+    return mutateSection(source, 'LEGEND', function(body) {
+        return {
+            source: body.replace(/\s*$/, '') + '\nBackground = Player and Wall\n',
+            detail: 'redefined Background as an aggregate'
+        };
+    });
+}
+
+function soundOnProperty(source) {
+    return mutateSection(source, 'SOUNDS', function(body) {
+        return {
+            source: body.replace(/\s*$/, '') + '\nObstacle MOVE 12345607\n',
+            detail: 'MOVE sound on property Obstacle'
+        };
+    });
+}
+
+function winOnUndefined(source) {
+    return mutateSection(source, 'WINCONDITIONS', function(body) {
+        return {
+            source: body.replace(/\s*$/, '') + '\nall Floop on Player\n',
+            detail: 'win condition on undefined Floop'
+        };
+    });
+}
+
+function emptyCellRow(source) {
+    return insertRuleLine(source, '[ > ] -> cancel');
+}
+
+function commandOnLhs(source) {
+    return insertRuleLine(source, 'win [ Player ] -> [ Player ]');
+}
+
+function groupPlus(source, rng) {
+    return mutateArrowRule(source, rng, function(line) {
+        if (/^\s*\+/.test(line)) {
+            return null;
+        }
+        return { line: '+ ' + line, detail: 'prefixed rule with +' };
+    });
+}
+
+function startloopMismatch(source) {
+    return insertRuleLine(source, 'startloop');
+}
+
+function directionPrefixSalad(source, rng) {
+    return mutateArrowRule(source, rng, function(line) {
+        if (/^\s*late\b/i.test(line)) {
+            return { line: 'randomdir perpendicular ' + line, detail: 'prefixed randomdir perpendicular' };
+        }
+        return { line: 'late rigid randomdir perpendicular ' + line, detail: 'prefixed late rigid randomdir perpendicular' };
+    });
+}
+
+function injectAgainLoop(source) {
+    return insertRuleLine(source, '[ Player ] -> [ Player ] again');
+}
+
+function injectRandomFill(source) {
+    return insertRuleLine(source, 'random [ no Player ] -> [ Player ] again');
+}
+
+function preludeInjection(source, rng) {
+    const flag = PRELUDE_FLAGS[rng.integer(PRELUDE_FLAGS.length)];
+    if (new RegExp('^\\s*' + flag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'im').test(source)) {
+        const alt = PRELUDE_FLAGS[(PRELUDE_FLAGS.indexOf(flag) + 1) % PRELUDE_FLAGS.length];
+        return { source: alt + '\n' + source, detail: 'injected ' + alt };
+    }
+    return { source: flag + '\n' + source, detail: 'injected ' + flag };
+}
+
+function raggedLevel(source) {
+    return mutateSection(source, 'LEVELS', function(body) {
+        const lines = body.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            if (i === 0 || /^\s*LEVELS\s*$/i.test(lines[i]) || /^\s*=+\s*$/.test(lines[i])) {
+                continue;
+            }
+            if (lines[i].trim() === '' || /^\s*message\b/i.test(lines[i])) {
+                continue;
+            }
+            lines[i] = lines[i] + '.';
+            return { source: lines.join('\n'), detail: 'appended . to a level row' };
+        }
+        return null;
+    });
+}
+
+function messageSandwich(source) {
+    return mutateSection(source, 'LEVELS', function(body) {
+        const lines = body.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            if (i === 0 || /^\s*LEVELS\s*$/i.test(lines[i]) || /^\s*=+\s*$/.test(lines[i])) {
+                continue;
+            }
+            if (lines[i].trim() === '' || /^\s*message\b/i.test(lines[i])) {
+                continue;
+            }
+            lines.splice(i, 0, 'message garden sandwich');
+            return { source: lines.join('\n'), detail: 'inserted a message before a map' };
+        }
+        return null;
+    });
+}
+
+function commentEatSection(source) {
+    const section = findSection(source, 'LEGEND') || findSection(source, 'RULES');
+    if (!section) {
+        return null;
+    }
+    const lines = source.split('\n');
+    lines[section.start] = '(' + lines[section.start];
+    return {
+        source: lines.join('\n'),
+        detail: 'comment ate ' + section.name
+    };
+}
+
+function duplicateSection(source, rng) {
+    const found = [];
+    for (let i = 0; i < SECTION_NAMES.length; i++) {
+        const section = findSection(source, SECTION_NAMES[i]);
+        if (section) {
+            found.push(section);
+        }
+    }
+    if (found.length === 0) {
+        return null;
+    }
+    const section = found[rng.integer(found.length)];
+    const lines = source.split('\n');
+    const block = lines.slice(section.start, section.end);
+    lines.splice(section.end, 0, ...block);
+    return { source: lines.join('\n'), detail: 'duplicated section ' + section.name };
+}
+
+function nudgeInput(source, rng, fixture) {
+    const extras = NUDGE_INPUT_CHOICES;
+    const inputs = ((fixture && fixture.inputs) || []).slice();
+    if (inputs.length === 0) {
+        inputs.push(extras[rng.integer(extras.length)]);
+    } else {
+        const index = rng.integer(inputs.length);
+        const current = inputs[index];
+        const choices = extras.filter(function(choice) { return choice !== current; });
+        inputs[index] = choices[rng.integer(choices.length)];
+    }
+    return {
+        source: source,
+        detail: 'nudged inputs to ' + JSON.stringify(inputs),
+        inputs: inputs
+    };
+}
+
+function offByOneLevel(source, rng, fixture) {
+    const level = fixture && Number.isInteger(fixture.level) ? fixture.level : 0;
+    const next = rng.integer(2) === 0 ? level + 1 : level - 1;
+    return { source: source, detail: 'level ' + level + ' -> ' + next, level: next };
+}
+
+function seedPoison(source, rng) {
+    const seed = POISON_SEEDS[rng.integer(POISON_SEEDS.length)];
+    return { source: source, detail: 'poisoned engine seed', randomSeed: seed };
+}
+
+function prefixChop(source, rng, fixture) {
+    const inputs = ((fixture && fixture.inputs) || []).slice();
+    if (inputs.length < 2) {
+        return null;
+    }
+    const keep = 1 + rng.integer(inputs.length - 1);
+    return {
+        source: source,
+        detail: 'chopped inputs to length ' + keep,
+        inputs: inputs.slice(0, keep)
+    };
+}
+
 const mutators = [
     { name: 'delete-rule-punctuation', apply: deleteRulePunctuation },
     { name: 'duplicate-rule-punctuation', apply: duplicateRulePunctuation },
@@ -443,8 +910,57 @@ const mutators = [
     { name: 'duplicate-rule-line', apply: duplicateRuleLine },
     { name: 'swap-object-colors', apply: swapObjectColors },
     { name: 'nudge-level-cell', apply: nudgeLevelCell },
-    { name: 'flip-win-quantifier', apply: flipWinQuantifier }
+    { name: 'flip-win-quantifier', apply: flipWinQuantifier },
+    { name: 'blns-slot', apply: blnsSlot },
+    { name: 'keyword-as-name', apply: keywordAsName },
+    { name: 'orphan-legend-member', apply: orphanLegendMember },
+    { name: 'inject-ellipsis', apply: injectEllipsis },
+    { name: 'inject-no', apply: injectNo },
+    { name: 'inject-control-char', apply: injectControlChar },
+    { name: 'sprite-matrix-noise', apply: spriteMatrixNoise },
+    { name: 'duplicate-object-name', apply: duplicateObjectName },
+    { name: 'case-flip-name', apply: caseFlipName },
+    { name: 'layer-drop', apply: layerDrop },
+    { name: 'layer-double-book', apply: layerDoubleBook },
+    { name: 'background-as-aggregate', apply: backgroundAsAggregate },
+    { name: 'sound-on-property', apply: soundOnProperty },
+    { name: 'win-on-undefined', apply: winOnUndefined },
+    { name: 'empty-cell-row', apply: emptyCellRow },
+    { name: 'command-on-lhs', apply: commandOnLhs },
+    { name: 'group-plus', apply: groupPlus },
+    { name: 'startloop-mismatch', apply: startloopMismatch },
+    { name: 'direction-prefix-salad', apply: directionPrefixSalad },
+    { name: 'inject-again-loop', apply: injectAgainLoop },
+    { name: 'inject-random-fill', apply: injectRandomFill },
+    { name: 'prelude-injection', apply: preludeInjection },
+    { name: 'ragged-level', apply: raggedLevel },
+    { name: 'message-sandwich', apply: messageSandwich },
+    { name: 'comment-eat-section', apply: commentEatSection },
+    { name: 'duplicate-section', apply: duplicateSection },
+    { name: 'nudge-input', apply: nudgeInput },
+    { name: 'off-by-one-level', apply: offByOneLevel },
+    { name: 'seed-poison', apply: seedPoison },
+    { name: 'prefix-chop', apply: prefixChop }
 ];
+
+function mutationChangedJob(applied, fixture) {
+    if (!applied) {
+        return false;
+    }
+    if (applied.source !== fixture.source) {
+        return true;
+    }
+    if (applied.inputs && JSON.stringify(applied.inputs) !== JSON.stringify(fixture.inputs || [])) {
+        return true;
+    }
+    if (applied.level !== undefined && applied.level !== fixture.level) {
+        return true;
+    }
+    if (applied.randomSeed !== undefined && applied.randomSeed !== fixture.randomSeed) {
+        return true;
+    }
+    return false;
+}
 
 function mutateFixture(fixture, rng, mutatorNames, options) {
     const allowed = mutators.filter(function(mutator) {
@@ -456,8 +972,8 @@ function mutateFixture(fixture, rng, mutatorNames, options) {
     const maxAttempts = options && options.maxAttempts ? options.maxAttempts : 8;
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
         const mutator = allowed[rng.integer(allowed.length)];
-        const applied = mutator.apply(fixture.source, rng);
-        if (applied) {
+        const applied = mutator.apply(fixture.source, rng, fixture);
+        if (applied && mutationChangedJob(applied, fixture)) {
             return {
                 mutator: mutator.name,
                 fixtureName: fixture.name,
@@ -466,9 +982,9 @@ function mutateFixture(fixture, rng, mutatorNames, options) {
                 kind: fixture.kind,
                 source: applied.source,
                 detail: applied.detail,
-                inputs: fixture.inputs,
-                level: fixture.level,
-                randomSeed: fixture.randomSeed,
+                inputs: applied.inputs || fixture.inputs,
+                level: applied.level !== undefined ? applied.level : fixture.level,
+                randomSeed: applied.randomSeed !== undefined ? applied.randomSeed : fixture.randomSeed,
                 expectedOutput: fixture.expectedOutput,
                 expectedErrors: fixture.expectedErrors,
                 expectedErrorCount: fixture.expectedErrorCount,

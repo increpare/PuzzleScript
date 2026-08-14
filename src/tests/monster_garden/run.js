@@ -117,7 +117,9 @@ async function main() {
             counts.skipped++;
             continue;
         }
-        mutant.inputs = executedInputs;
+        if (JSON.stringify(mutant.inputs || []) === JSON.stringify(fixture.inputs || [])) {
+            mutant.inputs = executedInputs;
+        }
         const baseline = await evaluateMutant({
             source: fixture.source,
             inputs: executedInputs,

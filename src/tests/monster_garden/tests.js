@@ -114,6 +114,25 @@ test('corpusIndex is unique even when names and kind-local indexes collide', fun
     }
 });
 
+function mutatorChangedJob(result, source, fixture) {
+    if (!result) {
+        return false;
+    }
+    if (result.source !== source) {
+        return true;
+    }
+    if (result.inputs && JSON.stringify(result.inputs) !== JSON.stringify(fixture.inputs || [])) {
+        return true;
+    }
+    if (result.level !== undefined && result.level !== fixture.level) {
+        return true;
+    }
+    if (result.randomSeed !== undefined && result.randomSeed !== fixture.randomSeed) {
+        return true;
+    }
+    return false;
+}
+
 test('every named mutator either changes a suitable source or reports inapplicable', function() {
     const expected = [
         'delete-rule-punctuation',
@@ -128,7 +147,37 @@ test('every named mutator either changes a suitable source or reports inapplicab
         'duplicate-rule-line',
         'swap-object-colors',
         'nudge-level-cell',
-        'flip-win-quantifier'
+        'flip-win-quantifier',
+        'blns-slot',
+        'keyword-as-name',
+        'orphan-legend-member',
+        'inject-ellipsis',
+        'inject-no',
+        'inject-control-char',
+        'sprite-matrix-noise',
+        'duplicate-object-name',
+        'case-flip-name',
+        'layer-drop',
+        'layer-double-book',
+        'background-as-aggregate',
+        'sound-on-property',
+        'win-on-undefined',
+        'empty-cell-row',
+        'command-on-lhs',
+        'group-plus',
+        'startloop-mismatch',
+        'direction-prefix-salad',
+        'inject-again-loop',
+        'inject-random-fill',
+        'prelude-injection',
+        'ragged-level',
+        'message-sandwich',
+        'comment-eat-section',
+        'duplicate-section',
+        'nudge-input',
+        'off-by-one-level',
+        'seed-poison',
+        'prefix-chop'
     ];
     assert.deepStrictEqual(garden.mutators.map(function(mutator) { return mutator.name; }), expected);
 
@@ -136,20 +185,47 @@ test('every named mutator either changes a suitable source or reports inapplicab
         '==============\nWINCONDITIONS\n==============\n\n',
         '==============\nWINCONDITIONS\n==============\n\nall crate on target\n\n'
     );
+    const fixtureBase = { inputs: [0, 3], level: 0, randomSeed: null };
 
     for (let i = 0; i < garden.mutators.length; i++) {
         const mutator = garden.mutators[i];
         let source = SAMPLE;
-        let result = mutator.apply(source, new garden.Random(100 + i));
-        if (!result) {
+        let fixture = Object.assign({ source: source }, fixtureBase);
+        let result = mutator.apply(source, new garden.Random(100 + i), fixture);
+        if (!mutatorChangedJob(result, source, fixture)) {
             source = winSource;
-            result = mutator.apply(source, new garden.Random(100 + i));
+            fixture = Object.assign({ source: source }, fixtureBase);
+            result = mutator.apply(source, new garden.Random(100 + i), fixture);
         }
         assert(result, mutator.name + ' should apply to a suitable source');
-        assert.notStrictEqual(result.source, source, mutator.name + ' should change the source');
+        assert(mutatorChangedJob(result, source, fixture), mutator.name + ' should change the source or job');
         assert.strictEqual(typeof result.detail, 'string');
         assert(result.detail.length > 0);
     }
+});
+
+test('job-tape mutators change inputs, level, or seed without requiring a source edit', function() {
+    const fixture = {
+        name: 'sample',
+        fixtureIndex: 0,
+        kind: 'simulation',
+        source: SAMPLE,
+        inputs: [0, 3, 1],
+        level: 0,
+        randomSeed: null
+    };
+    const nudged = garden.mutateFixture(fixture, new garden.Random(1), ['nudge-input']);
+    assert.strictEqual(nudged.source, fixture.source);
+    assert.notDeepStrictEqual(nudged.inputs, fixture.inputs);
+    const chopped = garden.mutateFixture(fixture, new garden.Random(1), ['prefix-chop']);
+    assert.strictEqual(chopped.source, fixture.source);
+    assert.ok(chopped.inputs.length < fixture.inputs.length);
+    const leveled = garden.mutateFixture(fixture, new garden.Random(1), ['off-by-one-level']);
+    assert.strictEqual(leveled.source, fixture.source);
+    assert.notStrictEqual(leveled.level, fixture.level);
+    const seeded = garden.mutateFixture(fixture, new garden.Random(1), ['seed-poison']);
+    assert.strictEqual(seeded.source, fixture.source);
+    assert.notStrictEqual(seeded.randomSeed, fixture.randomSeed);
 });
 
 test('mutating a fixture records enough information to reproduce it', function() {
