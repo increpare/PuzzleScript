@@ -399,7 +399,18 @@ function runOnce(job) {
         throw new Error('compile produced no state.levels');
     }
     if (job.level < 0 || job.level >= global.state.levels.length) {
-        throw new Error('job.level ' + job.level + ' is out of range');
+        return withEngineSeed(job, {
+            kind: 'ok',
+            error: null,
+            fingerprint: JSON.stringify({
+                errorCount: global.errorCount,
+                errorStrings: (global.errorStrings || []).slice(),
+                levelCount: global.state.levels.length,
+                requestedLevel: job.level
+            }),
+            detail: '',
+            errorCount: global.errorCount
+        });
     }
     const errorCount = global.errorCount;
     const drainBroken = drainAgain(job);

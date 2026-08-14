@@ -671,6 +671,19 @@ test('the worker compiles a valid sample and returns a stable ok fingerprint', f
     assert.deepStrictEqual(first, second);
 });
 
+test('a compiled game with fewer levels than job.level is ok, not a crash', function() {
+    const result = workerResult({
+        source: SAMPLE,
+        inputs: [],
+        level: 13,
+        randomSeed: null,
+        replay: false,
+        maxInputs: 8
+    });
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
+    assert.strictEqual(result.error, null);
+});
+
 test('ok fingerprints include rng and mode, not only the board string', function() {
     const result = workerResult({
         source: SAMPLE,
