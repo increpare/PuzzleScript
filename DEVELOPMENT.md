@@ -70,7 +70,14 @@ normal test suite.
     node src/tests/monster_garden/run.js --list-mutators
     node src/tests/monster_garden/run.js --seed 12345 --count 20
 
-A fixed seed reproduces the same mutants. Interesting cases are written under
-`.build/monster_garden/` as `original.txt`, `minimized.txt`, `report.json`, and
-`regression.js`. Paste `regression.js` into `testdata.js` or
-`errormessage_testdata.js` only after you have confirmed it is a real defect.
+A fixed seed reproduces the same mutants. Before blaming a mutation, the garden
+preflights the unmutated fixture with the same inputs, level, and random seed.
+If that baseline already fails the same way, the tally is `baseline` and no
+artifact is saved. Only a different interesting mutant is attributed to the
+mutator.
+
+Interesting cases are written under `.build/monster_garden/` as `original.txt`,
+`minimized.txt`, `report.json`, and `regression.js`. `report.json` includes
+`inputs`, `level`, `randomSeed`, `originalResult`, and `minimizedResult`. Paste
+`regression.js` into `testdata.js` or `errormessage_testdata.js` only after you
+have confirmed it is a real defect.

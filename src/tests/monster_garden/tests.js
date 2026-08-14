@@ -345,6 +345,44 @@ test('only crashes, timeouts, invariants, nondeterminism, and replay divergence 
     assert.strictEqual(garden.isInteresting({ kind: 'replay-divergence' }), true);
 });
 
+test('only causal mutants are attributed when the unmutated fixture already fails', function() {
+    const baseline = {
+        kind: 'replay-divergence',
+        error: null,
+        fingerprint: 'same',
+        detail: 'x',
+        errorCount: 0
+    };
+    const same = garden.attributeMonster(baseline, baseline);
+    assert.strictEqual(same.save, false);
+    assert.strictEqual(same.tally, 'baseline');
+    const different = garden.attributeMonster(baseline, {
+        kind: 'crash',
+        error: { name: 'TypeError', message: 'boom' },
+        fingerprint: '',
+        detail: '',
+        errorCount: 0
+    });
+    assert.strictEqual(different.save, true);
+    assert.strictEqual(different.tally, 'crash');
+    const healthy = garden.attributeMonster({
+        kind: 'ok', error: null, fingerprint: 'f', detail: '', errorCount: 0
+    }, baseline);
+    assert.strictEqual(healthy.save, true);
+    assert.strictEqual(healthy.tally, 'replay-divergence');
+    assert.strictEqual(garden.attributeMonster({
+        kind: 'compiler-error', error: null, fingerprint: 'compiler-error:1', detail: '', errorCount: 1
+    }, { kind: 'ok', error: null, fingerprint: 'f', detail: '', errorCount: 0 }).save, false);
+    assert.strictEqual(garden.attributeMonster({
+        kind: 'compiler-warning', error: null, fingerprint: 'compiler-warning:1', detail: '', errorCount: 1
+    }, { kind: 'ok', error: null, fingerprint: 'f', detail: '', errorCount: 0 }).save, false);
+    assert.strictEqual(garden.isHealthyKind('ok'), true);
+    assert.strictEqual(garden.isHealthyKind('compiler-error'), true);
+    assert.strictEqual(garden.isHealthyKind('compiler-warning'), true);
+    assert.strictEqual(garden.isHealthyKind('crash'), false);
+    assert.strictEqual(garden.isHealthyKind('replay-divergence'), false);
+});
+
 test('line shrinking keeps a deletion only when the signature stays the same', function() {
     const source = 'keep\nnoise\nkeep\n';
     const result = garden.shrinkSource(source, function(candidate) {

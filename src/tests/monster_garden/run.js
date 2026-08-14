@@ -85,11 +85,14 @@ async function main() {
     const counts = {
         ok: 0,
         'compiler-error': 0,
+        'compiler-warning': 0,
         crash: 0,
         timeout: 0,
         invariant: 0,
         nondeterministic: 0,
         'replay-divergence': 0,
+        'semantic-mismatch': 0,
+        baseline: 0,
         skipped: 0
     };
     let artifactIndex = 0;
@@ -107,12 +110,19 @@ async function main() {
             counts.skipped++;
             continue;
         }
+        const baseline = await evaluateMutant({
+            source: fixture.source,
+            inputs: fixture.inputs,
+            level: fixture.level,
+            randomSeed: fixture.randomSeed
+        }, options);
         const result = await evaluateMutant(mutant, options);
-        counts[result.kind] = (counts[result.kind] || 0) + 1;
+        const attributed = garden.attributeMonster(baseline, result);
+        counts[attributed.tally] = (counts[attributed.tally] || 0) + 1;
         process.stdout.write(
-            '#' + (i + 1) + ' ' + result.kind + ' ' + mutant.mutator + ' ' + mutant.fixtureName + '\n'
+            '#' + (i + 1) + ' ' + attributed.tally + ' ' + mutant.mutator + ' ' + mutant.fixtureName + '\n'
         );
-        if (!garden.isInteresting(result)) {
+        if (!attributed.save) {
             continue;
         }
         const minimized = await shrinkMutant(mutant, result, options);
@@ -141,6 +151,8 @@ async function main() {
                 timeoutMs: options.timeoutMs,
                 originalResult: result,
                 minimizedResult: minimized.result,
+                baselineKind: baseline.kind,
+                baselineSignature: garden.failureSignature(baseline),
                 signature: minimized.signature,
                 shrinkSteps: minimized.steps
             }, null, 2) + '\n',

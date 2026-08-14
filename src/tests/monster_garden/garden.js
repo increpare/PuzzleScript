@@ -491,6 +491,20 @@ function isInteresting(result) {
         || result.kind === 'replay-divergence';
 }
 
+function isHealthyKind(kind) {
+    return kind === 'ok' || kind === 'compiler-error' || kind === 'compiler-warning';
+}
+
+function attributeMonster(baseline, mutantResult) {
+    if (!baseline || isHealthyKind(baseline.kind)) {
+        return { save: isInteresting(mutantResult), tally: mutantResult.kind, baseline: false };
+    }
+    if (failureSignature(baseline) === failureSignature(mutantResult)) {
+        return { save: false, tally: 'baseline', baseline: true };
+    }
+    return { save: isInteresting(mutantResult), tally: mutantResult.kind, baseline: true };
+}
+
 function shrinkSource(source, keep, budget) {
     let current = source.split('\n');
     let remaining = budget;
@@ -764,6 +778,8 @@ module.exports = {
     failureSignature: failureSignature,
     checkLevelInvariants: checkLevelInvariants,
     isInteresting: isInteresting,
+    isHealthyKind: isHealthyKind,
+    attributeMonster: attributeMonster,
     shrinkSource: shrinkSource,
     shrinkInteresting: shrinkInteresting,
     artifactDirName: artifactDirName,
