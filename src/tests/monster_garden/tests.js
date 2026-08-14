@@ -231,6 +231,28 @@ test('extra inputs are generated deterministically and appended after the trunca
     });
 });
 
+test('default extraInputs keeps the unsliced recorded tape and campaign maxInputs', function() {
+    const recorded = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+    const rng = new garden.Random(1);
+    const unsliced = garden.prepareTrialInputs(recorded, rng, { maxInputs: 8, extraInputs: 0 });
+    assert.strictEqual(unsliced.length, recorded.length);
+    assert.deepStrictEqual(unsliced, recorded);
+
+    const omitted = garden.prepareTrialInputs(recorded, new garden.Random(1), { maxInputs: 8 });
+    assert.strictEqual(omitted.length, recorded.length);
+    assert.deepStrictEqual(omitted, recorded);
+
+    const extras = garden.prepareTrialInputs(recorded, new garden.Random(1), { maxInputs: 8, extraInputs: 3 });
+    const expectedExtras = garden.extendInputs(recorded, new garden.Random(1), { maxInputs: 8, extraInputs: 3 });
+    assert.deepStrictEqual(extras, expectedExtras);
+    assert.strictEqual(extras.length, 11);
+
+    const options = { maxInputs: 8, extraInputs: 0 };
+    assert.strictEqual(garden.trialMaxInputs(options, unsliced), 8);
+    assert.strictEqual(garden.trialMaxInputs({ maxInputs: 8 }, unsliced), 8);
+    assert.strictEqual(garden.trialMaxInputs({ maxInputs: 8, extraInputs: 3 }, extras), extras.length);
+});
+
 test('only inapplicable mutation errors are skippable', function() {
     assert.strictEqual(garden.isInapplicableMutation(new Error('inapplicable mutation after 2 attempts')), true);
     assert.strictEqual(garden.isInapplicableMutation(new TypeError('mutator exploded')), false);

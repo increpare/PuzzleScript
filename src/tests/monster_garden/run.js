@@ -41,7 +41,7 @@ async function evaluateMutant(mutant, options) {
         level: mutant.level,
         randomSeed: mutant.randomSeed,
         replay: options.replay,
-        maxInputs: (mutant.inputs || []).length
+        maxInputs: garden.trialMaxInputs(options, mutant.inputs)
     };
     const result = await garden.runChild(
         process.execPath,
@@ -98,7 +98,7 @@ async function main() {
     let artifactIndex = 0;
     for (let i = 0; i < options.count; i++) {
         const fixture = corpus[rng.integer(corpus.length)];
-        const executedInputs = garden.extendInputs(fixture.inputs, rng, {
+        const executedInputs = garden.prepareTrialInputs(fixture.inputs, rng, {
             maxInputs: options.maxInputs,
             extraInputs: options.extraInputs
         });

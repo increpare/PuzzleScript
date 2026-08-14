@@ -460,6 +460,22 @@ function extendInputs(recorded, rng, options) {
     return prefix.concat(extras);
 }
 
+function prepareTrialInputs(recorded, rng, options) {
+    const extraInputs = options && options.extraInputs ? options.extraInputs : 0;
+    if (extraInputs === 0) {
+        return (recorded || []).slice();
+    }
+    return extendInputs(recorded, rng, options);
+}
+
+function trialMaxInputs(options, inputs) {
+    const extraInputs = options && options.extraInputs ? options.extraInputs : 0;
+    if (extraInputs === 0) {
+        return options.maxInputs;
+    }
+    return (inputs || []).length;
+}
+
 function clip(value, n) {
     return String(value == null ? '' : value).slice(0, n || 80);
 }
@@ -855,6 +871,8 @@ module.exports = {
     isInapplicableMutation: isInapplicableMutation,
     parseArguments: parseArguments,
     extendInputs: extendInputs,
+    prepareTrialInputs: prepareTrialInputs,
+    trialMaxInputs: trialMaxInputs,
     failureSignature: failureSignature,
     checkLevelInvariants: checkLevelInvariants,
     isInteresting: isInteresting,
