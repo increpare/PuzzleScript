@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
+process.on('SIGINT', function() {});
+process.on('SIGTERM', function() {});
+
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');

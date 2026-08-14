@@ -71,9 +71,9 @@ normal test suite.
     node src/tests/monster_garden/run.js --seed 12345 --count 20
     node src/tests/monster_garden/run.js --forever --seed 12345
 
-A fixed seed reproduces the same mutants. `--list-mutators` prints all thirteen
-names, including `duplicate-rule-line`, `swap-object-colors`, `nudge-level-cell`,
-and `flip-win-quantifier`.
+A fixed seed reproduces the same mutants. `--list-mutators` prints every
+registered mutator name, including `duplicate-rule-line`, `swap-object-colors`,
+`nudge-level-cell`, and `flip-win-quantifier`.
 
 `--forever` runs until interrupted and cannot be combined with `--count`.
 Ctrl+C finishes the current trial and exits 0; a second Ctrl+C kills the

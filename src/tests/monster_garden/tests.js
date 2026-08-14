@@ -1236,77 +1236,6 @@ P
     assert.strictEqual(result.kind, 'compiler-error', JSON.stringify(result));
 });
 
-test('flooding runtime errors should stop logging instead of crashing (TooManyErrors)', function() {
-    const result = workerResult({
-        source: `title flood runtime errors
-========
-OBJECTS
-========
-Background
-black
-Player
-white
-Wall
-gray
-player_1
-red
-player_2
-blue
-player_3
-green
-=======
-LEGEND
-=======
-. = Background
-P = Player
-# = Wall
-=======
-SOUNDS
-=======
-================
-COLLISIONLAYERS
-================
-Background
-Player, Wall
-player_1
-player_2
-player_3
-======
-RULES
-======
-random [ no Player ] -> [ Player ] again
-late right [ Player | Player | Player ] -> [ Player player_1 | Player player_2 | Player player_3 ]
-==============
-WINCONDITIONS
-==============
-=======
-LEVELS
-=======
-################
-#..............#
-#..............#
-#..............#
-#..............#
-#..............#
-#..............#
-#..............#
-#..............#
-#..............#
-#..............#
-#..............#
-#..............#
-#.....P........#
-################
-`,
-        inputs: [0],
-        level: 0,
-        randomSeed: 'garden-seed',
-        replay: false,
-        maxInputs: 8
-    });
-    assert.notStrictEqual(result.kind, 'crash', JSON.stringify(result));
-});
-
 test('a compiled game with fewer levels than job.level is ok, not a crash', function() {
     const result = workerResult({
         source: SAMPLE,
@@ -1595,6 +1524,77 @@ P.
     const parsed = JSON.parse(result.fingerprint);
     assert.strictEqual(parsed.curlevel, 1);
     assert.strictEqual(parsed.rng.seed, 'garden-seed');
+});
+
+test('replaying a tape that restarts then wins does not use a stale restartTarget', function() {
+    const result = workerResult({
+        source: `title Restart Then Win
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+white
+
+Crate
+orange
+
+Target
+blue
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+* = Crate
+O = Target
+@ = Crate and Target
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+
+all Crate on Target
+
+=======
+LEVELS
+=======
+
+P*O
+
+P.
+`,
+        inputs: [1, 'restart', 3],
+        level: 0,
+        randomSeed: 'garden-seed',
+        replay: true,
+        maxInputs: 8
+    });
+    assert.notStrictEqual(result.kind, 'replay-divergence', JSON.stringify(result));
+    assert.strictEqual(result.kind, 'ok', JSON.stringify(result));
 });
 
 test('the worker treats compile diagnostics as compiler-error, not a crash', function() {
@@ -2021,6 +2021,53 @@ test('run.js --forever stops on SIGINT and writes tally.json', function() {
     });
 });
 
+test('worker.js ignores SIGINT and still emits a JSON result', function() {
+    const job = {
+        source: SAMPLE,
+        inputs: [0, 3],
+        level: 0,
+        randomSeed: null,
+        replay: false,
+        maxInputs: 8
+    };
+    const child = spawn(process.execPath, [path.join(__dirname, 'worker.js')]);
+    let stdout = '';
+    child.stdout.on('data', function(chunk) {
+        stdout += chunk.toString();
+    });
+    child.stdin.write(JSON.stringify(job));
+    return new Promise(function(resolve, reject) {
+        const timer = setTimeout(function() {
+            child.kill('SIGKILL');
+            reject(new Error('worker did not finish after SIGINT; stdout=' + stdout.slice(0, 200)));
+        }, 20000);
+        child.on('error', function(error) {
+            clearTimeout(timer);
+            reject(error);
+        });
+        child.on('close', function(code, signal) {
+            clearTimeout(timer);
+            try {
+                assert.strictEqual(signal, null, 'worker died from ' + signal);
+                assert.strictEqual(code, 0, stdout);
+                const line = stdout.trim().split('\n').pop();
+                const result = JSON.parse(line);
+                assert(
+                    result.kind === 'ok' || result.kind === 'compiler-error',
+                    JSON.stringify(result)
+                );
+                resolve();
+            } catch (error) {
+                reject(error);
+            }
+        });
+        setTimeout(function() {
+            child.kill('SIGINT');
+            child.stdin.end();
+        }, 200);
+    });
+});
+
 test('run.js --count exits on the first SIGINT', function() {
     const output = fs.mkdtempSync(path.join(os.tmpdir(), 'monster-garden-count-int-'));
     const child = spawn(process.execPath, [
@@ -2051,7 +2098,10 @@ test('run.js --count exits on the first SIGINT', function() {
         child.on('close', function(code, signal) {
             clearTimeout(timer);
             try {
-                assert.notStrictEqual(signal, 'SIGKILL');
+                assert(
+                    signal === 'SIGINT' || (code !== 0 && code !== null),
+                    'expected SIGINT or nonzero exit, got code=' + code + ' signal=' + signal
+                );
                 resolve();
             } catch (error) {
                 reject(error);

@@ -177,6 +177,7 @@ async function main() {
                 mutator: null,
                 fixtureName: fixture.name
             }, lastSaved);
+            await new Promise(function(resolve) { setImmediate(resolve); });
             continue;
         }
         if (JSON.stringify(mutant.inputs || []) === JSON.stringify(fixture.inputs || [])) {
