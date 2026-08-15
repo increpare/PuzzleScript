@@ -1060,10 +1060,10 @@ First, let's check for 'X no X' on the RHS.
                     if (item.startsWith("no")){
                         let no_name = cell[l+1]
                         let remove = false;
-                        if (!state.objectMasks.hasOwnProperty(no_name)){
+                        let no_object_mask = state.objectMasks[no_name];
+                        if (!no_object_mask) {
                             continue;//error, should have been caught earlier - e.g. You cannot use 'no' to exclude the aggregate objec
                         }
-                        let no_object_mask = state.objectMasks[no_name];
                         no_object_layer_mask.setZero();
                         for (let m=0;m<state.layerMasks.length;m++){
                             if (state.layerMasks[m].anyBitsInCommon(no_object_mask)){
@@ -2332,8 +2332,15 @@ function generateMasks(state) {
     for (let i = 0; i < synonyms_and_properties.length; i++) {
         let synprop = synonyms_and_properties[i];
         if (synprop.length === 2) {
-            // synonym (a = b)
-            objectMask[synprop[0]] = objectMask[synprop[1]];
+            // synonym (a = b). 
+            
+            // The target can be missing when an earlier
+            // legend line was rejected (mixed and/or, undefined name, etc.).
+            // Copying *that* undefined into objectMasks makes hasOwnProperty
+            // true and then crashes checkSuperfluousCoincidences on .data.
+            if (objectMask[synprop[1]]) {
+                objectMask[synprop[0]] = objectMask[synprop[1]];
+            }
         } else {
             // property (a = b or c)
             let val = new BitVec(STRIDE_OBJ);
