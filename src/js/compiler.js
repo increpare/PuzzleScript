@@ -1845,7 +1845,7 @@ function rulesToMask(state) {
 
                         state.rules.splice(ruleIndex, 1);
                         ruleIndex--;
-                        continue;
+                        continue outerloop;
                     }
                 }
 
