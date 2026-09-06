@@ -72,25 +72,7 @@
   // PuzzleScript: dynamic token colors (contrast-adjusted for midnight theme)
   var colorCache = {};
   function styleFromHexCode(hexCode) {
-    function parseColor(input) {
-      input = input.trim();
-      if (input.length<4){ return null }
-      else if (input.length<7){
-        return [parseInt(input.charAt(1),16)*0x11, parseInt(input.charAt(2),16)*0x11, parseInt(input.charAt(3),16)*0x11];
-      } else {
-        return [parseInt(input.substr(1,2),16), parseInt(input.substr(3,2),16), parseInt(input.substr(5,2),16)];
-      }
-    }
-    function luminanace(rgb) {
-      var r = rgb[0], g = rgb[1], b = rgb[2];
-      var a = [r, g, b].map(function (v) {
-        v /= 255;
-        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-      });
-      return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
-    }
-    var BG_LUMINANACE = luminanace(parseColor('#0F192A'));
-    function contrast(rgb) { return (luminanace(rgb) + 0.05) / (BG_LUMINANACE + 0.05); }
+    var editorBackground = parseHexColor('#0F192A');
     function rgbToHsl(rgb) {
       var r = rgb[0], g = rgb[1], b = rgb[2];
       r /= 255, g /= 255, b /= 255;
@@ -130,12 +112,15 @@
     var colorString = hexCode;
     var style;
     if (colorCache[colorString]) { style = colorCache[colorString]; } else {
-      var col = parseColor(colorString);
+      var col = parseHexColor(colorString);
       if (col) {
-        var r = contrast(col);
-        if (r < 2.361) {
+        var r = contrastRatio(col, editorBackground);
+        if (r < MINIMUM_COLOR_CONTRAST_RATIO) {
           var hsl = rgbToHsl(col);
-          do { hsl[2] += 0.01; r = contrast(hslToRgb(hsl)); } while (r < 2.361);
+          do {
+            hsl[2] += 0.01;
+            r = contrastRatio(hslToRgb(hsl), editorBackground);
+          } while (r < MINIMUM_COLOR_CONTRAST_RATIO);
           style = 'color: hsl(' + ~~(hsl[0] * 360) + ',' + ~~(hsl[1] * 100) + '%,' + ~~(hsl[2] * 100) + '%)';
         } else { style = 'color:' + colorString; }
       }
@@ -6839,7 +6824,8 @@
     "Ctrl-Home": "goDocStart", "Ctrl-End": "goDocEnd", "Ctrl-Up": "goLineUp", "Ctrl-Down": "goLineDown",
     "Ctrl-Left": "goGroupLeft", "Ctrl-Right": "goGroupRight", "Alt-Left": "goLineStart", "Alt-Right": "goLineEnd",
     "Ctrl-Backspace": "delGroupBefore", "Ctrl-Delete": "delGroupAfter", "Ctrl-S": "save", "Ctrl-F": "find",
-    "Ctrl-G": "findNext", "Shift-Ctrl-G": "findPrev", "Shift-Ctrl-F": "replace", "Shift-Ctrl-R": "replaceAll",
+    // PuzzleScript: Replace shares Find's panel, so only Replace All keeps a separate shortcut.
+    "Ctrl-G": "findNext", "Shift-Ctrl-G": "findPrev", "Shift-Ctrl-R": "replaceAll",
     "Ctrl-[": "indentLess", "Ctrl-]": "indentMore",
     "Ctrl-U": "undoSelection", "Shift-Ctrl-U": "redoSelection", "Alt-U": "redoSelection",
     "fallthrough": "basic"
@@ -6856,7 +6842,8 @@
     "Cmd-Home": "goDocStart", "Cmd-Up": "goDocStart", "Cmd-End": "goDocEnd", "Cmd-Down": "goDocEnd", "Alt-Left": "goGroupLeft",
     "Alt-Right": "goGroupRight", "Cmd-Left": "goLineLeft", "Cmd-Right": "goLineRight", "Alt-Backspace": "delGroupBefore",
     "Ctrl-Alt-Backspace": "delGroupAfter", "Alt-Delete": "delGroupAfter", "Cmd-S": "save", "Cmd-F": "find",
-    "Cmd-G": "findNext", "Shift-Cmd-G": "findPrev", "Cmd-Alt-F": "replace", "Shift-Cmd-Alt-F": "replaceAll",
+    // PuzzleScript: Replace shares Find's panel, so only Replace All keeps a separate shortcut.
+    "Cmd-G": "findNext", "Shift-Cmd-G": "findPrev", "Shift-Cmd-Alt-F": "replaceAll",
     "Cmd-[": "indentLess", "Cmd-]": "indentMore", "Cmd-Backspace": "delWrappedLineLeft", "Cmd-Delete": "delWrappedLineRight",
     "Cmd-U": "undoSelection", "Shift-Cmd-U": "redoSelection", "Ctrl-Up": "goDocStart", "Ctrl-Down": "goDocEnd",
     "fallthrough": ["basic", "emacsy"]

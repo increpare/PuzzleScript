@@ -86,9 +86,9 @@ global.inputString = '';
 global.outputString = '';
 global.editor = { getValue() { return global.levelString; } };
 
-global.QUnit = {
+global.PuzzleScriptTestAssertions = {
     push() {},
-    assert: { equal() {} }
+    equal() {}
 };
 
 global.UnitTestingThrow = function(error) {
@@ -112,6 +112,7 @@ const sourceFiles = [
     'js/riffwave.js',
     'js/sfxr.js',
     'js/codemirror/stringstream.js',
+    'js/colorhelpers.js',
     'js/colors.js',
     'js/engine.js',
     'js/parser.js',

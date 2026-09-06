@@ -96,12 +96,35 @@ function showContinueOptionOnTitleScreen() {
 	return (curlevel > 0 || curlevelTarget !== null) && (curlevel in state.levels);
 }
 
+function hasLoadedGame() {
+	return state !== introstate && state.levels.length > 0;
+}
+
+function gameCanvasCanReceiveInput() {
+	return !IDE || (canvas !== null && hasLoadedGame());
+}
+
+function setGameCanvasFocusable(focusable) {
+	if (!IDE || canvas === null) {
+		return;
+	}
+	if (focusable) {
+		canvas.setAttribute("tabindex", "-1");
+	} else {
+		canvas.blur();
+		canvas.removeAttribute("tabindex");
+		lastDownTarget = null;
+		keybuffer = [];
+	}
+}
+
 function unloadGame() {
 	if (levelEditorOpened){
 		printLevel();
 	}
 	levelEditorOpened = false;
 	state = introstate;
+	setGameCanvasFocusable(hasLoadedGame());
 	level = new Level(0, 5, 5, 2, null);
 	level.objects = new Int32Array(0);
 	generateTitleScreen();
@@ -292,7 +315,7 @@ function generateTitleScreen() {
 	for (let i=0;i<layout_rows.menu_options.length;i++){
 
 		let cur_row = layout_rows.menu_options[i];
-		if (cur_row.indexOf('---') !== -1){
+		if (cur_row.includes('---')){
 			selection_row = titleImage.length;
 		}
 
@@ -740,6 +763,7 @@ function setGameState(_state, command, randomseed) {
 	RandomGen = new RNG(randomseed);
 
 	state = _state;
+	setGameCanvasFocusable(hasLoadedGame());
 
 	if (command[0] !== "rebuild") {
 		backups = [];
@@ -1353,7 +1377,7 @@ function repositionEntitiesOnLayer(positionIndex, layer, dirMask) {
 		if (objectMask.anyBitsInCommon(sourceMask)) {
 			let movementMask = level.getMovements(positionIndex);
 			let directionMask = o.directionMask;
-			if (movementMask.anyBitsInCommon(directionMask) && seedsToPlay_CanMove.indexOf(o.seed) === -1) {
+			if (movementMask.anyBitsInCommon(directionMask) && !seedsToPlay_CanMove.includes(o.seed)) {
 				seedsToPlay_CanMove.push(o.seed);
 			}
 		}
@@ -1462,6 +1486,9 @@ Rule.prototype.generate_all_MatchFunctions = function(){
 
 let CACHE_RULE_CELLROWMATCHESFUNCTION = {}
 Rule.prototype.generateCellRowMatchesFunction = function (cellRow, ellipsisCount) {
+	if (!cellRow || cellRow.length === 0 || typeof cellRow[0].generateMatchString !== 'function') {
+		return function() { return false; };
+	}
 	if (ellipsisCount === 0) {
 		let cr_l = cellRow.length;
 
@@ -2348,8 +2375,8 @@ Rule.prototype.queueCommands = function () {
 	}
 
 	//commandQueue is an array of strings, message.commands is an array of array of strings (For messagetext parameter), so I search through them differently
-	let preexisting_cancel = level.commandQueue.indexOf("cancel") >= 0;
-	let preexisting_restart = level.commandQueue.indexOf("restart") >= 0;
+	let preexisting_cancel = level.commandQueue.includes("cancel");
+	let preexisting_restart = level.commandQueue.includes("restart");
 
 	let currule_cancel = false;
 	let currule_restart = false;
@@ -2382,7 +2409,7 @@ Rule.prototype.queueCommands = function () {
 	for (let i = 0; i < this.commands.length; i++) {
 		const command = this.commands[i];
 		let already = false;
-		if (level.commandQueue.indexOf(command[0]) >= 0) {
+		if (level.commandQueue.includes(command[0])) {
 			continue;
 		}
 		level.commandQueue.push(command[0]);
@@ -2607,7 +2634,7 @@ function generate_resolveMovements(OBJECT_SIZE, MOVEMENT_SIZE,state) {
 		
 					if (${ANY_BITS_IN_COMMON("cellMask", "objectMask", OBJECT_SIZE)} 
 					&& ${ANY_BITS_IN_COMMON("o.directionMask","movementMask", MOVEMENT_SIZE)} 
-					&& seedsToPlay_CantMove.indexOf(o.seed)===-1) {
+					&& !seedsToPlay_CantMove.includes(o.seed)) {
 						seedsToPlay_CantMove.push(o.seed);
 					}
 				}
@@ -2966,7 +2993,7 @@ function checkWin(dontDoWin) {
 		dontDoWin = true;
 	}
 
-	if (level.commandQueue.indexOf('win') >= 0) {
+	if (level.commandQueue.includes('win')) {
 		if (runrulesonlevelstart_phase) {
 			consolePrint("Win Condition Satisfied (However this is in the run_rules_on_level_start rule pass, so I'm going to ignore it for you.  Why would you want to complete a level before it's already started?!)");
 		} else {

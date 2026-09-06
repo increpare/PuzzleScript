@@ -30,7 +30,6 @@ let buildnum = parseInt(lines);
 buildnum++;
 fs.writeFileSync(".build/buildnumber.txt", buildnum.toString(), encoding = 'utf-8');
 
-//#node-qunit-phantomjs  tests/tests.html --timeout 40
 console.log("===========================");
 console.log('build number ' + buildnum)
 
@@ -168,7 +167,9 @@ ncp("./src", "./bin/", function (err) {
                 "./src/js/rng.js",
                 "./src/js/riffwave.js",
                 "./src/js/sfxr.js",
+                "./src/js/colorhelpers.js",
                 "./src/js/codemirror/codemirror.js",
+                "./src/js/codemirror/panel.js",
                 "./src/js/codemirror/active-line.js",
                 "./src/js/codemirror/dialog.js",
                 "./src/js/codemirror/searchcursor.js",

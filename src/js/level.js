@@ -96,8 +96,13 @@ function LEVEL_SET_MOVEMENTS(index, vec, array_size) {
 }
 
 Level.prototype.calcBackgroundMask = function (state) {
-	if (state.backgroundlayer === undefined) {
+	if (state.backgroundlayer === undefined || !state.layerMasks[state.backgroundlayer]) {
 		logError("you have to have a background layer");
+		const cell = new BitVec(STRIDE_OBJ);
+		if (Number.isInteger(state.backgroundid)) {
+			cell.ibitset(state.backgroundid);
+		}
+		return cell;
 	}
 
 	let backgroundMask = state.layerMasks[state.backgroundlayer];

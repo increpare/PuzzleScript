@@ -75,7 +75,7 @@ function expandLegendDictEntries(dict, synonymsDict, conflictingDict, kindName, 
                 let newvalues = dict[value];
                 for (let j = 0; j < newvalues.length; j++) {
                     let newvalue = newvalues[j];
-                    if (values.indexOf(newvalue) === -1) {
+                    if (!values.includes(newvalue)) {
                         values.push(newvalue);
                     }
                 }
@@ -340,14 +340,24 @@ function generateExtraMembers(state) {
         const key = propertiesDict_keys[k_i];
         let values = propertiesDict[key];
         let sameLayer = true;
-        for (let i = 1; i < values.length; i++) {
-            if ((state.objects[values[i - 1]].layer !== state.objects[values[i]].layer)) {
+        for (let i = 0; i < values.length; i++) {
+            const o = state.objects[values[i]];
+            if (!o) {
+                //so this is all legacy/robustness support, following
+                //from the output of "Cannot define a property (something defined in terms of 'or') in terms of an aggregate"
+                sameLayer = false;
+                break;
+            }
+            if (i > 0 && o.layer !== state.objects[values[i - 1]].layer) {
                 sameLayer = false;
                 break;
             }
         }
-        if (sameLayer) {
-            state.propertiesSingleLayer[key] = state.objects[values[0]].layer;        
+        if (sameLayer && values.length > 0) {
+            const first = state.objects[values[0]];
+            if (first) {
+                state.propertiesSingleLayer[key] = first.layer;
+            }
         }
     }
 
@@ -368,20 +378,27 @@ function generateExtraMembers(state) {
             let backgrounddef = state.propertiesDict['background'];
             let n = backgrounddef[0];
             let o = state.objects[n];
-            backgroundid = o.id;
-            backgroundlayer = o.layer;
-            for (let i = 1; i < backgrounddef.length; i++) {
-                let nnew = backgrounddef[i];
-                let onew = state.objects[nnew];
-                if (onew.layer !== backgroundlayer) {
-                    let lineNumber = state.original_line_numbers['background'];
-                    logError('Background objects must be on the same layer', lineNumber);
+            if (o) {
+                backgroundid = o.id;
+                backgroundlayer = o.layer;
+                for (let i = 1; i < backgrounddef.length; i++) {
+                    let nnew = backgrounddef[i];
+                    let onew = state.objects[nnew];
+                    if (!onew) {
+                        continue;
+                    }
+                    if (onew.layer !== backgroundlayer) {
+                        let lineNumber = state.original_line_numbers['background'];
+                        logError('Background objects must be on the same layer', lineNumber);
+                    }
                 }
             }
         } else if ('background' in state.aggregatesDict) {
             let o = state.objects[state.idDict[0]];
-            backgroundid = o.id;
-            backgroundlayer = o.layer;
+            if (o != null) {
+                backgroundid = o.id;
+                backgroundlayer = o.layer;
+            }
             let lineNumber = state.original_line_numbers['background'];
             logError("background cannot be an aggregate (declared with 'and'), it has to be a simple type, or property (declared in terms of others using 'or').", lineNumber);
         } else {
@@ -449,7 +466,7 @@ function levelFromString(state, level) {
     const levelBackgroundMask = o.calcBackgroundMask(state);
     for (let i = 0; i < o.n_tiles; i++) {
         let cell = o.getCell(i);
-        if (!backgroundLayerMask.anyBitsInCommon(cell)) {
+        if (!backgroundLayerMask || !backgroundLayerMask.anyBitsInCommon(cell)) {
             cell.ior(levelBackgroundMask);
             o.setCell(i, cell);
         }
@@ -491,7 +508,7 @@ function cellRowHasRelativeDir(cellRow) {
     for (let j = 0; j < cellRow.length; j++) {
         let cell = cellRow[j];
         for (let k = 0; k < cell.length; k += 2) {
-            if (relativeDirections.indexOf(cell[k]) >= 0) {
+            if (relativeDirections.includes(cell[k])) {
                 return true;
             }
         }
@@ -562,6 +579,11 @@ function processRuleString(rule, state, curRules) {
     let lineNumber = rule[1];
     let origLine = rule[2];
 
+    if (String(origLine).includes('(') && !String(line).includes('->')) {
+        logError("You can't have comments inside rules, sorry. In PuzzleScript, '(' starts a comment, so everything after the first '(' on this line was ignored before your rule was parsed.", lineNumber);
+        return null;
+    }
+
     // STEP ONE, TOKENIZE
     let tokens = tokenizeRuleLine(line);
 
@@ -611,7 +633,7 @@ function processRuleString(rule, state, curRules) {
         }
     }
 
-    if (tokens.indexOf('->') === -1) {
+    if (!tokens.includes('->')) {
         logError("A rule has to have an arrow in it.  There's no arrow here! Consider reading up about rules - you're clearly doing something weird", lineNumber);
     }
 
@@ -639,6 +661,8 @@ function processRuleString(rule, state, curRules) {
                         } else {
                             logError('Two "+"s (the "append to previous rule group" symbol) applied to the same rule.', lineNumber);
                         }
+                    } else if (relativeDirections.includes(token)) {
+                        logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
                     } else if (token in directionaggregates) {
                         directions = directions.concat(directionaggregates[token]);
                     } else if (token === 'late') {
@@ -651,9 +675,9 @@ function processRuleString(rule, state, curRules) {
                             logError(`A rule-group can only be marked random by the opening rule in the group (aka, a '+' and 'random' can't appear as rule modifiers on the same line).  Why? Well, you see "random" isn't a property of individual rules, but of whole rule groups.  It indicates that a single possible application of some rule from the whole group should be applied at random.`, lineNumber)
                         }
 
-                    } else if (simpleAbsoluteDirections.indexOf(token) >= 0) {
+                    } else if (simpleAbsoluteDirections.includes(token)) {
                         directions.push(token);
-                    } else if (simpleRelativeDirections.indexOf(token) >= 0) {
+                    } else if (simpleRelativeDirections.includes(token)) {
                         logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
                     } else if (token === '[') {
                         if (directions.length === 0) {
@@ -747,10 +771,16 @@ function processRuleString(rule, state, curRules) {
                             //check that the object is not already present in the cell
                             for (let j = 0; j < curcell.length; j += 2) {
                                 if (curcell[j + 1] === token) {
-                                    logError(`You cannot specify the same object more than once in a single cell (in this case ${token} occurs multiple times).`, lineNumber);
-                                    if (token in state.propertiesDict){
-                                        logWarningNoLine(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
-                                    } 
+                                    const existingDir = curcell[j];
+                                    const newDir = (curcell.length % 2 === 1) ? curcell[curcell.length - 1] : '';
+                                    if (existingDir === 'no' && newDir === 'no') {
+                                        logWarning(`I notice that you have NO ${token.toUpperCase()} more than once in a single cell. That's redundant innit.`, lineNumber);
+                                    } else {
+                                        logError(`You cannot specify the same object more than once in a single cell (in this case ${token.toUpperCase()} occurs multiple times).`, lineNumber);
+                                        if (token in state.propertiesDict){
+                                            logWarningNoLine(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
+                                        }
+                                    }
                                 }
                             }
                             if (curcell.length % 2 === 0) {
@@ -767,7 +797,7 @@ function processRuleString(rule, state, curRules) {
                             curcell.push(token);
                             curcell.push(token);
                         }
-                    } else if (commandwords.indexOf(token) >= 0) {
+                    } else if (commandwords.includes(token)) {
                         if (rhs === false) {
                             logError("Commands should only appear at the end of rules, not in or before the pattern-detection/-replacement sections.", lineNumber);
                         } else if (incellrow || rightBracketToRightOf(tokens, i)) {//only a warning for legacy support reasons.
@@ -783,7 +813,7 @@ function processRuleString(rule, state, curRules) {
                             commands.push([token, messageStr]);
                             i = tokens.length;
                         } else {
-                            if (commandwords_sfx.indexOf(token) >= 0) {
+                            if (commandwords_sfx.includes(token)) {
                                 //check defined
                                 let found = false;
                                 for (let j = 0; j < state.sounds.length; j++) {
@@ -815,6 +845,7 @@ function processRuleString(rule, state, curRules) {
             //ok
         } else {
             logWarning('Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right', lineNumber);
+            return null;
         }
     } else {
         for (let i = 0; i < lhs_cells.length; i++) {
@@ -920,6 +951,9 @@ First, let's check for 'X no X' on the RHS.
                     if (item.startsWith("no")){
                         let no_name = cell[l+1];
                         let no_name_mask = state.objectMasks[no_name];
+                        if (!no_name_mask) {
+                            continue;//error, will be caught later as "You cannot use 'no' to exclude the aggregate object"
+                        }
 
                         //if no_name overlaps with any objects_present, then we have a problem.
                         if (no_name_mask.anyBitsInCommon(objects_present_mask)){
@@ -942,7 +976,10 @@ First, let's check for 'X no X' on the RHS.
                     if (item.startsWith("no")){
                         let no_name = cell[l+1];
                         //look for a 'no X' on the LHS in the same position
-                        const lhs_cell = rule.lhs[j][k];
+                        const lhs_cell = rule.lhs[j] && rule.lhs[j][k];
+                        if (!lhs_cell) {
+                            continue;
+                        }
                         for (let m=0;m<lhs_cell.length;m+=2){
                             if (lhs_cell[m].startsWith("no") && lhs_cell[m+1] === no_name){
                                 //we have a match - remove the 'no X' from the LHS
@@ -988,6 +1025,9 @@ First, let's check for 'X no X' on the RHS.
                         for (let m=0;m<property_obs_len;m++){
                             const object_name = property_obs[m];
                             const object_data = state.objects[object_name];
+                            if (!object_data) {
+                                continue;
+                            }
                             required_objects.ibitset(object_data.id);
                         }
                         occupier[layer]=entity_name;
@@ -1001,6 +1041,9 @@ First, let's check for 'X no X' on the RHS.
                         let aggregate_obs = state.aggregatesDict[entity_name];
                         for (let m=0;m<aggregate_obs.length;m++){
                             let object_info = state.objects[aggregate_obs[m]];
+                            if (!object_info) {
+                                continue;
+                            }
                             let layer = object_info.layer;
                             let ob_id = object_info.id;
                             required_layers.ibitset(layer);
@@ -1017,10 +1060,10 @@ First, let's check for 'X no X' on the RHS.
                     if (item.startsWith("no")){
                         let no_name = cell[l+1]
                         let remove = false;
-                        if (!state.objectMasks.hasOwnProperty(no_name)){
+                        let no_object_mask = state.objectMasks[no_name];
+                        if (!no_object_mask) {
                             continue;//error, should have been caught earlier - e.g. You cannot use 'no' to exclude the aggregate objec
                         }
-                        let no_object_mask = state.objectMasks[no_name];
                         no_object_layer_mask.setZero();
                         for (let m=0;m<state.layerMasks.length;m++){
                             if (state.layerMasks[m].anyBitsInCommon(no_object_mask)){
@@ -1152,7 +1195,7 @@ function rewriteUpLeftRules(rule) {
 
     for (let i = 0; i < rule.lhs.length; i++) {
         rule.lhs[i].reverse();
-        if (rule.rhs.length > 0) {
+        if (rule.rhs[i]) {
             rule.rhs[i].reverse();
         }
     }
@@ -1290,7 +1333,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
             let properties_r = getPropertiesFromCell(state, row_r[k]);
             for (let prop_n = 0; prop_n < properties_r.length; prop_n++) {
                 let property = properties_r[prop_n];
-                if (properties_l.indexOf(property) === -1) {
+                if (!properties_l.includes(property)) {
                     ambiguousProperties[property] = true;
                 }
             }
@@ -1427,18 +1470,28 @@ function makeSpawnedObjectsStationary(state, rule, lineNumber) {
 
             //this is super intricate. uff. 
             let objects_l = getPossibleObjectsFromCell(state, row_l[k]);
-            let layers = objects_l.map(n => state.objects[n].layer);
+            let layers = [];
+            for (let oi = 0; oi < objects_l.length; oi++) {
+                const leftObj = state.objects[objects_l[oi]];
+                if (leftObj) {
+                    layers.push(leftObj.layer);
+                }
+            }
             for (let l = 0; l < cell.length; l += 2) {
                 let dir = cell[l];
                 if (dir !== "") {
                     continue;
                 }
                 let name = cell[l + 1];
-                if (name in state.propertiesDict || objects_l.indexOf(name) >= 0) {
+                if (name in state.propertiesDict || objects_l.includes(name)) {
                     continue;
                 }
-                let r_layer = state.objects[name].layer;
-                if (layers.indexOf(r_layer) === -1) {
+                let rhsObj = state.objects[name];
+                if (!rhsObj) {
+                    continue;
+                }
+                let r_layer = rhsObj.layer;
+                if (!layers.includes(r_layer)) {
                     cell[l] = 'stationary';
                 }
             }
@@ -1619,7 +1672,7 @@ function rephraseSynonyms(state, rule) {
         
         for (let j = 0; j < cellrow_l.length; j++) {
             processCell(cellrow_l[j]);
-            if (rule.rhs.length > 0) {
+            if (cellrow_r && cellrow_r[j]) {
                 processCell(cellrow_r[j]);
             }
         }
@@ -1695,27 +1748,18 @@ function absolutifyRuleCell(forward, cell) {
         }
     }
 }
-/*
-    direction mask
-    UP parseInt('%1', 2);
-    DOWN parseInt('0', 2);
-    LEFT parseInt('0', 2);
-    RIGHT parseInt('0', 2);
-    ?  parseInt('', 2);
-
-*/
 
 const dirMasks = {
-    'up': parseInt('00001', 2),
-    'down': parseInt('00010', 2),
-    'left': parseInt('00100', 2),
-    'right': parseInt('01000', 2),
-    'moving': parseInt('01111', 2),
-    'no': parseInt('00011', 2),
-    'randomdir': parseInt('00101', 2),
-    'random': parseInt('10010', 2),
-    'action': parseInt('10000', 2),
-    '': parseInt('00000', 2)
+    'up': 0b00001,
+    'down': 0b00010,
+    'left': 0b00100,
+    'right': 0b01000,
+    'moving': 0b01111,
+    'no': 0b00011,
+    'randomdir': 0b00101,
+    'random': 0b10010,
+    'action': 0b10000,
+    '': 0b00000
 };
 
 function getOverlapObjectNames(state, objects1,objects2){
@@ -1769,6 +1813,7 @@ function rulesToMask(state) {
                         }
                         if (colIndex === 0 || colIndex === cellrow_l.length - 1) {
                             logError("There's no point in putting an ellipsis at the very start or the end of a rule", rule.lineNumber);
+                            rule.ellipsisAtEdge = true;
                         }
                         if (rule.rhs.length > 0) {
                             const rhscell = cellrow_r[colIndex];
@@ -1792,6 +1837,7 @@ function rulesToMask(state) {
 
                     if (typeof layerIndex === "undefined") {
                         logError(`Oops! ${object_name.toUpperCase()} not assigned to a layer.`, rule.lineNumber);
+                        continue;
                     }
 
                     if (object_dir === 'no') {
@@ -1898,7 +1944,11 @@ function rulesToMask(state) {
                             }
 
                             for (const subobject of values) {
-                                const layerIndex = state.objects[subobject].layer | 0;
+                                const sub = state.objects[subobject];
+                                if (!sub || sub.layer === undefined) {
+                                    continue;
+                                }
+                                const layerIndex = sub.layer | 0;
                                 const existingname = layersUsed_r[layerIndex];
                                 
                                 if (existingname !== null) {
@@ -1918,6 +1968,11 @@ function rulesToMask(state) {
                     const object = state.objects[object_name];
                     const objectMask = state.objectMasks[object_name];
                     const layerIndex = object ? (object.layer | 0) : state.propertiesSingleLayer[object_name];
+
+                    if (typeof layerIndex === "undefined") {
+                        logError(`Oops! ${object_name.toUpperCase()} not assigned to a layer.`, rule.lineNumber);
+                        continue;
+                    }
 
                     if (object_dir === 'no') {
                         rhsBitVectors.objectsClear.ior(objectMask);
@@ -1993,6 +2048,11 @@ function rulesToMask(state) {
                 }
             }
         }
+        if (rule.ellipsisAtEdge) {
+            state.rules.splice(ruleIndex, 1);
+            ruleIndex--;
+            continue outerloop;
+        }
     }
 }
 
@@ -2023,7 +2083,11 @@ function collapseRules(groups) {
                 ellipses.push(0);
             }
 
-            newrule[0] = dirMasks[oldrule.direction];
+            const dirMask = dirMasks[oldrule.direction];
+            if (dirMask === undefined) {
+                continue;
+            }
+            newrule[0] = dirMask;
             for (let j = 0; j < oldrule.lhs.length; j++) {
                 const cellrow_l = oldrule.lhs[j];
                 for (let k = 0; k < cellrow_l.length; k++) {
@@ -2189,37 +2253,37 @@ function isObjectDefined(state, name) {
         (state.synonymsDict !== undefined && (name in state.synonymsDict));
 }
 
+function bitsetObjectId(objectMask, o) {
+    if (o == null) {
+        return;
+    }
+    objectMask.ibitset(o.id);
+}
+
 function getMaskFromName(state, name) {
     const objectMask = new BitVec(STRIDE_OBJ);
     let aggregate = false;
     if (name in state.objects) {
-        const o = state.objects[name];
-        objectMask.ibitset(o.id);
+        bitsetObjectId(objectMask, state.objects[name]);
     }
 
     if (name in state.aggregatesDict) {
         const objectnames = state.aggregatesDict[name];
         aggregate = true;
         for (let i = 0; i < objectnames.length; i++) {
-            const n = objectnames[i];
-            const o = state.objects[n];
-            objectMask.ibitset(o.id);
+            bitsetObjectId(objectMask, state.objects[objectnames[i]]);
         }
     }
 
     if (name in state.propertiesDict) {
         const objectnames = state.propertiesDict[name];
         for (let i = 0; i < objectnames.length; i++) {
-            const n = objectnames[i];
-            const o = state.objects[n];
-            objectMask.ibitset(o.id);
+            bitsetObjectId(objectMask, state.objects[objectnames[i]]);
         }
     }
 
     if (name in state.synonymsDict) {
-        const n = state.synonymsDict[name];
-        const o = state.objects[n];
-        objectMask.ibitset(o.id);
+        bitsetObjectId(objectMask, state.objects[state.synonymsDict[name]]);
     }
 
     if (objectMask.iszero()) {
@@ -2268,14 +2332,23 @@ function generateMasks(state) {
     for (let i = 0; i < synonyms_and_properties.length; i++) {
         let synprop = synonyms_and_properties[i];
         if (synprop.length === 2) {
-            // synonym (a = b)
-            objectMask[synprop[0]] = objectMask[synprop[1]];
+            // synonym (a = b). 
+            
+            // The target can be missing when an earlier
+            // legend line was rejected (mixed and/or, undefined name, etc.).
+            // Copying *that* undefined into objectMasks makes hasOwnProperty
+            // true and then crashes checkSuperfluousCoincidences on .data.
+            if (objectMask[synprop[1]]) {
+                objectMask[synprop[0]] = objectMask[synprop[1]];
+            }
         } else {
             // property (a = b or c)
             let val = new BitVec(STRIDE_OBJ);
             for (let j = 1; j < synprop.length; j++) {
                 let n = synprop[j];
-                val.ior(objectMask[n]);
+                if (objectMask[n]) {
+                    val.ior(objectMask[n]);
+                }
             }
             objectMask[synprop[0]] = val;
         }
@@ -2298,8 +2371,9 @@ function generateMasks(state) {
         let aggregateMask = new BitVec(STRIDE_OBJ);
         for (let i = 0; i < objectnames.length; i++) {
             let n = objectnames[i];
-            let o = state.objects[n];
-            aggregateMask.ior(objectMask[n]);
+            if (objectMask[n]) {
+                aggregateMask.ior(objectMask[n]);
+            }
         }
         state.aggregateMasks[aggregateName] = aggregateMask;
     }
@@ -2393,7 +2467,7 @@ function lookupWinConditionMask(state, name, lineNumber) {
         return { aggregate: true, mask: state.aggregateMasks[name] };
     } else {
         logError('Unwelcome term "' + name + '" found in win condition. I don\'t know what I\'m supposed to do with this. ', lineNumber);
-        return { aggregate: false, mask: 0 };
+        return null;
     }
 }
 
@@ -2430,6 +2504,9 @@ function processWinConditions(state) {
         }
         let r1 = lookupWinConditionMask(state, n1, lineNumber);
         let r2 = lookupWinConditionMask(state, n2, lineNumber);
+        if (!r1 || !r2) {
+            continue;
+        }
         let newcondition = [num, r1.mask, r2.mask, lineNumber, r1.aggregate, r2.aggregate];
         newconditions.push(newcondition);
     }
@@ -2679,14 +2756,14 @@ function generateLoopPoints(state) {
 }
 
 let soundDirectionIndicatorMasks = {
-    'up': parseInt('00001', 2),
-    'down': parseInt('00010', 2),
-    'left': parseInt('00100', 2),
-    'right': parseInt('01000', 2),
-    'horizontal': parseInt('01100', 2),
-    'vertical': parseInt('00011', 2),
-    'orthogonal': parseInt('01111', 2),
-    '___action____': parseInt('10000', 2)
+    'up': 0b00001,
+    'down': 0b00010,
+    'left': 0b00100,
+    'right': 0b01000,
+    'horizontal': 0b01100,
+    'vertical': 0b00011,
+    'orthogonal': 0b01111,
+    '___action____': 0b10000
 };
 
 function generateSoundData(state) {
@@ -2769,6 +2846,7 @@ function generateSoundData(state) {
 
             if (target in state.aggregatesDict) {
                 logError('cannot assign sound events to aggregate objects (declared with "and"), only to regular objects, or properties, things defined in terms of "or" ("' + target + '").', lineNumber);
+                continue;
             } else if (target in state.objectMasks) {
 
             } else {
@@ -2818,14 +2896,13 @@ function generateSoundData(state) {
                 for (let j = 0; j < targets.length; j++) {
                     let targetName = targets[j];
                     let targetDat = state.objects[targetName];
-                    let targetLayer = targetDat.layer;
-                    let this_object_mask = new BitVec(STRIDE_OBJ);
-                    this_object_mask.ibitset(targetDat.id)
-
-                    //if not found, continue - probably from the error ""aggr" is an aggregate (defined using "and"), and cannot be added to a single layer because its constituent objects must be able to coexist."
-                    if (targetLayer === undefined) {
+                    if (!targetDat || targetDat.layer === undefined) {
                         continue;
                     }
+                    let targetLayer = targetDat.layer;
+                    let this_object_mask = new BitVec(STRIDE_OBJ);
+                    this_object_mask.ibitset(targetDat.id);
+
                     let shiftedDirectionMask = new BitVec(STRIDE_MOV);
                     shiftedDirectionMask.ishiftor(directionMask, 5 * targetLayer);
 
@@ -3119,6 +3196,9 @@ function compile(command, text, randomseed) {
 
     if (state !== null) {//otherwise error
         setGameState(state, command, randomseed);
+        if (IDE) {
+            updateFocusBorderColour(state.bgcolor);
+        }
     }
 
     clearInputHistory();
@@ -3171,5 +3251,4 @@ function qualifyURL(url) {
     a.href = url;
     return a.href;
 }
-
 

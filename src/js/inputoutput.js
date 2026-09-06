@@ -335,6 +335,11 @@ function levelEditorRightClick(event, click) {
 
 let anyEditsSinceMouseDown = false;
 
+function isGameCanvasTarget(target) {
+	return target === canvas ||
+		(target !== null && target !== undefined && target.className === "tapFocusIndicator");
+}
+
 function onMouseDown(event) {
 
 	if (event.handled) {
@@ -352,11 +357,18 @@ function onMouseDown(event) {
 		lmb = false;
 		rmb = true;
 	}
+	const gameCanvasTarget = isGameCanvasTarget(event.target);
+	if (gameCanvasTarget && !gameCanvasCanReceiveInput()) {
+		lastDownTarget = null;
+		keybuffer = [];
+		event.handled = true;
+		return;
+	}
 
 	if (lmb) {
 		lastDownTarget = event.target;
 		keybuffer = [];
-		if (event.target === canvas || event.target.className === "tapFocusIndicator") {
+		if (gameCanvasTarget) {
 			setMouseCoord(event);
 			dragging = true;
 			rightdragging = false;
@@ -369,7 +381,7 @@ function onMouseDown(event) {
 		rightdragging = false;
 		event.handled = true;
 	} else if (rmb) {
-		if (event.target === canvas || event.target.className === "tapFocusIndicator") {
+		if (gameCanvasTarget) {
 			setMouseCoord(event);
 			dragging = false;
 			rightdragging = true;
@@ -420,12 +432,22 @@ function onKeyDown(event) {
 		toggleMute();
 	}
 
+	const gameCanvasHasInput = gameCanvasCanReceiveInput() &&
+		isGameCanvasTarget(lastDownTarget);
+
+	if (IDE && event.keyCode === 9 && gameCanvasHasInput) {//tab
+		editor.focus();
+		lastDownTarget = editor.getInputField();
+		prevent(event);
+		return;
+	}
+
 
 	if (keybuffer.indexOf(event.keyCode) >= 0) {
 		return;
 	}
 
-	if (lastDownTarget === canvas || (window.Mobile && (lastDownTarget === window.Mobile.focusIndicator))) {
+	if (gameCanvasHasInput) {
 		if (keybuffer.indexOf(event.keyCode) === -1) {
 			if (event && ((event.ctrlKey&&event.keyCode!==90) || event.metaKey)) {
 			} else {
@@ -448,8 +470,6 @@ function onKeyDown(event) {
 			saveClick();
 			prevent(event);
 		} else if (event.keyCode === 13 && (event.ctrlKey || event.metaKey)) {//ctrl+enter
-			canvas.focus();
-			editor.display.input.blur();
 			if (event.shiftKey) {
 				runClick();
 			} else {

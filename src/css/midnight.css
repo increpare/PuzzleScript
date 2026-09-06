@@ -268,8 +268,12 @@ span.cm-SOUND {
     color: light-dark(rgb(91, 74, 152), white);
 }
 
+.cm-s-midnight .cm-searching {
+    background-color: light-dark(rgba(210, 88, 88, 0.4),rgba(255, 255, 0, .4));
+}
+  
 .cm-s-midnight div.CodeMirror-selected {
-    background: light-dark(#eeffee, #314D67) !important;
+    background: light-dark(#a8ffa8, #314D67) !important;
 }
 
 .cm-s-midnight .CodeMirror-gutters {
