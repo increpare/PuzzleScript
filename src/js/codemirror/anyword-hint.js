@@ -78,10 +78,6 @@
             "DIRECTION",
             "up","down","left","right","horizontal","vertical","orthogonal"]
 
-        var WINCONDITION_WORDS = [
-            "LOGICWORD",
-            "some", "on", "no", "all"]
-
         var LEGEND_LOGICWORDS = [
                 "LOGICWORD",
                 "and","or"
@@ -92,6 +88,20 @@
         ]
 
         function renderHint(elt,data,cur){
+            if (cur.displayText) {
+                elt.classList.add('rule-analogy-hint');
+                for (var part of [
+                    ['rule-analogy-title', cur.displayText],
+                    ['rule-analogy-changes', cur.extra],
+                    ['rule-analogy-preview', cur.text]
+                ]) {
+                    var row = document.createElement('span');
+                    row.className = part[0];
+                    row.textContent = part[1];
+                    elt.appendChild(row);
+                }
+                return;
+            }
             var t1=cur.text;
             var t2=cur.extra;
             var tag=cur.tag;
@@ -180,6 +190,8 @@
 
             var tok = editor.getTokenAt(cur);
             var state = tok.state;
+            var semantics = state.section === 'rules' ? new RuleCompletion(state) : null;
+            var ruleContext = semantics ? semantics.parse(curLine.substring(0, start)) : null;
 
             // ignore empty word
             if (!curWord || state.commentLevel>0) {
@@ -419,7 +431,9 @@
                         }
                         //if inside of rules ,can use some extra directions
                         if (state.inside_cell==false) {
-                            candlists.push(RULE_DIRECTION_WORDS);
+                            candlists.push(RULE_DIRECTION_WORDS.filter(function(word) {
+                                return !(ruleContext.late && word === 'rigid') && !(ruleContext.rigid && word === 'late');
+                            }));
                             candlists.push(LOOP_WORDS);
                             
                             // we should only hint commands once we've reached the final ']'                         
@@ -438,7 +452,7 @@
                             }
 
                         } else {
-                            candlists.push(PATTERN_DIRECTION_WORDS);  
+                            candlists.push(semantics.patternWords(ruleContext, PATTERN_DIRECTION_WORDS));
                             addObjects=true;                          
                         }
                         
@@ -447,10 +461,14 @@
                     }
                 case 'winconditions':
                     {
-                        if ((lineToCursor.trim().split(/\s+/ ).length%2)===0){
+                        var winPosition = state.tokenIndex;
+                        if (winPosition === 1 || winPosition === 3) {
                             addObjects=true;
+                        } else if (winPosition === 0) {
+                            candlists.push(['LOGICWORD', 'all', 'some', 'any', 'no']);
+                        } else if (winPosition === 2) {
+                            candlists.push(['LOGICWORD', 'on']);
                         }
-                        candlists.push(WINCONDITION_WORDS);
                         break;
                     }
                 case 'levels':
@@ -754,6 +772,25 @@
                 list = list.concat(ruleMirrorFirst);
             }
 
+            if (semantics) {
+                list = list.filter(function(item) {
+                    if (item.tag !== 'NAME') return true;
+                    var info = semantics.nameHint(ruleContext, item.text);
+                    if (info.extra) item.extra = info.extra;
+                    return info.allowed;
+                });
+                if (curLine.substring(0, start).trim() === '' && curLine.substring(end).trim() === '') {
+                    var analogies = RuleAnalogies.suggestions(semantics, curWord, range);
+                    for (var analogy of analogies) {
+                        analogy.tag = 'EXTENDED_AUTOCOMPLETE';
+                        analogy.render = renderHint;
+                        analogy.from = CodeMirror.Pos(cur.line, start);
+                        analogy.to = CodeMirror.Pos(cur.line, end);
+                    }
+                    list = list.concat(analogies);
+                }
+            }
+
             //state.legend_aggregates
             //state.legend_synonyms
             //state.legend_properties
@@ -774,8 +811,8 @@
                     }
                 }
             }
-                    //if list is a single word and that matches what the current word is, don't show hint
-            if (list.length===1 && list[0].text.toLowerCase()===curWord){
+            // Keep exact matches when they explain a property's meaning.
+            if (list.length===1 && list[0].text.toLowerCase()===curWord && !list[0].extra){
                 list=[];
             }
             //if list contains the word that you've typed, put it to top of autocomplete list

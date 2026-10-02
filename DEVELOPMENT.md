@@ -34,6 +34,9 @@ Also, remember you need to run `./compile.js` to generate the updated `./src/sta
 
 ## Tests
 
+Editor completion regressions can be run with `node --test src/tests/autocomplete_test.js`.
+These exercise the live parser and completion helper, including contextual constraints and rule analogies.
+
 The tests can be run by opening `./src/tests/tests.html`.  There are two kinds of tests:
 
 * Tests based on short play-sessions recorded in the editor - it checks for a given start state and input state that a particular end-state will be reached.   

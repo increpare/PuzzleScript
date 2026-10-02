@@ -189,6 +189,50 @@ down [ > Player | down Crate_down ] -> [ > Player | left Crate_left ]</code></pr
 <p>
   This will do its best to transform any objects with suffixes mentioned in the above table, along with any movement directions mentioned.
 
+  <h2>Repeat a rule for another family</h2>
+  <p>
+    Autocomplete can also repeat earlier rules for related names. For example, after writing:
+  </p>
+  <pre><code>[ RedKey | RedDoor ] -> [ | ]</code></pre>
+  <p>
+    Start a new rule line with <code>Blu</code>. If <code>BlueKey</code> and <code>BlueDoor</code>
+    are defined, the menu offers <b>Repeat for Blue</b>. It shows the exact changes
+    (<code>RedKey → BlueKey; RedDoor → BlueDoor</code>) and previews the complete rule:
+  </p>
+  <pre><code>[ BlueKey | BlueDoor ] -> [ | ]</code></pre>
+  <p>
+    Select the suggestion and press Tab or Enter to insert it. The names must have a consistent
+    change between CamelCase words, underscore-separated parts, or numbers. This also works for
+    <code>OpenDoor / ClosedDoor</code>, <code>WoodBox / MetalBox</code>, and
+    <code>key_red / key_blue</code>. Every resulting name must already exist.
+    Commands, movement directions, comments, and message text are preserved.
+  </p>
+  <p>
+    Numbered transitions keep their step: typing <code>2</code> can repeat
+    <code>[ Stage1 ] -> [ Stage2 ]</code> as <code>[ Stage2 ] -> [ Stage3 ]</code>,
+    provided all three stages exist. Other numbered parts of a name remain unchanged.
+    Recent examples take priority; autocomplete looks back through 500 lines of parsed rules,
+    skips rules already present, and shows at most twelve repeats.
+    When a rule starts with a direction, the existing rotate/mirror suggestion handles its
+    <code>_up/_down/_left/_right</code> names together with the rule direction.
+  </p>
+
+  <h2>Suggestions that fit the rule</h2>
+  <p>
+    Suggestions use the current game definitions. Late rules omit forbidden movement modifiers;
+    win conditions offer <code>on</code> after their first object; and a cell's object suggestions
+    omit combinations known to conflict on a collision layer. An incomplete or uncertain definition
+    is not enough to rule out a suggestion.
+  </p>
+  <p>
+    A property on the right means <b>the same object matched on the left</b>. Autocomplete explains
+    whether it is bound by the corresponding cell or by one unique occurrence in the left-hand
+    pattern. If the left side is clear and supplies neither binding, that property is omitted.
+    Property aliases have their own names for this purpose: use the same property name on both sides.
+    <code>no Property</code> excludes all its members and <code>random Property</code> chooses a
+    member on the right, so these do not need that binding.
+  </p>
+
   </div><!-- /.container -->
 
 

@@ -39,3 +39,18 @@ li.CodeMirror-hint-active {
 .CodeMirror-hint-active .cm-s-midnight span.cm-COLOR-BLACK {
     color: light-dark(white, black);
 }
+
+.CodeMirror-hint.rule-analogy-hint {
+  padding: 5px 8px;
+  max-width: min(70em, 85vw);
+  white-space: normal;
+}
+
+.rule-analogy-hint > span {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.rule-analogy-title { font-weight: bold; }
+.rule-analogy-changes { color: light-dark(#555, #bec9d9); }
+.rule-analogy-preview { white-space: pre-wrap; }
