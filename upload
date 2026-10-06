@@ -8,4 +8,4 @@ if [ "$confirm" != "UPLOAD" ]; then
 fi
 
 node compile.js
-rsync -avW -e ssh bin/ r3okadmin_puzzlescript@ssh.nyc1.nearlyfreespeech.net:/home/public/
+rsync -avW -e ssh bin/ locus@ded.increpare.com:sites/puzzlescript/
