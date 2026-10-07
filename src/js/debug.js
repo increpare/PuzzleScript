@@ -53,10 +53,11 @@ function dumpTestCase() {
 	let errorStrings_stripped = errorStrings.map(stripHTMLTags);
 	let resultarray = [levelDat,errorStrings_stripped,errorCount];
 	let resultstring = JSON.stringify(resultarray);
-	let escapedtitle = (state.metadata.title||"untitled test").replace(/"/g, '\\"');
+	//JSON.stringify quotes the title and escapes any quotes/backslashes in it
+	let titlestring = JSON.stringify(state.metadata.title||"untitled test");
 	resultstring = `<br>
 	[<br>
-		"${escapedtitle}",<br>
+		${titlestring},<br>
 		${resultstring}<br>
 	],`;
 	selectableint++;
@@ -76,7 +77,7 @@ function dumpTestCase() {
 		let resultstring = JSON.stringify(resultarray);
 		resultstring = `<br>
 		[<br>
-			"${state.metadata.title||"untitled test"}",<br>
+			${titlestring},<br>
 			${resultstring}<br>
 		],`;
 		
