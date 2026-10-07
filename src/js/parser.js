@@ -71,9 +71,15 @@ function logIssue(str, lineNumber, urgent, className, countsAsError, printUrgent
             //do nothing, duplicate error
         } else {
             consolePrint(errorString, printUrgent);
-            errorStrings.push(errorString);
-            if (countsAsError) {
-                errorCount++;
+            // While a game is being played, the same message can be raised every turn (a rule
+            // group that loops too long, say). It is printed each time but recorded once, so a
+            // long play session does not creep up to the cap, which exists to stop runaway
+            // compilations and would otherwise end the game after a hundred such turns.
+            if (compiling || !errorStrings.includes(errorString)) {
+                errorStrings.push(errorString);
+                if (countsAsError) {
+                    errorCount++;
+                }
             }
             if (errorStrings.length > MAX_ERRORS_FOR_REAL) {
                 TooManyErrors();
