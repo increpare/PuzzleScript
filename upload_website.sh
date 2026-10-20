@@ -1,7 +1,11 @@
+#!/usr/bin/env bash
+set -eu
+
 #personal script for uploading to the puzzlescript.net server. If you're not increpare, you don't wanna use this :)
+cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 
 #prompt user to type UPLOAD to confirm uploading
-read -p "Type UPLOAD to confirm uploading: " confirm
+read -r -p "Type UPLOAD to confirm uploading: " confirm
 if [ "$confirm" != "UPLOAD" ]; then
     echo "Aborting."
     exit 1

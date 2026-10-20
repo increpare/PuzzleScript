@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "start": "python src/runserver.py",
+    "build": "node compile.js",
+    "test": "node src/tests/run_tests_node.js"
+  },
   "dependencies": {
     "compress-images": "^2.0.5",
     "concat": "^1.0.3",

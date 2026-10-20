@@ -24,6 +24,18 @@ const { Compress } = require('gzipper');
 const htmlminify = require('html-minifier-terser').minify;
 const glob = require("glob")
 
+// Resolve build inputs relative to this script, including when invoked elsewhere.
+process.chdir(__dirname);
+
+// Source maps still include source files, but local tooling and backups are not
+// website content. Keep deployment files such as .htaccess.
+const developmentNames = new Set(['.git', '.claude', '.codex', '.cursor', '.local-ai', 'AGENTS.md']);
+function includeInRelease(filename) {
+    const parts = path.relative(path.join(__dirname, 'src'), filename).split(path.sep);
+    return parts[0] !== 'tests' &&
+        !parts.some(part => developmentNames.has(part) || /\.(bak|orig)$/i.test(part));
+}
+
 //print all paths to all modules above
 let lines = fs.readFileSync(".build/buildnumber.txt", encoding = 'utf-8');
 let buildnum = parseInt(lines);
@@ -42,7 +54,7 @@ fs.mkdirSync('./bin');
 
 console.log("Copying files")
 ncp.limit = 16;
-ncp("./src", "./bin/", function (err) {
+ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
     if (err) {
         return console.error(err);
     }
@@ -55,7 +67,7 @@ ncp("./src", "./bin/", function (err) {
         compress_images(
             "./src/images/*.png",
             "./bin/images/",
-            { compress_force: false, statistic: false, autoupdate: true }, false,
+            { compress_force: false, statistic: false, autoupdate: true, pathLog: './build/log/compress-images' }, false,
             { jpg: { engine: "mozjpeg", command: ["-quality", "60"] } },
             { png: { engine: "pngcrush", command: ["-reduce", "-brute"] } },
             { svg: { engine: "svgo", command: "--multipass" } },
@@ -230,7 +242,7 @@ ncp("./src", "./bin/", function (err) {
                 "scripts_play_compiled.js",
                 "./bin/js/scripts_play_compiled.js");
 
-            await ncp("./src/js", "./bin/js/source", function (err) {
+            await ncp("./src/js", "./bin/js/source", { filter: includeInRelease }, function (err) {
                 if (err) {
                     return console.error(err);
                 }
