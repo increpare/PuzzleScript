@@ -34,7 +34,7 @@ function FastBase64_Encode(src) {
   var dst = '';
   var i = 0;
   while (len > 2) {
-    n = (src[i] << 16) | (src[i + 1] << 8) | src[i + 2];
+    var n = (src[i] << 16) | (src[i + 1] << 8) | src[i + 2];
     dst += FastBase64_encLookup[n >> 12] + FastBase64_encLookup[n & 0xFFF];
     len -= 3;
     i += 3;
