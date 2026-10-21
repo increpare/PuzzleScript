@@ -8150,7 +8150,8 @@ var editorRowCount = 1;
 var editorColumnCount = 1;
 
 function editorPaletteX() {
-    return Math.floor((canvas.width - (editorColumnCount + 1) * cellwidth) / 2);
+    const extraColumns = editorColumnCount - (screenwidth - 1);
+    return xoffset - (1 + Math.floor(extraColumns / 2)) * cellwidth;
 }
 
 // Share the drawn palette's canvas coordinates with hover and both mouse buttons.
@@ -8344,14 +8345,14 @@ x = 0;
 y = 0;
 
 function glyphCount() {
-    //could also just return glyphImages.length
-    var count = 0;
+    // Match generateGlyphImages: aliases with identical objects share an icon.
+    const glyphs = new Set();
     for (var n of state.glyphOrder) {
         if (n.length == 1 && state.glyphDict.hasOwnProperty(n)) {
-            count++;
+            glyphs.add(state.glyphDict[n].join(","));
         }
     }
-    return count;
+    return glyphs.size;
 }
 
 function redraw() {
@@ -8685,11 +8686,13 @@ function canvasResize(displaylevel) {
     if (levelEditorOpened && !textMode) {
         const glyphcount = glyphCount();
         let size = Math.min(cellwidth, cellheight);
-        // Choose the largest integer sprite scale that fits the map and its
-        // canvas-wide palette. Smaller cells also leave more palette columns.
+        // Keep the default palette position unless more columns are needed.
+        // Expand around the level in whole cells, within the canvas margins.
+        const defaultColumns = screenwidth - 1;
         while (true) {
             cellwidth = cellheight = size;
-            editorColumnCount = Math.max(1, Math.floor(canvas.width / size) - 1);
+            const marginColumns = Math.max(0, Math.floor((canvas.width - screenwidth * size) / (2 * size)));
+            editorColumnCount = Math.max(defaultColumns, Math.min(glyphcount, defaultColumns + 2 * marginColumns));
             editorRowCount = Math.ceil(glyphcount / editorColumnCount);
             screenheight = displaylevel.height + 2 + editorRowCount;
             if (screenheight * size <= canvas.height || size === 5) {
