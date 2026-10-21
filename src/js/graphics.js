@@ -121,6 +121,22 @@ var glyphPrintButton;
 var glyphMouseOver;
 var glyphSelectedIndex = 0;
 var editorRowCount = 1;
+var editorColumnCount = 1;
+
+function editorPaletteX() {
+    return Math.floor((canvas.width - (editorColumnCount + 1) * cellwidth) / 2);
+}
+
+// Share the drawn palette's canvas coordinates with hover and both mouse buttons.
+function getEditorPaletteCell() {
+    const column = Math.floor((mousePixelX - editorPaletteX()) / cellwidth);
+    const top = yoffset - cellheight * (1 + editorRowCount);
+    const row = Math.floor((mousePixelY - top) / cellheight);
+    if (column < 0 || column > editorColumnCount || row < 0 || row >= editorRowCount) {
+        return null;
+    }
+    return { column, row, index: column - 1 + row * editorColumnCount };
+}
 var editorGlyphMovements = [];
 
 var canvasdict = {};
@@ -350,8 +366,6 @@ function redraw() {
         var maxj = screenheight;
 
         if (levelEditorOpened) {
-            var glyphcount = glyphCount();
-            editorRowCount = Math.ceil(glyphcount / (screenwidth - 1));
             maxi -= 2;
             maxj -= 2 + editorRowCount;
         } else if (flickscreen) {
@@ -517,25 +531,28 @@ function drawEditorIcons(mini, minj) {
 							);*/
     var glyphsToDisplay = glyphEndIndex - glyphStartIndex;
 
-    ctx.drawImage(glyphPrintButton, xoffset - cellwidth, yoffset - cellheight * (1 + editorRowCount));
-    if (mouseCoordY === (-1 - editorRowCount) && mouseCoordX === -1) {
-        ctx.drawImage(glyphMouseOver, xoffset - cellwidth, yoffset - cellheight * (1 + editorRowCount));
-    }
+    const paletteX = editorPaletteX();
+    const paletteY = yoffset - cellheight * (1 + editorRowCount);
+    const paletteCell = getEditorPaletteCell();
+    const mouseIndex = paletteCell && paletteCell.column > 0 ? paletteCell.index : -1;
+    const printHovered = paletteCell && paletteCell.column === 0 && paletteCell.row === 0;
 
-    var ypos = editorRowCount - (-mouseCoordY - 2) - 1;
-    var mouseIndex = mouseCoordX + (screenwidth - 1) * ypos;
+    ctx.drawImage(glyphPrintButton, paletteX, paletteY);
+    if (printHovered) {
+        ctx.drawImage(glyphMouseOver, paletteX, paletteY);
+    }
 
     for (var i = 0; i < glyphsToDisplay; i++) {
         var glyphIndex = glyphStartIndex + i;
         var sprite = glyphImages[glyphIndex];
-        var xpos = i % (screenwidth - 1);
-        var ypos = (i / (screenwidth - 1)) | 0;
-        ctx.drawImage(sprite, xoffset + (xpos) * cellwidth, yoffset + ypos * cellheight - cellheight * (1 + editorRowCount));
-        if (mouseCoordX >= 0 && mouseCoordX < (screenwidth - 1) && mouseIndex === i) {
-            ctx.drawImage(glyphMouseOver, xoffset + xpos * cellwidth, yoffset + ypos * cellheight - cellheight * (1 + editorRowCount));
+        var xpos = paletteX + (1 + i % editorColumnCount) * cellwidth;
+        var ypos = paletteY + Math.floor(i / editorColumnCount) * cellheight;
+        ctx.drawImage(sprite, xpos, ypos);
+        if (mouseIndex === i) {
+            ctx.drawImage(glyphMouseOver, xpos, ypos);
         }
         if (i === glyphSelectedIndex) {
-            ctx.drawImage(glyphHighlight, xoffset + xpos * cellwidth, yoffset + ypos * cellheight - cellheight * (1 + editorRowCount));
+            ctx.drawImage(glyphHighlight, xpos, ypos);
         }
     }
 
@@ -543,7 +560,7 @@ function drawEditorIcons(mini, minj) {
     var tooltip_string = ''
     var tooltip_objects = null
     // prepare tooltip: legend for highlighted editor icon
-    if ((mouseCoordX >= 0) && (mouseCoordX < screenwidth) && (mouseIndex >= 0) && (mouseIndex < glyphsToDisplay)) {
+    if (mouseIndex >= 0 && mouseIndex < glyphsToDisplay) {
         const glyphIndex = glyphStartIndex + mouseIndex
         const identifier_index = glyphImagesCorrespondance[glyphIndex]
         tooltip_string = identifier_index
@@ -554,7 +571,7 @@ function drawEditorIcons(mini, minj) {
 
         }
     }
-    if (mouseIndex === -1) {
+    if (printHovered) {
         tooltip_string = "print level to console"
     }
     // prepare tooltip: content of a level's cell
@@ -571,7 +588,7 @@ function drawEditorIcons(mini, minj) {
     if (tooltip_string.length > 0) {
         ctx.fillStyle = state.fgcolor;
         ctx.font = `16px "Source Sans Pro", Helvetica, Arial, sans-serif`;
-        ctx.fillText(tooltip_string, xoffset, yoffset - 0.4 * cellheight);
+        ctx.fillText(tooltip_string, paletteX, yoffset - 0.4 * cellheight);
     }
 
     if (mouseCoordX >= -1 && mouseCoordY >= -1 && mouseCoordX < screenwidth - 1 && mouseCoordY < screenheight - 1 - editorRowCount) {
@@ -609,9 +626,7 @@ function canvasResize(displaylevel) {
         zoomscreen = state.metadata.zoomscreen !== undefined;
         if (levelEditorOpened) {
             screenwidth += 2;
-            var glyphcount = glyphCount();
-            editorRowCount = Math.ceil(glyphcount / (screenwidth - 1));
-            screenheight += 2 + editorRowCount;
+            screenheight += 2;
         } else if (flickscreen) {
             screenwidth = state.metadata.flickscreen[0];
             screenheight = state.metadata.flickscreen[1];
@@ -640,6 +655,23 @@ function canvasResize(displaylevel) {
 
     cellwidth = w * Math.max(~~(cellwidth / w), 1);
     cellheight = h * Math.max(~~(cellheight / h), 1);
+
+    if (levelEditorOpened && !textMode) {
+        const glyphcount = glyphCount();
+        let size = Math.min(cellwidth, cellheight);
+        // Choose the largest integer sprite scale that fits the map and its
+        // canvas-wide palette. Smaller cells also leave more palette columns.
+        while (true) {
+            cellwidth = cellheight = size;
+            editorColumnCount = Math.max(1, Math.floor(canvas.width / size) - 1);
+            editorRowCount = Math.ceil(glyphcount / editorColumnCount);
+            screenheight = displaylevel.height + 2 + editorRowCount;
+            if (screenheight * size <= canvas.height || size === 5) {
+                break;
+            }
+            size -= 5;
+        }
+    }
 
     xoffset = 0;
     yoffset = 0;

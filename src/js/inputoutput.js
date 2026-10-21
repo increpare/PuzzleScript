@@ -242,12 +242,14 @@ function printLevel() {
 
 function levelEditorClick(event, click) {
 	if (mouseCoordY <= -2) {
-		const ypos = editorRowCount - (-mouseCoordY - 2) - 1;
-		const newindex = mouseCoordX + (screenwidth - 1) * ypos;
-		if (mouseCoordX === -1) {
+		const paletteCell = getEditorPaletteCell();
+		if (!paletteCell) {
+			return;
+		}
+		if (paletteCell.column === 0 && paletteCell.row === 0) {
 			printLevel();
-		} else if (mouseCoordX >= 0 && newindex < glyphImages.length) {
-			glyphSelectedIndex = newindex;
+		} else if (paletteCell.column > 0 && paletteCell.index < glyphImages.length) {
+			glyphSelectedIndex = paletteCell.index;
 			redraw();
 		}
 
@@ -302,9 +304,10 @@ function levelEditorClick(event, click) {
 }
 
 function levelEditorRightClick(event, click) {
-	if (mouseCoordY === -2) {
-		if (mouseCoordX <= glyphImages.length) {
-			glyphSelectedIndex = mouseCoordX;
+	if (mouseCoordY <= -2) {
+		const paletteCell = getEditorPaletteCell();
+		if (paletteCell && paletteCell.column > 0 && paletteCell.index < glyphImages.length) {
+			glyphSelectedIndex = paletteCell.index;
 			redraw();
 		}
 	} else if (mouseCoordX > -1 && mouseCoordY > -1 && mouseCoordX < screenwidth - 2 && mouseCoordY < screenheight - 2 - editorRowCount) {
@@ -531,9 +534,13 @@ function onMyBlur(event) {
 
 let mouseCoordX = 0;
 let mouseCoordY = 0;
+let mousePixelX = -1;
+let mousePixelY = -1;
 
 function setMouseCoord(e) {
 	const coords = canvas.relMouseCoords(e);
+	mousePixelX = coords.x;
+	mousePixelY = coords.y;
 	mouseCoordX = coords.x - xoffset;
 	mouseCoordY = coords.y - yoffset;
 	mouseCoordX = Math.floor(mouseCoordX / cellwidth);
