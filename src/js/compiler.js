@@ -579,11 +579,6 @@ function processRuleString(rule, state, curRules) {
     let lineNumber = rule[1];
     let origLine = rule[2];
 
-    if (String(origLine).includes('(') && !String(line).includes('->')) {
-        logError("You can't have comments inside rules, sorry. In PuzzleScript, '(' starts a comment, so everything after the first '(' on this line was ignored before your rule was parsed.", lineNumber);
-        return null;
-    }
-
     // STEP ONE, TOKENIZE
     let tokens = tokenizeRuleLine(line);
 
@@ -631,6 +626,11 @@ function processRuleString(rule, state, curRules) {
             }
             return rule_line;
         }
+    }
+
+    if (String(origLine).includes('(') && !String(line).includes('->')) {
+        logError("You can't have comments inside rules, sorry. In PuzzleScript, '(' starts a comment, so everything after the first '(' on this line was ignored before your rule was parsed.", lineNumber);
+        return null;
     }
 
     if (!tokens.includes('->')) {

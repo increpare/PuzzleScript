@@ -1231,4 +1231,20 @@ var errormessage_testdata = [
         "object Background redefined as an aggregate of missing names should error instead of crashing (getMaskFromName id)",
         ["OBJECTS\nBackground Player .\nLEGEND\nBackground = Player and Wall\nCOLLISIONLAYERS\nBackground\n",["line 4 : Name \"BACKGROUND\" already in use (on line line 2).","line 4 : You're talking about WALL but it's not defined anywhere.","line 5 : section \"COLLISIONLAYERS\" is out of order, must follow  \"SOUNDS\" (or it could be that the section \"SOUNDS\"is just missing totally.  You have to include all section headings, even if the section itself is empty).","line 2 : color not specified for object \"background\".","Error, didn't find any object called player, either in the objects section, or the legends section.","No levels found.  Add some levels!"],6]
     ],
+    [
+        "#1192 trailing comments on STARTLOOP are allowed",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\nstartloop (apply checkerboard for bridges)\n[ Player ] -> [ Player ]\nendloop\n\nWINCONDITIONS\nLEVELS\n\nP\n", [], 0]
+    ],
+    [
+        "#1192 trailing nested comments on ENDLOOP are allowed",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\nSTARTLOOP\n[ Player ] -> [ Player ]\nENDLOOP (comment (nested comment))\n\nWINCONDITIONS\nLEVELS\n\nP\n", [], 0]
+    ],
+    [
+        "#1192 comments inside rules still report an error",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n[ Player (comment) ] -> [ Player ]\n\nWINCONDITIONS\nLEVELS\n\nP\n", ["line 18 : You can't have comments inside rules, sorry. In PuzzleScript, '(' starts a comment, so everything after the first '(' on this line was ignored before your rule was parsed."], 1]
+    ],
+    [
+        "#1192 STARTLOOP with a comment still requires ENDLOOP",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\nstartloop (missing endloop)\n[ Player ] -> [ Player ]\n\nWINCONDITIONS\nLEVELS\n\nP\n", ["line 18 : Yo I found a STARTLOOP without a corresponding ENDLOOP."], 1]
+    ],
 ];   
