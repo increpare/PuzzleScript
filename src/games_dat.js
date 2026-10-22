@@ -971,7 +971,7 @@ let games_gallery = [
     "homepage": "https://www.puzzlescript.net/"
   },
   {
-    "url": "https://www.puzzlescript.net/play.html?p=f34d1ea5b2636c253edf725bd2679976",
+    "url": "https://wryandbeary.itch.io/seven-layer-dip",
     "thumb": "f34d1ea5b2636c253edf725bd2679976.gif",
     "title": "Seven-Layer Dip",
     "author": "wryandbeary",
@@ -984,7 +984,7 @@ let games_gallery = [
     "author": "Tilmann R"
   },
   {
-    "url": "https://www.puzzlescript.net/play.html?p=11118b5d6e0d22b5bfc26f3043c888db",
+    "url": "https://clickmazes.itch.io/locknpin",
     "thumb": "11118b5d6e0d22b5bfc26f3043c888db.gif",
     "title": "Lock & Pin",
     "author": "Andrea Gilbert",
