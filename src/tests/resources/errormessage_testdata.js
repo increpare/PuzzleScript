@@ -1247,4 +1247,36 @@ var errormessage_testdata = [
         "#1192 STARTLOOP with a comment still requires ENDLOOP",
         ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\nstartloop (missing endloop)\n[ Player ] -> [ Player ]\n\nWINCONDITIONS\nLEVELS\n\nP\n", ["line 18 : Yo I found a STARTLOOP without a corresponding ENDLOOP."], 1]
     ],
+    [
+        "diagnostic coverage: invalid object name",
+        ["OBJECTS\n\nBackground .\nblack\n\n!\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n\n\nWINCONDITIONS\nLEVELS\n\nP\n",["line 6 : Unknown junk in object section (possibly: sprites have to be 5 pixels wide and 5 pixels high exactly. Or maybe: the main names for objects have to be words containing only the letters a-z0.9 - if you want to call them something like \",\", do it in the legend section)."],0]
+    ],
+    [
+        "diagnostic coverage: ellipsis followed by an unbound movement",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n[ ... > ] -> [ Player ]\n\nWINCONDITIONS\nLEVELS\n\nP\n",["line 18 : Cannot end a rule with ellipses.","line 18 : Error, malformed cell rule - encountered a \"[\"\" before previous bracket was closed","line 18 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).","You have an totally empty pattern on the left-hand side.  This will match *everything*.  You certainly don't want this."],4]
+    ],
+    [
+        "diagnostic coverage: movements without objects leave an empty pattern",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n[ > ] -> [ > ]\n\nWINCONDITIONS\nLEVELS\n\nP\n",["line 18 : In a rule, if you specify a movement, it has to act on an object.","line 18 : Error, malformed cell rule - encountered a \"[\"\" before previous bracket was closed","You have an totally empty pattern on the left-hand side.  This will match *everything*.  You certainly don't want this."],3]
+    ],
+    [
+        "diagnostic coverage: random on a synonym of an undefined object",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nAlias = Missing\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n[ Player ] -> [ random Alias ]\n\nWINCONDITIONS\nLEVELS\n\nP\n",["line 10 : You're talking about MISSING but it's not defined anywhere.","line 19 : You want to spawn a random \"MISSING\", but I don't know how to do that"],2]
+    ],
+    [
+        "diagnostic coverage: flickscreen dimension without an integer part",
+        ["flickscreen .0x1\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n\n\nWINCONDITIONS\nLEVELS\n\nP\n",["line 1 : Wasn't able to make sense of \".0\" as a dimension.","line 1 : Couldn't understand the dimensions given to me (you gave \".0x1\") - should be of the form AxB."],0]
+    ],
+    [
+        "diagnostic coverage: zoomscreen dimension with a decimal exponent",
+        ["zoomscreen .1e1x1\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n\n\nWINCONDITIONS\nLEVELS\n\nP\n",["line 1 : Wasn't able to make sense of \".1e1\" as a dimension.","line 1 : Couldn't understand the dimensions given to me (you gave \".1e1x1\") - should be of the form AxB."],0]
+    ],
+    [
+        "diagnostic coverage: sound event without a seed",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nsfx0\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n\n\nWINCONDITIONS\nLEVELS\n\nP\n",["line 11 : incorrect sound declaration."],0]
+    ],
+    [
+        "diagnostic coverage: object sound without a verb or seed",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nPlayer\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n\n\nWINCONDITIONS\nLEVELS\n\nP\n",["line 11 : incorrect sound declaration."],0]
+    ],
 ];   
