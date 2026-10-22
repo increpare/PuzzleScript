@@ -1,18 +1,15 @@
-bin/
-**/.DS_Store
-
+# spam files
+.DS_Store
 *.swp
-src - Kopie
 
+# generated files
+bin/
 node_modules/
+/build/
+/src/demo_canonical/
+/src/demo_rehydrated/
+
+# worktrees files
 .worktrees/
-.claude/worktrees/happy-mestorf/
-
-/src/demo_canonical
-/src/demo_rehydrated
-/.superpowers
-/build/action-noop-perf
-/build/action-noop-candidates
-/build
-
-.idea
+.claude/worktrees/
+/.superpowers/
