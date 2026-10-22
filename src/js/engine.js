@@ -1768,6 +1768,71 @@ CellPattern.prototype.generateMatchFunction = function() {
 let _o1, _o2, _o2_5, _o3, _o4, _o5, _o6, _o7, _o8, _o9, _o10, _o11, _o12;
 let _m1, _m2, _m3;
 
+// Deterministic, non-rigid replacements only visit words with nonzero masks.
+function generateSparseReplaceFunction(replacement, objectSize, movementSize) {
+	const objectWords = [];
+	const movementWords = [];
+	for (let i = 0; i < objectSize; i++) {
+		if (replacement.objectsClear.data[i] || replacement.objectsSet.data[i]) objectWords.push(i);
+	}
+	for (let i = 0; i < movementSize; i++) {
+		if (replacement.movementsClear.data[i] || replacement.movementsLayerMask.data[i] || replacement.movementsSet.data[i]) movementWords.push(i);
+	}
+	if (objectWords.length === 0 && movementWords.length === 0) return FALSE_FUNCTION;
+
+	// Mask values vary between patterns; the generated code only depends on word positions and strides.
+	// Originally we were substituting in concrete values here, but keeping it generic was slightly more optimzal,
+	// maybe just from a lazy function-generation perspective?
+	const key = `sparse:${objectSize},${movementSize}:${objectWords}:${movementWords}`;
+	if (key in CACHE_CELLPATTERN_REPLACEFUNCTION) return CACHE_CELLPATTERN_REPLACEFUNCTION[key];
+
+	let reads = '';
+	let writes = '';
+	const changes = [];
+
+	for (const i of objectWords) {
+		reads += `
+			const oldObject${i} = level.objects[currentIndex * ${objectSize} + ${i}];
+			const newObject${i} = (oldObject${i} & ~replacement.objectsClear.data[${i}]) | replacement.objectsSet.data[${i}];
+		`;
+		changes.push(`oldObject${i} !== newObject${i}`);
+		writes += `
+			level.objects[currentIndex * ${objectSize} + ${i}] = newObject${i};
+			sfxCreateMask.data[${i}] |= newObject${i} & ~oldObject${i};
+			sfxDestroyMask.data[${i}] |= oldObject${i} & ~newObject${i};
+			level.rowCellContents[row].data[${i}] |= newObject${i};
+			level.colCellContents[col].data[${i}] |= newObject${i};
+			level.mapCellContents.data[${i}] |= newObject${i};
+		`;
+	}
+
+	for (const i of movementWords) {
+		reads += `
+			const oldMovement${i} = level.movements[currentIndex * ${movementSize} + ${i}];
+			const newMovement${i} = (oldMovement${i} & ~(replacement.movementsClear.data[${i}] | replacement.movementsLayerMask.data[${i}])) | replacement.movementsSet.data[${i}];
+		`;
+		changes.push(`oldMovement${i} !== newMovement${i}`);
+		writes += `
+			level.movements[currentIndex * ${movementSize} + ${i}] = newMovement${i};
+			level.rowCellContents_Movements[row].data[${i}] |= newMovement${i};
+			level.colCellContents_Movements[col].data[${i}] |= newMovement${i};
+			level.mapCellContents_Movements.data[${i}] |= newMovement${i};
+		`;
+	}
+
+	// Summary masks accumulate bits during a turn; untouched words are already covered.
+	return CACHE_CELLPATTERN_REPLACEFUNCTION[key] = new Function('level', 'rule', 'currentIndex', `
+		'use strict';
+		const replacement = this.replacement;
+		${reads}
+		if (!(${changes.join(' || ')})) return false;
+		const row = currentIndex % level.height;
+		const col = (currentIndex / level.height) | 0;
+		${writes}
+		return true;
+	`);
+}
+
 let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
 let _replace_function_key_array = new Int32Array(0);
 
@@ -1775,6 +1840,13 @@ let _replace_function_key_array = new Int32Array(0);
 CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE,rule) {
 	if (this.replacement===null){
 		return FALSE_FUNCTION;
+	}
+
+	const replace_randomEntityMask_zero = this.replacement.randomEntityMask.iszero()
+	const replace_randomDirMask_zero = this.replacement.randomDirMask.iszero()
+	let deterministic = replace_randomEntityMask_zero && replace_randomDirMask_zero;
+	if (deterministic && !rule.rigid) {
+		return generateSparseReplaceFunction(this.replacement, OBJECT_SIZE, MOVEMENT_SIZE);
 	}
 
 	const rigidGroupIndex = rule.rigid ? (state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1) : 0;
@@ -1806,10 +1878,6 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		return CACHE_CELLPATTERN_REPLACEFUNCTION[key];
 	}
 	
-	const replace_randomEntityMask_zero = this.replacement.randomEntityMask.iszero()
-	const replace_randomDirMask_zero = this.replacement.randomDirMask.iszero()
-	let deterministic = replace_randomEntityMask_zero && replace_randomDirMask_zero;
-
 	let fn = `	
 		let replace = this.replacement;
 
