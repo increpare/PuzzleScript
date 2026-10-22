@@ -48,13 +48,18 @@ function stripHTMLTags(html_str){
 }
 
 function dumpTestCase() {
+	// The console uses innerHTML, so escape the JSON before displaying it.
+	const stringifyForHTML = value => JSON.stringify(value)
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;");
 	//compiler error data
 	let levelDat = compiledText;
 	let errorStrings_stripped = errorStrings.map(stripHTMLTags);
 	let resultarray = [levelDat,errorStrings_stripped,errorCount];
-	let resultstring = JSON.stringify(resultarray);
+	let resultstring = stringifyForHTML(resultarray);
 	//JSON.stringify quotes the title and escapes any quotes/backslashes in it
-	let titlestring = JSON.stringify(state.metadata.title||"untitled test");
+	let titlestring = stringifyForHTML(state.metadata.title||"untitled test");
 	resultstring = `<br>
 	[<br>
 		${titlestring},<br>
@@ -74,7 +79,7 @@ function dumpTestCase() {
 		let outputDat = convertLevelToString();
 
 		let resultarray = [levelDat,input,outputDat,recordingStartsFromLevel,loadedLevelSeed,sounds];
-		let resultstring = JSON.stringify(resultarray);
+		let resultstring = stringifyForHTML(resultarray);
 		resultstring = `<br>
 		[<br>
 			${titlestring},<br>
