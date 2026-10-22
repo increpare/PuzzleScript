@@ -283,11 +283,11 @@ editor.on("drop", function(editor, event) {
 			reader = new FileReader();
 			reader.onload = function(e) {
 				let source_text = reader.result;
-				//if filename ends with .html
-				if (file.name.endsWith(".html")) {
+				// Extract source from standalone HTML exports.
+				if (file.name.endsWith(".html") || file.name.endsWith(".htm")) {
 					source_text = rip_source_from_html(source_text);
 				} else if (!file.name.endsWith(".txt")) {
-					consoleError("Only .html and .txt files are supported");
+					consoleError("Only .html/.htm/.txt files are supported");
 					return;
 				} 
 				editor.setValue(source_text);
