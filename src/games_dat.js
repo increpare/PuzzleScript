@@ -907,4 +907,87 @@ let games_gallery = [
     "author": "nebu soku",
     "homepage": "https://nebu-soku.itch.io/yukiasobi"
   },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=6a412035f6f1999cc773ddcb071de6e6",
+    "thumb": "6a412035f6f1999cc773ddcb071de6e6.gif",
+    "title": "paint everything everywhere!",
+    "author": "increpare + pancelor",
+    "homepage": "https://www.pancelor.com/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=b6020a515c32a33ad309fbd5a63f3588",
+    "thumb": "b6020a515c32a33ad309fbd5a63f3588.gif",
+    "title": "A CLEAR VIEW OF THE SKY",
+    "author": "increpare",
+    "homepage": "https://www.increpare.com/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=9b405f4c165349eb617779b5547cdf52",
+    "thumb": "9b405f4c165349eb617779b5547cdf52.gif",
+    "title": "WITCH LIFTER",
+    "author": "increpare",
+    "homepage": "https://www.increpare.com/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=33d42cc9f33cd58f74fa2ee31b494314",
+    "thumb": "33d42cc9f33cd58f74fa2ee31b494314.gif",
+    "title": "The sponge what lights up the seafloor",
+    "author": "increpare",
+    "homepage": "https://www.increpare.com/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=c75c21d481107aa5cb78dc91378f8d9b",
+    "thumb": "c75c21d481107aa5cb78dc91378f8d9b.gif",
+    "title": "Put the logs in the water, elephant!",
+    "author": "increpare",
+    "homepage": "https://www.increpare.com/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=1f22424c2178d3e64c33c2e25203365b",
+    "thumb": "1f22424c2178d3e64c33c2e25203365b.gif",
+    "title": "Karamell",
+    "author": "Stephen Lavelle",
+    "homepage": "https://www.increpare.com/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=96608bd07725a3a105bb0027a7b73da3",
+    "thumb": "96608bd07725a3a105bb0027a7b73da3.gif",
+    "title": "Omniban",
+    "author": "Patrickgh3",
+    "homepage": "https://www.puzzlescript.net/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=bf3272fd7b73c43acb4f835478fb25ee",
+    "thumb": "bf3272fd7b73c43acb4f835478fb25ee.gif",
+    "title": "Bring the ice cube to the goal without exposing it to heat.",
+    "author": "increpare",
+    "homepage": "https://www.increpare.com/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=0bde9b6117e2c7aebb4f226b47cbdc47",
+    "thumb": "0bde9b6117e2c7aebb4f226b47cbdc47.gif",
+    "title": "Un-Lock",
+    "author": "noa",
+    "homepage": "https://www.puzzlescript.net/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=f34d1ea5b2636c253edf725bd2679976",
+    "thumb": "f34d1ea5b2636c253edf725bd2679976.gif",
+    "title": "Seven-Layer Dip",
+    "author": "wryandbeary",
+    "homepage": "https://wryandbeary.itch.io/"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=dbb32000738925f19cd89453e64b54c0",
+    "thumb": "dbb32000738925f19cd89453e64b54c0.gif",
+    "title": "Being Alan Hazelden",
+    "author": "Tilmann R"
+  },
+  {
+    "url": "https://www.puzzlescript.net/play.html?p=11118b5d6e0d22b5bfc26f3043c888db",
+    "thumb": "11118b5d6e0d22b5bfc26f3043c888db.gif",
+    "title": "Lock & Pin",
+    "author": "Andrea Gilbert",
+    "homepage": "https://clickmazes.itch.io/"
+  },
 ]
