@@ -2421,12 +2421,22 @@ Rule.prototype.tryApply = function (level) {
 
 	let result = false;
 	if (this.hasReplacements) {
-		let tuples = generateTuples(matches);
-		for (let tupleIndex = 0; tupleIndex < tuples.length; tupleIndex++) {
-			let tuple = tuples[tupleIndex];
-			let shouldCheck = tupleIndex > 0;
-			let success = this.applyAt(level, tuple, shouldCheck, delta);
-			result = success || result;
+		const singleCell = this.patterns.length === 1 &&
+			this.patterns[0].length === 1 && this.ellipsisCount[0] === 0;
+		if (singleCell && !verbose_logging) {
+			// Distinct single-cell matches cannot invalidate one another.
+			const cell = this.patterns[0][0];
+			for (const index of matches[0]) {
+				result = cell.replace(level, this, index) || result;
+			}
+		} else {
+			let tuples = generateTuples(matches);
+			for (let tupleIndex = 0; tupleIndex < tuples.length; tupleIndex++) {
+				let tuple = tuples[tupleIndex];
+				let shouldCheck = tupleIndex > 0;
+				let success = this.applyAt(level, tuple, shouldCheck, delta);
+				result = success || result;
+			}
 		}
 	}
 
