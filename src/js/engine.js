@@ -3102,6 +3102,7 @@ function DoWin() {
 }
 
 function nextLevel() {
+	const startedInTextMode = textMode;
 	againing = false;
 	messagetext = "";
 	if (state && state.levels && (curlevel > state.levels.length)) {
@@ -3149,6 +3150,10 @@ function nextLevel() {
 			tryPlayEndGameSound();
 		}
 		//continue existing game
+	}
+	// Title/message inputs are not recorded, so start replay history at the board they open.
+	if (startedInTextMode) {
+		clearInputHistory();
 	}
 	try {
 		storage_set(document.URL, curlevel);
