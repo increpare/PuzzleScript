@@ -87,6 +87,7 @@ CodeMirror.commands.swapLineUp = function(cm) {
 
 let editor = window.CodeMirror.fromTextArea(code, {
 //	viewportMargin: Infinity,
+	theme: 'midnight',
 	lineWrapping: true,
 	lineNumbers: true,
 	styleActiveLine: true,
@@ -166,7 +167,6 @@ editor.on("beforeChange", function(instance, change) {
 
 
 code.editorreference = editor;
-editor.setOption('theme', 'midnight');
 
 installImagePasteHandler(editor);
 
