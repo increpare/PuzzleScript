@@ -6,7 +6,7 @@
 <title>__GAMETITLE__</title>
 <style>
 html { height: 100%; }
-body {
+.player-shell {
     --player-bg: black;
     --player-fg: lightblue;
     --control-size: 56px;
@@ -17,13 +17,13 @@ body {
     --control-lift: 32px;
     margin: 0;
     height: 100%;
-    height: 100dvh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     font-family: "Courier New", Courier, monospace;
     color: var(--player-fg);
 }
+body.player-shell { height: 100dvh; }
 .player-toolbar {
     flex: none;
     display: grid;
@@ -106,7 +106,7 @@ body {
 .player-deck .player-button::before { inset: -1px; }
 .player-actions .player-button { border-radius: 18px; border-color: color-mix(in srgb, currentColor 32%, transparent); background: color-mix(in srgb, currentColor 12%, var(--player-bg)); }
 .player-actions .player-button svg { opacity: 1; }
-body:not(.controls-labels) .player-actions .player-button span { display: none; }
+.player-shell:not(.controls-labels) .player-actions .player-button span { display: none; }
 .controls-swapped .player-deck { flex-direction: row-reverse; }
 .controls-stacked .player-actions { grid-template: repeat(3, var(--control-size)) / var(--action-width); }
 .controls-stacked .player-actions #restartButton { grid-area: 1 / 1; }
@@ -124,7 +124,7 @@ body:not(.controls-labels) .player-actions .player-button span { display: none; 
 .player-button:focus-visible, .player-menu :is(button, input, select, a):focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 #gameCanvas:focus, .player-menu-panel:focus { outline: none; }
 .player-button:disabled { opacity: .3; cursor: default; }
-.player-button[hidden], body:not(.touch-enabled) .touch-control { display: none; }
+.player-button[hidden], .player-shell:not(.touch-enabled) .touch-control { display: none; }
 .gameContainer { position: relative; flex: 1; min-width: 0; min-height: 0; margin-left: env(safe-area-inset-left); margin-right: env(safe-area-inset-right); touch-action: none; }
 #gameCanvas { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; -webkit-tap-highlight-color: transparent; image-rendering: -moz-crisp-edges; image-rendering: pixelated; image-rendering: crisp-edges; }
 #errormessage { display: block; flex: none; padding: 8px 12px; text-align: center; font-size: 14px; line-height: 20px; }
@@ -169,14 +169,14 @@ body > #playerLinks a { display: inline-block; padding: 8px 16px; font-size: 14p
     .player-movement .move-left { grid-area: 2 / 1; }
     .player-movement .move-right { grid-area: 2 / 2; }
     .player-movement .move-down { grid-area: 3 / 1 / 4 / 3; width: var(--control-size); justify-self: center; }
-    body.touch-enabled:not(.controls-overlay) { display: grid; grid-template-columns: calc(var(--movement-width) + var(--deck-inset) + 12px + env(safe-area-inset-left)) minmax(0,1fr) calc(var(--actions-width) + var(--deck-inset) + 12px + env(safe-area-inset-right)); grid-template-rows: auto minmax(0,1fr) auto; }
+    .player-shell.touch-enabled:not(.controls-overlay) { display: grid; grid-template-columns: calc(var(--movement-width) + var(--deck-inset) + 12px + env(safe-area-inset-left)) minmax(0,1fr) calc(var(--actions-width) + var(--deck-inset) + 12px + env(safe-area-inset-right)); grid-template-rows: auto minmax(0,1fr) auto; }
     .touch-enabled:not(.controls-overlay) .player-toolbar { grid-area: 1 / 1 / 2 / 4; }
     .touch-enabled:not(.controls-overlay) .gameContainer { grid-area: 2 / 2; margin: 0; }
     .touch-enabled:not(.controls-overlay) .player-deck { display: contents; }
     .touch-enabled:not(.controls-overlay) .player-movement { grid-area: 2 / 1; align-self: end; justify-self: start; margin: 0 0 calc(var(--control-lift) + env(safe-area-inset-bottom)) calc(var(--deck-inset) + env(safe-area-inset-left)); }
     .touch-enabled:not(.controls-overlay) .player-actions { grid-area: 2 / 3; align-self: end; justify-self: end; margin: 0 calc(var(--deck-inset) + env(safe-area-inset-right)) calc(var(--control-lift) + env(safe-area-inset-bottom)) 0; }
     .touch-enabled:not(.controls-overlay) #errormessage { grid-area: 3 / 1 / 4 / 4; }
-    body.touch-enabled.controls-swapped:not(.controls-overlay) { grid-template-columns: calc(var(--actions-width) + var(--deck-inset) + 12px + env(safe-area-inset-left)) minmax(0,1fr) calc(var(--movement-width) + var(--deck-inset) + 12px + env(safe-area-inset-right)); }
+    .player-shell.touch-enabled.controls-swapped:not(.controls-overlay) { grid-template-columns: calc(var(--actions-width) + var(--deck-inset) + 12px + env(safe-area-inset-left)) minmax(0,1fr) calc(var(--movement-width) + var(--deck-inset) + 12px + env(safe-area-inset-right)); }
     .touch-enabled.controls-swapped:not(.controls-overlay) .player-movement { grid-column: 3; justify-self: end; margin-left: 0; margin-right: calc(var(--deck-inset) + env(safe-area-inset-right)); }
     .touch-enabled.controls-swapped:not(.controls-overlay) .player-actions { grid-column: 1; justify-self: start; margin-right: 0; margin-left: calc(var(--deck-inset) + env(safe-area-inset-left)); }
 }
@@ -193,7 +193,6 @@ body > #playerLinks a { display: inline-block; padding: 8px 16px; font-size: 14p
     .player-menu input::before { display: none; }
 }
 
-
 </style>
 <style>
 body, #gameCanvas { background-color: ___BGCOLOR___; }
@@ -201,7 +200,7 @@ h1, a { color: ___TEXTCOLOR___; }
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 </head>
-<body>
+<body class="player-shell">
 <header class="player-toolbar" id="playerToolbar" aria-label="Game controls"><div class="player-identity"><h1 id="gametitle">__GAMETITLE__</h1><a id="homepagelink" href="__HOMEPAGE__" target="_blank" rel="noopener">__HOMEPAGE_STRIPPED_PROTOCOL__</a></div></header>
 <div class="gameContainer">
 <canvas 
@@ -853,17 +852,21 @@ function get_title_animation_frame() {
 }
 
 var WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
+var WORKLIST_GENERATION_INDEX = 0;
 function tick_lazy_function_generation(iterative_generation = false) {
     if (WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length === 0) {
         return;
     }
-    // spent a maximum of 10ms on lazy function generation
+    // Spend up to 20ms on lazy function generation before starting another item.
     let start = performance.now();
-    var generated_count = 0;
     while (
         ((performance.now() - start < 20) || !iterative_generation)
-        && WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length > 0) {
-        const object = WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.shift();
+        && WORKLIST_GENERATION_INDEX < WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length) {
+        const object = WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR[WORKLIST_GENERATION_INDEX++];
+        // Clear before generating the last item so appends and errors see an empty queue.
+        if (WORKLIST_GENERATION_INDEX === WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length) {
+            lazy_function_generation_clear_backlog();
+        }
         //depending on type of object
         //if CellPattern, call generateMatchFunction
         //if Rule, call generate_all_MatchFunctions
@@ -874,12 +877,12 @@ function tick_lazy_function_generation(iterative_generation = false) {
         } else {
             throw new Error("Unknown object type: " + object);
         }
-        generated_count++;
     }
 }
 
 function lazy_function_generation_clear_backlog() {
     WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
+    WORKLIST_GENERATION_INDEX = 0;
 }
 
 
@@ -887,10 +890,10 @@ function lazy_function_generation_clear_backlog() {
 <script>
 'use strict';
 
-let canSetHTMLColors=true;
-let canDump=false;
-let canOpenEditor=false;
-let IDE=false;
+const canSetHTMLColors=true;
+const canDump=false;
+const canOpenEditor=false;
+const IDE=false;
 const diffToVisualize=null;
 
 function stripTags(str) {
@@ -8057,13 +8060,23 @@ function renderCJKCharacter(char, padding) {
     return sprite;
 }
 
+var textGlyphCache = null;
 function regenText(spritecanvas, spritectx) {
-    textImages = {};
+    // Text changes can introduce new characters without changing existing glyphs.
+    const scanline = "scanline" in state.metadata;
+    if (!textGlyphCache || textGlyphCache.state !== state ||
+        textGlyphCache.width !== cellwidth || textGlyphCache.height !== cellheight ||
+        textGlyphCache.color !== state.fgcolor || textGlyphCache.scanline !== scanline) {
+        textImages = {};
+        textGlyphCache = { state: state, width: cellwidth, height: cellheight, color: state.fgcolor, scanline: scanline };
+    }
 
     for (var rowidx in titleImage) {
         var row = titleImage[rowidx];
         for (var nidx in row) {
             var n = row[nidx];
+            // The space glyph is transparent; omitting it also avoids drawing it.
+            if (n === " ") continue;
             if (!textImages.hasOwnProperty(n)) {
                 if (font.hasOwnProperty(n)) {
                     const fontstr = font[n].split('\n').map(a => a.trim().split('').map(t => parseInt(t)));
@@ -8088,6 +8101,8 @@ function regenSpriteImages() {
         return;
     }
 
+    // The level editor reuses the text "s" canvas for its grille icon.
+    textGlyphCache = null;
     if (IDE === true) {
         textImages['editor_s'] = createSprite('chars', editor_s_grille, undefined);
     }
@@ -10437,12 +10452,21 @@ CellPattern.prototype.generateMatchFunction = function() {
     
     let fn = '';
     
+    // Only load words referenced by the generated match expression.
     for (let i = 0; i < STRIDE_OBJ; ++i) {
-        fn += `const cellObjects${i} = objects[i${objStride}${i ? '+' + i : ''}];\n`;
+        let needed = this.objectsPresent.data[i] || this.objectsMissing.data[i];
+        for (let j = 0; !needed && j < this.anyObjectsPresent.length; ++j) {
+            needed = this.anyObjectsPresent[j].data[i];
+        }
+        if (needed) {
+            fn += `const cellObjects${i} = objects[i${objStride}${i ? '+' + i : ''}];\n`;
+        }
     }
     
     for (let i = 0; i < STRIDE_MOV; ++i) {
-        fn += `const cellMovements${i} = movements[i${movStride}${i ? '+' + i : ''}];\n`;
+        if (this.movementsPresent.data[i] || this.movementsMissing.data[i]) {
+            fn += `const cellMovements${i} = movements[i${movStride}${i ? '+' + i : ''}];\n`;
+        }
     }
     
     fn += `return ${this.generateMatchString()};`;
@@ -10455,6 +10479,71 @@ CellPattern.prototype.generateMatchFunction = function() {
 let _o1, _o2, _o2_5, _o3, _o4, _o5, _o6, _o7, _o8, _o9, _o10, _o11, _o12;
 let _m1, _m2, _m3;
 
+// Deterministic, non-rigid replacements only visit words with nonzero masks.
+function generateSparseReplaceFunction(replacement, objectSize, movementSize) {
+	const objectWords = [];
+	const movementWords = [];
+	for (let i = 0; i < objectSize; i++) {
+		if (replacement.objectsClear.data[i] || replacement.objectsSet.data[i]) objectWords.push(i);
+	}
+	for (let i = 0; i < movementSize; i++) {
+		if (replacement.movementsClear.data[i] || replacement.movementsLayerMask.data[i] || replacement.movementsSet.data[i]) movementWords.push(i);
+	}
+	if (objectWords.length === 0 && movementWords.length === 0) return FALSE_FUNCTION;
+
+	// Mask values vary between patterns; the generated code only depends on word positions and strides.
+	// Originally we were substituting in concrete values here, but keeping it generic was slightly more optimzal,
+	// maybe just from a lazy function-generation perspective?
+	const key = `sparse:${objectSize},${movementSize}:${objectWords}:${movementWords}`;
+	if (key in CACHE_CELLPATTERN_REPLACEFUNCTION) return CACHE_CELLPATTERN_REPLACEFUNCTION[key];
+
+	let reads = '';
+	let writes = '';
+	const changes = [];
+
+	for (const i of objectWords) {
+		reads += `
+			const oldObject${i} = level.objects[currentIndex * ${objectSize} + ${i}];
+			const newObject${i} = (oldObject${i} & ~replacement.objectsClear.data[${i}]) | replacement.objectsSet.data[${i}];
+		`;
+		changes.push(`oldObject${i} !== newObject${i}`);
+		writes += `
+			level.objects[currentIndex * ${objectSize} + ${i}] = newObject${i};
+			sfxCreateMask.data[${i}] |= newObject${i} & ~oldObject${i};
+			sfxDestroyMask.data[${i}] |= oldObject${i} & ~newObject${i};
+			level.rowCellContents[row].data[${i}] |= newObject${i};
+			level.colCellContents[col].data[${i}] |= newObject${i};
+			level.mapCellContents.data[${i}] |= newObject${i};
+		`;
+	}
+
+	for (const i of movementWords) {
+		reads += `
+			const oldMovement${i} = level.movements[currentIndex * ${movementSize} + ${i}];
+			const newMovement${i} = (oldMovement${i} & ~(replacement.movementsClear.data[${i}] | replacement.movementsLayerMask.data[${i}])) | replacement.movementsSet.data[${i}];
+		`;
+		changes.push(`oldMovement${i} !== newMovement${i}`);
+		writes += `
+			level.movements[currentIndex * ${movementSize} + ${i}] = newMovement${i};
+			level.rowCellContents_Movements[row].data[${i}] |= newMovement${i};
+			level.colCellContents_Movements[col].data[${i}] |= newMovement${i};
+			level.mapCellContents_Movements.data[${i}] |= newMovement${i};
+		`;
+	}
+
+	// Summary masks accumulate bits during a turn; untouched words are already covered.
+	return CACHE_CELLPATTERN_REPLACEFUNCTION[key] = new Function('level', 'rule', 'currentIndex', `
+		'use strict';
+		const replacement = this.replacement;
+		${reads}
+		if (!(${changes.join(' || ')})) return false;
+		const row = currentIndex % level.height;
+		const col = (currentIndex / level.height) | 0;
+		${writes}
+		return true;
+	`);
+}
+
 let CACHE_CELLPATTERN_REPLACEFUNCTION = {}
 let _replace_function_key_array = new Int32Array(0);
 
@@ -10462,6 +10551,13 @@ let _replace_function_key_array = new Int32Array(0);
 CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_SIZE,rule) {
 	if (this.replacement===null){
 		return FALSE_FUNCTION;
+	}
+
+	const replace_randomEntityMask_zero = this.replacement.randomEntityMask.iszero()
+	const replace_randomDirMask_zero = this.replacement.randomDirMask.iszero()
+	let deterministic = replace_randomEntityMask_zero && replace_randomDirMask_zero;
+	if (deterministic && !rule.rigid) {
+		return generateSparseReplaceFunction(this.replacement, OBJECT_SIZE, MOVEMENT_SIZE);
 	}
 
 	const rigidGroupIndex = rule.rigid ? (state.groupNumber_to_RigidGroupIndex[rule.groupNumber]+1) : 0;
@@ -10493,10 +10589,6 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 		return CACHE_CELLPATTERN_REPLACEFUNCTION[key];
 	}
 	
-	const replace_randomEntityMask_zero = this.replacement.randomEntityMask.iszero()
-	const replace_randomDirMask_zero = this.replacement.randomDirMask.iszero()
-	let deterministic = replace_randomEntityMask_zero && replace_randomDirMask_zero;
-
 	let fn = `	
 		let replace = this.replacement;
 
@@ -11040,12 +11132,22 @@ Rule.prototype.tryApply = function (level) {
 
 	let result = false;
 	if (this.hasReplacements) {
-		let tuples = generateTuples(matches);
-		for (let tupleIndex = 0; tupleIndex < tuples.length; tupleIndex++) {
-			let tuple = tuples[tupleIndex];
-			let shouldCheck = tupleIndex > 0;
-			let success = this.applyAt(level, tuple, shouldCheck, delta);
-			result = success || result;
+		const singleCell = this.patterns.length === 1 &&
+			this.patterns[0].length === 1 && this.ellipsisCount[0] === 0;
+		if (singleCell && !verbose_logging) {
+			// Distinct single-cell matches cannot invalidate one another.
+			const cell = this.patterns[0][0];
+			for (const index of matches[0]) {
+				result = cell.replace(level, this, index) || result;
+			}
+		} else {
+			let tuples = generateTuples(matches);
+			for (let tupleIndex = 0; tupleIndex < tuples.length; tupleIndex++) {
+				let tuple = tuples[tupleIndex];
+				let shouldCheck = tupleIndex > 0;
+				let success = this.applyAt(level, tuple, shouldCheck, delta);
+				result = success || result;
+			}
 		}
 	}
 
@@ -11789,6 +11891,7 @@ function DoWin() {
 }
 
 function nextLevel() {
+	const startedInTextMode = textMode;
 	againing = false;
 	messagetext = "";
 	if (state && state.levels && (curlevel > state.levels.length)) {
@@ -11836,6 +11939,10 @@ function nextLevel() {
 			tryPlayEndGameSound();
 		}
 		//continue existing game
+	}
+	// Title/message inputs are not recorded, so start replay history at the board they open.
+	if (startedInTextMode) {
+		clearInputHistory();
 	}
 	try {
 		storage_set(document.URL, curlevel);
@@ -16435,11 +16542,6 @@ function formatHomePage(state) {
         }
 
         if ('text_color' in state.metadata) {
-            let separator = document.getElementById("separator");
-            if (separator != null) {
-                separator.style.color = state.fgcolor;
-            }
-
             let aElements = document.getElementsByTagName("a");
             for (let i = 0; i < aElements.length; i++) {
                 aElements[i].style.color = state.fgcolor;
@@ -16696,15 +16798,6 @@ function manage_compilation_caches() {
     evictObjCacheIfOversized(CACHE_RESOLVEMOVEMENTS, 5000);
     evictObjCacheIfOversized(CACHE_RULE_FINDMATCHES, 5000);
 }
-
-
-
-function qualifyURL(url) {
-    let a = document.createElement('a');
-    a.href = url;
-    return a.href;
-}
-
 
 </script>
 <script>
@@ -17786,16 +17879,16 @@ Mobile.enable = function (force) {
     return Mobile._instance;
 };
 
-// The player shares these controls with exported games. The editor keeps its
-// own layout and focus handling.
+// Shared by the web player, exported games and the editor preview.
 Mobile.setupPlayerControls = function () {
     var toolbar = document.getElementById('playerToolbar');
     if (!toolbar) {
         return;
     }
     Mobile.playerToolbar = toolbar;
+    var root = Mobile.playerRoot = toolbar.parentNode;
     var canvas = document.getElementById('gameCanvas');
-    canvas.setAttribute('tabindex', '-1');
+    if (!IDE || hasLoadedGame()) { canvas.setAttribute('tabindex', '-1'); }
     var releaseButtons = [];
     // Consume the compatibility click even if activation hides its button
     // (mute/unmute) or opens a menu under the pointer before click dispatch.
@@ -17812,6 +17905,8 @@ Mobile.setupPlayerControls = function () {
         releaseButtons.forEach(function (release) { release(); });
     };
     var icons = {
+        expand: '<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>',
+        collapse: '<path d="M3 8h5V3m13 5h-5V3M8 21v-5H3m13 5v-5h5"/>',
         menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
         sound: '<path d="M11 4 6 8H3v8h3l5 4Z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>',
         muted: '<path d="M11 4 6 8H3v8h3l5 4Z"/><path d="m16 9 6 6m0-6-6 6"/>',
@@ -17925,10 +18020,55 @@ Mobile.setupPlayerControls = function () {
     menuButton.setAttribute('aria-expanded', 'false');
     menuButton.setAttribute('aria-controls', 'playerMenu');
     leading.appendChild(menuButton);
-    trailing.appendChild(button('muteButton', 'Mute sound (M)', 'sound', muteAudio));
-    trailing.appendChild(button('unMuteButton', 'Unmute sound (M)', 'muted', unMuteAudio));
+    trailing.appendChild(button('muteButton', IDE ? 'Mute sound' : 'Mute sound (M)', 'sound', muteAudio));
+    trailing.appendChild(button('unMuteButton', IDE ? 'Unmute sound' : 'Unmute sound (M)', 'muted', unMuteAudio));
     toolbar.insertBefore(leading, toolbar.firstChild);
     toolbar.appendChild(trailing);
+    if (IDE) {
+        var inertPanels = [];
+        var expand = button('expandPreviewButton', 'Expand game preview', 'expand', function () {
+            setExpanded(!root.classList.contains('preview-expanded'));
+        });
+        trailing.appendChild(expand);
+        function setExpanded(expanded) {
+            Mobile.releasePlayerButtons();
+            if (Mobile._instance) { Mobile._instance.cancelTouch(); }
+            keybuffer = [];
+            root.classList.toggle('preview-expanded', expanded);
+            expand.setAttribute('aria-expanded', String(expanded));
+            expand.setAttribute('aria-label', expanded ? 'Return to editor' : 'Expand game preview');
+            expand.title = expanded ? 'Return to editor' : 'Expand game preview';
+            expand.querySelector('svg').innerHTML = icons[expanded ? 'collapse' : 'expand'];
+            if (expanded) {
+                inertPanels = Array.from(document.body.children).filter(function (element) {
+                    return !element.contains(root) && !element.inert;
+                });
+                inertPanels.forEach(function (element) { element.inert = true; });
+            } else {
+                inertPanels.forEach(function (element) { element.inert = false; });
+                inertPanels = [];
+            }
+            Mobile.layoutPlayerControls();
+            canvasResize();
+        }
+        expand.setAttribute('aria-expanded', 'false');
+        root.addEventListener('keydown', function (event) {
+            if (!root.classList.contains('preview-expanded') || Mobile.playerMenuOpen) { return; }
+            if (event.key === 'Tab') {
+                var controls = Array.from(root.querySelectorAll('button:not(:disabled), input, select, a[href]')).filter(function (element) { return element.getClientRects().length; });
+                var first = controls[0], last = controls[controls.length - 1];
+                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+                event.stopPropagation();
+            }
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                event.stopPropagation();
+                setExpanded(false);
+                expand.focus({ preventScroll: true });
+            }
+        });
+    }
     killAudioButton();
 
     var deck = document.createElement('div');
@@ -17970,7 +18110,7 @@ Mobile.setupPlayerControls = function () {
         '<label><span>Swap control sides</span><input type="checkbox" id="swapControls"></label>' +
         '<label><span>Overlay controls</span><input type="checkbox" id="overlayControls" checked></label></div>' +
         '<div class="player-menu-footer"><button type="button" id="backToTitleButton">Back to title</button></div></div>';
-    document.body.appendChild(menu);
+    root.appendChild(menu);
     var panel = menu.firstChild;
     panel.tabIndex = -1;
     var links = document.getElementById('playerLinks');
@@ -17994,6 +18134,7 @@ Mobile.setupPlayerControls = function () {
             lastDownTarget = canvas;
         }
     }
+    Mobile.setPlayerMenu = setMenu;
     document.getElementById('backToTitleButton').addEventListener('click', function (event) { setMenu(false, event.detail === 0); input(27); });
     document.getElementById('closeMenuButton').addEventListener('click', function (event) { setMenu(false, event.detail === 0); });
     menu.addEventListener('click', function (event) { if (event.target === menu) { setMenu(false); } });
@@ -18015,10 +18156,10 @@ Mobile.setupPlayerControls = function () {
             var saved = storage_get(key);
             if (saved === 'true' || saved === 'false') { control.checked = saved === 'true'; }
         } catch (error) { /* Keep the default when storage is unavailable. */ }
-        document.body.classList.toggle(setting[1], control.checked);
+        root.classList.toggle(setting[1], control.checked);
         control.addEventListener('change', function () {
             Mobile.releasePlayerButtons();
-            document.body.classList.toggle(setting[1], control.checked);
+            root.classList.toggle(setting[1], control.checked);
             try { storage_set(key, String(control.checked)); } catch (error) { /* The preference still works for this session. */ }
             canvasResize();
         });
@@ -18074,7 +18215,7 @@ Mobile.setupPlayerControls = function () {
         var landscape = window.matchMedia('(orientation: landscape)').matches;
         var movementWidth = landscape ? 2 * size + 4 : 3 * size + 8;
         var actionsWidth = 2 * actionWidth + 4;
-        var style = document.body.style;
+        var style = root.style;
         style.setProperty('--control-size', size + 'px');
         layoutMovementSurface(size);
         style.setProperty('--action-width', actionWidth + 'px');
@@ -18084,12 +18225,13 @@ Mobile.setupPlayerControls = function () {
         var padding = getComputedStyle(deck);
         var safeWidth = Math.max(0, parseFloat(padding.paddingLeft) - inset) +
             Math.max(0, parseFloat(padding.paddingRight) - inset);
-        var width = document.documentElement.clientWidth - safeWidth;
+        var width = root.clientWidth - safeWidth;
         // Keep the chosen target size: stack actions when the thumb groups
         // would collide, and limit only the edge inset on very narrow screens.
         var stacked = movementWidth + actionsWidth + 12 + 2 * inset > width;
         if (stacked) { actionsWidth = actionWidth; }
-        document.body.classList.toggle('controls-stacked', stacked);
+        root.classList.toggle('controls-stacked', stacked);
+        root.classList.toggle('controls-too-small', IDE && (width < movementWidth + actionsWidth + 28 || root.clientHeight < 300));
         style.setProperty('--actions-width', actionsWidth + 'px');
         style.setProperty('--deck-inset', Math.max(8, Math.min(inset,
             Math.floor((width - movementWidth - actionsWidth - 12) / 2))) + 'px');
@@ -18113,8 +18255,8 @@ Mobile.setupPlayerControls = function () {
     // Keep the existing pixel scale in overlay mode. If the board can fit clear
     // of the visible buttons, use the nearest such position to its usual centre.
     Mobile.positionPlayerBoard = function (width, height, x, y) {
-        if (!document.body.classList.contains('touch-enabled') ||
-            !document.body.classList.contains('controls-overlay')) { return null; }
+        if (!root.classList.contains('touch-enabled') ||
+            !root.classList.contains('controls-overlay')) { return null; }
         Mobile.syncPlayerControls();
         var maxX = Math.floor(canvas.width - width);
         var maxY = Math.floor(canvas.height - height);
@@ -18180,26 +18322,38 @@ Mobile.setupPlayerControls = function () {
         canvasResize();
     });
     document.addEventListener('visibilitychange', function () { if (document.hidden) { releaseInput(); } });
+    if (IDE && window.ResizeObserver) {
+        new ResizeObserver(function () {
+            Mobile.layoutPlayerControls();
+            canvasResize();
+        }).observe(root);
+    }
     Mobile.syncPlayerControls();
 };
 
 Mobile.syncPlayerControls = function () {
     var toolbar = Mobile.playerToolbar;
     if (!toolbar) { return; }
+    var root = Mobile.playerRoot;
+    var unavailable = IDE && (!hasLoadedGame() || levelEditorOpened);
     var noUndo = 'noundo' in state.metadata;
     var noRestart = 'norestart' in state.metadata;
     var noAction = 'noaction' in state.metadata && !textMode;
     var noHistory = backups.length === 0;
-    var title = state.metadata.title || document.getElementById('gametitle').textContent;
+    var title = state.metadata.title || (IDE ? 'Game preview' : document.getElementById('gametitle').textContent);
     var screen = [titleScreen, textMode, curlevel].join('|');
-    var status = [screen, titleMode, noUndo, noRestart, noAction, noHistory, state.fgcolor, state.bgcolor, title].join('|');
+    var status = [screen, titleMode, noUndo, noRestart, noAction, noHistory, state.fgcolor, state.bgcolor, title, unavailable].join('|');
     if (Mobile.playerStatus === status) { return; }
     if (Mobile.playerScreen !== screen) { Mobile.releasePlayerButtons(); }
     Mobile.playerScreen = screen;
     Mobile.playerStatus = status;
-    document.body.style.setProperty('--player-fg', state.fgcolor);
-    document.body.style.setProperty('--player-bg', state.bgcolor);
+    root.style.setProperty('--player-fg', state.fgcolor);
+    root.style.setProperty('--player-bg', state.bgcolor);
     document.getElementById('gametitle').title = title;
+    if (IDE) { document.getElementById('gametitle').textContent = title; }
+    var availabilityChanged = root.classList.contains('controls-unavailable') !== unavailable;
+    root.classList.toggle('controls-unavailable', unavailable);
+    if (availabilityChanged) { requestAnimationFrame(function () { canvasResize(); }); }
     document.getElementById('backToTitleButton').disabled = titleScreen;
     var undo = document.getElementById('undoButton');
     var restart = document.getElementById('restartButton');
@@ -18207,19 +18361,20 @@ Mobile.syncPlayerControls = function () {
     undo.hidden = noUndo;
     restart.hidden = noRestart;
     action.hidden = noAction;
-    undo.disabled = textMode || noHistory;
-    restart.disabled = textMode;
+    undo.disabled = unavailable || textMode || noHistory;
+    restart.disabled = unavailable || textMode;
+    action.disabled = unavailable;
     var actionLabel = textMode ? (titleScreen ? 'Start' : 'Continue') : 'Action';
     action.querySelector('span').textContent = actionLabel;
     action.setAttribute('aria-label', actionLabel + ' (X)');
     action.title = actionLabel + ' (X)';
     var actionLayoutChanged = action.parentNode.classList.contains('no-action') !== noAction;
     action.parentNode.classList.toggle('no-action', noAction);
-    if (actionLayoutChanged && document.body.classList.contains('controls-stacked')) {
+    if (actionLayoutChanged && root.classList.contains('controls-stacked')) {
         requestAnimationFrame(function () { canvasResize(); });
     }
     ['up','left','down','right'].forEach(function (direction) {
-        document.getElementById('move' + direction).disabled = textMode &&
+        document.getElementById('move' + direction).disabled = unavailable || textMode &&
             !(titleScreen && titleMode === 1 && (direction === 'up' || direction === 'down'));
     });
 };
@@ -18312,7 +18467,7 @@ Mobile.debugDot = function (event) {
     proto.bootstrap = function () {
         if (Mobile.playerToolbar) {
             Mobile.playerToolbar.classList.add('touch-enabled');
-            document.body.classList.add('touch-enabled');
+            Mobile.playerRoot.classList.add('touch-enabled');
             var links = document.getElementById('playerLinks');
             if (links) { document.querySelector('.player-menu-footer').appendChild(links); }
             Mobile.layoutPlayerControls();
@@ -18662,9 +18817,8 @@ Mobile.debugDot = function (event) {
     };
 
     proto.toggleMenu = function () {
-        // Player controls are always available; retain the gesture menu only
-        // for the editor, where there is no player header.
         if (Mobile.playerToolbar) {
+            Mobile.setPlayerMenu(!Mobile.playerMenuOpen);
             return;
         }
         if (this.isMenuVisible) {
@@ -18940,8 +19094,8 @@ Mobile.debugDot = function (event) {
 
     proto.disableSelection = function () {
         var body;
-        body = document.getElementsByTagName('body')[0];
-        body.setAttribute('class', body.getAttribute('class') + ' disable-select');
+        body = Mobile.playerRoot || document.body;
+        body.classList.add('disable-select');
     };
 
 }(window.Mobile.GestureHandler.prototype));
@@ -19091,8 +19245,11 @@ function Animatable(key, increment, update) {
         };
     }
 
-    Mobile.setupPlayerControls();
-    Mobile.enable();
+    // The editor initializes after its engine, code editor and layout are ready.
+    if (!IDE) {
+        Mobile.setupPlayerControls();
+        Mobile.enable();
+    }
 }());
 
 </script>
