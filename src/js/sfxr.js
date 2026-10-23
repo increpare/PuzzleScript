@@ -1030,21 +1030,25 @@ function playSound(seed,ignore) {
 
 
 
+let audioButtonEnabled = true;
+
 function killAudioButton(){
+  audioButtonEnabled = false;
   const mb = document.getElementById("muteButton");
   const umb = document.getElementById("unMuteButton");
   if (mb){
-    mb.remove();
-    umb.remove();
+    mb.style.display="none";
+    umb.style.display="none";
   }
 }
 
 function showAudioButton(){
+  audioButtonEnabled = true;
   const mb = document.getElementById("muteButton");
   const umb = document.getElementById("unMuteButton");
   if (mb){
-    mb.style.display="block"; 
-    umb.style.display="none";
+    mb.style.display=muted ? "none" : "";
+    umb.style.display=muted ? "" : "none";
   }
 }
 
@@ -1063,7 +1067,7 @@ function muteAudio() {
   const umb = document.getElementById("unMuteButton");
   if (mb){
     mb.style.display="none"; 
-    umb.style.display="block";
+    umb.style.display=audioButtonEnabled ? "" : "none";
   }
 }
 function unMuteAudio() {
@@ -1071,7 +1075,7 @@ function unMuteAudio() {
   const mb = document.getElementById("muteButton");
   const umb = document.getElementById("unMuteButton");
   if (mb){
-    mb.style.display="block"; 
+    mb.style.display=audioButtonEnabled ? "" : "none";
     umb.style.display="none";
   }
 }

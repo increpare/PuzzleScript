@@ -9,7 +9,7 @@ window.Mobile = {};
 //stolen from https://github.com/Modernizr/Modernizr/blob/master/feature-detects/touchevents.js
 Mobile.hasTouch = function () {
     var bool;
-    if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+    if (navigator.maxTouchPoints > 0 || ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
         bool = true;
     } else {
         /*
@@ -23,12 +23,450 @@ Mobile.hasTouch = function () {
 }
 
 Mobile.enable = function (force) {
-    if (force || Mobile.hasTouch() && !Mobile._instance) {
+    if ((force || Mobile.hasTouch()) && !Mobile._instance) {
         Mobile._instance = new Mobile.GestureHandler();
         Mobile._instance.bindEvents();
         Mobile._instance.bootstrap();
     }
     return Mobile._instance;
+};
+
+// The player shares these controls with exported games. The editor keeps its
+// own layout and focus handling.
+Mobile.setupPlayerControls = function () {
+    var toolbar = document.getElementById('playerToolbar');
+    if (!toolbar) {
+        return;
+    }
+    Mobile.playerToolbar = toolbar;
+    var canvas = document.getElementById('gameCanvas');
+    canvas.setAttribute('tabindex', '-1');
+    var releaseButtons = [];
+    // Consume the compatibility click even if activation hides its button
+    // (mute/unmute) or opens a menu under the pointer before click dispatch.
+    var skipPointerClick = false;
+    document.addEventListener('pointerdown', function () { skipPointerClick = false; }, true);
+    document.addEventListener('click', function (event) {
+        if (skipPointerClick && event.detail > 0) {
+            skipPointerClick = false;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+    }, true);
+    Mobile.releasePlayerButtons = function () {
+        releaseButtons.forEach(function (release) { release(); });
+    };
+    var icons = {
+        menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+        sound: '<path d="M11 4 6 8H3v8h3l5 4Z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>',
+        muted: '<path d="M11 4 6 8H3v8h3l5 4Z"/><path d="m16 9 6 6m0-6-6 6"/>',
+        restart: '<path d="M4 10a8 8 0 1 1 1 7M4 4v6h6"/>',
+        undo: '<path d="m8 4-5 5 5 5M3 9h11a6 6 0 0 1 0 12h-2"/>',
+        action: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/>',
+        up: '<path d="m7 14 5-5 5 5"/>',
+        down: '<path d="m7 10 5 5 5-5"/>',
+        left: '<path d="m14 7-5 5 5 5"/>',
+        right: '<path d="m10 7 5 5-5 5"/>'
+    };
+    function input(code) {
+        Mobile.releasePlayerButtons();
+        lastDownTarget = canvas;
+        onKeyDown({ keyCode: code });
+        onKeyUp({ keyCode: code });
+    }
+    function button(id, label, icon, callback, heldCode, caption) {
+        var element = document.createElement('button');
+        element.type = 'button';
+        element.id = id;
+        element.className = 'player-button';
+        element.setAttribute('aria-label', label);
+        element.title = label;
+        element.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + icons[icon] + '</svg>';
+        if (caption) {
+            var text = document.createElement('span');
+            text.textContent = caption;
+            element.appendChild(text);
+        }
+        function activate(keyboard) {
+            callback(keyboard);
+            if (keyboard && (id === 'muteButton' || id === 'unMuteButton')) {
+                document.getElementById(muted ? 'unMuteButton' : 'muteButton').focus();
+            } else if (!keyboard && !Mobile.playerMenuOpen) {
+                canvas.focus({ preventScroll: true });
+            }
+        }
+        var pointer = null;
+        var pointerUsed = false;
+        function release() {
+            if (pointer && pointer.ownsKey) {
+                onKeyUp({ keyCode: heldCode });
+            }
+            pointer = null;
+            element.classList.remove('is-held');
+        }
+        releaseButtons.push(release);
+        function inside(event) {
+            var bounds = element.getBoundingClientRect();
+            return event.clientX >= bounds.left && event.clientX <= bounds.right &&
+                event.clientY >= bounds.top && event.clientY <= bounds.bottom;
+        }
+        if (window.PointerEvent) {
+            element.addEventListener('pointerdown', function (event) {
+                if (event.button !== 0 || element.disabled || pointer) { return; }
+                event.preventDefault();
+                pointerUsed = true;
+                skipPointerClick = true;
+                pointer = { id: event.pointerId, ownsKey: heldCode && keybuffer.indexOf(heldCode) < 0 };
+                element.setPointerCapture(event.pointerId);
+                element.classList.add('is-held');
+                if (heldCode) {
+                    // Use the engine's repeat timing, throttling and norepeat_action.
+                    // Setting the input target directly also allows two-thumb input.
+                    lastDownTarget = canvas;
+                    onKeyDown({ keyCode: heldCode });
+                }
+            });
+            element.addEventListener('pointermove', function (event) {
+                if (pointer && event.pointerId === pointer.id && !inside(event)) { release(); }
+            });
+            element.addEventListener('pointerup', function (event) {
+                if (!pointer || event.pointerId !== pointer.id) { return; }
+                var tap = !heldCode && !element.disabled && inside(event);
+                release();
+                if (tap) { activate(false); }
+            });
+            element.addEventListener('pointercancel', release);
+            element.addEventListener('lostpointercapture', release);
+        } else {
+            // Older touch browsers can suppress the first click after a swipe.
+            var touchStart;
+            element.addEventListener('touchstart', function (event) {
+                touchStart = event.touches.length === 1 ? event.touches[0] : null;
+            });
+            element.addEventListener('touchmove', function (event) {
+                if (touchStart && (event.touches.length !== 1 ||
+                    Math.abs(event.touches[0].clientX - touchStart.clientX) > 10 ||
+                    Math.abs(event.touches[0].clientY - touchStart.clientY) > 10)) { touchStart = null; }
+            });
+            element.addEventListener('touchcancel', function () { touchStart = null; });
+            element.addEventListener('touchend', function (event) {
+                var tap = touchStart && !element.disabled && !event.touches.length && inside(event.changedTouches[0]);
+                touchStart = null;
+                event.preventDefault();
+                if (tap) { activate(false); }
+            });
+        }
+        element.addEventListener('click', function (event) {
+            if (!pointerUsed || event.detail === 0) { activate(event.detail === 0); }
+            pointerUsed = false;
+        });
+        return element;
+    }
+    var leading = document.createElement('div');
+    var trailing = document.createElement('div');
+    leading.className = trailing.className = 'player-controls';
+    var menuButton = button('gameMenuButton', 'Game menu', 'menu', function (keyboard) { setMenu(!Mobile.playerMenuOpen, keyboard); });
+    menuButton.classList.add('touch-control');
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.setAttribute('aria-controls', 'playerMenu');
+    leading.appendChild(menuButton);
+    trailing.appendChild(button('muteButton', 'Mute sound (M)', 'sound', muteAudio));
+    trailing.appendChild(button('unMuteButton', 'Unmute sound (M)', 'muted', unMuteAudio));
+    toolbar.insertBefore(leading, toolbar.firstChild);
+    toolbar.appendChild(trailing);
+    killAudioButton();
+
+    var deck = document.createElement('div');
+    deck.className = 'player-deck';
+    deck.id = 'playerDeck';
+    var movement = document.createElement('div');
+    movement.className = 'player-movement';
+    movement.setAttribute('role', 'group');
+    movement.setAttribute('aria-label', 'Movement');
+    // A single quiet silhouette groups the directions; the native buttons
+    // retain their full touch targets and separate keyboard focus.
+    movement.innerHTML = '<svg class="movement-surface movement-surface-portrait" aria-hidden="true" focusable="false"><path/></svg>' +
+        '<svg class="movement-surface movement-surface-landscape" aria-hidden="true" focusable="false"><path/></svg>';
+    [['up',38],['left',37],['down',40],['right',39]].forEach(function (direction) {
+        var element = button('move' + direction[0], 'Move ' + direction[0], direction[0], function () { input(direction[1]); }, direction[1]);
+        element.classList.add('move-' + direction[0]);
+        movement.appendChild(element);
+    });
+    var actions = document.createElement('div');
+    actions.className = 'player-actions';
+    actions.setAttribute('role', 'group');
+    actions.setAttribute('aria-label', 'Game actions');
+    actions.appendChild(button('restartButton', 'Restart level (R)', 'restart', function () { input(82); }, null, 'Restart'));
+    actions.appendChild(button('undoButton', 'Undo move (Z)', 'undo', function () { input(90); }, 90, 'Undo'));
+    actions.appendChild(button('actionButton', 'Action (X)', 'action', function () { input(88); }, 88, 'Action'));
+    deck.appendChild(movement);
+    deck.appendChild(actions);
+    document.querySelector('.gameContainer').after(deck);
+
+    var menu = document.createElement('div');
+    menu.id = 'playerMenu';
+    menu.className = 'player-menu';
+    menu.hidden = true;
+    menu.innerHTML = '<div class="player-menu-panel" role="dialog" aria-modal="true" aria-label="Game menu">' +
+        '<div class="player-menu-header"><h2>Game menu</h2><button type="button" id="closeMenuButton" class="player-button" aria-label="Close menu" title="Close menu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>' +
+        '<label><span>Button size</span><select id="controlSize"><option value="48">Compact</option><option value="56" selected>Comfortable</option><option value="64">Large</option></select></label>' +
+        '<label><span>Position</span><select id="controlPosition"><option value="12">Near edges</option><option value="24" selected>Inset</option><option value="36">Further in</option></select></label>' +
+        '<div class="player-menu-toggles"><label><span>Button labels</span><input type="checkbox" id="buttonLabels" checked></label>' +
+        '<label><span>Swap control sides</span><input type="checkbox" id="swapControls"></label>' +
+        '<label><span>Overlay controls</span><input type="checkbox" id="overlayControls" checked></label></div>' +
+        '<div class="player-menu-footer"><button type="button" id="backToTitleButton">Back to title</button></div></div>';
+    document.body.appendChild(menu);
+    var panel = menu.firstChild;
+    panel.tabIndex = -1;
+    var links = document.getElementById('playerLinks');
+    if (links) {
+        links.hidden = false;
+        if (Mobile.hasTouch()) { panel.querySelector('.player-menu-footer').appendChild(links); }
+    }
+    function setMenu(open, keyboard) {
+        Mobile.releasePlayerButtons();
+        if (Mobile._instance) { Mobile._instance.cancelTouch(); }
+        keybuffer = [];
+        Mobile.playerMenuOpen = open;
+        menu.hidden = !open;
+        menuButton.setAttribute('aria-expanded', String(open));
+        if (open) {
+            lastDownTarget = null;
+            // Pointer users enter the dialog without a keyboard focus ring.
+            (keyboard ? document.getElementById('closeMenuButton') : panel).focus({ preventScroll: true });
+        } else {
+            (keyboard ? menuButton : canvas).focus({ preventScroll: true });
+            lastDownTarget = canvas;
+        }
+    }
+    document.getElementById('backToTitleButton').addEventListener('click', function (event) { setMenu(false, event.detail === 0); input(27); });
+    document.getElementById('closeMenuButton').addEventListener('click', function (event) { setMenu(false, event.detail === 0); });
+    menu.addEventListener('click', function (event) { if (event.target === menu) { setMenu(false); } });
+    menu.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') { event.preventDefault(); setMenu(false, true); }
+        if (event.key === 'Tab') {
+            var focusable = Array.from(panel.querySelectorAll('button:not(:disabled), input, select, a[href]'));
+            var first = focusable[0], last = focusable[focusable.length - 1];
+            if (event.shiftKey && (document.activeElement === first || document.activeElement === panel)) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+        event.stopPropagation();
+    });
+    menu.addEventListener('keyup', function (event) { event.stopPropagation(); });
+    [['buttonLabels','controls-labels'],['swapControls','controls-swapped'],['overlayControls','controls-overlay']].forEach(function (setting) {
+        var control = document.getElementById(setting[0]);
+        var key = 'puzzlescript:' + setting[0];
+        try {
+            var saved = storage_get(key);
+            if (saved === 'true' || saved === 'false') { control.checked = saved === 'true'; }
+        } catch (error) { /* Keep the default when storage is unavailable. */ }
+        document.body.classList.toggle(setting[1], control.checked);
+        control.addEventListener('change', function () {
+            Mobile.releasePlayerButtons();
+            document.body.classList.toggle(setting[1], control.checked);
+            try { storage_set(key, String(control.checked)); } catch (error) { /* The preference still works for this session. */ }
+            canvasResize();
+        });
+    });
+
+
+    var sizeControl = document.getElementById('controlSize');
+    var positionControl = document.getElementById('controlPosition');
+    var movementSurfaceSize;
+    function layoutMovementSurface(size) {
+        if (movementSurfaceSize === size) { return; }
+        movementSurfaceSize = size;
+        // Match the buttons' 14px circular corners and centre the 1px stroke
+        // half a pixel inside their border boxes. Keep the grid's 4px gaps.
+        var outerRadius = 13.5;
+        var innerRadius = Math.min(14.5, (size + 4) / 2 - outerRadius);
+        function draw(selector, width, height, points) {
+            var surface = movement.querySelector(selector);
+            surface.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+            var path = '';
+            points.forEach(function (point, index) {
+                var previous = points[(index + points.length - 1) % points.length];
+                var next = points[(index + 1) % points.length];
+                var dx = Math.sign(point[0] - previous[0]), dy = Math.sign(point[1] - previous[1]);
+                var nx = Math.sign(next[0] - point[0]), ny = Math.sign(next[1] - point[1]);
+                var convex = dx * ny - dy * nx > 0;
+                var radius = convex ? outerRadius : innerRadius;
+                path += (index ? 'L' : 'M') + (point[0] - dx * radius) + ' ' + (point[1] - dy * radius) +
+                    'A' + radius + ' ' + radius + ' 0 0 ' + (convex ? 1 : 0) + ' ' +
+                    (point[0] + nx * radius) + ' ' + (point[1] + ny * radius);
+            });
+            surface.firstElementChild.setAttribute('d', path + 'Z');
+        }
+        var wide = 3 * size + 8, short = 2 * size + 4;
+        var left = size + 4.5, right = 2 * size + 3.5, row = size + 4.5;
+        draw('.movement-surface-portrait', wide, short, [
+            [left, .5], [right, .5], [right, row], [wide - .5, row],
+            [wide - .5, short - .5], [.5, short - .5], [.5, row], [left, row]
+        ]);
+        left = (size + 4) / 2 + .5;
+        right = left + size - 1;
+        var bottomRow = 2 * size + 3.5;
+        draw('.movement-surface-landscape', short, wide, [
+            [left, .5], [right, .5], [right, row], [short - .5, row],
+            [short - .5, bottomRow], [right, bottomRow], [right, wide - .5],
+            [left, wide - .5], [left, bottomRow], [.5, bottomRow], [.5, row], [left, row]
+        ]);
+    }
+    Mobile.layoutPlayerControls = function () {
+        var size = Number(sizeControl.value);
+        var inset = Number(positionControl.value);
+        var actionWidth = Math.max(60, size);
+        var landscape = window.matchMedia('(orientation: landscape)').matches;
+        var movementWidth = landscape ? 2 * size + 4 : 3 * size + 8;
+        var actionsWidth = 2 * actionWidth + 4;
+        var style = document.body.style;
+        style.setProperty('--control-size', size + 'px');
+        layoutMovementSurface(size);
+        style.setProperty('--action-width', actionWidth + 'px');
+        style.setProperty('--movement-width', movementWidth + 'px');
+        style.setProperty('--control-lift', (inset + 8) + 'px');
+        style.setProperty('--deck-inset', inset + 'px');
+        var padding = getComputedStyle(deck);
+        var safeWidth = Math.max(0, parseFloat(padding.paddingLeft) - inset) +
+            Math.max(0, parseFloat(padding.paddingRight) - inset);
+        var width = document.documentElement.clientWidth - safeWidth;
+        // Keep the chosen target size: stack actions when the thumb groups
+        // would collide, and limit only the edge inset on very narrow screens.
+        var stacked = movementWidth + actionsWidth + 12 + 2 * inset > width;
+        if (stacked) { actionsWidth = actionWidth; }
+        document.body.classList.toggle('controls-stacked', stacked);
+        style.setProperty('--actions-width', actionsWidth + 'px');
+        style.setProperty('--deck-inset', Math.max(8, Math.min(inset,
+            Math.floor((width - movementWidth - actionsWidth - 12) / 2))) + 'px');
+    };
+    [[sizeControl, ['48','56','64']], [positionControl, ['12','24','36']]].forEach(function (setting) {
+        var control = setting[0];
+        var key = 'puzzlescript:' + control.id;
+        try {
+            var saved = storage_get(key);
+            if (setting[1].indexOf(saved) >= 0) { control.value = saved; }
+        } catch (error) { /* Use the comfortable default without storage. */ }
+        control.addEventListener('change', function () {
+            Mobile.releasePlayerButtons();
+            Mobile.layoutPlayerControls();
+            try { storage_set(key, control.value); } catch (error) { /* Session preference still applies. */ }
+            canvasResize();
+        });
+    });
+    Mobile.layoutPlayerControls();
+
+    // Keep the existing pixel scale in overlay mode. If the board can fit clear
+    // of the visible buttons, use the nearest such position to its usual centre.
+    Mobile.positionPlayerBoard = function (width, height, x, y) {
+        if (!document.body.classList.contains('touch-enabled') ||
+            !document.body.classList.contains('controls-overlay')) { return null; }
+        Mobile.syncPlayerControls();
+        var maxX = Math.floor(canvas.width - width);
+        var maxY = Math.floor(canvas.height - height);
+        if (maxX < 0 || maxY < 0) { return null; }
+        var origin = canvas.getBoundingClientRect();
+        var obstacles = Array.from(deck.querySelectorAll('button')).filter(function (element) {
+            return element.getClientRects().length > 0;
+        }).map(function (element) {
+            var bounds = element.getBoundingClientRect();
+            return { left: bounds.left - origin.left, right: bounds.right - origin.left,
+                top: bounds.top - origin.top, bottom: bounds.bottom - origin.top };
+        });
+        // Every closest clear placement lies at the centre, a canvas edge, or
+        // a button edge. Try a little breathing room first, then a flush fit.
+        function place(gap) {
+            var columns = [Math.floor(x), 0, maxX];
+            var rows = [Math.floor(y), 0, maxY];
+            obstacles.forEach(function (bounds) {
+                columns.push(Math.floor(bounds.left - width - gap), Math.ceil(bounds.right + gap));
+                rows.push(Math.floor(bounds.top - height - gap), Math.ceil(bounds.bottom + gap));
+            });
+            var best = null;
+            var distance = Infinity;
+            columns.forEach(function (left) {
+                if (left < 0 || left > maxX) { return; }
+                rows.forEach(function (top) {
+                    if (top < 0 || top > maxY) { return; }
+                    var shift = (left - x) * (left - x) + (top - y) * (top - y);
+                    if (shift >= distance) { return; }
+                    var clear = obstacles.every(function (bounds) {
+                        return left + width + gap <= bounds.left || left >= bounds.right + gap ||
+                            top + height + gap <= bounds.top || top >= bounds.bottom + gap;
+                    });
+                    if (clear) { best = { x: left, y: top }; distance = shift; }
+                });
+            });
+            return best;
+        }
+        return place(8) || place(0);
+    };
+
+    // UI gestures must never also become a game tap or held swipe.
+    [toolbar, deck, menu].forEach(function (surface) {
+        surface.addEventListener('touchstart', function (event) {
+            if (Mobile._instance) { Mobile._instance.cancelTouch(); }
+            event.stopPropagation();
+        });
+        surface.addEventListener('mousedown', function (event) { event.stopPropagation(); });
+        function buttonKey(event) {
+            if (event.keyCode === 13 || event.keyCode === 32) { event.stopPropagation(); }
+        }
+        surface.addEventListener('keydown', buttonKey);
+        surface.addEventListener('keyup', buttonKey);
+    });
+    function releaseInput() {
+        Mobile.releasePlayerButtons();
+        if (Mobile._instance) { Mobile._instance.cancelTouch(); }
+    }
+    window.addEventListener('blur', releaseInput);
+    window.addEventListener('resize', function () {
+        releaseInput();
+        Mobile.layoutPlayerControls();
+        canvasResize();
+    });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) { releaseInput(); } });
+    Mobile.syncPlayerControls();
+};
+
+Mobile.syncPlayerControls = function () {
+    var toolbar = Mobile.playerToolbar;
+    if (!toolbar) { return; }
+    var noUndo = 'noundo' in state.metadata;
+    var noRestart = 'norestart' in state.metadata;
+    var noAction = 'noaction' in state.metadata && !textMode;
+    var noHistory = backups.length === 0;
+    var title = state.metadata.title || document.getElementById('gametitle').textContent;
+    var screen = [titleScreen, textMode, curlevel].join('|');
+    var status = [screen, titleMode, noUndo, noRestart, noAction, noHistory, state.fgcolor, state.bgcolor, title].join('|');
+    if (Mobile.playerStatus === status) { return; }
+    if (Mobile.playerScreen !== screen) { Mobile.releasePlayerButtons(); }
+    Mobile.playerScreen = screen;
+    Mobile.playerStatus = status;
+    document.body.style.setProperty('--player-fg', state.fgcolor);
+    document.body.style.setProperty('--player-bg', state.bgcolor);
+    document.getElementById('gametitle').title = title;
+    document.getElementById('backToTitleButton').disabled = titleScreen;
+    var undo = document.getElementById('undoButton');
+    var restart = document.getElementById('restartButton');
+    var action = document.getElementById('actionButton');
+    undo.hidden = noUndo;
+    restart.hidden = noRestart;
+    action.hidden = noAction;
+    undo.disabled = textMode || noHistory;
+    restart.disabled = textMode;
+    var actionLabel = textMode ? (titleScreen ? 'Start' : 'Continue') : 'Action';
+    action.querySelector('span').textContent = actionLabel;
+    action.setAttribute('aria-label', actionLabel + ' (X)');
+    action.title = actionLabel + ' (X)';
+    var actionLayoutChanged = action.parentNode.classList.contains('no-action') !== noAction;
+    action.parentNode.classList.toggle('no-action', noAction);
+    if (actionLayoutChanged && document.body.classList.contains('controls-stacked')) {
+        requestAnimationFrame(function () { canvasResize(); });
+    }
+    ['up','left','down','right'].forEach(function (direction) {
+        document.getElementById('move' + direction).disabled = textMode &&
+            !(titleScreen && titleMode === 1 && (direction === 'up' || direction === 'down'));
+    });
 };
 
 window.Mobile.GestureHandler = function () {
@@ -113,11 +551,21 @@ Mobile.debugDot = function (event) {
         window.addEventListener('touchstart', this.onTouchStart.bind(this));
         window.addEventListener('touchend', this.onTouchEnd.bind(this));
         window.addEventListener('touchmove', this.onTouchMove.bind(this));
+        window.addEventListener('touchcancel', this.cancelTouch.bind(this));
     };
 
     proto.bootstrap = function () {
-        this.showTab();
-        this.disableScrolling();
+        if (Mobile.playerToolbar) {
+            Mobile.playerToolbar.classList.add('touch-enabled');
+            document.body.classList.add('touch-enabled');
+            var links = document.getElementById('playerLinks');
+            if (links) { document.querySelector('.player-menu-footer').appendChild(links); }
+            Mobile.layoutPlayerControls();
+            canvasResize();
+        } else {
+            this.showTab();
+            this.disableScrolling();
+        }
         if (!this.isAudioSupported()) {
             this.disableAudio();
         }
@@ -128,6 +576,9 @@ Mobile.debugDot = function (event) {
 
     proto.onTouchStart = function (event) {
         if (this.isTouching) {
+            return;
+        }
+        if (Mobile.playerToolbar && !document.querySelector('.gameContainer').contains(event.target)) {
             return;
         }
 
@@ -177,7 +628,7 @@ Mobile.debugDot = function (event) {
     };
 
     proto.onTouchMove = function (event) {
-        if (!this.isFocused) {
+        if (!this.isFocused || !this.isTouching) {
             return;
         }
         if (levelEditorOpened) {
@@ -196,6 +647,12 @@ Mobile.debugDot = function (event) {
 
         prevent(event);
         return false;
+    };
+
+    proto.cancelTouch = function () {
+        this.isTouching = false;
+        this.mayBeSwiping = false;
+        this.endRepeatWatcher();
     };
 
     proto.handleFocusChange = function (event) {
@@ -450,6 +907,11 @@ Mobile.debugDot = function (event) {
     };
 
     proto.toggleMenu = function () {
+        // Player controls are always available; retain the gesture menu only
+        // for the editor, where there is no player header.
+        if (Mobile.playerToolbar) {
+            return;
+        }
         if (this.isMenuVisible) {
             this.hideMenu();
         } else {
@@ -874,5 +1336,6 @@ function Animatable(key, increment, update) {
         };
     }
 
+    Mobile.setupPlayerControls();
     Mobile.enable();
 }());

@@ -5,243 +5,209 @@
 <meta name="description" content="__GAMETITLE__">
 <title>__GAMETITLE__</title>
 <style>
-
+html { height: 100%; }
 body {
-	background-color:___BGCOLOR___;
-	font-family:"Courier New", Courier, monospace;
+    --player-bg: black;
+    --player-fg: lightblue;
+    --control-size: 56px;
+    --action-width: 60px;
+    --movement-width: 176px;
+    --actions-width: 124px;
+    --deck-inset: 24px;
+    --control-lift: 32px;
+    margin: 0;
+    height: 100%;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: "Courier New", Courier, monospace;
+    color: var(--player-fg);
+}
+.player-toolbar {
+    flex: none;
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    align-items: center;
+    gap: 4px;
+    min-height: 48px;
+    padding: env(safe-area-inset-top) max(8px, env(safe-area-inset-right)) 0 max(8px, env(safe-area-inset-left));
+    user-select: none;
+    -webkit-user-select: none;
+}
+.player-identity { position: relative; min-width: 0; min-height: 44px; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+.player-toolbar h1 {
+    min-width: 0;
+    margin: 0;
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#homepagelink { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 12px/16px system-ui, sans-serif; text-decoration-thickness: 1px; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); text-underline-offset: 3px; touch-action: manipulation; }
+#homepagelink::after { content: ''; position: absolute; inset: 0; }
+.player-controls { display: flex; align-items: center; min-height: 44px; }
+.player-controls:last-child { justify-content: flex-end; }
+.player-button {
+    position: relative;
+    box-sizing: border-box;
+    flex: 0 0 44px;
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: inherit;
+    font: 500 11px/14px system-ui, sans-serif;
+    cursor: pointer;
     touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
-#gameCanvas {
-  position:absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  bottom: 0px;
-  right:0px;
-  border: 0px;
-  background-color: ___BGCOLOR___; 
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -webkit-crisp-edges;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-} 
+.player-button::before { content: ''; position: absolute; inset: 0; border: 1px solid currentColor; border-radius: inherit; background: currentColor; opacity: 0; pointer-events: none; }
+.player-button svg { position: relative; display: block; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; opacity: .8; pointer-events: none; }
+.player-button span { position: relative; pointer-events: none; }
+.player-deck { display: none; }
+.touch-enabled .player-deck {
+    display: flex;
+    flex: none;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 4px calc(var(--deck-inset) + env(safe-area-inset-right)) calc(var(--control-lift) + env(safe-area-inset-bottom)) calc(var(--deck-inset) + env(safe-area-inset-left));
+}
+.player-movement { position: relative; display: grid; grid-template: repeat(2, var(--control-size)) / repeat(3, var(--control-size)); gap: 4px; }
+.movement-surface { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; fill: var(--player-bg); fill: color-mix(in srgb, currentColor 8%, var(--player-bg)); stroke: currentColor; stroke-opacity: .18; stroke-width: 1px; }
+.movement-surface path { vector-effect: non-scaling-stroke; }
+.movement-surface-landscape { display: none; }
+.player-movement .move-up { grid-area: 1 / 2; }
+.player-movement .move-left { grid-area: 2 / 1; }
+.player-movement .move-down { grid-area: 2 / 2; }
+.player-movement .move-right { grid-area: 2 / 3; }
+.player-actions { display: grid; grid-template: repeat(2, var(--control-size)) / repeat(2, var(--action-width)); gap: 4px; }
+.player-deck .player-button { height: var(--control-size); border-radius: 14px; }
+.player-deck .player-button svg { width: 28px; height: 28px; stroke-width: 1.75; opacity: .9; }
+.player-actions .player-button svg { width: 24px; height: 24px; }
+.player-actions .player-button { width: var(--action-width); }
+.player-actions #restartButton { grid-area: 1 / 2; }
+.player-actions #undoButton { grid-area: 2 / 1; }
+.player-actions #actionButton { grid-area: 1 / 1; }
+.player-actions.no-action #undoButton { grid-area: 2 / 2; }
+.player-deck .player-button { border: 1px solid transparent; }
+.player-deck .player-button::before { inset: -1px; }
+.player-actions .player-button { border-radius: 18px; border-color: color-mix(in srgb, currentColor 32%, transparent); background: color-mix(in srgb, currentColor 12%, var(--player-bg)); }
+.player-actions .player-button svg { opacity: 1; }
+body:not(.controls-labels) .player-actions .player-button span { display: none; }
+.controls-swapped .player-deck { flex-direction: row-reverse; }
+.controls-stacked .player-actions { grid-template: repeat(3, var(--control-size)) / var(--action-width); }
+.controls-stacked .player-actions #restartButton { grid-area: 1 / 1; }
+.controls-stacked .player-actions #undoButton { grid-area: 2 / 1; }
+.controls-stacked .player-actions #actionButton { grid-area: 3 / 1; }
+.controls-stacked .player-actions.no-action { grid-template-rows: repeat(2, var(--control-size)); }
+.touch-enabled .player-toolbar { grid-template-columns: 48px minmax(0,1fr) 48px; min-height: 52px; }
+.touch-enabled .player-toolbar .player-button { flex-basis: 48px; width: 48px; height: 48px; }
+.touch-enabled .player-toolbar .player-button svg { width: 24px; height: 24px; }
+@media (hover: hover) {
+    .player-button:hover:not(:disabled)::before { opacity: .16; }
+    .player-button:hover:not(:disabled) svg { opacity: 1; }
+}
+.player-button:active:not(:disabled)::before, .player-button.is-held::before { opacity: .26; }
+.player-button:focus-visible, .player-menu :is(button, input, select, a):focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+#gameCanvas:focus, .player-menu-panel:focus { outline: none; }
+.player-button:disabled { opacity: .3; cursor: default; }
+.player-button[hidden], body:not(.touch-enabled) .touch-control { display: none; }
+.gameContainer { position: relative; flex: 1; min-width: 0; min-height: 0; margin-left: env(safe-area-inset-left); margin-right: env(safe-area-inset-right); touch-action: none; }
+#gameCanvas { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; -webkit-tap-highlight-color: transparent; image-rendering: -moz-crisp-edges; image-rendering: pixelated; image-rendering: crisp-edges; }
+#errormessage { display: block; flex: none; padding: 8px 12px; text-align: center; font-size: 14px; line-height: 20px; }
+#errormessage:empty { display: none; }
+.player-menu { position: fixed; z-index: 10; inset: 0; display: flex; align-items: center; justify-content: center; padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left)); background: rgba(0,0,0,.45); }
+.player-menu[hidden] { display: none; }
+.player-menu-panel { max-height: 100%; overflow-y: auto; width: 340px; max-width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid color-mix(in srgb, currentColor 24%, transparent); border-radius: 18px; color: var(--player-fg); background: var(--player-bg); box-shadow: 0 16px 64px rgba(0,0,0,.35); display: grid; gap: 4px; }
+.player-menu button, .player-menu a, .player-menu label { display: flex; align-items: center; justify-content: space-between; min-height: 44px; box-sizing: border-box; padding: 8px 12px; font: 14px/20px system-ui, sans-serif; border: 0; border-radius: 10px; color: inherit; background: transparent; touch-action: manipulation; cursor: pointer; }
+.player-menu-header, .player-menu-footer { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; }
+.player-menu-header { justify-content: space-between; }
+.player-menu-header h2 { margin: 0; padding-left: 8px; font: 500 16px/24px system-ui, sans-serif; }
+.player-menu .player-menu-header button { flex: none; width: 44px; height: 44px; padding: 0; }
+.player-menu label { gap: 12px; padding: 0 8px; }
+.player-menu-toggles { display: contents; }
+.player-menu-footer { border-top: 1px solid color-mix(in srgb, currentColor 16%, transparent); }
+.player-menu-footer button { flex: 1; }
+.player-menu button { justify-content: center; }
+.player-menu button:disabled { opacity: .3; cursor: default; }
+.player-menu select { min-height: 44px; max-width: 160px; padding: 4px 8px; font: 16px system-ui, sans-serif; border: 1px solid color-mix(in srgb, currentColor 24%, transparent); border-radius: 8px; color: inherit; background: var(--player-bg); }
+.player-menu input { appearance: none; -webkit-appearance: none; position: relative; flex: none; box-sizing: border-box; width: 36px; height: 22px; margin: 0 0 0 8px; border: 1px solid currentColor; border-radius: 12px; color: inherit; background: transparent; cursor: pointer; }
+.player-menu input::before { content: ''; position: absolute; width: 14px; height: 14px; top: 3px; left: 3px; border-radius: 50%; background: currentColor; }
+.player-menu input:checked { background: var(--player-fg); }
+.player-menu input:checked::before { left: 17px; background: var(--player-bg); }
 
-.homepagelink {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 50%;
+.player-menu #backToTitleButton { justify-content: flex-start; }
+#playerLinks { flex: none; text-align: center; }
+body > #playerLinks a { display: inline-block; padding: 8px 16px; font-size: 14px; }
+@media (orientation: landscape) and (min-width: 560px) {
+    .player-menu-toggles { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .player-menu-toggles label { gap: 8px; padding: 0 4px; }
+    .player-menu-panel { width: 560px; padding: 8px; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; row-gap: 3px; }
+}
+.disable-select { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+@media (max-width: 400px) {
+    .player-toolbar h1 { font-size: 18px; }
+}
+@media (orientation: landscape) {
+    .movement-surface-portrait { display: none; }
+    .movement-surface-landscape { display: block; }
+    .player-movement { grid-template: repeat(3, var(--control-size)) / repeat(2, var(--control-size)); }
+    .player-movement .move-up { grid-area: 1 / 1 / 2 / 3; width: var(--control-size); justify-self: center; }
+    .player-movement .move-left { grid-area: 2 / 1; }
+    .player-movement .move-right { grid-area: 2 / 2; }
+    .player-movement .move-down { grid-area: 3 / 1 / 4 / 3; width: var(--control-size); justify-self: center; }
+    body.touch-enabled:not(.controls-overlay) { display: grid; grid-template-columns: calc(var(--movement-width) + var(--deck-inset) + 12px + env(safe-area-inset-left)) minmax(0,1fr) calc(var(--actions-width) + var(--deck-inset) + 12px + env(safe-area-inset-right)); grid-template-rows: auto minmax(0,1fr) auto; }
+    .touch-enabled:not(.controls-overlay) .player-toolbar { grid-area: 1 / 1 / 2 / 4; }
+    .touch-enabled:not(.controls-overlay) .gameContainer { grid-area: 2 / 2; margin: 0; }
+    .touch-enabled:not(.controls-overlay) .player-deck { display: contents; }
+    .touch-enabled:not(.controls-overlay) .player-movement { grid-area: 2 / 1; align-self: end; justify-self: start; margin: 0 0 calc(var(--control-lift) + env(safe-area-inset-bottom)) calc(var(--deck-inset) + env(safe-area-inset-left)); }
+    .touch-enabled:not(.controls-overlay) .player-actions { grid-area: 2 / 3; align-self: end; justify-self: end; margin: 0 calc(var(--deck-inset) + env(safe-area-inset-right)) calc(var(--control-lift) + env(safe-area-inset-bottom)) 0; }
+    .touch-enabled:not(.controls-overlay) #errormessage { grid-area: 3 / 1 / 4 / 4; }
+    body.touch-enabled.controls-swapped:not(.controls-overlay) { grid-template-columns: calc(var(--actions-width) + var(--deck-inset) + 12px + env(safe-area-inset-left)) minmax(0,1fr) calc(var(--movement-width) + var(--deck-inset) + 12px + env(safe-area-inset-right)); }
+    .touch-enabled.controls-swapped:not(.controls-overlay) .player-movement { grid-column: 3; justify-self: end; margin-left: 0; margin-right: calc(var(--deck-inset) + env(safe-area-inset-right)); }
+    .touch-enabled.controls-swapped:not(.controls-overlay) .player-actions { grid-column: 1; justify-self: start; margin-right: 0; margin-left: calc(var(--deck-inset) + env(safe-area-inset-left)); }
+}
+.touch-enabled.controls-overlay .player-deck { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; pointer-events: none; }
+.controls-overlay .player-deck .player-button { pointer-events: auto; }
+.controls-overlay .movement-surface { fill: var(--player-bg); fill: color-mix(in srgb, var(--player-bg) 72%, transparent); stroke-opacity: .28; }
+.controls-overlay .player-actions .player-button { background: var(--player-bg); background: color-mix(in srgb, var(--player-bg) 72%, transparent); }
+.controls-overlay .player-actions .player-button { border-color: color-mix(in srgb, currentColor 48%, transparent); }
+.controls-overlay .player-actions .player-button:is(:active,.is-held) { background: var(--player-bg); background: color-mix(in srgb, var(--player-bg) 90%, transparent); }
+@media (forced-colors: active) {
+    .player-deck .player-button, .player-menu-panel, .player-menu select { border: 1px solid ButtonText; }
+    .movement-surface { fill: Canvas; stroke: ButtonText; stroke-opacity: 1; }
+    .player-menu input { appearance: auto; -webkit-appearance: auto; }
+    .player-menu input::before { display: none; }
 }
 
-h1 {
-	color:___TEXTCOLOR___;
-	font-weight:normal;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    height:2em;
-    margin-top:0.5em;
-    margin-bottom: 0.5em;
-}
-a {
-	color:___TEXTCOLOR___;
-}
-.title {	
-	background-color:none;
-	text-align:center;
-	font-size:100%;
-	float:center;
-	color:gray;
-	position:absolute;
-	left:10%;
-	right:10%;
-	top:0%;
-	height:3em;
-}
 
-.footer {	
-	background-color:none;
-	text-align:center;
-	float:center;
-	color:white;
-	position:absolute;
-	left:0%;
-	right:0%;
-	height:3em;
-	bottom:0;
-}
-.gameContainer {
-	background-color:none;
-	position:absolute;
-	left:0%;
-	right:0%;
-	top:3.5em;
-	bottom:3em;
-  touch-action: none;
-}
-
-  .mobile-menu {
-      position: relative;
-      top: 5em;
-      left:0.7em;
-      margin-left: auto;
-      margin-right: auto;
-      font-weight: bold;
-      border-radius: 0.25em;
-  }
-
-  .mobile-menu.item-count-3 {
-      width: 30em;
-  }
-  .mobile-menu.item-count-3 .button {
-      width: 28.3333%;
-      /* scale the height of the button relative to the width of .mobile-menu */
-      padding: 7.5% 0%;
-  }
-
-  .mobile-menu.item-count-2 {
-      width: 20em;
-  }
-  .mobile-menu.item-count-2 .button {
-      width: 46%;
-      /* scale the height of the button relative to the width of .mobile-menu */
-      padding: 12.1765% 0%;
-  }
-
-  .mobile-menu.item-count-1 {
-      width: 10em;
-  }
-  .mobile-menu.item-count-1 .button {
-      width: 98%;
-      /* scale the height of the button relative to the width of .mobile-menu */
-      padding: 26.5% 0%;
-  }
-
-  .mobile-menu,
-  .tab-icon,
-  .mobile-menu .close {
-      background: rgba(0,0,0,0.4);
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      color: rgba(255, 255, 255, 1);
-  }
-
-  .mobile-menu .button {
-      margin: 2%;
-      border-radius: 0.25em;
-      text-align: center;
-      float: left;
-  }
-  .mobile-menu .clear {
-      clear: both;
-  }
-
-  .tab-affordance,
-  .close-affordance {
-      width: 6em;
-      height: 6em;
-      position: absolute;
-      z-index: 1000;
-  }
-
-  .tab-affordance {
-      left: -2em;
-      top: 5em;
-  }
-
-  .close-affordance {
-      left: -4em;
-      top: -1em;
-  }
-
-  .tab-icon,
-  .mobile-menu .close {
-      height: 48px;
-      position: absolute;
-      border-radius: 6px;
-  }
-
-  .tab-icon {
-    left: 0;
-      top: 70px;
-      width: 18px;
-      border-radius: 0 6px 6px 0;
-      border-left: 0;
-  }
-
-  .mobile-menu .close {
-      left: -18px;
-      width: 18px;
-      top: 0px;
-      border-radius: 6px 0 0 6px;
-      border-right: 0;
-  }
-
-  .tab-icon .slice,
-  .mobile-menu .close .slice {
-      margin: 4.5px 1px;
-      width: 2px;
-      height: 80%;
-      background: rgba(255, 255, 255, 0.4);
-  }
-
-  .tab-icon .slice {
-      float: right;
-  }
-
-  .tab-icon .slice:first-child {
-       margin-right: 4.5px;
-  }
-
-  .mobile-menu .close .slice {
-      float: left;
-  }
-  .mobile-menu .close .slice:first-child {
-       margin-left: 4.5px;
-  }
-
-  @media screen and (max-width: 32em) {
-      .mobile-menu {
-          font-size: 0.8em;
-          width: 90%;
-      }
-  }
-  @media screen and (max-width: 24em) {
-      .mobile-menu {
-          font-size: 0.65em;
-          width: 90%;
-      }
-  }
-
- .disable-select {
-     -webkit-touch-callout: none;
-     -webkit-user-select: none;
-     -khtml-user-select: none;
-     -moz-user-select: none;
-     -ms-user-select: none;
-     user-select: none;
- }
-
-a {
-    display:inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 80%;
-}
 </style>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<style>
+body, #gameCanvas { background-color: ___BGCOLOR___; }
+h1, a { color: ___TEXTCOLOR___; }
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 </head>
 <body>
-<div class="title"><h1 id="gametitle">__GAMETITLE__</h1></div>
+<header class="player-toolbar" id="playerToolbar" aria-label="Game controls"><div class="player-identity"><h1 id="gametitle">__GAMETITLE__</h1><a id="homepagelink" href="__HOMEPAGE__" target="_blank" rel="noopener">__HOMEPAGE_STRIPPED_PROTOCOL__</a></div></header>
 <div class="gameContainer">
 <canvas 
     id="gameCanvas" ></canvas>
 </div> 
-<div class="footer">
-<span id="errormessage" style="color:red;"></span>
-<a id="homepagelink" href="__HOMEPAGE__" target="_blank">__HOMEPAGE_STRIPPED_PROTOCOL__</a>
-</div>
+<span id="errormessage" style="color:red;" role="alert"></span>
 
 <!--___SCRIPTINSERT___-->
 <script>
@@ -7489,21 +7455,25 @@ function playSound(seed,ignore) {
 
 
 
+let audioButtonEnabled = true;
+
 function killAudioButton(){
+  audioButtonEnabled = false;
   const mb = document.getElementById("muteButton");
   const umb = document.getElementById("unMuteButton");
   if (mb){
-    mb.remove();
-    umb.remove();
+    mb.style.display="none";
+    umb.style.display="none";
   }
 }
 
 function showAudioButton(){
+  audioButtonEnabled = true;
   const mb = document.getElementById("muteButton");
   const umb = document.getElementById("unMuteButton");
   if (mb){
-    mb.style.display="block"; 
-    umb.style.display="none";
+    mb.style.display=muted ? "none" : "";
+    umb.style.display=muted ? "" : "none";
   }
 }
 
@@ -7522,7 +7492,7 @@ function muteAudio() {
   const umb = document.getElementById("unMuteButton");
   if (mb){
     mb.style.display="none"; 
-    umb.style.display="block";
+    umb.style.display=audioButtonEnabled ? "" : "none";
   }
 }
 function unMuteAudio() {
@@ -7530,10 +7500,11 @@ function unMuteAudio() {
   const mb = document.getElementById("muteButton");
   const umb = document.getElementById("unMuteButton");
   if (mb){
-    mb.style.display="block"; 
+    mb.style.display=audioButtonEnabled ? "" : "none";
     umb.style.display="none";
   }
 }
+
 </script>
 <script>
 // Minimal CodeMirror stub + StringStream for player (play.html), standalone export (standalone.html), and tests.
@@ -8339,6 +8310,9 @@ function glyphCount() {
 }
 
 function redraw() {
+    if (window.Mobile && Mobile.syncPlayerControls) {
+        Mobile.syncPlayerControls();
+    }
     if (cellwidth === 0 || cellheight === 0) {
         return;
     }
@@ -8679,6 +8653,11 @@ function canvasResize(displaylevel) {
         cellheight = cellwidth * h / w;
         yoffset = (canvas.height - cellheight * screenheight) / 2;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
+    }
+
+    if (!levelEditorOpened && window.Mobile && Mobile.positionPlayerBoard) {
+        var position = Mobile.positionPlayerBoard(cellwidth * screenwidth, cellheight * screenheight, xoffset, yoffset);
+        if (position) { xoffset = position.x; yoffset = position.y; }
     }
 
     if (levelEditorOpened && !textMode) {
@@ -17785,7 +17764,7 @@ window.Mobile = {};
 //stolen from https://github.com/Modernizr/Modernizr/blob/master/feature-detects/touchevents.js
 Mobile.hasTouch = function () {
     var bool;
-    if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+    if (navigator.maxTouchPoints > 0 || ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
         bool = true;
     } else {
         /*
@@ -17799,12 +17778,450 @@ Mobile.hasTouch = function () {
 }
 
 Mobile.enable = function (force) {
-    if (force || Mobile.hasTouch() && !Mobile._instance) {
+    if ((force || Mobile.hasTouch()) && !Mobile._instance) {
         Mobile._instance = new Mobile.GestureHandler();
         Mobile._instance.bindEvents();
         Mobile._instance.bootstrap();
     }
     return Mobile._instance;
+};
+
+// The player shares these controls with exported games. The editor keeps its
+// own layout and focus handling.
+Mobile.setupPlayerControls = function () {
+    var toolbar = document.getElementById('playerToolbar');
+    if (!toolbar) {
+        return;
+    }
+    Mobile.playerToolbar = toolbar;
+    var canvas = document.getElementById('gameCanvas');
+    canvas.setAttribute('tabindex', '-1');
+    var releaseButtons = [];
+    // Consume the compatibility click even if activation hides its button
+    // (mute/unmute) or opens a menu under the pointer before click dispatch.
+    var skipPointerClick = false;
+    document.addEventListener('pointerdown', function () { skipPointerClick = false; }, true);
+    document.addEventListener('click', function (event) {
+        if (skipPointerClick && event.detail > 0) {
+            skipPointerClick = false;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+        }
+    }, true);
+    Mobile.releasePlayerButtons = function () {
+        releaseButtons.forEach(function (release) { release(); });
+    };
+    var icons = {
+        menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+        sound: '<path d="M11 4 6 8H3v8h3l5 4Z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>',
+        muted: '<path d="M11 4 6 8H3v8h3l5 4Z"/><path d="m16 9 6 6m0-6-6 6"/>',
+        restart: '<path d="M4 10a8 8 0 1 1 1 7M4 4v6h6"/>',
+        undo: '<path d="m8 4-5 5 5 5M3 9h11a6 6 0 0 1 0 12h-2"/>',
+        action: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/>',
+        up: '<path d="m7 14 5-5 5 5"/>',
+        down: '<path d="m7 10 5 5 5-5"/>',
+        left: '<path d="m14 7-5 5 5 5"/>',
+        right: '<path d="m10 7 5 5-5 5"/>'
+    };
+    function input(code) {
+        Mobile.releasePlayerButtons();
+        lastDownTarget = canvas;
+        onKeyDown({ keyCode: code });
+        onKeyUp({ keyCode: code });
+    }
+    function button(id, label, icon, callback, heldCode, caption) {
+        var element = document.createElement('button');
+        element.type = 'button';
+        element.id = id;
+        element.className = 'player-button';
+        element.setAttribute('aria-label', label);
+        element.title = label;
+        element.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + icons[icon] + '</svg>';
+        if (caption) {
+            var text = document.createElement('span');
+            text.textContent = caption;
+            element.appendChild(text);
+        }
+        function activate(keyboard) {
+            callback(keyboard);
+            if (keyboard && (id === 'muteButton' || id === 'unMuteButton')) {
+                document.getElementById(muted ? 'unMuteButton' : 'muteButton').focus();
+            } else if (!keyboard && !Mobile.playerMenuOpen) {
+                canvas.focus({ preventScroll: true });
+            }
+        }
+        var pointer = null;
+        var pointerUsed = false;
+        function release() {
+            if (pointer && pointer.ownsKey) {
+                onKeyUp({ keyCode: heldCode });
+            }
+            pointer = null;
+            element.classList.remove('is-held');
+        }
+        releaseButtons.push(release);
+        function inside(event) {
+            var bounds = element.getBoundingClientRect();
+            return event.clientX >= bounds.left && event.clientX <= bounds.right &&
+                event.clientY >= bounds.top && event.clientY <= bounds.bottom;
+        }
+        if (window.PointerEvent) {
+            element.addEventListener('pointerdown', function (event) {
+                if (event.button !== 0 || element.disabled || pointer) { return; }
+                event.preventDefault();
+                pointerUsed = true;
+                skipPointerClick = true;
+                pointer = { id: event.pointerId, ownsKey: heldCode && keybuffer.indexOf(heldCode) < 0 };
+                element.setPointerCapture(event.pointerId);
+                element.classList.add('is-held');
+                if (heldCode) {
+                    // Use the engine's repeat timing, throttling and norepeat_action.
+                    // Setting the input target directly also allows two-thumb input.
+                    lastDownTarget = canvas;
+                    onKeyDown({ keyCode: heldCode });
+                }
+            });
+            element.addEventListener('pointermove', function (event) {
+                if (pointer && event.pointerId === pointer.id && !inside(event)) { release(); }
+            });
+            element.addEventListener('pointerup', function (event) {
+                if (!pointer || event.pointerId !== pointer.id) { return; }
+                var tap = !heldCode && !element.disabled && inside(event);
+                release();
+                if (tap) { activate(false); }
+            });
+            element.addEventListener('pointercancel', release);
+            element.addEventListener('lostpointercapture', release);
+        } else {
+            // Older touch browsers can suppress the first click after a swipe.
+            var touchStart;
+            element.addEventListener('touchstart', function (event) {
+                touchStart = event.touches.length === 1 ? event.touches[0] : null;
+            });
+            element.addEventListener('touchmove', function (event) {
+                if (touchStart && (event.touches.length !== 1 ||
+                    Math.abs(event.touches[0].clientX - touchStart.clientX) > 10 ||
+                    Math.abs(event.touches[0].clientY - touchStart.clientY) > 10)) { touchStart = null; }
+            });
+            element.addEventListener('touchcancel', function () { touchStart = null; });
+            element.addEventListener('touchend', function (event) {
+                var tap = touchStart && !element.disabled && !event.touches.length && inside(event.changedTouches[0]);
+                touchStart = null;
+                event.preventDefault();
+                if (tap) { activate(false); }
+            });
+        }
+        element.addEventListener('click', function (event) {
+            if (!pointerUsed || event.detail === 0) { activate(event.detail === 0); }
+            pointerUsed = false;
+        });
+        return element;
+    }
+    var leading = document.createElement('div');
+    var trailing = document.createElement('div');
+    leading.className = trailing.className = 'player-controls';
+    var menuButton = button('gameMenuButton', 'Game menu', 'menu', function (keyboard) { setMenu(!Mobile.playerMenuOpen, keyboard); });
+    menuButton.classList.add('touch-control');
+    menuButton.setAttribute('aria-expanded', 'false');
+    menuButton.setAttribute('aria-controls', 'playerMenu');
+    leading.appendChild(menuButton);
+    trailing.appendChild(button('muteButton', 'Mute sound (M)', 'sound', muteAudio));
+    trailing.appendChild(button('unMuteButton', 'Unmute sound (M)', 'muted', unMuteAudio));
+    toolbar.insertBefore(leading, toolbar.firstChild);
+    toolbar.appendChild(trailing);
+    killAudioButton();
+
+    var deck = document.createElement('div');
+    deck.className = 'player-deck';
+    deck.id = 'playerDeck';
+    var movement = document.createElement('div');
+    movement.className = 'player-movement';
+    movement.setAttribute('role', 'group');
+    movement.setAttribute('aria-label', 'Movement');
+    // A single quiet silhouette groups the directions; the native buttons
+    // retain their full touch targets and separate keyboard focus.
+    movement.innerHTML = '<svg class="movement-surface movement-surface-portrait" aria-hidden="true" focusable="false"><path/></svg>' +
+        '<svg class="movement-surface movement-surface-landscape" aria-hidden="true" focusable="false"><path/></svg>';
+    [['up',38],['left',37],['down',40],['right',39]].forEach(function (direction) {
+        var element = button('move' + direction[0], 'Move ' + direction[0], direction[0], function () { input(direction[1]); }, direction[1]);
+        element.classList.add('move-' + direction[0]);
+        movement.appendChild(element);
+    });
+    var actions = document.createElement('div');
+    actions.className = 'player-actions';
+    actions.setAttribute('role', 'group');
+    actions.setAttribute('aria-label', 'Game actions');
+    actions.appendChild(button('restartButton', 'Restart level (R)', 'restart', function () { input(82); }, null, 'Restart'));
+    actions.appendChild(button('undoButton', 'Undo move (Z)', 'undo', function () { input(90); }, 90, 'Undo'));
+    actions.appendChild(button('actionButton', 'Action (X)', 'action', function () { input(88); }, 88, 'Action'));
+    deck.appendChild(movement);
+    deck.appendChild(actions);
+    document.querySelector('.gameContainer').after(deck);
+
+    var menu = document.createElement('div');
+    menu.id = 'playerMenu';
+    menu.className = 'player-menu';
+    menu.hidden = true;
+    menu.innerHTML = '<div class="player-menu-panel" role="dialog" aria-modal="true" aria-label="Game menu">' +
+        '<div class="player-menu-header"><h2>Game menu</h2><button type="button" id="closeMenuButton" class="player-button" aria-label="Close menu" title="Close menu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>' +
+        '<label><span>Button size</span><select id="controlSize"><option value="48">Compact</option><option value="56" selected>Comfortable</option><option value="64">Large</option></select></label>' +
+        '<label><span>Position</span><select id="controlPosition"><option value="12">Near edges</option><option value="24" selected>Inset</option><option value="36">Further in</option></select></label>' +
+        '<div class="player-menu-toggles"><label><span>Button labels</span><input type="checkbox" id="buttonLabels" checked></label>' +
+        '<label><span>Swap control sides</span><input type="checkbox" id="swapControls"></label>' +
+        '<label><span>Overlay controls</span><input type="checkbox" id="overlayControls" checked></label></div>' +
+        '<div class="player-menu-footer"><button type="button" id="backToTitleButton">Back to title</button></div></div>';
+    document.body.appendChild(menu);
+    var panel = menu.firstChild;
+    panel.tabIndex = -1;
+    var links = document.getElementById('playerLinks');
+    if (links) {
+        links.hidden = false;
+        if (Mobile.hasTouch()) { panel.querySelector('.player-menu-footer').appendChild(links); }
+    }
+    function setMenu(open, keyboard) {
+        Mobile.releasePlayerButtons();
+        if (Mobile._instance) { Mobile._instance.cancelTouch(); }
+        keybuffer = [];
+        Mobile.playerMenuOpen = open;
+        menu.hidden = !open;
+        menuButton.setAttribute('aria-expanded', String(open));
+        if (open) {
+            lastDownTarget = null;
+            // Pointer users enter the dialog without a keyboard focus ring.
+            (keyboard ? document.getElementById('closeMenuButton') : panel).focus({ preventScroll: true });
+        } else {
+            (keyboard ? menuButton : canvas).focus({ preventScroll: true });
+            lastDownTarget = canvas;
+        }
+    }
+    document.getElementById('backToTitleButton').addEventListener('click', function (event) { setMenu(false, event.detail === 0); input(27); });
+    document.getElementById('closeMenuButton').addEventListener('click', function (event) { setMenu(false, event.detail === 0); });
+    menu.addEventListener('click', function (event) { if (event.target === menu) { setMenu(false); } });
+    menu.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') { event.preventDefault(); setMenu(false, true); }
+        if (event.key === 'Tab') {
+            var focusable = Array.from(panel.querySelectorAll('button:not(:disabled), input, select, a[href]'));
+            var first = focusable[0], last = focusable[focusable.length - 1];
+            if (event.shiftKey && (document.activeElement === first || document.activeElement === panel)) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+        event.stopPropagation();
+    });
+    menu.addEventListener('keyup', function (event) { event.stopPropagation(); });
+    [['buttonLabels','controls-labels'],['swapControls','controls-swapped'],['overlayControls','controls-overlay']].forEach(function (setting) {
+        var control = document.getElementById(setting[0]);
+        var key = 'puzzlescript:' + setting[0];
+        try {
+            var saved = storage_get(key);
+            if (saved === 'true' || saved === 'false') { control.checked = saved === 'true'; }
+        } catch (error) { /* Keep the default when storage is unavailable. */ }
+        document.body.classList.toggle(setting[1], control.checked);
+        control.addEventListener('change', function () {
+            Mobile.releasePlayerButtons();
+            document.body.classList.toggle(setting[1], control.checked);
+            try { storage_set(key, String(control.checked)); } catch (error) { /* The preference still works for this session. */ }
+            canvasResize();
+        });
+    });
+
+
+    var sizeControl = document.getElementById('controlSize');
+    var positionControl = document.getElementById('controlPosition');
+    var movementSurfaceSize;
+    function layoutMovementSurface(size) {
+        if (movementSurfaceSize === size) { return; }
+        movementSurfaceSize = size;
+        // Match the buttons' 14px circular corners and centre the 1px stroke
+        // half a pixel inside their border boxes. Keep the grid's 4px gaps.
+        var outerRadius = 13.5;
+        var innerRadius = Math.min(14.5, (size + 4) / 2 - outerRadius);
+        function draw(selector, width, height, points) {
+            var surface = movement.querySelector(selector);
+            surface.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+            var path = '';
+            points.forEach(function (point, index) {
+                var previous = points[(index + points.length - 1) % points.length];
+                var next = points[(index + 1) % points.length];
+                var dx = Math.sign(point[0] - previous[0]), dy = Math.sign(point[1] - previous[1]);
+                var nx = Math.sign(next[0] - point[0]), ny = Math.sign(next[1] - point[1]);
+                var convex = dx * ny - dy * nx > 0;
+                var radius = convex ? outerRadius : innerRadius;
+                path += (index ? 'L' : 'M') + (point[0] - dx * radius) + ' ' + (point[1] - dy * radius) +
+                    'A' + radius + ' ' + radius + ' 0 0 ' + (convex ? 1 : 0) + ' ' +
+                    (point[0] + nx * radius) + ' ' + (point[1] + ny * radius);
+            });
+            surface.firstElementChild.setAttribute('d', path + 'Z');
+        }
+        var wide = 3 * size + 8, short = 2 * size + 4;
+        var left = size + 4.5, right = 2 * size + 3.5, row = size + 4.5;
+        draw('.movement-surface-portrait', wide, short, [
+            [left, .5], [right, .5], [right, row], [wide - .5, row],
+            [wide - .5, short - .5], [.5, short - .5], [.5, row], [left, row]
+        ]);
+        left = (size + 4) / 2 + .5;
+        right = left + size - 1;
+        var bottomRow = 2 * size + 3.5;
+        draw('.movement-surface-landscape', short, wide, [
+            [left, .5], [right, .5], [right, row], [short - .5, row],
+            [short - .5, bottomRow], [right, bottomRow], [right, wide - .5],
+            [left, wide - .5], [left, bottomRow], [.5, bottomRow], [.5, row], [left, row]
+        ]);
+    }
+    Mobile.layoutPlayerControls = function () {
+        var size = Number(sizeControl.value);
+        var inset = Number(positionControl.value);
+        var actionWidth = Math.max(60, size);
+        var landscape = window.matchMedia('(orientation: landscape)').matches;
+        var movementWidth = landscape ? 2 * size + 4 : 3 * size + 8;
+        var actionsWidth = 2 * actionWidth + 4;
+        var style = document.body.style;
+        style.setProperty('--control-size', size + 'px');
+        layoutMovementSurface(size);
+        style.setProperty('--action-width', actionWidth + 'px');
+        style.setProperty('--movement-width', movementWidth + 'px');
+        style.setProperty('--control-lift', (inset + 8) + 'px');
+        style.setProperty('--deck-inset', inset + 'px');
+        var padding = getComputedStyle(deck);
+        var safeWidth = Math.max(0, parseFloat(padding.paddingLeft) - inset) +
+            Math.max(0, parseFloat(padding.paddingRight) - inset);
+        var width = document.documentElement.clientWidth - safeWidth;
+        // Keep the chosen target size: stack actions when the thumb groups
+        // would collide, and limit only the edge inset on very narrow screens.
+        var stacked = movementWidth + actionsWidth + 12 + 2 * inset > width;
+        if (stacked) { actionsWidth = actionWidth; }
+        document.body.classList.toggle('controls-stacked', stacked);
+        style.setProperty('--actions-width', actionsWidth + 'px');
+        style.setProperty('--deck-inset', Math.max(8, Math.min(inset,
+            Math.floor((width - movementWidth - actionsWidth - 12) / 2))) + 'px');
+    };
+    [[sizeControl, ['48','56','64']], [positionControl, ['12','24','36']]].forEach(function (setting) {
+        var control = setting[0];
+        var key = 'puzzlescript:' + control.id;
+        try {
+            var saved = storage_get(key);
+            if (setting[1].indexOf(saved) >= 0) { control.value = saved; }
+        } catch (error) { /* Use the comfortable default without storage. */ }
+        control.addEventListener('change', function () {
+            Mobile.releasePlayerButtons();
+            Mobile.layoutPlayerControls();
+            try { storage_set(key, control.value); } catch (error) { /* Session preference still applies. */ }
+            canvasResize();
+        });
+    });
+    Mobile.layoutPlayerControls();
+
+    // Keep the existing pixel scale in overlay mode. If the board can fit clear
+    // of the visible buttons, use the nearest such position to its usual centre.
+    Mobile.positionPlayerBoard = function (width, height, x, y) {
+        if (!document.body.classList.contains('touch-enabled') ||
+            !document.body.classList.contains('controls-overlay')) { return null; }
+        Mobile.syncPlayerControls();
+        var maxX = Math.floor(canvas.width - width);
+        var maxY = Math.floor(canvas.height - height);
+        if (maxX < 0 || maxY < 0) { return null; }
+        var origin = canvas.getBoundingClientRect();
+        var obstacles = Array.from(deck.querySelectorAll('button')).filter(function (element) {
+            return element.getClientRects().length > 0;
+        }).map(function (element) {
+            var bounds = element.getBoundingClientRect();
+            return { left: bounds.left - origin.left, right: bounds.right - origin.left,
+                top: bounds.top - origin.top, bottom: bounds.bottom - origin.top };
+        });
+        // Every closest clear placement lies at the centre, a canvas edge, or
+        // a button edge. Try a little breathing room first, then a flush fit.
+        function place(gap) {
+            var columns = [Math.floor(x), 0, maxX];
+            var rows = [Math.floor(y), 0, maxY];
+            obstacles.forEach(function (bounds) {
+                columns.push(Math.floor(bounds.left - width - gap), Math.ceil(bounds.right + gap));
+                rows.push(Math.floor(bounds.top - height - gap), Math.ceil(bounds.bottom + gap));
+            });
+            var best = null;
+            var distance = Infinity;
+            columns.forEach(function (left) {
+                if (left < 0 || left > maxX) { return; }
+                rows.forEach(function (top) {
+                    if (top < 0 || top > maxY) { return; }
+                    var shift = (left - x) * (left - x) + (top - y) * (top - y);
+                    if (shift >= distance) { return; }
+                    var clear = obstacles.every(function (bounds) {
+                        return left + width + gap <= bounds.left || left >= bounds.right + gap ||
+                            top + height + gap <= bounds.top || top >= bounds.bottom + gap;
+                    });
+                    if (clear) { best = { x: left, y: top }; distance = shift; }
+                });
+            });
+            return best;
+        }
+        return place(8) || place(0);
+    };
+
+    // UI gestures must never also become a game tap or held swipe.
+    [toolbar, deck, menu].forEach(function (surface) {
+        surface.addEventListener('touchstart', function (event) {
+            if (Mobile._instance) { Mobile._instance.cancelTouch(); }
+            event.stopPropagation();
+        });
+        surface.addEventListener('mousedown', function (event) { event.stopPropagation(); });
+        function buttonKey(event) {
+            if (event.keyCode === 13 || event.keyCode === 32) { event.stopPropagation(); }
+        }
+        surface.addEventListener('keydown', buttonKey);
+        surface.addEventListener('keyup', buttonKey);
+    });
+    function releaseInput() {
+        Mobile.releasePlayerButtons();
+        if (Mobile._instance) { Mobile._instance.cancelTouch(); }
+    }
+    window.addEventListener('blur', releaseInput);
+    window.addEventListener('resize', function () {
+        releaseInput();
+        Mobile.layoutPlayerControls();
+        canvasResize();
+    });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) { releaseInput(); } });
+    Mobile.syncPlayerControls();
+};
+
+Mobile.syncPlayerControls = function () {
+    var toolbar = Mobile.playerToolbar;
+    if (!toolbar) { return; }
+    var noUndo = 'noundo' in state.metadata;
+    var noRestart = 'norestart' in state.metadata;
+    var noAction = 'noaction' in state.metadata && !textMode;
+    var noHistory = backups.length === 0;
+    var title = state.metadata.title || document.getElementById('gametitle').textContent;
+    var screen = [titleScreen, textMode, curlevel].join('|');
+    var status = [screen, titleMode, noUndo, noRestart, noAction, noHistory, state.fgcolor, state.bgcolor, title].join('|');
+    if (Mobile.playerStatus === status) { return; }
+    if (Mobile.playerScreen !== screen) { Mobile.releasePlayerButtons(); }
+    Mobile.playerScreen = screen;
+    Mobile.playerStatus = status;
+    document.body.style.setProperty('--player-fg', state.fgcolor);
+    document.body.style.setProperty('--player-bg', state.bgcolor);
+    document.getElementById('gametitle').title = title;
+    document.getElementById('backToTitleButton').disabled = titleScreen;
+    var undo = document.getElementById('undoButton');
+    var restart = document.getElementById('restartButton');
+    var action = document.getElementById('actionButton');
+    undo.hidden = noUndo;
+    restart.hidden = noRestart;
+    action.hidden = noAction;
+    undo.disabled = textMode || noHistory;
+    restart.disabled = textMode;
+    var actionLabel = textMode ? (titleScreen ? 'Start' : 'Continue') : 'Action';
+    action.querySelector('span').textContent = actionLabel;
+    action.setAttribute('aria-label', actionLabel + ' (X)');
+    action.title = actionLabel + ' (X)';
+    var actionLayoutChanged = action.parentNode.classList.contains('no-action') !== noAction;
+    action.parentNode.classList.toggle('no-action', noAction);
+    if (actionLayoutChanged && document.body.classList.contains('controls-stacked')) {
+        requestAnimationFrame(function () { canvasResize(); });
+    }
+    ['up','left','down','right'].forEach(function (direction) {
+        document.getElementById('move' + direction).disabled = textMode &&
+            !(titleScreen && titleMode === 1 && (direction === 'up' || direction === 'down'));
+    });
 };
 
 window.Mobile.GestureHandler = function () {
@@ -17889,11 +18306,21 @@ Mobile.debugDot = function (event) {
         window.addEventListener('touchstart', this.onTouchStart.bind(this));
         window.addEventListener('touchend', this.onTouchEnd.bind(this));
         window.addEventListener('touchmove', this.onTouchMove.bind(this));
+        window.addEventListener('touchcancel', this.cancelTouch.bind(this));
     };
 
     proto.bootstrap = function () {
-        this.showTab();
-        this.disableScrolling();
+        if (Mobile.playerToolbar) {
+            Mobile.playerToolbar.classList.add('touch-enabled');
+            document.body.classList.add('touch-enabled');
+            var links = document.getElementById('playerLinks');
+            if (links) { document.querySelector('.player-menu-footer').appendChild(links); }
+            Mobile.layoutPlayerControls();
+            canvasResize();
+        } else {
+            this.showTab();
+            this.disableScrolling();
+        }
         if (!this.isAudioSupported()) {
             this.disableAudio();
         }
@@ -17904,6 +18331,9 @@ Mobile.debugDot = function (event) {
 
     proto.onTouchStart = function (event) {
         if (this.isTouching) {
+            return;
+        }
+        if (Mobile.playerToolbar && !document.querySelector('.gameContainer').contains(event.target)) {
             return;
         }
 
@@ -17953,7 +18383,7 @@ Mobile.debugDot = function (event) {
     };
 
     proto.onTouchMove = function (event) {
-        if (!this.isFocused) {
+        if (!this.isFocused || !this.isTouching) {
             return;
         }
         if (levelEditorOpened) {
@@ -17972,6 +18402,12 @@ Mobile.debugDot = function (event) {
 
         prevent(event);
         return false;
+    };
+
+    proto.cancelTouch = function () {
+        this.isTouching = false;
+        this.mayBeSwiping = false;
+        this.endRepeatWatcher();
     };
 
     proto.handleFocusChange = function (event) {
@@ -18226,6 +18662,11 @@ Mobile.debugDot = function (event) {
     };
 
     proto.toggleMenu = function () {
+        // Player controls are always available; retain the gesture menu only
+        // for the editor, where there is no player header.
+        if (Mobile.playerToolbar) {
+            return;
+        }
         if (this.isMenuVisible) {
             this.hideMenu();
         } else {
@@ -18650,15 +19091,13 @@ function Animatable(key, increment, update) {
         };
     }
 
+    Mobile.setupPlayerControls();
     Mobile.enable();
 }());
 
 </script>
 
-<div style = "z-index: 2; background: transparent; position: absolute; top: 0.5em; right: 1em;">
-    <img alt="mute" id="muteButton" width=32px height=32px onClick="muteAudio()" style="display:none" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwgAADsIBFShKgAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xOdTWsmQAAAIGSURBVFhH3ZchcsJAGIURiApEBbIH6BEqOQASWYHoESoQFcwgOAaiEsEBKip6BERlBQJRwQEqtu/tvj+TLMnAJpntTL+ZP/De7p/9k102YUCcc0tEbpbx4MHIAMcKQ2LM4ktmOCYH9gXIawXzQasLYGKnAphryErC53VJLiPvhNgjtog54tZ3bgDt7QpgTkyD/42Y+aQa2CG5APYvMdGnFTBC3COeEG8IY4M4uxtsSCqAfQ1ZhSdZATangdNCvhCVImheVQC6FFdKZHtkeQ8fB8QOsUCM5N0hPhBkQ8+gEQ5BXLUb+swSsu0cZXjFE/kswu7ElB6hCAeJS/isCDXZOcaIKeKdHvhBPKiN00F4l+zu1BaQtKkop1Ic5BCx8g3OfSJu5Fthj9LnBfB7Ckqzc/Dq1oihtA34LP0SpHuV7r0AYyXN6SC7SO+ley9gFpQ7SHNNkFifpP9fAcZaOvsUNC3ChbQtwq30eQGg88+QwLKNjRuS/e6toLl0bQGNsF+MmuwcdRuR7Ya2EfEJ6Z8JFOEQRK6tuHg8U4TDBdClr4eRn3uDRjhcCfsasgpPsgLs8uP4iBiryUMzqQDC/iXiFxJbA1zttg4IX9EqgxM2JBdAmBPT4Pf/SmYwr4y8PC+lBnMNWUn4vLbJBvNBtz8m4E//mtkGlK0IjhWG1Jj8EnRWMPhg8AvjeqPLyfe3igAAAABJRU5ErkJggg==" />
-    <img alt="unmute" id="unMuteButton" width=32px height=32px onClick="unMuteAudio()" style="display:none" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTnU1rJkAAABqElEQVRYR72XW3LDMAwDc7QerTdPRWjBoW1aedXZGUYUAIlqP9LpLbjf77+jvs3vfvgUvkDMmiPHzGxg9HTXEjNjsB6A0Nar+MxYg+UPFoH5ccLCauE+3Wmqvke+Pk5YWAl3sJuXGiSx3wfSOsMsrKRm4i6DJJAEktB+L1YW1oG4xyAJJIGUSOsMs7A2xB0GSSAJpA3Sz8xgYYnh/8R5g+ZKFG6Q9yAQ9dS3JEcEkkBqkb8K2X8EcYEkkE5RxkH6rkz7VT10uu3wwcbrcOipB+hEg62ZmlR9hbL1wEkJndgRMpVgif1+j3yH6LsSOtGALZAE0rUPwBJICfJ1D0A2ylamfDxXke8QfVfCGdak6pXpNkZBvkP0XeUl3hvkFiKfP8CwT5BPIfavD0iQBNJhEPJnDzCjr6Q31sMfI4P0/gPM6BP20ivTnSClxrZFvkP0WQ4YCQuImfzNYLfId4i+VqL0ExDfgNUi3yF6V6LkC3AsQW6R7xB9rZeHmzhrkFrkO0R/qHcZZ4Plv3sROARHv1mvImbG4GxixbucmDVHMjOauf8qY/jt9gdOODPsYZA1BAAAAABJRU5ErkJggg==" />
-</div>
+
 
 <script>const sourceCode="__GAMEDAT__";compile(["restart"],sourceCode);</script>
 </body>

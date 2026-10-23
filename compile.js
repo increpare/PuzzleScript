@@ -18,7 +18,7 @@ let webResourceInliner = require("web-resource-inliner");
 const ncp = require('ncp').ncp;
 const gifsicle = require('gifsicle').default || require('gifsicle');
 const concat = require('concat');
-const cssmin = require('ycssmin').cssmin;
+const CleanCSS = require('clean-css');
 const { minify } = require("terser");
 const { Compress } = require('gzipper');
 const htmlminify = require('html-minifier-terser').minify;
@@ -26,6 +26,14 @@ const glob = require("glob")
 
 // Resolve build inputs relative to this script, including when invoked elsewhere.
 process.chdir(__dirname);
+
+function cssmin(css) {
+    const result = new CleanCSS({ inline: false, rebase: false }).minify(css);
+    if (result.errors.length) {
+        throw new Error(result.errors.join('\n'));
+    }
+    return result.styles;
+}
 
 // Source maps still include source files, but local tooling and backups are not
 // website content. Keep deployment files such as .htaccess.
@@ -134,6 +142,10 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
             let css = fs.readFileSync("./bin/css/combined.css", encoding = 'utf8');
             let min = cssmin(css);
             fs.writeFileSync("./bin/css/combined.css", min, encoding = "utf8");
+
+            css = fs.readFileSync("./src/css/player.css", encoding = 'utf8');
+            min = cssmin(css);
+            fs.writeFileSync("./bin/css/player.css", min, encoding = "utf8");
 
             css = fs.readFileSync("./bin/Documentation/css/bootstrap.css", encoding = 'utf8');
             min = cssmin(css);

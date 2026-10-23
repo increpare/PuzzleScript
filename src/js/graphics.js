@@ -313,6 +313,9 @@ function glyphCount() {
 }
 
 function redraw() {
+    if (window.Mobile && Mobile.syncPlayerControls) {
+        Mobile.syncPlayerControls();
+    }
     if (cellwidth === 0 || cellheight === 0) {
         return;
     }
@@ -653,6 +656,11 @@ function canvasResize(displaylevel) {
         cellheight = cellwidth * h / w;
         yoffset = (canvas.height - cellheight * screenheight) / 2;
         xoffset = (canvas.width - cellwidth * screenwidth) / 2;
+    }
+
+    if (!levelEditorOpened && window.Mobile && Mobile.positionPlayerBoard) {
+        var position = Mobile.positionPlayerBoard(cellwidth * screenwidth, cellheight * screenheight, xoffset, yoffset);
+        if (position) { xoffset = position.x; yoffset = position.y; }
     }
 
     if (levelEditorOpened && !textMode) {

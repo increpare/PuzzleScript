@@ -5,6 +5,7 @@
     "test": "node src/tests/run_tests_node.js"
   },
   "dependencies": {
+    "clean-css": "^5.3.3",
     "compress-images": "^2.0.5",
     "concat": "^1.0.3",
     "gifsicle": "^7.0.1",
@@ -13,8 +14,7 @@
     "html-minifier-terser": "^7.2.0",
     "ncp": "^2.0.0",
     "rimraf": "^3.0.2",
-    "terser": "^5.17.1",
-    "web-resource-inliner": "^6.0.1",
-    "ycssmin": "^1.0.1"
+    "terser": "^5.51.2",
+    "web-resource-inliner": "^6.0.1"
   }
 }
