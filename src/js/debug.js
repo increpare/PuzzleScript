@@ -1,13 +1,13 @@
 'use strict';
 
-let canSetHTMLColors=false;
-let canDump=true;
+const canSetHTMLColors=false;
+const canDump=true;
 let recordingStartsFromLevel=0;
 let inputHistory=[];
 let soundHistory=[];
 let compiledText;
-let canOpenEditor=true;
-let IDE=true;
+const canOpenEditor=true;
+const IDE=true;
 
 let debugger_turnIndex=0;
 let debug_visualisation_array=[];

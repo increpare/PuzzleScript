@@ -1,9 +1,9 @@
 'use strict';
 
-let canSetHTMLColors=true;
-let canDump=false;
-let canOpenEditor=false;
-let IDE=false;
+const canSetHTMLColors=true;
+const canDump=false;
+const canOpenEditor=false;
+const IDE=false;
 const diffToVisualize=null;
 
 function stripTags(str) {
