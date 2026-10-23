@@ -1,0 +1,9 @@
+.editor-player { position: relative; box-sizing: border-box; background: var(--player-bg); }
+.editor-player .player-toolbar { grid-template-columns: 48px minmax(0, 1fr) 96px; padding: 0 8px; }
+.editor-player .player-toolbar h1 { font-size: 16px; color: inherit; }
+.editor-player .gameContainer { margin: 0; }
+.editor-player:not(.touch-enabled) .player-toolbar { display: none; }
+.editor-player.controls-too-small:not(.preview-expanded), .editor-player.controls-unavailable { display: flex; }
+.editor-player.controls-too-small:not(.preview-expanded) .player-deck, .editor-player.controls-unavailable .player-deck { display: none; }
+.editor-player.controls-too-small:not(.preview-expanded) .player-identity { visibility: hidden; }
+.editor-player.preview-expanded { position: fixed; inset: 0; width: auto; height: auto; z-index: 20; }

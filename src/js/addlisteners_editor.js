@@ -63,6 +63,7 @@ window.onbeforeunload = function (e) {
   }
 };
 
+Mobile.setupPlayerControls();
 let gestureHandler = Mobile.enable();
 if (gestureHandler) {
     gestureHandler.setFocusElement(document.getElementById('gameCanvas'));

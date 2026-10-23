@@ -18,8 +18,10 @@ let webResourceInliner = require("web-resource-inliner");
 const ncp = require('ncp').ncp;
 const gifsicle = require('gifsicle').default || require('gifsicle');
 const concat = require('concat');
-const CleanCSS = require('clean-css');
-const { minify } = require("terser");
+const { transform } = require('lightningcss');
+const { minify } = require('@swc/core');
+const { TraceMap, eachMapping } = require('@jridgewell/trace-mapping');
+const { GenMapping, addMapping, setSourceContent, toEncodedMap } = require('@jridgewell/gen-mapping');
 const { Compress } = require('gzipper');
 const htmlminify = require('html-minifier-terser').minify;
 const glob = require("glob")
@@ -28,11 +30,7 @@ const glob = require("glob")
 process.chdir(__dirname);
 
 function cssmin(css) {
-    const result = new CleanCSS({ inline: false, rebase: false }).minify(css);
-    if (result.errors.length) {
-        throw new Error(result.errors.join('\n'));
-    }
-    return result.styles;
+    return transform({ code: Buffer.from(css), minify: true }).code.toString();
 }
 
 // Source maps still include source files, but local tooling and backups are not
@@ -131,7 +129,9 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
                 "./src/css/layout.css",
                 "./src/css/toolbar.css",
                 "./src/css/dialog.css",
-                "./src/css/show-hint.css"],
+                "./src/css/show-hint.css",
+                "./src/css/player.css",
+                "./src/css/editorplayer.css"],
                 "./bin/css/combined.css");
 
             console.log('css files concatenated')
@@ -154,25 +154,45 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
             console.log("running js minification");
 
             async function generateFrom(toinclude, output_src, output_bin) {
-                let files = toinclude;
+                let lineOffset = 0;
+                const sources = toinclude.map(fpath => {
+                    const code = fs.readFileSync(fpath, 'utf8');
+                    const source = { name: "source/" + fpath.slice(9), code, lineOffset };
+                    lineOffset += (code.match(/\n/g) || []).length + 1;
+                    return source;
+                });
+                const result = await minify(sources.map(source => source.code).join('\n'), {
+                    // Inline HTML handlers and generated engine functions share these globals.
+                    module: false,
+                    toplevel: false,
+                    compress: { toplevel: false, passes: 3 },
+                    mangle: { toplevel: false },
+                    format: { comments: 'some', inlineScript: true },
+                    sourceMap: true,
+                    inlineSourcesContent: false
+                });
 
-                let corpus = {};
-                for (let i = 0; i < files.length; i++) {
-                    let fpath = files[i];
-                    corpus["source/" + fpath.slice(9)] = fs.readFileSync(fpath, encoding = 'utf-8');
-                }
-
-                let result = await minify(
-                    corpus,
-                    {
-                        sourceMap: {
-                            filename: output_src,
-                            url: output_src + ".map"
-                        }
+                // SWC maps the concatenated input. Restore the original file boundaries
+                // so browser debugging still opens the individual source files.
+                const map = new GenMapping({ file: output_src });
+                sources.forEach(source => setSourceContent(map, source.name, source.code));
+                eachMapping(new TraceMap(result.map), mapping => {
+                    const generated = { line: mapping.generatedLine, column: mapping.generatedColumn };
+                    if (mapping.originalLine === null) {
+                        addMapping(map, { generated });
+                        return;
+                    }
+                    const source = sources.find((source, index) =>
+                        index === sources.length - 1 || mapping.originalLine <= sources[index + 1].lineOffset);
+                    addMapping(map, {
+                        generated,
+                        source: source.name,
+                        original: { line: mapping.originalLine - source.lineOffset, column: mapping.originalColumn },
+                        name: mapping.name || undefined
                     });
-
-                fs.writeFileSync(output_bin, result.code);
-                fs.writeFileSync(output_bin + ".map", result.map);
+                });
+                fs.writeFileSync(output_bin, result.code + "\n//# sourceMappingURL=" + output_src + ".map\n");
+                fs.writeFileSync(output_bin + ".map", JSON.stringify(toEncodedMap(map)));
             };
 
             let includes_editor = [
@@ -315,11 +335,15 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
                             {
                                 collapseBooleanAttributes: true,
                                 collapseWhitespace: true,
-                                minifyCSS: true,
-                                minifyURLs: true,
-                                // removeAttributeQuotes: true,
+                                conservativeCollapse: true,
                                 removeComments: true,
                                 removeEmptyAttributes: true,
+                                removeOptionalTags: true,
+                                useShortDoctype: true,
+                                minifyCSS: true,
+                                minifyURLs: true,
+                                // Placeholders such as __GAMETITLE__ are replaced later and may contain spaces.
+                                removeAttributeQuotes: false
                             });
                         fs.writeFileSync("./bin/standalone_inlined.txt", minified);
                     }
@@ -332,7 +356,16 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
                     glob("./bin/*.html", {}, async function (er, files) {
                         for (filename of files) {
                             let lines = fs.readFileSync(filename, encoding = 'utf8');
-                            let result = await htmlminify(lines);
+                            let result = await htmlminify(lines, {
+                                collapseBooleanAttributes: true,
+                                collapseWhitespace: true,
+                                conservativeCollapse: true,
+                                removeComments: true,
+                                removeEmptyAttributes: true,
+                                removeOptionalTags: true,
+                                useShortDoctype: true,
+                                removeAttributeQuotes: false
+                            });
                             fs.writeFileSync(filename, result);
                         }
                     });

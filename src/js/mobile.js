@@ -31,16 +31,16 @@ Mobile.enable = function (force) {
     return Mobile._instance;
 };
 
-// The player shares these controls with exported games. The editor keeps its
-// own layout and focus handling.
+// Shared by the web player, exported games and the editor preview.
 Mobile.setupPlayerControls = function () {
     var toolbar = document.getElementById('playerToolbar');
     if (!toolbar) {
         return;
     }
     Mobile.playerToolbar = toolbar;
+    var root = Mobile.playerRoot = toolbar.parentNode;
     var canvas = document.getElementById('gameCanvas');
-    canvas.setAttribute('tabindex', '-1');
+    if (!IDE || hasLoadedGame()) { canvas.setAttribute('tabindex', '-1'); }
     var releaseButtons = [];
     // Consume the compatibility click even if activation hides its button
     // (mute/unmute) or opens a menu under the pointer before click dispatch.
@@ -57,6 +57,8 @@ Mobile.setupPlayerControls = function () {
         releaseButtons.forEach(function (release) { release(); });
     };
     var icons = {
+        expand: '<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>',
+        collapse: '<path d="M3 8h5V3m13 5h-5V3M8 21v-5H3m13 5v-5h5"/>',
         menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
         sound: '<path d="M11 4 6 8H3v8h3l5 4Z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/>',
         muted: '<path d="M11 4 6 8H3v8h3l5 4Z"/><path d="m16 9 6 6m0-6-6 6"/>',
@@ -170,10 +172,55 @@ Mobile.setupPlayerControls = function () {
     menuButton.setAttribute('aria-expanded', 'false');
     menuButton.setAttribute('aria-controls', 'playerMenu');
     leading.appendChild(menuButton);
-    trailing.appendChild(button('muteButton', 'Mute sound (M)', 'sound', muteAudio));
-    trailing.appendChild(button('unMuteButton', 'Unmute sound (M)', 'muted', unMuteAudio));
+    trailing.appendChild(button('muteButton', IDE ? 'Mute sound' : 'Mute sound (M)', 'sound', muteAudio));
+    trailing.appendChild(button('unMuteButton', IDE ? 'Unmute sound' : 'Unmute sound (M)', 'muted', unMuteAudio));
     toolbar.insertBefore(leading, toolbar.firstChild);
     toolbar.appendChild(trailing);
+    if (IDE) {
+        var inertPanels = [];
+        var expand = button('expandPreviewButton', 'Expand game preview', 'expand', function () {
+            setExpanded(!root.classList.contains('preview-expanded'));
+        });
+        trailing.appendChild(expand);
+        function setExpanded(expanded) {
+            Mobile.releasePlayerButtons();
+            if (Mobile._instance) { Mobile._instance.cancelTouch(); }
+            keybuffer = [];
+            root.classList.toggle('preview-expanded', expanded);
+            expand.setAttribute('aria-expanded', String(expanded));
+            expand.setAttribute('aria-label', expanded ? 'Return to editor' : 'Expand game preview');
+            expand.title = expanded ? 'Return to editor' : 'Expand game preview';
+            expand.querySelector('svg').innerHTML = icons[expanded ? 'collapse' : 'expand'];
+            if (expanded) {
+                inertPanels = Array.from(document.body.children).filter(function (element) {
+                    return !element.contains(root) && !element.inert;
+                });
+                inertPanels.forEach(function (element) { element.inert = true; });
+            } else {
+                inertPanels.forEach(function (element) { element.inert = false; });
+                inertPanels = [];
+            }
+            Mobile.layoutPlayerControls();
+            canvasResize();
+        }
+        expand.setAttribute('aria-expanded', 'false');
+        root.addEventListener('keydown', function (event) {
+            if (!root.classList.contains('preview-expanded') || Mobile.playerMenuOpen) { return; }
+            if (event.key === 'Tab') {
+                var controls = Array.from(root.querySelectorAll('button:not(:disabled), input, select, a[href]')).filter(function (element) { return element.getClientRects().length; });
+                var first = controls[0], last = controls[controls.length - 1];
+                if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+                else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+                event.stopPropagation();
+            }
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                event.stopPropagation();
+                setExpanded(false);
+                expand.focus({ preventScroll: true });
+            }
+        });
+    }
     killAudioButton();
 
     var deck = document.createElement('div');
@@ -215,7 +262,7 @@ Mobile.setupPlayerControls = function () {
         '<label><span>Swap control sides</span><input type="checkbox" id="swapControls"></label>' +
         '<label><span>Overlay controls</span><input type="checkbox" id="overlayControls" checked></label></div>' +
         '<div class="player-menu-footer"><button type="button" id="backToTitleButton">Back to title</button></div></div>';
-    document.body.appendChild(menu);
+    root.appendChild(menu);
     var panel = menu.firstChild;
     panel.tabIndex = -1;
     var links = document.getElementById('playerLinks');
@@ -239,6 +286,7 @@ Mobile.setupPlayerControls = function () {
             lastDownTarget = canvas;
         }
     }
+    Mobile.setPlayerMenu = setMenu;
     document.getElementById('backToTitleButton').addEventListener('click', function (event) { setMenu(false, event.detail === 0); input(27); });
     document.getElementById('closeMenuButton').addEventListener('click', function (event) { setMenu(false, event.detail === 0); });
     menu.addEventListener('click', function (event) { if (event.target === menu) { setMenu(false); } });
@@ -260,10 +308,10 @@ Mobile.setupPlayerControls = function () {
             var saved = storage_get(key);
             if (saved === 'true' || saved === 'false') { control.checked = saved === 'true'; }
         } catch (error) { /* Keep the default when storage is unavailable. */ }
-        document.body.classList.toggle(setting[1], control.checked);
+        root.classList.toggle(setting[1], control.checked);
         control.addEventListener('change', function () {
             Mobile.releasePlayerButtons();
-            document.body.classList.toggle(setting[1], control.checked);
+            root.classList.toggle(setting[1], control.checked);
             try { storage_set(key, String(control.checked)); } catch (error) { /* The preference still works for this session. */ }
             canvasResize();
         });
@@ -319,7 +367,7 @@ Mobile.setupPlayerControls = function () {
         var landscape = window.matchMedia('(orientation: landscape)').matches;
         var movementWidth = landscape ? 2 * size + 4 : 3 * size + 8;
         var actionsWidth = 2 * actionWidth + 4;
-        var style = document.body.style;
+        var style = root.style;
         style.setProperty('--control-size', size + 'px');
         layoutMovementSurface(size);
         style.setProperty('--action-width', actionWidth + 'px');
@@ -329,12 +377,13 @@ Mobile.setupPlayerControls = function () {
         var padding = getComputedStyle(deck);
         var safeWidth = Math.max(0, parseFloat(padding.paddingLeft) - inset) +
             Math.max(0, parseFloat(padding.paddingRight) - inset);
-        var width = document.documentElement.clientWidth - safeWidth;
+        var width = root.clientWidth - safeWidth;
         // Keep the chosen target size: stack actions when the thumb groups
         // would collide, and limit only the edge inset on very narrow screens.
         var stacked = movementWidth + actionsWidth + 12 + 2 * inset > width;
         if (stacked) { actionsWidth = actionWidth; }
-        document.body.classList.toggle('controls-stacked', stacked);
+        root.classList.toggle('controls-stacked', stacked);
+        root.classList.toggle('controls-too-small', IDE && (width < movementWidth + actionsWidth + 28 || root.clientHeight < 300));
         style.setProperty('--actions-width', actionsWidth + 'px');
         style.setProperty('--deck-inset', Math.max(8, Math.min(inset,
             Math.floor((width - movementWidth - actionsWidth - 12) / 2))) + 'px');
@@ -358,8 +407,8 @@ Mobile.setupPlayerControls = function () {
     // Keep the existing pixel scale in overlay mode. If the board can fit clear
     // of the visible buttons, use the nearest such position to its usual centre.
     Mobile.positionPlayerBoard = function (width, height, x, y) {
-        if (!document.body.classList.contains('touch-enabled') ||
-            !document.body.classList.contains('controls-overlay')) { return null; }
+        if (!root.classList.contains('touch-enabled') ||
+            !root.classList.contains('controls-overlay')) { return null; }
         Mobile.syncPlayerControls();
         var maxX = Math.floor(canvas.width - width);
         var maxY = Math.floor(canvas.height - height);
@@ -425,26 +474,38 @@ Mobile.setupPlayerControls = function () {
         canvasResize();
     });
     document.addEventListener('visibilitychange', function () { if (document.hidden) { releaseInput(); } });
+    if (IDE && window.ResizeObserver) {
+        new ResizeObserver(function () {
+            Mobile.layoutPlayerControls();
+            canvasResize();
+        }).observe(root);
+    }
     Mobile.syncPlayerControls();
 };
 
 Mobile.syncPlayerControls = function () {
     var toolbar = Mobile.playerToolbar;
     if (!toolbar) { return; }
+    var root = Mobile.playerRoot;
+    var unavailable = IDE && (!hasLoadedGame() || levelEditorOpened);
     var noUndo = 'noundo' in state.metadata;
     var noRestart = 'norestart' in state.metadata;
     var noAction = 'noaction' in state.metadata && !textMode;
     var noHistory = backups.length === 0;
-    var title = state.metadata.title || document.getElementById('gametitle').textContent;
+    var title = state.metadata.title || (IDE ? 'Game preview' : document.getElementById('gametitle').textContent);
     var screen = [titleScreen, textMode, curlevel].join('|');
-    var status = [screen, titleMode, noUndo, noRestart, noAction, noHistory, state.fgcolor, state.bgcolor, title].join('|');
+    var status = [screen, titleMode, noUndo, noRestart, noAction, noHistory, state.fgcolor, state.bgcolor, title, unavailable].join('|');
     if (Mobile.playerStatus === status) { return; }
     if (Mobile.playerScreen !== screen) { Mobile.releasePlayerButtons(); }
     Mobile.playerScreen = screen;
     Mobile.playerStatus = status;
-    document.body.style.setProperty('--player-fg', state.fgcolor);
-    document.body.style.setProperty('--player-bg', state.bgcolor);
+    root.style.setProperty('--player-fg', state.fgcolor);
+    root.style.setProperty('--player-bg', state.bgcolor);
     document.getElementById('gametitle').title = title;
+    if (IDE) { document.getElementById('gametitle').textContent = title; }
+    var availabilityChanged = root.classList.contains('controls-unavailable') !== unavailable;
+    root.classList.toggle('controls-unavailable', unavailable);
+    if (availabilityChanged) { requestAnimationFrame(function () { canvasResize(); }); }
     document.getElementById('backToTitleButton').disabled = titleScreen;
     var undo = document.getElementById('undoButton');
     var restart = document.getElementById('restartButton');
@@ -452,19 +513,20 @@ Mobile.syncPlayerControls = function () {
     undo.hidden = noUndo;
     restart.hidden = noRestart;
     action.hidden = noAction;
-    undo.disabled = textMode || noHistory;
-    restart.disabled = textMode;
+    undo.disabled = unavailable || textMode || noHistory;
+    restart.disabled = unavailable || textMode;
+    action.disabled = unavailable;
     var actionLabel = textMode ? (titleScreen ? 'Start' : 'Continue') : 'Action';
     action.querySelector('span').textContent = actionLabel;
     action.setAttribute('aria-label', actionLabel + ' (X)');
     action.title = actionLabel + ' (X)';
     var actionLayoutChanged = action.parentNode.classList.contains('no-action') !== noAction;
     action.parentNode.classList.toggle('no-action', noAction);
-    if (actionLayoutChanged && document.body.classList.contains('controls-stacked')) {
+    if (actionLayoutChanged && root.classList.contains('controls-stacked')) {
         requestAnimationFrame(function () { canvasResize(); });
     }
     ['up','left','down','right'].forEach(function (direction) {
-        document.getElementById('move' + direction).disabled = textMode &&
+        document.getElementById('move' + direction).disabled = unavailable || textMode &&
             !(titleScreen && titleMode === 1 && (direction === 'up' || direction === 'down'));
     });
 };
@@ -557,7 +619,7 @@ Mobile.debugDot = function (event) {
     proto.bootstrap = function () {
         if (Mobile.playerToolbar) {
             Mobile.playerToolbar.classList.add('touch-enabled');
-            document.body.classList.add('touch-enabled');
+            Mobile.playerRoot.classList.add('touch-enabled');
             var links = document.getElementById('playerLinks');
             if (links) { document.querySelector('.player-menu-footer').appendChild(links); }
             Mobile.layoutPlayerControls();
@@ -907,9 +969,8 @@ Mobile.debugDot = function (event) {
     };
 
     proto.toggleMenu = function () {
-        // Player controls are always available; retain the gesture menu only
-        // for the editor, where there is no player header.
         if (Mobile.playerToolbar) {
+            Mobile.setPlayerMenu(!Mobile.playerMenuOpen);
             return;
         }
         if (this.isMenuVisible) {
@@ -1185,8 +1246,8 @@ Mobile.debugDot = function (event) {
 
     proto.disableSelection = function () {
         var body;
-        body = document.getElementsByTagName('body')[0];
-        body.setAttribute('class', body.getAttribute('class') + ' disable-select');
+        body = Mobile.playerRoot || document.body;
+        body.classList.add('disable-select');
     };
 
 }(window.Mobile.GestureHandler.prototype));
@@ -1336,6 +1397,9 @@ function Animatable(key, increment, update) {
         };
     }
 
-    Mobile.setupPlayerControls();
-    Mobile.enable();
+    // The editor initializes after its engine, code editor and layout are ready.
+    if (!IDE) {
+        Mobile.setupPlayerControls();
+        Mobile.enable();
+    }
 }());

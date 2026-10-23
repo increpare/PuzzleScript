@@ -16,6 +16,8 @@
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/toolbar.css">
 <link rel="stylesheet" href="css/show-hint.css">
+<link rel="stylesheet" href="css/player.css">
+<link rel="stylesheet" href="css/editorplayer.css">
 
 <!--CSSREPLACE-->
 <link rel="shortcut icon" type="image/x-icon" href="Documentation/ico/favicon.ico" />
@@ -137,8 +139,9 @@ LEVELS
 </div>
 
 <div id="righttophalf">	
-	<div class="upperarea">
-		<canvas id="gameCanvas" ></canvas>
+	<div class="upperarea player-shell editor-player">
+		<header class="player-toolbar" id="playerToolbar" aria-label="Game preview controls"><div class="player-identity"><h1 id="gametitle">Game preview</h1></div></header>
+		<div class="gameContainer"><canvas id="gameCanvas"></canvas></div>
 	</div>
 </div>
 <div id="horizontaldragbar"></div>
