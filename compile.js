@@ -254,6 +254,13 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
                 "scripts_play_compiled.js",
                 "./bin/js/scripts_play_compiled.js");
 
+            // Standalone has its own script list, without the web player's GitHub loader.
+            let standalone_raw = fs.readFileSync("./src/standalone.html", 'utf8');
+            await generateFrom(
+                Array.from(standalone_raw.matchAll(/<script src="([^"]+)"><\/script>/g), match => "./src/" + match[1]),
+                "scripts_standalone_compiled.js",
+                "./bin/js/scripts_standalone_compiled.js");
+
             await ncp("./src/js", "./bin/js/source", { filter: includeInRelease }, function (err) {
                 if (err) {
                     return console.error(err);
@@ -280,8 +287,6 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
             console.log("inlining standalone template")
 
             //src one first:
-            let standalone_raw = fs.readFileSync("./src/standalone.html", 'utf8');
-
             webResourceInliner.html({
                 fileContent: standalone_raw,
                 relativeTo: 'src/',
@@ -296,7 +301,7 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
 
             //then bin one:
             standalone_raw = standalone_raw.replace(/<script src="js\/[A-Za-z0-9_\/-]*\.js"><\/script>/g, "");
-            standalone_raw = standalone_raw.replace(/<!--___SCRIPTINSERT___-->/g, '<script src="js\/scripts_play_compiled.js"><\/script>');
+            standalone_raw = standalone_raw.replace(/<!--___SCRIPTINSERT___-->/g, '<script src="js\/scripts_standalone_compiled.js"><\/script>');
             webResourceInliner.html({
                 fileContent: standalone_raw,
                 relativeTo: 'bin/',
