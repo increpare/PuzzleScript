@@ -67,17 +67,21 @@ function get_title_animation_frame() {
 }
 
 var WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
+var WORKLIST_GENERATION_INDEX = 0;
 function tick_lazy_function_generation(iterative_generation = false) {
     if (WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length === 0) {
         return;
     }
-    // spent a maximum of 10ms on lazy function generation
+    // Spend up to 20ms on lazy function generation before starting another item.
     let start = performance.now();
-    var generated_count = 0;
     while (
         ((performance.now() - start < 20) || !iterative_generation)
-        && WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length > 0) {
-        const object = WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.shift();
+        && WORKLIST_GENERATION_INDEX < WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length) {
+        const object = WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR[WORKLIST_GENERATION_INDEX++];
+        // Clear before generating the last item so appends and errors see an empty queue.
+        if (WORKLIST_GENERATION_INDEX === WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR.length) {
+            lazy_function_generation_clear_backlog();
+        }
         //depending on type of object
         //if CellPattern, call generateMatchFunction
         //if Rule, call generate_all_MatchFunctions
@@ -88,11 +92,11 @@ function tick_lazy_function_generation(iterative_generation = false) {
         } else {
             throw new Error("Unknown object type: " + object);
         }
-        generated_count++;
     }
 }
 
 function lazy_function_generation_clear_backlog() {
     WORKLIST_OBJECTS_TO_GENERATE_FUNCTIONS_FOR = [];
+    WORKLIST_GENERATION_INDEX = 0;
 }
 
