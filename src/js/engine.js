@@ -1750,12 +1750,21 @@ CellPattern.prototype.generateMatchFunction = function() {
     
     let fn = '';
     
+    // Only load words referenced by the generated match expression.
     for (let i = 0; i < STRIDE_OBJ; ++i) {
-        fn += `const cellObjects${i} = objects[i${objStride}${i ? '+' + i : ''}];\n`;
+        let needed = this.objectsPresent.data[i] || this.objectsMissing.data[i];
+        for (let j = 0; !needed && j < this.anyObjectsPresent.length; ++j) {
+            needed = this.anyObjectsPresent[j].data[i];
+        }
+        if (needed) {
+            fn += `const cellObjects${i} = objects[i${objStride}${i ? '+' + i : ''}];\n`;
+        }
     }
     
     for (let i = 0; i < STRIDE_MOV; ++i) {
-        fn += `const cellMovements${i} = movements[i${movStride}${i ? '+' + i : ''}];\n`;
+        if (this.movementsPresent.data[i] || this.movementsMissing.data[i]) {
+            fn += `const cellMovements${i} = movements[i${movStride}${i ? '+' + i : ''}];\n`;
+        }
     }
     
     fn += `return ${this.generateMatchString()};`;
