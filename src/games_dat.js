@@ -422,13 +422,6 @@ let games_gallery = [
     "homepage": "https://twitter.com/AllenWebster4th"
   },
   {
-    "url": "https://w.itch.io/aunt-floras-mansion",
-    "thumb": "mansion.gif",
-    "title": "Aunt Flora's Mansion",
-    "author": "anna anthropy",
-    "homepage": "https://w.itch.io/"
-  },
-  {
     "url": "https://www.puzzlescript.net/play.html?p=6faf74de7d562674e71a",
     "thumb": "6faf74de7d562674e71a.gif",
     "title": "Tidy the Cafe!",
@@ -583,20 +576,6 @@ let games_gallery = [
     "homepage": "https://twitter.com/zejety"
   },
   {
-    "url": "https://heskhwis.itch.io/the-closet-and-the-castle",
-    "thumb": "castle.gif",
-    "title": "The closet and the castle",
-    "author": "HeskHwis and Holly Hatter",
-    "homepage": "https://heskhwis.tumblr.com/"
-  },
-  {
-    "url": "https://heskhwis.itch.io/my-first-kishoutenketsu",
-    "thumb": "fish.gif",
-    "title": "\"My first Kishoutenketsu\"",
-    "author": "HeskHwis",
-    "homepage": "https://heskhwis.tumblr.com/"
-  },
-  {
     "url": "https://www.puzzlescript.net/play.html?p=983d3fe448e281182289826597fe5a4b",
     "thumb": "983d3fe448e281182289826597fe5a4b.gif",
     "title": "PrograMaze",
@@ -607,13 +586,6 @@ let games_gallery = [
     "url": "https://www.puzzlescript.net/play.html?p=57da05bc817b904d037df40fefa78d66",
     "thumb": "57da05bc817b904d037df40fefa78d66.gif",
     "title": "Symbolism",
-    "author": "Richard Locke",
-    "homepage": "http://www.richardlocke.co.uk/"
-  },
-  {
-    "url": "https://virelsa.itch.io/entanglement-chapter-1",
-    "thumb": "entanglement.gif",
-    "title": "Entanglement - Chapter One",
     "author": "Richard Locke",
     "homepage": "http://www.richardlocke.co.uk/"
   },
@@ -648,13 +620,6 @@ let games_gallery = [
     "thumb": "537878634acb9aa4cfbd5298856ea1ef.gif",
     "title": "XL-Plan",
     "author": "Mark Richardson"
-  },
-  {
-    "url": "https://pedropsi.github.io/pmgrp#puzzlescript",
-    "thumb": "pmgrp.gif",
-    "title": "Play Mini Gemini Replay (PMGRP)",
-    "author": "Pedro PSI",
-    "homepage": "https://pedropsi.github.io/"
   },
   {
     "url": "https://www.puzzlescript.net/play.html?p=9ebe1e5ad44ac22259343de170a3b337",
