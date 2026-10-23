@@ -2982,11 +2982,6 @@ function formatHomePage(state) {
         }
 
         if ('text_color' in state.metadata) {
-            let separator = document.getElementById("separator");
-            if (separator != null) {
-                separator.style.color = state.fgcolor;
-            }
-
             let aElements = document.getElementsByTagName("a");
             for (let i = 0; i < aElements.length; i++) {
                 aElements[i].style.color = state.fgcolor;
@@ -3243,12 +3238,3 @@ function manage_compilation_caches() {
     evictObjCacheIfOversized(CACHE_RESOLVEMOVEMENTS, 5000);
     evictObjCacheIfOversized(CACHE_RULE_FINDMATCHES, 5000);
 }
-
-
-
-function qualifyURL(url) {
-    let a = document.createElement('a');
-    a.href = url;
-    return a.href;
-}
-

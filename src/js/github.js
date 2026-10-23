@@ -5,6 +5,12 @@
 // If you’re running from another host name, sharing might not work.
 const OAUTH_CLIENT_ID = "211570277eb588cddf44";
 
+function qualifyURL(url) {
+    let a = document.createElement('a');
+    a.href = url;
+    return a.href;
+}
+
 function github_authURL() {
 	// Generates 32 letters of random data, like "liVsr/e+luK9tC02fUob75zEKaL4VpQn".
 	let randomState = window.btoa(Array.prototype.map.call(

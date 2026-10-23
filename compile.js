@@ -247,7 +247,8 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
                 "./src/js/github.js",
                 "./src/js/compiler.js",
                 "./src/js/inputoutput.js",
-                "./src/js/mobile.js"];
+                "./src/js/mobile.js",
+                "./src/js/play.js"];
 
             await generateFrom(
                 includes_play,
