@@ -590,13 +590,6 @@ let games_gallery = [
     "homepage": "http://www.richardlocke.co.uk/"
   },
   {
-    "url": "https://virelsa.itch.io/entanglement-chapter-1",
-    "thumb": "entanglement.gif",
-    "title": "Entanglement - Chapter One",
-    "author": "Richard Locke",
-    "homepage": "http://www.richardlocke.co.uk/"
-  },
-  {
     "url": "https://www.puzzlescript.net/play.html?p=ce2474f62432e2a703bba3fb65f5b01f",
     "thumb": "ce2474f62432e2a703bba3fb65f5b01f.gif",
     "title": "Vertebrae",
