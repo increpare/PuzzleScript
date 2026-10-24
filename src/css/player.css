@@ -145,6 +145,15 @@ body.player-shell { height: 100dvh; }
 .player-menu #backToTitleButton { justify-content: flex-start; }
 #playerLinks { flex: none; text-align: center; }
 body > #playerLinks a { display: inline-block; padding: 8px 16px; font-size: 14px; }
+#playerLinks.standalone-links { display: flex; justify-content: center; align-items: center; min-width: 0; max-width: 100%; padding: 8px 0; font: 14px/20px "Courier New", Courier, monospace; }
+#playerLinks.standalone-links[hidden] { display: none; }
+#playerLinks.standalone-links #homepagelink { display: block; min-width: 0; padding: 0; color: inherit; font: inherit; text-decoration: underline; }
+#playerLinks.standalone-links #homepagelink::after { content: none; }
+.standalone-links .player-link-separator { flex: none; padding: 0 6px; opacity: .5; }
+.standalone-links form { display: inline-flex; flex: none; margin: 0; }
+#playerLinks.standalone-links button { display: inline; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
+.player-menu-footer .standalone-links { flex: 1; }
+.player-menu-footer .standalone-links button { min-height: 44px; }
 @media (orientation: landscape) and (min-width: 560px) {
     .player-menu-toggles { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
     .player-menu-toggles label { gap: 8px; padding: 0 4px; }

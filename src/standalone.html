@@ -12,12 +12,13 @@ h1, a { color: ___TEXTCOLOR___; }
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 </head>
 <body class="player-shell">
-<header class="player-toolbar" id="playerToolbar" aria-label="Game controls"><div class="player-identity"><h1 id="gametitle">__GAMETITLE__</h1><a id="homepagelink" href="__HOMEPAGE__" target="_blank" rel="noopener">__HOMEPAGE_STRIPPED_PROTOCOL__</a></div></header>
+<header class="player-toolbar" id="playerToolbar" aria-label="Game controls"><div class="player-identity"><h1 id="gametitle">__GAMETITLE__</h1></div></header>
 <div class="gameContainer">
 <canvas 
     id="gameCanvas" ></canvas>
 </div> 
 <span id="errormessage" style="color:red;" role="alert"></span>
+<nav id="playerLinks" class="standalone-links" hidden><a id="homepagelink" href="__HOMEPAGE__" target="_blank" rel="noopener">__HOMEPAGE_STRIPPED_PROTOCOL__</a>__HACK_LINK__</nav>
 
 <!--___SCRIPTINSERT___-->
 <script src="js/storagewrapper.js"></script>

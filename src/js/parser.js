@@ -38,7 +38,7 @@ const reg_message_verb = /[\p{Z}\s]*message\b[\p{Z}\s]*/u;
 const reg_message_verb_nospace = /[\p{Z}\s]*message[\p{Z}\s]*/u;
 const reg_hexcolor = /#[0-9a-fA-F]+/;
 const metadata_with_value = ['title', 'author', 'homepage', 'background_color', 'text_color', 'key_repeat_interval', 'realtime_interval', 'again_interval', 'flickscreen', 'zoomscreen', 'color_palette', 'youtube'];
-const metadata_no_value = ['run_rules_on_level_start', 'norepeat_action', 'require_player_movement', 'debug', 'verbose_logging', 'throttle_movement', 'noundo', 'noaction', 'norestart', 'scanline'];
+const metadata_no_value = ['run_rules_on_level_start', 'norepeat_action', 'require_player_movement', 'debug', 'verbose_logging', 'throttle_movement', 'noundo', 'noaction', 'nohack', 'norestart', 'scanline'];
 
 let compiling = false;
 let errorStrings = [];//also stores warning strings
@@ -1438,7 +1438,8 @@ let codeMirrorFn = function () {
                                 return 'METADATA';
                             } else {
                                 //garbage found
-                                logError(`Unrecognised stuff "${stream.string}" in the prelude.`, state.lineNumber);
+                                const text = stream.string.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                                logError(`Unrecognised stuff "${text}" in the prelude.`, state.lineNumber);
                             }
                         } else {
                             stream.match(reg_notcommentstart, true);

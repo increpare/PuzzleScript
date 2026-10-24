@@ -66,16 +66,15 @@ function buildStandalone(sourceCode) {
 	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);
 	htmlString = htmlString.replace(/__HOMEPAGE_STRIPPED_PROTOCOL__/g,homepage_stripped);
 
-	// $ has special meaning to JavaScript's String.replace 
-	// c.f.	https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#specifying_a_string_as_a_parameter
-	// basically: '$$'s are inserted as single '$'s.
+	let hackLink = 'nohack' in state.metadata ? '' :
+		'<span class="player-link-separator" aria-hidden="true">|</span><form method="post" action="https://www.puzzlescript.net/editor.html" accept-charset="UTF-8" target="_blank" rel="noopener" onsubmit="this.elements.source.value=sourceCode">' +
+		'<input type="hidden" name="source"><button type="submit">hack</button></form>';
+	htmlString = htmlString.replace(/__HACK_LINK__/g, () => hackLink);
 
-	// First we double all strings - remember that replace interprets '$$' 
-	// as a single'$', so we need to type four to double
-	sourceCode = sourceCode.replace(/\$/g, '$$$$');
-
-	// Then when we substitute them, the doubled $'s will be reduced to single ones.
-	htmlString = htmlString.replace(/"__GAMEDAT__"/g,sourceCode);
+	// sourceCode is already JSON. Keep it inside its script even when game text
+	// contains HTML end tags. A callback also preserves literal $ replacements.
+	sourceCode = sourceCode.replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+	htmlString = htmlString.replace(/"__GAMEDAT__"/g, () => sourceCode);
 
 	saveAs(htmlString, 'text/html;charset=utf-8',title+".html");
 }

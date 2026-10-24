@@ -24,6 +24,7 @@
             ["homepage", "www.puzzlescript.net"],
             ["key_repeat_interval", "0.1"],
             ["noaction", ""],
+            ["nohack", ""],
             ["norepeat_action", ""],
             ["norestart", ""],
             ["noundo", ""],

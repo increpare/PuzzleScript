@@ -1,0 +1,19 @@
+--- cgiserver.py
++++ cgiserver.py
+@@ -8,10 +8,16 @@
+ """
+ import http.server
+ import os
++from import_source import handle_http
+ 
+ 
+ class Handler(http.server.CGIHTTPRequestHandler):
+     cgi_directories = ["/cgi-bin"]
++
++    def do_POST(self):
++        if self.path.split("?", 1)[0] == "/editor.html":
++            return handle_http(self)
++        super().do_POST()
+ 
+     def run_cgi(self):
+         origin = self.headers.get("Origin", "")
