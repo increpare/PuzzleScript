@@ -24,7 +24,7 @@ const html = exportGame({});
 assert.match(html, /action="https:\/\/www\.puzzlescript\.net\/editor\.html"/);
 assert.match(html, /method="post"/);
 assert.match(html, /name="source"/);
-assert.match(html, /<nav id="playerLinks" class="standalone-links" hidden><a[\s\S]*<\/a><span class="player-link-separator"[\s\S]*>\|<\/span><form[\s\S]*>hack<\/button>[\s\S]*<\/nav>/);
+assert.match(html, /<div class="footer-links"><a[\s\S]*<\/a><nav id="playerLinks" hidden><span class="footer-separator"[\s\S]*>\|<\/span><form[\s\S]*>hack<\/button>[\s\S]*<\/nav><\/div>/);
 assert.doesNotMatch(html, /<script>throw Error/);
 const script = html.match(/<script>const sourceCode=([\s\S]*?)<\/script>/)[1];
 let received;
@@ -36,7 +36,7 @@ runtime.form = { elements: { source: { value: '' } } };
 vm.runInContext('(function(){' + submit + '}).call(form)', runtime);
 assert.equal(runtime.form.elements.source.value, original);
 const nohackHtml = exportGame({ nohack: true });
-assert.doesNotMatch(nohackHtml, /action="https:\/\/www\.puzzlescript\.net\/editor\.html"|>hack<\/button>|class="player-link-separator"/);
+assert.doesNotMatch(nohackHtml, /action="https:\/\/www\.puzzlescript\.net\/editor\.html"|>hack<\/button>|class="footer-separator"|<nav id="playerLinks"/);
 assert.match(nohackHtml, /id="homepagelink"/);
 
 // Import must take precedence over local saves, demos, and gist lookups.

@@ -67,8 +67,8 @@ function buildStandalone(sourceCode) {
 	htmlString = htmlString.replace(/__HOMEPAGE_STRIPPED_PROTOCOL__/g,homepage_stripped);
 
 	let hackLink = 'nohack' in state.metadata ? '' :
-		'<span class="player-link-separator" aria-hidden="true">|</span><form method="post" action="https://www.puzzlescript.net/editor.html" accept-charset="UTF-8" target="_blank" rel="noopener" onsubmit="this.elements.source.value=sourceCode">' +
-		'<input type="hidden" name="source"><button type="submit">hack</button></form>';
+		'<nav id="playerLinks" hidden><span class="footer-separator" aria-hidden="true">|</span><form method="post" action="https://www.puzzlescript.net/editor.html" accept-charset="UTF-8" target="_blank" rel="noopener" onsubmit="this.elements.source.value=sourceCode">' +
+		'<input type="hidden" name="source"><button type="submit">hack</button></form></nav>';
 	htmlString = htmlString.replace(/__HACK_LINK__/g, () => hackLink);
 
 	// sourceCode is already JSON. Keep it inside its script even when game text

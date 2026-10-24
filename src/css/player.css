@@ -144,15 +144,15 @@ body.player-shell { height: 100dvh; }
 .player-menu #backToTitleButton { justify-content: flex-start; }
 #playerLinks { flex: none; text-align: center; }
 body > #playerLinks a { display: inline-block; padding: 8px 16px; font-size: 14px; }
-#playerLinks.standalone-links { display: flex; justify-content: center; align-items: center; min-width: 0; max-width: 100%; padding: 8px 0; font: 14px/20px "Courier New", Courier, monospace; }
-#playerLinks.standalone-links[hidden] { display: none; }
-#playerLinks.standalone-links #homepagelink { display: block; min-width: 0; padding: 0; color: inherit; font: inherit; text-decoration: underline; }
-#playerLinks.standalone-links #homepagelink::after { content: none; }
-.standalone-links .player-link-separator { flex: none; padding: 0 6px; opacity: .5; }
-.standalone-links form { display: inline-flex; flex: none; margin: 0; }
-#playerLinks.standalone-links button { display: inline; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
-.player-menu-footer .standalone-links { flex: 1; }
-.player-menu-footer .standalone-links button { min-height: 44px; }
+.footer-links { display: flex; justify-content: center; align-items: baseline; gap: .5ch; flex: none; min-width: 0; padding: 8px 0; font: 16px/20px "Courier New", Courier, monospace; }
+.footer-links #homepagelink { display: block; min-width: 0; max-width: 80%; padding: 0; color: inherit; font: inherit; text-decoration: underline; }
+.footer-links #homepagelink::after { content: none; }
+.footer-links #playerLinks { display: inline-flex; align-items: baseline; gap: .5ch; flex: none; }
+.footer-links #playerLinks[hidden] { display: none; }
+.footer-links .footer-separator { opacity: .5; }
+.footer-links form { display: inline-flex; margin: 0; }
+.footer-links button { display: inline; min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
+.player-menu #playerLinks .footer-separator, .mobile-menu #playerLinks .footer-separator { display: none; }
 @media (orientation: landscape) and (min-width: 560px) and (max-height: 400px) {
     .player-menu-toggles { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
     .player-menu-toggles label { gap: 8px; padding: 0 4px; border: 1px solid color-mix(in srgb, currentColor 24%, transparent); }

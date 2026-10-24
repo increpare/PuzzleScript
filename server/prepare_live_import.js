@@ -68,8 +68,11 @@ async function bundle(mapName) {
     const engine = scripts.find(s => s[1].includes('sourceMappingURL=scripts_play_compiled.js.map'));
     if (!engine) throw Error('Live standalone engine script not found');
     template = replaceOnce(template, engine[0], '<script>' + player.code + '</script>');
-    template = replaceOnce(template, '<div class="footer">', '<div class="footer">__HACK_LINK__');
-    const css = '#playerLinks,#playerLinks form{display:inline}#playerLinks[hidden]{display:none}#playerLinks button{display:inline-block;min-height:44px;padding:8px 16px;border:0;background:transparent;color:___TEXTCOLOR___;font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}.mobile-menu #playerLinks{display:block;clear:both;text-align:center}';
+    const homepage = template.match(/<a id="homepagelink"[^>]*>[\s\S]*?<\/a>/)[0];
+    template = replaceOnce(template, homepage, '<div class="footer-links">' + homepage + '__HACK_LINK__</div>');
+    const playerCss = fs.readFileSync(path.join(repo, 'src/css/player.css'), 'utf8');
+    const rowCss = playerCss.slice(playerCss.indexOf('.footer-links {'), playerCss.indexOf('@media (orientation: landscape)'));
+    const css = '.footer-links{color:___TEXTCOLOR___}' + rowCss + '.mobile-menu #playerLinks{display:block;clear:both;text-align:center}.mobile-menu #playerLinks button{min-height:44px;padding:8px 12px;border:0;background:transparent;color:___TEXTCOLOR___;font:inherit;text-decoration:underline;cursor:pointer}';
     template = replaceOnce(template, '</style>', css + '</style>');
     const compatibility = '<script>(function(){var links=document.getElementById("playerLinks");if(!links)return;links.addEventListener("touchstart",function(event){event.stopPropagation();});if(Mobile.hasTouch()){var original=Mobile.GestureHandler.prototype.buildMenu;Mobile.GestureHandler.prototype.buildMenu=function(){original.call(this);links.hidden=false;this.menuElem.appendChild(links);};}else{links.hidden=false;}})();</script>';
     template = replaceOnce(template, '<script>const sourceCode=', compatibility + '<script>const sourceCode=');
