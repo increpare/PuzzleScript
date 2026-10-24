@@ -255,12 +255,12 @@ Mobile.setupPlayerControls = function () {
     menu.className = 'player-menu';
     menu.hidden = true;
     menu.innerHTML = '<div class="player-menu-panel" role="dialog" aria-modal="true" aria-label="Game menu">' +
-        '<div class="player-menu-header"><h2>Game menu</h2><button type="button" id="closeMenuButton" class="player-button" aria-label="Close menu" title="Close menu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>' +
-        '<label><span>Button size</span><select id="controlSize"><option value="48">Compact</option><option value="56" selected>Comfortable</option><option value="64">Large</option></select></label>' +
-        '<label><span>Position</span><select id="controlPosition"><option value="12">Near edges</option><option value="24" selected>Inset</option><option value="36">Further in</option></select></label>' +
+        '<div class="player-menu-header"><button type="button" id="closeMenuButton" class="player-button" aria-label="Close menu" title="Close menu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>' +
+        '<label><span>Button size</span><select id="controlSize"><option value="48">Small</option><option value="56" selected>Medium</option><option value="64">Large</option></select></label>' +
+        '<label><span>Position</span><select id="controlPosition"><option value="12">Flush</option><option value="24" selected>Inset</option><option value="36">Deep</option></select></label>' +
         '<div class="player-menu-toggles"><label><span>Button labels</span><input type="checkbox" id="buttonLabels" checked></label>' +
-        '<label><span>Swap control sides</span><input type="checkbox" id="swapControls"></label>' +
-        '<label><span>Overlay controls</span><input type="checkbox" id="overlayControls" checked></label></div>' +
+        '<label><span>Swap sides</span><input type="checkbox" id="swapControls"></label>' +
+        '<label><span>Buttons Overlap Game</span><input type="checkbox" id="overlayControls" checked></label></div>' +
         '<div class="player-menu-footer"><button type="button" id="backToTitleButton">Back to title</button></div></div>';
     root.appendChild(menu);
     var panel = menu.firstChild;
