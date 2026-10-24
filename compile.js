@@ -302,7 +302,9 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
 
             let player = fs.readFileSync("./bin/play.html", encoding = 'utf8');
             player = player.replace(/<script src="js\/[A-Za-z0-9_\/-]*\.js"><\/script>/g, "");
-            player = player.replace(/<!--___SCRIPTINSERT___-->/g, '<script src="js\/scripts_play_compiled.js"><\/script>');
+            // The page and bundle must update together: older bundles lack the game loader.
+            player = player.replace(/<!--___SCRIPTINSERT___-->/g, `<script src="js/scripts_play_compiled.js?v=${buildnum}"></script>`);
+            player = player.replace('href="css/player.css"', `href="css/player.css?v=${buildnum}"`);
             fs.writeFileSync("./bin/play.html", player, encoding = 'utf8');
 
             console.log("inlining standalone template")
