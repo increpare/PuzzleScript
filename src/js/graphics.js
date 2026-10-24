@@ -614,9 +614,6 @@ var oldfgcolor = -1;
 var forceRegenImages = false;
 function canvasResize(displaylevel) {
     displaylevel ||= level;
-    canvas.width = canvas.parentNode.clientWidth;
-    canvas.height = canvas.parentNode.clientHeight;
-
     screenwidth = displaylevel.width;
     screenheight = displaylevel.height;
     if (state !== undefined) {
@@ -641,9 +638,6 @@ function canvasResize(displaylevel) {
         screenheight = TERMINAL_HEIGHT;
     }
 
-    cellwidth = canvas.width / screenwidth;
-    cellheight = canvas.height / screenheight;
-
     var w = 5;//sprites[1].dat.length;
     var h = 5;//sprites[1].dat[0].length;
 
@@ -653,8 +647,15 @@ function canvasResize(displaylevel) {
         h = xchar.length;
     }
 
-    cellwidth = w * Math.max(~~(cellwidth / w), 1);
-    cellheight = h * Math.max(~~(cellheight / h), 1);
+    var forcedOverlay = window.Mobile && Mobile.fitPlayerControls &&
+        Mobile.fitPlayerControls(screenwidth * w, screenheight * h);
+    canvas.width = canvas.parentNode.clientWidth;
+    canvas.height = canvas.parentNode.clientHeight;
+
+    // A forced overlay only rescues a board that could not fit at 1x. Keep
+    // that scale instead of enlarging it back underneath the controls.
+    cellwidth = forcedOverlay ? w : w * Math.max(~~(canvas.width / screenwidth / w), 1);
+    cellheight = forcedOverlay ? h : h * Math.max(~~(canvas.height / screenheight / h), 1);
 
     xoffset = 0;
     yoffset = 0;

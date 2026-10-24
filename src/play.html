@@ -7,18 +7,18 @@
 <link rel="stylesheet" href="css/player.css">
 <style>
 body, #gameCanvas { background-color: black; }
-h1, a { color: lightblue; }
+h1, a, .footer-links, #playerLinks { color: lightblue; }
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 </head>
 <body class="player-shell">
-<header class="player-toolbar" id="playerToolbar" aria-label="Game controls"><div class="player-identity"><h1 id="gametitle">PuzzleScript Game</h1><a id="homepagelink" href="https://www.puzzlescript.net" target="_blank" rel="noopener">www.puzzlescript.net</a></div></header>
+<header class="player-toolbar" id="playerToolbar" aria-label="Game controls"><div class="player-identity"><h1 id="gametitle">PuzzleScript Game</h1></div></header>
 <div class="gameContainer">
 <canvas 
     id="gameCanvas" ></canvas>
 </div> 
 <span id="errormessage" style="color:red;" role="alert"></span>
-<nav id="playerLinks" hidden><a id="hacklink" href="#">Edit game</a></nav>
+<div class="footer-links"><a id="homepagelink" href="https://www.puzzlescript.net" target="_blank" rel="noopener">www.puzzlescript.net</a><nav id="playerLinks" hidden><span class="footer-separator" aria-hidden="true">|</span><a id="hacklink" href="#">hack</a></nav></div>
 
 <!--___SCRIPTINSERT___-->
 <script src="js/storagewrapper.js"></script>

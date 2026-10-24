@@ -47,7 +47,16 @@ body.player-shell { height: 100dvh; }
     text-overflow: ellipsis;
 }
 #homepagelink { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 12px/16px system-ui, sans-serif; text-decoration-thickness: 1px; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); text-underline-offset: 3px; touch-action: manipulation; }
-#homepagelink::after { content: ''; position: absolute; inset: 0; }
+.touch-enabled #homepagelink::after { content: ''; position: absolute; inset: 0; }
+body.player-shell:not(.touch-enabled) > .player-toolbar {
+    grid-template-columns: 44px minmax(0, max-content) 44px;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 16px 8px;
+}
+body.player-shell:not(.touch-enabled) .player-identity { align-items: center; gap: 4px; }
+body.player-shell:not(.touch-enabled) .player-toolbar h1 { max-width: 100%; font-size: clamp(24px, 2.5vw, 32px); line-height: 1.2; }
+body.player-shell:not(.touch-enabled) #homepagelink { font-size: 16px; line-height: 22px; }
 .player-controls { display: flex; align-items: center; min-height: 44px; }
 .player-controls:last-child { justify-content: flex-end; }
 .player-button {
@@ -149,9 +158,17 @@ body.player-shell { height: 100dvh; }
 .player-menu input:checked::before { left: 17px; background: var(--player-bg); }
 
 .player-menu #backToTitleButton { justify-content: flex-start; }
-#playerLinks { flex: none; text-align: center; }
-body > #playerLinks a { display: inline-block; padding: 8px 16px; font-size: 14px; }
-body > #playerLinks button { display: inline-block; padding: 8px 16px; border: 0; background: transparent; color: inherit; font: inherit; font-size: 14px; text-decoration: underline; cursor: pointer; }
+.footer-links { display: flex; justify-content: center; align-items: center; flex: none; min-width: 0; max-width: 100%; padding: 8px 16px; font: 16px/22px "Courier New", Courier, monospace; }
+.footer-links #homepagelink { display: block; min-width: 0; max-width: 80%; padding: 0; color: inherit; font: inherit; text-decoration: underline; }
+.footer-links #homepagelink::after { content: none; }
+#playerLinks { display: inline-flex; align-items: center; flex: none; font: inherit; }
+#playerLinks[hidden], .footer-links:empty { display: none; }
+#playerLinks :is(a, button) { min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
+#playerLinks .footer-separator { flex: none; padding: 0 6px; opacity: .5; }
+#playerLinks form { display: inline-flex; margin: 0; }
+.player-menu #playerLinks .footer-separator, .mobile-menu #playerLinks .footer-separator { display: none; }
+.player-menu-footer #playerLinks { flex: 1; justify-content: center; font: 14px/20px system-ui, sans-serif; }
+.player-menu-footer #playerLinks :is(a, button) { display: flex; align-items: center; min-height: 44px; padding: 0 8px; }
 @media (orientation: landscape) and (min-width: 560px) and (max-height: 400px) {
     .player-menu-toggles { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
     .player-menu-toggles label { gap: 8px; padding: 0 4px; border: 1px solid color-mix(in srgb, currentColor 24%, transparent); }
@@ -196,18 +213,18 @@ body > #playerLinks button { display: inline-block; padding: 8px 16px; border: 0
 </style>
 <style>
 body, #gameCanvas { background-color: ___BGCOLOR___; }
-h1, a { color: ___TEXTCOLOR___; }
+h1, a, .footer-links, #playerLinks { color: ___TEXTCOLOR___; }
 </style>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 </head>
 <body class="player-shell">
-<header class="player-toolbar" id="playerToolbar" aria-label="Game controls"><div class="player-identity"><h1 id="gametitle">__GAMETITLE__</h1><a id="homepagelink" href="__HOMEPAGE__" target="_blank" rel="noopener">__HOMEPAGE_STRIPPED_PROTOCOL__</a></div></header>
+<header class="player-toolbar" id="playerToolbar" aria-label="Game controls"><div class="player-identity"><h1 id="gametitle">__GAMETITLE__</h1></div></header>
 <div class="gameContainer">
 <canvas 
     id="gameCanvas" ></canvas>
 </div> 
 <span id="errormessage" style="color:red;" role="alert"></span>
-__HACK_LINK__
+<div class="footer-links"><a id="homepagelink" href="__HOMEPAGE__" target="_blank" rel="noopener">__HOMEPAGE_STRIPPED_PROTOCOL__</a>__HACK_LINK__</div>
 
 <!--___SCRIPTINSERT___-->
 <script>
@@ -8615,9 +8632,6 @@ var oldfgcolor = -1;
 var forceRegenImages = false;
 function canvasResize(displaylevel) {
     displaylevel ||= level;
-    canvas.width = canvas.parentNode.clientWidth;
-    canvas.height = canvas.parentNode.clientHeight;
-
     screenwidth = displaylevel.width;
     screenheight = displaylevel.height;
     if (state !== undefined) {
@@ -8642,9 +8656,6 @@ function canvasResize(displaylevel) {
         screenheight = TERMINAL_HEIGHT;
     }
 
-    cellwidth = canvas.width / screenwidth;
-    cellheight = canvas.height / screenheight;
-
     var w = 5;//sprites[1].dat.length;
     var h = 5;//sprites[1].dat[0].length;
 
@@ -8654,8 +8665,15 @@ function canvasResize(displaylevel) {
         h = xchar.length;
     }
 
-    cellwidth = w * Math.max(~~(cellwidth / w), 1);
-    cellheight = h * Math.max(~~(cellheight / h), 1);
+    var forcedOverlay = window.Mobile && Mobile.fitPlayerControls &&
+        Mobile.fitPlayerControls(screenwidth * w, screenheight * h);
+    canvas.width = canvas.parentNode.clientWidth;
+    canvas.height = canvas.parentNode.clientHeight;
+
+    // A forced overlay only rescues a board that could not fit at 1x. Keep
+    // that scale instead of enlarging it back underneath the controls.
+    cellwidth = forcedOverlay ? w : w * Math.max(~~(canvas.width / screenwidth / w), 1);
+    cellheight = forcedOverlay ? h : h * Math.max(~~(canvas.height / screenheight / h), 1);
 
     xoffset = 0;
     yoffset = 0;
@@ -18106,11 +18124,11 @@ Mobile.setupPlayerControls = function () {
     menu.hidden = true;
     menu.innerHTML = '<div class="player-menu-panel" role="dialog" aria-modal="true" aria-label="Game menu">' +
         '<div class="player-menu-header"><button type="button" id="closeMenuButton" class="player-button" aria-label="Close menu" title="Close menu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>' +
-        '<label><span>Button size</span><select id="controlSize"><option value="48">Compact</option><option value="56" selected>Comfortable</option><option value="64">Large</option></select></label>' +
-        '<label><span>Position</span><select id="controlPosition"><option value="12">Near edges</option><option value="24" selected>Inset</option><option value="36">Further in</option></select></label>' +
+        '<label><span>Button size</span><select id="controlSize"><option value="48">Small</option><option value="56" selected>Medium</option><option value="64">Large</option></select></label>' +
+        '<label><span>Position</span><select id="controlPosition"><option value="12">Flush</option><option value="24" selected>Inset</option><option value="36">Deep</option></select></label>' +
         '<div class="player-menu-toggles"><label><span>Button labels</span><input type="checkbox" id="buttonLabels" checked></label>' +
-        '<label><span>Swap control sides</span><input type="checkbox" id="swapControls"></label>' +
-        '<label><span>Overlay controls</span><input type="checkbox" id="overlayControls" checked></label></div>' +
+        '<label><span>Swap sides</span><input type="checkbox" id="swapControls"></label>' +
+        '<label><span>Buttons Overlap Game</span><input type="checkbox" id="overlayControls" checked></label></div>' +
         '<div class="player-menu-footer"><button type="button" id="backToTitleButton">Back to title</button></div></div>';
     root.appendChild(menu);
     var panel = menu.firstChild;
@@ -18253,6 +18271,21 @@ Mobile.setupPlayerControls = function () {
         });
     });
     Mobile.layoutPlayerControls();
+
+    Mobile.fitPlayerControls = function (width, height) {
+        Mobile.syncPlayerControls();
+        // The checkbox stores the preference; the class describes the actual
+        // layout. Recheck the reserved space so resizing or changing levels
+        // can return to non-overlay controls without changing that preference.
+        var overlay = document.getElementById('overlayControls').checked;
+        root.classList.toggle('controls-overlay', overlay);
+        if (overlay || !root.classList.contains('touch-enabled') ||
+            !movement.getClientRects().length) { return false; }
+        var container = canvas.parentNode;
+        var forcedOverlay = container.clientWidth < width || container.clientHeight < height;
+        root.classList.toggle('controls-overlay', forcedOverlay);
+        return forcedOverlay;
+    };
 
     // Keep the existing pixel scale in overlay mode. If the board can fit clear
     // of the visible buttons, use the nearest such position to its usual centre.
@@ -18471,6 +18504,10 @@ Mobile.debugDot = function (event) {
             Mobile.playerToolbar.classList.add('touch-enabled');
             Mobile.playerRoot.classList.add('touch-enabled');
             var links = document.getElementById('playerLinks');
+            // Keep the homepage by the title on touch screens, including
+            // games without a hack link. Desktop keeps both below the game.
+            var homepage = document.getElementById('homepagelink');
+            if (homepage) { Mobile.playerToolbar.querySelector('.player-identity').appendChild(homepage); }
             if (links) { document.querySelector('.player-menu-footer').appendChild(links); }
             Mobile.layoutPlayerControls();
             canvasResize();

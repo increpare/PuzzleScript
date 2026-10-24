@@ -404,6 +404,21 @@ Mobile.setupPlayerControls = function () {
     });
     Mobile.layoutPlayerControls();
 
+    Mobile.fitPlayerControls = function (width, height) {
+        Mobile.syncPlayerControls();
+        // The checkbox stores the preference; the class describes the actual
+        // layout. Recheck the reserved space so resizing or changing levels
+        // can return to non-overlay controls without changing that preference.
+        var overlay = document.getElementById('overlayControls').checked;
+        root.classList.toggle('controls-overlay', overlay);
+        if (overlay || !root.classList.contains('touch-enabled') ||
+            !movement.getClientRects().length) { return false; }
+        var container = canvas.parentNode;
+        var forcedOverlay = container.clientWidth < width || container.clientHeight < height;
+        root.classList.toggle('controls-overlay', forcedOverlay);
+        return forcedOverlay;
+    };
+
     // Keep the existing pixel scale in overlay mode. If the board can fit clear
     // of the visible buttons, use the nearest such position to its usual centre.
     Mobile.positionPlayerBoard = function (width, height, x, y) {
@@ -621,6 +636,10 @@ Mobile.debugDot = function (event) {
             Mobile.playerToolbar.classList.add('touch-enabled');
             Mobile.playerRoot.classList.add('touch-enabled');
             var links = document.getElementById('playerLinks');
+            // Keep the homepage by the title on touch screens, including
+            // games without a hack link. Desktop keeps both below the game.
+            var homepage = document.getElementById('homepagelink');
+            if (homepage) { Mobile.playerToolbar.querySelector('.player-identity').appendChild(homepage); }
             if (links) { document.querySelector('.player-menu-footer').appendChild(links); }
             Mobile.layoutPlayerControls();
             canvasResize();
