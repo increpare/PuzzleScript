@@ -126,18 +126,33 @@ for (const file of sourceFiles) {
     allCode += `\n// ---- ${file} ----\n${code}\n`;
 }
 
+// Move over-long games and end states out to test_scripts/ and test_endstates/,
+// and rebuild the bundle tests.html uses when opened from disk.
+const externalTestFiles = require('./externalTestFiles');
+let preparedData;
+try {
+    preparedData = externalTestFiles.prepareTestData({
+        externalize: !process.argv.includes('--no-externalize')
+    });
+} catch (err) {
+    console.error(err.message);
+    process.exit(1);
+}
+for (const message of preparedData.messages) {
+    console.log(message);
+}
+
 // Load test framework and test data into the same script scope
-const extras = [
-    'tests/resources/testingFrameWork.js',
-    'tests/resources/testdata.js',
-    'tests/resources/errormessage_testdata.js',
-];
-for (const file of extras) {
-    const code = fs.readFileSync(path.join(srcDir, file), 'utf8');
-    allCode += `\n// ---- ${file} ----\n${code}\n`;
+const frameworkFile = 'tests/resources/testingFrameWork.js';
+allCode += `\n// ---- ${frameworkFile} ----\n${fs.readFileSync(path.join(srcDir, frameworkFile), 'utf8')}\n`;
+for (const variable of ['testdata', 'errormessage_testdata']) {
+    allCode += `\n// ---- ${variable} ----\n${preparedData.sources[variable]}\n`;
 }
 
 vm.runInThisContext(allCode, { filename: 'combined_sources.js' });
+
+externalTestFiles.resolveRefs(global.testdata, ref => preparedData.bundle[ref]);
+externalTestFiles.resolveRefs(global.errormessage_testdata, ref => preparedData.bundle[ref]);
 
 // Override stripHTMLTags -- the debug.js version needs a real DOM.
 // Only strip actual HTML tags (starting with <letter or </letter), not
