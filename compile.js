@@ -232,6 +232,7 @@ ncp("./src", "./bin/", { filter: includeInRelease }, function (err) {
                 "./src/js/parser.js",
                 "./src/js/github.js",
                 "./src/js/imagepaste.js",
+                "./src/js/codemirror/object-links.js",
                 "./src/js/editor.js",
                 "./src/js/compiler.js",
                 "./src/js/console.js",

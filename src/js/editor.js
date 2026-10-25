@@ -116,6 +116,8 @@ let editor = window.CodeMirror.fromTextArea(code, {
 		}
 	});
 	
+installObjectLinks(editor);
+
 editor.on('mousedown', function(cm, event) {
   if (event.target.className == 'cm-SOUND') {
     let seed = parseInt(event.target.innerHTML);

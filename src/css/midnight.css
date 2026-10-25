@@ -184,6 +184,11 @@ body {
     color: #1DC116;
 }
 
+.CodeMirror.cm-object-links .cm-NAME {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .cm-s-midnight span.cm-HEADER {
     color: light-dark(#7b47db, #AE81FF);
 }
