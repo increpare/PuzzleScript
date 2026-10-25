@@ -1,0 +1,405 @@
+title I Need To Stop My Teleport Gun
+author duyaa
+homepage https://confoundingcalendar.itch.io/
+
+again_interval 0.1
+background_color #151244
+text_color #f9cb60
+
+========
+OBJECTS
+========
+
+Background 
+#f9cb60 #f9960f #bc2f01
+00001
+01000
+00100
+00010
+10000
+
+Save
+#f9cb60 #f9960f #bc2f01
+01111
+10001
+10101
+10001
+11110
+
+SaveFinal
+#f9cb60 #f9960f #bc2f01
+01111
+10001
+10101
+10001
+11110
+
+Pit
+#151244 #60117f #922a95
+00001
+01000
+00100
+00010
+10000
+
+Player
+transparent #be7dbc #60117f #bc2f01
+03030
+02220
+21212
+02220
+02020
+
+DeadPlayer
+transparent #be7dbc
+01010
+01110
+10101
+01110
+01010
+
+Gun0
+#f9cb60 #680703 #151244 #60117f #922a95 #be7dbc
+01010
+11111
+10000
+10000
+11111
+
+Gun1
+#f9cb60 #680703 #151244 #60117f #922a95 #be7dbc
+01010
+11111
+12000
+12000
+11111
+
+Gun2
+#f9cb60 #680703 #151244 #60117f #922a95 #be7dbc
+01010
+11111
+12300
+12300
+11111
+
+Gun3
+#f9cb60 #680703 #151244 #60117f #922a95 #be7dbc
+01010
+11111
+12340
+12340
+11111
+
+Gun4
+#f9cb60 #680703 #151244 #60117f #922a95 #be7dbc
+01010
+11111
+12345
+12345
+11111
+
+GunBroken1
+#f9cb60 #680703 #151244 #60117f #922a95 #be7dbc
+01010
+11111
+12145
+12345
+11111
+
+GunBroken2
+#f9cb60 #680703 #151244 #bc2f01 #922a95 #be7dbc
+01010
+11111
+11315
+12145
+11111
+
+GunBroken3
+#f9cb60 #680703 #bc2f01 #f9960f #be7dbc
+01110
+11211
+12321
+11214
+11111
+
+GunBroken4
+#f9cb60 #680703 #bc2f01 #f9960f
+01210
+12321
+23032
+12321
+11211
+
+GunBroken5
+#f9cb60 #680703 #bc2f01 #f9960f
+12321
+23032
+30003
+23032
+12321
+
+GunBroken6
+#f9cb60 #bc2f01 #f9960f
+12021
+20002
+00000
+20002
+12021
+
+GunBroken7
+#f9cb60 #f9960f
+10001
+00000
+00000
+00000
+10001
+
+GunBroken8
+#f9cb60
+00000
+00000
+00000
+00000
+00000
+
+BulletD
+transparent #be7dbc #922a95 #60117f
+00300
+00200
+02120
+00200
+00000
+
+BulletL
+transparent #be7dbc #922a95 #60117f
+00000
+00200
+02123
+00200
+00000
+
+BulletR
+transparent #be7dbc #922a95 #60117f
+00000
+00200
+32120
+00200
+00000
+
+BulletU
+transparent #be7dbc #922a95 #60117f
+00000
+00200
+02120
+00200
+00300
+
+Crate
+#7f6962 #680703
+00000
+01110
+01110
+01110
+00000
+
+CrateUL
+#7f6962 #680703 transparent
+22220
+22200
+22010
+20110
+00000
+
+CrateUR
+#7f6962 #680703 transparent
+02222
+00222
+01022
+01102
+00000
+
+CrateDL
+#7f6962 #680703 transparent
+00000
+20110
+22010
+22200
+22220
+
+CrateDR
+#7f6962 #680703 transparent
+00000
+01102
+01022
+00222
+02222
+
+TempGun
+transparent
+
+BorderCheck
+transparent
+
+TempTele
+transparent
+
+SolutionCheck
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+: = Save
+; = SaveFinal
+X = Pit and BorderCheck
+# = Pit
+P = Player
+G = Gun0
+0 = Crate
+1 = CrateUL
+2 = CrateUR
+3 = CrateDL
+4 = CrateDR
+5 = CrateUL and Save
+6 = CrateUR and Save
+7 = CrateDL and Save
+8 = CrateDR and Save
+B = CrateUR and SolutionCheck
+d = BulletD
+r = BulletR
+l = BulletL
+u = BulletU
+
+Gun = Gun0 or Gun1 or Gun2 or Gun3 or Gun4
+GunBroken = GunBroken1 or GunBroken2 or GunBroken3 or GunBroken4 or GunBroken5 or GunBroken6 or GunBroken7 or GunBroken8
+GunOrGunBroken = Gun or GunBroken
+Object = Crate or CrateUL or CrateUR or CrateDL or CrateDR
+Bullet = BulletD or BulletL or BulletR or BulletU
+
+( for bullet colliding )
+ObjectD = Crate or CrateDL or CrateDR
+ObjectL = Crate or CrateUL or CrateDL
+ObjectR = Crate or CrateUR or CrateDR or Gun
+ObjectU = Crate or CrateUL or CrateUR
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Save, Pit, SaveFinal, SolutionCheck
+Gun, GunBroken, Object
+Player
+DeadPlayer
+BulletD
+BulletL
+BulletR
+BulletU
+TempGun
+BorderCheck
+TempTele
+
+======
+RULES 
+====== 
+
+( gun charging )
+[GunOrGunBroken] -> [GunOrGunBroken TempGun]
+[Gun0 TempGun] -> [Gun1 no TempGun]
+[Gun1 TempGun] -> [Gun2 no TempGun]
+[Gun2 TempGun] -> [Gun3 no TempGun]
+[Gun3 TempGun] -> [Gun4 no TempGun]
+right [Gun4 TempGun | no ObjectR] -> [Gun0 BulletR no TempGun | ]
+right [Gun4 TempGun | ObjectR] -> [GunBroken1 no TempGun | ObjectR] again
+( gun breaking )
+[GunBroken1 TempGun] -> [GunBroken2 no TempGun] again
+[GunBroken2 TempGun] -> [GunBroken3 no TempGun] again
+[GunBroken3 TempGun] -> [GunBroken4 no TempGun] again
+[GunBroken4 TempGun] -> [GunBroken5 no TempGun] again
+[GunBroken5 TempGun] -> [GunBroken6 no TempGun] again
+[GunBroken6 TempGun] -> [GunBroken7 no TempGun] again
+[GunBroken7 TempGun] -> [GunBroken8 no TempGun] win
+
+( bullet moving )
+[Bullet BorderCheck] -> [Player TempTele BorderCheck]
+[BulletD][Gun] -> [down BulletD][Gun]
+[BulletL][Gun] -> [left BulletL][Gun]
+[BulletR][Gun] -> [right BulletR][Gun]
+[BulletU][Gun] -> [up BulletU][Gun]
+( bullet and object colliding )
+down [> BulletD | ObjectD] -> [stationary Player < TempTele | ObjectD]
+late [ BulletD CrateUL] -> [ BulletL CrateUL]
+late [ BulletD CrateUR] -> [ BulletR CrateUR]
+left [> BulletL | ObjectL] -> [stationary Player < TempTele | ObjectL]
+late [ BulletL CrateUR] -> [ BulletU CrateUR]
+late [ BulletL CrateDR] -> [ BulletD CrateDR]
+right [> BulletR | ObjectR] -> [stationary Player < TempTele | ObjectR]
+late [ BulletR CrateUL] -> [BulletU CrateUL]
+late [ BulletR CrateDL] -> [BulletD CrateDL]
+up [> BulletU | ObjectU] -> [stationary Player < TempTele | ObjectU]
+late [BulletU CrateDL] -> [ BulletL CrateDL]
+late [BulletU CrateDR] -> [ BulletR CrateDR]
+( teleport collision recoiling )
+[> TempTele Object] -> [> TempTele > Object]
+
+( teleportation happening )
+[Player no TempTele][TempTele] -> [][TempTele]
+[DeadPlayer no TempTele][TempTele] -> [] [TempTele]
+[TempTele] -> []
+
+( player, object normally moving )
+[> Player | Object] -> [> Player | > Object]
+[> Object | stationary Object] -> [> Object | > Object]
+( cannot push gun )
+[> Player | GunOrGunBroken] -> [stationary Player | GunOrGunBroken]
+[> Object | GunOrGunBroken] -> [stationary Object | GunOrGunBroken]
+[> Object | stationary Object] -> [stationary Object | Object]
+[> Player | stationary Object] -> [stationary Player | Object]
+( pit )
+late [Player Pit] -> [DeadPlayer Pit]
+[> Object | Pit] -> [ | Pit]
+( checkpoint )
+late [SolutionCheck Bullet][SaveFinal] -> [Bullet][Save]
+late [Player Save] -> [Player] checkpoint
+
+==============
+WINCONDITIONS
+============== 
+
+======= 
+LEVELS
+=======
+
+message Press X to wait. 
+
+XXXXXXXXXXXXXXXXXXXX
+X#4##..####3##.###.X
+X####.2.###1##.###3X
+X##.....#####:4#3#0X
+X##.4.#..####..####X
+X###...#.#####2#1##X
+X###.#...###4#####1X
+X.80.######.60#####X
+X#23###0..####...##X
+X#4.#3#4;0G.##.:0#3X
+X##...#.....##...##X
+X##.1.0###..#####..X
+X###..#B####23##0:1X
+X##0#.###.##41###4.X
+X###0:0.#4..213####X
+X####0.0#.....#0:1.X
+X0:..############1#X
+X#.2.###014.0#23###X
+X#..########1##2.0#X
+X####0######4##1###X
+X########2.10######X
+XXXXXXXXXXXXXXXXXXXX
+
+message I'm freeeeeeeee!
+

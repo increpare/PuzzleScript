@@ -1,0 +1,431 @@
+title Head Skuller
+author David Skinner
+homepage www.puzzlescript.net
+verbose_logging
+debug
+color_palette 2
+noaction
+
+(
+
+I found this game, half-made, in my gist history from two years ago. I have no recollection of making it, but I also can't find any evidence anyone else making it, so I'm finishing it and releasing it.
+)
+========
+OBJECTS
+========
+
+Background
+darkgreen green
+00101
+10000
+00100
+00001
+01000
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+darkgray darkgray gray
+.222.
+11112
+12202
+11112
+11112
+
+Player
+darkred brown pink red
+.000.
+.111.
+22222
+13331
+.3.3.
+
+head_front
+yellow white lightbrown brown red
+.....
+01010
+00000
+04440
+.000.
+
+
+head_back
+yellow white pink brown
+.....
+33333
+03330
+00000
+.000.
+
+skull_front
+white #dddddd darkgray black
+.000.
+03030
+00200
+.000.
+.111.
+
+skull_back
+white lightgray darkgray black
+.000.
+00000
+00000
+.111.
+.222.
+
+skull_head_front
+yellow white lightbrown brown red lightgray
+.555.
+01010
+00000
+04440
+.000.
+
+skull_head_back
+yellow lightgray pink brown
+.111.
+33333
+03330
+00000
+.000.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+* = skull_front
+, = skull_back
+
+O = head_front
+Q = head_back
+
+@ = skull_head_front
+$ = skull_head_back
+
+skull = skull_front or skull_back
+head = head_front or head_back
+skull_head = skull_head_front or skull_head_back
+head_or_skull_head = head or skull_head
+
+head_back_or_skull_head_or_skull = head_back or skull_head or skull
+head_front_or_skull_head_or_skull = head_front or skull_head or skull
+pushable = skull or head or skull_head
+obstacle = pushable or wall or Player
+
+=======
+SOUNDS
+=======
+
+pushable move 36772507
+sfx0 84095907 (turn sfx)
+sfx1 38976908 (insert)
+endlevel 85129908
+endgame 18963908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, skull, head, skull_head
+
+======
+RULES
+======
+
+[ > Player | pushable ] -> [ > Player | > pushable ] 
+horizontal [ > pushable | pushable ] -> [ > pushable | > pushable ]
+
+horizontal [ > skull_front | no obstacle ] -> [ | skull_back ] sfx0
++ horizontal [ > skull_back | no obstacle ] -> [ | skull_front ] sfx0
++ horizontal [ > head_front | no obstacle ] -> [ | head_back ] sfx0
++ horizontal [ > head_back | no obstacle ] -> [ | head_front ] sfx0
++ horizontal [ > skull_head_front | no obstacle ] -> [ | skull_head_back ] sfx0
++ horizontal [ > skull_head_back | no obstacle ] -> [ | skull_head_front ] sfx0
+
+
+vertical [ > Player | pushable ] -> [ > Player | > pushable ] 
+
+down [ > head_or_skull_head | pushable ] -> [ > head_or_skull_head | > pushable ]
++ [ > skull_front | head_back_or_skull_head_or_skull ] -> [ > skull_front | > head_back_or_skull_head_or_skull ]
++ [ > skull_back | head_front_or_skull_head_or_skull ] -> [ > skull_back | > head_front_or_skull_head_or_skull ]
+
+
+down [ head_or_skull_head | < pushable ] -> [ < head_or_skull_head | < pushable ]
++ [ skull_front | < head_back_or_skull_head_or_skull ] -> [ < skull_front | < head_back_or_skull_head_or_skull ]
++ [ skull_back | < head_front_or_skull_head_or_skull ] -> [ < skull_back | < head_front_or_skull_head_or_skull ]
+
+down [ > skull_front | head_front ] -> [ | stationary skull_head_front ] sfx1
+down [ > skull_back | head_back ] -> [ | stationary skull_head_back ] sfx1
+
+down [ skull_front | < head_front ] -> [ skull_head_front | ] sfx1
+down [ skull_back | < head_back ] -> [ skull_head_back | ] sfx1
+
+==============
+WINCONDITIONS
+==============
+
+no skull
+
+=======
+LEVELS
+=======
+
+######
+#..p.#
+#..*.#
+#..o.#
+#..*.#
+#..o.#
+######
+
+p..........
+*.,.o.q.@.$
+*.*.*.*.*.*
+...........
+*.,.o.q.@.$
+,.,.,.,.,.,
+...........
+*.,.o.q.@.$
+o.o.o.o.o.o
+...........
+*.,.o.q.@.$
+q.q.q.q.q.q
+...........
+*.,.o.q.@.$
+@.@.@.@.@.@
+...........
+*.,.o.q.@.$
+$.$.$.$.$.$
+...........
+
+######
+#....#
+#....#
+#....#
+#....#
+######
+
+#######
+#.....#
+#.....#
+#.....#
+#.....#
+#######
+
+#########
+#.......#
+#.......#
+#.......#
+#.......#
+#########
+
+
+############
+#..........#
+#..........#
+#..........#
+#..........#
+############
+
+############
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+#..........#
+############
+
+
+(981 not so interesting, but not trivial, and not too hard)
+######
+#*...#
+#.*op#
+#...o#
+#...##
+######
+
+(4077 FINE GOOD ENOUGH NOT TOO HARD)
+######
+##...#
+#.o.o#
+#.*.*#
+#..p.#
+######
+
+(7239 not too hard, interesting starting point?)
+######
+#...p#
+#..o.#
+#.**o#
+#..#.#
+######
+
+
+(9165)
+#######
+#.*..p#
+#....*#
+#..oo.#
+#.....#
+#######
+
+(2879)
+#######
+#..*..#
+#.o.p.#
+#o..*.#
+#....##
+#######
+
+(4117)
+#######
+#....*#
+#..op.#
+##o.*.#
+#....##
+#######
+
+(2812)
+#######
+#.....#
+#.o*..#
+#..o*.#
+#.#p###
+#######
+
+######
+#....#
+#....#
+#....#
+#....#
+######
+
+
+..#####..
+###...###
+#.....*.#
+#.#..#*.#
+#.o.o#p.#
+#########
+
+
+
+message level 1 of 10
+
+####..
+#**#..
+#..###
+#pq..#
+#..O.#
+#..###
+####..
+
+message level 2 of 10
+
+######
+#....#
+#.#P.#
+#.*@.#
+#.O@.#
+#....#
+######
+
+message level 3 of 10
+
+
+
+message level 4 of 10
+
+########
+#......#
+#.O@@,P#
+#......#
+#####..#
+....####
+
+message level 5 of 10
+
+.#######
+.#.....#
+.#.O*O.#
+##.*P*.#
+#..O*O.#
+#......#
+########
+
+message level 6 of 10
+
+######.#####
+#....###...#
+#.**.....#P#
+#.*.#OOO...#
+#...########
+#####.......
+
+message level 7 of 10
+
+#######
+#.....#
+#.O*O.#
+#.*O*.#
+#.O*O.#
+#.*O*.#
+#..P..#
+#######
+
+message level 8 of 10
+
+..######
+..#.**P#
+..#.oo.#
+..##.###
+...#.#..
+...#.#..
+####.#..
+#....##.
+#.#...#.
+#...#.#.
+###...#.
+..#####.
+
+message level 9 of 10
+
+#####.
+#O..##
+#P**.#
+##...#
+.##..#
+..##Q#
+...###
+
+message level 10 of 10
+
+......#####
+......#O..#
+......#O#.#
+#######O#.#
+#.P.*.*.*.#
+#.#.#.#.###
+#.......#..
+#########..
+
+message congratulations!
+
+(
+choose 3 [ ] -> [ wall ]
+choose 1 [ no wall ] -> [ player ]
+choose 2 [ no wall no player no skull_front ] -> [ skull_front ]
+choose 2 [ no wall no player no skull_front no head_front ] -> [ head_front ]
+)

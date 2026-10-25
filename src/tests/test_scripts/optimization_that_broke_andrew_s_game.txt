@@ -1,0 +1,220 @@
+title tiny treasure hunt 1.0
+author Weeble
+homepage www.twitter.com/weeble
+run_rules_on_level_start
+
+debug
+verbose_logging
+
+========
+OBJECTS
+========
+LowFloorRaw
+BLACK
+
+LowFloor1
+#111411 #191d19 #202020 #252725
+01011
+12310
+23320
+02321
+02110
+
+LowFloor2
+#111411 #191d19 #202020 #252725
+01001
+22312
+12331
+01310
+10101
+
+WallFacade
+#555555 #666666 #777777
+21221
+10011
+.....
+.....
+.....
+
+HighFloor
+#909090 #999999 #bbbbbb #cccccc
+33232
+31012
+20002
+31012
+32222
+
+LowPlayer
+#686868 #707070 #787878 #808080
+.....
+.....
+.232.
+.121.
+.0.0.
+
+HighCrate
+#dddd55 #eeee50 #cccc48
+10001
+00000
+10001
+22222
+22222
+
+MeltingIce
+White LightBlue #9999ff #330000
+.33..
+3333.
+31013
+11330
+21112
+
+
+StaticIce
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeN
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeE
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeS
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+IceCubeW
+White LightBlue #9999ff
+10002
+1...0
+0...1
+10012
+21122
+
+FirePit1
+#990000 #770000 #550000 #330000
+02111
+13321
+02321
+32110
+23121
+
+FirePit2
+#990000 #770000 #550000 #330000
+10311
+21233
+11021
+23213
+20122
+
+
+Pillar
+#cccccc #dddddd #eeeeee #ffffff #bbbbbb #aaaaaa
+32123
+33333
+02120
+22122
+01310
+
+
+ 
+StairsNorth
+#333333 #444444 #555555 #666666 #777777
+44444
+43334
+32223
+21112
+10001
+=======
+LEGEND
+=======
+. = LowFloorRaw
+" = HighFloor
+@ = LowPlayer and LowFloorRaw
+H = HighCrate and HighFloor
+: = WallFacade and FirePit1 and LowFloorRaw
+~ = WallFacade and LowFloorRaw
+# = LowFloorRaw
+W = LowFloorRaw and WallFacade
+! = FirePit1 and LowFloorRaw
+I = Pillar and HighFloor
+% = StaticIce and LowFloorRaw
+& = StaticIce and LowFloorRaw and WallFacade
+/ = StairsNorth and LowFloorRaw
+FirePit = FirePit1 or FirePit2
+LowFloor = LowFloor1 or LowFloor2
+Background = LowFloor or HighFloor or LowFloorRaw
+Player = LowPlayer
+Obstacle = StairsNorth
+BlocksLow = HighFloor or StaticIce or Pillar
+Pushable = StaticIce
+MovingIce = IceCubeE or IceCubeS or IceCubeW or IceCubeN
+IceCube = StaticIce or MovingIce
+Grounded = IceCube or LowPlayer
+
+=======
+SOUNDS
+=======
+
+SFX0 98605308 ( Hiss )
+SFX1 89033504 ( Snap )
+SFX2 70543502 ( Plink )
+SFX3 34905302 ( Slam )
+SFX4 93355705 ( Squeak )
+SFX5 52776702 ( Grind )
+SFX6 86238705 ( Bounce )
+
+================
+COLLISIONLAYERS
+================
+
+Background
+StairsNorth, FirePit
+WallFacade
+IceCube, MovingIce, LowPlayer, MeltingIce
+Pillar, HighCrate
+
+======
+RULES 
+====== 
+
+(Pushing stuff)
+left [ > LowPlayer | Pushable ] -> [ > LowPlayer | > Pushable ]
+
+(Ice melts in lava)
+[ MeltingIce FirePit ] -> [ ]
+[ IceCube FirePit ] -> [ MeltingIce FirePit ] sfx0 again
+
+(Ice slides)
+LEFT [ > StaticIce ] -> [ > IceCubeW ] sfx2
+LEFT [ IceCubeW ] -> [ > IceCubeW ] again
+
+==============
+WINCONDITIONS
+==============
+
+======= 
+LEVELS
+=======
+
+.!%@
+
+

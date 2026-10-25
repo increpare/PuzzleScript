@@ -1,0 +1,1716 @@
+title Shall We Golf?
+author nebu soku
+homepage www.puzzlescript.net
+
+realtime_interval 0.13
+run_rules_on_level_Start
+background_color #3a6aa3
+text_color lightblue
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Green
+#659b2d green
+11111
+10001
+10101
+10001
+11111
+
+Water
+lightblue 
+
+AddWaterLUD
+lightblue 
+0....
+.....
+.....
+.....
+0....
+
+AddWaterLU
+lightblue 
+0....
+.....
+.....
+.....
+.....
+
+AddWaterLD
+lightblue 
+.....
+.....
+.....
+.....
+0....
+
+AddWaterRUD
+lightblue 
+....0
+.....
+.....
+.....
+....0
+
+AddWaterRU
+lightblue 
+....0
+.....
+.....
+.....
+.....
+
+AddWaterRD
+lightblue 
+.....
+.....
+.....
+.....
+....0
+
+RemoveWaterLUD
+green
+0....
+.....
+.....
+.....
+0....
+
+RemoveWaterLU
+green
+0....
+.....
+.....
+.....
+.....
+
+RemoveWaterLD
+green
+.....
+.....
+.....
+.....
+0....
+
+RemoveWaterRUD
+green
+....0
+.....
+.....
+.....
+....0
+
+RemoveWaterRU
+green
+....0
+.....
+.....
+.....
+.....
+
+RemoveWaterRD
+green
+.....
+.....
+.....
+.....
+....0
+
+Bunker
+lightbrown orange #2a6b17
+00000
+00010
+00000
+01000
+00000
+
+AddBunkerLUD
+lightbrown
+0....
+.....
+.....
+.....
+0....
+
+AddBunkerLU
+lightbrown
+0....
+.....
+.....
+.....
+.....
+
+AddBunkerLD
+lightbrown
+.....
+.....
+.....
+.....
+0....
+
+AddBunkerRUD
+lightbrown
+....0
+.....
+.....
+.....
+....0
+
+AddBunkerRU
+lightbrown
+....0
+.....
+.....
+.....
+.....
+
+AddBunkerRD
+lightbrown
+.....
+.....
+.....
+.....
+....0
+
+RemoveBunkerLUD
+green
+0....
+.....
+.....
+.....
+0....
+
+RemoveBunkerLU
+green
+0....
+.....
+.....
+.....
+.....
+
+RemoveBunkerLD
+green
+.....
+.....
+.....
+.....
+0....
+
+RemoveBunkerRUD
+green
+....0
+.....
+.....
+.....
+....0
+
+RemoveBunkerRU
+green
+....0
+.....
+.....
+.....
+.....
+
+RemoveBunkerRD
+green
+.....
+.....
+.....
+.....
+....0
+
+OnBunker
+black
+.....
+.....
+.....
+.....
+.....
+
+blank
+#3a6aa3
+
+Win1
+#3a6aa3
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+Win2
+#3a6aa3
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+WinS1
+white
+
+WinS2
+black
+
+RSVWin1
+black
+.....
+.....
+.....
+.....
+.....
+
+RSVWin2
+black
+.....
+.....
+.....
+.....
+.....
+
+Target
+lightgray red darkblue
+..0..
+..0..
+..2..
+.....
+.....
+
+Flag
+red lightgray
+.....
+.....
+.....
+..00.
+..1..
+
+clubR
+gray darkgray white
+.....
+.....
+.0...
+.2...
+.11..
+
+clubL
+gray darkgray white
+.....
+.....
+...0.
+...2.
+..11.
+
+Ball
+white
+.....
+.....
+..0..
+.....
+.....
+
+BallR
+white darkblue
+..0..
+.....
+..1..
+.....
+.....
+
+BallL
+white darkblue
+..0..
+.....
+..1..
+.....
+.....
+
+BallU
+white darkblue
+..0..
+.....
+..1..
+.....
+.....
+
+BallD
+white darkblue
+..0..
+.....
+..1..
+.....
+.....
+
+BallIn
+darkblue
+.....
+.....
+..0..
+.....
+.....
+
+Start
+lightgreen green
+11111
+11111
+10111
+11111
+11101
+
+Tree
+darkgreen brown #134b3d
+.000.
+.000.
+..1..
+.....
+.....
+
+TreeU
+darkgreen #134b3d
+.....
+.....
+.....
+.111.
+.111.
+
+LeftRSV
+purple
+
+UnmovableR
+white lightbrown lightgray darkblue brown blue black darkgray
+.6666
+63636
+.3333
+.0330
+.3.6.
+
+UnmovableL
+white lightbrown lightgray darkblue brown blue black
+6666.
+63636
+3333.
+0330.
+.6.3.
+
+PlayerR
+white lightbrown lightgray darkblue brown blue black darkgray
+.6666
+63636
+.2333
+.0330
+.776.
+
+WalkR1
+white lightbrown lightgray darkblue brown blue black darkgray
+.6666
+63636
+.3233
+.3033
+3.776
+
+WalkR2
+white lightbrown lightgray darkblue brown blue black darkgray
+.6666
+62636
+.2333
+.0332
+.773.
+
+WalkR3
+white lightbrown lightgray darkblue brown blue black darkgray
+.6666
+63636
+23333
+03330
+77..3
+
+PlayerL
+white lightbrown lightgray darkblue brown blue black darkgray
+6666.
+63636
+3332.
+0330.
+.677.
+
+WalkL1
+white lightbrown lightgray darkblue brown blue black darkgray
+6666.
+63636
+3323.
+.303.
+677.3
+
+WalkL2
+white lightbrown lightgray darkblue brown blue black darkgray
+6666.
+63636
+3332.
+2330.
+.377.
+
+WalkL3
+white lightbrown lightgray darkblue brown blue black darkgray
+6666.
+63636
+33332
+03330
+3..77
+
+RSVR1
+pink
+.....
+.....
+.....
+.....
+.....
+
+RSVL1
+pink
+.....
+.....
+.....
+.....
+.....
+
+TM1R
+white lightbrown lightgray pink brown blue darkred
+.6666
+63636
+.3333
+.0330
+.3.6.
+
+TM1WalkR1
+white lightbrown lightgray pink brown blue darkred
+.6666
+63636
+.3333
+.3033
+3...6
+
+TM1WalkR2
+white lightbrown lightgray pink brown blue darkred
+.6666
+63636
+.3333
+.0332
+.6.3.
+
+TM1WalkR3
+white lightbrown lightgray pink brown blue darkred
+.6666
+63636
+.3333
+03330
+6...3
+
+TM1L
+white lightbrown lightgray pink brown blue darkred
+6666.
+63636
+3333.
+0330.
+.6.3.
+
+TM1WalkL1
+white lightbrown lightgray pink brown blue darkred
+6666.
+63636
+3333.
+3303.
+6...3
+
+TM1WalkL2
+white lightbrown lightgray pink brown blue darkred
+6666.
+63636
+3333.
+2330.
+.3.6.
+
+TM1WalkL3
+white lightbrown lightgray pink brown blue darkred
+6666.
+63636
+3333.
+03330
+3...6
+
+RSVR2
+yellow
+.....
+.....
+.....
+.....
+.....
+
+RSVL2
+yellow
+.....
+.....
+.....
+.....
+.....
+
+TM2R
+white lightbrown lightgray yellow brown blue orange
+.6666
+63636
+.3333
+.0330
+.3.6.
+
+TM2WalkR1
+white lightbrown lightgray yellow brown blue orange
+.6666
+63636
+.3333
+.3033
+3...6
+
+TM2WalkR2
+white lightbrown lightgray yellow brown blue orange
+.6666
+63636
+.3333
+.0332
+.6.3.
+
+TM2WalkR3
+white lightbrown lightgray yellow brown blue orange
+.6666
+63636
+.3333
+03330
+6...3
+
+TM2L
+white lightbrown lightgray yellow brown blue orange
+6666.
+63636
+3333.
+0330.
+.6.3.
+
+TM2WalkL1
+white lightbrown lightgray yellow brown blue orange
+6666.
+63636
+3333.
+3303.
+6...3
+
+TM2WalkL2
+white lightbrown lightgray yellow brown blue orange
+6666.
+63636
+3333.
+2330.
+.3.6.
+
+TM2WalkL3
+white lightbrown lightgray yellow brown blue orange
+6666.
+63636
+3333.
+03330
+3...6
+
+RSVR3
+gray
+.....
+.....
+.....
+.....
+.....
+
+RSVL3
+gray
+.....
+.....
+.....
+.....
+.....
+
+TM3R
+white lightbrown lightgray Blue brown blue #153759
+.6666
+63636
+.3333
+.0330
+.3.6.
+
+TM3WalkR1
+white lightbrown lightgray Blue brown blue #153759
+.6666
+63636
+.3333
+.3033
+3...6
+
+TM3WalkR2
+white lightbrown lightgray Blue brown blue #153759
+.6666
+63636
+.3333
+.0332
+.6.3.
+
+TM3WalkR3
+white lightbrown lightgray Blue brown blue #153759
+.6666
+63636
+.3333
+03330
+6...3
+
+TM3L
+white lightbrown lightgray Blue brown blue #153759
+6666.
+63636
+3333.
+0330.
+.6.3.
+
+TM3WalkL1
+white lightbrown lightgray Blue brown blue #153759
+6666.
+63636
+3333.
+3303.
+6...3
+
+TM3WalkL2
+white lightbrown lightgray Blue brown blue #153759
+6666.
+63636
+3333.
+2330.
+.3.6.
+
+TM3WalkL3
+white lightbrown lightgray Blue brown blue #153759
+6666.
+63636
+3333.
+03330
+3...6
+
+AddGreenLUD
+green
+0....
+.....
+.....
+.....
+0....
+
+AddGreenLU
+green
+0....
+.....
+.....
+.....
+.....
+
+AddGreenLD
+green
+.....
+.....
+.....
+.....
+0....
+
+AddGreenRUD
+green
+....0
+.....
+.....
+.....
+....0
+
+AddGreenRU
+green
+....0
+.....
+.....
+.....
+.....
+
+AddGreenRD
+green
+.....
+.....
+.....
+.....
+....0
+
+RemoveGreenLUD
+#1d4c2c
+0....
+.....
+.....
+.....
+0....
+
+RemoveGreenLU
+#1d4c2c
+0....
+.....
+.....
+.....
+.....
+
+RemoveGreenLD
+#1d4c2c
+.....
+.....
+.....
+.....
+0....
+
+RemoveGreenRUD
+#1d4c2c
+....0
+.....
+.....
+.....
+....0
+
+RemoveGreenRU
+#1d4c2c
+....0
+.....
+.....
+.....
+.....
+
+RemoveGreenRD
+#1d4c2c
+.....
+.....
+.....
+.....
+....0
+
+BorderR
+#1d4c2c
+0....
+0....
+0....
+0....
+0....
+
+BorderL
+#1d4c2c
+....0
+....0
+....0
+....0
+....0
+
+BorderU
+#1d4c2c
+.....
+.....
+.....
+.....
+00000
+
+BorderD
+#1d4c2c
+00000
+.....
+.....
+.....
+.....
+
+RemoveBorderRU
+#3a6aa3
+0....
+.....
+.....
+.....
+.....
+
+RemoveBorderLU
+#3a6aa3
+....0
+.....
+.....
+.....
+.....
+
+RemoveBorderRD
+#3a6aa3
+.....
+.....
+.....
+.....
+0....
+
+RemoveBorderLD
+#3a6aa3
+.....
+.....
+.....
+.....
+....0
+
+Ripples1
+white
+.....
+.....
+..0..
+.....
+.....
+
+Ripples2
+white #3a6aa3
+.....
+...0.
+.0...
+..1..
+.....
+
+Ripples3
+white #3a6aa3
+.....
+.....
+.....
+.....
+..1..
+
+ArrowR
+gray lightgray red
+.111.
+11211
+11121
+11211
+.111.
+
+ArrowL
+gray lightgray red
+.111.
+11211
+12111
+11211
+.111.
+
+ArrowU
+gray lightgray red
+.111.
+11211
+12121
+11111
+.111.
+
+ArrowD
+gray lightgray red
+.111.
+11111
+12121
+11211
+.111.
+
+RSVText
+purple
+
+NT
+#fa5c5c
+0...0
+00..0
+0.0.0
+0..00
+0...0
+
+IT
+orange yellow
+.0.11
+.0.1.
+.0.1.
+.0.1.
+.0.11
+
+CT
+yellow #27cc20
+000.1
+....1
+....1
+....1
+000.1
+
+ET
+#27cc20
+0000.
+.....
+0000.
+.....
+0000.
+
+ST
+#4bb6e3
+.0000
+.0...
+.0000
+.....
+.0000
+
+HT
+#4bb6e3 blue
+0.1..
+..1..
+0.111
+0.1..
+0.1..
+
+OT
+blue #bb4be2
+.0.11
+.0.1.
+00.1.
+.0.1.
+.0.11
+
+TT
+#bb4be2 pink
+000.1
+..0..
+..0..
+..0..
+000..
+
+TT2
+pink
+0000.
+.0...
+.0...
+.0...
+.0...
+
+ExT
+#fa5c5c
+.0...
+.0...
+.0...
+.....
+.0...
+
+Cursor
+red
+0...0
+.....
+.....
+.....
+0...0
+
+=======
+LEGEND
+=======
+
+Player = PlayerR or PlayerL or WalkR1 or WalkR2 or WalkR3 or WalkL1 or WalkL2 or WalkL3 or clubR or clubL
+Leader = PlayerR or PlayerL or WalkR1 or WalkR2 or WalkR3 or WalkL1 or WalkL2 or WalkL3
+WalkR = WalkR1 or WalkR2 or WalkR3
+WalkL = WalkL1 or WalkL2 or WalkL3
+
+TM1 = TM1R or TM1L
+TM1WalkR = TM1R or TM1WalkR1 or TM1WalkR2 or TM1WalkR3
+TM1WalkL = TM1L or TM1WalkL1 or TM1WalkL2 or TM1WalkL3
+RSV1 = RSVR1 or RSVL1
+
+TM2 = TM2R or TM2L
+TM2WalkR = TM2R or TM2WalkR1 or TM2WalkR2 or TM2WalkR3
+TM2WalkL = TM2L or TM2WalkL1 or TM2WalkL2 or TM2WalkL3
+RSV2 = RSVR2 or RSVL2
+
+TM3 = TM3R or TM3L
+TM3WalkR = TM3R or TM3WalkR1 or TM3WalkR2 or TM3WalkR3
+TM3WalkL = TM3L or TM3WalkL1 or TM3WalkL2 or TM3WalkL3
+RSV3 = RSVR3 or RSVL3
+
+TMs = TM1WalkR or TM1WalkL or TM2WalkR or TM2WalkL or TM3WalkR or TM3WalkL or UnmovableR or UnmovableL
+
+club = clubR or clubL
+
+Arrows = ArrowR or ArrowL or ArrowU or ArrowD
+
+Obstacles = Player or TMs or blank or Tree
+OBforP = Ball or blank or Target or Tree or Water
+
+. = Background
+, = Green
+P = PlayerR
+O = Target and Green
+_ = blank
+T = Tree and Green
+S = Start and PlayerR and Green
+B = Ball and Green
+W = Water and Green
++ = Bunker and Green
+R = ArrowR and Green
+L = ArrowL and Green
+U = ArrowU and Green
+D = ArrowD and Green
+1 = WinS1 and blank
+2 = WinS2 and blank
+3 = RSVText and blank
+* = LeftRSV and blank
+
+AddGreenL = AddGreenLUD or AddGreenLU or AddGreenLD
+AddGreenR = AddGreenRUD or AddGreenRU or AddGreenRD
+
+RemoveGreenL = RemoveGreenLUD or RemoveGreenLU or RemoveGreenLD
+RemoveGreenR = RemoveGreenRUD or RemoveGreenRU or RemoveGreenRD
+
+AddWaterL = AddWaterLUD or AddWaterLU or AddWaterLD
+AddwaterR = AddWaterRUD or AddWaterRU or AddWaterRD
+
+RemoveWaterL = RemoveWaterLUD or RemoveWaterLU or RemoveWaterLD
+RemoveWaterR = RemoveWaterRUD or RemoveWaterRU or RemoveWaterRD
+
+AddBunkerL = AddBunkerLUD or AddBunkerLU or AddBunkerLD
+AddBunkerR = AddBunkerRUD or AddBunkerRU or AddBunkerRD
+
+RemoveBunkerL = RemoveBunkerLD or RemoveBunkerLU or RemoveBunkerLUD
+RemoveBunkerR = RemoveBunkerRUD or RemoveBunkerRU or RemoveBunkerRD
+
+=======
+SOUNDS
+=======
+
+Leader MOVE 62144707
+blank MOVE 16278507
+blank move 95612108
+Target action 6210100
+club move 44711106
+Ball action 45846907
+Ripples2 action 22937701
+Ripples1 action 73444303
+
+sfx0 47327503
+sfx1 44711106
+sfx2 48837904
+
+restart 58221102
+undo 12286707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Start, WinS1, WinS2, RSVText, LeftRSV
+Green
+Target, Bunker, Water
+AddWaterL
+AddwaterR
+AddBunkerL
+AddBunkerR
+RemoveWaterL
+RemoveWaterR
+RemoveBunkerL
+RemoveBunkerR
+Ripples1, Ripples2, Ripples3
+RemoveGreenL
+RemoveGreenR
+Arrows
+Leader, TM1WalkR, TM1WalkL, TM2WalkR, TM2WalkL, TM3WalkR, TM3WalkL, UnmovableR, UnmovableL, Ball, blank, Tree, BallIn
+clubR, clubL
+BallR, BallL, BallU, BallD
+RSV1, RSV2, RSV3
+OnBunker
+BorderR
+BorderL
+BorderU
+BorderD
+RemoveBorderRU
+RemoveBorderLU
+RemoveBorderRD
+RemoveBorderLD
+AddGreenL
+AddGreenR
+Flag, TreeU
+Cursor
+Win1, RSVWin1
+Win2, RSVWin2
+NT, IT, CT, ET, ST, HT, OT, TT, TT2, ExT
+
+======
+RULES
+======
+
+up [ Target | no Flag ] -> [ Target | Flag ]
+up [ Tree | no TreeU ] -> [ Tree | TreeU ]
+
+[ > Player | OBforP ] -> [ Player | OBforP ]
+
+[ LeftRSV ] [ PlayerR ] -> [ ] [ PlayerL ]
+
+([ > Player | Arrows | no OBforP ] -> [ > Player | > Arrows | ]
+[ > Player | Arrows | OBforP ] -> [ Player | Arrows | OBforP ])
+
+(Arrows)
+
+right [ BallU ArrowR | no Obstacles ] -> [ ArrowR | BallU ]
+right [ BallD ArrowR | no Obstacles ] -> [ ArrowR | BallD ]
+right [ BallL ArrowR | no Obstacles ] -> [ ArrowR | Ball ]
+left [ BallU ArrowL | no Obstacles ] -> [ ArrowL | BallU ]
+left [ BallD ArrowL | no Obstacles ] -> [ ArrowL | BallD ]
+left [ BallR ArrowL | no Obstacles ] -> [ ArrowL | Ball ]
+up [ BallR ArrowU | no Obstacles ] -> [ ArrowU | BallR ]
+up [ BallL ArrowU | no Obstacles ] -> [ ArrowU | BallL ]
+up [ BallD ArrowU | no Obstacles ] -> [ ArrowU | Ball ]
+down [ BallR ArrowD | no Obstacles ] -> [ ArrowD | BallR ]
+down [ BallL ArrowD | no Obstacles ] -> [ ArrowD | BallL ]
+down [ BallU ArrowD | no Obstacles ] -> [ ArrowD | Ball ]
+
+(Water)
+
+left [ no Water no AddWaterL | Water ] -> [ AddWaterLUD | Water ]
+right [ no Water no AddWaterR | Water ] -> [ AddWaterRUD | Water ]
+
+up [ AddWaterLUD | no Water ] -> [ AddWaterLD | ]
+up [ AddWaterRUD | no Water ] -> [ AddWaterRD | ]
+
+down [ AddWaterLUD | no Water ] -> [ AddWaterLU | ]
+down [ AddWaterRUD | no Water ] -> [ AddWaterRU | ]
+
+down [ AddWaterLD | no Water ] -> [ | ]
+down [ AddWaterRD | no Water ] -> [ | ]
+
+left [ Water no RemoveWaterL | no Water ] -> [ Water RemoveWaterLUD | ]
+right [ Water no RemoveWaterR | no Water ] -> [ Water RemoveWaterRUD | ]
+
+up [ RemoveWaterLUD | Water ] -> [ RemoveWaterLD | Water ]
+up [ RemoveWaterRUD | Water ] -> [ RemoveWaterRD | Water ]
+
+down [ RemoveWaterLUD | Water ] -> [ RemoveWaterLU | Water ]
+down [ RemoveWaterRUD | Water ] -> [ RemoveWaterRU | Water ]
+
+down [ RemoveWaterLD | Water ] -> [ | Water ]
+down [ RemoveWaterRD | Water ] -> [ | Water ]
+
+right [ RemoveWaterRU | AddWaterLU ] -> [ RemoveWaterRU | ]
+right [ RemoveWaterRD | AddWaterLD ] -> [ RemoveWaterRD | ]
+
+right [ RemoveWaterRUD | AddWaterLU ] -> [ RemoveWaterRUD | ]
+right [ RemoveWaterRUD | AddWaterLD ] -> [ RemoveWaterRUD | ]
+
+left [ RemoveWaterLU | AddWaterRU ] -> [ RemoveWaterLU | ]
+left [ RemoveWaterLD | AddWaterRD ] -> [ RemoveWaterLD | ]
+
+left [ RemoveWaterLUD | AddWaterRU ] -> [ RemoveWaterLUD | ]
+left [ RemoveWaterLUD | AddWaterRD ] -> [ RemoveWaterLUD | ]
+
+[ Ball Water ] -> [ Ripples1 Water ]
+[ stationary Ripples3 ] -> [ ]
+[ stationary Ripples2 ] -> [ Ripples3 ]
+[ stationary Ripples1 ] -> [ action Ripples2 ]
+
+(Bunker)
+
+left [ no Bunker no AddBunkerL | Bunker ] -> [ AddBunkerLUD | Bunker ]
+right [ no Bunker no AddBunkerR | Bunker ] -> [ AddBunkerRUD | Bunker ]
+
+up [ AddBunkerLUD | no Bunker ] -> [ AddBunkerLD | ]
+up [ AddBunkerRUD | no Bunker ] -> [ AddBunkerRD | ]
+
+down [ AddBunkerLUD | no Bunker ] -> [ AddBunkerLU | ]
+down [ AddBunkerRUD | no Bunker ] -> [ AddBunkerRU | ]
+
+down [ AddBunkerLD | no Bunker ] -> [ | ]
+down [ AddBunkerRD | no Bunker ] -> [ | ]
+
+left [ Bunker no RemoveBunkerL | no Bunker ] -> [ Bunker RemoveBunkerLUD | ]
+right [ Bunker no RemoveBunkerR | no Bunker ] -> [ Bunker RemoveBunkerRUD | ]
+
+up [ RemoveBunkerLUD | Bunker ] -> [ RemoveBunkerLD | Bunker ]
+up [ RemoveBunkerRUD | Bunker ] -> [ RemoveBunkerRD | Bunker ]
+
+down [ RemoveBunkerLUD | Bunker ] -> [ RemoveBunkerLU | Bunker ]
+down [ RemoveBunkerRUD | Bunker ] -> [ RemoveBunkerRU | Bunker ]
+
+down [ RemoveBunkerLD | Bunker ] -> [ | Bunker ]
+down [ RemoveBunkerRD | Bunker ] -> [ | Bunker ]
+
+right [ RemoveBunkerRU | AddBunkerLU ] -> [ RemoveBunkerRU | ]
+right [ RemoveBunkerRD | AddBunkerLD ] -> [ RemoveBunkerRD | ]
+
+right [ RemoveBunkerRUD | AddBunkerLU ] -> [ RemoveBunkerRUD | ]
+right [ RemoveBunkerRUD | AddBunkerLD ] -> [ RemoveBunkerRUD | ]
+
+left [ RemoveBunkerLU | AddBunkerRU ] -> [ RemoveBunkerLU | ]
+left [ RemoveBunkerLD | AddBunkerRD ] -> [ RemoveBunkerLD | ]
+
+left [ RemoveBunkerLUD | AddBunkerRU ] -> [ RemoveBunkerLUD | ]
+left [ RemoveBunkerLUD | AddBunkerRD ] -> [ RemoveBunkerLUD | ]
+
+(Green)
+
+left [ no Green no AddGreenL | Green ] -> [ AddGreenLUD | Green ]
+right [ no Green no AddGreenR | Green ] -> [ AddGreenRUD | Green ]
+
+up [ AddGreenLUD | no Green ] -> [ AddGreenLD | ]
+up [ AddGreenRUD | no Green ] -> [ AddGreenRD | ]
+
+down [ AddGreenLUD | no Green ] -> [ AddGreenLU | ]
+down [ AddGreenRUD | no Green ] -> [ AddGreenRU | ]
+
+down [ AddGreenLD | no Green ] -> [ | ]
+down [ AddGreenRD | no Green ] -> [ | ]
+
+left [ Green no RemoveGreenL | no Green ] -> [ Green RemoveGreenLUD | ]
+right [ Green no RemoveGreenR | no Green ] -> [ Green RemoveGreenRUD | ]
+
+up [ RemoveGreenLUD | Green ] -> [ RemoveGreenLD | Green ]
+up [ RemoveGreenRUD | Green ] -> [ RemoveGreenRD | Green ]
+
+down [ RemoveGreenLUD | Green ] -> [ RemoveGreenLU | Green ]
+down [ RemoveGreenRUD | Green ] -> [ RemoveGreenRU | Green ]
+
+down [ RemoveGreenLD | Green ] -> [ | Green ]
+down [ RemoveGreenRD | Green ] -> [ | Green ]
+
+right [ RemoveGreenRU | AddGreenLU ] -> [ RemoveGreenRU | ]
+right [ RemoveGreenRD | AddGreenLD ] -> [ RemoveGreenRD | ]
+
+right [ RemoveGreenRUD | AddGreenLU ] -> [ RemoveGreenRUD | ]
+right [ RemoveGreenRUD | AddGreenLD ] -> [ RemoveGreenRUD | ]
+
+left [ RemoveGreenLU | AddGreenRU ] -> [ RemoveGreenLU | ]
+left [ RemoveGreenLD | AddGreenRD ] -> [ RemoveGreenLD | ]
+
+left [ RemoveGreenLUD | AddGreenRU ] -> [ RemoveGreenLUD | ]
+left [ RemoveGreenLUD | AddGreenRD ] -> [ RemoveGreenLUD | ]
+
+(Border)
+
+right [ Green | blank ] -> [ Green | BorderR blank ]
+left [ Green | blank ] -> [ Green | BorderL blank ]
+up [ Green | blank ] -> [ Green | BorderU blank ]
+down [ Green | blank ] -> [ Green | BorderD blank ]
+
+up [ BorderR | no BorderR ] -> [ BorderR RemoveBorderRU | ]
+down [ BorderR | no BorderR ] -> [ BorderR RemoveBorderRD | ]
+up [ BorderL | no BorderL ] -> [ BorderL RemoveBorderLU | ]
+down [ BorderL | no BorderL ] -> [ BorderL RemoveBorderLD | ]
+right [ BorderU | no BorderU ] -> [ BorderU RemoveBorderLD | ]
+left [ BorderU | no BorderU ] -> [ BorderU RemoveBorderRD | ]
+right [ BorderD | no BorderD ] -> [ BorderD RemoveBorderLU | ]
+left [ BorderD | no BorderD ] -> [ BorderD RemoveBorderRU | ]
+
+(club)
+
+[ > PlayerR | TMs ] -> [ UnmovableR | TMs clubR ] sfx1
+[ > WalkR | TMs ] -> [ UnmovableR | TMs clubR ] sfx1
+[ > PlayerL | TMs ] -> [ UnmovableL | TMs clubL ] sfx1
+[ > WalkL | TMs ] -> [ UnmovableL | TMs clubL ] sfx1
+
+[ > club | no TMs ] -> [ club | ]
+late [ club UnmovableR ] -> [ clubR UnmovableR ]
+late [ club UnmovableL ] -> [ clubL UnmovableL ]
+late [ club TM1WalkR ] -> [ clubR TM1WalkR ]
+late [ club TM1WalkL ] -> [ clubL TM1WalkL ]
+late [ club TM2WalkR ] -> [ clubR TM2WalkR ]
+late [ club TM2WalkL ] -> [ clubL TM2WalkL ]
+late [ club TM3WalkR ] -> [ clubR TM3WalkR ]
+late [ club TM3WalkL ] -> [ clubL TM3WalkL ]
+
+late [ club UnmovableR ] -> [ PlayerR ]
+late [ club UnmovableL ] -> [ PlayerL ]
+
+late up [ club TMs no Cursor ] -> [ club TMs Cursor ]
+late up [ no club TMs Cursor ] -> [ TMs ]
+
+(Hit)
+
+[ Ball Target ] -> [ BallIn Target ]
+
+right [ Bunker OnBunker | BallR ] -> [ Bunker | action Ball ]
+left [ Bunker OnBunker | BallL ] -> [ Bunker | action Ball ]
+up [ Bunker OnBunker | BallU ] -> [ Bunker | action Ball ]
+down [ Bunker OnBunker | BallD ] -> [ Bunker | action Ball ]
+
+right [ action Player | Ball no Bunker | no Obstacles ] -> [ Player | BallR | ] sfx0
+left [ action Player | Ball no Bunker | no Obstacles ] -> [ Player | BallL | ] sfx0
+up [ action Player | Ball no Bunker | no Obstacles ] -> [ Player | BallU | ] sfx0
+down [ action Player | Ball no Bunker | no Obstacles ] -> [ Player | BallD | ] sfx0
+
+right [ action Player | Ball Bunker | no Obstacles ] -> [ Player | BallR Bunker OnBunker | ] sfx2
+left [ action Player | Ball Bunker | no Obstacles ] -> [ Player | BallL Bunker OnBunker | ] sfx2
+up [ action Player | Ball Bunker | no Obstacles ] -> [ Player | BallU Bunker OnBunker | ] sfx2
+down [ action Player | Ball Bunker | no Obstacles ] -> [ Player | BallD Bunker OnBunker | ] sfx2
+
+right [ BallR | no Obstacles ] -> [ > BallR | ]
+right [ BallR | Obstacles ] -> [ action Ball | Obstacles ]
+left [ BallL | no Obstacles ] -> [ > BallL | ]
+left [ BallL | Obstacles ] -> [ action Ball | Obstacles ]
+up [ BallU | no Obstacles ] -> [ > BallU | ]
+up [ BallU | Obstacles ] -> [ action Ball | Obstacles ]
+down [ BallD | no Obstacles ] -> [ > BallD | ]
+down [ BallD | Obstacles ] -> [ action Ball | Obstacles ]
+
+(Follower)
+
+[ Start RSVR1 no Player ] -> [ Start TM1R RSVR1 ]
+
+[ PlayerR ] -> [ PlayerR RSVR1 ]
+[ WalkR ] -> [ WalkR RSVR1 ]
+[ PlayerL ] -> [ PlayerL RSVL1 ]
+[ WalkL ] -> [ WalkL RSVL1 ]
+
+[ > Leader ] [ RSVR3 ] -> [ > Leader ] [ RSVR1 ]
+[ > Leader ] [ RSVL3 ] -> [ > Leader ] [ RSVL1 ]
+[ > Leader ] [ RSVR2 ] -> [ > Leader ] [ RSVR3 ]
+[ > Leader ] [ RSVL2 ] -> [ > Leader ] [ RSVL3 ]
+[ > Leader ] [ RSVR1 no Player no TM3WalkR ] -> [ > Leader ] [ RSVR2 ]
+[ > Leader ] [ RSVL1 no Player no TM3WalkL no UnmovableR no UnmovableL ] -> [ > Leader ] [ RSVL2 ]
+
+late [ TM2WalkR RSVR3 ] -> [ TM3WalkR1 RSVR3 ]
+late [ TM2WalkL RSVL3 ] -> [ TM3WalkL1 RSVL3 ]
+late [ TM1WalkR RSVR2 ] -> [ TM2WalkR1 RSVR2 ]
+late [ TM1WalkL RSVL2 ] -> [ TM2WalkL1 RSVL2 ]
+late [ RSVR1 no Player no TM1WalkR no UnmovableR no UnmovableL ] -> [ TM1WalkR1 RSVR1 ]
+late [ RSVL1 no Player no TM1WalkL no UnmovableR no UnmovableL ] -> [ TM1WalkL1 RSVL1 ]
+
+(Walking anim)
+
+left [ > PlayerR ] -> [ > PlayerL ]
+left [ > WalkR1 ] -> [ > WalkL1 ]
+left [ > WalkR2 ] -> [ > WalkL2 ]
+left [ > WalkR3 ] -> [ > WalkL3 ]
+right [ > PlayerL ] -> [ > PlayerR ]
+right [ > WalkL1 ] -> [ > WalkR1 ]
+right [ > WalkL2 ] -> [ > WalkR2 ]
+right [ > WalkL3 ] -> [ > WalkR3 ]
+
+[ stationary TM3walkR3 ] -> [ TM3R ]
+[ stationary TM3WalkR2 ] -> [ TM3walkR3 ]
+[ stationary TM3WalkR1 ] -> [ TM3walkR2 ]
+[ stationary TM3walkL3 ] -> [ TM3L ]
+[ stationary TM3WalkL2 ] -> [ TM3walkL3 ]
+[ stationary TM3WalkL1 ] -> [ TM3walkL2 ]
+
+[ stationary TM2walkR3 ] -> [ TM2R ]
+[ stationary TM2WalkR2 ] -> [ TM2walkR3 ]
+[ stationary TM2WalkR1 ] -> [ TM2walkR2 ]
+[ stationary TM2walkL3 ] -> [ TM2L ]
+[ stationary TM2WalkL2 ] -> [ TM2walkL3 ]
+[ stationary TM2WalkL1 ] -> [ TM2walkL2 ]
+
+[ stationary TM1walkR3 ] -> [ TM1R ]
+[ stationary TM1WalkR2 ] -> [ TM1walkR3 ]
+[ stationary TM1WalkR1 ] -> [ TM1walkR2 ]
+[ stationary TM1walkL3 ] -> [ TM1L ]
+[ stationary TM1WalkL2 ] -> [ TM1walkL3 ]
+[ stationary TM1WalkL1 ] -> [ TM1walkL2 ]
+
+[ > PlayerR ] -> [ > WalkR1 ]
+[ stationary walkR3 ] -> [ PlayerR ]
+[ stationary WalkR2 ] -> [ walkR3 ]
+[ stationary WalkR1 ] -> [ walkR2 ]
+
+[ > PlayerL ] -> [ > WalkL1 ]
+[ stationary walkL3 ] -> [ PlayerL ]
+[ stationary WalkL2 ] -> [ walkL3 ]
+[ stationary WalkL1 ] -> [ walkL2 ]
+
+(Win)
+
+right [ BallIn Target ] [ WinS1 no Win1 ] [ WinS2 no Win2 ] [ RSVText | | ] -> [ BallIn action Target ] [ WinS1 Win1 ] [ WinS2 Win2 ] [ RSVText | | NT ]
+[ Win1 | no Win1 ] -> [ Win1 | RSVWin1 ]
+[ Win2 | no Win2 ] -> [ Win2 | RSVWin2 ]
+[ RSVWin1 ] -> [ Win1 ]
+[ RSVWin2 ] -> [ Win2 ]
+
+right [ NT | | | | | | | | | ] -> [ NT | IT | CT | ET | ST | HT | OT | TT | TT2 | ExT ]
+
+==============
+WINCONDITIONS
+==============
+
+All WinS1 on Win2
+
+=======
+LEVELS
+=======
+
+message Hole 1 of 15
+message X to hit.
+______________
+______________
+_1____________
+__s,,,,,,,,,__
+___,,,,,,,o,__
+3__,,,,,,,,,__
+___,,b,,,,,,__
+___,,,,,,,,,__
+____________2_
+______________
+______________
+
+message Hole 2 of 15
+message Everybody can use the club.
+message Press move key towards followers.
+
+______________
+______________
+__1___________
+______o_______
+____,,,,,_____
+3___,,,,,_____
+____,,t,,_____
+____,,b,,_____
+___s,,,,,_____
+_________2____
+______________
+
+message Hole 3 of 15
+
+______________
+__1___________
+____,o________
+____,,________
+____,,,,,_____
+3___,,,,,_____
+____,t,,,_____
+____,,,,,_____
+____,b,,,_____
+___s,,,,,_____
+_________2____
+
+message Hole 4 of 15
+
+______________
+__1___________
+____,,,,,,____
+___,,,b,,,____
+___,,ttt,,____
+3__,,,o,,,____
+___,,ttt,,____
+___,,,,,,,____
+_________s____
+__________2___
+_____________*
+
+message Hole 5 of 15
+
+______________
+__1___________
+____,,,,,,____
+____,,,,,,____
+____,,,ow,____
+3___,,,,w,____
+____,,,,,,____
+____,bt,______
+___s,,,,______
+__________2___
+______________
+
+message Hole 6 of 15
+
+______________
+______________
+1_____________
+__,,,,,,,,,___
+__,,,,,,,,,___
+3_t,w,o,w,,___
+__,,tt,tt,,___
+__,bwwwww,,___
+_s,,,,,,,,,___
+___________2__
+______________
+
+message Hole 7 of 15
+
+1_____________
+__,,,,,,,,,,,_
+__,,,,,,,,,,,_
+__,,ww,,,ww,,_
+__,,ww,w,ww,,_
+3_,,ww,o,ww,,_
+__t,ww,b,ww,t_
+__,,wwwwwww,,_
+_s,,,,,,,,,,,_
+__,,,,,,,,,,,_
+_____________2
+
+message Hole 8 of 15
+
+______________
+1_____________
+__,,,,,,,,,,__
+__,b,,t,,t,,__
+__,,t,,,,,,,__
+3_,,ww,twow,__
+__,,t,,,www,__
+__,,t,t,,,,,__
+_s,,,,,,,,,,__
+____________2_
+______________
+
+message Hole 9 of 15
+
+______________
+__1___________
+_______o______
+___,,,,,,_____
+___,b,,,,_____
+3__,,,,,,_____
+___,,,,,,_____
+___,,,,,,_____
+_______s______
+_________2____
+_____________*
+
+message Hole 10 of 15
+message The bunker could be useful.
+
+______________
+______________
+______________
+_1____________
+___,,,,,,,,,__
+3__,,,,,,,,o__
+__s,b,+,,,,,__
+___,,,,,,,,,__
+____________2_
+______________
+______________
+
+message Hole 11 of 15
+
+______________
+_1____________
+_____,,_______
+_____,owwww___
+_____,,,,,,___
+3____,,+,,,___
+___,,,,,w,,___
+___,,,,,,,,___
+___,,,w,,b,___
+__s,,,,,,,,___
+___________2__
+
+
+message Hole 12 of 15
+
+______________
+_1____________
+___,,,,www____
+___,o,,,,,____
+___,,,,+++____
+3_s,ttt,+,____
+___,t,,,+,,,__
+___,,,,,,,,,__
+___,b,,,t,,,__
+___,,,,,,,____
+____________2_
+
+(______________
+______________
+_________o____
+______,,,,w___
+____,,,,,,w___
+____,,,b+,w___
+____,,,,,,w___
+____,,,,,,w___
+____,,,,,,w___
+___s,,,,,,w___
+______________
+
+______________
+______________
+__________o___
+_______,,,,w__
+____,,,,,,,w__
+___,,b,,,,,w__
+___,,,,,,,,w__
+___,,,,t,+,w__
+___,,,,,,,,w__
+__s,,,,,,,,w__
+______________)
+
+message Hole 13 of 15
+
+_1____________
+______s_______
+__,,,,,,,,,___
+__,,,tbt,,,___
+__,+++,+++,___
+3_,+++,+++,___
+__,+++,+++,___
+__,,+++++,,___
+__,,,wow,,,___
+__,,,www,,,___
+___________2__
+
+message Hole 14 of 15
+
+_1____________
+______s_______
+__,,,,,,,,,___
+__,+++b+++,___
+__,+++,+++,___
+3_,w++,++w,___
+__,+++,+++,___
+__,,+++++,,___
+__,,,wow,,,___
+__,,,www,,,___
+___________2__
+
+message Hole 15 of 15
+
+______________
+_1____________
+_______,,,,ow_
+____,,,,t,,,w_
+___,,b,,,,,,w_
+3__,,,,,,,,,w_
+___,,,,,,,+,w_
+___,,,,w,,,,w_
+__s,,,,,,,,,w_
+_____________2
+______________
+
+(______________
+______________
+_______s______
+__,,,,,,,,,,,_
+__,,,,,,,,,,,_
+__,,,,,b,,,,,_
+__,,,,,dttttt_
+__ttttt,,,,,o_
+______________
+______________
+______________
+
+______________
+__s,,,,,,,,,__
+___,t,,b,tt,__
+___,,,,t,,,,,_
+___,,,,,,,,,,_
+___,tt,,,tt,,_
+___,o,,t,,,,,_
+___,,,ltd,,,,_
+___,tt,,,tt,,_
+___,,,,,,,,,__
+______________
+
+______________
+_____,,,,,____
+_____,,o,,____
+_____,www,____
+_____,,l,,____
+_____,,r,,____
+_____,,,,,____
+_____,,,,,____
+_____,tbt,____
+____s,,,,,____
+______________)
+
+message Thanks for playing!

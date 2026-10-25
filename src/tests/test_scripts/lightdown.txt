@@ -1,0 +1,266 @@
+title Lightdown
+author Stingby12
+homepage https://stingby12.itch.io/
+
+background_color #262626
+
+run_rules_on_level_start
+
+key_repeat_interval 0.3
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Player
+White Black
+.000.
+01010
+00000
+01110
+.000.
+
+NormalWall
+White
+
+LightWall
+White Gray
+00000
+00100
+01110
+00100
+00000
+
+SolidWall
+#262626
+
+FakeWall
+Transparent
+
+LightCrate
+White #808080 Black
+.000.
+00100
+01010
+00100
+.000.
+
+NormalCrate
+White #808080 Black
+.000.
+00200
+02120
+00200
+.000.
+
+FakeCrate
+Transparent
+
+Target
+White #808080
+.....
+.0.0.
+..1..
+.0.0.
+.....
+
+TargetActi
+White White
+.....
+.0.0.
+..1..
+.0.0.
+.....
+
+LightFew
+black
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+LightMid
+black
+.....
+.....
+.....
+.....
+.....
+
+LightFull
+black
+.....
+.....
+.....
+.....
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+% = LightWall
+# = NormalWall and FakeWall
+- = SolidWall
+* = LightCrate
+@ = NormalCrate and FakeCrate
+x = Target
+
+Light = LightFull or LightMid or LightFew
+Crate = LightCrate or NormalCrate
+Wall = NormalWall or LightWall or SolidWall
+
+=======
+SOUNDS
+=======
+
+startgame 4133508
+endlevel 74089700
+
+Crate move 19432707
+restart 14550505
+
+sfx0 10653902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+FakeWall
+NormalWall, LightWall
+Target, TargetActi
+FakeCrate
+Crate
+Light
+SolidWall
+Player
+
+======
+RULES
+======
+
+(Clearing)
+[Light] -> []
+[TargetActi] -> [Target]
+
+(Basic movement)
+[> Player | Crate] -> [> Player | > Crate]
+[> Player | Wall] -> [Player | Wall]
+
+[> Player] [> Crate | Crate] -> [Player] [Crate | Crate]
+[> Player] [> Crate | Wall] -> [Player] [Crate | Wall]
+[> Crate FakeCrate | FakeCrate] -> [ | Crate FakeCrate] sfx0
+
+[> Crate FakeCrate] -> [> Crate > FakeCrate]
+
+late [Target Crate] -> [TargetActi Crate]
+late [Target FakeCrate] -> [TargetActi FakeCrate]
+
+(Lighting)
+late [LightCrate] -> [LightFull LightCrate]
++ late [LightWall] -> [LightFull LightWall]
++ late [LightFull | no Light no SolidWall] -> [LightFull | LightMid]
++ late [LightMid | no Light no SolidWall] -> [LightMid | LightFew]
+
+(Darkess effects)
+late [NormalWall no Light] -> []
+late [FakeWall Light] -> [FakeWall NormalWall Light]
+
+late [NormalCrate no Light] -> []
+late [FakeCrate Light] -> [FakeCrate NormalCrate Light]
+
+==============
+WINCONDITIONS
+==============
+
+No Target
+
+=======
+LEVELS
+=======
+
+message It's so dark in here.
+message Maybe this lantern can help me find the way out.
+
+message Level 1 of 8
+
+###########
+#....#....#
+#...*#....#
+#p...#.*#x%
+#...*#....#
+#....#....#
+###########
+
+message Level 2 of 8
+
+#####%
+#....#
+#x.*.#
+#p####
+#x.*.#
+#....#
+#####%
+
+message Level 3 of 8
+
+.........
+.x...###.
+.x@.*p@#.
+.x...###.
+.........
+
+message Level 4 of 8
+
+########
+#.@@@@.#
+#..*.p.#
+#.xxxxx#
+########
+
+message Level 5 of 8
+
+.......
+.@.#.p.
+...#...
+.*.#.x.
+.......
+
+message Level 6 of 8
+
+.....######
+.....@@.xx%
+--*..@@pxx#
+.....@@.xx%
+.....######
+
+message Level 7 of 8
+
+###%#####%#####%###
+#.....#...*.#x.@..#
+#...@*#...*x#..*..#
+#p.x@x#...*.#x.@..#
+#...@*#...*x#..*..#
+#.....#...*.#x.@..#
+###%#####%#####%###
+
+message Level 8 of 8
+
+-######-
+##@@@@##
+#@xxxx@#
+#@x*xx@#
+#@xp*x@#
+#@xxxx@#
+##@@@@##
+-######-
+
+message I guess darkness is not that useless after all.
+

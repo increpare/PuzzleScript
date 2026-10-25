@@ -1,0 +1,158 @@
+title Simple Block Pushing Game
+author David Skinner
+homepage www.puzzlescript.net
+
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Background
+darkgreen
+
+
+
+大
+red
+
+mauer
+BROWN 
+
+Player
+white white white white
+.....
+.111.
+.111.
+.111.
+.....
+
+
+schlange_oben q
+lightgreen red yellow
+.....
+.....
+.000.
+.202.
+.000.
+
+schlange_mitte a 
+green red white
+.000.
+.000.
+.000.
+.000.
+.000.
+
+schlange_unten z
+lightgreen red white brown
+.000.
+.000.
+.000.
+..0..
+.....
+
+
+leiter_oben w
+yellow 
+.....
+.0.0.
+.000.
+.0.0.
+.000.
+
+leiter_mitte s
+orange
+.0.0.
+.000.
+.0.0.
+.000.
+.0.0.
+
+leiter_unten x
+yellow
+.000.
+.0.0.
+.000.
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = mauer
+P = Player
+O = 大
+
+leiter = leiter_oben or leiter_unten or leiter_mitte
+schlange = schlange_oben or schlange_unten or schlange_mitte
+
+mitte = leiter_mitte or schlange_mitte
+oben = leiter_oben or schlange_oben
+unten = leiter_unten or schlange_unten
+
+stück = leiter or schlange
+
+obstacle = stück or mauer or player
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+大
+leiter, schlange
+Player, mauer
+
+======
+RULES
+======
+
+horizontal [ > player | mitte ] -> [ > player | > mitte ]
+
+vertical [ left schlange_mitte | schlange ] -> [ left schlange_mitte | left schlange ] 
+vertical [ right schlange_mitte | schlange ] -> [ right schlange_mitte | right schlange ] 
+
+vertical [ left leiter_mitte | leiter ] -> [ left leiter_mitte | left leiter ] 
+
+vertical [ right leiter_mitte | leiter ] -> [ right leiter_mitte | right leiter ] 
+
+[> stück | stück] -> cancel
+[> stück | mauer] -> cancel
+
+
+late up [ Player leiter_unten | ] -> [ leiter_unten | player ]
+late up [ player leiter_mitte | ] -> [ leiter_mitte | player ]
+
+
+late down [ Player schlange_oben | ] -> [ schlange_oben | player ]
+late down [ player schlange_mitte | ] -> [ schlange_mitte | player ]
+
+==============
+WINCONDITIONS
+==============
+
+all player on 大
+
+=======
+LEVELS
+=======
+
+
+
+
+
+#######
+#o....#
+#.....#
+#.....#
+#.....#
+#.....#
+#p....#
+#######

@@ -1,0 +1,271 @@
+title Dating Queens
+author Pedro Rabinovitch
+homepage http://twitter.com/kathrrak
+run_rules_on_level_start
+require_player_movement 
+noaction
+color_palette ega 
+debug
+========
+OBJECTS
+========
+
+Background 
+LightGrey
+
+Target1 O
+Red DarkRed
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Target2 W
+Blue DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Glass +
+LightBlue White
+00000
+0..10
+0...0
+0...0
+00000
+
+NWMirror /
+LightBlue White DarkGrey
+...00
+..012
+.0122
+01222
+02222
+
+NWMirror1 
+LightBlue White DarkGrey DarkRed 
+..300
+..012
+30322
+01222
+02222
+
+
+AngryQueen
+Purple Green Pink
+..1..
+.121.
+.000.
+.202.
+.000.
+
+Queen1 I
+DarkRed Black Orange
+..1..
+.121.
+.000.
+.202.
+.000.
+
+Queen2 Q
+DarkBlue Yellow Pink
+..1..
+.121.
+.000.
+.202.
+.000.
+
+Wall 
+DarkGrey
+
+Player 
+DarkGreen Black Orange
+.111.
+.222.
+20102
+.000.
+.2.2.
+
+
+Buddy 
+Green DarkRed Orange
+.111.
+.222.
+20102
+.000.
+.2.2.
+
+HSight1
+Red DarkRed
+.....
+.....
+.1.1.
+.....
+.....
+
+VSight1
+Red DarkRed
+.....
+..1..
+.....
+..1..
+.....
+
+HSight2
+Blue DarkBlue
+.....
+.....
+.1.1.
+.....
+.....
+
+VSight2
+Blue DarkBlue
+.....
+..1..
+.....
+..1..
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+B = Buddy
+Queen = Queen1 or Queen2
+Follower = Queen
+Pushable = Queen1 or Buddy or Queen2
+Pullable = Queen1 or Queen2 or Buddy
+HSightSource1 = HSight1 or Queen1
+HSightSource2 = HSight2 or Queen2
+VSightSource1 = VSight1 or Queen1
+VSightSource2 = VSight2 or Queen2
+Sight1 = HSight1 or VSight1
+Sight2 = HSight2 or VSight2
+Sight = Sight1 or Sight2
+Mirror = NWMirror or NWMirror1
+Opaque = Buddy or Wall or Player or Mirror
+Obstacle = Buddy or Wall or Player or Mirror or Glass
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target1, Target2
+HSight1, HSight2
+VSight1, VSight2
+Queen1, Player, Wall, Buddy, Queen2, AngryQueen, Glass, NWMirror, NWMirror1
+
+======
+RULES 
+====== 
+
+([ Moving Player | Follower ] -> [ Moving Player | Moving Follower ])
+
+[> Player] [AngryQueen] -> RESTART
+
+[ > Player | Pushable ] -> [ > Player | > Pushable ]
+[ < Player | Pullable ] -> [ < Player | < Pullable ] 
+
+[ Sight ] -> []
+[ NWMirror1 ] -> [NWMirror]
+
+startLoop
+
+late HORIZONTAL [HSightSource1 | No Opaque No Queen1 ] -> [HSightSource1 | HSight1]
+late VERTICAL [VSightSource1 | No Opaque No Queen1 ] -> [VSightSource1 | VSight1]
+late HORIZONTAL [HSightSource2 | No Opaque No Queen2 ] -> [HSightSource2 | HSight2]
+late VERTICAL [VSightSource2 | No Opaque No Queen2 ] -> [VSightSource2 | VSight2]
+
+late RIGHT [HSightSource1 | NWMirror ] -> [HSightSource1 | NWMirror1 ]
+late DOWN [VSightSource1 | NWMirror ] -> [VSightSource1 | NWMirror1 ]
+late UP [NWMirror1 | No Opaque No Queen1 ] -> [NWMirror1 | VSight1] 
+late LEFT [NWMirror1 | No Opaque No Queen1 ] -> [NWMirror1 | HSight1] 
+
+endLoop
+
+late [Sight Queen] -> [AngryQueen] message What is *SHE* doing here?
+(
+late [Sight1 Queen2] -> [AngryQueen] message What is *SHE* doing here?
+)
+==============
+WINCONDITIONS
+==============
+
+No AngryQueen
+All Queen1 on Target1
+All Queen2 on Target2
+
+======= 
+LEVELS
+=======
+
+Message Trying to fix a bug. :)
+
+##########
+#........#
+#P.......#
+#w.i.../.#
+#........#
+#....#.Q.#
+#....#...#
+#../.../O#
+##########
+
+(
+Message Take me to our wonderful date!
+
+#########
+#i.P....#
+#.......#
+#####...#
+#.......#
+#......O#
+#########
+)
+Message You better not date anyone else!
+
+#########
+#w......#
+#.i###..#
+#.P.#...#
+#...#.Q.#
+#......O#
+#########
+
+Message Are you going to introduce me?
+
+#########
+#w.....O#
+#.......#
+#.P..+.B#
+#....#..#
+#...i#.Q#
+#########
+
+Message ...
+
+
+#########
+#w+....O#
+#.......#
+#.P.....#
+###...###
+#i..B..Q#
+#########
+
+
+
+Message Congratulations!
+

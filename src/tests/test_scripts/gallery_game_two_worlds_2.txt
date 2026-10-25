@@ -1,0 +1,2098 @@
+title Two Worlds
+author nebu soku
+homepage www.puzzlescript.net
+
+run_rules_on_level_start
+realtime_interval 0.1
+again_interval 0.05
+background_color #282818
+text_color #c8c8a8
+flickscreen 19x16
+
+========
+OBJECTS
+========
+
+Background 
+#282818
+
+OutLine
+#282818
+
+BGBlue
+#c8c8a8 #c1e4f0
+
+BGPink
+#282818 #f8cefd
+
+Target 
+#a0a088
+00.00
+00000
+00000
+.000.
+..0..
+
+GhostTarget 
+#a0a088
+00.00
+00000
+00000
+.000.
+..0..
+
+Wall 
+#a0a088 #686850 #282818
+01000
+02010
+00020
+00000
+11111
+
+WallAbove
+#a0a088
+.....
+.....
+.....
+.....
+00000
+
+WallBelow
+#686850
+00000
+.....
+.....
+.....
+.....
+
+ZonePurple
+#282818 #a0a088 #3d1e7e
+00000
+00000
+00100
+00000
+00000
+
+ZonePurpleBelow
+#686850 #a0a088
+00000
+.....
+.....
+.....
+.....
+
+ZonePink
+#c8c8a8 #ef90e3
+
+PlayerBlueRight
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850 #54b4d5
+.0000
+.0000
+.0121
+5.33.
+..34.
+
+WalkAnimBR1
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850(#4fbbdf #608b8c #d5f5f6 #1d7788 #1a6978 #53aecc)
+.0000
+.0000
+.0121
+5.33.
+.....
+
+WalkAnimBR2
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850
+.0000
+.0000
+.0121
+5.33.
+.4..3
+
+WalkAnimBR3
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850
+.0000
+.0000
+.0121
+5.33.
+..3..
+
+PlayerBlueLeft
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850
+0000.
+0000.
+1210.
+.33.5
+.43..
+
+WalkAnimBL1
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850
+0000.
+0000.
+1210.
+.33.5
+.....
+
+WalkAnimBL2
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850
+0000.
+0000.
+1210.
+.33.5
+3..4.
+
+WalkAnimBL3
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850
+0000.
+0000.
+1210.
+.33.5
+..3..
+
+StayBlueRight
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850
+.0000
+.0000
+.0121
+5.33.
+..34.
+
+StayBlueLeft
+#686850 #a0a088 #c8c8a8 #686850 #282818 #686850
+0000.
+0000.
+1210.
+.33.5
+.43..
+
+PlayerPinkRight
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818(#de4fdd #8a608b #f6d4f5 #871d86 #741978 #cc52c9 #d153d5)
+.5000
+.0000
+.0121
+..33.
+..34.
+
+WalkAnimPR1
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+.5000
+.0000
+.0121
+..33.
+.....
+
+WalkAnimPR2
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+.5000
+.0000
+.0121
+..33.
+.4..3
+
+WalkAnimPR3
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+.5000
+.0000
+.0121
+..33.
+..3..
+
+PlayerPinkLeft
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+0005.
+0000.
+1210.
+.33..
+.43..
+
+WalkAnimPL1
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+0005.
+0000.
+1210.
+.33..
+.....
+
+WalkAnimPL2
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+0005.
+0000.
+1210.
+.33..
+3..4.
+
+WalkAnimPL3
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+0005.
+0000.
+1210.
+.33..
+..3..
+
+StayPinkRight
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+.5000
+.0000
+.0121
+..33.
+..34.
+
+StayPinkLeft
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+0005.
+0000.
+1210.
+.33..
+.43..
+
+FallRight
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+.5000
+.0000
+.0121
+..33.
+.4..3
+
+FallLeft
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+0005.
+0000.
+1210.
+.33..
+3..4.
+
+ClimbRight
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+.5000
+.0000
+.0121
+..33.
+.4..3
+
+ClimbLeft
+#686850 #a0a088 #c8c8a8 #686850 #282818 #282818
+0005.
+0000.
+1210.
+.33..
+3..4.
+
+GhostPlayer
+#c8c8a8 #686850
+.000.
+.010.
+.000.
+.111.
+.....
+
+GhostPlayerAbove
+#c8c8a8
+.....
+.....
+.....
+.....
+.000.
+
+GhostPlayerAnim1
+#c8c8a8 #686850
+.000.
+.010.
+.000.
+.111.
+.....
+
+GhostPlayerAnim2
+#c8c8a8 #686850
+.000.
+.010.
+.000.
+.111.
+.....
+
+GhostPlayerAnim3
+#c8c8a8 #686850
+.010.
+.000.
+.111.
+.....
+.....
+
+GhostPlayerAnim4
+#c8c8a8 #686850
+.010.
+.000.
+.111.
+.....
+.....
+
+GhostPlayerAnim5
+#c8c8a8 #686850
+.010.
+.000.
+.111.
+.....
+.....
+
+StuckRigid
+black
+
+StuckCursor
+#282818
+0...0
+0...0
+0...0
+00000
+.....
+
+StuckCursorAbove
+#282818
+.....
+.....
+.....
+.....
+00000
+
+Crate 
+#a0a088 #686850 #282818 #c8c8a8
+01110
+02220
+02020
+00000
+11111
+
+CrateAbove
+#a0a088
+.....
+.....
+.....
+.....
+00000
+
+CrateBelow
+#686850
+00000
+.....
+.....
+.....
+.....
+
+CrateLine
+#a0a088
+.....
+.....
+.....
+00000
+.....
+
+RigidCrate
+#a0a088 #282818
+11111
+11111
+11011
+11111
+11111
+
+RigidU
+#686850
+00000
+.....
+.....
+.....
+.....
+
+RigidUL
+#686850
+....0
+.....
+.....
+.....
+.....
+
+RigidUR
+#686850
+0....
+.....
+.....
+.....
+.....
+
+RigidD
+#a0a088 #686850
+.....
+.....
+.....
+00000
+11111
+
+RigidL
+#a0a088
+0....
+0....
+0....
+0....
+0....
+
+RigidR
+#a0a088
+....0
+....0
+....0
+....0
+....0
+
+RigidLR
+#a0a088
+0...0
+0...0
+0...0
+0...0
+0...0
+
+AboveRigidL
+#a0a088
+.....
+.....
+.....
+0....
+0....
+
+AboveRigidR
+#a0a088
+.....
+.....
+.....
+....0
+....0
+
+AboveRigidLR
+#a0a088
+.....
+.....
+.....
+0...0
+0...0
+
+AboveRigidLRwithR
+#a0a088
+....0
+....0
+....0
+0...0
+0...0
+
+AboveRigidLRwithL
+#a0a088
+0....
+0....
+0....
+0...0
+0...0
+
+rigid1
+black
+
+rigid2
+black
+
+Block 
+#c8c8a8 #a0a088 #686850
+12222
+21112
+21112
+21112
+22221
+
+GhostBlock
+#c8c8a8 #686850
+.....
+..0..
+..1..
+.....
+.....
+
+GhostBlockAnim1
+#c8c8a8 #686850
+.....
+..0..
+..1..
+.....
+.....
+
+GhostBlockAnim2
+#c8c8a8 #686850
+.....
+..0..
+..1..
+.....
+.....
+
+GhostBlockAnim3
+#c8c8a8 #686850
+..0..
+..1..
+.....
+.....
+.....
+
+GhostBlockAnim4
+#c8c8a8 #686850
+..0..
+..1..
+.....
+.....
+.....
+
+GhostBlockAnim5
+#c8c8a8 #686850
+..0..
+..1..
+.....
+.....
+.....
+
+
+Climbable
+pink
+
+ColBGPink
+black
+.....
+.....
+.....
+.....
+.....
+
+FallBlock
+black
+
+Winable
+black
+
+AddPinkLUD
+#c8c8a8
+0....
+.....
+.....
+.....
+0....
+
+AddPinkLU
+#c8c8a8
+0....
+.....
+.....
+.....
+.....
+
+AddPinkLD
+#c8c8a8
+.....
+.....
+.....
+.....
+0....
+
+AddPinkRUD
+#c8c8a8
+....0
+.....
+.....
+.....
+....0
+
+AddPinkRU
+#c8c8a8
+....0
+.....
+.....
+.....
+.....
+
+AddPinkRD
+#c8c8a8
+.....
+.....
+.....
+.....
+....0
+
+RemovePinkLUD
+#282818
+0....
+.....
+.....
+.....
+0....
+
+RemovePinkLU
+#282818
+0....
+.....
+.....
+.....
+.....
+
+RemovePinkLD
+#282818
+.....
+.....
+.....
+.....
+0....
+
+RemovePinkRUD
+#282818
+....0
+.....
+.....
+.....
+....0
+
+RemovePinkRU
+#282818
+....0
+.....
+.....
+.....
+.....
+
+RemovePinkRD
+#282818
+.....
+.....
+.....
+.....
+....0
+
+Transition1
+#282818
+.....
+.....
+.....
+.....
+0...0
+
+Transition2
+#282818
+..0..
+.....
+.....
+0...0
+00.00
+
+Transition3
+#282818
+00000
+0.0.0
+0...0
+00.00
+00000
+
+Transition4
+#282818
+00000
+00000
+00.00
+00000
+00000
+
+Transition5
+#282818
+00000
+00000
+00000
+00000
+00000
+
+Transition6
+#282818
+00000
+00000
+00.00
+00000
+00000
+
+Transition7
+#282818
+00000
+0.0.0
+0...0
+00.00
+00000
+
+Transition8
+#282818
+..0..
+.....
+.....
+0...0
+00.00
+
+Transition9
+#282818
+.....
+.....
+.....
+.....
+0...0
+
+TransitionR1
+#282818
+.....
+.....
+.....
+.....
+0...0
+
+TransitionR2
+#282818
+..0..
+.....
+.....
+0...0
+00.00
+
+TransitionR3
+#282818
+00000
+0.0.0
+0...0
+00.00
+00000
+
+TransitionR4
+#282818
+00000
+00000
+00.00
+00000
+00000
+
+TransitionR5
+#282818
+00000
+00000
+00000
+00000
+00000
+
+TransitionR6
+#282818
+00000
+00000
+00.00
+00000
+00000
+
+TransitionR7
+#282818
+00000
+0.0.0
+0...0
+00.00
+00000
+
+TransitionR8
+#282818
+..0..
+.....
+.....
+0...0
+00.00
+
+TransitionR9
+#282818
+.....
+.....
+.....
+.....
+0...0
+
+Hide
+#c8c8a8
+
+WinAnim1
+#c8c8a8
+.....
+.0...
+.....
+.....
+.....
+
+WinAnim2
+#c8c8a8
+.....
+.0...
+.....
+.....
+.....
+
+WinAnim3
+#c8c8a8
+.0...
+000..
+.0...
+...0.
+.....
+
+WinAnim4
+#c8c8a8
+.....
+.0...
+...0.
+..000
+...0.
+
+WinAnim5
+#c8c8a8
+.....
+.....
+.....
+...0.
+.....
+
+WinAnim6
+#c8c8a8
+.....
+.....
+.....
+.....
+.....
+
+LevelStart
+#282818
+
+PressX
+#686850 #282818
+0.0.0
+0.0.0
+00.00
+0.0.0
+0.0.0
+
+TCount1
+black
+
+TCount2
+black
+
+TCount3
+black
+
+TCount4
+black
+
+TCount5
+black
+
+=======
+LEGEND
+=======
+
+BlueRight = PlayerBlueRight or WalkAnimBR1 or WalkAnimBR2 or WalkAnimBR3
+BlueLeft = PlayerBlueLeft or WalkAnimBL1 or WalkAnimBL2 or WalkAnimBL3
+PlayerBlue = BlueRight or BlueLeft
+
+PinkRight = PlayerPinkRight or WalkAnimPR1 or WalkAnimPR2 or WalkAnimPR3 
+PinkLeft = PlayerPinkLeft or WalkAnimPL1 or WalkAnimPL2 or WalkAnimPL3
+PlayerPink = PinkRight or PinkLeft
+PlayerFall = PlayerPink or FallRight or FallLeft
+
+Player = PlayerBlue or PlayerPink or ClimbRight or ClimbLeft
+PlayerMove = PlayerBlue or PlayerPink
+
+GBlock = GhostBlock or GhostBlockAnim1 or GhostBlockAnim2 or GhostBlockAnim3 or GhostBlockAnim4 or GhostBlockAnim5
+
+GPlayer = GhostPlayer or GhostPlayerAnim1 or GhostPlayerAnim2 or GhostPlayerAnim3 or GhostPlayerAnim4 or GhostPlayerAnim5
+GPAboveAnim = GhostPlayerAnim3 or GhostPlayerAnim4 or GhostPlayerAnim5
+
+Ridable = BGPink or Block or ColBGPink
+
+Rigids = rigid1 or rigid2
+
+AboveDeco = AboveRigidL or AboveRigidR or RigidL or RigidR or RigidLR
+RigidDeco = RigidU or AboveDeco or RigidD or AboveRigidLR or AboveRigidLRwithR or AboveRigidLRwithL or RigidUL or RigidUR
+
+AddPinkL = AddPinkLUD or AddPinkLU or AddPinkLD
+AddPinkR = AddPinkRUD or AddPinkRU or AddPinkRD
+
+RemovePinkL = RemovePinkLUD or RemovePinkLU or RemovePinkLD
+RemovePinkR = RemovePinkRUD or RemovePinkRU or RemovePinkRD
+
+Transition = Transition1 or Transition2 or Transition3 or Transition4 or Transition5 or Transition6 or Transition7 or Transition8 or Transition9
+TransitionR = TransitionR1 or TransitionR2 or TransitionR3 or TransitionR4 or TransitionR5 or TransitionR6 or TransitionR7 or TransitionR8 or TransitionR9
+
+WinAnim = WinAnim1 or WinAnim2 or WinAnim3 or WinAnim4 or WinAnim5 or WinAnim6
+TCount = TCount1 or TCount2 or TCount3 or TCount4
+
+. = Background
+, = BGBlue
+' = BGPink
+# = Wall and BGBlue
+B = PlayerBlueRight and BGBlue
+P = PlayerPinkRight and ZonePink
+* = Crate and BGBlue
+@ = RigidCrate and rigid1 and BGBlue
+2 = RigidCrate and rigid2 and BGBlue
+O = GhostTarget and ZonePurple
+x = ZonePurple and BGBlue
++ = ZonePink
+" = GhostBlock and ZonePurple and BGBlue
+! = GhostPlayer and ZonePurple and BGBlue
+($ = StayBlueRight and BGBlue)
+% = StayPinkRight and ZonePink
+石 = Block and ZonePink
+文 = PressX and BGBlue
+
+=======
+SOUNDS
+=======
+
+PlayerMove move 15203103
+Crate move 80987507
+RigidCrate move 80987507
+Block action 70814309
+StuckCursor action 20002502 (boo)
+ZonePurple move 95712903
+ZonePink action 52706103
+Transition1 action 54782309
+TransitionR1 action 54782309
+
+sfx0 30806303
+sfx1 91797700 (fall)
+sfx2 99718300
+sfx3 65480100
+sfx4 80396503 (jump1)
+sfx5 80987507 (block)
+sfx6 45846907
+sfx7 28015305 (jump2)
+sfx8 10636903
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+PressX
+TCount, TCount5
+LevelStart
+Climbable
+FallBlock
+Winable
+rigids
+StuckRigid
+BGBlue
+ZonePink
+BGPink
+WallBelow
+Target
+Hide
+CrateBelow, ZonePurpleBelow
+Player, Wall, Crate, ZonePurple, StayBlueRight, StayBlueLeft, StayPinkRight, StayPinkLeft, FallRight, FallLeft, ClimbRight, ClimbLeft, Block, ColBGPink, RigidCrate
+RemovePinkL
+RemovePinkR
+GhostTarget
+RigidU, RigidUL, RigidUR
+GPlayer
+AboveRigidL, AboveRigidR, RigidL, RigidR, RigidLR
+RigidD, AboveRigidLR, AboveRigidLRwithR, AboveRigidLRwithL
+CrateAbove
+StuckCursorAbove
+WallAbove
+GBlock
+GhostPlayerAbove
+CrateLine
+StuckCursor
+AddPinkL
+AddPinkR
+OutLine
+WinAnim
+Transition, TransitionR
+
+======
+RULES 
+====== 
+[ > Player ] [ FallBlock ] -> cancel (bug?) 
+
+(int)
+
+[ > Player Transition ] -> [ Player Transition ]
+[ ColBGPink ] -> [ ]
+[ BGPink ] -> [ BGPink ColBGPink ]
+[ Background no BGBlue no BGPink no ZonePurple no ZonePink ] -> [ Background OutLine ColBGPink ]
+
+right [ GhostTarget | | | | | | | | | | | | | | | | | | | ] -> [ GhostTarget | | | | | | | | | | | | | | | | | | | Target ]
+
+down [ ZonePurple | no ZonePurple ] -> [ ZonePurple | ZonePurpleBelow ]
+
+up [ Wall | ] -> [ Wall | WallAbove ]
+down [ Wall | ] -> [ Wall | WallBelow ]
+
+(Crate-ZonePink)
+
+[ CrateAbove ] -> [ ]
+[ CrateBelow ] -> [ ]
+[ CrateLine ] -> [ ]
+late up [ | Crate | ] -> [ CrateBelow | Crate CrateLine | CrateAbove ]
+(late down [ Crate | ] -> [ Crate | CrateBelow ])
+
+late right [ no Crate no ZonePurple no RigidCrate | | | | | | | | | | | | | | | | | | | ZonePink ] -> [ | | | | | | | | | | | | | | | | | | | BGPink ]
+late right [ PlayerPink ] [ Crate | | | | | | | | | | | | | | | | | | | BGPink ] -> [ PlayerPink ] [ Crate | | | | | | | | | | | | | | | | | | | ZonePink ]
+late right [ PlayerPink ] [ RigidCrate | | | | | | | | | | | | | | | | | | | BGPink ] -> [ PlayerPink ] [ RigidCrate | | | | | | | | | | | | | | | | | | | ZonePink ]
+
+(Block-GhostBlock)
+
+[ PlayerPink ] [ GBlock ] -> [ PlayerPink ] [ ]
+right [ PlayerPink ] [ | | | | | | | | | | | | | | | | | | | Block ] -> [ PlayerPink ] [ GhostBlock | | | | | | | | | | | | | | | | | | | Block ]
+
+[ PlayerBlue ] [ Block ] -> [ PlayerBlue ] [ ]
+right [ PlayerBlue ] [ GBlock | | | | | | | | | | | | | | | | | | | ] -> [ PlayerBlue ] [ GBlock | | | | | | | | | | | | | | | | | | | Block ]
+
+(Player-GhostPlayer)
+
+[ PlayerPink ] [ GPlayer ] -> [ PlayerPink ] [ ]
+right [ PlayerPink ] [ | | | | | | | | | | | | | | | | | | | PlayerPink ] -> [ PlayerPink ] [ GhostPlayer | | | | | | | | | | | | | | | | | | | PlayerPink ]
+
+(Switch)
+
+[ Target LevelStart ] [ action BlueRight ] [ StayPinkRight ] [ Background ] -> [ Target LevelStart ] [ BlueRight ] [ StayPinkRight ] [ Background action Transition1 ]
+[ Target LevelStart ] [ BlueRight ] [ StayPinkRight ] [ Transition6 ] -> [ Target LevelStart ] [ StayBlueRight ] [ PlayerPinkRight ] [ Transition6 ]
+[ Target LevelStart ] [ action BlueRight ] [ StayPinkLeft ] [ Background ] -> [ Target LevelStart ] [ BlueRight ] [ StayPinkLeft ] [ Background action Transition1 ]
+[ Target LevelStart ] [ BlueRight ] [ StayPinkLeft ] [ Transition6 ] -> [ Target LevelStart ] [ StayBlueRight ] [ PlayerPinkLeft ] [ Transition6 ]
+[ Target LevelStart ] [ action BlueLeft ] [ StayPinkRight ] [ Background ] -> [ Target LevelStart ] [ BlueLeft ] [ StayPinkRight ] [ Background action Transition1 ]
+[ Target LevelStart ] [ BlueLeft ] [ StayPinkRight ] [ Transition6 ] -> [ Target LevelStart ] [ StayBlueLeft ] [ PlayerPinkRight ] [ Transition6 ]
+[ Target LevelStart ] [ action BlueLeft ] [ StayPinkLeft ] [ Background ] -> [ Target LevelStart ] [ BlueLeft ] [ StayPinkLeft ] [ Background action Transition1 ]
+[ Target LevelStart ] [ BlueLeft ] [ StayPinkLeft ] [ Transition6 ] -> [ Target LevelStart ] [ StayBlueLeft ] [ PlayerPinkLeft ] [ Transition6 ]
+
+[ action PlayerPinkRight no FallBlock ] [ StayBlueRight ] [ Background ] -> [ PlayerPinkRight ] [ StayBlueRight ] [ Background action TransitionR1 ]
+[ PlayerPinkRight ] [ StayBlueRight ] [ TransitionR6 ] -> [ StayPinkRight ] [ PlayerBlueRight ] [ TransitionR6 ]
+[ action PlayerPinkRight no FallBlock ] [ StayBlueLeft ] [ Background ] -> [ PlayerPinkRight ] [ StayBlueLeft ] [ Background action TransitionR1 ]
+[ PlayerPinkRight ] [ StayBlueLeft ] [ TransitionR6 ] -> [ StayPinkRight ] [ PlayerBlueLeft ] [ TransitionR6 ]
+[ action PlayerPinkLeft no FallBlock ] [ StayBlueRight ] [ Background ] -> [ PlayerPinkLeft ] [ StayBlueRight ] [ Background action TransitionR1 ]
+[ PlayerPinkLeft ] [ StayBlueRight ] [ TransitionR6 ] -> [ StayPinkLeft ] [ PlayerBlueRight ] [ TransitionR6 ]
+[ action PlayerPinkLeft no FallBlock ] [ StayBlueLeft ] [ Background ] -> [ PlayerPinkLeft ] [ StayBlueLeft ] [ Background action TransitionR1 ]
+[ PlayerPinkLeft ] [ StayBlueLeft ] [ TransitionR6 ] -> [ StayPinkLeft ] [ PlayerBlueLeft ] [ TransitionR6 ]
+
+(Climb)
+
+[ Climbable ] -> [ ]
+horizontal [ BGPink | ZonePink ] -> [ BGPink Climbable | ZonePink ]
+horizontal [ BGPink | Block ] -> [ BGPink | Block Climbable ]
+horizontal [ Block | Block ] -> [ Block Climbable | Block Climbable ]
+
+down [ ClimbRight | BGPink ] -> [ PlayerPinkRight | BGPink ]
+down [ ClimbRight | Block ] -> [ PlayerPinkRight | Block ]
+right [ ClimbRight | ZonePink ] -> [ > ClimbRight | ZonePink ]
+right [ ClimbRight | Climbable ] -> [ FallRight | Climbable ]
+right [ > PinkRight no FallBlock | Climbable ] -> [ up ClimbRight | Climbable ] sfx7
+
+down [ ClimbLeft | BGPink ] -> [ PlayerPinkLeft | BGPink ]
+down [ ClimbLeft | Block ] -> [ PlayerPinkLeft | Block ]
+left [ ClimbLeft | ZonePink ] -> [ > ClimbLeft | ZonePink ]
+left [ ClimbLeft | Climbable ] -> [ FallLeft | Climbable ]
+left [ > PinkLeft no FallBlock | Climbable ] -> [ up ClimbLeft | Climbable ] sfx7
+
+(Push)
+
+[ > Player | Crate no GPlayer no PressX no TCount ] -> [ > Player | > Crate ]
+[ > Player no FallBlock | Block ] -> [ > Player | > Block ] sfx5
+[ > Player | GBlock no rigids no ZonePurple | no Wall no ZonePurple no OutLine no Crate ] -> [ > Player | > GBlock | ]
+
+[ StuckCursor ] -> [ ] (Stuck effect)
+[ StuckCursorAbove ] -> [ ]
+late up [ StuckCursor | ] -> [ StuckCursor | StuckCursorAbove ]
+[ > PlayerBlueRight | GPlayer Crate ] -> [ WalkAnimBR1 | GPlayer action StuckCursor Crate ]
+[ > PlayerBlueLeft | GPlayer Crate ] -> [ WalkAnimBL1 | GPlayer action StuckCursor Crate ]
+[ > PlayerBlueRight | StuckRigid ] [ GPlayer ] -> [ WalkAnimBR1 | StuckRigid ] [ GPlayer action StuckCursor ]
+[ > PlayerBlueLeft | StuckRigid ] [ GPlayer ] -> [ WalkAnimBL1 | StuckRigid ] [ GPlayer action StuckCursor ]
+
+[ StuckRigid ] -> [ ]
+[ Rigid1 GPlayer ] [ Rigid1 ] -> [ Rigid1 GPlayer StuckRigid ] [ Rigid1 StuckRigid ]
+[ Rigid2 GPlayer ] [ Rigid2 ] -> [ Rigid2 GPlayer StuckRigid ] [ Rigid2 StuckRigid ]
+
+rigid [ > Player | RigidCrate rigid1 no StuckRigid ] -> [ > Player | > RigidCrate > rigid1 ]
++ rigid [ moving RigidCrate rigid1 | RigidCrate rigid1 ] -> [ moving RigidCrate moving rigid1 | moving RigidCrate moving rigid1 ]
++ rigid [ moving rigid1 | GBlock rigid1 ] -> [ moving rigid1 | moving GBlock moving rigid1 ]
+
+rigid [ > Player | RigidCrate rigid2 no StuckRigid ] -> [ > Player | > RigidCrate > rigid2 ]
++ rigid [ moving RigidCrate rigid2 | RigidCrate rigid2 ] -> [ moving RigidCrate moving rigid2 | moving RigidCrate moving rigid2 ]
++ rigid [ moving rigid2 | GBlock rigid2 ] -> [ moving rigid2 | moving GBlock moving rigid2 ]
+
+(RigidCrate)
+
+[ RigidDeco ] -> [ ]
+late down [ rigid1 | no rigid1 ] -> [ rigid1 RigidD | CrateBelow ]
+late up [ rigid1 | no rigid1 ] -> [ rigid1 | CrateAbove ]
+late left [ rigid1 | no rigid1 ] -> [ rigid1 RigidL | ]
+late right [ rigid1 RigidL | no rigid1 ] -> [ rigid1 RigidLR | ]
+late right [ rigid1 no AboveDeco | no rigid1 ] -> [ rigid1 RigidR | ]
+
+late up [ RigidL rigid1 | rigid1 no AboveDeco ] -> [ RigidL rigid1 | rigid1 AboveRigidL ]
+late up [ RigidR rigid1 | rigid1 no AboveDeco ] -> [ RigidR rigid1 | rigid1 AboveRigidR ]
+late up [ RigidLR rigid1 | rigid1 ] -> [ RigidLR rigid1 | rigid1 AboveRigidLR ]
+
+late up [ RigidL rigid1 | rigid1 RigidR ] -> [ RigidL rigid1 | rigid1 AboveRigidLRwithR ]
+late up [ RigidR rigid1 | rigid1 RigidL ] -> [ RigidR rigid1 | rigid1 AboveRigidLRwithL ]
+
+late up [ rigid1 | CrateAbove ] -> [ rigid1 RigidU | CrateAbove ]
+
+late left [ rigid1 RigidU | rigid1 no RigidU ] -> [ rigid1 RigidU | rigid1 RigidUL ]
+late right [ rigid1 RigidU | rigid1 no RigidU ] -> [ rigid1 RigidU | rigid1 RigidUR ]
+
+
+late down [ rigid2 | no rigid2 ] -> [ rigid2 RigidD | CrateBelow ]
+late up [ rigid2 | no rigid2 ] -> [ rigid2 | CrateAbove ]
+late left [ rigid2 | no rigid2 ] -> [ rigid2 RigidL | ]
+late right [ rigid2 RigidL | no rigid2 ] -> [ rigid2 RigidLR | ]
+late right [ rigid2 no AboveDeco | no rigid2 ] -> [ rigid2 RigidR | ]
+
+late up [ RigidL rigid2 | rigid2 no AboveDeco ] -> [ RigidL rigid2 | rigid2 AboveRigidL ]
+late up [ RigidR rigid2 | rigid2 no AboveDeco ] -> [ RigidR rigid2 | rigid2 AboveRigidR ]
+late up [ RigidLR rigid2 | rigid2 ] -> [ RigidLR rigid2 | rigid2 AboveRigidLR ]
+
+late up [ RigidL rigid2 | rigid2 RigidR ] -> [ RigidL rigid2 | rigid2 AboveRigidLRwithR ]
+late up [ RigidR rigid2 | rigid2 RigidL ] -> [ RigidR rigid2 | rigid2 AboveRigidLRwithL ]
+
+late up [ rigid2 | CrateAbove ] -> [ rigid2 RigidU | CrateAbove ]
+
+late left [ rigid2 RigidU | rigid2 no RigidU ] -> [ rigid2 RigidU | rigid2 RigidUL ]
+late right [ rigid2 RigidU | rigid2 no RigidU ] -> [ rigid2 RigidU | rigid2 RigidUR ]
+
+(Fall)
+
+down [ FallRight | Ridable ] -> [ PlayerPinkRight | Ridable ]
+down [ FallRight no Transition | no Ridable ] -> [ > FallRight | ]
+down [ PinkRight no Transition | no Ridable ] -> [ > FallRight | ] sfx7
+
+down [ FallLeft | BGPink ] -> [ PlayerPinkLeft | BGPink ]
+down [ FallLeft | Block ] -> [ PlayerPinkLeft | Block ]
+down [ FallLeft no Transition | no Ridable ] -> [ > FallLeft | ]
+down [ PinkLeft no Transition | no Ridable ] -> [ > FallLeft | ] sfx7
+
+[ FallBlock ] -> [ ]
+down [ Block no Transition | no ColBGPink no Block no Player ] [ PlayerFall ] -> [ > Block | ] [ PlayerFall FallBlock ] sfx1
+
+(ZonePink border)
+
+[ AddPinkL ] -> [ ]
+[ RemovePinkL ] -> [ ]
+[ AddPinkR ] -> [ ]
+[ RemovePinkR ] -> [ ]
+
+late left [ no ZonePink no AddPinkL | ZonePink ] -> [ AddPinkLUD | ZonePink ]
+late right [ no ZonePink no AddPinkR | ZonePink ] -> [ AddPinkRUD | ZonePink ]
+
+late up [ AddPinkLUD | no ZonePink ] -> [ AddPinkLD | ]
+late up [ AddPinkRUD | no ZonePink ] -> [ AddPinkRD | ]
+
+late down [ AddPinkLUD | no ZonePink ] -> [ AddPinkLU | ]
+late down [ AddPinkRUD | no ZonePink ] -> [ AddPinkRU | ]
+
+late down [ AddPinkLD | no ZonePink ] -> [ | ]
+late down [ AddPinkRD | no ZonePink ] -> [ | ]
+
+late left [ ZonePink no RemovePinkL | no ZonePink ] -> [ ZonePink RemovePinkLUD | ]
+late right [ ZonePink no RemovePinkR | no ZonePink ] -> [ ZonePink RemovePinkRUD | ]
+
+late up [ RemovePinkLUD | ZonePink ] -> [ RemovePinkLD | ZonePink ]
+late up [ RemovePinkRUD | ZonePink ] -> [ RemovePinkRD | ZonePink ]
+
+late down [ RemovePinkLUD | ZonePink ] -> [ RemovePinkLU | ZonePink ]
+late down [ RemovePinkRUD | ZonePink ] -> [ RemovePinkRU | ZonePink ]
+
+late down [ RemovePinkLD | ZonePink ] -> [ | ZonePink ]
+late down [ RemovePinkRD | ZonePink ] -> [ | ZonePink ]
+
+late right [ RemovePinkRU | AddPinkLU ] -> [ RemovePinkRU | ]
+late right [ RemovePinkRD | AddPinkLD ] -> [ RemovePinkRD | ]
+
+late right [ RemovePinkRUD | AddPinkLU ] -> [ RemovePinkRUD | ]
+late right [ RemovePinkRUD | AddPinkLD ] -> [ RemovePinkRUD | ]
+
+late left [ RemovePinkLU | AddPinkRU ] -> [ RemovePinkLU | ]
+late left [ RemovePinkLD | AddPinkRD ] -> [ RemovePinkLD | ]
+
+late left [ RemovePinkLUD | AddPinkRU ] -> [ RemovePinkLUD | ]
+late left [ RemovePinkLUD | AddPinkRD ] -> [ RemovePinkLUD | ]
+
+late left [ AddPinkLUD | RemovePinkRUD ] -> [ | RemovePinkRUD ]
+late right [ AddPinkRUD | RemovePinkLUD ] -> [ | RemovePinkLUD ]
+late left [ AddPinkLUD | RemovePinkRU ] -> [ AddPinkLD | RemovePinkRU ]
+late right [ AddPinkRUD | RemovePinkLU ] -> [ AddPinkRD | RemovePinkLU ]
+late left [ AddPinkLUD | RemovePinkRD ] -> [ AddPinkLU | RemovePinkRD ]
+late right [ AddPinkRUD | RemovePinkLD ] -> [ AddPinkRU | RemovePinkLD ]
+late left [ AddPinkLU | RemovePinkRU ] -> [ | RemovePinkRU ]
+late right [ AddPinkRU | RemovePinkLU ] -> [ | RemovePinkLU ]
+late left [ AddPinkLD | RemovePinkRD ] -> [ | RemovePinkRD ]
+late right [ AddPinkRD | RemovePinkLD ] -> [ | RemovePinkLD ]
+
+(Animation)
+
+right [ > PlayerBlueLeft ] -> [ > PlayerBlueRight ]
+right [ > WalkAnimBL1 ] -> [ > WalkAnimBR1 ]
+right [ > WalkAnimBL2 ] -> [ > WalkAnimBR2 ]
+right [ > WalkAnimBL3 ] -> [ > WalkAnimBR3 ]
+
+left [ > PlayerBlueRight ] -> [ > PlayerBlueLeft ]
+left [ > WalkAnimBR1 ] -> [ > WalkAnimBL1 ]
+left [ > WalkAnimBR2 ] -> [ > WalkAnimBL2 ]
+left [ > WalkAnimBR3 ] -> [ > WalkAnimBL3 ]
+
+[ WalkAnimBR3 ] -> [ PlayerBlueRight ]
+[ WalkAnimBR2 ] -> [ WalkAnimBR3 ]
+[ WalkAnimBR1 ] -> [ WalkAnimBR2 ]
+[ > PlayerBlueRight ] -> [ > WalkAnimBR1 ]
+
+[ WalkAnimBL3 ] -> [ PlayerBlueLeft ]
+[ WalkAnimBL2 ] -> [ WalkAnimBL3 ]
+[ WalkAnimBL1 ] -> [ WalkAnimBL2 ]
+[ > PlayerBlueLeft ] -> [ > WalkAnimBL1 ]
+
+right [ > PlayerPinkLeft ] -> [ > PlayerPinkRight ]
+right [ > WalkAnimPL1 ] -> [ > WalkAnimPR1 ]
+right [ > WalkAnimPL2 ] -> [ > WalkAnimPR2 ]
+right [ > WalkAnimPL3 ] -> [ > WalkAnimPR3 ]
+
+left [ > PlayerPinkRight ] -> [ > PlayerPinkLeft ]
+left [ > WalkAnimPR1 ] -> [ > WalkAnimPL1 ]
+left [ > WalkAnimPR2 ] -> [ > WalkAnimPL2 ]
+left [ > WalkAnimPR3 ] -> [ > WalkAnimPL3 ]
+
+[ WalkAnimPR3 ] -> [ PlayerPinkRight ]
+[ WalkAnimPR2 ] -> [ WalkAnimPR3 ]
+[ WalkAnimPR1 ] -> [ WalkAnimPR2 ]
+[ > PlayerPinkRight ] -> [ > WalkAnimPR1 ]
+
+[ WalkAnimPL3 ] -> [ PlayerPinkLeft ]
+[ WalkAnimPL2 ] -> [ WalkAnimPL3 ]
+[ WalkAnimPL1 ] -> [ WalkAnimPL2 ]
+[ > PlayerPinkLeft ] -> [ > WalkAnimPL1 ]
+
+[ stationary Player ] [ stationary GhostBlockAnim5 ] -> [ Player ] [ action GhostBlock ]
+[ stationary Player ] [ stationary GhostBlockAnim4 ] -> [ Player ] [ action GhostBlockAnim5 ]
+[ stationary Player ] [ stationary GhostBlockAnim3 ] -> [ Player ] [ action GhostBlockAnim4 ]
+[ stationary Player ] [ stationary GhostBlockAnim2 ] -> [ Player ] [ action GhostBlockAnim3 ]
+[ stationary Player ] [ stationary GhostBlockAnim1 ] -> [ Player ] [ action GhostBlockAnim2 ]
+[ stationary Player ] [ stationary GhostBlock ] -> [ Player ] [ action GhostBlockAnim1 ]
+
+[ GhostPlayerAbove ] -> [ ]
+late up [ GPAboveAnim | ] -> [ GPAboveAnim | GhostPlayerAbove ]
+
+[ stationary Player ] [ stationary GhostPlayerAnim5 ] -> [ Player ] [ action GhostPlayer ]
+[ stationary Player ] [ stationary GhostPlayerAnim4 ] -> [ Player ] [ action GhostPlayerAnim5 ]
+[ stationary Player ] [ stationary GhostPlayerAnim3 ] -> [ Player ] [ action GhostPlayerAnim4 ]
+[ stationary Player ] [ stationary GhostPlayerAnim2 ] -> [ Player ] [ action GhostPlayerAnim3 ]
+[ stationary Player ] [ stationary GhostPlayerAnim1 ] -> [ Player ] [ action GhostPlayerAnim2 ]
+[ stationary Player ] [ stationary GhostPlayer ] -> [ Player ] [ action GhostPlayerAnim1 ]
+
+[ Background Transition1 ] [ Background no Transition1 ] -> [ Background Transition1 ] [ Background Transition1 ]
+[ stationary Transition9 ] -> [ ] again
+[ stationary Transition8 ] -> [ action Transition9 ] again
+[ stationary Transition7 ] -> [ action Transition8 ] again
+[ stationary Transition6 ] -> [ action Transition7 ] again
+[ stationary Transition5 ] -> [ action Transition6 ] again
+[ stationary Transition4 ] -> [ action Transition5 ] again
+[ stationary Transition3 ] -> [ action Transition4 ] again
+[ stationary Transition2 ] -> [ action Transition3 ] again
+[ stationary Transition1 ] -> [ action Transition2 ] again
+
+[ Background TransitionR1 ] [ Background no TransitionR1 ] -> [ Background TransitionR1 ] [ Background TransitionR1 ]
+[ stationary TransitionR9 ] -> [ ] again
+[ stationary TransitionR8 ] -> [ action TransitionR9 ] again
+[ stationary TransitionR7 ] -> [ action TransitionR8 ] again
+[ stationary TransitionR6 ] -> [ action TransitionR7 ] again
+[ stationary TransitionR5 ] -> [ action TransitionR6 ] again
+[ stationary TransitionR4 ] -> [ action TransitionR5 ] again
+[ stationary TransitionR3 ] -> [ action TransitionR4 ] again
+[ stationary TransitionR2 ] -> [ action TransitionR3 ] again
+[ stationary TransitionR1 ] -> [ action TransitionR2 ] again
+
+(Level start)
+
+[ Target no LevelStart ] [ Background no Transition ] -> [ Target ] [ Background Transition5 ]
+[ Target Transition9 no LevelStart ] -> [ Target LevelStart ]
+
+(Win)
+
+down [ PlayerPink no WinAnim Target no FallBlock | Ridable ]-> [ PlayerPink WinAnim1 Target | Ridable ] sfx8
+
+[ WinAnim6 ] [ Background no Transition ] -> [ WinAnim6 ] [ Background Transition1 ]
+[ WinAnim5 ] -> [ WinAnim6 ]
+[ WinAnim4 ] -> [ WinAnim5 ]
+[ WinAnim3 ] -> [ WinAnim4 ]
+[ WinAnim2 ] -> [ WinAnim3 ]
+[ WinAnim1 ] -> [ WinAnim2 ]
+
+[ > Player WinAnim ] -> cancel
+[ action Player WinAnim ] -> cancel
+
+[ Target WinAnim6 Transition5 ] -> [ Target WinAnim6 Transition5 Winable ]
+
+(tutorial)
+
+[ Crate PressX no TCount ] [ PressX ] -> [ Crate TCount1 ] [ ]
+
+[ TCount5 ] -> [ ]
+[ TCount4 ] -> [ TCount5 ] message X or spacebar to switch characters.
+[ TCount3 ] -> [ TCount4 ]
+[ TCount2 ] -> [ TCount3 ]
+[ TCount1 ] -> [ TCount2 ]
+
+[ > Player ] [ Crate PressX ] -> [ Player ] [ Crate PressX ]
+[ > Player ] [ Crate TCount ] -> [ Player ] [ Crate TCount ]
+[ PlayerPink ] [ PressX ] -> [ PlayerPink ] [ ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Winable 
+
+======= 
+LEVELS
+=======
+
+
+(Tutorial)
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,xxxxxxxxxxx,,,..'''+++++++++++'''.
+.,,,!xxxxxxxxxo,,,..'''p++++++++++'''.
+.,,,,,xxxxxxx,,,,,..'''''+++++++'''''.
+.,,,,,xxxxxx,,,,,,..'''''++++++''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,xxxxxxxxxxx,,,..'''+++++++++++'''.
+.,,,xxxx"xxxxxx,,,..'''p+①+①++++++'''.
+.,,,,,,x,xxxoxx,,,..''''''+'++++++'''.
+.,,,xxxxxxxx,xx,,,..'''++++++++'++'''.
+.,,,xxxxxxxxxxx,,,..'''+++①+++++++'''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,!xxxxxxxx,,,,..''''p++++++++''''.
+.,,,,,,,xxxxxx,,,,..'''''''++++++''''.
+.,,,,,,xxxxxox,,,,..''''''+++++++''''.
+.,,,,xxxxxx",x,,,,..''''++++++①'+''''.
+.,,,,xx"xxx"xx,,,,..''''++①+++①++''''.
+.,,,,xx"x,,,,,,,,,..''''++①+'''''''''.
+.,,,,,,,x,,,,,,,,,..'''''''+'''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,xxxx!xxxx,,,,..''''++++p++++''''.
+.,,,,xxxx"xxxx,,,,..''''++++①++++''''.
+.,,,,x,,,,,,,x,,,,..''''+'''''''+''''.
+.,,,,xxxxxxxxx,,,,..''''+++++++++''''.
+.,,,,xxxxx"xxx,,,,..''''+++++①+++''''.
+.,,,,xxx"o,"xx,,,,..''''+++①+'①++''''.
+.,,,,xx",xx"xx,,,,..''''++①'++①++''''.
+.,,,,xx"xx,,,,,,,,..''''++①++''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,xxxxx"xxxxx,,,..'''+++++①+++++'''.
+.,,,xxxxx"xxxxx,,,..'''+++++①+++++'''.
+.,,,xxxxx"xxxxx,,,..'''+++++①+++++'''.
+.,,,xxxxx"xxxxx,,,..'''+++++①+++++'''.
+.,,,xxxxx"xxxox,,,..'''+++++①+++++'''.
+.,,,xxxxx"xx,,,,,,..'''+++++①++''''''.
+.,,,xxxxx"xx,,,,,,..'''+++++①++''''''.
+.,,,xxxxx"xx,,,,,,..'''+++++①++''''''.
+.,,,xx!xx"xx,,,,,,..'''++p++①++''''''.
+.,,,,,,,,,,,,$,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+(二つでスタックのチュートリアル)
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,xxxxxxxxxxx,,,..'''+++++++++++'''.
+.,,,xxx!xxxoxxx,,,..'''+++%+++++++'''.
+.,,,,xx"x"xxxx,,,,..''''+++++++++''''.
+.,,,,#########,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,b,*,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.xxxxxxxxxxxxxxxxx..+++++++++++++++++.
+.x,,,,,,,,,,,,,,,x..+'''''''''''''''+.
+.x,,,,,,b,*,,,,,,x..+''''''''+''''''+.
+.x,,xxxxxxxxxxx,,x..+''+++++++++++''+.
+.x,,xxx!xxxoxxx,,x..+''+++%+++++++''+.
+.x,,,xx"x"xxxx,,,x..+'''+++++++++'''+.
+.x,,,,,,,,,,,,,,,x..+'''''''''''''''+.
+.xxxxxxxxxxxxxxxxx..+++++++++++++++++.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+(一個なら押しのけて登れる)
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,xxxxxx,,,,,..''''''++++++'''''.
+.,,,,,,x",x"x,,,,,..''''''++'+++'''''.
+.,,,,,,,!,,,x,,,,,..'''''''%'''+'''''.
+.,,,,#b,,,*,x,,,,,..'''''''''''+'''''.
+.,,,,xxxxxxxxx,,,,..''''+++++++++''''.
+.,,,,oxxxxxxxx,,,,..''''+++++++++''''.
+.,,,,xxxxxxxxx,,,,..''''+++++++++''''.
+.,,,,,,,xxxxxx,,,,..'''''''++++++''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+message Reach the heart to win.
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,xxxxxxxxx,,,,..''''+++++++++''''.
+.,,,,xxxxxxxxx,,,,..''''+++++++++''''.
+.,,,,x!xxxxxox,,,,..''''+p+++++++''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message You can climb one square.
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,xxxxxxxxx,,,,..''''+++++++++''''.
+.,,,,xxxxxxxxx,,,,..''''+++++++++''''.
+.,,,,xxxxxxxox,,,,..''''+石+++++++''''.
+.,,,,,!,,,,,,,,,,,..'''''p'''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message You can only push one block at a time.
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,xxxxxxxxx,,,,..''''+++++++++''''.
+.,,,,xxxxxxxox,,,,..''''+++++++++''''.
+.,,,,x!"xxxx"x,,,,..''''+p石++++石+''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 1. Two Worlds
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,!xxx,b,xxxxxo,,..''%+++'''++++++''.
+.,,,xxx,,,xxxx,,,,..'''+++'''++++''''.
+.,,,xxx,,,xxxx,,,,..'''+++'''++++''''.
+.,,,xxx,,,xxx,,,,,..'''+++'''+++'''''.
+.,,,xxxx*x"xx,,,,,..'''++++'++++'''''.
+.,,,xxx,,,,,,,,,,,..'''+++'''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,b,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,文,,,,,,,,..'''''''''''''''''.
+.,,,!xxx,,,xxxo,,,..'''%+++'''++++'''.
+.,,,,xxxx*xxx,,,,,..''''++++'+++'''''.
+.,,,,xxx,,,xx,,,,,..''''+++'''++'''''.
+.,,,,,,,,文,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 2. Delivery
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,xxxxxxx,,,,,..'''''+++++++'''''.
+.,,,,,xxxxxxx,,,,,..'''''+++++++'''''.
+.,,,,,oxxxxxx,,,,,..'''''+++++++'''''.
+.,,,,,xxxxxxx,,,,,..'''''+++++++'''''.
+.,,,,,,xxxxxx,,,,,..''''''++++++'''''.
+.,,,,,,x!x"xx,,,,,..''''''+%++++'''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,b*,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 3. One-way Tickets
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,xx,,,,,,,,,,,..''''++'''''''''''.
+.,,,,x",,,b*,,,,,,..''''++'''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,xx########,,,..''''++'''''''''''.
+.,,,,xxxxxxxxxx,,,..''''++++++++++'''.
+.,,,,xxxxxxxxxx,,,..''''++++++++++'''.
+.,,,,xxx!xxxoxx,,,..''''+++%++++++'''.
+.,,,,#xx"x"xxxx,,,..'''''+++++++++'''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+(message Brain training
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,b*,,x"x,,,,,,,..'''''''+++'''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,xxx!xxxxxxx,,,..'''+++%+++++++'''.
+.,,,xxx,,,,,xxx,,,..'''+++'''''+++'''.
+.,,,xxxxxxxxxxx,,,..'''+++++++++++'''.
+.,,,xxxxxx"xxxx,,,..'''+++++++++++'''.
+.,,,xxxx"o,"xxx,,,..'''++++++'++++'''.
+.,,,xxx",xx"xx,,,,..'''++++'+++++''''.
+.,,,,xx"xx####,,,,..''''+++++''''''''.
+.,,,,######,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+(message 2 x 3
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,##,,,,,##,,,,..'''''''''''''''''.
+.,,,,#,,,,,,,#,,,,..'''''''''''''''''.
+.,,,,#,"x"x",#,,,,..''''''+++++''''''.
+.,,,,#,,b,*,,#,,,,..'''''''''''''''''.
+.,,,,,,xxxxx,,,,,,..''''''+++++''''''.
+.,,,,,,xxxxo,,,,,,..''''''+++++''''''.
+.,,,,,,xxxxx,,,,,,..''''''+++++''''''.
+.,,,,,,xx!xx,,,,,,..''''''++%++''''''.
+.,,,,#,,,,,,,#,,,,..'''''''''''''''''.
+.,,,,##,,,,,##,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+message 4. 3 x 6
+
+
+......................................
+.,,,,,,,,,",,,,,,,..'''''''''+'''''''.
+.,,,,,,,,,",,,,,,,..'''''''''+'''''''.
+.,,,,,,,,,",,,,,,,..'''''''''+'''''''.
+.,,,,,,,,,",,,,,,,..'''''''''+'''''''.
+.,,,,,b*,,",,,,,,,..'''''''''+'''''''.
+.,,,,,,,,,",,,,,,,..'''''''''+'''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,xxxxxxx,,,,,..'''''+++++++'''''.
+.,,,,,xxxxxxo,,,,,..'''''+++++++'''''.
+.,,,,,xxxxxx,,,,,,..'''''++++++''''''.
+.,,,,,xxxxxx,,,,,,..'''''++++++''''''.
+.,,,,,!xxxxx,,,,,,..'''''%+++++''''''.
+.,,,,,,xxxxx,,,,,,..''''''+++++''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,##########,,,,..'''''''''''''''''.
+.,,,#,,,,,,,,#,,,,..'''''''''''''''''.
+.,,,#,"!"x"x,#,,,,..'''''+p++++''''''.
+.,,,#b,,,*,,,#,,,,..'''''''''''''''''.
+.,,,#,xxxxxx##,,,,..'''''++++++''''''.
+.,,,#,*,,,,,,o,,,,..''''''''''''+''''.
+.,,,#,xxxxxxx,,,,,..'''''+++++++'''''.
+.,,,#,xxxxxx,#,,,,..'''''++++++''''''.
+.,,,#,xxxxxx,#,,,,..'''''++++++''''''.
+.,,,#,xxxxxx,#,,,,..'''''++++++''''''.
+.,,,#,,,,,,,,#,,,,..'''''''''''''''''.
+.,,,##########,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+message 5. Too Small to Climb
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,ox"#,,,,,,..'''''''+++'''''''.
+.,,,,,,,,,"#,,,,,,..'''''''''+'''''''.
+.,,,,,,,x,"#,,,,,,..'''''''+'+'''''''.
+.,,,,,,,x,,,,,,,,,..'''''''+'''''''''.
+.,,,,,,,x,,,,,,,,,..'''''''+'''''''''.
+.,,,,,,,!b*,,,,,,,..'''''''%'''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,",,,,,,,,..''''''''+''''''''.
+.,,,,,,,,",,,,,,,,..''''''''+''''''''.
+.,,,,,,,,",,,,,,,,..''''''''+''''''''.
+.,,,,,,,b@,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,@,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,oxxx,,,,,,,..''''''++++'''''''.
+.,,,,,#,xxx,,,,,,,..'''''''+++'''''''.
+.,,,,,!,xxx,,,,,,,..'''''%'+++'''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+message 6. I Hope That's Enough
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,xox,,,,,..''''''''++++'''''.
+.,,,,,,,,,xxx"xx,,..''''''''+++++++''.
+.,,,,,,,,,,,,"xx,,..''''''''''''+++''.
+.,,######xxxx"xx,,..''''''''+++++++''.
+.,,#,,,!#x",,,,,,,..''''''%'++'''''''.
+.,,#,*,,xx"x,*,*,,..'''''''++++''''''.
+.,,####,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,##,,,,,,b,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 7. The Larger, the Better
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,#,#,#,#,#,#,..'''''''''''''''''.
+.,,,,,xxxxxo,,,,,,..'''''++++++''''''.
+.,,,,,xx",,,,,,,,,..'''''+++'''''''''.
+.,,,,,xx",,,,,,,,,..'''''+++'''''''''.
+.,,,,,!x",@@@@,,,,..'''''%++'''''''''.
+.,#,#,#,#,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,b,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 8. Cut the Screen
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,xxx"xxx,,,,,..'''''+++++++'''''.
+.,,,,,xxx"xxx,,,,,..'''''+++++++'''''.
+.,,,,,xxx"xxx,,,,,..'''''+++++++'''''.
+.,,,,,oxx"xxx,,,,,..'''''+++++++'''''.
+.,,,,,@@@@@@@,,,,,..'''''+++++++'''''.
+.,,,,,xxx"x#x,,,,,..'''''+++++'+'''''.
+.,,,,,xxx"xxx,,,,,..'''''+++++++'''''.
+.,,,,,xxx"xxx,,,,,..'''''+++++++'''''.
+.,,,,,x!x"xxx,,,,,..'''''+%+++++'''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,b,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................)
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,xxxxxxx,,,,,..'''''+++++++'''''.
+.,,,,,xxx"xxx,,,,,..'''''+++++++'''''.
+.,,,,,oxx"xxx,,,,,..'''''+++++++'''''.
+.,,,,,xxx"xxx,,,,,..'''''+++++++'''''.
+.,,,,,2222222,,,,,..'''''''''''''''''.
+.,x,,,xxx"xxx,,,,,..'+'''+++++++'''''.
+.,,,,,@@@@@@@,,,,,..'''''''''''''''''.
+.,,,,,,xxxx!x,,,,,..''''''++++%+'''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,b,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 9. Transfer
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.#################..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,xx,,,2b@@@,,o,,..''++''''''''''+''.
+.,,!",222,@,,,,x,,..''%+''''''''''+''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.#################..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 10. Do You Like Math Puzzles?
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,b,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,"@#xx#xx#xx#x#..'''+''++++++++'+'.
+.,,""@#xxxxxxxxxx#..''++''++++++++++'.
+.,,""@#xx,xx,xx,o#..''++''++'++'++'+'.
+.,,,,@#!x,xx,xx,x#..''''''%+'++'++'+'.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 11. Haste Makes Waste
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,xxx,,,,,,,..'''''''+++'''''''.
+.,,xxx,,,,,,,xxx,,..''+++'''''''+++''.
+.,,xx",,@@@,,xox,,..''+++'''''''+++''.
+.,,!x",,@@@,,xxx,,..''%++'''''''+++''.
+.,,###,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,b,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 12. Neither Road Leads to Rome
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,#############,,,..'''''''''''''''''.
+.,#,,,,!"""x"x###,..''''''%+++++++++'.
+.,#b@@,,,,,,,,xo#,..'''''''''''''+++'.
+.,#,,,,xxxxxx,xx#,..''''''++++++'+++'.
+.,#,,,,,,,,,,,###,..'''''''''''''''''.
+.,#############,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+message 13. This Elevator Will Be Taking No Passengers
+
+
+(......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,o""""",,,,,,..'''''++++++''''''.
+.,,b*,,""""",,,,,,..''''''+++++''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.####xxx,,,xxx####..''''+++'''+++''''.
+.,,,,xxx@@@xxx,,,,..''''+++'''+++''''.
+.,,,,xxx@@@xxx,,,,..''''+++'''+++''''.
+.,,,,xxx,,,xxx,,,,..''''+++'''+++''''.
+.,,,,xxx,,,xxx,,,,..''''+++'''+++''''.
+.,,,,x!x,,,xxx,,,,..''''+%+'''+++''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+......................................)
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,xx"""""xx,,,,..''''+++++++++''''.
+.,b*,xx"""""xx,,,,..''''+++++++++''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,#oxx,,,xxx#,,,..''''+++'''+++''''.
+.,,,#,xx@@@xxx#,,,..'''''++'''+++''''.
+.,,,#xxx@@@xxx#,,,..''''+++'''+++''''.
+.,,,#xxx,,,xxx#,,,..''''+++'''+++''''.
+.,,,#xxx,,,xxx#,,,..''''+++'''+++''''.
+.,,,#x!x,,,xxx#,,,..''''+%+'''+++''''.
+.,,,###,,,,,###,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+......................................
+
+
+(......................................
+.,,,,xxxx"""xx,,,,..''''+++++++++''''.
+.,,,,xxx""""xx,,,,..''''+++++++++''''.
+.,b*,xx,""""xx,,,,..''''++'++++++''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,#oxx,,,xxx#,,,..''''+++'''+++''''.
+.,,,#,xx@@@xxx#,,,..'''''++'''+++''''.
+.,,,#xxx@@@xxx#,,,..''''+++'''+++''''.
+.,,,#xxx,,,xxx#,,,..''''+++'''+++''''.
+.,,,#xxx,,,xxx#,,,..''''+++'''+++''''.
+.,,,#x!x,,,xxx#,,,..''''+%+'''+++''''.
+.,,,###,,,,,###,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+......................................)
+
+
+message 14. 3 x 21
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,#,,xxx"""o,,..''''''''+++++++''.
+.,,,,@@@,xxx""",,,..''''''''++++++'''.
+.,,,,@@@#"""""",,,..''''''''++++++'''.
+.,,,#@@@,"""""",,,..''''''''++++++'''.
+.,,,,@@@,"""""",#,..''''''''++++++'''.
+.,,,,@@@,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,#,,,,b,,22,,,,..'''''''''''''''''.
+.,,,x!,,,,,,,2,,,,..'''+%''''''''''''.
+.,,,,#,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,#,#,#,#,#,..'''''''''''''''''.
+.,,,,,#,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+message Thanks for playing!
+
+
+(......................................
+.,,,,,#,,,,#,,,,,,..'''''''''''''''''.
+.,,,,,#,,,,#,,,,,,..'''''''''''''''''.
+.,,,,,#o,b,#,,,,,,..''''''+''''''''''.
+.,,,,,,,,,,#,,,,,,..'''''''''''''''''.
+.,,,,,#,*,*#,,,,,,..'''''''''''''''''.
+.,,,,,#,@@@#,,,,,,..'''''''''''''''''.
+.,,,,,#,@@@##,,,,,..'''''''''''''''''.
+.,,,,,#,,,,,#,,,,,..'''''''''''''''''.
+.,,,,,##,,,,#,,,,,..'''''''''''''''''.
+.,,,,,,#,,,,#,,,,,..'''''''''''''''''.
+.,,,,,,#,,,,#,,,,,..'''''''''''''''''.
+.,,,,,,#,x,,#,,,,,..''''''''%''''''''.
+.,,,,,,#,,,,#,,,,,..'''''''''''''''''.
+.,,,,,,#,,,,#,,,,,..'''''''''''''''''.
+......................................
+
+
+......................................
+.,,,,,,,,,,,,,,#,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,b,,,,,,,,,#,,..'''''''''''''''''.
+.,,,,,,,o,,,,,,,,,..'''''''+'''''''''.
+.,,,,,,,",,,,,,#,,..'''''''+'''''''''.
+.,*,*,*,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,#,,,,,,#,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,@@,@@@#,,,,,,#,,..'''''''''''''''''.
+.,@@,,@@,,,,,,,,,,..'''''''''''''''''.
+.,@@@@@@#,,,,,,#,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,#,!,#,#,,..''''''''''%''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,##!######,,,,..''''''%''''''''''.
+.,,,,#,,,,,,o#,,,,..'''''''''''+'''''.
+.,,,,#,,,,,,,#,,,,..'''''''''''''''''.
+.,,,,#,,@b2,,#,,,,..'''''''+'+'''''''.
+.,,,,#,@@,22,#,,,,..''''''++'++''''''.
+.,,,,#,,,,,,,#,,,,..'''''''''''''''''.
+.,,,,#########,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+......................................
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,x"""x,,,,,,..''''''+++++''''''.
+.,,,,,,""""",,,,,,..''''''+++++''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,#,xxx,,,,,oxx,#,..'''+++'''''+++'''.
+.,#,xxx,222,xxx,#,..'''+++'''''+++'''.
+.,#,xxx,,,,,xxx,#,..'''+++'''''+++'''.
+.,#,xxx,@@,,xxx,#,..'''+++'''''+++'''.
+.,#,x!x,,,,,xxx,#,..'''+%+'''''+++'''.
+.,,,,,,,,b,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+.,,,,,,,,,,,,,,,,,..'''''''''''''''''.
+......................................
+
+
+......................................
+.,,#,,,,,,,,,,#,,,..'''''''''''''''''.
+.,,#,,,,,,,,,,#,,,..'''''''''''''''''.
+.,,#,,,,,,"o,,#,,,..'''''''''++''''''.
+.,,#,,,,,,,,,,#,,,..'''''''''''''''''.
+.,,#xxx,,,,xxx#,,,..'''+++''''+++''''.
+.,,#xxx,,,,"xx#,,,..'''+++''''+++''''.
+.,,#xxx,,,,"xx#,,,..'''+++''''+++''''.
+.,,#xxx,2@,"xx#,,,..'''+++''''+++''''.
+.,,#!xx22@@"xx#,,,..'''%++''''+++''''.
+.,,#,,,2,,@,,,#,,,..'''''''''''''''''.
+.,,#,,,2,,@,,,#,,,..'''''''''''''''''.
+.,,#,b,22@@,,,#,,,..'''''''''''''''''.
+.,,#,,,,,,,,,,#,,,..'''''''''''''''''.
+.,,#,,,,,,,,,,#,,,..'''''''''''''''''.
+......................................)

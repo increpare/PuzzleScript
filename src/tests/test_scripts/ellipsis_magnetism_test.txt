@@ -1,0 +1,169 @@
+title Magnet test cases
+author CHz
+homepage quiteajolt.com
+
+========
+OBJECTS
+========
+
+Background
+Pink
+
+Goal
+DarkBlue
+
+Floor
+Black
+.....
+.....
+..0..
+.....
+.....
+
+Wall
+Brown
+
+PlayerAttract
+Black Yellow White
+.2.2.
+.0.0.
+.000.
+.1.1.
+11.11
+
+PlayerRepel
+Black Yellow White
+2...2
+0...0
+.000.
+.1.1.
+11.11
+
+
+Crate
+DarkGray Gray
+.000.
+00100
+01010
+00100
+.000.
+
+
+=======
+LEGEND
+=======
+
+. = Floor
+# = Wall
+P = PlayerRepel
+C = Crate
+@ = Crate and Goal
+G = Goal and Floor
+Player = PlayerAttract or PlayerRepel
+
+
+=======
+SOUNDS
+=======
+
+SFX0 78396103 (crate attraction)
+SFX1 66007901 (crate repulsion)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Goal
+Player, Wall, Crate, Floor
+
+======
+RULES
+======
+
+(The most elegant attraction rule would be this:
+
+ late [ PlayerAttract | ... | Crate ] -> [ PlayerAttract | ... | < Crate ] again
+ 
+ However, I want the attraction rule to happen after player movement, and you can't apply movement in a late rule. So, I've had to be more hacky and explicit: every empty space in the grid is actually taken up by a transparent Floor object in the same layer as everything else. This helps me because in a late rule I can swap objects with no problems: < Crate becomes [ Floor | Crate ] -> [ Crate | Floor ].
+)
+
+(player movement)
+[ > Player | Floor ] -> [ Floor | Player ]
+
+(player action: switch polarity)
+[ ACTION PlayerAttract ] -> [ PlayerRepel ]
+[ ACTION PlayerRepel ] -> [ PlayerAttract ]
+
+(crate attraction)
+late [ PlayerAttract | ... | Floor | Crate ] -> [ PlayerAttract | ... | Crate | Floor ] SFX0
+
+(crate repulsion)
+late [ PlayerRepel | ... | Crate | Floor ] -> [ PlayerRepel | ... | Floor | Crate ] SFX1
+
+==============
+WINCONDITIONS
+==============
+
+Some Player on Goal
+
+=======
+LEVELS
+=======
+
+G......
+.......
+.......
+...P...
+.......
+.......
+...C...
+
+G......
+.......
+.......
+....P..
+.......
+...C...
+.......
+
+G......
+.......
+.......
+.......
+.......
+.......
+C.....P
+
+G......
+.......
+.......
+.......
+.......
+C.....P
+.......
+
+G......
+.......
+.......
+.......
+.......
+.......
+P.....C
+
+G..C...
+.......
+...#...
+...P...
+.......
+.......
+.......
+
+G..C...
+...#...
+.......
+...P...
+.......
+.......
+.......
+

@@ -1,0 +1,211 @@
+title Kettle, except something is off
+author Stingby12
+homepage https://stingby12.itch.io/
+
+color_palette arnecolors
+
+========
+OBJECTS
+========
+
+Background
+darkgray
+
+Target
+yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+
+UPolice
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+DPolice
+black
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+LPolice
+black
+.000.
+.000.
+0000.
+.000.
+.0.0.
+
+RPolice
+black
+.000.
+.000.
+.0000
+.000.
+.0.0.
+
+Crate
+blue
+..0..
+00000
+..0..
+.000.
+.0.0.
+
+wall
+black
+
+=======
+LEGEND
+=======
+
+. = Background
+player = upolice or dpolice or lpolice or rpolice
+i = upolice
+k = dpolice
+j = lpolice
+l = rpolice
+c = Crate
+@ = Crate and Target
+t = Target
+# = wall
+
+
+=========
+SOUNDS
+=========
+target move 59810707
+player move 86872107
+startlevel 63638302
+endlevel 86642102
+endgame 63929902
+showmessage 42200307
+closemessage 42200307
+startgame 94059902
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+player, Crate, wall
+
+======
+RULES
+======
+
+(Moonwulk)
+
+[ up rpolice] -> [rpolice]
+[ down rpolice] -> [rpolice]
+[ left rpolice] -> [ left rpolice]
+
+[ down upolice] -> [ down upolice]
+[ left upolice] -> [upolice]
+[ right upolice] -> [upolice]
+
+[ up lpolice] -> [lpolice]
+[ down lpolice] -> [lpolice]
+[ right lpolice] -> [ right lpolice]
+
+[ up dpolice] -> [ up dpolice]
+[ left dpolice] -> [dpolice]
+[ right dpolice] -> [dpolice]
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > crate | Crate ] -> [ > crate | > Crate ]
+
+==============
+WINCONDITIONS
+==============
+all target on crate
+
+=======
+LEVELS
+=======
+
+message You've been hit back by a smooth Kettle
+
+################
+#..............#
+#..............#
+#..............#
+#....kkkkkk....#
+#...lcc..ccj...#
+#...l.tttt.j...#
+#...l.t@@t.j...#
+#...lcttt@cj...#
+#...lct@ttcj...#
+#...lcc..ccj...#
+#....iiiiii....#
+#..............#
+#..............#
+#..............#
+################
+
+message Area secure
+message What are these people in black doing ?!
+
+################
+#..............#
+#..............#
+#..............#
+#....kkkkkk....#
+#...lc..c.cj...#
+#...l......j...#
+#...lc.@tt.j...#
+#...l..t@tcj...#
+#...l..ttt.j...#
+#...lc..c..j...#
+#....iiiiii....#
+#..............#
+#..............#
+#..............#
+################
+
+message Area secure
+message We may be in trouble.
+
+##########
+#..k.....#
+#........#
+#..ltck.j#
+#..c..t..#
+#..t..c..#
+#l.ictj..#
+#........#
+#.....i..#
+##########
+
+message Area secure
+message KAW !
+
+###############
+#.............#
+#....k........#
+#......k......#
+#..l.c....k...#
+#......c.j....#
+#...l.@tt.c.j.#
+#.l.c.tt@.....#
+#.....t@t.....#
+#..l.c..c.j...#
+#.....i.......#
+#....i..i.....#
+#.............#
+#.............#
+###############
+
+message Area secure
+message Mickael Jackson was here.
+message Next time it will be Despacito.
+

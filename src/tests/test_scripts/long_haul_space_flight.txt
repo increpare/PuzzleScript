@@ -1,0 +1,295 @@
+title Long Haul Space Flight
+author pap4qlxxlevb
+background_color darkblue
+text_color lightblue
+
+========
+OBJECTS
+========
+
+Background
+lightgray gray
+00000
+00000
+00100
+00000
+00000
+
+Target
+#ffff22 lightgray
+.....
+.000.
+.010.
+.000.
+.....
+
+Wall
+darkgray gray
+00000
+00000
+00000
+00000
+00000
+
+Player
+Black Orange white darkblue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+Crate
+lightblue #668899
+01110
+01110
+11111
+01110
+01010
+
+Cryo
+blue lightgrey
+.....
+..0..
+.010.
+..0..
+.....
+
+Defunct
+grey lightgray
+.....
+..0..
+.010.
+..0..
+.....
+
+Thaw
+red lightgray
+.....
+.0.0.
+..1..
+.0.0.
+.....
+
+Dthaw
+grey lightgray
+.....
+.0.0.
+..1..
+.0.0.
+.....
+
+=======
+LEGEND
+=======
+
+. = Background
+w = Wall
+P = Player
+o = Crate
+s = Crate and Target
+x = Target
+c = Cryo
+t = Thaw
+
+=======
+SOUNDS
+=======
+
+Player move 81907
+Crate MOVE 96378700
+Player cantmove 16386304
+endlevel 55294100
+startgame 5822103
+crate create 49604100
+player create 59446908
+
+================
+COLLISIONLAYERS
+================
+
+Background, 
+Defunct, dthaw
+Target, Cryo, Thaw 
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+late [ Player Cryo ] -> [ Crate Defunct]
+
+late [ Crate Thaw ] -> [ Player Dthaw]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+some Player
+
+=======
+LEVELS
+=======
+
+message "It's gonna be a long, long flight. Make sure all our passengers are in their seats."
+
+message level 1 of 12
+
+wwwwwww
+wwwwxxw
+ww.o..w
+wp.o.ow
+ww.o..w
+wwwwxxw
+wwwwwww
+
+message "Looks like someone's arrived late. Help them onboard, will ya?"
+
+message level 2 of 12
+
+wwwwwww
+wwwwx.w
+ww...ow
+wpp.c.w
+ww....w
+wwww.xw
+wwwwwww
+
+message "Honestly, you'd think people would have the decency to turn up to their cryonic space flight on time!"
+
+message level 3 of 12
+
+wwwwwwwww
+wwwwxwwww
+ww.o.o.ww
+wp.....xw
+ww.p.c.ww
+wwwwxwwww
+wwwwwwwww
+
+message "If they're gonna arrive late, they can at least help with packing everyone up."
+
+message level 4 of 12
+
+wwwwwwwww
+wpxw.c.xw
+w.p..o..w
+wp.w.cxww
+wwwwwwwww
+
+message "They're lucky, they won't even feel the years pass. Not like us."
+
+message level 5 of 12
+
+wwwwwwww
+wxc..wxw
+wwo.p..w
+wwp.c..w
+wwo.p..w
+wx....xw
+wwwwwwww
+
+
+message "From their perspective 75 years will pass in a blink of an eye."
+
+message level 6 of 12
+
+wwwwwwww
+wwxwwwww
+wwc..www
+ww.oxwww
+wwpp..ww
+wwwwwwww
+
+message "It'll be our grandkids who thaw them out on the other side."
+
+message level 7 of 12
+
+wwwwwww
+wt....w
+w.w.wpw
+w..c..w
+wow.w.w
+w....xw
+wwwwwww
+
+message "I guess we're still lucky in our own way, winning the maintenance raffle."
+
+message level 8 of 12
+
+wwwwww
+ww.cxw
+w.potw
+wto..w
+wxc.ww
+wwwwww
+wwwwww
+message "I'd rather spend those 75 years in here than back on our ruined planet."
+
+message level 9 of 12
+
+wwwwwww
+wwt.o.w
+wwoww.w
+wp..x.w
+wwww.ww
+wwxc.ww
+wwwwwww
+
+message "Wonder if they'll even remember us once they arrive..."
+
+message level 10 of 12
+
+wwwwwwwwwww
+wwwww.wxx.w
+w....tw.cww
+w.o.w.w..ww
+wp.owt..cww
+w.o.w.w...w
+w....twxc.w
+wwwwwwwwwww
+
+message " ... We've got a long trip ahead of us."
+
+message level 11 of 12
+
+wwwwww
+w....w
+wpoo.w
+w..o.w
+wwwtww
+wx...w
+wxxc.w
+wwwwww
+
+message "If I am gonna grow old and die on this godforsaken ship..."
+
+message level 12 of 12
+
+wwwwwwwwwwww
+wwwwwwww.www
+wwwwwwxw...w
+w.....twx.ww
+w.o.ww.ww.ww
+wpcow....t.w
+w.o.w.wwcc.w
+w....tw...xw
+wwwwwwwwwwww
+
+message "...I'm glad I get to grow old with you."
+
+wwwwwww
+wwwwxxw
+wwpo..w
+w..o.ow
+wwpo..w
+wwwwxxw
+wwwwwww
+
+message The End :)
+
+

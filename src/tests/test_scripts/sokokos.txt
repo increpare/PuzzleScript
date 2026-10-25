@@ -1,0 +1,243 @@
+title SokokoS
+author Notan
+homepage https://notaninart.itch.io
+background_color #350828
+text_color #f9cb60
+norepeat_action
+run_rules_on_level_start
+
+========
+OBJECTS
+========
+
+Palette1
+#151244 #60117f #922a95 #be7dbc #350828
+01234
+12340
+23401
+34012
+40123
+
+Palette2
+#7f6962 #f9cb60 #f9960f #bc2f01 #680703
+01234
+12340
+23401
+34012
+40123
+
+Background
+#350828
+
+Wall
+#7f6962#680703
+00010
+11111
+01000
+11111
+00010
+
+Player
+#be7dbc #151244
+.000.
+01010
+01010
+00000
+.000.
+
+Crate
+#f9960f
+00000
+0...0
+0...0
+0...0
+00000
+
+
+PlayerGuide
+#be7dbc #151244
+.....
+.....
+..0..
+.....
+.....
+
+CrateGuide
+#f9960f
+.....
+.....
+..0..
+.....
+.....
+
+Target
+#7f6962
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Mirror
+#f9cb60
+..0..
+..0..
+..0..
+..0..
+..0..
+
+Marker
+transparent
+
+=======
+LEGEND
+=======
+
+Obstacle = Crate or Wall
+Guide = PlayerGuide or CrateGuide
+
+Palette = Palette1 or Palette2
+X = Palette1
+Y = Palette2
+
+. = Background
+# = Wall
+I = Mirror
+P = Player
+╋ = Crate
+╬ = Target
+H = Mirror and Wall
+& = Crate and Target
+@ = Crate and Wall
+
+=======
+SOUNDS
+=======
+
+
+sfx0 22463707 (walk)
+sfx1 67079507 (push 10471704)
+sfx2 03111065 (flip)
+sfx3 10471704 (walk unused)
+sfx4 41314507 (walk unused)
+sfx5 10471704 (push unused)
+Undo 21479104 (72060504 60450507)
+restart 46704309
+startgame 21069303
+closemessage 21069303
+(startlevel 67233309)
+endlevel 32515109
+(endgame 21069303)
+titlescreen 21069303
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Palette
+Target, Wall
+Guide
+Player
+Crate
+Mirror
+Marker
+
+======
+RULES 
+======
+
+[ > player no obstacle | no obstacle ] -> [ | player ] sfx0
+[ > player no obstacle | crate no wall | no obstacle ] -> [ | player | crate ] sfx1
+[ > player ] -> [ player ]
+
+[ action player ] -> sfx2
+
+horizontal [ action player ] [ no marker | mirror | no marker ] -> [ action player ] [ marker | mirror | marker ]
+right [ | marker no crate | ... | marker no crate | ] -> [ marker | | ... | | marker ]
++ horizontal [ | marker crate | ... | marker no crate | ] -> [ marker | | ... | crate | marker ]
++ right [ | marker crate | ... | marker crate | ] -> [ marker | crate | ... | crate | marker ]
+[ marker ] -> [ ]
+
+horizontal [ action player | ... | mirror ] -> [ player | ... | marker mirror ]
+right [ | marker mirror | ] -> [ marker | mirror | marker ]
+right [ | marker no player | ... | marker no player | ] -> [ marker | | ... | | marker ]
++ horizontal [ marker player | ... | marker ] -> [ | ... | player ]
+[ marker ] -> [ ]
+
+late [ guide ] -> [ ]
+late horizontal [ no marker | mirror | no marker ] -> [ marker | mirror | marker ]
+late right [ | marker no crate | ... | marker no crate | ] -> [ marker | | ... | | marker ]
++ late horizontal [ | marker crate | ... | marker no crate | ] -> [ marker | crate | ... | crateGuide | marker ]
++ late right [ | marker crate | ... | marker crate | ] -> [ marker | crate CrateGuide | ... | crate crateGuide | marker ]
+late [ marker ] -> [ ]
+
+late horizontal [ player | ... | mirror ] -> [ player | ... | marker mirror ]
+late right [ | marker mirror | ] -> [ marker | mirror | marker ]
+late right [ | marker no player | ... | marker no player | ] -> [ marker | | ... | | marker ]
++ late horizontal [ marker player | ... | marker ] -> [ player | ... | playerGuide ]
+late [ marker ] -> [ ]
+
+==============
+WINCONDITIONS
+==============
+
+all target on crate
+
+======= 
+LEVELS
+=======
+
+
+Message Press X | X sserP
+
+
+(
+######h######
+##..╬.i╬...##
+##...╬i.╬..##
+######h##╋###
+#...##h##..##
+#.#.##h##..##
+#...#.h..#╋##
+#####.h.╋.╋.#
+#####.h##...#
+#...#.h##.#.#
+#.p.#.i.....#
+#...##h######
+######h######
+
+
+######h######
+##..╬.i╬...##
+##...╬i.╬..##
+######h##╋###
+######h##...#
+######h##...#
+#####.h..#╋##
+#####.h.╋.╋.#
+#####.h##...#
+#...#.h##.#.#
+#.p.#.i.....#
+#...##h######
+######h######
+)
+
+#######h#######
+####...i#╬╬####
+####..#i.╬╬####
+#######h#╋#####
+####..#h#.#####
+####.##h#.#####
+####...h.╋#####
+######.h.╋.╋..#
+######.h#..##.#
+##...#.h##.##.#
+##.p.#.i......#
+##...##h#######
+#######h#######
+
+
+Message You win! | !niw ouY
+
