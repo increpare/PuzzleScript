@@ -131,7 +131,7 @@ function indexFolder(folder) {
         names.add(name);
         byHash.set(hashText(fs.readFileSync(path.join(dir, name), 'utf8')), name);
     }
-    return { folder, byHash, names };
+    return { folder, byHash, names, created: [] };
 }
 
 // Returns the path for this text, writing a new file if no existing one matches.
@@ -146,6 +146,7 @@ function fileFor(index, text, testName) {
         name = slug + '_' + k + '.txt';
     }
     fs.writeFileSync(path.join(testsDir, index.folder, name), text, 'utf8');
+    index.created.push(name);
     index.names.add(name);
     index.byHash.set(hash, name);
     return index.folder + '/' + name;
@@ -193,17 +194,30 @@ function externalizeDataFile(spec, scripts, endstates) {
     }
     rewritten += source.slice(last);
 
-    // Only save if the rewritten file loads back to exactly the same tests.
+    // Only save if the rewritten file loads back to exactly the same tests,
+    // and nobody edited the data file while this ran.
     const check = evalDataFile(rewritten, spec.variable);
-    const missing = resolveRefs(check, readOrUndefined);
-    if (missing.length > 0 || JSON.stringify(check) !== JSON.stringify(original)) {
+    const missing = resolveRefs(check, readOrUndefined).concat(resolveRefs(original, readOrUndefined));
+    const unchanged = missing.length === 0 && JSON.stringify(check) === JSON.stringify(original);
+    const editedMeanwhile = fs.readFileSync(absPath, 'utf8') !== source;
+    if (!unchanged || editedMeanwhile) {
+        for (const index of [scripts, endstates]) {
+            for (const name of index.created) {
+                fs.unlinkSync(path.join(testsDir, index.folder, name));
+                index.names.delete(name);
+            }
+            index.byHash.forEach((name, hash) => {
+                if (index.created.includes(name)) index.byHash.delete(hash);
+            });
+            index.created.length = 0;
+        }
+        if (editedMeanwhile) {
+            return [`${spec.file} changed during the audit; skipped externalizing it.`];
+        }
         throw new Error(`Externalizing ${spec.file} would change its tests; left it unchanged.`);
     }
-
-    // Don't clobber edits made to the data file while this ran.
-    if (fs.readFileSync(absPath, 'utf8') !== source) {
-        return [`${spec.file} changed during the audit; skipped externalizing it.`];
-    }
+    scripts.created.length = 0;
+    endstates.created.length = 0;
     writeIfChanged(absPath, rewritten);
     return [`Moved ${moved} long string(s) out of ${spec.file} into test_scripts/ and test_endstates/.`];
 }
