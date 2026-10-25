@@ -2036,5 +2036,10 @@ var testdata = [
 		"rigid ownership: a later rule still owns new layers across movement words (#1206)",
 		["title Overlapping rigid ownership\n\nOBJECTS\n\nBackground\nblack\n\nPlayer\nwhite\n\nCrate\norange\n\nWall\ngray\n\nMarker\nred\n\nPaddingA\nblack\n\nPaddingB\nblack\n\nPaddingC\nblack\n\nPaddingD\nblack\n\nPaddingE\nblack\n\nLEGEND\n. = Background\nP = Player and Crate\nC = Crate\n\nSOUNDS\n\nCOLLISIONLAYERS\nBackground\nPaddingA\nPaddingB\nPaddingC\nPaddingD\nPaddingE\nPlayer\nCrate\nWall\nMarker\n\nRULES\nrigid right [ Player ] -> [ > Player Marker ]\nrigid down [ Player Crate ] -> [ > Player > Crate ]\nrigid right [ Wall ] -> [ > Wall ]\n\nWINCONDITIONS\n\nLEVELS\nP\nC\n",[4],"background crate player:0,\nbackground crate:1,\n"]
 	],
+	[
+		"#1207 rejected late randomdir does not leave movement pending after undo",
+		// Dust's movement is in the second movement word, beyond restoreLevel's clearing range.
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nPaddingA\nblack\n\nPaddingB\nblack\n\nPaddingC\nblack\n\nPaddingD\nblack\n\nPaddingE\nblack\n\nDust D\norange\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nPaddingA\nPaddingB\nPaddingC\nPaddingD\nPaddingE\nDust\n\nRULES\n\nlate [ Dust ] -> [ randomdir Dust ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n.D.\n...\n", [3, "undo", 4], "background player:0,background:1,1,\n1,background dust:2,1,\n1,1,1,\n", 0, "1207"]
+	],
 ];
 

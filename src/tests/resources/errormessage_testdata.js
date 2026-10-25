@@ -433,7 +433,7 @@ var errormessage_testdata = [
     ],
     [
         "for the occasion of the refactor of 'check that no late rule contains movemen' #750",
-        ["title Simple Block Pushing Game\nauthor David Skinner\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nLIGHTGREEN GREEN\n11111\n01111\n11101\n11111\n10111\n\n\nTarget\nDarkBlue\n.....\n.000.\n.0.0.\n.000.\n.....\n\nWall\nBROWN DARKBROWN\n00010\n11111\n01000\n11111\n00010\n\nPlayer\nBlack Orange White Blue\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nCrate\nOrange\n00000\n0...0\n0...0\n0...0\n00000\n\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Crate\n@ = Crate and Target\nO = Target\n\ncrate_or_target = crate or target\n=======\nSOUNDS\n=======\n\nCrate MOVE 36772507\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\n\n======\nRULES\n======\n\nlate [ > Player | Crate ] -> [ > Player | > Crate ]\n\n\nlate [ Player ] -> [ no Player ]\n\nlate [ Player ] -> [ randomdir Player ]\n\nlate [ crate ] -> [ random crate_or_target ]\n==============\nWINCONDITIONS\n==============\n\nAll Target on Crate\n\n=======\nLEVELS\n=======\n\n\n####..\n#.O#..\n#..###\n#@P..#\n#..*.#\n#..###\n####..\n\n\n######\n#....#\n#.#P.#\n#.*@.#\n#.O@.#\n#....#\n######\n\n", ["line 81 : Movements cannot appear in late rules."], 1]
+        ["title Simple Block Pushing Game\nauthor David Skinner\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nLIGHTGREEN GREEN\n11111\n01111\n11101\n11111\n10111\n\n\nTarget\nDarkBlue\n.....\n.000.\n.0.0.\n.000.\n.....\n\nWall\nBROWN DARKBROWN\n00010\n11111\n01000\n11111\n00010\n\nPlayer\nBlack Orange White Blue\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nCrate\nOrange\n00000\n0...0\n0...0\n0...0\n00000\n\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Crate\n@ = Crate and Target\nO = Target\n\ncrate_or_target = crate or target\n=======\nSOUNDS\n=======\n\nCrate MOVE 36772507\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\n\n======\nRULES\n======\n\nlate [ > Player | Crate ] -> [ > Player | > Crate ]\n\n\nlate [ Player ] -> [ no Player ]\n\nlate [ Player ] -> [ randomdir Player ]\n\nlate [ crate ] -> [ random crate_or_target ]\n==============\nWINCONDITIONS\n==============\n\nAll Target on Crate\n\n=======\nLEVELS\n=======\n\n\n####..\n#.O#..\n#..###\n#@P..#\n#..*.#\n#..###\n####..\n\n\n######\n#....#\n#.#P.#\n#.*@.#\n#.O@.#\n#....#\n######\n\n", ["line 81 : Movements cannot appear in late rules.", "line 86 : Movements cannot appear in late rules."], 2]
     ],
     [
         "X no X causing rulegroup to vanish error message #762",
@@ -1279,4 +1279,28 @@ var errormessage_testdata = [
         "diagnostic coverage: object sound without a verb or seed",
         ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nPlayer\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n\n\nWINCONDITIONS\nLEVELS\n\nP\n",["line 11 : incorrect sound declaration."],0]
     ],
-];   
+    [
+        "#1207 randomdir is rejected on the left of a late rule",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nDust D\norange\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nDust\n\nRULES\n\nlate [ randomdir Dust ] -> [ Dust ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n.D.\n...\n", ["line 22 : Movements cannot appear in late rules."], 1]
+    ],
+    [
+        "#1207 randomdir is rejected on the right of a late rule",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nDust D\norange\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nDust\n\nRULES\n\nlate [ Dust ] -> [ randomdir Dust ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n.D.\n...\n", ["line 22 : Movements cannot appear in late rules."], 1]
+    ],
+    [
+        "#1207 randomdir remains allowed in non-late rules",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nDust D\norange\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nDust\n\nRULES\n\n[ Dust ] -> [ randomdir Dust ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n.D.\n...\n", [], 0]
+    ],
+    [
+        "#1207 no remains allowed on both sides of late rules",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nDust D\norange\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nDust\n\nRULES\n\nlate [ Player no Dust ] -> [ Player no Dust ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n.D.\n...\n", [], 0]
+    ],
+    [
+        "#1207 random rule groups remain allowed in late rules",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nDust D\norange\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nDust\n\nRULES\n\nlate random [ Dust ] -> [ ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n.D.\n...\n", [], 0]
+    ],
+    [
+        "#1207 random object spawning remains allowed in late rules",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nDust D\norange\n\nLEGEND\nParticle = Player or Dust\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nDust\n\nRULES\n\nlate [ Dust ] -> [ random Particle ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n.D.\n...\n", [], 0]
+    ],
+];
