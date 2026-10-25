@@ -1,0 +1,385 @@
+title Every Star Needs a Tree
+author Toombler
+homepage https://toombler.itch.io/
+
+background_color #60117f
+text_color #be7dbc
+
+run_rules_on_level_start
+
+realtime_interval 0.05
+
+noaction (remove this line to enable turning off the display with action)
+
+========
+OBJECTS
+========
+
+(
+PALETTE
+)
+
+Col1
+#151244
+
+Col2
+#60117f
+
+Col3
+#922a95
+
+Col4
+#be7dbc
+
+Col5
+#350828
+
+Col6
+#7f6962
+
+Col7
+#f9cb60
+
+Col8
+#f9960f
+
+Col9
+#bc2f01
+
+Col10
+#680703
+
+
+
+
+
+Background
+#89228c #922a95
+00000
+01110
+01110
+01110
+00000
+
+
+Wall
+#60117f
+
+
+Player
+#151244 #f9960f #be7dbc #151244
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+
+UnsatisfiedStar
+#f9960f
+0...0
+.000.
+.000.
+.000.
+0...0
+
+SatisfiedStar
+#f9cb60
+0...0
+.000.
+.000.
+.000.
+0...0
+
+
+TreeTrunk
+#151244
+0000.
+.0000
+0000.
+.0000
+.000.
+
+TreeTop
+#151244 #89228c
+11011
+10001
+00001
+10000
+10001
+
+ProtectedTree
+#be7dbc (#f9960f )
+..0..
+.....
+0..0.
+.0...
+...0.
+
+
+
+
+TreeTrunkDissolveCopy
+#151244
+0000.
+.0000
+0000.
+.0000
+.000.
+
+TreeTopDissolveCopy
+#151244 #89228c
+11011
+10001
+00001
+10000
+10001
+
+Dissolve0
+#89228c #922a95
+..0..
+0..1.
+.....
+.1...
+...0.
+
+Dissolve1
+#89228c #922a95
+.00..
+0.11.
+..1..
+.1...
+..00.
+
+Dissolve2
+#89228c #922a95
+.00..
+0.11.
+011..
+.1.00
+.000.
+
+Dissolve3
+#89228c #922a95
+000..
+0.11.
+0111.
+.1.10
+.000.
+
+Dissolve4
+#89228c #922a95
+00000
+01110
+01110
+01.10
+00000
+
+
+AboveTreeTop
+transparent
+
+
+ScoreStart
+transparent
+
+ScoreSatisfied
+#f9cb60
+.....
+.000.
+00000
+.000.
+.....
+
+ScoreUnsatisfied
+#350828
+.....
+.000.
+00000
+.000.
+.....
+
+TempCountedStar
+black
+
+ScoreToggled
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+P = Player
+# = Wall
+
+S = UnsatisfiedStar
+X = SatisfiedStar
+star = UnsatisfiedStar or SatisfiedStar
+
+T = TreeTrunk
+Tree = TreeTrunk or TreeTop
+
+B = ScoreStart and wall
+Score = ScoreSatisfied or ScoreUnsatisfied
+
+Dissolve = Dissolve0 or Dissolve1 or Dissolve2 or Dissolve3 or Dissolve4
+TreeDissolveCopy = TreeTrunkDissolveCopy or TreeTopDissolveCopy
+
+Col = Col1 or Col2 or Col3 or Col4 or Col5 or Col6 or Col7 or Col8 or Col9 or Col10
+
+=======
+SOUNDS
+=======
+
+star MOVE 35528507 (36772507)
+Player move 63208907
+
+
+SatisfiedStar create 70313100
+UnsatisfiedStar create 55575100 (54449300) (59228107) (49933904) (15540904)
+
+startgame 51532700 (75654300)
+endgame 38823100
+
+
+sfx1 78866304 (27218109) (89389102) (4099902) (67740500) (6235507)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Col
+AboveTreeTop
+
+Player, UnsatisfiedStar, SatisfiedStar, TreeTrunk, Wall
+
+TreeTrunkDissolveCopy
+TreeTopDissolveCopy
+Dissolve
+
+TreeTop
+ProtectedTree
+
+
+TempCountedStar
+ScoreToggled
+ScoreStart
+ScoreSatisfied, ScoreUnsatisfied
+
+
+======
+RULES
+======
+
+(push stars)
+[ > Player | Star ] -> [ > Player | > Star ]
+
+
+(dissolve animation)
+[ Dissolve4 TreeDissolveCopy ] -> []
+[ Dissolve3 ] -> [ Dissolve4 ]
+[ Dissolve2 ] -> [ Dissolve3 ]
+[ Dissolve1 ] -> [ Dissolve2 ]
+[ Dissolve0 ] -> [ Dissolve1 ]
+
+
+
+(stars protect trees below them)
+late [ ProtectedTree ] -> []
+late down [ Star | TreeTrunk ] -> [ Star | TreeTrunk ProtectedTree ]
+late down [ ProtectedTree | TreeTrunk ] -> [ ProtectedTree | ProtectedTree TreeTrunk ]
+
+(stars kill unprotected trees)
+late [ star | Treetrunk no ProtectedTree ] -> [ star | TreeTrunkDissolveCopy Dissolve0 ] sfx1
+late [ TreeTop TreeTrunkDissolveCopy ] -> [ TreeTopDissolveCopy ]
+
+
+(tree top sprite)
+late [ TreeTop ] -> []
+late up [ TreeTrunk | no TreeTrunk ] -> [ TreeTrunk TreeTop | ]
+
+(check if stars have a tree)
+late down [ UnsatisfiedStar | TreeTop ] -> [ SatisfiedStar | TreeTop ]
+late down [ SatisfiedStar | no TreeTop ] -> [ UnsatisfiedStar | ] 
+
+
+
+(score stuff)
+late [ Score ] -> []
+late right [ SatisfiedStar no TempCountedStar ][ ScoreStart | no Score ] -> [ SatisfiedStar TempCountedStar ][ ScoreStart | ScoreSatisfied ]
+late right [ SatisfiedStar no TempCountedStar ][ Score | no Score ] -> [ SatisfiedStar TempCountedStar ][ Score | ScoreSatisfied ]
+late right [ UnsatisfiedStar no TempCountedStar ][ ScoreStart | no Score ] -> [ UnsatisfiedStar TempCountedStar ][ ScoreStart | ScoreUnsatisfied ]
+late right [ UnsatisfiedStar no TempCountedStar ][ Score | no Score ] -> [ UnsatisfiedStar TempCountedStar ][ Score | ScoreUnsatisfied ]
+late [ TempCountedStar ] -> []
+
+[ action Player ][ ScoreStart no ScoreToggled ] -> [ Player ][ ScoreStart ScoreToggled ] 
+[ action Player ][ ScoreStart ScoreToggled ] -> [ Player ][ ScoreStart ] 
+late [ Score ][ ScoreToggled ] -> [ ][ ScoreToggled ]
+
+
+==============
+WINCONDITIONS
+==============
+
+no UnsatisfiedStar
+
+
+=======
+LEVELS
+=======
+
+
+
+(things:
+- can't destroy from top
+- use star to free other star
+- use star to make path to other area
+- 4 high = can fit two stars
+)
+
+
+###################
+###################
+#######........####
+###...t.....t..##..
+###.x.t.....t..##s.
+####t##..s..t..##..
+....t.......t..#.s.
+....t.......t..#.s.
+..tttt#t#...t.##t..
+....#...#.p.t...t..
+#####s.s#..........
+#####...#t#########
+###################
+#####b#############
+###################
+
+message Thanks For Playing!
+
+(hold right
+................................
+p.x.............................
+..t.tt.tt.t.t.t...tt.tt.t.t.t.t.
+................................
+..s.............................
+)
+
+(
+..........
+....s.....
+.t....s...
+.t.....t..
+.t.t.s.t..
+.t.t......
+...t..p...
+..........
+)
+
+
+
+
+
+
+

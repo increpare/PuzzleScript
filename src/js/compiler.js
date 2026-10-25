@@ -707,7 +707,7 @@ function processRuleString(rule, state, curRules) {
                             logError("Error, an item can only have one direction/action at a time, but you're looking for several at once!", lineNumber);
                         } else if (!incellrow) {
                             logWarning("Invalid syntax. Directions should be placed at the start of a rule.", lineNumber);
-                        } else if (late && token !== 'no' && token !== 'random' && token !== 'randomdir') {
+                        } else if (late && token !== 'no' && token !== 'random') {
                             logError("Movements cannot appear in late rules.", lineNumber);
                         } else {
                             curcell.push(token);

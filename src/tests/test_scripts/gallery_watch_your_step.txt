@@ -1,0 +1,197 @@
+title Watch Your Step
+author Aaron Steed
+homepage www.puzzlescript.net
+require_player_movement
+
+========
+OBJECTS
+========
+
+Background
+#2c2c2c #4f4f4f #ff0000 #ff0000 
+11110
+11111
+11111
+11110
+11100
+
+Floor0
+#ff0202 #ffc680 #ff952b #400040 
+.....
+..2..
+..0..
+.....
+.....
+
+Floor1
+#ff0202 #ffc680 #ff952b #400040 
+.2...
+.0...
+...2.
+...0.
+.....
+
+Floor2
+#ff0202 #ffc680 #ff952b #400040 
+.2...
+.01..
+..02.
+...0.
+.....
+
+Floor3
+#ff0202 #ffc680 #ff952b #400040 
+.2.2.
+.0.0.
+.2.2.
+.0.0.
+.....
+
+Floor4
+#ff0202 #ffc680 #ff952b #400040 
+.2.2.
+.010.
+.202.
+.0.0.
+.....
+
+Target 
+#2c2c2c #000000 #000040 #ff0000 
+02112
+21111
+11111
+11111
+21112
+
+Wall 
+#808080 #c0c0c0 #ff0000 #ff0000 
+11110
+11111
+11110
+11110
+01000
+
+Player
+#ffffff #c0c0c0 #000000 #ff0000 
+.000.
+00000
+02020
+00001
+11111
+
+Crate0
+#ff0202 #ffc680 #ff952b #000000 
+11111
+12220
+12320
+12220
+00000
+
+Crate1
+#ff0202 #ffc680 #ff952b #000000 
+11111
+13220
+12220
+12230
+00000
+
+Crate2
+#ff0202 #ffc680 #ff952b #000000 
+11111
+13220
+12320
+12230
+00000
+
+Crate3
+#ff0202 #ffc680 #ff952b #000000 
+11111
+13230
+12220
+13230
+00000
+
+Crate4
+#ff0202 #ffc680 #ff952b #000000 
+11111
+13230
+12320
+13230
+00000
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+0 = Crate0
+1 = Crate1
+2 = Crate2
+3 = Crate3
+4 = Crate4
+* = Target
+
+Crate = Crate0 or Crate1 or Crate2 or Crate3 or Crate4
+Floor = Floor0 or Floor1 or Floor2 or Floor3 or Floor4
+Object = Crate or Player or Wall
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Floor
+Target
+Player, Wall, Crate 
+
+======
+RULES 
+====== 
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+[ > Crate0 | Crate0 ] -> [ | Crate1 ]
+[ > Crate1 | Crate1 ] -> [ | Crate2 ]
+[ > Crate2 | Crate2 ] -> [ | Crate3 ]
+[ > Crate3 | Crate3 ] -> [ | Crate4 ]
+
+late [Floor4 no Object] -> [no Floor Crate0]
+
+late [Floor3 no Object] -> [Floor4 no Object]
+[Floor2 no Object] -> [Floor3 no Object]
+[Floor1 no Object] -> [Floor2 no Object]
+[Floor0 no Object] -> [Floor1 no Object]
+[Player no Floor] -> [Player Floor0]
+
+==============
+WINCONDITIONS
+==============
+
+Any Crate4
+
+======= 
+LEVELS
+=======
+
+message each step you take leaves a seed that grows into a no 1 crate
+
+message push two crates of the same number together to make a higher number crate
+
+message make a no 5 crate
+
+#########
+#.......#
+#.......#
+#.......#
+#...p...#
+#.......#
+#.......#
+#.......#
+#########
+
+message well done, I couldn't be bothered to find out myself, do let me know

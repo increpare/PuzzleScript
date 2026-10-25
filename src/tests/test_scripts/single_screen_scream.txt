@@ -1,0 +1,2013 @@
+title single screen scream
+author Kip Fabish
+homepage www.puzzlescript.net
+
+background_color #0e0e12
+
+(background, switch, player, crate)
+
+========
+OBJECTS
+========
+
+background .
+#e6e6ec
+
+crate_background
+#535373
+
+crate_background2
+#333346
+
+crate_background3
+#8080a4
+
+crate_background4
+#a6a6bf
+
+crate_backgroundx
+#535373
+
+crate_background2x
+#333346
+
+crate_background3x
+#8080a4
+
+crate_background4x
+#a6a6bf
+
+player_background
+#FE292F
+
+crate1big
+#535373
+
+crate2big
+#333346
+
+crate3big
+#8080a4
+
+crate4big
+#a6a6bf
+
+darkness d
+#0e0e12
+
+blackness
+#0e0e12
+
+(pixel0 0
+transparent
+
+pixel1 1
+#0e0e12
+
+pixel2 2
+#1a1a24
+
+pixel3 3
+#333346
+
+pixel4 4
+#535373
+
+pixel5 5
+#8080a4
+
+pixel6 6
+#a6a6bf
+
+pixel7 7
+#c1c1d2
+
+pixel8 8
+#e6e6ec)
+
+crate1 3
+#333346
+
+crate2 4
+#535373
+
+crate3 5
+#8080a4
+
+crate4 6
+#a6a6bf
+
+border
+#c1c1d2
+
+player1 9
+#FE292F
+
+player2 ~
+#FE292F
+
+player3 `
+#FE292F
+
+player4 !
+#FE292F
+
+playerbig
+#FE292F
+
+switch1 $
+#0e0e12
+
+switch2 ^
+#0e0e12
+
+switch3
+#0e0e12
+
+switch4
+#0e0e12
+
+switch5
+#0e0e12
+
+switch6
+#0e0e12
+
+switch7
+#0e0e12
+
+switch8
+#0e0e12
+
+switch9
+#0e0e12
+
+switch10
+#0e0e12
+
+switch11
+#0e0e12
+
+switch12
+#0e0e12
+
+switch13
+#0e0e12
+
+switch14
+#0e0e12
+
+switch15
+#0e0e12
+
+switch16
+#0e0e12
+
+switch17
+#0e0e12
+
+switch18
+#0e0e12
+
+switch19
+#0e0e12
+
+switch20
+#0e0e12
+
+switch21
+#0e0e12
+
+switch22
+#0e0e12
+
+switch23
+#0e0e12
+
+switch24
+#0e0e12
+
+switch25
+#0e0e12
+
+switch26
+#0e0e12
+
+remove_border1
+transparent
+
+remove_border1add
+transparent
+
+add_border1
+transparent
+
+add_border1add
+transparent
+
+remove_border2
+transparent
+
+remove_border2add
+transparent
+
+add_border2
+transparent
+
+add_border2add
+transparent
+
+remove_border3
+transparent
+
+remove_border3add
+transparent
+
+add_border3
+transparent
+
+add_border3add
+transparent
+
+remove_border4
+transparent
+
+remove_border4add
+transparent
+
+add_border4
+transparent
+
+add_border4add
+transparent
+
+remove_border5
+transparent
+
+remove_border5add
+transparent
+
+add_border5
+transparent
+
+add_border5add
+transparent
+
+remove_border6
+transparent
+
+remove_border6add
+transparent
+
+add_border6
+transparent
+
+add_border6add
+transparent
+
+remove_border7
+transparent
+
+remove_border7add
+transparent
+
+add_border7
+transparent
+
+add_border7add
+transparent
+
+remove_border8
+transparent
+
+remove_border8add
+transparent
+
+add_border8
+transparent
+
+add_border8add
+transparent
+
+remove_border9
+transparent
+
+remove_border9add
+transparent
+
+add_border9
+transparent
+
+add_border9add
+transparent
+
+remove_border10
+transparent
+
+remove_border10add
+transparent
+
+add_border10
+transparent
+
+add_border10add
+transparent
+
+remove_border11
+transparent
+
+remove_border11add
+transparent
+
+add_border11
+transparent
+
+add_border11add
+transparent
+
+remove_border12
+transparent
+
+remove_border12add
+transparent
+
+add_border12
+transparent
+
+add_border12add
+transparent
+
+remove_border13
+transparent
+
+remove_border13add
+transparent
+
+add_border13
+transparent
+
+add_border13add
+transparent
+
+remove_border14
+transparent
+
+remove_border14add
+transparent
+
+add_border14
+transparent
+
+add_border14add
+transparent
+
+remove_border15
+transparent
+
+remove_border15add
+transparent
+
+add_border15
+transparent
+
+add_border15add
+transparent
+
+remove_border16
+transparent
+
+remove_border16add
+transparent
+
+add_border16
+transparent
+
+add_border16add
+transparent
+
+remove_border17
+transparent
+
+remove_border17add
+transparent
+
+add_border17
+transparent
+
+add_border17add
+transparent
+
+remove_border18
+transparent
+
+remove_border18add
+transparent
+
+add_border18
+transparent
+
+add_border18add
+transparent
+
+remove_border19
+transparent
+
+remove_border19add
+transparent
+
+add_border19
+transparent
+
+add_border19add
+transparent
+
+remove_border20
+transparent
+
+remove_border20add
+transparent
+
+add_border20
+transparent
+
+add_border20add
+transparent
+
+remove_border21
+transparent
+
+remove_border21add
+transparent
+
+add_border21
+transparent
+
+add_border21add
+transparent
+
+remove_border22
+transparent
+
+remove_border22add
+transparent
+
+add_border22
+transparent
+
+add_border22add
+transparent
+
+remove_border23
+transparent
+
+remove_border23add
+transparent
+
+add_border23
+transparent
+
+add_border23add
+transparent
+
+marker
+transparent
+
+marker2
+transparent
+
+marker3
+transparent
+
+marker4
+transparent
+
+marker5
+transparent
+
+marker6
+transparent
+
+marker7
+transparent
+
+marker8
+transparent
+
+marker9
+transparent
+
+marker10
+transparent
+
+marker11
+transparent
+
+marker12
+transparent
+
+marker13
+transparent
+
+marker14
+transparent
+
+marker15
+transparent
+
+marker16
+transparent
+
+marker17
+transparent
+
+marker18
+transparent
+
+marker19
+transparent
+
+marker20
+transparent
+
+marker21
+transparent
+
+marker22
+transparent
+
+marker23
+transparent
+
+marker24
+transparent
+
+marker25
+transparent
+
+marker26
+transparent
+
+marker27
+transparent
+
+marker28
+transparent
+
+marker29
+transparent
+
+marker30
+transparent
+
+marker31
+transparent
+
+marker32
+transparent
+
+marker33
+transparent
+
+marker34
+transparent
+
+marker35
+transparent
+
+marker36
+transparent
+
+marker37
+transparent
+
+marker38
+transparent
+
+marker39
+transparent
+
+marker40
+transparent
+
+marker41
+transparent
+
+marker42
+transparent
+
+marker43
+transparent
+
+marker44
+transparent
+
+marker45
+transparent
+
+marker46
+transparent
+
+marker47
+transparent
+
+marker48
+transparent
+
+marker49
+transparent
+
+marker50
+transparent
+
+marker51
+transparent
+
+marker52
+transparent
+
+marker53
+transparent
+
+marker54
+transparent
+
+marker55
+transparent
+
+marker56
+transparent
+
+marker57
+transparent
+
+marker58
+transparent
+
+marker59
+transparent
+
+marker60
+transparent
+
+marker61
+transparent
+
+marker62
+transparent
+
+marker63
+transparent
+
+marker64
+transparent
+
+marker65
+transparent
+
+marker66
+transparent
+
+marker67
+transparent
+
+marker68
+transparent
+
+marker69
+transparent
+
+marker70
+transparent
+
+marker71
+transparent
+
+marker72
+transparent
+
+marker73
+transparent
+
+marker74
+transparent
+
+marker75
+transparent
+
+marker76
+transparent
+
+marker77
+transparent
+
+marker78
+transparent
+
+marker79
+transparent
+
+marker80
+transparent
+
+marker81
+transparent
+
+marker82
+transparent
+
+marker83
+transparent
+
+marker84
+transparent
+
+marker85
+transparent
+
+marker86
+transparent
+
+marker87
+transparent
+
+marker88
+transparent
+
+marker89
+transparent
+
+marker90
+transparent
+
+marker91
+transparent
+
+marker92
+transparent
+
+marker93
+transparent
+
+marker94
+transparent
+
+marker95
+transparent
+
+marker96
+transparent
+
+marker97
+transparent
+
+marker98
+transparent
+
+marker99
+transparent
+
+marker100
+transparent
+
+marker101
+transparent
+
+marker102
+transparent
+
+marker103
+transparent
+
+marker104
+transparent
+
+marker105
+transparent
+
+marker106
+transparent
+
+marker107
+transparent
+
+marker108
+transparent
+
+=======
+LEGEND
+=======
+
+player = player1 or player2 or player3 or player4 or playerbig
+crate = crate1 or crate2 or crate3 or crate4
+cratebig = crate1big or crate2big or crate3big or crate4big
+switch = switch1 or switch2
+
+7 = border and darkness and marker3 and marker99
+8 = border and background and marker2 and marker4
+2 = border and marker and darkness and marker4 and marker7 and marker8 and marker99
+0 = darkness and marker and marker99
+@ = remove_border1 and darkness and marker2
+# = darkness and marker2
+_ = darkness and marker3
++ = add_border1add and background 
+{ = darkness and marker5
+& = darkness and switch3
+* = darkness and switch4
+} = darkness and marker6
+[ = darkness and marker2 and marker6
+] = remove_border2 and darkness and marker5
+| = add_border2add and darkness and marker2
+\ = darkness and marker7
+' = darkness and marker and marker7 and marker9
+" = darkness and marker and marker7 and marker8 and marker99
+1 = marker and marker7
+< = crate1 and darkness and marker5
+, = crate2 and darkness and marker5
+> = crate3 and darkness and marker5
+? = crate4 and darkness and marker5 and marker100
+/ = marker10 and darkness and marker99
+q = remove_border3 and darkness
+w = darkness and marker5 and add_border3add
+e = darkness and marker6 and marker10 and marker14 and marker99
+r = darkness and marker5 and marker10
+t = switch5 and darkness
+y = darkness and marker12
+u = darkness and marker13 and marker19
+i = remove_border4 and darkness and marker12
+o = add_border4add and darkness
+p = marker10 and darkness and marker13 and marker19 and marker99
+a = darkness and marker6 and marker10 and marker13 and marker19 and marker32
+s = darkness and marker10 and marker12 and marker16
+f = darkness and marker6 and marker10 and marker14 and marker12 and marker29 and marker35
+g = darkness and marker5 and marker10 and marker13 and marker19 and marker29 and marker35
+h = darkness and marker6 and marker13 and marker19 and marker29 and marker35
+j = darkness and marker12 and add_border5add
+k = darkness and marker12 and marker29 and marker35 and crate1
+l = darkness and marker12 and marker29 and marker35 and crate3
+z = darkness and marker12 and crate4
+x = switch6 and darkness and marker12 and marker10 and marker16
+c = darkness and remove_border5 and marker22 and crate2
+v = darkness and marker17
+b = darkness and marker13 and marker20
+n = darkness and marker13 and marker21 and marker26 and marker99
+m = darkness and marker12 and marker21 and marker26
+α = darkness and marker22
+β = darkness and marker13 and marker19 and marker22
+γ = crate1 and darkness and marker22
+δ = crate2 and darkness and marker22
+ε = crate3 and darkness and marker22
+ζ = crate4 and darkness and marker22
+η = darkness and marker13 and marker19 and marker22 and crate1
+θ = darkness and marker13 and marker19 and marker22 and crate2
+ι = darkness and marker22 and switch7
+κ = add_border6add and darkness and marker22
+λ = remove_border6 and darkness and marker28
+μ = darkness and marker24 and marker31 and marker92
+ξ = darkness and marker17 and marker26 and marker99
+π = darkness and marker13 and marker20 and marker26 and marker99
+ρ = darkness and marker13 and marker21 and marker26 and marker27 and marker31 and marker32
+σ = darkness and marker17 and marker26 and marker27 and marker31 and marker57 and marker62 and marker92
+Ф = darkness and marker12 and marker26 and marker27 and marker35 and marker24
+τ = darkness and marker22 and marker24 and marker31 and crate3
+υ = darkness and marker22 and marker24 and marker35 and marker19 and crate1
+φ = crate1 and darkness and marker22 and marker24 and marker31
+χ = crate3 and darkness and marker22 and marker24 and marker31
+ψ = marker28 and darkness
+ω = darkness and marker17 and marker26 and marker28
+Б = darkness and marker13 and marker20 and marker26 and marker28 and marker29 and marker35
+Д = marker28 and darkness and crate1
+Ђ = marker28 and darkness and crate2
+Є = marker28 and darkness and crate3
+Ж = marker28 and darkness and crate4
+З = marker28 and darkness and switch8
+И = remove_border7 and darkness and marker32
+К = add_border7add and darkness and marker28
+Л = darkness and marker29
+Љ = darkness and marker12 and marker29 and marker35
+М = darkness and marker5 and marker29 and marker35
+Њ = darkness and marker and marker7 and marker9 and marker29 and marker33 and marker39
+П = darkness and marker2 and marker6 and marker29 and marker33 and marker39
+Ќ = marker28 and darkness and marker29 and marker35
+У = darkness and marker24 and marker35 and marker36 and marker45 and marker51
+Ц = darkness and marker32
+Ч = darkness and marker13 and marker19 and marker32
+Џ = darkness and marker6 and marker32
+Ш = darkness and marker and marker32
+Щ = darkness and marker24 and marker31 and marker32
+Ь = darkness and marker32 and switch9
+Э = darkness and marker13 and marker19 and marker32 and switch9
+Ә = remove_border8 and darkness and marker36
+Ғ = add_border8add and darkness and marker32
+Ҕ = darkness and marker33 and marker39 and marker48
+Ӻ = border and marker and darkness and marker4 and marker7 and marker8 and marker33 and marker39 and marker40
+Ӷ = marker and marker7 and marker33 and marker43
+Ӂ = border and background and marker2 and marker4 and marker33 and marker43
+Ӝ = darkness and marker2 and marker33 and marker39
+Ҡ = darkness and marker32 and marker33 and marker39
+Ҟ = darkness and marker24 and marker31 and marker32 and marker33 and marker39 and marker45 and marker51
+Ӊ = marker28 and darkness and marker29 and marker33 and marker39 and marker45 and marker51
+Ң = darkness and marker24 and marker33 and marker39
+Ӈ = darkness and marker29 and marker35 and marker36
+Ҥ = darkness and marker36
+Ө = darkness and marker and marker36
+Ҩ = darkness and marker and marker7 and marker8 and marker36
+Ҏ = border and marker and darkness and marker4 and marker7 and marker8 and marker36 and marker38 and marker43
+¡ = remove_border9 and darkness and marker40
+¢ = add_border9add and darkness and marker36
+£ = marker38 and darkness and marker43 and marker99
+¤ = marker38 and marker36 and darkness and marker43
+¥ = border and darkness and marker3 and marker38 and marker43 and marker99
+§ = darkness and marker32 and marker39
+¨ = darkness and marker33 and marker43 and marker44 and marker45 and marker51
+© = marker38 and background and marker43
+ª = darkness and marker and marker7 and marker8 and marker36 and switch10
+« = darkness and marker36 and crate1
+¬ = darkness and marker36 and crate2
+® = darkness and marker36 and crate3 and marker45 and marker51
+¯ = darkness and marker36 and crate4 and marker45 and marker51
+± = darkness and marker40
+² = border and darkness and marker3 and marker40
+³ = darkness and marker33 and marker39 and marker40
+¶ = border and darkness and marker3 and marker40 and switch11
+Ĵ = remove_border10 and darkness and marker44
+¸ = add_border10add and darkness and marker40
+¹ = darkness and marker41 and marker46 and marker79 and marker99
+» = darkness and marker33 and marker46 and marker48 and marker79 and switch18
+¼ = marker38 and marker36 and darkness
+(½ = darkness and marker33 and marker39 and marker40 and marker41)
+¾ = darkness and marker40 and marker41 and marker46 and marker79
+¿ = marker38 and darkness and marker41 and marker46 and marker79 and marker99
+½ = marker36 and marker41 and darkness and marker51 and marker79
+À = darkness and marker6 and marker10 and marker14 and marker12 and marker29 and marker35 and switch6
+Â = darkness and marker12 and crate2
+Ã = darkness and marker12 and crate1
+Ä = darkness and marker12 and crate3
+Å = darkness and marker24 and marker31 and marker22
+Æ = darkness and marker22 and crate4
+Ç = darkness and marker12 and marker21 and marker26 and switch12
+È = darkness and marker44
+É = marker44 and marker38 and darkness and marker43
+Ê = darkness and marker44 and crate1
+Ë = darkness and marker44 and crate2
+Ì = darkness and marker44 and crate3
+Í = darkness and marker44 and crate4
+Î = darkness and remove_border11 and marker48 and crate2
+Ï = darkness and marker44 and add_border11add
+Ð = darkness and marker44 and marker45 and marker51
+Ñ = darkness and marker36 and marker45 and marker51
+Ò = darkness and marker45 and marker28 and marker51
+Ó = marker28 and darkness and switch8 and marker45 and marker51
+Ô = darkness and marker45 and marker24 and marker31 and marker56 and marker92
+Õ = darkness and marker45 and marker51 and marker52
+Ö = darkness and marker40 and marker41 and marker51 and marker79
+× = darkness and marker41 and marker56 and marker79 and marker80
+Ø = marker48 and darkness
+Ù = marker48 and darkness and marker41 and marker46 and marker79
+Ú = marker48 and marker24 and marker31 and darkness
+Û = marker48 and darkness and marker24 and marker33 and marker39
+Ý = marker48 and darkness and crate1
+Þ = marker48 and darkness and crate3
+ß = marker48 and darkness and crate4
+÷ = marker48 and darkness and crate2
+Ā = marker48 and marker24 and marker31 and darkness and crate2
+Ă = marker48 and marker24 and marker31 and darkness and crate4 and marker54 and marker59
+Ą = darkness and marker33 and marker39 and marker48 and crate1
+Ć = darkness and marker33 and marker39 and marker48 and crate2
+Ĉ = darkness and marker52
+Ċ = darkness and remove_border12 and marker52
+Č = marker49 and darkness and marker56 and marker96
+Ď = marker49 and marker48 and darkness and marker56
+Đ = marker48 and darkness and marker41 and marker46 and marker49 and marker56 and marker84
+Ē = darkness and marker41 and marker51 and switch13 and marker52 and marker84
+Ĕ = darkness and marker45 and marker28 and marker59
+Ė = darkness and marker44 and marker45 and marker56 and marker77 and marker84
+Ĝ = darkness and marker45 and marker51 and switch13 and marker52
+Ğ = darkness and marker52
+Ģ = crate1 and darkness and marker52
+Ĥ = crate2 and darkness and marker52
+Ħ = crate3 and darkness and marker52
+Ĩ = crate4 and darkness and marker52
+Ī = darkness and marker24 and marker31 and marker52 and marker54 and marker59
+Ĭ = marker52 and darkness
+Ġ = marker44 and marker38 and darkness and marker43
+Į = marker44 and marker38 and darkness and marker43
+ɐ = marker44 and marker38 and darkness and marker43
+ı = darkness and marker44
+Ĳ = darkness and marker44
+Ѫ = marker48 and darkness and crate3 and add_border12add
+Ѯ = switch15 and darkness and marker44
+Ѭ = darkness and marker44 and marker45 and marker51 and switch15
+Ѳ = darkness and marker44 and crate1
+Ѽ = darkness and marker44 and crate2
+҂ = darkness and marker44 and crate3 and marker77 and marker84
+ހ = darkness and marker44 and crate4 and marker77 and marker84
+; = darkness and marker53
+□ = darkness and marker53 and switch16
+ӽ = darkness and remove_border13 and marker92
+ӹ = darkness and add_border13add and marker52 and crate1
+ӿ = darkness and marker54 and marker59 and marker93
+Ͽ = marker54 and darkness and marker17 and marker26 and marker27 and marker31 and marker59 and marker93
+Ͼ = marker54 and darkness and marker22 and marker62
+Ͻ = marker54 and marker28 and darkness and marker59
+ϼ = marker54 and marker52 and darkness and marker59
+ϻ = marker48 and marker24 and marker31 and darkness and crate4
+Ϲ = marker49 and darkness and marker59 and marker88 and marker96
+ế = darkness and remove_border14 and marker93
+ϱ = add_border14add and darkness and marker92
+ϯ = marker57 and darkness and marker62 and marker99
+ϭ = marker57 and darkness and marker22 and marker62
+ϫ = marker57 and darkness and marker17 and marker26 and marker62 and marker99
+ϩ = darkness and marker54 and marker65 and marker91
+ϧ = marker54 and marker28 and darkness and marker62
+ϥ = crate1 and darkness and marker96
+ϣ = crate2 and darkness and marker96
+ϡ = crate3 and darkness
+ϟ = crate4 and darkness and marker95
+ϝ = remove_border15 and darkness and marker94
+ϙ = add_border15add and darkness and marker93
+ϗ = marker60 and darkness and marker65 and marker99
+ϖ = darkness and marker53 and marker60 and marker68 and marker88
+ϔ = darkness and marker57 and marker65 and marker99
+ϓ = marker60 and darkness and marker54 and marker59 and marker65 and marker88 and marker93
+ϒ = crate3 and darkness and marker60 and marker65 and marker93
+ϑ = crate4 and darkness and marker60 and marker65 and marker93
+ẵ = darkness and marker54 and marker62 and marker88 and marker94
+ώ = darkness and remove_border16 and marker95 and marker101
+ύ = darkness and add_border16add and marker94
+ό = darkness and marker63 and marker68 and marker99
+ϋ = darkness and marker53 and marker63 and marker68
+ϊ = marker60 and darkness and marker68 and marker99
+Ͱ = marker60 and darkness and marker65 and crate1 and marker66 and marker72 and marker88 and marker95
+Ͳ = marker60 and darkness and marker65 and crate2 and marker95
+ͷ = darkness and add_border17add and marker95
+ʹ = darkness and marker53 and remove_border17
+͵ = darkness and marker66 and marker72 and marker99
+ͺ = crate3 and darkness and marker66 and marker72 and marker95
+΄ = crate1 and darkness and marker66 and marker72 and marker95
+΅ = darkness and marker63 and marker72 and marker99
+· = marker60 and darkness and marker72 and marker91
+ά = marker69 and darkness
+έ = darkness and marker66 and marker69 and marker72
+ή = darkness and marker69 and remove_border18
+ί = add_border18add and darkness and marker53
+ΰ = marker70 and darkness and marker76 and marker99
+ʯ = marker70 and darkness and marker53 and marker76
+ʮ = darkness and marker66 and marker76 and marker99
+ʭ = darkness and marker85 and marker90 and marker69
+ʬ = darkness and marker73
+ʫ = marker70 and darkness and marker73 and marker76
+(ʪ = marker69 and darkness and crate1
+ʩ = marker69 and darkness and crate2
+ʨ = marker69 and darkness and crate3
+ʧ = marker69 and darkness and crate4)
+ʦ = darkness and marker73 and remove_border19
+ʥ = marker69 and darkness and add_border19add
+ʤ = darkness and marker74 and marker99
+ʣ = marker69 and darkness and marker74
+ʢ = darkness and marker74 and marker82 and marker85 and marker90 and marker69
+ʡ = marker70 and darkness and marker99
+ʠ = darkness and remove_border20 and marker80
+ʟ = darkness and marker44 and crate1 and add_border20add
+ʞ = darkness and marker77 and marker84 and marker99
+ʝ = marker49 and darkness and marker56 and marker77 and marker87 and marker96
+ʜ = marker52 and darkness and marker77 and marker84
+ʛ = darkness and marker52 and marker77 and marker84
+ʚ = crate3 and darkness and marker52 and marker77 and marker84
+ʙ = crate1 and darkness and marker52 and marker77 and marker84
+ʘ = darkness and marker44 and marker77 and marker84
+ʗ = darkness and marker41 and marker46 and marker84 and marker99
+ʖ = crate2 and marker49 and darkness and marker56 and marker80
+ʕ = crate4 and marker49 and darkness and marker56 and marker80
+ʔ = darkness and marker33 and marker39 and marker48 and switch18
+ʓ = marker80 and darkness
+ʒ = marker80 and darkness and marker41 and marker46 and marker79
+ʑ = marker80 and crate1 and darkness
+ʐ = crate2 and darkness and marker80
+ʏ = marker80 and crate3 and darkness
+ʎ = marker80 and crate4 and darkness
+ʍ = marker80 and marker49 and darkness and marker56
+ʌ = switch14 and marker52 and darkness
+ʋ = marker81 and darkness
+ʊ = marker81 and darkness and marker74
+ʉ = marker81 and marker70 and darkness and marker85 and marker90
+ʈ = marker81 and darkness and marker77 and marker84
+ʇ = marker81 and marker49 and darkness and marker56 and marker85 and marker90
+ʆ = marker80 and darkness and marker41 and marker46 and marker79
+ʅ = marker82 and darkness and marker87 and marker99
+ʄ = marker82 and darkness and marker74 and marker87 and marker99
+ʃ = marker82 and darkness and marker73 and marker87
+ʂ = marker82 and marker70 and darkness and marker73 and marker76 and marker85 and marker90 and switch26
+ʁ = marker82 and marker70 and darkness and marker87 and crate3 and marker96
+ʀ = marker82 and marker80 and darkness and marker87
+ɿ = marker82 and marker80 and crate4 and darkness and marker87
+ɾ = marker82 and marker80 and crate3 and darkness and marker87
+ɽ = darkness and marker77 and marker87 and marker99
+ɼ = marker52 and darkness and marker77 and marker90
+ɻ = add_border21add and marker80 and crate3 and darkness
+ɺ = remove_border21 and marker81 and darkness
+ɸ = marker81 and darkness and switch20
+ɷ = marker85 and darkness and marker90 and marker91
+ɶ = marker85 and marker49 and darkness and marker59 and marker90 and marker91 and crate1
+ɵ = marker85 and marker49 and darkness and marker56 and marker92
+ɴ = marker85 and marker54 and marker52 and darkness and marker59
+ɳ = marker85 and marker52 and darkness and marker90
+ɲ = marker85 and crate4 and darkness and marker52 and marker90
+ɱ = marker85 and crate3 and darkness and marker52 and marker90
+ɰ = marker85 and crate4 and marker49 and darkness and marker56 and marker80 and marker90
+ɯ = marker85 and marker81 and darkness and marker90
+ɮ = marker85 and marker81 and darkness and switch20 and marker90
+ɭ = marker85 and marker69 and darkness and marker90
+ɬ = marker85 and darkness and marker66 and marker69 and marker72
+ɫ = marker85 and marker70 and darkness and marker53 and marker76
+ɪ = remove_border22 and darkness and marker96
+ɩ = add_border22add and marker81 and darkness
+ɨ = crate4 and marker70 and darkness and marker76 and marker96
+ɧ = crate3 and marker70 and darkness and marker76 and marker96
+ɦ = crate1 and marker82 and darkness and marker87 and marker96
+ɥ = remove_border23 and darkness and marker91
+ɤ = add_border23add and darkness and marker96
+ɢ = marker88 and darkness and marker96
+ɣ = marker88 and darkness and marker57 and marker65 and marker92
+ɡ = marker88 and crate4 and darkness and marker92
+ɠ = marker88 and crate3 and darkness and marker92
+ɟ = marker88 and darkness and marker66 and marker76 and marker96
+ɞ = marker88 and darkness and marker53
+ɝ = marker88 and darkness and marker63 and marker72 and marker94
+ɜ = marker90 and marker85 and marker70 and darkness and marker76 and marker66 and marker91
+ɛ = crate1 and darkness and marker54 and marker59
+ɚ = crate2 and darkness and marker54 and marker59
+ə = switch21 and darkness and marker73
+ɘ = switch22 and darkness and marker73
+ɗ = switch23 and darkness and marker73
+ɖ = switch24 and marker82 and darkness and marker73 and marker87
+ɕ = switch25 and marker82 and darkness and marker73 and marker87
+ɔ = switch26 and marker82 and darkness and marker73 and marker87
+ɓ = crate1 and darkness and marker73
+ɒ = crate1 and marker82 and darkness and marker73 and marker87
+ɑ = crate2 and darkness and marker73
+ỿ = crate2 and marker70 and darkness and marker73 and marker76
+ỽ = crate2 and marker82 and darkness and marker73 and marker87
+ỻ = crate3 and darkness and marker73
+ỹ = crate4 and darkness and marker73
+ỷ = crate4 and marker70 and darkness and marker73 and marker76
+Ỵ = crate2 and marker60 and darkness and marker65 and marker91
+ỳ = crate4 and marker60 and darkness and marker65 and marker91
+ự = crate3 and darkness and marker66 and marker72 and marker91
+ữ = crate4 and darkness and marker66 and marker72 and marker91
+ử = marker69 and darkness
+ừ = marker69 and darkness and marker74
+ứ = marker91 and darkness
+ủ = marker91 and darkness and marker66 and marker72
+ụ = marker91 and marker60 and darkness and marker65
+ợ = marker91 and darkness and marker54 and marker59
+ỡ = marker91 and crate1 and darkness
+ở = marker91 and crate2 and darkness
+ờ = marker91 and crate3 and darkness
+ớ = marker91 and crate4 and darkness
+ộ = marker92 and darkness
+ỗ = marker92 and marker88 and darkness
+ổ = marker92 and marker57 and darkness and marker62
+ồ = marker92 and marker49 and darkness and marker56
+ố = marker92 and crate1 and darkness
+ỏ = marker92 and crate2 and darkness
+ọ = marker92 and crate3 and darkness
+ị = marker92 and crate4 and darkness
+ỉ = marker93 and darkness
+ệ = marker93 and marker60 and darkness and marker65
+ễ = darkness and marker17 and marker26 and marker93
+ể = crate1 and darkness and marker93
+ề = crate2 and darkness and marker93
+ẽ = darkness and marker94
+ẻ = marker94 and darkness and marker63 and marker68
+ẹ = marker94 and marker88 and darkness
+ặ = marker94 and marker57 and darkness and marker62
+ẳ = marker94 and crate1 and darkness
+ằ = marker94 and crate2 and darkness
+ắ = marker94 and crate3 and darkness
+ậ = marker94 and crate4 and darkness
+ẫ = marker95 and darkness
+ẩ = marker95 and darkness and marker66 and marker72
+ầ = marker95 and crate2 and darkness
+ấ = marker95 and marker60 and darkness and marker65
+ẟ = marker96 and darkness
+ẝ = marker96 and marker70 and darkness and marker76
+ẜ = marker96 and marker82 and darkness and marker87
+ẛ = switch14 and marker54 and marker52 and darkness and marker59
+ẚ = switch19 and marker80 and darkness
+ẙ = switch17 and marker69 and darkness
+ẘ = switch17 and marker69 and darkness and marker74
+ẗ = marker97 and darkness and marker63 and marker68
+ẖ = marker99 and darkness and marker13 and marker19
+ẕ = marker99 and darkness and marker6
+ẓ = marker102 and darkness and marker2
+ẉ = marker103 and darkness
+ẇ = darkness and marker105
+ẅ = darkness and marker106
+ẃ = darkness and marker107
+ẁ = darkness and marker108
+ṿ = marker85 and darkness and marker90 and marker91 and crate3
+ṽ = crate2 and marker91 and darkness and marker54 and marker59
+
+=======
+SOUNDS
+=======
+
+(startgame 84468908)
+(startgame 24734308)(*)
+(startgame 69406508)
+
+(sfx0 65936907)
+sfx0 73213307
+sfx1 26048507
+sfx2 16287304
+sfx3 77775702
+sfx4 83090108
+sfx5 23289908
+sfx6 99739108
+sfx7 90095508
+
+startgame 92150508 (*)
+showmessage 49359108
+(startgame 36933308) (*)
+(sfx8 22700508) (scream)
+(sfx8 12817708) (scream)
+(sfx3 21046508)
+
+================
+COLLISIONLAYERS
+================
+
+background
+blackness
+crate_background, crate_background2, crate_background3, crate_background4, player_background, crate_backgroundx, crate_background2x, crate_background3x, crate_background4x
+remove_border1, marker, remove_border1add, add_border1, add_border1add, remove_border2, remove_border2add, add_border2, add_border2add, remove_border3, remove_border3add, add_border3, add_border3add, remove_border4, remove_border4add, add_border4, add_border4add, remove_border5, remove_border5add, add_border5, add_border5add, remove_border6, remove_border6add, add_border6, add_border6add, remove_border7, remove_border7add, add_border7, add_border7add, remove_border8, remove_border8add, add_border8, add_border8add, remove_border9, remove_border9add, add_border9, add_border9add, remove_border10, remove_border10add, add_border10, add_border10add, remove_border11, remove_border11add, add_border11, add_border11add, remove_border12, remove_border12add, add_border12, add_border12add, remove_border13, remove_border13add, add_border13, add_border13add, remove_border14, remove_border14add, add_border14, add_border14add, remove_border15, remove_border15add, add_border15, add_border15add, remove_border16, remove_border16add, add_border16, add_border16add, remove_border17, remove_border17add, add_border17, add_border17add, remove_border18, remove_border18add, add_border18, add_border18add, remove_border19, remove_border19add, add_border19, add_border19add, remove_border20, remove_border20add, add_border20, add_border20add, remove_border21, remove_border21add, add_border21, add_border21add, remove_border22, remove_border22add, add_border22, add_border22add, remove_border23, remove_border23add, add_border23, add_border23add
+marker2
+marker3
+marker4
+marker5
+marker6
+marker7
+marker8
+marker9
+marker10
+marker11
+marker12
+marker13
+marker14
+marker15
+marker16
+marker17
+marker18
+marker19
+marker20
+marker21
+marker22
+marker23
+marker24
+marker25
+marker26
+marker27
+marker28
+marker29
+marker30
+marker31
+marker32
+marker33
+marker34
+marker35
+marker36
+marker37
+marker38
+marker39
+marker40
+marker41
+marker42
+marker43
+marker44
+marker45
+marker46
+marker47
+marker48
+marker49
+marker50
+marker51
+marker52
+marker53
+marker54
+marker55
+marker56
+marker57
+marker58
+marker59
+marker60
+marker61
+marker62
+marker63
+marker64
+marker65
+marker66
+marker67
+marker68
+marker69
+marker70
+marker71
+marker72
+marker73
+marker74
+marker75
+marker76
+marker77
+marker78
+marker79
+marker80
+marker81
+marker82
+marker83
+marker84
+marker85
+marker86
+marker87
+marker88
+marker89
+marker90
+marker91
+marker92
+marker93
+marker94
+marker95
+marker96
+marker97
+marker98
+marker99
+marker100
+marker101
+marker102
+marker103
+marker104
+marker105
+marker106
+marker107
+marker108
+switch1, switch2, switch3, switch4, switch5, switch6, switch7, switch8, switch9, switch10, switch11, switch12, switch13, switch14, switch15, switch16, switch17, switch18, switch19, switch20, switch21, switch22, switch23, switch24, switch25, switch26
+crate1, crate2, crate3, crate4
+player1, player2, player3, player4
+darkness
+crate1big, crate2big, crate3big, crate4big
+playerbig
+border
+
+======
+RULES
+======
+
+(movement and pushing crates)
+
+[ > player1 | no crate no border | no border no crate ] -> [ | | player1 ] sfx0
+[ > player2 | no crate no border | no border no crate ] -> [ | | player2 ] sfx0
+[ > player3 | no crate no border | no border no crate ] -> [ | | player3 ] sfx0
+[ > player4 | no crate no border | no border no crate ] -> [ | | player4 ] sfx0
+[ > player | border ] -> [ player | border ]
+[ > player1 | > player2 | crate1 | crate2 | no border no crate | ] -> [ | | player1 | player2 | crate1 | crate2 ] sfx1
+[ > player | crate1 | crate2 | border ] -> [ player | crate1 | crate2 | border ]
+[ > player3 | > player4 | crate3 | crate4 | no border no crate | ] -> [ | | player3 | player4 | crate3 | crate4 ] sfx1
+[ > player | crate3 | crate4 | border ] -> [ player | crate3 | crate4 | border ]
+[ > player1 | > player3 | crate1 | crate3 | no border no crate | ] -> [ | | player1 | player3 | crate1 | crate3 ] sfx1
+[ > player | crate1 | crate3 | border ] -> [ player | crate1 | crate3 | border ]
+[ > player2 | > player4 | crate2 | crate4 | no border no crate | ] -> [ | | player2 | player4 | crate2 | crate4 ] sfx1
+[ > player | crate2 | crate4 | border ] -> [ player | crate2 | crate4 | border ]
+[ > player2 | > player1 | crate2 | crate1 | no border no crate | ] -> [ | | player2 | player1 | crate2 | crate1 ] sfx1
+[ > player | crate2 | crate1 | border ] -> [ player | crate2 | crate1 | border ]
+[ > player4 | > player3 | crate4 | crate3 | no border no crate | ] -> [ | | player4 | player3 | crate4 | crate3 ] sfx1
+[ > player | crate4 | crate3 | border ] -> [ player | crate4 | crate3 | border ]
+[ > player3 | > player1 | crate3 | crate1 | no border no crate | ] -> [ | | player3 | player1 | crate3 | crate1 ] sfx1
+[ > player | crate3 | crate1 | border ] -> [ player | crate3 | crate1 | border ]
+[ > player4 | > player2 | crate4 | crate2 | no border no crate | ] -> [ | | player4 | player2 | crate4 | crate2 ] sfx1
+[ > player | crate4 | crate2 | border ] -> [ player | crate4 | crate2 | border ]
+
+(can't push multiples)
+[ > player1 | > player2 | crate1 | crate2 | crate1 | crate2 ] -> [ player1 | player2 | crate1 | crate2 | crate1 | crate2 ]
+[ > player3 | > player4 | crate3 | crate4 | crate3 | crate4 ] -> [ player3 | player4 | crate3 | crate4 | crate3 | crate4 ]
+[ > player2 | > player1 | crate2 | crate1 | crate2 | crate1 ] -> [ player2 | player1 | crate2 | crate1 | crate2 | crate1 ]
+[ > player4 | > player3 | crate4 | crate3 | crate4 | crate3 ] -> [ player4 | player3 | crate4 | crate3 | crate4 | crate3 ]
+[ > player1 | > player3 | crate1 | crate3 | crate1 | crate3 ] -> [ player1 | player3 | crate1 | crate3 | crate1 | crate3 ]
+[ > player2 | > player4 | crate2 | crate4 | crate2 | crate4 ] -> [ player2 | player4 | crate2 | crate4 | crate2 | crate4 ]
+[ > player3 | > player1 | crate3 | crate1 | crate3 | crate1 ] -> [ player3 | player1 | crate3 | crate1 | crate3 | crate1 ]
+[ > player4 | > player2 | crate4 | crate2 | crate4 | crate2 ] -> [ player4 | player2 | crate4 | crate2 | crate4 | crate2 ]
+
+(match 3 rule)
+[ crate1 | crate3 | crate1 | crate3 | crate1 | crate3 ] -> [|||||] sfx3
+[ crate2 | crate4 | crate2 | crate4 | crate2 | crate4 ] -> [|||||]
+[ crate1 | crate2 | crate1 | crate2 | crate1 | crate2 ] -> [|||||] sfx3
+[ crate3 | crate4 | crate3 | crate4 | crate3 | crate4 ] -> [|||||]
+
+([ player remove_border1 ][ marker2 ][ marker ][ darkness marker2 ] -> [ player remove_border1 ][ background no border ][ border ][ background ]
+[ player remove_border1 ][ marker2 ] -> [ player no darkness remove_border1 ][ background no darkness ]
+[ player remove_border1 ][ border darkness ] -> [ player remove_border1 ][ no border darkness ])
+
+([ player remove_border1 ][ marker2 ] -> [ player remove_border1 ][ background no border no darkness ]
+[ player remove_border1 ][ marker ] -> [ player remove_border1 ][ border ]
+[ player remove_border1 ][ marker3 ] -> [ player remove_border1 ][ darkness no border ])
+
+([ crate switch ][ marker2 ] -> [ crate switch ][ background no border no darkness ]
+[ player remove_border1 ][ marker ] -> [ player remove_border1 ][ border ]
+[ player remove_border1 ][ marker3 ] -> [ player remove_border1 ][ darkness no border ])
+
+[ crate switch ][ marker2 darkness no marker6 ] -> [ crate switch ][ marker2 no darkness ] sfx2
+[ crate switch ][ marker2 darkness marker6 ] -> [ crate switch ][ marker2 no darkness marker6 ]
+[ player remove_border1 ][ marker no marker6 ] -> [ player remove_border1 ][ border marker ]
+[ player remove_border1 ][ marker marker6 ] -> [ player remove_border1 ][ border marker marker6 ]
+[ player remove_border1 ][ marker3 ][ switch10 no crate ] -> [ player remove_border1 ][ darkness no border marker3 ][ switch10 no crate ]
+[ player remove_border1 ][ marker3 ][ switch10 crate ] -> [ player remove_border1 ][ no border marker3 ][ switch10 crate ]
+[ player remove_border1 ][ marker2 ][ no crate switch ] -> [ player remove_border1 ][ no border background darkness marker2 ][ switch ]
+[ player remove_border1 ][ marker2 ][ crate switch ] -> [ player remove_border1 ][ no border background no darkness marker2 ][ crate switch ]
+
+[ player remove_border1 ][ add_border1add ] -> [ player remove_border1add ][ add_border1 ]
+
+[ player add_border1 ][ marker3 ] -> [ player add_border1 ][ border marker3 ]
+[ player add_border1 ][ marker ] -> [ player add_border1 ][ marker no border ]
+[ player add_border1 ][ marker4 ] -> [ player add_border1 ][ marker4 border ]
+
+[ player add_border1 ][ remove_border1add ] -> [ player add_border1add ][ remove_border1 ]
+
+[ no crate switch ][ marker2 ] -> [ switch ][ darkness marker2 ]
+
+(level 3)
+
+[ crate switch3 ][ marker5 darkness ] -> [ crate switch3 ][ marker5 no darkness ] sfx2
+[ crate switch3 ][ marker7 darkness ] -> [ crate switch3 ][ marker7 no darkness ]
+[ player remove_border2 ][ marker6 ] -> [ player remove_border2 ][ marker6 border ]
+[ player remove_border2 ][ marker7 border no marker ] -> [ player remove_border2 ][ marker7 no border darkness ]
+[ player remove_border2 ][ marker7 border marker ] -> [ player remove_border2 ][ marker7 no border ]
+[ player remove_border2 ][ marker8 ] -> [ player remove_border2 ][ marker8 darkness ]
+[ marker8 no border ] -> [ marker8 darkness ]
+[ marker8 marker36 darkness ][ switch9 crate ] -> [ marker8 marker36 no darkness ][ switch9 crate ]
+[ marker8 marker40 darkness ][ switch10 crate ] -> [ marker8 marker40 no darkness ][ switch10 crate ]
+[ crate switch ][ crate switch3 darkness ][ crate switch4 darkness ] -> [ crate switch ][ crate switch3 ][ crate switch4 ] sfx2
+[ switch no crate ][ crate switch3 no darkness ][ crate switch4 no darkness ] -> [ switch ][ crate switch3 darkness ][ crate switch4 darkness ]
+[ crate switch ][ player switch3 darkness ][ player switch4 darkness ] -> [ crate switch ][ player switch3 no darkness ][ player switch4 no darkness ]
+[ switch crate ][ no player switch3 no darkness no crate ][ no player switch4 no darkness no crate ] -> [ switch crate ][ switch3 darkness ][ switch4 darkness ]
+[ switch3 no crate ][ marker5 no darkness ] -> [ switch3 ][ marker5 darkness ]
+[ switch3 no crate ][ marker9 no darkness ] -> [ switch3 ][ marker9 darkness ]
+
+[ player remove_border2 ][ add_border2add ] -> [ player remove_border2add ][ add_border2 ]
+
+[ player add_border2 ][ marker7 ] -> [ player add_border2 ][ marker7 border marker ]
+[ player add_border2 ][ marker6 border ] -> [ player add_border2 ][ marker6 no border ]
+
+[ player add_border2 ][ remove_border2add ] -> [ player add_border2add ][ remove_border2 ]
+
+(level 4)
+
+[ player remove_border3 ][ marker10 no marker6 no marker5 ] -> [ player remove_border3 ][ marker10 border ]
+([ player remove_border3 ][ marker10 marker6 darkness no marker5 ] -> [ player remove_border3 ][ marker10 marker6 no darkness ])
+[ player remove_border3 ][ marker6 border no marker10 no marker2 no marker5 ] -> [ player remove_border3 ][ marker6 no border darkness marker11 ]
+[ player remove_border3 ][ marker border ] -> [ player remove_border3 ][ marker darkness no border marker11 ]
+[ player remove_border3 ][ marker2 border marker6 ] -> [ player remove_border3 ][ marker2 no border marker6 marker11 ]
+[ player remove_border3 ][ marker5 marker10 no border ] -> [ player remove_border3 ][ marker5 border marker10 marker11 ]
+[ player remove_border3 ][ marker16 ] -> [ player remove_border3 ][ marker16 border marker11 ]
+
+[ player remove_border3 ][ add_border3add ] -> [ player remove_border3add ][ add_border3 ]
+
+[ player add_border3 ][ marker10 no marker6 no marker5 border ] -> [ player add_border3 ][ marker10 no border darkness ]
+[ player add_border3 ][ marker6 no border marker11 ] -> [ player add_border3 ][ marker6 border no marker11 ]
+[ player add_border3 ][ marker marker11 ] -> [ player add_border3 ][ marker border ]
+[ player add_border3 ][ marker2 marker6 no border marker11 ] -> [ player add_border3 ][ marker2 marker6 border ]
+[ player add_border3 ][ marker5 border marker10 marker11 ] -> [ player add_border3 ][ marker5 marker10 no border ]
+
+[ player add_border3 ][ remove_border3add ] -> [ player add_border3add ][ remove_border3 ]
+
+(level 5)
+
+[ crate switch5 ][ darkness marker12 ] -> [ crate switch5 ][ marker12 ] sfx2
+[ switch5 no crate ][ marker12 ] -> [ switch5 ][ marker12 darkness ]
+[ player remove_border4 ][ marker13 no border no marker14 ] -> [ player remove_border4 ][ border marker13 marker15 ]
+[ player remove_border4 ][ crate_background2 marker13 no border no marker14 ] -> [ player remove_border4 ][ border crate_background2 marker13 marker15 ]
+[ player remove_border4 ][ marker10 no marker13 no marker6 border ] -> [ player remove_border4 ][ marker10 no border marker15 ]
+[ player remove_border4 ][ marker14 border ] -> [ player remove_border4 ][ marker14 no border marker15 ]
+[ player remove_border4 ][ marker13 marker19 marker22 no border marker23 ] -> [ player remove_border4 ][ marker13 marker19 marker22 border marker23 ]
+
+[ player remove_border4 ][ add_border4add ] -> [ player remove_border4add ][ add_border4 ]
+
+[ player add_border4 ][ marker13 border marker15 ] -> [ player add_border4 ][ marker13 no border ]
+[ player add_border4 ][ marker13 border crate_background2 marker15 ] -> [ player add_border4 ][ marker13 no border crate_background2 ]
+[ player add_border4 ][ marker10 no border marker15 ] -> [ player add_border4 ][ marker10 border ]
+[ player add_border4 ][ marker14 no border marker15 ] -> [ player add_border4 ][ marker14 border ]
+[ player add_border4 ][ marker13 marker19 marker22 border ] -> [ player add_border4 ][ marker13 marker19 marker22 no border marker23 ]
+
+[ player add_border4 ][ remove_border4add ] -> [ player add_border4add ][ remove_border4 ]
+
+(level 6) (marker18)
+
+[ crate switch6 ][ darkness marker22 ] -> [ crate switch6 ][ marker22 crate_background no darkness ] sfx2
+[ crate switch6 ][ darkness marker105 ] -> [ crate switch6 ][ marker105 crate_backgroundx no darkness ] sfx2
+[ player remove_border5 ][ marker17 ] -> [ player remove_border5 ][ border marker17 marker18 ]
+[ player remove_border5 ][ crate_background2 marker17 ] -> [ player remove_border5 ][ border crate_background2 marker17 marker18 ]
+[ player remove_border5 ][ marker19 border ] -> [ player remove_border5 ][ marker19 no border marker18 ]
+[ player remove_border5 ][ marker21 no border ] -> [ player remove_border5 ][ marker21 border marker18 ]
+
+[ player remove_border5 ][ add_border5add ] -> [ player remove_border5add ][ add_border5 ]
+
+[ player add_border5 ][ border marker18 marker17 ] -> [ player add_border5 ][ no border no marker18 marker17 ]
+[ player add_border5 ][ no border marker18 marker19 ] -> [ player add_border5 ][ border no marker18 marker19 ]
+[ player add_border5 ][ marker21 marker18 border ] -> [ player add_border5 ][ marker21 no marker18 no border ]
+
+[ player add_border5 ][ remove_border5add ] -> [ player add_border5add ][ remove_border5 ]
+
+(level 7) (marker25)
+
+[ crate switch7 ][ darkness marker28 ] -> [ crate switch7 ][ marker28 crate_background2 ] sfx2
+[ crate switch7 ][ darkness marker106 ] -> [ crate switch7 ][ marker106 crate_background2x ]
+[ player remove_border6 ][ marker24 no border ] -> [ player remove_border6 ][ border marker24 marker25 ]
+[ player remove_border6 ][ marker26 border no marker27 ] -> [ player remove_border6 ][ marker26 no border marker25 ]
+
+[ player remove_border6 ][ add_border6add ] -> [ player remove_border6add ][ add_border6 ]
+
+[ player add_border6 ][ marker25 border marker24 ] -> [ player add_border6 ][ marker24 no border ]
+[ player add_border6 ][ marker26 no border marker25 ] -> [ player add_border6 ][ marker26 border ]
+
+[ player add_border6 ][ remove_border6add ] -> [ player add_border6add ][ remove_border6 ]
+
+(level8) (marker30)
+
+[ crate switch8 ][ darkness marker32 ] -> [ crate switch8 ][ marker32 no darkness ] sfx2
+[ player remove_border7 ][ marker29 no border ] -> [ player remove_border7 ][ marker29 border marker30 ] (f, h, Љ [y], g, М [{], Њ ['], П [[], Ќ [ψ], Б)
+[ player remove_border7 ][ marker31 border ] -> [ player remove_border7 ][ marker31 no border marker30 ] (σ, μ [У] , ρ, [Ф], [υ], τ, φ, χ)
+
+[ player remove_border7 ][ add_border7add ] -> [ player remove_border7add ][ add_border7 ]
+
+[ player add_border7 ][ marker30 marker29 border ] -> [ player add_border7 ][ marker29 no border ]
+[ player add_border7 ][ marker30 marker31 no border ] -> [ player add_border7 ][ marker31 border ]
+
+[ player add_border7 ][ remove_border7add ] -> [ player add_border7add ][ remove_border7 ]
+
+(level9) (marker34)
+
+[ crate switch9 ][ darkness marker36 ] -> [ crate switch9 ][ marker36 no darkness ] sfx2
+[ player remove_border8 ][ marker33 no border ] -> [ player remove_border8 ][ marker33 border marker34 ]
+[ player remove_border8 ][ marker35 border ] -> [ player remove_border8 ][ marker35 no border marker34 ]
+
+[ player remove_border8 ][ add_border8add ] -> [ player remove_border8add ][ add_border8 ]
+
+[ player add_border8 ][ marker34 border marker33 ] -> [ player add_border8 ][ marker33 no border ]
+[ player add_border8 ][ marker35 no border marker34 ] -> [ player add_border8 ][ marker35 border ]
+[ player add_border8 ][ marker7 marker4 marker8 no darkness marker36 ][ switch9 no crate ] -> [ player add_border8 ][ marker7 marker4 marker8 darkness ][ switch9 ]
+[ player add_border8 ][ marker7 marker4 marker8 no darkness no marker36 ][ no crate switch10 ] -> [ player add_border8 ][ marker7 marker4 marker8 darkness ][ no crate switch10 ]
+[ player add_border8 ][ marker7 marker4 marker8 no darkness no marker36 ][ crate switch10 ] -> [ player add_border8 ][ marker7 marker4 marker8 no darkness ][ crate switch10 ]
+
+[ player add_border8 ][ remove_border8add ] -> [ player add_border8add ][ remove_border8 ]
+
+(level10) (marker37) (border and marker and darkness and marker4 and marker7 and marker8 and marker33 and marker39)
+
+[ crate switch10 ][ darkness marker40 ] -> [ crate switch10 ][ marker40 no darkness ] sfx2
+[ switch10 no crate ][ marker40 no darkness ] -> [ switch10 ][ marker40 darkness ]
+[ player remove_border9 ][ marker38 no border ] -> [ player remove_border9 ][ marker38 border marker37 ]
+[ player remove_border9 ][ marker39 border ] -> [ player remove_border9 ][ marker39 no border marker37 ]
+[ player remove_border9 ][ marker8 marker39 ][ switch10 no crate ] -> [ player remove_border9 ][ darkness marker39 marker8 ][ switch10 no crate ]
+[ player remove_border9 ][ marker8 marker39 darkness ][ switch10 crate ] -> [ player remove_border9 ][ no darkness marker39 marker8 ][ switch10 crate ]
+
+[ player remove_border9 ][ add_border9add ] -> [ player remove_border9add ][ add_border9 ]
+
+[ player add_border9 ][ marker37 border marker38 ] -> [ player add_border9 ][ marker38 no border no marker37 ]
+[ player add_border9 ][ marker37 marker39 no border ] -> [ player add_border9 ][ marker39 border no marker37 ]
+
+[ player add_border9 ][ remove_border9add ] -> [ player add_border9add ][ remove_border9 ]
+
+(level11)
+
+[ crate switch11 ][ darkness marker44 ] -> [ crate switch11 ][ marker44 no darkness ] sfx2
+[ switch11 no crate ][ marker44 no darkness ] -> [ switch11 ][ marker44 darkness ]
+[ crate switch11 ][ darkness marker36 ] -> [ crate switch11 ][ marker36 no darkness ]
+[ switch9 no crate ][ switch11 no crate ][ marker36 no darkness ] -> [ switch9 ][ switch11 ][ marker36 darkness ]
+[ player remove_border10 ][ marker41 no border ] -> [ player remove_border10 ][ marker41 border marker42 ]
+[ player remove_border10 ][ marker43 border ] -> [ player remove_border10 ][ marker43 no border marker42 ]
+
+[ player remove_border10 ][ add_border10add ] -> [ player remove_border10add ][ add_border10 ]
+
+[ player add_border10 ][ marker42 border marker41 ] -> [ player add_border10 ][ marker41 no border no marker42 ]
+[ player add_border10 ][ marker42 no border marker43 ] -> [ player add_border10 ][ marker43 border no marker42 ]
+
+[ player add_border10 ][ remove_border10add ] -> [ player add_border10add ][ remove_border10 ]
+
+(level12) (remember to put switch13 in the next level)
+
+[ crate switch13 ][ darkness marker48 ] -> [ crate switch13 ][ marker48 no darkness ] sfx2
+[ switch13 no crate ][ marker48 no darkness ] -> [ switch13 ][ marker48 darkness ]
+[ player remove_border11 ][ marker45 no border ] -> [ player remove_border11 ][ marker45 border marker47 ]
+[ player remove_border11 ][ marker46 border ] -> [ player remove_border11 ][ marker46 no border marker47 ]
+
+[ player remove_border11 ][ add_border11add ] -> [ player remove_border11add ][ add_border11 ]
+
+[ player add_border11 ][ marker47 border marker45 ] -> [ player add_border11 ][ marker45 no border no marker47 ]
+[ player add_border11 ][ marker47 marker46 no border ] -> [ player add_border11 ][ marker46 border no marker47 ]
+
+[ player add_border11 ][ remove_border11add ] -> [ player add_border11add ][ remove_border11 ]
+
+(level13)
+
+[ crate switch15 ][ darkness marker52 ] -> [ crate switch15 ][ marker52 no darkness ] sfx2
+[ switch15 no crate ][ marker52 no darkness ] -> [ switch15 ][ marker52 darkness ]
+[ player remove_border12 ][ marker49 no border ] -> [ player remove_border12 ][ marker49 border marker50 ]
+[ player remove_border12 ][ marker51 border ] -> [ player remove_border12 ][ marker51 no border marker50 ]
+
+[ player remove_border12 ][ add_border12add ] -> [ player remove_border12add ][ add_border12 ]
+
+[ player add_border12 ][ marker49 border marker50 ] -> [ player add_border12 ][ marker49 no border no marker50 ]
+[ player add_border12 ][ marker51 no border marker50 ] -> [ player add_border12 ][ marker51 border no marker50 ]
+
+[ player add_border12 ][ remove_border12add ] -> [ player add_border12add ][ remove_border12 ]
+
+(level14)
+
+[ crate switch14 ][ darkness marker53 ] -> [ crate switch14 ][ marker53 no darkness ] sfx2
+[ switch14 no crate ][ marker53 no darkness ] -> [ switch14 ][ marker53 darkness ]
+[ player remove_border13 ][ marker54 no border ] -> [ player remove_border13 ][ marker54 border marker55 ]
+[ player remove_border13 ][ marker56 border ] -> [ player remove_border13 ][ marker56 no border marker55 ]
+
+[ player remove_border13 ][ add_border13add ] -> [ player remove_border13add ][ add_border13 ]
+
+[ player add_border13 ][ marker54 border marker55 ] -> [ player add_border13 ][ marker54 no border no marker55 ]
+[ player add_border13 ][ marker56 no border marker55 ] -> [ player add_border13 ][ marker56 border no marker55 ]
+
+[ player add_border13 ][ remove_border13add ] -> [ player add_border13add ][ remove_border13 ]
+
+(level15)
+
+[ player remove_border14 ][ marker57 no border ] -> [ player remove_border14 ][ marker57 border marker58 ]
+[ player remove_border14 ][ marker59 border ] -> [ player remove_border14 ][ marker59 no border marker58 ]
+
+[ player remove_border14 ][ add_border14add ] -> [ player remove_border14add ][ add_border14 ]
+
+[ player add_border14 ][ marker57 border marker58 ] -> [ player add_border14 ][ marker57 no border no marker58 ]
+[ player add_border14 ][ marker59 no border marker58 ] -> [ player add_border14 ][ marker59 border no marker58 ]
+
+[ player add_border14 ][ remove_border14add ] -> [ player add_border14add ][ remove_border14 ]
+
+(level16)
+
+[ player remove_border15 ][ marker60 no border ] -> [ player remove_border15 ][ marker60 border marker61 ]
+[ player remove_border15 ][ marker62 border ] -> [ player remove_border15 ][ marker62 no border marker61 ]
+
+[ player remove_border15 ][ add_border15add ] -> [ player remove_border15add ][ add_border15 ]
+
+[ player add_border15 ][ marker60 border marker61 ] -> [ player add_border15 ][ marker60 no border no marker61 ]
+[ player add_border15 ][ marker62 no border marker61 ] -> [ player add_border15 ][ marker62 border no marker61 ]
+
+[ player add_border15 ][ remove_border15add ] -> [ player add_border15add ][ remove_border15 ]
+
+(level17)
+
+[ player remove_border16 ][ marker63 no border ] -> [ player remove_border16 ][ marker63 border marker64 ]
+[ player remove_border16 ][ marker65 border ] -> [ player remove_border16 ][ marker65 no border marker64 ]
+
+[ player remove_border16 ][ add_border16add ] -> [ player remove_border16add ][ add_border16 ]
+
+[ player add_border16 ][ marker63 border marker64 ] -> [ player add_border16 ][ marker63 no border no marker64 ]
+[ player add_border16 ][ marker65 no border marker64 ] -> [ player add_border16 ][ marker65 border no marker64 ]
+
+[ player add_border16 ][ remove_border16add ] -> [ player add_border16add ][ remove_border16 ]
+
+(level18)
+
+[ crate switch16 ][ darkness marker69 ] -> [ crate switch16 ][ marker69 no darkness player_background ] sfx2
+[ switch16 no crate ][ marker69 no darkness player_background ] -> [ switch16 ][ marker69 darkness no player_background ]
+[ player remove_border17 ][ marker66 no border ] -> [ player remove_border17 ][ marker66 border marker67 ]
+[ player remove_border17 ][ marker68 border ] -> [ player remove_border17 ][ marker68 no border marker67 ]
+
+[ player remove_border17 ][ add_border17add ] -> [ player remove_border17add ][ add_border17 ]
+
+[ player add_border17 ][ marker66 border marker67 ] -> [ player add_border17 ][ marker66 no border no marker67 ]
+[ player add_border17 ][ marker68 no border marker67 ] -> [ player add_border17 ][ marker68 border no marker67 ]
+
+[ player add_border17 ][ remove_border17add ] -> [ player add_border17add ][ remove_border17 ]
+
+(level19)
+
+[ crate switch17 ][ darkness marker73 ] -> [ crate switch17 ][ marker73 no darkness player_background ] sfx2
+[ switch17 no crate ][ marker73 no darkness player_background ] -> [ switch17 ][ marker73 darkness no player_background ]
+[ player remove_border18 ][ marker70 no border ] -> [ player remove_border18 ][ marker70 border marker71 ]
+[ player remove_border18 ][ marker72 border ] -> [ player remove_border18 ][ marker72 no border marker71 ]
+
+[ player remove_border18 ][ add_border18add ] -> [ player remove_border18add ][ add_border18 ]
+
+[ player add_border18 ][ marker70 border marker71 ] -> [ player add_border18 ][ marker70 no border no marker71 ]
+[ player add_border18 ][ marker72 no border marker71 ] -> [ player add_border18 ][ marker72 border no marker71 ]
+
+[ player add_border18 ][ remove_border18add ] -> [ player add_border18add ][ remove_border18 ]
+
+(level20)
+
+[ crate switch18 ][ darkness marker80 ] -> [ crate switch18 ][ marker80 no darkness ] sfx2
+[ switch18 no crate ][ marker80 no darkness ] -> [ switch18 ][ marker80 darkness ]
+[ crate switch18 ][ darkness marker32 ] -> [ crate switch18 ][ marker32 no darkness ]
+[ switch8 no crate ][ switch18 no crate ][ marker32 no darkness ] -> [ switch8 ][ switch18 ][ marker32 darkness ]
+[ player remove_border19 ][ marker74 no border ] -> [ player remove_border19 ][ marker74 border marker75 ]
+[ player remove_border19 ][ marker76 border ] -> [ player remove_border19 ][ marker76 no border marker75 ]
+
+[ player remove_border19 ][ add_border19add ] -> [ player remove_border19add ][ add_border19 ]
+
+[ player add_border19 ][ marker74 border marker75 ] -> [ player add_border19 ][ marker74 no border no marker75 ]
+[ player add_border19 ][ marker76 no border marker75 ] -> [ player add_border19 ][ marker76 border no marker75 ]
+
+[ player add_border19 ][ remove_border19add ] -> [ player add_border19add ][ remove_border19 ]
+
+(level21)
+
+[ crate switch19 ][ darkness marker81 ] -> [ crate switch19 ][ marker81 no darkness player_background ] sfx2
+[ switch19 no crate ][ marker81 no darkness player_background ] -> [ switch19 ][ marker81 darkness no player_background ]
+[ player remove_border20 ][ marker77 no border ] -> [ player remove_border20 ][ marker77 border marker78 ]
+[ player remove_border20 ][ marker79 border ] -> [ player remove_border20 ][ marker79 no border marker78 ]
+
+[ player remove_border20 ][ add_border20add ] -> [ player remove_border20add ][ add_border20 ]
+
+[ player add_border20 ][ marker77 border marker78 ] -> [ player add_border20 ][ marker77 no border no marker78 ]
+[ player add_border20 ][ marker79 no border marker78 ] -> [ player add_border20 ][ marker79 border no marker78 ]
+
+[ player add_border20 ][ remove_border20add ] -> [ player add_border20add ][ remove_border20 ]
+
+(level22)
+
+[ crate switch20 ][ darkness marker96 ] -> [ crate switch20 ][ marker96 no darkness player_background ] sfx2
+[ switch20 no crate ][ marker96 no darkness player_background ] -> [ switch20 ][ marker96 darkness no player_background ]
+[ player remove_border21 ][ marker82 no border ] -> [ player remove_border21 ][ marker82 border marker83 ]
+[ player remove_border21 ][ marker84 border ] -> [ player remove_border21 ][ marker84 no border marker83 ]
+
+[ player remove_border21 ][ add_border21add ] -> [ player remove_border21add ][ add_border21 ]
+
+[ player add_border21 ][ marker82 border marker83 ] -> [ player add_border21 ][ marker82 no border no marker83 ]
+[ player add_border21 ][ marker84 no border marker83 ] -> [ player add_border21 ][ marker84 border no marker83 ]
+
+[ player add_border21 ][ remove_border21add ] -> [ player add_border21add ][ remove_border21 ]
+
+(level23)
+
+[ player remove_border22 ][ marker85 no border ] -> [ player remove_border22 ][ marker85 border marker86 ]
+[ player remove_border22 ][ marker87 border ] -> [ player remove_border22 ][ marker87 no border marker86 ]
+
+[ player remove_border22 ][ add_border22add ] -> [ player remove_border22add ][ add_border22 ]
+
+[ player add_border22 ][ marker85 border marker86 ] -> [ player add_border22 ][ marker85 no border no marker86 ]
+[ player add_border22 ][ marker87 no border marker86 ] -> [ player add_border22 ][ marker87 border no marker86 ]
+
+[ player add_border22 ][ remove_border22add ] -> [ player add_border22add ][ remove_border22 ]
+
+(level24)
+
+[ player remove_border23 ][ marker88 no border ] -> [ player remove_border23 ][ marker88 border marker89 ]
+[ player remove_border23 ][ marker90 border ] -> [ player remove_border23 ][ marker90 no border marker89 ]
+
+[ player remove_border23 ][ add_border23add ] -> [ player remove_border23add ][ add_border23 ]
+
+[ player add_border23 ][ marker88 border marker89 ] -> [ player add_border23 ][ marker88 no border no marker89 ]
+[ player add_border23 ][ marker90 no border marker89 ] -> [ player add_border23 ][ marker90 border no marker89 ]
+
+[ player add_border23 ][ remove_border23add ] -> [ player add_border23add ][ remove_border23 ]
+
+(some switches)
+
+[ crate switch21 ][ darkness marker91 ] -> [ crate switch21 ][ marker91 no darkness ] sfx2
+[ switch21 no crate ][ marker91 no darkness ] -> [ switch21 ][ marker91 darkness ]
+
+[ crate switch22 ][ darkness marker92 ] -> [ crate switch22 ][ marker92 no darkness crate_background3 ] sfx2
+[ switch22 no crate ][ marker92 no darkness crate_background3 ] -> [ switch22 ][ marker92 darkness no crate_background3 ]
+[ crate switch22 ][ darkness marker108 ] -> [ crate switch22 ][ marker108 no darkness crate_background3x ] sfx2
+[ switch22 no crate ][ marker108 no darkness crate_background3x ] -> [ switch22 ][ marker108 darkness no crate_background3x ]
+
+[ crate switch24 ][ darkness marker93 ] -> [ crate switch24 ][ marker93 no darkness crate_background4 ] sfx2
+[ crate switch24 ][ darkness marker107 ] -> [ crate switch24 ][ marker107 no darkness crate_background4x ]
+[ switch24 no crate ][ marker93 no darkness crate_background4 ] -> [ switch24 ][ marker93 darkness no crate_background4 ]
+[ switch24 no crate ][ marker107 no darkness crate_background4x ] -> [ switch24 ][ marker107 darkness no crate_background4x ]
+
+[ crate switch25 ][ darkness marker94 ] -> [ crate switch25 ][ marker94 no darkness ] sfx2
+[ switch25 no crate ][ marker94 no darkness ] -> [ switch25 ][ marker94 darkness ]
+
+[ crate switch26 ][ darkness marker95 ] -> [ crate switch26 ][ marker95 no darkness ] sfx2
+[ switch26 no crate ][ marker95 no darkness ] -> [ switch26 ][ marker95 darkness ]
+
+()
+
+(META)
+
+(16, 17, 19, 20)
+[ crate switch16 ][ crate switch17 ][ crate switch19 ][ crate switch20 ][ player1 ][ player2 ][ player3 ][ player4 ][ player_background ] -> [ switch16 ][ switch17 ][ switch19 ][ switch20 ][ marker97 ][][][][ playerbig ] sfx4 sfx5 sfx6 sfx7
+([ playerbig ][ crate1 ][ crate2 ][ crate3 ][ crate4 ] -> [ playerbig ][][][][]
+[ playerbig ][ crate1 ][ crate2 ][ crate3 ][ crate4 ] -> [ playerbig ][][][][]
+[ playerbig ][ switch1 ][ switch2 ][ switch3 ][ switch ][ switch4 ] -> [ playerbig ][][][][][]
+[ playerbig ][ switch5 ][ switch6 ][ switch7 ][ switch8 ][ switch9 ] -> [ playerbig ][][][][][]
+[ playerbig ][ switch10 ][ switch11 ][ switch12 ][ switch13 ][ switch14 ] -> [ playerbig ][][][][][]
+[ playerbig ][ switch15 ][ switch16 ][ switch17 ][ switch18 ][ switch19 ] -> [ playerbig ][][][][][]
+[ playerbig ][ switch20 ][ switch21 ][ switch22 ][ switch23 ][ switch24 ] -> [ playerbig ][][][][][]
+[ playerbig ][ switch25 ][ switch26 ][ border ][ border ][ border ] -> [ playerbig ][][][][][])
+[ playerbig ][ no marker98 ][ border ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch1 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch2 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch3 darkness ][ marker102 darkness ] -> [ playerbig ][][ darkness ][ marker102 darkness ]
+[ playerbig ][ no marker98 ][ switch4 darkness ][ marker102 darkness ] -> [ playerbig ][][ darkness ][ marker102 darkness ]
+[ playerbig ][ no marker98 ][ switch3 darkness ][ marker102 no darkness ] -> [ playerbig ][][ background ][ marker102 ]
+[ playerbig ][ no marker98 ][ switch4 darkness ][ marker102 no darkness ] -> [ playerbig ][][ background ][ marker102 ]
+[ playerbig ][ no marker98 ][ switch5 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch6 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch7 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch8 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch9 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch10 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch11 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch12 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch13 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch14 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch15 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch16 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch17 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch18 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch19 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch20 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch21 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch22 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch23 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch24 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch25 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ switch26 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ crate1 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ crate2 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ crate3 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ crate4 ] -> [ playerbig ][][]
+[ playerbig ][ no marker98 ][ marker8 ] -> [ playerbig ][][ background ]
+[ playerbig ][ no marker98 ][ add_border1 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border2 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border3 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border4 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border5 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border6 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border7 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border8 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border9 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border10 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border11 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border12 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border13 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border14 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border15 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border16 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border17 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border18 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border19 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border20 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border21 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border22 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ add_border23 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border1add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border2add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border3add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border4add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border5add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border6add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border7add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border8add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border9add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border10add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border11add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border12add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border13add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border14add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border15add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border16add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border17add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border18add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border19add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border20add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border21add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border22add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border23add ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border1 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border2 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border3 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border4 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border5 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border6 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border7 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border8 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border9 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border10 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border11 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border12 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border13 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border14 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border15 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border16 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border17 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border18 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border19 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border20 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border21 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border22 ] -> [ playerbig ][ no marker98 ][]
+[ playerbig ][ no marker98 ][ remove_border23 ] -> [ playerbig ][ no marker98 ][]
+([ playerbig ][ darkness ] -> [ playerbig ][ background ])
+([ playerbig | darkness | playerbig ] -> [ playerbig | playerbig | playerbig ])
+
+([ playerbig ][ no marker98 ][ player_background ] -> [ playerbig ][][ playerbig ]) (LAGS IT UP!!!!!)
+
+([ playerbig ][ no marker98 ][ crate_background ] -> [ playerbig ][][ crate1big ]
+[ playerbig ][ no marker98 ][ crate_background2 ] -> [ playerbig ][][ crate2big ]
+[ playerbig ][ no marker98 ][ crate_background3 ] -> [ playerbig ][][crate3big ]
+[ playerbig ][ no marker98 ][ crate_background4 ] -> [ playerbig ][][ crate4big ])
+
+
+(RUle THAT LAGS iT Up!!!!)
+[ marker103 ][ crate_backgroundx ][ crate_background2x ][ crate_background3x ][ crate_background4x ] -> [ marker104 ][ crate_backgroundx ][ crate_background2x ][ crate_background3x ][ crate_background4x ]
+
+[ playerbig ][ marker104 ][ no marker98 ][ crate_background ] -> [ playerbig ][ marker104 ][][ crate1big ]
+[ playerbig ][ marker104 ][ no marker98 ][ crate_backgroundx ] -> [ playerbig ][ marker104 ][][ crate1big ]
+[ playerbig ][ marker104 ][ no marker98 ][ crate_background2 ] -> [ playerbig ][ marker104 ][][ crate2big ]
+[ playerbig ][ marker104 ][ no marker98 ][ crate_background2x ] -> [ playerbig ][ marker104 ][][ crate2big ]
+[ playerbig ][ marker104 ][ no marker98 ][ crate_background3 ] -> [ playerbig ][ marker104 ][][crate3big ]
+[ playerbig ][ marker104 ][ no marker98 ][ crate_background3x ] -> [ playerbig ][ marker104 ][][crate3big ]
+[ playerbig ][ marker104 ][ no marker98 ][ crate_background4 ] -> [ playerbig ][ marker104 ][][ crate4big ]
+[ playerbig ][ marker104 ][ no marker98 ][ crate_background4x ] -> [ playerbig ][ marker104 ][][ crate4big ]
+
+[ marker97 ][ player_background ] -> [ marker97 ][ playerbig ] 
+[ playerbig ][ marker97 ] -> [ playerbig ][ marker98 ]
+
+(playerbig movement)
+
+[ > playerbig |no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no marker99|no cratebig no marker99] -> [||||||||||||||||playerbig] sfx0
+[ up playerbig ||||||||||||||||cratebig||||||||||||||||no marker99][ marker100 no playerbig ] -> [||||||||||||||||playerbig||||||||||||||||cratebig][ marker100 ] sfx1 sfx0
+[ down playerbig ||||||||||||||||cratebig||||||||||||||||no marker99][ marker101 no playerbig ] -> [||||||||||||||||playerbig||||||||||||||||cratebig][ marker101 ] sfx1 sfx0
+([ > playerbig ||||||||||||||||no cratebig] -> [||||||||||||||||playerbig]
+[ up playerbig ||||||||||||||||cratebig] -> [||||||||||||||||playerbig cratebig]
+[ down playerbig |||||||||||||||| cratebig] -> [ ||||||||||||||||playerbig cratebig ]
+[ playerbig cratebig ||||||||||||||||] -> [ playerbig ||||||||||||||||cratebig ])
+
+([ playerbig marker101 ] -> [ playerbig marker100 ]
+[ marker100 no playerbig ] -> [ marker101 ])
+
+([ playerbig marker99 ||||||||||||||||] -> [ marker99 ||||||||||||||||playerbig]) (antiquated rule)
+[ > playerbig ] -> [ playerbig ]
+
+==============
+WINCONDITIONS
+==============
+
+some crate1big on darkness
+some crate2big on darkness
+
+=======
+LEVELS
+=======
+
+7777777722""""""00ẕẕẕẕẕẕee////////
+7.......18######['{{{{{w{qtdddddd/
+7.......18##ẓ###['{{{{{{{dddddddd/
+79~..$^+.@######|{]<,{{{r}dddddẉd/
+7`!......########{{>?{{{r}ddddddd/
+7..34...18#&*###['{{{{{{r}ddddddd/
+7..56...18######['{{{{{{r}ddddddd/
+7.......18######['{{{{{{r}dddddod/
+¥©©©©©©©ӶӁӜӜӜӜӜӜПЊММММММghuuuuuddp
+¥¶¶²²²²²ӺҎҨªªҨҨҨӨШЏЏЏЏЏЏaÀxssssyyp
+£±±±±±±±³¤ҤҤҤҤҤҤӘ§ҒЦЦЦЦЦЧЉyyyyyiyẖ
+£±±±±±±±³¤ҤҤҤҤҤҤӇҠЦЦЦЦЦЬЭkÂyyÃÂÃÂẖ
+£±±±±±±±³¤ҤҤҤҤҤҤӇҠЦЦЦЦЦЦЧlzyyÄzÄzẖ
+£±±±±±±±³¤ҤҤҤҤҤҤӇҠЦЦЦЦЦЦЧЉyyyÃÂÃÂẖ
+£±±±±±±±³¤ҤҤҤҤҤҤӇҠЦЦЦЦЦЦЧЉyyyÄzÄzẖ
+£±±±±¸±±¡Ҥ¢ҤҤ«¬ҤӇҠЦЦЦЦЦЦЧЉjyyyyyyẖ
+¿¾¾¾¾±±¾Ö½ÑÑÑ®¯ÑУҞЩЩЩИЦЩρФymmmmmmn
+¿ĠĠĮɐĴÈÉ¨»ʔĄĆҔҔҔÛӉЌЌЌψψЌБυcββββββπ
+¹ÈÈıĲÈÈÈÐÙØÞßØØØÚÒψψψКψψωτÆααααααξ
+¹ÈÈÈÈÈÈÏÈÝÎØØØØØÚÓЗψψДЂψωÅααααẇααξ
+¹ÈÈÈÈÈÈÈÈÞßØØØØØÚÒψψψЄЖψωÅαααααααξ
+¹ÊËÈÈÈÈÈÐÙØØØÝ÷ÝĀÒψψψψψψωÅαααααααξ
+¹ÌÍÈÈÈÈÈÐÙØØØÞßÞϻÒψψẅψψψωÅαααααααξ
+¹ʟËÈÈѲѼѮѬÙØØØØØÝĀÒψψψψψψλακααααιιξ
+ʗÌÍʘʘ҂ހʘĖĐĎĎĎĎĎѪĂĔϽϽϽϽϽϽϧϾϭϭϭϭϭϭϭϫ
+ʗʓʓʒʒʒʒʆ×ĒĜÕÕÕÕĈĪÔμμμμμμσϿễễễễễễễϫ
+ʞʠʓʓʓʓʓʓʍʜĬĬĬĬĬĊϼồộộộộộộổӿỉỉỉỉỉỉỉϯ
+ʞʓʓʓʓʓʓʓʍʙĤĬĬĬĬĬϼồộẁộốỏộổӿỉỉỉỉỉỉỉϯ
+ʞʓʓʓʓʓʓʓʍʚĨĬĬĬĬĬϼồộộộọịộổӿỉỉỉỉẃỉỉϯ
+ʞʓʓʑʐʓʓʑʖʜĬĬĬĬĬӹĤộӽộộộộϱộỉếỉỉỉỉỉỉϯ
+ʞʓʓʏʎʓʓʏʕʜĬĬĬĬĬĦĨộộộộộộộộỉỉỉỉỉỉỉỉϯ
+ʞẚẚʓʓʑʐʑʖʛĞĬĬĢĤʌẛồộộộốỏộổӿỉểềϙỉểềϯ
+ɽʀʀʀʀɾɿɻɰɼɳɳɳɱɲɳɴɵỗỗỗɠɡỗɣϓệϒϑỉỉϒϑϔ
+ɽʈʈʈʈʈʈʋʇʝČČČČČČϹɶṽợợợợợϩẵặặặẽẽặặϔ
+ʅʋʋʋʋʋʋɺɯẜẟẟẟẟẟẟɢṿớứứứứứụẹẽẽẽϝẽẽẽϗ
+ʅʋʋʋʋʋʋɩʋẟɪẟẟẟẟɤẟứɥỡởứứứụẹẽẽẽẽẽẽẽϗ
+ʅʋʋʋʋʋʋʋʋẟẟẟẟẟẟẟẟứứờớứứứụẹẽẽẽẽẽẽẽϗ
+ʅʋʋʋʋʋʋʋɯẜẟẟẟẟẟẟɢɷứứứỡởỡỴẹẽẳằẽẽẳằϗ
+ʅʋʋʋʋʋʋʋɯẜẟẟẟẟẟẟɢɷứứứờớờỳẹẽắậẽẽắậϗ
+ʅʋʋʋʋʋʋɸɮɦϣϥϣẟẟẟɢɷứứứỡởứụẹẽẽẽύẽẽẽϗ
+ʄʊʊʊʊʊʊʊʉʁɨɧɨẝẝẝɟɜủủủựữủ·ɝẻẻẻẽẽẻẻϊ
+ʄɖɖɒỽɕɕɔʂʢʭɭɭɭɭɭɬɫɞɞɞɞɞɞϖͰͲấấẫẫấấϊ
+ʤʬʬỻỹʬʬʬʫʣάάάάάάέʯ;;;;;;ϋͺϟẫẫώẫẫẫό
+ʤʬʬʬʬɓɑɓỿʣάάάάάήά;ί;;;;;ϋ΄ầẫẫẫẫẫẫό
+ʤʬʬʬʬỻỹỻỷʣάάάάάάά;;;;;;;ϋͺϟẫẫẫẫẫẫό
+ʤɘɘɓɑɓɑʦʬάʥάάάάάέʯ;;;;;;;ẫẫẫẫẫẫẫẫό
+ʤʬʬỻỹỻỹʬʬάάάάάάάέʯ;;;;;ʹ;ẫͷẫẫẫẫẫẫό
+ʤʬʬʬʬəəʬʫẘẙάάάάάέʯ;□□;;;ϋẩẫẫẫẫẫẫẫό
+ʤʬʬʬʬʬʬʬʫừửάάάάάέʯ;;;;;;ϋẩẫẫẫẫẫẫẫό
+ʤʤʤʤʤʤʤʤʡʡΰΰΰΰΰΰʮʮ͵͵͵͵͵͵΅΅όόόόόόόό
+
+message "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeek!!!!!"
+
+(to do:)
+(bug with moving into side of level for big level)
+(think about 4-crates level)
+(design problem with last level of dusty corridor)
+(the passages of time, the hallucination hall, the tunnels of sadness, and the dusty corridor await... don't be scared!)

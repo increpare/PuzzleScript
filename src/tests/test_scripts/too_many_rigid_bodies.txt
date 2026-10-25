@@ -1,0 +1,150 @@
+title Way Too Many Rigid Bodies
+author Guilherme Tows/Scott Hughes
+
+(
+usable in the case where there's only a single player that's pushing stuff around.
+)
+
+run_rules_on_level_start
+
+=======
+OBJECTS
+=======
+
+Background
+white
+
+Player
+pink
+
+BoxN
+white
+..0..
+..0..
+..0..
+.....
+.....
+
+BoxE
+white
+.....
+.....
+..000
+.....
+.....
+
+BoxS
+white
+.....
+.....
+..0..
+..0..
+..0..
+
+BoxW
+white
+.....
+.....
+000..
+.....
+.....
+
+Box1 1
+Blue
+
+Box2 2
+Red
+
+Box
+Red
+
+Wall
+grey
+
+======
+LEGEND
+======
+
+. = Background
+@ = Player
+1 = Box1
+2 = Box2
+# = Wall
+
+BoxSpawn = Box1 or Box2
+BoxDir = BoxN or BoxE or BoxS or BoxW
+
+======
+SOUNDS
+======
+
+===============
+COLLISIONLAYERS
+===============
+
+Background
+Player, Box, BoxSpawn, Wall
+BoxN
+BoxE
+BoxS
+BoxW
+
+=====
+RULES
+=====
+
+right [ Box1 no BoxE | Box1 no BoxW ] -> [ Box1 BoxE | Box1 BoxW ] 
+down [ Box1 no BoxS | Box1 no BoxN ] -> [ Box1 BoxS | Box1 BoxN ] 
+right [ Box2 no BoxE | Box2 no BoxW ] -> [ Box2 BoxE | Box2 BoxW ] 
+down [ Box2 no BoxS | Box2 no BoxN ] -> [ Box2 BoxS | Box2 BoxN ] 
+[ BoxSpawn ] -> [ Box ]
+
+[ > Player | Box ] -> [ > Player | > Box ]
+
+startloop
+
+[ > Box stationary BoxDir ] -> [ > Box > BoxDir ]
+
+up [ moving BoxN | stationary Box ] -> [ moving BoxN | moving Box ]
+right [ moving BoxE | stationary Box ] -> [ moving BoxE | moving Box ]
+down [ moving BoxS | stationary Box ] -> [ moving BoxS | moving Box ]
+left [ moving BoxW | stationary Box ] -> [ moving BoxW | moving Box ]
+
+[ > Box | Box ] -> [ > Box | > Box ]
+
+endloop
+
+[ > Box | Wall ] -> cancel
+
+=============
+WINCONDITIONS
+=============
+
+======
+LEVELS
+======
+
+##############################
+#..11###.........11###.......#
+#..22#222..##....22#222..##..#
+#21.11211...#2.21.11211...#2.#
+#2..@..222..#2.2.....222..#2.#
+##.....21...22.#.....21...22.#
+#1..2..11.12...1..2..11.12...#
+#1.22.....121111.22.....12111#
+#..2.....11......2.....11....#
+#.21.1.....22.#.21.1.....22.##
+#.22111.122.2...22111.122.2..#
+#..#...112.1.....#...112.1...#
+#..11.....211....11.....211..#
+#..22.222.2##....22.222.2##..#
+#21.11211...#2.21.11211...#2.#
+#2.....222..#2.2.....222..#2.#
+##.....21...22.#.....21...22.#
+#1..2..11.12...1..2..11.12...#
+#1.22.....121111.22.....12111#
+#..2.111.11......2.111.11....#
+#.21.121...22.#.21.121...22.##
+#.22.111..##2...22.111..##2..#
+#..#.....##......#.....##....#
+##############################

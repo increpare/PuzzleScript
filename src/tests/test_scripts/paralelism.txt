@@ -1,0 +1,352 @@
+title Paralelism
+author Stingby12 {Remix of Octat by Increpare}
+homepage https://www.puzzlescript.net/play.html?p=7e1e5c5b3cd9de65085e46bfb0a8d002
+
+background_color #233F5C
+text_color #C294FA
+
+noundo
+require_player_movement
+
+(A port of a flash game I made. The original's here:
+
+http://ded.increpare.com/~locus/octat/
+
+)
+
+========
+OBJECTS
+========
+
+Background
+#3F72A6
+.....
+.000.
+.000.
+.000.
+.....
+
+activetile
+#60ADFA
+00000
+0...0
+0...0
+0...0
+00000
+
+Target
+#634B80
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+HorPlayer
+#C294FA
+..0..
+.000.
+.000.
+.000.
+..0..
+
+OrtPlayer
+#C294FA
+.....
+.000.
+.000.
+.000.
+.....
+
+VerPlayer
+#C294FA
+.....
+.000.
+00000
+.000.
+.....
+
+void 0
+#233F5C
+
+temp
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+P = ortplayer and activetile
+a = activetile
+x = Target
+y = target and activetile
+player = HorPlayer or VerPlayer or OrtPlayer
+
+=========
+SOUNDS
+=========
+
+================
+COLLISIONLAYERS
+================
+
+Background
+void
+activetile
+player
+temp
+Target
+
+======
+RULES
+======
+
+[ > player | no activetile ] -> cancel
+
+horizontal [> verplayer | ] -> [ | ortplayer ]
+horizontal [> ortplayer | ] -> [ | horplayer ]
+horizontal [> horplayer | ] -> [ | horplayer ]
+
+vertical [> horplayer | ] -> [ | ortplayer ]
+vertical [> ortplayer | ] -> [ | verplayer ]
+vertical [> verplayer | ] -> [ | verplayer ]
+
+[ activetile | ortplayer ] -> [ temp | ortplayer ]
+[ no temp | ortplayer ] -> [ activetile | ortplayer ]
+
+vertical [ activetile | horplayer ] -> [ temp | horplayer ]
+vertical [ no temp | horplayer] -> [ activetile | horplayer ]
+
+horizontal [ activetile | verplayer ] -> [ temp | verplayer ]
+horizontal [ no temp | verplayer] -> [ activetile | verplayer ]
+
+[ temp ] -> []
+
+late [activetile void ] -> [ void ]
+
+==============
+WINCONDITIONS
+==============
+
+some player on target
+
+=======
+LEVELS
+=======
+
+message Level 1 of 10
+
+..........
+..........
+..........
+..........
+..........
+.x...ap...
+..........
+..........
+..........
+..........
+
+message Level 2 of 10
+
+...........
+...........
+...........
+...........
+...........
+....xpa....
+...........
+...........
+...........
+...........
+
+
+message Level 3 of 10
+
+...........
+...........
+...........
+...........
+aaaaaaa..aa
+..y....ap..
+aaaaaaa..aa
+...........
+...........
+...........
+
+message Level 4 of 10
+
+...........
+...........
+...a.......
+..aaa......
+.aaaaa.....
+aaayaaa.ap.
+.aaaaa.....
+..aaa......
+...a.......
+...........
+
+message Level 5 of 10
+
+.a.a.a.a.
+000000000
+..aaa....
+.xaaa.ap.
+..aaa....
+000000000
+.a.a.a.a.
+
+message Level 6 of 10
+
+.a.a.a.a.a.
+00000000000
+.a.a.a.a.a.
+axa.a.a.apa
+.a.a.a.a.a.
+00000000000
+.a.a.a.a.a.
+
+message Level 7 of 10
+
+0aaaa..00
+0aaaa...0
+y..aa..ap
+0aaaa...0
+0aaaa..00
+
+message Level 8 of 10
+
+....0000...
+.......0...
+..00.0.0...
+.a...ap.ax.
+..00.0.0...
+.......0...
+....0000...
+
+message Level 9 of 10
+
+aaayaaa
+a0a0a0a
+.......
+0a0a0a0
+.......
+a0a0a0a
+aaapaaa
+
+message Level 10 of 10
+
+..aa..aa0aaa.aaa0aaa.
+.a0a.a0...a..a0a0.a..
+.p0a.a...0a00aaa..a..
+.a0a.a0..0a00a0a.0a0.
+.aa...aa00a00a0a.0y0.
+
+message My white square brother will be proud of what I did !
+
+(
+message level 1 of 8
+
+..........
+..........
+..........
+..........
+..........
+.x...ap...
+..........
+..........
+..........
+..........
+
+message level 2 of 8
+
+...........
+...........
+...........
+...........
+...........
+....xpa....
+...........
+...........
+...........
+...........
+
+
+message level 3 of 8
+
+
+...........
+...........
+...........
+...........
+..a........
+.axaaap....
+..a........
+...........
+...........
+...........
+
+message level 4 of 8
+
+
+...........
+...........
+...a.......
+..a.a......
+.a.a.a.....
+a.aya.a.ap.
+.a.a.a.....
+..a.a......
+...a.......
+...........
+
+message level 5 of 8
+
+
+...........
+...........
+...........
+...........
+aaaaaaaaaaa
+...y..ap...
+aaaaaaaaaaa
+...........
+...........
+...........
+
+message level 6 of 8
+
+
+000000....0
+000000..0.0
+000000..0..
+000000000..
+....A...0.0
+.AY.A...AAP
+....A...0.0
+000000000..
+000000..0..
+000000..0.0
+000000....0
+
+message level 7 of 8
+
+
+..AAA...000
+.AY.A...AP.
+..AAA...000
+
+message level 8 of 8
+
+
+0AAAA..00
+0AAAA..00
+YAAAA..AP
+0AAAA..00
+0AAAA..00
+
+message the end
+)
+

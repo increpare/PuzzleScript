@@ -1,0 +1,765 @@
+title You're Pulleying My Leg
+author Alan Hazelden
+homepage www.draknek.org
+
+run_rules_on_level_start
+
+again_interval 0.1
+
+(verbose_logging)
+
+zoomscreen 17x13
+
+noaction
+
+========
+OBJECTS
+========
+
+Sky
+blue
+
+Wall
+#8a5c23 #805520 #966426
+00001
+01020
+00000
+20100
+00000
+
+Background
+DarkBrown
+
+Grass1
+Green
+00000
+.....
+.....
+.....
+.....
+
+Grass2
+Green
+00000
+....0
+.....
+.....
+.....
+
+Grass3
+Green
+00000
+0....
+.....
+.....
+.....
+
+PlayerL
+#3c8ee7 #e6e4d5
+..1..
+.00..
+..0..
+.00..
+.0.0.
+
+PlayerR
+#3c8ee7 #e6e4d5
+..1..
+..00.
+..0..
+..00.
+.0.0.
+
+PlayerClimbing
+#3c8ee7 #e6e4d5
+..1..
+.000.
+..0..
+..0..
+.0.0.
+
+PlayerClimbingL
+#3c8ee7 #e6e4d5
+.1...
+00...
+.0...
+00...
+0....
+
+PlayerClimbingR
+#3c8ee7 #e6e4d5
+...1.
+...00
+...0.
+...0.
+....0
+
+LiftCorner
+Grey Yellow
+.000.
+00000
+00100
+00000
+.000.
+
+LiftRope
+#d97d3c #d9903c
+..0..
+..0..
+..1..
+..0..
+..0..
+
+LiftRopeH
+#d97d3c #d9903c
+.....
+.....
+00100
+.....
+.....
+
+Lift
+transparent
+
+LiftGraphic
+Black
+00000
+.....
+.....
+.....
+.....
+
+Shelf
+#8a5c23 #f4c56a
+00000
+..1..
+.....
+.....
+.....
+
+Ladder
+#d97d3c #f4c56a
+.0.0.
+.010.
+.0.0.
+.010.
+.0.0.
+
+RopeL
+#d97d3c #d9903c
+0....
+0....
+1....
+0....
+0....
+
+RopeR
+#d97d3c #d9903c
+....0
+....0
+....1
+....0
+....0
+
+(Boulder
+#1b1207 #30200c #2c190a
+.100.
+00200
+00000
+20010
+.000.)
+
+Boulder
+#be2633 #eb8931 #732930
+.000.
+01100
+01000
+00002
+.022.
+
+(Dark0_odd
+transparent
+
+Dark0_even
+transparent
+
+Dark1_odd
+transparent
+
+Dark1_even
+transparent
+
+Dark2_odd
+transparent
+
+Dark2_even
+transparent
+
+Dark3_odd
+black
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+
+Dark3_even
+black
+0.0.0
+.0.0.
+0.0.0
+.0.0.
+0.0.0
+
+Dark4_odd
+black
+
+Dark4_even
+black
+
+Dark5
+black
+
+DarkPending
+transparent)
+
+LightSource
+transparent
+
+LightSource2
+#1d57f7 #3164ea #4471dd #587ed0 #6c8bc3
+01234
+01234
+01234
+01234
+01234
+
+LightSource3
+#7f97b6 #93a5aa #a7b19c #bbbf90 #cfcc83
+01234
+01234
+01234
+01234
+01234
+
+LightL
+#f4e46a
+
+LightR
+#f4e46a
+
+LightU
+#f4e46a
+
+LightD
+#f4e46a
+
+(LightBlockedL
+#f4e46a
+...00
+...00
+...00
+...00
+...00
+
+LightBlockedR
+#f4e46a
+00...
+00...
+00...
+00...
+00...
+
+LightBlockedU
+#f4e46a
+.....
+.....
+.....
+00000
+00000
+
+LightBlockedD
+#f4e46a
+00000
+00000
+.....
+.....
+.....)
+
+MirrorUL
+#e6e4d5 #909090 #4e5159
+....0
+...01
+..011
+.0111
+01112
+
+MirrorUR
+#e6e4d5 #909090 #4e5159
+0....
+10...
+110..
+1110.
+21110
+
+MirrorDL
+#e6e4d5 #909090 #4e5159
+01111
+.0111
+..011
+...01
+22222
+
+MirrorDR
+#e6e4d5 #909090 #4e5159
+11110
+1110.
+110..
+10...
+22222
+
+Target
+#f4e46a #e6e4d5 #909090
+11211
+10001
+20002
+10001
+11211
+
+SeenMirror
+transparent
+
+SeenTarget
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+~ = Sky
+o = LiftCorner
+L = Lift
+U = Ladder
+B = Boulder
+[ = RopeL
+] = RopeR
+/ = MirrorUL
+\ = MirrorUR
+` = MirrorDL
+' = MirrorDR
+- = Shelf
+T = Shelf and Ladder
++ = Lift and Shelf
+* = Target
+p = PlayerR
+% = Shelf and Target
+
+Player = PlayerL or PlayerR or PlayerClimbing or PlayerClimbingL or PlayerClimbingR
+
+Grass = Grass1 or Grass2 or Grass3
+
+LiftChain = LiftRope or LiftRopeH or LiftCorner
+
+Mirror = MirrorUL or MirrorUR or MirrorDL or MirrorDR
+
+Falling = Player or Boulder or Mirror
+
+Pushable = Boulder or Mirror
+
+Solid = Wall or Boulder or Mirror or Target
+
+Floor = Solid or LiftGraphic or Shelf or Target
+
+Climbable = Ladder or RopeL or RopeR
+
+
+! = LightSource and Sky and SeenMirror and SeenTarget
+(! = LightSource and Dark0_even and Sky
+
+Darkness = Dark0_even or Dark0_odd or Dark1_even or Dark1_odd or Dark2_even or Dark2_odd or Dark3_even or Dark3_odd or Dark4_even or Dark4_odd or Dark5
+
+Dark1 = Dark1_even or Dark1_odd
+Dark2 = Dark2_even or Dark2_odd)
+
+(LightBlocked = LightBlockedL or LightBlockedR or LightBlockedU or LightBlockedD)
+
+Light = LightSource or LightSource2 or LightSource3 or LightL or LightR or LightU or LightD
+
+
+=======
+SOUNDS
+=======
+
+EndLevel 55891508
+Player Move 82426907
+Lift Move 47466509
+Mirror Move 62036907
+Boulder Move 62036907
+Target Destroy 38934902
+
+(16126909)
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Light
+Sky
+Lift, Wall
+Shelf
+LiftRope
+Climbable
+Boulder, Mirror, Target
+LiftGraphic
+Grass, LiftCorner, LiftRopeH
+Player
+SeenMirror
+SeenTarget
+(Darkness
+DarkPending)
+
+======
+RULES
+======
+
+(Observations)
+
+horizontal [ Player | MirrorUL ] [ SeenMirror ] -> [ Player | MirrorUL ] [] message A massive angled mirror, sloping towards the cave ceiling
+horizontal [ Player | MirrorDL ] [ SeenMirror ] -> [ Player | MirrorDL ] [] message A massive angled mirror, sloping towards the cave floor
+horizontal [ Player | Target ] [ SeenTarget ] -> [ Player | Target ] [] message A large stone block with an engraved image of the sun
+
+late [ Player | MirrorUL ] [ SeenMirror ] -> again
+late [ Player | MirrorDL ] [ SeenMirror ] -> again
+late [ Player | Target ] [ SeenTarget ] -> again
+
+(Init)
+
+down [ Sky | Wall no Grass ] -> [ Sky | Wall random Grass ]
+
+right [ LiftCorner | no LiftRopeH no Wall | ... | LiftCorner ] -> [ LiftCorner | LiftRopeH | ... | LiftCorner ]
+right [ LiftRopeH | no LiftRopeH no Wall | ... | LiftCorner ] -> [ LiftRopeH | LiftRopeH | ... | LiftCorner ]
+
+(Darkness: can be commented out easily)
+
+([ Darkness no Sky ] -> [])
+
+([ Dark0_even | no Wall no Darkness ] -> [ Dark0_even | Dark0_odd ]
++ [ Dark0_odd | no Wall no Darkness ] -> [ Dark0_odd | Dark0_even ]
+
+[ Dark0_even | no Darkness ] -> [ Dark0_even | Dark1_odd ]
+[ Dark0_odd | no Darkness ] -> [ Dark0_odd | Dark1_even ]
+
+[ Dark1 | no Darkness no DarkPending ] -> [ Dark1 | DarkPending ]
+
+startloop
+random [ DarkPending no Darkness ] -> [ action DarkPending ]
+
+random [ action DarkPending | stationary Dark1 no DarkPending ] -> [ action DarkPending | action Dark1 ]
+
+[ action DarkPending | stationary Dark1_even no DarkPending ] -> [ Dark1_odd DarkPending | Dark1_even ]
+[ action DarkPending | stationary Dark1_odd no DarkPending ] -> [ Dark1_even DarkPending | Dark1_odd ]
+
+[ action DarkPending ] -> []
+[ action Dark1 ] -> [ Dark1 ]
+endloop
+
+[ DarkPending ] -> []
+
+[ Dark1_even | no Darkness ] -> [ Dark1_even | Dark2_odd ]
+[ Dark1_odd | no Darkness ] -> [ Dark1_odd | Dark2_even ]
+
+[ Dark2_even | no Darkness ] -> [ Dark2_even | Dark3_odd ]
+[ Dark2_odd | no Darkness ] -> [ Dark2_odd | Dark3_even ]
+
+[ Dark3_even | no Darkness ] -> [ Dark3_even | Dark4_odd ]
+[ Dark3_odd | no Darkness ] -> [ Dark3_odd | Dark4_even ]
+
+[ Dark4_even | no Darkness ] -> [ Dark4_even | Dark5 ]
+[ Dark4_odd | no Darkness ] -> [ Dark4_odd | Dark5 ]
+
+[ Dark5 | no Darkness ] -> [ Dark5 | Dark5 ])
+
+(Movement)
+
+right [ Solid | < Player | LightSource ] -> [ Solid | Player | LightSource ]
+
+down [ right PlayerClimbingL | Floor ] -> [ PlayerR | Floor ]
+down [ left PlayerClimbingR | Floor ] -> [ PlayerL | Floor ]
+
+[ left Player ] -> [ left PlayerL ]
+[ right Player ] -> [ right PlayerR ]
+
+left [ > Player RopeL | Wall ] -> [ PlayerClimbingL RopeL | Wall ]
+right [ > Player RopeR | Wall ] -> [ PlayerClimbingR RopeR | Wall ]
+
+[ > Player | Wall ] -> cancel
+[ > Player | Target ] -> cancel
+
+[ up Player no Lift no Climbable ] -> [ Player ]
+down [ > Player no Lift no Climbable | no Climbable ] -> [ Player | ]
+down [ > Player Climbable | Floor no Climbable ] -> cancel
+
+up [ > Player Climbable no Floor no Lift | no Climbable ] -> [ Player Climbable | ]
+
+horizontal [ > Player | Pushable ] -> [ > Player | > Pushable ]
+vertical [ > Player | Pushable ] -> cancel
+
+[ > Pushable | Solid ] -> cancel
+
+(Lifts)
+
+[ vertical Player Lift no PlayerClimbing no PlayerClimbingL no PlayerClimbingR ] -> [ Player vertical Lift ]
+
+up [ > Lift Falling | LiftCorner ] -> [ Lift Falling | LiftCorner ]
+up [ > Lift | Wall ] -> [ Lift | Wall ]
+down [ > Lift | Solid ] -> [ Lift | Solid ]
+
+[ moving Lift | stationary LiftChain ] -> [ moving Lift | moving LiftChain ]
+[ moving LiftChain | stationary LiftChain ] -> [ moving LiftChain | moving LiftChain ]
+
+[ up LiftChain stationary Lift ] -> [ up LiftChain down Lift ]
+[ down LiftChain stationary Lift ] -> [ down LiftChain up Lift ]
+
+up [ > Lift Falling | LiftCorner ] -> [ Lift Falling | LiftCorner ]
+up [ > Lift | Wall ] -> [ Lift | Wall ]
+down [ > Lift | Solid ] -> [ Lift | Solid ]
+
+[ stationary Lift moving LiftChain ] -> [ Lift action LiftChain ]
+
+[ action LiftChain | LiftChain ] -> [ action LiftChain | action LiftChain ]
+[ action LiftChain moving Lift ] -> [ action LiftChain Lift ]
+
+[ moving LiftChain ] -> [ LiftChain ]
+
+[ moving Lift stationary Falling ] -> [ moving Lift moving Falling ]
+
+up [ > Falling | Falling ] -> cancel
+
+(Update graphics)
+
+late [ LiftRope ] -> []
+late [ LiftGraphic ] -> []
+late down [ Lift | ] -> [ Lift LiftRope | LiftGraphic ]
+late up [ LiftRope no LiftCorner | no LiftCorner ] -> [ LiftRope | LiftRope ]
+
+late down [ Player Ladder no Lift | no Floor ] -> [ PlayerClimbing Ladder | ]
+late down [ Player RopeL no Lift | no Floor ] -> [ PlayerClimbingL RopeL | ]
+late down [ Player RopeR no Lift | no Floor ] -> [ PlayerClimbingR RopeR | ]
+
+late [ PlayerClimbingL no Climbable ] -> [ PlayerL ]
+late [ PlayerClimbingR no Climbable ] -> [ PlayerR ]
+
+( Gravity)
+
+late down [ Falling no Climbable | no Floor ] -> again
+
+down [ stationary Falling no Climbable | no Floor ] -> [ > Falling | ]
+
+(Light)
+
+late [ Light no LightSource ] -> []
+
+late right [ LightSource no MirrorUL no MirrorDL | no Light no MirrorUR no MirrorDR ] -> [ LightSource | LightSource2 ]
+late right [ LightSource2 no Solid | no Light no MirrorUR no MirrorDR ] -> [ LightSource2 | LightSource3 ]
+
+late right [ LightSource2 Boulder | no Light no MirrorUR no MirrorDR ] -> [ LightSource2 Boulder | LightSource3 ]
+
+late right [ LightSource3 no Solid | no Light no Mirror ] -> [ LightSource3 | LightR ]
+late right [ LightSource3 no Solid | MirrorUL ] -> [ LightSource3 | MirrorUL LightU ]
+late right [ LightSource3 no Solid | MirrorDL ] -> [ LightSource3 | MirrorDL LightD ]
+
+late left [ LightL | no Light no Solid ] -> [ LightL | LightL ]
++ late right [ LightR | no Light no Solid ] -> [ LightR | LightR ]
++ late up [ LightU | no Light no Solid ] -> [ LightU | LightU ]
++ late down [ LightD | no Light no Solid ] -> [ LightD | LightD ]
+
++ late left [ LightL | MirrorUR ] -> [ LightL | MirrorUR LightU ]
++ late left [ LightL | MirrorDR ] -> [ LightL | MirrorDR LightD ]
++ late right [ LightR | MirrorUL ] -> [ LightR | MirrorUL LightU ]
++ late right [ LightR | MirrorDL ] -> [ LightR | MirrorDL LightD ]
++ late up [ LightU | MirrorDL ] -> [ LightU | MirrorDL LightL ]
++ late up [ LightU | MirrorDR ] -> [ LightU | MirrorDR LightR ]
++ late down [ LightD | MirrorUL ] -> [ LightD | MirrorUL LightL ]
++ late down [ LightD | MirrorUR ] -> [ LightD | MirrorUR LightR ]
+
++ late left [ LightL | Boulder ] -> [ LightL | Boulder LightL ]
++ late right [ LightR | Boulder ] -> [ LightR | Boulder LightL ]
++ late up [ LightU | Boulder ] -> [ LightU | Boulder LightL ]
++ late down [ LightD | Boulder ] -> [ LightD | Boulder LightL ]
+
++ late left [ Boulder Light | no Light no Solid ] -> [ Boulder Light | LightL ]
++ late right [ Boulder Light | no Light no Solid ] -> [ Boulder Light | LightR ]
++ late up [ Boulder Light | no Light no Solid ] -> [ Boulder Light | LightU ]
++ late down [ Boulder Light | no Light no Solid ] -> [ Boulder Light | LightD ]
+
+late [ Boulder Light | Target ] -> [ Boulder Light | ] again
+
+late left [ LightL | Target ] -> [ LightL | Target Sky ]
+late right [ LightR | Target ] -> [ LightR | Target Sky ]
+late up [ LightU | Target ] -> [ LightU | Target Sky ]
+late down [ LightD | Target ] -> [ LightD | Target Sky ]
+
+late down [ Target Sky | no Target ] -> checkpoint
+late [ Target Sky ] -> [] again
+
+==============
+WINCONDITIONS
+==============
+
+all boulder on sky
+all player on sky
+
+=======
+LEVELS
+=======
+
+(~~~~~~~~~~~~~~~~
+~~~~##########~~
+~~~###o..o#####~
+~~~###....######
+~~~!p.l...######
+####-t----##o.o#
+###..u..`l.*l..#
+###--t----t----#
+#u*..u./..u....#
+#u##########---#
+#u##########...#
+#u.............#
+#u............l#
+#u.............#
+################)
+
+~~~~~~~~~~~~~~~~~
+~~~~##########~~~
+~~~###o..o#####~~
+~~~###....#######
+~~!..pl...#######
+#####t----###o.o#
+####.u..`l......#
+###..t----t-%---#
+#u*..u./..u.*l..#
+#u#--#######--t-#
+#uo..o###.....u.#
+#ul...`.....\.ul#
+#t--t--t--t---t.#
+#u**u..u..u...u.#
+##-t--###########
+##.u...##o...o###
+#..u............#
+#..u'l.t-+-t....#
+#########*###-t##
+####.....*....u.#
+####..b..*...lu.#
+####.t-t.*....u.#
+#################
+
+(~~~~~~~~~~~~~~~~~
+~~~~##########~~~
+~~~###o..o#####~~
+~~~###....#######
+~~~!p.l...#######
+#####t----###o.o#
+####.u..`l......#
+###..t----t-----#
+#u*..u./..u.*l..#
+#u#--#######--t-#
+#uo..o###.....u.#
+#ul...`.....\.ul#
+#t--t--t--t---t.#
+#u**u..u..u...u.#
+##-t--###########
+##.u...##########
+#..u.l..........#
+#..u....b..'..\.#
+#################
+
+
+~~~~~~~~~~~~~~~~~
+~~~~##########~~~
+~~~###o..o#####~~
+~~~###....#######
+~~~!..l.`.#######
+#####t----###o.o#
+####.u..\l..`.pl#
+###..t----t-----#
+#u...u../.u.....#
+#u#--#######--t-#
+#uo..o###.....u.#
+#ul...........u.#
+#t--t--t--t---t.#
+#u**u..u..u..lu.#
+##-t--###########
+##.u...##o....o##
+#..u.....l......#
+#..u'l.t---t....#
+#########*###t-##
+######...*...u..#
+######...*...u..#
+######.b.*...ul.#
+#################
+
+~~~~~~~~~~~~~~~~~
+~~~~##########~~~
+~~~###o..o#####~~
+~~~###....#######
+~~~!..l.`.#######
+#####t----###o.o#
+####.u..\l..`...#
+###..t----t-----#
+#u...u....u..l..#
+#u#--#######--t-#
+#uo..o###.....u.#
+#ul...........ul#
+#t--t--t--t---t.#
+#u..u..u..u./.u.#
+##-t--###########
+##.u...##o....o##
+#..u.....l......#
+#..u'l.t---t....#
+#########*###t-##
+######...*...u..#
+######...*...u..#
+######.b.*...ul.#
+#################
+
+~~~~~~~~~~~~~~~~~
+~~~~##########~~~
+~~~###o..o#####~~
+~~~###l...#######
+~~~!....`.#######
+#####t----###o.o#
+####.u.........l#
+###..t---+t-----#
+#u..'u../.u.....#
+#u#--#######--t-#
+#uo..o###.....u.#
+#u...l........u.#
+#t--t--t--t---t.#
+#u..u..u..u..lu.#
+##-t--###########
+##.u...##o...o###
+#..u............#
+#.lu\..t-+-t...`#
+#########.###-t##
+####..........u.#
+####..b......lu.#
+####.t-t...p..u.#
+#################)
+
+
+
+(````````````````
+````````````````
+`````!``````````
+#####[##########
+#####[#o..o#####
+#####[#...bu####
+####.[ul--lu####
+####.pu.\..u####
+################)
+
+message Congrats! Thanks for playing :)
+

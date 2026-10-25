@@ -1,0 +1,126 @@
+title Simple Block Pushing Game
+author increpare
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+black
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+Crate1 1
+Orange 
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate2 2
+Red 
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate3 3
+Blue 
+00000
+0...0
+0...0
+0...0
+00000
+
+Crate4 4
+Green 
+00000
+0...0
+0...0
+0...0
+00000
+
+
+=======
+LEGEND
+=======
+
+CG1 = Crate1 or Crate2
+CG2 = Crate3 or Crate4
+. = Background
+# = Wall
+P = Player
+O = Target
+Crate = CG1 or CG2
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Wall, Crate
+
+======
+RULES
+======
+
+[ > Player | Crate ] -> [ > Player | > Crate ]
+
+startLoop
+[> 1|2] -> [> 1|> 2]
+[> 2|1] -> [> 2|> 1]
+endLoop
+
+[> 2|3] -> [> 2|> 3]
+[> 3|2] -> [> 3|> 2]
+
+
+startLoop
+[> 3|4] -> [> 3|> 4]
+[> 4|3] -> [> 4|> 3]
+endLoop
+
+==============
+WINCONDITIONS
+==============
+
+=======
+LEVELS
+=======
+
+
+..12121212....
+P.34343434....
+..23232323....
+

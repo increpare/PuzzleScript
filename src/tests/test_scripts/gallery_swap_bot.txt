@@ -1,0 +1,785 @@
+title SwapBot
+author John M. Williams
+homepage gate.itch.io
+
+run_rules_on_level_start
+norepeat_action
+again_interval 0.05
+
+========
+OBJECTS
+========
+
+Background
+Green
+
+TrapDoor
+Green Black
+00000
+01010
+00000
+01010
+00000
+
+HoleNormal
+Black
+ 
+HoleTop
+Black #282117
+11111
+00000
+00000
+00000
+00000
+
+Selected
+Yellow
+0.0.0
+.....
+0...0
+.....
+0.0.0
+
+Collectable
+Yellow White
+.....
+..0..
+.000.
+..0..
+.....
+
+PasteTarget
+Black
+
+Door1
+Red DarkRed
+00000
+01010
+00000
+01010
+00000
+
+Door1Down
+Red
+00000
+0...0
+0...0
+0...0
+00000
+
+Door2
+Blue DarkBlue
+00000
+01010
+00000
+01010
+00000
+
+Door2Down
+Blue
+00000
+0...0
+0...0
+0...0
+00000
+
+Door3
+Orange Brown
+00000
+01010
+00000
+01010
+00000
+
+Door3Down
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+Key1
+Red Grey
+.....
+.100.
+.100.
+.100.
+.....
+
+Key2
+Blue Grey
+.....
+.100.
+.100.
+.100.
+.....
+
+Key3
+Orange Grey
+.....
+.100.
+.100.
+.100.
+.....
+
+KeyNoneMan
+White DarkGrey Yellow
+.000.
+0.2.0
+0...0
+10001
+.111.
+
+Key1Man
+Red DarkRed
+.000.
+0.0.0
+0...0
+10001
+.111.
+
+Key2Man
+Blue DarkBlue
+.000.
+0.0.0
+0...0
+10001
+.111.
+
+Key3Man
+Orange Brown
+.000.
+0.0.0
+0...0
+10001
+.111.
+
+UpMan
+Gray White DarkGrey Yellow
+.111.
+00.00
+00200
+20002
+.222.
+
+DownMan
+Gray White DarkGrey Yellow
+.000.
+00.00
+00200
+21112
+.222.
+
+LeftMan
+Gray White DarkGrey Yellow
+.000.
+10.00
+10200
+20002
+.222.
+
+RightMan
+Gray White DarkGrey Yellow
+.000.
+00.01
+00201
+20002
+.222.
+
+TeleportMan
+Purple
+.000.
+00000
+00000
+00000
+.000.
+
+TeleportMan2
+Purple
+.000.
+00000
+00000
+00000
+.000.
+
+TeleportMan3
+Purple
+.000.
+00000
+00000
+00000
+.000.
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+TargetTest
+Black
+
+TargetOn
+Yellow
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Magic
+Purple Grey DarkGrey
+.....
+.1.1.
+.222.
+.000.
+.000.
+
+MagicBar
+Purple
+.....
+...0.
+..0..
+...0.
+..0..
+
+MagicReplace
+Purple
+
+SwapAnim1
+Purple
+
+SwapAnim2
+Purple
+00000
+00000
+00.00
+00000
+00000
+
+SwapAnim3
+Purple
+00000
+00.00
+0...0
+00.00
+00000
+
+SwapAnim4
+Purple
+00.00
+0...0
+.....
+0...0
+00.00
+
+SwapAnim5
+Purple
+0...0
+.....
+.....
+.....
+0...0
+
+TeleportBeamTop
+Purple
+.....
+..0..
+.000.
+.000.
+.000.
+
+TeleportBeam
+Purple
+.000.
+.000.
+.000.
+.000.
+.000.
+
+TeleportBeamBottom
+Purple
+.000.
+.000.
+.000.
+..0..
+.....
+
+InfinitePower
+Transparent
+
+TempAnim
+Transparent
+
+MagicEnd
+Transparent
+
+CastPaste
+Black
+
+NoSelected
+Black
+
+DidNotMove
+Black
+
+WallNormal
+DarkGreen Darkblue
+00000
+00000
+00000
+00000
+00000
+ 
+WallBottom
+DarkGreen Darkblue
+00000
+00000
+00000
+00000
+11111
+
+One
+Darkblue
+...0.
+..00.
+...0.
+...0.
+..000
+
+Two
+Darkblue
+.000.
+....0
+..00.
+.0...
+.0000
+
+Three
+Darkblue
+.000.
+....0
+..000
+....0
+.000.
+
+Four
+Darkblue
+.0..0
+.0..0
+.0000
+....0
+....0
+
+Five
+Darkblue
+.0000
+.0...
+.000.
+....0
+.000.
+
+Six
+Darkblue
+..00.
+.0...
+.000.
+.0..0
+..00.
+
+Seven
+Darkblue
+.0000
+....0
+...0.
+..0..
+.0...
+
+Eight
+Darkblue
+..00.
+.0..0
+..00.
+.0..0
+..00.
+
+Nine
+Darkblue
+..00.
+.0..0
+..000
+....0
+..00.
+
+Zero
+Darkblue
+..00.
+.0..0
+.0..0
+.0..0
+..00.
+
+=======
+LEGEND
+=======
+
+Wall = WallNormal or WallBottom
+BlackBackground = HoleNormal or HoleTop
+Hole = BlackBackground
+
+. = Background
+# = WallNormal
+T = Target
+P = DownMan and KeyNoneMan
+* = Collectable
+M = Magic
+E = MagicReplace and HoleNormal
+B = HoleNormal
+F = TrapDoor
+
+U = InfinitePower and E
+
+Q = Key1
+W = Door1
+
+A = Key2
+S = Door2
+
+Z = Key3
+X = Door3
+
+1 = One and WallNormal
+2 = Two and WallNormal
+3 = Three and WallNormal
+4 = Four and WallNormal
+5 = Five and WallNormal
+6 = Six and WallNormal
+7 = Seven and WallNormal
+8 = Eight and WallNormal
+9 = Nine and WallNormal
+0 = Zero and WallNormal
+
+Player = UpMan or DownMan or LeftMan or RightMan
+Man = UpMan or DownMan or LeftMan or RightMan
+Block = BlackBackground
+
+KeyMan = Key1Man or Key2Man or Key3Man or KeyNoneMan
+Key = Key1 or Key2 or Key3
+KeyDoor = Door1 or Door2 or Door3
+DoorDown = Door1Down or Door2Down or Door3Down
+
+Numbers = Zero or One or Two or Three or Four or Five or Six or Seven or Eight or Nine
+
+Copyable = Wall or Target or TargetOn or Magic or Player or Collectable or Key or KeyDoor or TrapDoor or Numbers or DoorDown
+
+SwapAnim = SwapAnim1 or SwapAnim2 or SwapAnim3 or SwapAnim4 or SwapAnim5
+
+TeleportAnim = TeleportBeamTop or TeleportBeam or TeleportBeamBottom or TeleportMan or TeleportMan2 or TeleportMan3
+
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+BlackBackground
+Target, TargetTest, TargetOn, KeyDoor, DoorDown, Key, Trapdoor
+KeyMan
+Player, Wall
+Magic, Collectable, Numbers
+MagicEnd, MagicReplace
+MagicBar, InfinitePower
+CastPaste
+NoSelected, PasteTarget
+DidNotMove
+Selected
+SwapAnim, TeleportAnim, TempAnim
+
+======
+RULES
+======
+
+(SetupSpellIcons)
+
+[Player] -> [Player DidNotMove]
+[MagicReplace] -> [MagicEnd]
+
+(Player Orientation)
+[ up Man no UpMan ] -> [ up UpMan ]
+[ down Man no DownMan ] -> [ down DownMan ]
+[ left Man no LeftMan ] -> [ left LeftMan ]
+[ right Man no RightMan ] -> [ right RightMan ]
+
+(Move crates)
+[ > Man | Block] -> [Man | Block]
+
+(Door collision)
+[ > Man no Key1Man | Door1 ] -> [ Man | Door1]
+[ > Man no Key2Man | Door2 ] -> [ Man | Door2]
+[ > Man no Key3Man | Door3 ] -> [ Man | Door3]
+
+(Put spell on player based on magic)
+
+up [action UpMan | Selected] -> [UpMan | ]
+down [action DownMan | Selected] -> [DownMan | ]
+left [action LeftMan | Selected] -> [LeftMan | ]
+right [action RightMan | Selected] -> [RightMan | ]
+
+[Man] -> [Man noSelected]
+[Selected] [NoSelected] -> [Selected] []
+
+up [action UpMan noSelected|no BlackBackground] -> [UpMan | Selected]
+down [action DownMan noSelected|no BlackBackground] -> [DownMan | Selected]
+left [action LeftMan noSelected|no BlackBackground] -> [LeftMan | Selected]
+right [action RightMan noSelected|no BlackBackground] -> [RightMan | Selected]
+
+[NoSelected] -> []
+
+up [action Man] [InfinitePower] [Selected] -> [Man CastPaste] [InfinitePower] [Selected]
+up [action Man] [MagicBar | no MagicBar] [Selected] -> [Man CastPaste] [|] [Selected]
+
+(Swap Anim)
+[SwapAnim5] -> [] again
+[SwapAnim4] -> [SwapAnim5] again
+[SwapAnim3] -> [SwapAnim4] again
+[SwapAnim2] -> [SwapAnim3] again
+[SwapAnim1] -> [SwapAnim2] again
+
+(Cast Paste)
+
+up [UpMan CastPaste | no BlackBackground] -> [UpMan | PasteTarget]
+down [DownMan CastPaste | no BlackBackground] -> [DownMan | PasteTarget]
+left [LeftMan CastPaste | no BlackBackground] -> [LeftMan | PasteTarget]
+right [RightMan CastPaste | no BlackBackground] -> [RightMan | PasteTarget]
+
+[Man CastPaste] -> cancel
+
+[PasteTarget Copyable] [MagicEnd] -> [PasteTarget] [MagicEnd Copyable]
+[PasteTarget] [Selected Copyable] -> [PasteTarget Copyable] [Selected]
+[MagicEnd Copyable] [Selected] -> [MagicEnd] [Selected Copyable]
+[PasteTarget] [Selected] [DidNotMove] -> [SwapAnim1] [SwapAnim1] [] again
+
+(Handle picking up magic and magic bar)
+late [Player Collectable] -> [Player]
+late [Player Magic] [MagicEnd no MagicBar] -> [Player] [MagicEnd MagicBar]
+late up [Player Magic] [MagicBar | no MagicBar] -> [Player] [MagicBar | MagicBar]
+
+(Handle holding Keys)
+
+late [Player no KeyMan] [KeyMan] -> [Player KeyMan] []
+
+late [Player Key1] -> [Player Key1Man]
+late [Player Key2] -> [Player Key2Man]
+late [Player Key3] -> [Player Key3Man]
+
+(Trapdoor)
+late [TrapDoor DidNotMove no Player] -> [HoleNormal DidNotMove]
+late [Blackbackground Selected] -> [BlackBackground]
+
+(Target)
+late [Collectable] [Target] -> [Collectable] [TargetTest]
+late [Target] -> [TargetOn]
+late [TargetTest] -> [Target]
+
+(clean up)
+late [DidNotMove] -> []
+
+(Pretty Doors)
+late [Door1 Player] -> [Door1Down Player]
+late [Door2 Player] -> [Door2Down Player]
+late [Door3 Player] -> [Door3Down Player]
+
+late [Door1Down no Player] -> [Door1]
+late [Door2Down no Player] -> [Door2]
+late [Door3Down no Player] -> [Door3]
+
+(Pretty Walls)
+late Down [ WallNormal | no Wall ] -> [ WallBottom | ]
+late Down [ WallBottom | Wall ] -> [ WallNormal | Wall ]
+
+(PrettyHoles)
+ 
+late Up [ HoleNormal | no Hole ] -> [ HoleTop | ]
+late Up [ HoleTop | Hole ] -> [ HoleNormal | Hole ]
+
+(Teleport Anim)
+late [TeleportMan3] -> [TeleportBeamBottom] again
+late [TeleportBeamBottom] -> [TempAnim] again
+late up [TempAnim | TeleportBeam] -> [ | TeleportBeamBottom] again
+late up [TeleportBeamBottom | ] -> [TeleportBeamBottom | TeleportBeam] again
+late up [TeleportBeam | ] -> [TeleportBeam | TeleportBeamTop] again
+
+late [TeleportMan2] -> [TeleportMan3] again
+late up [TeleportMan3|] -> [TeleportMan3 | TeleportBeam] again
+late up [TeleportBeam|] -> [TeleportBeam| TeleportBeamTop] again
+
+late [TeleportMan] -> [TeleportMan2] again
+late up [TeleportMan2|] -> [Teleportman2|TeleportBeamTop] again
+
+late [Player KeyMan TargetOn] -> [ TeleportMan TargetOn] again
+
+late [TempAnim] -> []
+
+==============
+WINCONDITIONS
+==============
+
+No Player
+No TeleportAnim
+
+=======
+LEVELS
+=======
+
+Message Collect '+' to activate teleporter
+
+#####b
+#***#b
+#*.*#b
+#.t.#b
+##p##b
+###01e
+
+Message Press 'x' to select a tile
+Message Press 'x' on another tile to swap
+
+#####b
+#*p*#b
+#...#b
+#.#.#b
+##t##b
+###02u
+
+Message Swapping uses batteries
+
+#########b
+#*#####*#b
+#m##*##m#b
+#########b
+#########b
+#########b
+###mmm###b
+###mmm###b
+###.p.###b
+#########b
+####t####b
+#######03e
+
+#########b
+#*##m##*#b
+#########b
+#########b
+#########b
+###mmm###b
+###mp####b
+###mmm###b
+#########b
+####t####b
+#######04e
+
+Message Collect key cards to access security tiles
+
+#######b
+#*#*#*#b
+#s###w#b
+#w#t#s#b
+#..x.z#b
+#a...q#b
+##...##b
+#p..mm#b
+#####05e
+
+##########b
+#*#*#*##t#b
+#w#s#w####b
+#.#.#.#..#b
+#s#w#s#..#b
+#m.m.m...#b
+###s#s####b
+#*wp..asq#b
+########06e
+
+Message SwapBot cannot swap holes
+
+bbbbbbbbb
+btwwwwwsb
+bbbbbbbsb
+bbbbbbbsb
+bbbbbbbsb
+b.xzpaxsb
+b..xxx..b
+b.bmmmb.b
+b.#mmm#.b
+b#*#b#q#b
+b#######b
+b#####07e
+
+b#######bb
+##..a..##b
+x..xws..sb
+mbbwsxbb*b
+bbbsxwbbbb
+*bbxwsbbtb
+s..wsx..xb
+##..m..##b
+b#qmmmz#bb
+b##.p.##bb
+bb###08bbe
+
+Message Trapdoors create holes
+
+#######bbbbbb
+#####*#bbbbbb
+#####.#bbbbbb
+#####f#bbbtbb
+#*#q#m#bbbxbb
+#fz.spmazw#bb
+#..f#m#bbbbbb
+#####f#bbbbbb
+#####*#bbbbbb
+#####09bbbbeb
+
+bbbbbb###bbbbbbb
+#######*#######b
+#*s..#.z.#..f*#b
+#fb..w...w..bf#b
+#xbf###f###fbx#b
+#fbw#b#s#b#xbf#b
+#xbw###s###xbx#b
+#fb.........bf#b
+#tbbq.mmm.abb*#b
+#fxw...p...sxf#b
+#############10e
+
+##########bbbbbb
+####mfffz#bbbbbb
+##*qx###.######b
+####x###msssst#b
+####x##.m######b
+##########bbbbbb
+#a##x##m##bbbbbb
+##.#z##m##bbbbbb
+#..#pm#.##bbbbbb
+########11bbbbbe
+
+###############b
+#baffmbbbqffmb#b
+#b*fx*#.#*ff*b#b
+#bbxfbbbbbssbb#b
+#bbffffmffffbb#b
+#bbfff.pffffbb#b
+#bbbbbbwbbzfbb#b
+#bbbbbbfbbbbbb#b
+#bbbbbbtbbbbbb#b
+#############12e
+
+Message SwapBot has swapped everything!
+Message Congratulations!

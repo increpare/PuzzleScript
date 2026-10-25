@@ -1,0 +1,884 @@
+title Crate Assembler
+author MoonSoup
+homepage www.puzzlescript.net
+
+========
+OBJECTS
+========
+
+Background
+#4EBC46 #229443
+11111
+10001
+10101
+10001
+11111
+
+Target
+darkblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+#51545c #40404a #2d2c33
+11111
+10000
+11111
+00100
+00100
+
+Wall4
+#51545c #40404a #2d2c33
+22222
+20002
+21112
+20102
+22222
+
+Wall31
+#51545c #40404a #2d2c33
+21112
+20002
+21112
+20102
+22222
+
+Wall32
+#51545c #40404a #2d2c33
+22222
+20000
+21111
+20100
+22222
+
+Wall33
+#51545c #40404a #2d2c33
+22222
+20002
+21112
+20102
+20102
+
+Wall34
+#51545c #40404a #2d2c33
+22222
+10002
+11112
+00102
+22222
+
+Wall21
+#51545c #40404a #2d2c33
+21111
+20000
+21111
+20100
+22222
+
+Wall22
+#51545c #40404a #2d2c33
+22222
+20000
+21111
+20100
+20100
+
+Wall23
+#51545c #40404a #2d2c33
+22222
+10002
+11112
+00102
+00102
+
+Wall24
+#51545c #40404a #2d2c33
+11112
+10002
+11112
+00102
+22222
+
+Wall11
+#51545c #40404a #2d2c33
+21111
+20000
+21111
+20100
+20100
+
+Wall12
+#51545c #40404a #2d2c33
+22222
+10000
+11111
+00100
+00100
+
+Wall13
+#51545c #40404a #2d2c33
+11112
+10002
+11112
+00102
+00102
+
+Wall14
+#51545c #40404a #2d2c33
+11111
+10000
+11111
+00100
+22222
+
+Wall2Ho
+#51545c #40404a #2d2c33
+22222
+10000
+11111
+00100
+22222
+
+Wall2Ve
+#51545c #40404a #2d2c33
+21112
+20002
+21112
+20102
+20102
+
+Wall1a
+#51545c #40404a #2d2c33
+21111
+10000
+11111
+00100
+00100
+
+Wall1b
+#51545c #40404a #2d2c33
+11112
+10000
+11111
+00100
+00100
+
+Wall1c
+#51545c #40404a #2d2c33
+11111
+10000
+11111
+00100
+00102
+
+Wall1d
+#51545c #40404a #2d2c33
+11111
+10000
+11111
+00100
+20100
+
+Wall2a
+#51545c #40404a #2d2c33
+21112
+20000
+21111
+20100
+22222
+
+Wall2b
+#51545c #40404a #2d2c33
+22222
+20000
+21111
+20100
+20102
+
+Wall2c
+#51545c #40404a #2d2c33
+22222
+10002
+11112
+00102
+20102
+
+Wall2d
+#51545c #40404a #2d2c33
+21112
+10002
+11112
+00102
+22222
+
+Wall2e
+#51545c #40404a #2d2c33
+21111
+10000
+11111
+00100
+22222
+
+Wall2f
+#51545c #40404a #2d2c33
+21112
+20000
+21111
+20100
+20100
+
+Wall2g
+#51545c #40404a #2d2c33
+22222
+10000
+11111
+00100
+00102
+
+Wall2h
+#51545c #40404a #2d2c33
+11112
+10002
+11112
+00102
+20102
+
+Wall2i
+#51545c #40404a #2d2c33
+11112
+10000
+11111
+00100
+22222
+
+Wall2j
+#51545c #40404a #2d2c33
+21111
+20000
+21111
+20100
+20102
+
+Wall2k
+#51545c #40404a #2d2c33
+22222
+10000
+11111
+00100
+20100
+
+Wall2l
+#51545c #40404a #2d2c33
+21112
+10002
+11112
+00102
+00102
+
+Wall2m
+#51545c #40404a #2d2c33
+21112
+10000
+11111
+00100
+22222
+
+Wall2n
+#51545c #40404a #2d2c33
+21112
+20000
+21111
+20100
+20102
+
+Wall2o
+#51545c #40404a #2d2c33
+22222
+10000
+11111
+00100
+20102
+
+Wall2p
+#51545c #40404a #2d2c33
+21112
+10002
+11112
+00102
+20102
+
+Wall2q
+#51545c #40404a #2d2c33
+11111
+10000
+11111
+00100
+20102
+
+Player
+#42192c #eec99f #25739d #214574
+.000.
+.111.
+22222
+13331
+.3.3.
+
+Crate4
+#541d29 #783a29 #86482f #9a643a
+22233
+1...3
+1...2
+0...2
+00112
+
+Crate31
+#541d29 #783a29 #86482f #9a643a
+2...3
+1...3
+1...2
+0...2
+00112
+
+Crate32
+#541d29 #783a29 #86482f #9a643a
+22233
+1....
+1....
+0....
+00112
+
+Crate33
+#541d29 #783a29 #86482f #9a643a
+22233
+1...3
+1...2
+0...2
+0...2
+
+Crate34
+#541d29 #783a29 #86482f #9a643a
+22233
+....3
+....2
+....2
+00112
+
+Crate21
+#541d29 #783a29 #86482f #9a643a
+2....
+1....
+1....
+0....
+00112
+
+Crate22
+#541d29 #783a29 #86482f #9a643a
+22233
+1....
+1....
+0....
+0....
+
+Crate23
+#541d29 #783a29 #86482f #9a643a
+22233
+....3
+....2
+....2
+....2
+
+Crate24
+#541d29 #783a29 #86482f #9a643a
+....3
+....3
+....2
+....2
+00112
+
+Crate11
+#541d29 #783a29 #86482f #9a643a
+2....
+1....
+1....
+0....
+0....
+
+Crate12
+#541d29 #783a29 #86482f #9a643a
+22233
+.....
+.....
+.....
+.....
+
+Crate13
+#541d29 #783a29 #86482f #9a643a
+....3
+....3
+....2
+....2
+....2
+
+Crate14
+#541d29 #783a29 #86482f #9a643a
+.....
+.....
+.....
+.....
+00112
+
+Crate2s
+#541d29 #783a29 #86482f #9a643a
+22233
+.....
+.....
+.....
+00112
+
+Crate2c
+#541d29 #783a29 #86482f #9a643a
+2...3
+1...3
+1...2
+0...2
+0...2
+
+Friend
+black orange white blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+O = Target
+q = Crate4
+w = Crate31
+e = Crate32
+r = Crate33
+t = Crate34
+z = Crate21
+u = Crate22
+i = Crate23
+a = Crate24
+s = Crate11
+d = Crate12
+f = Crate13
+g = Crate14
+h = Crate21 and Target
+j = Crate24 and Target
+k = Crate2s
+l = Crate2c
+y = Crate33 and Player
+x = Crate4 and Target
+c = Crate11 and Target
+b = Crate12 and Target
+n = Crate13 and Target
+m = Crate14 and Target
+ü = Crate14 and Player
+! = Wall4
+" = Wall31
+§ = Wall32
+$ = Wall33
+% = Wall34
+& = Wall21
+/ = Wall22
+? = Wall23
+\ = Wall24
+} = Wall11
+ö = Wall12
+ä = Wall13
+{ = Wall14
+@ = Wall2Ho
+µ = Wall2Ve
+; = Wall1a
+, = Wall1b
+: = Wall1c
+- = Wall1d
+* = Wall2a
++ = Wall2b
+~ = Wall2c
+' = Wall2d
+¡ = Wall2e
+¢ = Wall2f
+£ = Wall2g
+¤ = Wall2h
+¥ = Wall2i
+¦ = Wall2j
+¨ = Wall2k
+© = Wall2l
+° = Crate34 and Target
+ª = Crate11 and Target and Player
+« = Crate11 and Player
+¬ = Friend
+® = Wall2m
+¯ = Wall2n
+± = Wall2o
+² = Wall2p
+³ = Wall2q
+´ = Crate23 and Target
+
+Crate = Crate4 or Crate31 or Crate32 or Crate33 or Crate34 or Crate21 or Crate22 or Crate23 or Crate24 or Crate2s or Crate2c or Crate11 or Crate12 or Crate13 or Crate14
+
+Object = Crate or Player
+
+(Crates that have collision in the top left, right, bottom right or bottom left:)
+TopLeft = Crate4 or Crate31 or Crate32 or Crate33 or Crate34 or Crate21 or Crate22 or Crate23 or Crate2s or Crate2c or Crate11 or Crate12
+
+TopRight = Crate4 or Crate31 or Crate32 or Crate33 or Crate34 or Crate22 or Crate23 or Crate24 or Crate2s or Crate2c or Crate12 or Crate13
+
+BotRight = Crate4 or Crate31 or Crate32 or Crate33 or Crate34 or Crate23 or Crate24 or Crate21 or Crate2s or Crate2c or Crate13 or Crate14
+
+BotLeft = Crate4 or Crate31 or Crate32 or Crate33 or Crate34 or Crate24 or Crate21 or Crate22 or Crate2s or Crate2c or Crate14 or Crate11
+
+(Crates that are open on that side:)
+OpenUp = Crate31 or Crate24 or Crate21 or Crate2c or Crate13 or Crate14 or Crate11
+OpenRight = Crate32 or Crate21 or Crate22 or Crate2s or Crate14 or Crate11 or Crate12
+OpenDown = Crate33 or Crate22 or Crate23 or Crate2c or Crate11 or Crate12 or Crate13
+OpenLeft = Crate34 or Crate23 or Crate24 or Crate2s or Crate12 or Crate13 or Crate14
+
+(Crates that are closed on that side:)
+ClosedUp = Crate4 or Crate32 or Crate33 or Crate34 or Crate22 or Crate23 or Crate2s or Crate12
+ClosedRight = Crate4 or Crate33 or Crate34 or Crate31 or Crate23 or Crate24 or Crate2c or Crate13
+ClosedDown = Crate4 or Crate34 or Crate31 or Crate32 or Crate24 or Crate21 or Crate2s or Crate14
+ClosedLeft = Crate4 or Crate31 or Crate32 or Crate33 or Crate21 or Crate22 or Crate2c or Crate11
+
+Walls = Wall or Wall4 or Wall31 or Wall32 or Wall33 or Wall34 or Wall21 or Wall22 or Wall23 or Wall24 or Wall11 or Wall12 or Wall13 or Wall14 or Wall2Ho or Wall2Ve or Wall1a or Wall1b or Wall1c or Wall1d or Wall2a or Wall2b or Wall2c or Wall2d or Wall2e or Wall2f or Wall2g or Wall2h or Wall2i or Wall2j or Wall2k or Wall2l or Wall2m or Wall2n or Wall2o or Wall2p or Wall2q
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Walls
+Player, Friend 
+Crate4, Crate31, Crate32, Crate33, Crate34
+Crate21, Crate22, Crate2s, Crate2c
+Crate23, Crate24
+Crate11
+Crate12
+Crate13
+Crate14
+
+======
+RULES
+======
+
+(Player or Crate moving an adjacent crate that is closed on the adjacent side)
+RIGHT [> Object | closedleft ] -> [> Object |> closedleft ]
+DOWN [> Object | closedup ] -> [> Object |> closedup ]
+LEFT [> Object | closedright ] -> [> Object |> closedright ]
+UP [> Object | closeddown ] -> [> Object |> closeddown ]
+
+(Player or Crate inside of crate moving it)
+RIGHT [> Object closedright] -> [> Object > closedright]
+DOWN [> Object closeddown] -> [> Object > closeddown]
+LEFT [> Object closedleft] -> [> Object > closedleft]
+UP [> Object closedup] -> [> Object > closedup]
+
+(Crate moving adjacent crate if they touch (Doing it ten billion times to avoid a bug I don't know how to fix otherwise. If you know a better way please let me know.))
+
+RIGHT [> topright | topleft] -> [> topright |> topleft]
+RIGHT [> botright | botleft] -> [> botright |> botleft]
+RIGHT [> topright | topleft] -> [> topright |> topleft]
+RIGHT [> botright | botleft] -> [> botright |> botleft]
+RIGHT [> topright | topleft] -> [> topright |> topleft]
+
+DOWN [> botright | topright] -> [> botright |> topright]
+DOWN [> botleft | topleft] -> [> botleft |> topleft]
+DOWN [> botright | topright] -> [> botright |> topright]
+DOWN [> botleft | topleft] -> [> botleft |> topleft]
+DOWN [> botright | topright] -> [> botright |> topright]
+
+LEFT [> botleft | botright] -> [> botleft |> botright]
+LEFT [> topleft | topright] -> [> topleft |> topright]
+LEFT [> botleft | botright] -> [> botleft |> botright]
+LEFT [> topleft | topright] -> [> topleft |> topright]
+LEFT [> botleft | botright] -> [> botleft |> botright]
+
+UP [> topleft | botleft] -> [> topleft |> botleft]
+UP [> topright | botright] -> [> topright |> botright]
+UP [> topleft | botleft] -> [> topleft |> botleft]
+UP [> topright | botright] -> [> topright |> botright]
+UP [> topleft | botleft] -> [> topleft |> botleft]
+
+(Interaction that wasn't accounted for so far)
+RIGHT [> closedright | Crate13] -> [> closedright |> Crate13]
+DOWN [> closeddown | Crate14] -> [> closeddown |> Crate14]
+LEFT [> closedleft | Crate11] -> [> closedleft |> Crate11]
+UP [> closedup | Crate12] -> [> closedup |> Crate12]
+
+
+(Doing the rules another time, bug reasons again)
+
+(Player or Crate moving an adjacent crate that is closed on the adjacent side)
+RIGHT [> Object | closedleft ] -> [> Object |> closedleft ]
+DOWN [> Object | closedup ] -> [> Object |> closedup ]
+LEFT [> Object | closedright ] -> [> Object |> closedright ]
+UP [> Object | closeddown ] -> [> Object |> closeddown ]
+
+(Player or Crate inside of crate moving it)
+RIGHT [> Object closedright] -> [> Object > closedright]
+DOWN [> Object closeddown] -> [> Object > closeddown]
+LEFT [> Object closedleft] -> [> Object > closedleft]
+UP [> Object closedup] -> [> Object > closedup]
+
+(Crate moving adjacent crate if they touch (Doing it ten billion times to avoid a bug I don't know how to fix otherwise. If you know a better way please let me know.))
+
+RIGHT [> topright | topleft] -> [> topright |> topleft]
+RIGHT [> botright | botleft] -> [> botright |> botleft]
+RIGHT [> topright | topleft] -> [> topright |> topleft]
+RIGHT [> botright | botleft] -> [> botright |> botleft]
+RIGHT [> topright | topleft] -> [> topright |> topleft]
+
+DOWN [> botright | topright] -> [> botright |> topright]
+DOWN [> botleft | topleft] -> [> botleft |> topleft]
+DOWN [> botright | topright] -> [> botright |> topright]
+DOWN [> botleft | topleft] -> [> botleft |> topleft]
+DOWN [> botright | topright] -> [> botright |> topright]
+
+LEFT [> botleft | botright] -> [> botleft |> botright]
+LEFT [> topleft | topright] -> [> topleft |> topright]
+LEFT [> botleft | botright] -> [> botleft |> botright]
+LEFT [> topleft | topright] -> [> topleft |> topright]
+LEFT [> botleft | botright] -> [> botleft |> botright]
+
+UP [> topleft | botleft] -> [> topleft |> botleft]
+UP [> topright | botright] -> [> topright |> botright]
+UP [> topleft | botleft] -> [> topleft |> botleft]
+UP [> topright | botright] -> [> topright |> botright]
+UP [> topleft | botleft] -> [> topleft |> botleft]
+
+(Interaction that wasn't accounted for so far)
+RIGHT [> closedright | Crate13] -> [> closedright |> Crate13]
+DOWN [> closeddown | Crate14] -> [> closeddown |> Crate14]
+LEFT [> closedleft | Crate11] -> [> closedleft |> Crate11]
+UP [> closedup | Crate12] -> [> closedup |> Crate12]
+
+(Cancel if moving into wall)
+[> Object | Walls] -> cancel 
+
+(Combine smaller crates into larger ones when on the same square)
+late [Crate11 Crate12] -> [Crate22]
+late [Crate12 Crate13] -> [Crate23]
+late [Crate13 Crate14] -> [Crate24]
+late [Crate14 Crate11] -> [Crate21]
+
+late [Crate11 Crate13] -> [Crate2c]
+late [Crate12 Crate14] -> [Crate2s]
+
+late [Crate21 Crate12] -> [Crate32]
+late [Crate21 Crate13] -> [Crate31]
+late [Crate22 Crate13] -> [Crate33]
+late [Crate22 Crate14] -> [Crate32]
+late [Crate23 Crate14] -> [Crate34]
+late [Crate23 Crate11] -> [Crate33]
+late [Crate24 Crate11] -> [Crate31]
+late [Crate24 Crate12] -> [Crate34]
+
+late [Crate21 Crate23] -> [Crate4]
+late [Crate22 Crate24] -> [Crate4]
+
+late [Crate2s Crate11] -> [Crate32]
+late [Crate2s Crate13] -> [Crate34]
+late [Crate2c Crate12] -> [Crate33]
+late [Crate2c Crate14] -> [Crate31]
+
+late [Crate31 Crate12] -> [Crate4]
+late [Crate32 Crate13] -> [Crate4]
+late [Crate33 Crate14] -> [Crate4]
+late [Crate34 Crate11] -> [Crate4]
+
+late [Player | Friend] -> win
+
+==============
+WINCONDITIONS
+==============
+
+all Crate on Target
+
+=======
+LEVELS
+=======
+
+MESSAGE Level 0/10
++@@@@~
+µ....µ
+µ.ot.µ
+µ.sp.µ
+µ....µ
+*@@@@'
+
+MESSAGE Level 1/10
+MESSAGE Hey bud, long time no see. Thanks for coming! Look, I've been working on this new crate pushing game.
+MESSAGE Thing is, I didn't actually assemble most of the crates yet. Will you help me out?
++@@¨ö?
+µ.o}#ä
+µdp&{¤
+µhf..µ
+µ.st.µ
+µ../ö©
+*@@¡{\
+
+MESSAGE Level 2/10
+MESSAGE This one would be a great level... if it had a crate. You know what to do.
+/£@@~
+}ä..µ
+}äopµ
+¦\f.µ
+µd.zµ
+µ...µ
+*@@@'
+
+MESSAGE Level 3/10
+MESSAGE With your help, I'm sure we'll be done in no time!
+/£@@@@~
+¦\.o..µ
+µ.sp!.µ
+µgd.f.µ
+*@@@@@'
+
+MESSAGE Level 4/10
+MESSAGE Got another job for you. There's more space this time, that should help.
+/öö£@@¨ö?
+¦{{\..}#ä
+µ....d&{¤
+µ.o$.sg.µ
+µ.p"....µ
+µ...../ö©
+¢öö?f.}#ä
+&{{¥@@¡{\
+
+MESSAGE Level 1/10
+MESSAGE Hey remember Level 1? I.. broke it. Could you fix it for me?
++@@¨ö?
+µ.o}#ä
+µ.g&{¤
+µosgfµ
+µ.d..µ
+µ.y/ö©
+*@@¡{\
+
+MESSAGE Level 5/10
+MESSAGE These large levels must be exhausting for players. Do you think they would like smaller ones?
++@@@~
+µg..µ
+µf.oµ
+µpdsµ
+*@@@'
+
+MESSAGE Level 6/10
+MESSAGE Nice and compact. I think I'll do another small one. Build me a crate, will ya?
++@@@~
+µp.gµ
+µfd.µ
+µ..cµ
+*@@@'
+
+MESSAGE Level 7/10
+MESSAGE Okay, just one more small level. Don't wanna bore anyone.
++@@@~
+µpgsµ
+µof.µ
+µ.d.µ
+*@@@'
+
+MESSAGE Level 1/10
+MESSAGE Uh, yeah. Messed up Level 1 again. I swear I'm not doing this on purpose.
++@@¨ö?
+µ..}#ä
+µzi&{¤
+µop..µ
+µsmi.µ
+µ../ö©
+*@@¡{\
+
+MESSAGE Level 8/10
+MESSAGE I think we are a great team.
+/öö£@@¨?
+¦{{\..}ä
+µ.....}ä
+µ.ipu.}ä
+¯@@@%.&¤
+µ.j.h..µ
+µ......µ
+*@@@@@@'
+
+MESSAGE Level 9/10
+MESSAGE Running out of material! There should be some discarded planks around here, maybe you can craft a crate out of them?
+/£@@¨öö£@@¨öö?
+}ä..¦{{\s.¦{{¤
+¦\f."....."o.µ
+µ.dg...$...p.µ
+µ.../?."./?..µ
+¢ööö;ä...},öö©
+}####ä../;###ä
+&{{{{¥@@¡{{{{\
+
+MESSAGE Level 1/10
+MESSAGE Why does level 1 keep breaking? Maybe I should change the wall layout..
++@@¨ö?
+µ.ª&{¤
+µfdg.µ
+µ.s..µ
+µ.°/ö©
+*@@¡{\
+
+MESSAGE Level 1/10
+MESSAGE Aaaand it broke again. Do your thing.
++@@¨ö?
+µ.«&{¤
+µfbg.µ
+µos..µ
+µ.t/ö©
+*@@¡{\
+
+MESSAGE Level 10/10
+MESSAGE I suppose level 1 simply needs new crates. Can you find a way to deliver them?
+/öö£@@¨ööööööööööö?
+¦{{\..}###########ä
+µ.....¦{{{-#######ä
+µ.o$.."...¦{{³{{-#ä
+µ.."......µ.."..}#ä
+µ........§'.....}#ä
+¯@@¨ööö?....§~..}#ä
+µ..}###ä.....µ.§¡{¤
+µ..&{-#,?....µp...µ
+µx...}##,öööö©.df.µ
+µ....}#######ä.sg.µ
+µ../ö;#######ä....µ
+*@@¡{{{{{{{{{¥@@@@'
+
+MESSAGE And that's it! That's all the crates I need. You know, I think I'll call the game "Microban". Oh, before you go, one last thing I wanted to say:
++@@@@@@@@@@@@@@@~
+µ.......¬.......µ
+µ...............µ
+µ.iufwlqlrlwfe..µ
+µ.fsfrlrlllr.ts.µ
+µ...............µ
+µ.......p.......µ
+*@@@@@@@@@@@@@@@'
+
+
+
+
+
+
+
+
+

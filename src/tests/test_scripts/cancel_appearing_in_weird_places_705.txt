@@ -1,0 +1,110 @@
+title Block Pushing Bros
+author increpare
+homepage www.increpare.com
+
+require_player_movement
+debug
+
+========
+OBJECTS
+========
+
+Background
+#58875a
+
+
+Target
+transparent #b8ca58
+00000
+00100
+01110
+00100
+00000
+
+
+Wall
+#906f80 #5f4351
+00010
+11111
+01000
+11111
+00010
+
+Player
+blue
+
+Freund
+yellow
+
+Crate
+#b39b2a transparent
+00000
+01110
+01110
+01110
+00000
+
+
+playermovementtag
+transparent
+
+
+friendmovementtag
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+f = Freund
+* = Crate
+@ = Crate and Target
+O = Target
+
+pusher = player or freund or crate
+
+blocker = player or freund or crate or wall
+=======
+SOUNDS
+=======
+
+Crate MOVE 36772507
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, freund, Wall, Crate
+playermovementtag, friendmovementtag
+
+======
+RULES
+======
+cancel [stationary player ] [] -> [ ] []
+[stationary player ] [] cancel -> [ ] []
+[stationary player ] [] -> [ cancel] []
+[stationary player ] [] -> [ ] cancel []
+
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+(pretty ok? level 1 or 2?)
+######
+#..f.#
+#p.f.#
+#p*..#
+#.*.o#
+#...*#
+#o..o#
+######

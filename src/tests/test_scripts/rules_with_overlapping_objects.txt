@@ -1,0 +1,203 @@
+title Rules with overlapping objects
+author That Scar
+
+========
+OBJECTS
+========
+
+Background
+LightGray White
+11111
+01111
+11101
+11111
+10111
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+P0
+DarkBrown #2E7F18
+.....
+01110
+01010
+01010
+01110
+
+P1
+DarkBrown #45731E
+.....
+00100
+01100
+00100
+01110
+
+P2
+DarkBrown #675E24
+.....
+01100
+00010
+00100
+01110
+
+P3
+DarkBrown #8D472B
+.....
+01110
+00110
+00010
+01100
+
+P4
+DarkBrown #B13433
+.....
+01010
+01110
+00010
+00010
+
+P5
+DarkBrown #C82538
+.....
+01110
+01100
+00010
+01100
+
+P6
+DarkBrown #C82538
+.....
+01110
+01000
+01110
+01110
+
+P7
+DarkBrown #C82538
+.....
+01110
+00010
+00100
+00100
+
+P8
+DarkBrown #C82538
+.....
+01110
+01110
+01010
+01110
+
+P9
+DarkBrown #C82538
+.....
+01110
+01110
+00010
+01110
+
+Lots
+DarkBrown #C82538
+.....
+01000
+01000
+01000
+01110
+
+TempCheck
+transparent
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+
+0 = P0
+1 = P1
+2 = P2
+3 = P3
+4 = P4
+5 = P5
+6 = P6
+7 = P7
+8 = P8
+9 = P9
+
+(
+MoreThan0 = P1 or P2 or P3 or P4 or P5 or P6 or P7 or P8 or P9 or Lots
+MoreThan1 = P2 or P3 or P4 or P5 or P6 or P7 or P8 or P9 or Lots
+MoreThan2 = P3 or P4 or P5 or P6 or P7 or P8 or P9 or Lots
+MoreThan3 = P4 or P5 or P6 or P7 or P8 or P9 or Lots
+MoreThan4 = P5 or P6 or P7 or P8 or P9 or Lots
+MoreThan5 = P6 or P7 or P8 or P9 or Lots
+MoreThan6 = P7 or P8 or P9 or Lots
+MoreThan7 = P8 or P9 or Lots
+MoreThan8 = P9 or Lots
+MoreThan9 = Lots
+)
+Present = P0 or P1 or P2 or P3 or P4 or P5 or P6 or P7 or P8 or P9 or Lots
+
+Player = Wall
+
+=======
+SOUNDS
+=======
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+
+P0
+P1
+P2
+P3
+P4
+P5
+P6
+P7
+P8
+P9
+Lots
+
+TempCheck
+
+======
+RULES
+======
+
+startloop
+[ Present Present ] -> [ Present Present TempCheck ]
+[ ] -> [ ]
+(more stuff)
+endloop
+
+
+[ Present Present ] -> [ Present Present TempCheck ]
++[ ] -> [ ]
+(more stuff)
+
+==============
+WINCONDITIONS
+==============
+(
+no Present
+no Error
+)
+=======
+LEVELS
+=======
+
+.
+
+#
+

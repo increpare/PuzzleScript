@@ -1,0 +1,388 @@
+title Caramelban
+author Notan
+homepage https://notaninart.itch.io/
+background_color #be7dbc
+text_color #350828
+run_rules_on_level_start
+noaction
+
+========
+OBJECTS
+========
+
+Palette1
+#151244 #60117f #922a95 #be7dbc #350828
+01234
+12340
+23401
+34012
+40123
+
+Palette2
+#7f6962 #f9cb60 #f9960f #bc2f01 #680703
+01234
+12340
+23401
+34012
+40123
+
+Background
+#151244 #60117f #922a95 #be7dbc #350828
+33333
+33333
+33333
+33333
+33333
+
+Target
+#151244 #60117f #922a95 #be7dbc #350828 #7f6962 #f9cb60 #f9960f #bc2f01 #680703
+.5555
+.5..5
+.5..5
+.5555
+.....
+
+PlayerR
+#151244 #60117f #922a95 #be7dbc #350828 #7f6962 #f9cb60 #f9960f #bc2f01 #680703
+.222.
+.2222
+.060.
+.666.
+.....
+
+PlayerL
+#151244 #60117f #922a95 #be7dbc #350828 #7f6962 #f9cb60 #f9960f #bc2f01 #680703
+..222
+.2222
+..060
+..666
+.....
+
+Caramel1
+#7f6962 #f9cb60 #f9960f #bc2f01 #680703
+.2222
+.2333
+.3322
+.2222
+.....
+
+Caramel2
+#7f6962 #f9cb60 #f9960f #bc2f01 #680703
+.1111
+.1222
+.2211
+.1111
+.....
+
+EdgeH
+#7f6962 #f9cb60 #f9960f #bc2f01 #680703
+.....
+.....
+.....
+.....
+.3333
+
+EdgeV
+#7f6962 #f9cb60 #f9960f #bc2f01 #680703
+3....
+3....
+3....
+3....
+.....
+
+EdgeC
+#7f6962 #f9cb60 #f9960f #bc2f01 #680703
+.....
+.....
+.....
+.....
+3....
+
+StopCaramel
+transparent
+
+StopH
+transparent
+
+StopV
+transparent
+
+StopC
+transparent
+
+StretchUp
+transparent
+
+StretchLeft
+transparent
+
+StretchDown
+transparent
+
+StretchRight
+transparent
+
+Wall
+#151244 #60117f #922a95 #be7dbc #350828 #7f6962 #f9cb60 #f9960f #bc2f01 #680703
+.1222
+.2112
+.1212
+.1121
+.....
+
+WallH
+#151244 #60117f #922a95 #be7dbc #350828 #7f6962 #f9cb60 #f9960f #bc2f01 #680703
+.....
+.....
+.....
+.....
+.2211
+
+WallV
+#151244 #60117f #922a95 #be7dbc #350828 #7f6962 #f9cb60 #f9960f #bc2f01 #680703
+1....
+1....
+2....
+2....
+.....
+
+WallC
+#151244 #60117f #922a95 #be7dbc #350828 #7f6962 #f9cb60 #f9960f #bc2f01 #680703
+.....
+.....
+.....
+.....
+2....
+
+WalkMarker
+transparent
+
+=======
+LEGEND
+=======
+
+Palette = Palette1 or Palette2
+X = Palette1
+Y = Palette2
+
+Player = PlayerR or PlayerL
+Caramel = Caramel1 or Caramel2
+Obstacle = Wall or Caramel
+
+EdgeX = EdgeH and EdgeV
+Edge = EdgeH or EdgeV or EdgeC
+
+StopEdge = StopH or StopV or StopC
+Stretch = StretchUp or StretchLeft or StretchDown or StretchRight
+
+. = Background
+# = Wall
+P = PlayerR
+* = Caramel1
+% = Caramel2
+T = Target
+
+=======
+SOUNDS
+=======
+
+sfx0 30084302 (walk)
+sfx1 50705900 (on target)
+sfx2 85057703 (stretch)
+sfx3 65493303 (stretch unused)
+sfx4 42598703 (stretch unused)
+sfx5 49655103 (stretch unused)
+Undo 21479104 (72060504 60450507)
+restart 46704309
+startgame 21069303
+closemessage 21069303
+(startlevel 67233309)
+endlevel 32515109
+(endgame 21069303)
+titlescreen 21069303
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Wall
+WallH
+WallV
+WallC
+Target
+Player
+Caramel
+
+StopCaramel
+WalkMarker
+
+EdgeH
+EdgeV
+EdgeC
+
+Stretch
+
+StopH
+StopV
+StopC
+
+Palette
+
+======
+RULES 
+======
+
+(turn)
+[ right player ] -> [ right playerR ]
+[ left player ] -> [ left playerL ]
+
+(stop player)
+[ > player | wall ] -> [ player | wall ]
+
+
+(move)
+
+(add stopCaramel to walls for convenience)
+[ wall ] -> [ wall stopCaramel ]
+
+(add stop marker to caramel cubes)
+[ > player ] [ caramel no stopCaramel | stopCaramel ] -> [ > player ] [ caramel stopCaramel | stopCaramel ]
+
+(stop player if its neighbor caramel cube has stopCaramel)
+[ > player | stopCaramel ] -> [ player | stopCaramel ]
+
+(walk sound)
+[ > player ] -> [ > player walkMarker ]
+
+(move player and caramel cubes)
+[ > player | caramel ] -> [ > player | > caramel ]
+[ > caramel | caramel ] -> [ > caramel | > caramel ]
+
+
+(add stop to edges)
+left [ left player ] [ edgeV | stopCaramel ] -> [ left player ] [ edgeV stopV | stopCaramel ]
+down [ down player ] [ edgeH | stopCaramel ] -> [ down player ] [ edgeH stopH | stopCaramel ]
+[ right player ] [ edgeV stopCaramel ] -> [ right player ] [ edgeV stopV stopCaramel ]
+[ up player ] [ edgeH stopCaramel ] -> [ up player ] [ edgeH stopH stopCaramel ]
+
+(add stopC)
+left [ left player ] [ edgeC | wallH ] -> [ left player ] [ edgeC stopC | wallH ]
+down [ down player ] [ edgeC | wallV ] -> [ down player ] [ edgeC stopC | wallV ]
+[ right player ] [ edgeC wallH ] -> [ right player ] [ edgeC stopC wallH ]
+[ up player ] [ edgeC wallV ] -> [ up player ] [ edgeC stopC wallV ]
+
+
+(propagate force from player to edges)
+[ left player edgeV no stopV ] -> [ left player left edgeV ]
+[ down player edgeH no stopH ] -> [ down player down edgeH ]
+right [ right player | edgeV no stopV ] -> [ right player | right edgeV ]
+up [ up player | edgeH no stopH ] -> [ up player | up edgeH ]
+
+(propagate force between edges)
+[ moving edgeV edgeC no stopC ] -> [ moving edgeV moving edgeC ]
++ [ moving edgeH edgeC no stopC ] -> [ moving edgeH moving edgeC ]
++ [ moving edgeC edgeV no stopV ] -> [ moving edgeC moving edgeV ]
++ [ moving edgeC edgeH no stopH ] -> [ moving edgeC moving edgeH ]
++ down [ moving edgeC | edgeV no stopV ] -> [ moving edgeC | moving edgeV ]
++ left [ moving edgeC | edgeH no stopH ] -> [ moving edgeC | moving edgeH ]
++ up [ moving edgeV | edgeC no stopC ] -> [ moving edgeV | moving edgeC ]
++ right [ moving edgeH | edgeC no stopC ] -> [ moving edgeH | moving edgeC ]
+
+(propagate force from edges to caramel cubes)
+left [ left edgeV | caramel ] -> [ left edgeV | left caramel ]
+down [ down edgeH | caramel ] -> [ down edgeH | down caramel ]
+[ right edgeV caramel ] -> [ right edgeV right caramel ]
+[ up edgeH caramel ] -> [ up edgeH up caramel ]
+
+(add stretch)
+[ left edgeC stopV ] -> [ left edgeC stopV stretchLeft ]
+[ down edgeC stopH ] -> [ down edgeC stopH stretchDown ]
+[ right edgeC stopV ] -> [ right edgeC stopV stretchRight ]
+[ up edgeC stopH ] -> [ up edgeC stopH stretchUp ]
+down [ left edgeC | stopV ] -> [ left edgeC stretchLeft | stopV ]
+left [ down edgeC | stopH ] -> [ down edgeC stretchDown | stopH ]
+down [ right edgeC | stopV ] -> [ right edgeC stretchRight | stopV ]
+left [ up edgeC | stopH ] -> [ up edgeC stretchUp | stopH ]
+
+(stretch sound)
+[ stretch ] [ walkMarker ] -> [ stretch ] [ ] sfx2
+[ walkMarker ] -> [ ] sfx0
+
+(collapse edges moving against stopC)
+[ left edgeH stopC ] -> [ stopC ]
+[ down edgeV stopC ] -> [ stopC ]
+right [ right edgeH | stopC ] -> [ | stopC ]
+up [ up edgeV | stopC ] -> [ | stopC ]
+
+(collapse edges moving against walls)
+horizontal [ > edgeH | wallH ] -> [ | wallH ]
+vertical [ > edgeV | wallV ] -> [ | wallV ]
+
+(collapse edges moving against stationary edges)
+[ > edgeH | stationary edgeH ] -> [ | stationary edgeH ]
+[ > edgeV | stationary edgeV ] -> [ | stationary edgeV ]
+
+
+(remove markers)
+[ stopCaramel ] -> [ ]
+[ stopEdge ] -> [ ]
+
+
+
+(connect walls)
+left [ wall no wallV | wall ] -> [ wall wallV | wall ]
+down [ wall no wallH | wall ] -> [ wall wallH | wall ]
+down [ wallV no wallC | wallV ] -> [ wallV wallC | wallV ]
+
+(caramel on target?)
+late [ caramel1 target ] -> [ caramel2 target ] sfx1
+late [ caramel2 no target ] -> [ caramel1 ]
+
+(stretch edges)
+late left [ stretchLeft | ] -> [ | edgeH ]
+late down [ stretchDown | ] -> [ | edgeV ]
+late [ stretchRight ] -> [ edgeH ]
+late [ stretchUp ] -> [ edgeV ]
+
+(add edges around caramel cubes)
+late [ caramel no edgeH ] -> [ caramel edgeH ]
+late [ caramel no edgeV ] -> [ caramel edgeV ]
+late up [ caramel | no edgeH ] -> [ caramel | edgeH ]
+late right [ caramel | no edgeV ] -> [ caramel | edgeV ]
+
+(re-assign edgeC)
+late [ edgeC ] -> [ ]
+late [ edgeV no edgeC ] -> [ edgeV edgeC ]
+late [ edgeH no edgeC ] -> [ edgeH edgeC ]
+late up [ edgeV | no edge ] -> [ edgeV | edgeC ]
+late right [ edgeH | no edge ] -> [ edgeH | edgeC ]
+
+
+==============
+WINCONDITIONS
+==============
+
+all target on caramel
+
+======= 
+LEVELS
+=======
+
+Message Sokoban + Caramel Cubes = Caramelban
+
+#####################
+#.......#####.......#
+#.......#####...#...#
+#....*...*.##.....t.#
+#.......##.##.....t.#
+#.......##..........#
+#...#...#####...p...#
+#.......#####.......#
+#####################
+
+
+Message You win!
+
+
+

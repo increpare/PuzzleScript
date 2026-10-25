@@ -1,0 +1,859 @@
+title Loop Deleter
+author Zachary Barbanell
+homepage zacharybarbanell.itch.io
+
+run_rules_on_level_start
+
+realtime_interval 0.1
+
+color_palette 14
+
+background_color darkgray
+
+
+(verbose_logging)
+========
+OBJECTS
+========
+
+Background
+green darkgreen
+11111
+01111
+11101
+11111
+10111
+
+Wall
+blue 
+
+WallU
+Darkblue
+00000
+.....
+.....
+.....
+.....
+
+WallR
+Darkblue
+....0
+....0
+....0
+....0
+....0
+
+WallD
+Darkblue
+.....
+.....
+.....
+.....
+00000
+
+WallL
+Darkblue
+0....
+0....
+0....
+0....
+0....
+ 
+WallUL
+Darkblue
+0....
+.....
+.....
+.....
+.....
+ 
+WallUR
+Darkblue
+....0
+.....
+.....
+.....
+.....
+ 
+WallDL
+Darkblue
+.....
+.....
+.....
+.....
+0....
+ 
+WallDR
+Darkblue
+.....
+.....
+.....
+.....
+....0
+
+Player
+Black Orange White lightblue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+MemPlayer
+transparent 
+
+Crate
+Brown darkbrown
+00000
+01110
+01110
+01110
+00000
+
+MemCrate
+transparent
+
+
+PusherUp
+purple black 
+01110
+01110
+00100
+00000
+00000
+
+MemPusherUp
+transparent
+
+PusherDown
+purple black pink
+00000
+00000
+00100
+01110
+01110
+
+MemPusherDown
+transparent
+
+PusherLeft
+purple black 
+00000
+11000
+11100
+11000
+00000
+
+MemPusherLeft
+transparent
+
+PusherRight
+purple black 
+00000
+00011
+00111
+00011
+00000
+
+MemPusherRight
+transparent
+
+UpBlocker
+pink
+
+DownBlocker
+pink
+
+LeftBlocker
+pink
+
+RightBlocker
+pink
+
+Blocker
+pink
+
+AgainMarker
+transparent
+
+AgainMarker2
+transparent
+
+Mutex
+transparent
+
+Temp
+pink
+
+Temp2
+pink
+
+Temp3
+pink
+
+BufferedUp
+transparent
+
+BufferedDown
+transparent
+
+BufferedLeft
+transparent
+
+BufferedRight
+transparent
+
+MemSetup
+transparent
+
+MemUsed
+transparent
+
+TutorialStairs
+gray darkgray black
+00000
+01110
+00010
+02210
+00000
+
+Explosion
+lightblue purple
+11111
+10001
+10.01
+10001
+11111
+
+TutorialMessage1
+red
+..0..
+..0..
+..0..
+.....
+..0..
+
+TutorialMessage2
+red
+..0..
+..0..
+..0..
+.....
+..0..
+
+TutorialMessage3
+red
+..0..
+..0..
+..0..
+.....
+..0..
+
+TutorialMessage4
+red
+..0..
+..0..
+..0..
+.....
+..0..
+
+TutorialMessage5
+red
+..0..
+..0..
+..0..
+.....
+..0..
+
+UISlot
+darkgray
+
+Orb
+darkred red lightred white
+.111.
+01131
+01111
+00111
+.000.
+
+UpCloud
+white
+.....
+0...0
+.0.0.
+.0.0.
+.0.0.
+
+DownCloud
+white
+.0.0.
+.0.0.
+.0.0.
+0...0
+.....
+
+LeftCloud
+white
+.0...
+..000
+.....
+..000
+.0...
+
+RightCloud
+white
+...0.
+000..
+.....
+000..
+...0.
+
+DebugMarker
+yellow
+
+=======
+LEGEND
+=======
+
+Pusher = PusherUp or PusherDown or PusherLeft or PusherRight
+
+Pushable = Pusher or Crate or Player
+
+MemObj = MemPlayer or MemCrate or MemPusherUp or MemPusherDown or MemPusherLeft or MemPusherRight
+
+BufferedInput = BufferedUp or BufferedDown or BufferedLeft or BufferedRight
+
+Cloud = UpCloud or DownCloud or LeftCloud or RightCloud
+
+Particle = Explosion or Cloud
+
+Border = WallU or WallR or WallD or WallL or WallUL or WallUR or WallDL or WallDR
+
+. = Background
+# = Wall
+P = Player and Mutex
+* = Crate
+
+U = PusherUp
+D = PusherDown
+L = PusherLeft
+R = PusherRight
+
+T = TutorialStairs
+
+1 = TutorialMessage1
+2 = TutorialMessage2
+3 = TutorialMessage3
+4 = TutorialMessage4
+5 = TutorialMessage5
+
+_ = UISlot
+
+O = Orb
+
+
+=======
+SOUNDS
+=======
+
+sfx1 36772507
+
+(sfx0 12836702)
+
+sfx0 42777703
+
+sfx2 18318100
+
+sfx3 81819707
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Cloud
+TutorialStairs
+TutorialMessage1, TutorialMessage2, TutorialMessage3, TutorialMessage4, TutorialMessage5
+UISlot
+Orb
+Player, Wall, Crate, Pusher
+
+WallU
+WallR
+WallD
+WallL
+WallUL
+WallUR
+WallDL
+WallDR
+
+Explosion
+
+UpBlocker
+DownBlocker
+LeftBlocker
+RightBlocker
+Blocker
+
+MemObj
+MemSetup
+MemUsed
+
+BufferedInput
+
+AgainMarker
+AgainMarker2
+Mutex
+Temp
+Temp2
+Temp3
+
+DebugMarker
+
+======
+RULES
+======
+
+[ Particle ] -> [ ]
+
+
+[ AgainMarker2 ] [ orthogonal Player ] -> cancel
+
+[ action Player ] -> [ action Player Temp ]
+[ UISlot Orb ] [ Temp ] -> [ UISlot Orb ] [ ]
+[ Temp ] -> cancel
+
+
+
+
+
+[ AgainMarker2 ] [ action Player ] [ MemObj ] -> [ AgainMarker2 ] [ action Player ] [ ]
+
+[ AgainMarker2 ] [ action Player ] [ MemUsed ] -> [ AgainMarker2 ] [ action Player ] [ ]
+
+[ AgainMarker2 ] [ Orb UISlot ] [ action Player ] -> [ ] [ Orb UISlot ] [ Player AgainMarker MemSetup MemPlayer ]
+
+[ MemSetup ] [ Crate ] -> [ MemSetup ] [ Crate MemCrate ]
+[ MemSetup ] [ PusherUp ] -> [ MemSetup ] [ PusherUp MemPusherUp ]
+[ MemSetup ] [ PusherDown ] -> [ MemSetup ] [ PusherDown MemPusherDown ]
+[ MemSetup ] [ PusherLeft ] -> [ MemSetup ] [ PusherLeft MemPusherLeft ]
+[ MemSetup ] [ PusherRight ] -> [ MemSetup ] [ PusherRight MemPusherRight ]
+
+[ MemSetup ] -> [ ]
+
+(
+[ stationary Player ] -> [ Player Temp ]
+
+[ up Player no BufferedInput ] -> [ Player BufferedUp ]
+[ down Player no BufferedInput ] -> [ Player BufferedDown ]
+[ left Player no BufferedInput ] -> [ Player BufferedLeft ]
+[ right Player no BufferedInput ] -> [ Player BufferedRight ]
+
+[ Player Temp BufferedUp ] -> [ up Player ]
+[ Player Temp BufferedDown ] -> [ down Player ]
+[ Player Temp BufferedLeft ] -> [ left Player ]
+[ Player Temp BufferedRight ] -> [ right Player ]
+
+[ Temp ] -> [ ]
+)
+
+[ orthogonal Player ] -> [ orthogonal Player AgainMarker ]
+
+[ orthogonal Player ] [ MemObj ] -> [ orthogonal Player ] [ ]
+
+[ > Pushable | Pushable ] -> [ > Pushable | > Pushable ] (sfx1)
+
+[ > Pushable no Player | no Pushable no Wall ] -> sfx1
+
+
+
+
+
+
+
+
+
+up		[ AgainMarker2 ] [ PusherUp | Pushable ] -> [ AgainMarker2 ] [ > PusherUp | Pushable ]
+down	[ AgainMarker2 ] [ PusherDown | Pushable ] -> [ AgainMarker2 ] [ > PusherDown | Pushable ]
+left	[ AgainMarker2 ] [ PusherLeft | Pushable ] -> [ AgainMarker2 ] [ > PusherLeft | Pushable ]
+right	[ AgainMarker2 ] [ PusherRight | Pushable ] -> [ AgainMarker2 ] [ > PusherRight | Pushable ]
+
+
+
+
+[ Mutex ] [ > Pusher no Temp ] -> [ ] [ > Pusher Temp Temp2 Temp3 ]
++ [ > Pusher Temp2 | ... | no Pushable ] -> [ > Pusher | ... | Temp2 ]
++ [ > Pusher Temp3 ] [ Temp2 Wall ] -> [ Pusher Temp3 ] [ Wall ]
++ [ Temp2 ] -> [ ]
++ [ Temp3 ] -> [ Mutex ]
+
+[ Temp ] -> [ ]
+
+[ > Pusher | < Pusher ] -> [ Pusher | Pusher ] (special case)
+
+
+up		[ > Pusher | ] -> [ > Pusher | UpBlocker ]
+down	[ > Pusher | ] -> [ > Pusher | DownBlocker ]
+left	[ > Pusher | ] -> [ > Pusher | LeftBlocker ]
+right	[ > Pusher | ] -> [ > Pusher | RightBlocker ]
+
+up		[ Pushable UpBlocker | ] -> [ Pushable UpBlocker | UpBlocker ]
+down	[ Pushable DownBlocker | ] -> [ Pushable DownBlocker | DownBlocker ]
+left	[ Pushable LeftBlocker | ] -> [ Pushable LeftBlocker | LeftBlocker ]
+right	[ Pushable RightBlocker | ] -> [ Pushable RightBlocker | RightBlocker ]
+
+[ UpBlocker DownBlocker ] -> [ Blocker ]
+[ UpBlocker LeftBlocker ] -> [ Blocker ]
+[ UpBlocker RightBlocker ] -> [ Blocker ]
+[ DownBlocker LeftBlocker ] -> [ Blocker ]
+[ DownBlocker RightBlocker ] -> [ Blocker ]
+[ LeftBlocker RightBlocker ] -> [ Blocker ]
+
+up		[ Pushable UpBlocker | Blocker ] -> [ Pushable Blocker | Blocker ]
+down	[ Pushable DownBlocker | Blocker ] -> [ Pushable Blocker | Blocker ]
+left	[ Pushable LeftBlocker | Blocker ] -> [ Pushable Blocker | Blocker ]
+right	[ Pushable RightBlocker | Blocker ] -> [ Pushable Blocker | Blocker ]
+
+[ > Pusher | Blocker ] -> [ Pusher | Blocker ]
+
+[ UpBlocker ] -> [ ]
+[ DownBlocker ] -> [ ]
+[ LeftBlocker ] -> [ ]
+[ RightBlocker ] -> [ ]
+[ Blocker ] -> [ ]
+
+(okay now any object that's still moving should be one that's allowed to)
+(hopefully)
+
+[ > Pusher MemObj ] -> [ > Pusher MemObj MemUsed ] ()()()
+
+([ > Pusher no Temp | < Pusher no Temp ] -> [ < Pusher Temp | > Pusher Temp ]) (special case)
+
+[ > Pusher no Temp | stationary Pushable ] -> [ Pusher | > Pushable Temp ] sfx1
+
+[ Temp ] -> [ ]
+
+[ > Pushable | Pushable ] -> [ > Pushable | > Pushable ]
+
+[ > Pushable ] -> [ > Pushable MemUsed ] ()()()
+
+[ > Pushable ] [ AgainMarker2 ] -> [ > Pushable ] [ AgainMarker AgainMarker2 ]
+
+[ AgainMarker2 ] [ up Pushable ] -> [ AgainMarker2 ] [ up Pushable UpCloud ]
+[ AgainMarker2 ] [ down Pushable ] -> [ AgainMarker2 ] [ down Pushable DownCloud ]
+[ AgainMarker2 ] [ left Pushable ] -> [ AgainMarker2 ] [ left Pushable LeftCloud ]
+[ AgainMarker2 ] [ right Pushable ] -> [ AgainMarker2 ] [ right Pushable RightCloud ]
+
+
+[ AgainMarker2 ] -> [ ]
+
+[ AgainMarker no Player ] [ Player ] -> [ ] [ AgainMarker Player ]
+[ AgainMarker ] -> [ AgainMarker2 ] (again)
+
+
+
+
+
+( -------------------- )
+
+late random [ MemUsed ] -> [ MemUsed MemSetup ]
+
+late [ Crate no MemCrate ] [ MemSetup ] -> [ Crate ] [ ]
+late [ Player no MemPlayer ] [ MemSetup ] -> [ Player ] [ ]
+late [ PusherUp no MemPusherUp ] [ MemSetup ] -> [ PusherUp ] [ ]
+late [ PusherDown no MemPusherDown ] [ MemSetup ] -> [ PusherDown ] [ ]
+late [ PusherLeft no MemPusherLeft ] [ MemSetup ] -> [ PusherLeft ] [ ]
+late [ PusherRight no MemPusherRight ] [ MemSetup ] -> [ PusherRight ] [ ]
+
+late [ MemSetup ] [ MemUsed ] -> [ MemSetup ] [ Explosion no Pushable no MemObj ] sfx0
+
+late right [ MemSetup ] [ Orb UISlot | no Orb ] -> [ ] [ UISlot | ]
+
+late [ Player Orb ] [ UISlot no Orb ] -> [ Player ] [ UISlot Orb ] sfx2
+
+
+
+late [ Player TutorialMessage1 ] -> [ Player ] 
+late [ Player TutorialMessage2 ] -> [ Player ] 
+late [ Player TutorialMessage3 ] -> [ Player ] 
+late [ Player TutorialMessage4 ] -> [ Player ] 
+late [ Player TutorialMessage5 ] -> [ Player ] 
+
+late [ Player TutorialStairs ] -> win
+
+
+
+late [ Border ] -> [ ]
+
+late [ ] -> [ WallU WallD WallL WallR ]
+
+late up		[ WallU | ] -> [ | ]
+late down	[ WallD | ] -> [ | ]
+late left	[ WallL | ] -> [ | ]
+late right	[ WallR | ] -> [ | ]
+
+late up		[ Wall | no Wall ] -> [ Wall WallU | ]
+late down	[ Wall | no Wall ] -> [ Wall WallD | ]
+late left	[ Wall | no Wall ] -> [ Wall WallL | ]
+late right	[ Wall | no Wall ] -> [ Wall WallR | ]
+
+late left	[ WallU | ] -> [ WallU | WallUR ]
+late right	[ WallU | ] -> [ WallU | WallUL ]
+late left	[ WallD | ] -> [ WallD | WallDR ]
+late right	[ WallD | ] -> [ WallD | WallDL ]
+late up		[ WallL | ] -> [ WallL | WallDL ]
+late down	[ WallL | ] -> [ WallL | WallUL ]
+late up		[ WallR | ] -> [ WallR | WallDR ]
+late down	[ WallR | ] -> [ WallR | WallUR ]
+
+late [ Border no Wall ] -> [ ]
+
+late [ Pushable Cloud ] -> [ Pushable ]
+
+
+==============
+WINCONDITIONS
+==============
+
+all Pushable on Player
+
+no Explosion
+
+no Orb
+
+=======
+LEVELS
+=======
+
+
+
+message These first few levels are a tutorial. The actual objective will be covered in a moment, so for now just try and go to the stairs.
+
+message Level 1/16
+
+################
+#....#####.....#
+#....#####..##.#
+#.p.....*...#t.#
+#....#####..##.#
+#....#####.....#
+################
+________________
+
+
+
+
+message Level 2/16
+
+############
+#r...*.#...#
+##.p.....t.#
+##...#u#...#
+############
+____________
+
+
+
+message Watch out! If there is ever an endless loop of objects being pushed, you will be unable to move. You can always undo with Z or restart with R if you get stuck.
+
+message Level 3/16
+
+##################
+#.........##.....#
+#........d##.....#
+#..p..........t..#
+#................#
+#.......#u#......#
+##################
+__________________
+
+
+
+message You can use an ORB with X while something is stuck in a loop to remove everything currently in a loop. From now on, you win when you use every ORB and remove every object that could be part of a loop.
+
+message Level 4/16
+
+############
+######.....#
+######..o..#
+#R.*.L.....#
+######..P..#
+######.....#
+############
+____________
+
+
+
+message Level 5/16
+
+########
+#.d.#..#
+#...#u.#
+#.*....#
+#....o.#
+#.p....#
+########
+________
+
+
+
+message An object that could move in in multiple directions will not move. An object will not move into a space that multiple objects are being pushed into.
+
+message Level 6/16
+
+###########
+#...#.#...#
+#...#d#...#
+#....*....#
+#...#u#...#
+#.p.#.#.o.#
+#...#.....#
+###########
+___________
+
+
+
+message level 7/16
+
+########
+#......#
+#.r..d.#
+#..**..#
+#..oo..#
+#.up.l.#
+#......#
+########
+________
+
+
+
+message Level 8/16
+
+#########
+#.......#
+#...l...#
+#....*..#
+#.u.p.d.#
+#..o....#
+#...r...#
+#.......#
+#########
+_________
+
+
+
+message Level 9/16
+
+#################
+#....d.d.d.d....#
+#.**.........oo.#
+#.**.........oo.#
+#p...u.u.u.u....#
+#################
+_________________
+
+
+
+message Level 10/16
+
+########
+#......#
+#.d..d.#
+#..*o..#
+#..p...#
+#.u..u.#
+#......#
+########
+________
+
+
+
+message Level 11/16
+
+########
+#......#
+#.d..d.#
+#..**..#
+#..po..#
+#.u..u.#
+#......#
+########
+________
+
+
+
+message Level 12/16
+
+###########
+#.........#
+#.d..o..l.#
+#....*....#
+#...***...#
+#..*****..#
+#...***...#
+#....*....#
+#.r..p..u.#
+#.........#
+###########
+___________
+
+
+
+message Level 13/16
+
+###########
+#.........#
+#.d.....l.#
+#....*....#
+#...***...#
+#.o**.**o.#
+#...***...#
+#....*....#
+#.r..p..u.#
+#.........#
+###########
+___________
+
+
+
+message Level 14/16
+
+#############
+#...........#
+#p..dd....l.#
+#or....uu...#
+#...........#
+#############
+_____________
+
+
+
+message Level 15/16
+
+#######
+##p.o##
+#..d..#
+#.r*l.#
+#..u..#
+#######
+_______
+
+
+
+message Level 16/16
+
+###################
+#...#d##d##d##d##d#
+#...o..*..o..*..o.#
+#.p.*..o..*..o....#
+#...#u##u##u##u##u#
+###################
+___________________
+
+
+message Thank you for playing!
+
+
+
+
+

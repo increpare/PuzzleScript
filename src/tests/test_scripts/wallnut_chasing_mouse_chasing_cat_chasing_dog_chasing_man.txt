@@ -1,0 +1,597 @@
+title Wallnut chasing mouse chasing cat chasing dog chasing man
+author Stingby12
+homepage https://stingby12.itch.io/
+
+noaction
+run_rules_on_level_start
+
+key_repeat_interval 0.2
+again_interval 0.2
+
+color_palette 5
+
+verbose_logging
+
+========
+OBJECTS
+========
+
+Background
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+
+Target
+DarkBlue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+Wall
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+Player
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+DogIdle
+Lightbrown Black Red
+.....
+0.0..
+101..
+02000
+.0000
+
+DogActiveL
+Lightbrown Black Red
+0.0..
+101.0
+02000
+.0000
+.0..0
+
+DogActiveR
+Lightbrown Black Red
+..0.0
+0.101
+00020
+0000.
+0..0.
+
+CatIdle
+Gray Black White
+.....
+0.0..
+101..
+00000
+.0220
+
+CatActiveL
+Gray Black White
+0.0..
+101.0
+00000
+.0220
+.0..0
+
+CatActiveR
+Gray Black White
+..0.0
+0.101
+00000
+0220.
+0..0.
+
+MouseIdle
+Gray DarkGray Pink
+.....
+.....
+.....
+100..
+.000.
+
+MouseActiveL
+Gray DarkGray Pink
+.....
+.....
+.....
+100..
+.0022
+
+MouseActiveR
+Gray DarkGray Pink
+.....
+.....
+.....
+..001
+2200.
+
+WallnutIdle
+Yellow Orange Blue
+.....
+.....
+..0..
+.011.
+..1..
+
+WallnutActive
+Yellow Orange Blue
+..0..
+.011.
+.212.
+.2.2.
+22.22
+
+Crate
+Orange
+00000
+0...0
+0...0
+0...0
+00000
+
+(--Anim--)
+
+PlayerAnim
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+DogAnimL
+Lightbrown Black Red
+0.0..
+101.0
+02000
+.0000
+.0..0
+
+DogAnimR
+Lightbrown Black Red
+..0.0
+0.101
+00020
+0000.
+0..0.
+
+CatAnimL
+Gray Black White
+0.0..
+101.0
+00000
+.0220
+.0..0
+
+CatAnimR
+Gray Black White
+..0.0
+0.101
+00000
+0220.
+0..0.
+
+MouseAnimL
+Gray DarkGray Pink
+.....
+.....
+.....
+100..
+.0022
+
+MouseAnimR
+Gray DarkGray Pink
+.....
+.....
+.....
+..001
+2200.
+
+WallnutAnim
+Yellow Orange Blue
+..0..
+.011.
+.212.
+.2.2.
+22.22
+
+Spawner
+transparent
+
+SpawnButton
+transparent
+
+HordeButton
+transparent
+
+GoL
+transparent
+
+GoR
+transparent
+
+Delete
+transparent
+
+AscendButton
+transparent
+
+PlayerAscending1
+Black Orange White Blue Lightbrown
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+PlayerAscending2
+Black Orange White Blue Lightbrown
+.000.
+21112
+.222.
+.333.
+.3.3.
+
+PlayerAscending3
+Black Orange White Blue Lightbrown
+.000.
+24142
+.222.
+.333.
+.3.3.
+
+NextStep
+transparent
+
+Light
+yellow
+00000
+00000
+00000
+00000
+00000
+
+LightL
+yellow
+...00
+...00
+...00
+...00
+...00
+
+LightR
+yellow
+00...
+00...
+00...
+00...
+00...
+
+=======
+LEGEND
+=======
+
+. = Background
+# = Wall
+P = Player
+D = DogIdle
+C = CatIdle
+M = MouseIdle
+W = WallnutIdle
+* = Crate
+@ = Crate and Target
+O = Target
+
+DogActive = DogActiveL or DogActiveR
+CatActive = CatActiveL or CatActiveR
+MouseActive = MouseActiveL or MouseActiveR
+
+Dog = DogIdle or DogActive
+Cat = CatIdle or CatActive
+Mouse = MouseIdle or MouseActive
+Wallnut = WallnutIdle or WallnutActive
+
+(--Anim--)
+
++ = PlayerAnim
+% = PlayerAnim and Spawner
+& = PlayerAscending3 and Light
+§ = Light
+µ = Light and SpawnButton
+£ = Light and Delete
+- = Spawner
+? = SpawnButton
+! = HordeButton
+< = GoL
+> = GoR
+X = Delete
+/ = AscendButton
+
+DogAnim = DogAnimL or DogAnimR
+CatAnim = CatAnimL or CatAnimR
+MouseAnim = MouseAnimL or MouseAnimR
+
+Ascend = PlayerAscending1 or PlayerAscending2 or PlayerAscending3
+
+Anim = PlayerAnim or DogAnim or CatAnim or MouseAnim or WallnutAnim
+
+=======
+SOUNDS
+=======
+
+startgame 13270509
+endlevel 22256108
+endgame 22256108
+restart 94088302
+undo 87693501
+
+Crate MOVE 25943107
+CatIdle MOVE 25943107
+MouseIdle MOVE 25943107
+WallnutIdle MOVE 25943107
+
+sfx0 86992703
+DogActive MOVE 47565107
+CatActive MOVE 36092905
+MouseActive MOVE 20048306
+WallnutActive MOVE 18695302
+
+(--Anim--)
+
+DogAnim create 47565107
+DogAnim move 47565107
+CatAnim create 36092905
+CatAnim move 36092905
+MouseAnim create 20048306
+MouseAnim move 20048306
+WallnutAnim create 18695302
+WallnutAnim move 18695302
+
+PlayerAscending3 destroy 58002102
+
+sfx1 52296908
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Target
+Player, Dog, Cat, Mouse, Wallnut, Wall, Crate
+
+(--Anim--)
+
+Light, LightL, LightR
+Spawner, SpawnButton, HordeButton, GoL, GoR, Delete, AscendButton
+PlayerAnim, Ascend, DogAnim, CatAnim, MouseAnim, WallnutAnim
+NextStep
+
+======
+RULES
+======
+
+[> Player | Crate] -> [> Player | > Crate]
+[> Player | CatIdle] -> [> Player | > CatIdle]
+[> Player | MouseIdle] -> [> Player | > MouseIdle]
+[> Player | WallnutIdle] -> [> Player | > WallnutIdle]
+
+right [DogActiveL | ... | Player] -> [DogActiveR | ... | Player]
+left [DogActiveR | ... | Player] -> [DogActiveL | ... | Player]
+right [CatActiveL | ... | DogActive] -> [CatActiveR | ... | DogActive]
+left [CatActiveR | ... | DogActive] -> [CatActiveL | ... | DogActive]
+right [MouseActiveL | ... | CatActive] -> [MouseActiveR | ... | CatActive]
+left [MouseActiveR | ... | CatActive] -> [MouseActiveL | ... | CatActive]
+
+[DogActive | ... | Player] -> [> DogActive | ... | Player]
+[CatActive | ... | DogActive] -> [> CatActive | ... | DogActive]
+[MouseActive | ... | CatActive] -> [> MouseActive | ... | CatActive]
+[WallnutActive | ... | MouseActive] -> [> WallnutActive | ... | MouseActive]
+
+late [DogIdle | Player] -> [DogActiveL | Player] sfx0
+late [CatIdle | DogActive] -> [CatActiveL | DogActive] sfx0
+late [MouseIdle | CatActive] -> [MouseActiveL | CatActive] sfx0
+late [WallnutIdle | MouseActive] -> [WallnutActive | MouseActive] sfx0
+
+(--Anim--)
+
+[Anim] [GoL] -> [left Anim] [GoL] again
+[Anim] [GoR] -> [right Anim] [GoR] again
+[Anim Delete] -> [Delete] again
+[PlayerAscending3 Delete] -> [Delete] again
+
+[PlayerAscending3] -> [up PlayerAscending3] again
+
+late [PlayerAnim SpawnButton] [GoR] [Spawner] -> [PlayerAnim SpawnButton] [GoR] [DogAnimR Spawner]
+late [PlayerAnim SpawnButton] [GoL] [Spawner] -> [PlayerAnim SpawnButton] [GoL] [DogAnimL Spawner]
+late [PlayerAscending3 SpawnButton] [Spawner] -> [PlayerAscending3 SpawnButton] [DogAnimR Spawner]
+
+late [DogAnim HordeButton] [GoR] [Spawner] -> [DogAnim HordeButton] [GoR] [CatAnimR Spawner]
+late [DogAnim HordeButton] [GoL] [Spawner] -> [DogAnim HordeButton] [GoL] [CatAnimL Spawner]
+late [CatAnim HordeButton] [GoR] [Spawner] -> [CatAnim HordeButton] [GoR] [MouseAnimR Spawner]
+late [CatAnim HordeButton] [GoL] [Spawner] -> [CatAnim HordeButton] [GoL] [MouseAnimL Spawner]
+late [MouseAnim HordeButton] [Spawner] -> [MouseAnim HordeButton] [WallnutAnim Spawner]
+
+late [Ascend AscendButton] -> [Ascend NextStep AscendButton] again
+
+late [PlayerAnim AscendButton] -> [PlayerAscending1 AscendButton] again
+
+[PlayerAscending1 NextStep] -> [PlayerAscending2]
+[PlayerAscending2 NextStep] -> [PlayerAscending3] sfx1 win
+
+left [Light | no Light] -> [Light | LightL]
+right [Light | no Light] -> [Light | LightR]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Crate
+No DogIdle
+No CatIdle
+No MouseIdle
+No WallnutIdle
+
+(--Anim--)
+
+No Anim
+No Ascend
+
+=======
+LEVELS
+=======
+
+message "I wonder if I'll get chased by something today"
+message Level 1a of 4
+
+#####.
+#...##
+#.#p.#
+#.*@.#
+#.o@.#
+#....#
+######
+
+message "Oh just great"
+message Level 1b of 4
+
+#####.
+#..d##
+#.#p.#
+#.*@.#
+#.o@.#
+#....#
+######
+
+message "There's more following me ?"
+message Level 1c of 4
+
+#####.
+#mcd##
+#.#p.#
+#.*@.#
+#.o@.#
+#....#
+######
+
+message "I don't need anything please stop following me"
+message Level 2 of 4
+
+####..
+#.o#..
+#..###
+#@p..#
+#..*d#
+#c.m##
+#####.
+
+message "There's not way this wallnut can chase me"
+message Level 3a of 4
+
+####.....
+#..###.#.
+#.d..#...
+##.#.###.
+.#.mp..#.
+.###.#w##
+...#...c#
+.#.###..#
+.....####
+
+message "Okay nevermind"
+message Level 3b of 4
+
+####.....
+#..###.#.
+#.w..#...
+##.#.###.
+.#.mp..#.
+.###.#d##
+...#...c#
+.#.###..#
+.....####
+
+message "They'll never stop following me until I'm stuck"
+message Level 4a of 4
+
+...#######
+####...#w#
+#..#.m.#.#
+#..d.*.o.#
+##c#.*.o.#
+.###.p.###
+...#####..
+
+message "But I still have one last trick up my sleeve"
+message Level 4b of 4
+
+.......###.
+...#####w#.
+####...#.##
+#..#.m.#...
+#..d.*oo.##
+##c#.*...#.
+.###.p.###.
+...#####...
+
+(--Anim--)
+
+.........
+....>....
+.........
+.........
+%.!.?...x
+.........
+.........
+
+.........
+....<....
+.........
+.........
+x...?.!.%
+.........
+.........
+
+.........
+....>....
+.........
+.........
+%!....?.x
+.........
+.........
+
+.........
+....>....
+.........
+.........
++.../....
+.........
+.........
+
+message "I ascend !"
+
+....£....
+.>..§....
+....§....
+....§....
+-!..µ...x
+....&....
+....§....
+
+message "Goodbyeeeee..."
+

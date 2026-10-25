@@ -1,0 +1,2583 @@
+(enigmash with global annotations removed)
+title ENIGMASH
+author Jack Lance
+again_interval 0
+zoomscreen 13x13
+( local_radius 17 )
+run_rules_on_level_start
+homepage tinyurl.com/enigmash-acknowledgements
+
+========
+OBJECTS
+========
+
+Background .
+lightgray
+
+p
+pink
+
+Thing o
+brown
+
+Wall X
+darkgray
+
+sunk
+transparent
+
+one 1
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+two 2
+#f5c6ef
+
+
+three 3
+#dfcc4f yellow
+11111
+01111
+11101
+11111
+10111
+
+four 4
+#556 #334
+11111
+11011
+10001
+11011
+11111
+
+five 5
+#CEB37B #E2BA7C #EACC8F
+11111
+01111
+11101
+11111
+10112
+
+six 6
+#A1F5F5
+
+onehide !
+transparent
+
+twohide @
+transparent
+
+threehide #
+transparent
+
+fourhide $
+transparent
+
+fivehide %
+transparent
+
+sixhide ^
+transparent
+
+onetmp
+transparent
+
+twotmp
+transparent
+
+threetmp
+transparent
+
+fourtmp
+transparent
+
+fivetmp
+transparent
+
+sixtmp
+transparent
+
+
+swapped
+transparent
+
+noswap
+transparent
+
+Toggle
+red
+
+wallone
+BROWN DARKBROWN
+00010
+11111
+01000
+11111
+00010
+
+wallthingone
+BROWN DARKBROWN orange
+20212
+11111
+21002
+11111
+20212
+
+playerone
+Black Orange White Blue
+.000.
+.111.
+22222
+.333.
+.3.3.
+
+backgroundone
+LIGHTGREEN GREEN
+11111
+01111
+11101
+11111
+10111
+
+thingone
+Orange Yellow
+00000
+0...0
+0...0
+0...0
+00000
+
+checkone
+#1111bb
+.000.
+.000.
+00000
+.000.
+.0.0.
+
+toggleone
+Darkred
+.....
+.000.
+.0.0.
+.000.
+.....
+
+walltwo
+#820e00
+00000
+00000
+00000
+00000
+00000
+
+wallthingtwo
+#820e00 #780b26 #b0337a #b76a93 #4d020e #941f3a #9d2b46 #ffa30d #ff8126 #c93700
+08090
+80709
+07080
+90809
+09090
+
+(walltwo
+#d32112 #820e00 #d34900 #b32112
+11111
+11111
+11111
+11111
+11111)
+
+walltwoup
+#d32112 #820e00 #d34900 #9da3c7
+22220
+2...0
+0....
+.....
+.....
+
+walltwodown
+#620e00
+.....
+.....
+.....
+.....
+00000
+
+walltwoleft
+#620e00 #f5c6ef
+.....
+.....
+.....
+0....
+0....
+
+walltworight
+#620e00 #f5c6ef
+.....
+.....
+....0
+....0
+....0
+
+playertwoleft
+#000000 #e72119 #ffffff #ff0000
+.000.
+.200.
+.000.
+.111.
+.0.0.
+
+playerl1
+#000000 #e72119 #ffffff #ff0000
+.....
+.....
+.....
+....0
+....2
+
+playerl1a
+#000000 #e72119 #ffffff #ff0000
+.....
+.....
+.....
+00...
+00...
+
+playerl1b
+#000000 #e72119 #ffffff #ff0000
+00...
+11...
+.0...
+.....
+.....
+
+playerl2
+#000000 #e72119 #ffffff #ff0000
+.....
+..000
+..200
+..111
+..0.0
+
+
+playertworight
+#000000 #e72119 #ffffff #ff0000
+.000.
+.002.
+.000.
+.111.
+.0.0.
+
+playerr1
+#000000 #e72119 #ffffff #ff0000
+.....
+.....
+.....
+0....
+2....
+
+playerr1a
+#000000 #e72119 #ffffff #ff0000
+.....
+.....
+.....
+...00
+...00
+
+playerr1b
+#000000 #e72119 #ffffff #ff0000
+...00
+...11
+...0.
+.....
+.....
+
+playerr2
+#000000 #e72119 #ffffff #ff0000
+.....
+000..
+002..
+111..
+0.0..
+
+backgroundtwo
+#f5c6ef
+
+thingtwo
+#d32112 #ffa30d #ff8126 #c93700
+.223.
+21123
+21123
+32233
+.333.
+
+toggletwo
+#dd0000 #ff6666 #ff3333 #550000
+.....
+.112.
+.112.
+.000.
+.....
+
+checktwo
+#003288 #ffe02c #ffc700 #c87700
+.000.
+00000
+00010
+00000
+00000
+
+(
+)
+
+wallthree
+LightBlue Blue
+11111
+11101
+11111
+10111
+11111
+
+playerthree
+#a46422 #493c2b #000000
+..0..
+.111.
+01110
+02220
+.2.2.
+
+checkpoin
+transparent
+
+backgroundthree
+#dfcc4f yellow
+11111
+01111
+11101
+11111
+10111
+
+3ulb
+Blue
+0....
+.....
+.....
+.....
+.....
+
+3dlb
+Blue
+.....
+.....
+.....
+.....
+0....
+
+3urb
+Blue
+....0
+.....
+.....
+.....
+.....
+
+3drb
+Blue
+.....
+.....
+.....
+.....
+....0
+
+3uly
+yellow
+0....
+.....
+.....
+.....
+.....
+
+3dly
+yellow
+.....
+.....
+.....
+.....
+0....
+
+3ury
+yellow
+....0
+.....
+.....
+.....
+.....
+
+3dry
+yellow
+.....
+.....
+.....
+.....
+....0
+
+u3
+transparent
+
+d3
+transparent
+
+l3
+transparent
+
+r3
+transparent
+
+togglethree
+#dfcc4f yellow #ff2200
+21112
+02121
+11201
+12121
+20112
+
+thingthree
+#444 #111 #777
+.000.
+02200
+02000
+00001
+.011.
+
+checkthree
+black #00a0f0
+.....
+.0111
+.0111
+.0...
+.0...
+
+llink3
+#444 #222 #666 #aaa
+3....
+.....
+.....
+.....
+3....
+
+rlink3
+#444 #222 #666 #aaa
+....3
+.....
+.....
+.....
+....3
+
+dlink3
+#444 #222 #666 #aaa
+.....
+.....
+.....
+.....
+3...3
+
+ulink3
+#444 #222 #666 #aaa
+3...3
+.....
+.....
+.....
+.....
+
+sunkthree
+#111 #000 #222 blue
+30003
+02200
+02000
+00001
+30113
+
+
+wallfour
+#855 #434
+11111
+10101
+11011
+10101
+11111
+
+wallfour2
+#6a8 #9db #486 #153
+20001
+20001
+22220
+23232
+32323
+
+wallfour2down
+#6a8 #9db #486
+.....
+.....
+.....
+01111
+20001
+
+playerfourleft
+#000000 #ffaaaa #ff8888 #888888 #555555
+.111.
+32311
+42421
+22221
+.2.2.
+
+playerfourright
+#000000 #ffaaaa #ff8888 #888888 #555555
+.111.
+22313
+22424
+22221
+.2.2.
+
+backgroundfour
+#556 #334
+11111
+11011
+10001
+11011
+11111
+
+thingfour
+#7777dd #9999ff #5555bb
+.111.
+20011
+20001
+22001
+.222.
+
+wallthingfour
+#855 #434 #7777dd #9999ff #5555bb
+13331
+40203
+42023
+40203
+14441
+
+togglefour
+#885555 #cc6666
+..1..
+.111.
+.010.
+.000.
+..0..
+
+checkfour
+lightblue
+.....
+.000.
+.0.0.
+.000.
+.....
+
+wallfive
+#AA997B #90908E #B9A88C #C1BDAA #C4AC75
+00010
+00010
+11111
+21222
+11111
+
+wallfivealt
+#AA997B #90908E #B9A88C #C1BDAA #C4AC75
+44410
+44410
+11111
+21333
+11111
+
+playerfiveu
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.2.2.
+..2..
+.101.
+.400.
+.03..
+
+playerfivel
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.....
+2.10.
+.2003
+2.140
+.....
+
+playerfived
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+..30.
+.400.
+.101.
+..2..
+.2.2.
+
+playerfiver
+#FF9138 #617CA3 #E2461F #FcA019 #F88330
+.....
+001.2
+3002.
+.41.2
+.....
+
+checkfive
+#2F316f #2F314f
+.....
+.000.
+.111.
+.111.
+.....
+
+backgroundfive
+#CEB37B #E2BA7C #EACC8F
+11111
+01111
+11101
+11111
+10112
+
+thingfive
+#B27D52 darkbrown #E2461F #A26f48
+.2.2.
+..2..
+.101.
+.000.
+..300
+
+thingfive2
+#F9AE00 #FFD987 #FcA019 #FF9138 #E99E00 #EC9009 #EF8128
+.....
+..0..
+.410.
+..4..
+.....
+
+fiveleft
+#F9AE00 #FFD987 #FcA019 #FF9138 #E99E00 #EC9009 #EF8128
+.....
+23...
+30...
+56...
+.....
+
+fiveup
+#F9AE00 #FFD987 #FcA019 #FF9138 #E99E00 #EC9009 #EF8128
+.623.
+.6.3.
+.....
+.....
+.....
+
+fivedown
+#F9AE00 #FFD987 #FcA019 #FF9138 #E99E00 #EC9009 #EF8128
+.....
+.....
+.....
+.603.
+.532.
+
+fiveright
+#F9AE00 #FFD987 #FcA019 #FF9138 #E99E00 #EC9009 #EF8128
+.....
+...33
+....2
+...66
+.....
+
+efiveleft
+transparent
+
+efiveup
+transparent
+
+efivedown
+transparent
+
+efiveright
+transparent
+
+
+togglefive
+#dE937B #f29A7C #fAaC8F
+11111
+01111
+11101
+11111
+10112
+
+playersix1
+#FF9703 #FF8403
+.1.1.
+.111.
+10001
+00000
+.000.
+
+playersix2
+#FF9703 #FF8403
+.000.
+00000
+10001
+.111.
+.1.1.
+
+playersix3
+#FF9703 #FF8403
+..10.
+11000
+.1000
+11000
+..10.
+
+playersix4
+#FF9703 #FF8403
+.01..
+00011
+0001.
+00011
+.01..
+
+legs
+transparent
+
+legs1
+#FF8403 #FF9703
+.1.1.
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+
+legs2
+#FF8403 #FF9703
+.0.0.
+.0.0.
+.0.0.
+.0.0.
+.1.1.
+
+legs3
+#FF8403 #FF9703
+.....
+10000
+.....
+10000
+.....
+
+legs4
+#FF8403 #FF9703
+.....
+00001
+.....
+00001
+.....
+
+thingsix
+#FF9703 #FF8403
+.....
+.000.
+.1.1.
+.111.
+.....
+
+llink
+#FF9703 #FF8403 #A1F5F5
+.....
+00...
+22...
+11...
+.....
+
+ulink
+#FF9703 #FF8403 #A1F5F5
+.121.
+.121.
+.....
+.....
+.....
+
+dlink
+#FF9703 #FF8403 #A1F5F5
+.....
+.....
+.....
+.121.
+.121.
+
+rlink
+#FF9703 #FF8403 #A1F5F5
+.....
+...00
+...22
+...11
+.....
+
+linked
+transparent
+
+backgroundsix
+#A1F5F5
+
+triml
+#109898
+0....
+0....
+0....
+0....
+0....
+
+trimr
+#109898
+....0
+....0
+....0
+....0
+....0
+
+trimu
+#109898
+00000
+.....
+.....
+.....
+.....
+
+trimd
+#109898
+.....
+.....
+.....
+.....
+00000
+
+trimul
+#109898
+0....
+.....
+.....
+.....
+.....
+
+trimdr
+#109898
+.....
+.....
+.....
+.....
+....0
+
+trimur
+#109898
+....0
+.....
+.....
+.....
+.....
+
+trimdl
+#109898
+.....
+.....
+.....
+.....
+0....
+
+tracel1
+#109898
+.....
+.....
+...0.
+.....
+.....
+
+tracel2
+#109898
+.....
+.....
+.00..
+.....
+.....
+
+
+traceu1
+#109898
+.....
+.....
+.....
+..0..
+.....
+
+traceu2
+#109898
+.....
+..0..
+..0..
+.....
+.....
+
+
+tracer1
+#109898
+.....
+.....
+.0...
+.....
+.....
+
+tracer2
+#109898
+.....
+.....
+.00..
+.....
+.....
+
+
+traced1
+#109898
+.....
+..0..
+.....
+.....
+.....
+
+traceD2
+#109898
+.....
+..0..
+..0..
+.....
+.....
+
+trace1
+transparent
+
+trace2
+transparent
+
+
+
+togglesix
+#c75703 #e72403
+.....
+.1.1.
+..1..
+.1.1.
+.....
+
+checksix
+#81d5F5
+.....
+..0..
+.0.0.
+..0..
+.....
+
+check
+transparent
+
+wallsix
+#37C7C7
+
+tmpcheck
+transparent
+
+stopleft
+white
+0....
+0....
+0....
+0....
+0....
+
+stopright
+white
+....0
+....0
+....0
+....0
+....0
+
+stopdown
+white
+.....
+.....
+.....
+.....
+00000
+
+stopup
+white
+00000
+.....
+.....
+.....
+.....
+
+barrierup2
+#ddffff #aaaaaa #ffdddd #ffffdd #ddffdd
+.111.
+.....
+.....
+.....
+.....
+
+barrierdown2
+#aacccc #aaaacc #ccaaaa #ccccaa #aaccaa
+.....
+.....
+.....
+.....
+.....
+
+barrierleft2
+#ddffff #aaaaaa #ffdddd #ffffdd #ddffdd
+.....
+1....
+1....
+1....
+.....
+
+barrierright2
+#aacccc #aaaacc #ccaaaa #ccccaa #aaccaa
+.....
+.....
+.....
+.....
+.....
+
+barrierup
+#ddffff #ddddff #ffdddd #ffffdd #ddffdd
+.1.3.
+.....
+.....
+.....
+.....
+
+barrierdown
+#ddffff #ddddff #ffdddd #ffffdd #ddffdd
+.....
+.....
+.....
+.....
+0.2.4
+
+barrierleft
+#ddffff #ddddff #ffdddd #ffffdd #ddffdd
+.....
+3....
+.....
+1....
+.....
+
+barrierright
+#ddffff #ddddff #ffdddd #ffffdd #ddffdd
+....4
+.....
+....2
+.....
+....0
+
+supported
+transparent
+
+justswappedo
+transparent
+
+justswappedp
+transparent
+
+lmark4
+transparent
+
+rmark4
+transparent
+
+dmark4
+transparent
+
+umark4
+transparent
+
+lmark5
+transparent
+
+rmark5
+transparent
+
+dmark5
+transparent
+
+umark5
+transparent
+
+lmark6
+transparent
+
+rmark6
+transparent
+
+dmark6
+transparent
+
+umark6
+transparent
+
+near1 /
+transparent
+
+near2 ?
+transparent
+
+fixmypuzzle
+transparent
+
+fixmypuzzle2
+transparent
+
+heydontputthatthere
+transparent
+
+exitmark
+transparent
+
+tailmark
+transparent
+
+finishedeating
+transparent
+
+swap1
+transparent
+
+swap2
+transparent
+
+swap3
+transparent
+
+swap4
+transparent
+
+swap5
+transparent
+
+swap6
+transparent
+
+swap7
+transparent
+
+swap8
+transparent
+
+swap9
+transparent
+
+swap10
+transparent
+
+swap11
+transparent
+
+swap12
+transparent
+
+swap13
+transparent
+
+swap14
+transparent
+
+swap15
+transparent
+
+swap16
+transparent
+
+wentleft
+transparent
+
+wentright
+transparent
+
+checkpointmessage
+transparent
+
+branchmessageleft
+transparent
+
+branchmessageright
+transparent
+
+uhhdont
+transparent
+
+branchmessage
+transparent
+
+hideseven
+transparent
+
+seven
+transparent
+
+sevenwall
+black
+
+letterA
+white
+..00.
+....0
+..000
+.0..0
+..000
+
+letterC
+white
+..000
+.0...
+.0...
+.0...
+..000
+
+letterE
+white
+..00.
+.0..0
+.0000
+.0...
+..000
+
+LetterF
+white
+..000
+.0...
+.000.
+.0...
+.0...
+
+letterG
+white
+..00.
+.0..0
+..000
+....0
+..00.
+
+letterH
+white
+.0...
+.0...
+.000.
+.0..0
+.0..0
+
+letter
+white
+..0..
+..0..
+..0..
+.....
+..0..
+
+letterI
+white
+..0..
+.....
+.00..
+..0..
+.000.
+
+letterK
+white
+.0...
+.0..0
+.000.
+.0..0
+.0..0
+
+letterL
+white
+..0..
+..0..
+..0..
+..0..
+..0..
+
+letterN
+white
+.....
+.000.
+.0..0
+.0..0
+.0..0
+
+letterO
+white
+.....
+..00.
+.0..0
+.0..0
+..00.
+
+letterP
+white
+.000.
+.0..0
+.000.
+.0...
+.0...
+
+letterR
+white
+.....
+.000.
+.0..0
+.0...
+.0...
+
+letterS
+white
+..000
+.0...
+..00.
+....0
+.000.
+
+letterT
+white
+00000
+..0..
+..0..
+..0..
+..0..
+
+littlerT
+white
+..0..
+..0..
+.000.
+..0..
+..0..
+
+letterU
+white
+.....
+.0..0
+.0..0
+.0..0
+..000
+
+letterX
+white
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+letterY
+white
+.0..0
+.0..0
+..000
+....0
+.000.
+
+camera
+transparent
+
+camerastick
+transparent
+
+camerashift
+transparent
+
+camerashiftleft
+transparent
+
+(green #f5c6ef yellow #334 #CEB37B #A1F5F5 )
+
+awarpa
+lightgreen green darkgreen
+.210.
+210..
+210..
+210..
+.210.
+awarpb
+yellow #dfcc4f #bfac2f brown
+3210.
+210..
+210..
+210..
+3210.
+
+awarpc
+ #EACC8F #E2BA7C #CEB37B
+.012.
+..012
+..012
+..012
+.012.
+
+awarpd
+yellow #dfcc4f lightblue #bfac2f darkblue
+..013
+...01
+...01
+...01
+..013
+
+
+iwarpb
+transparent
+
+iwarpc
+transparent
+
+activewarp
+transparent
+
+climb1
+transparent
+
+climb2
+transparent
+
+messag
+purple
+0...0
+.0.0.
+..0..
+.0.0.
+0...0
+
+connector1
+transparent
+
+connector2
+transparent
+
+connector3
+transparent
+
+connector4
+transparent
+
+connector5
+transparent
+
+connector6
+transparent
+
+connector7
+transparent
+
+
+goingleft
+transparent
+
+goingright
+transparent
+
+wait
+transparent
+
+wait2
+transparent
+
+touchingone
+transparent
+
+touchingtwo
+transparent
+
+touchingthree
+transparent
+
+winspawn
+transparent
+
+winner
+transparent
+
+dontbegreedy
+transparent
+
+halloweenbowlpleaseonlytakeone
+transparent
+
+reallybadidea
+transparent
+
+oops
+transparent
+
+dangthisissohackyblargh
+transparent
+=======
+LEGEND
+=======
+¿ = oops
+warp = awarpa or awarpb or awarpc or awarpd
+0 = fixmypuzzle and thing
+- = fixmypuzzle2 and thing
+l = stopleft
+r = stopright
+d = stopdown
+u = stopup
+n = stopup and wall
+s = stopdown and wall
+w = stopleft and wall
+e = stopright and wall
+t = toggle
+v = toggle and stopleft
+[ = t and six and onehide
+} = t and six and stopright
+{ = t and six and stopleft
+i = o and t and justswappedo
+& = hideseven
+7 = 5 and stopup and stopdown and stopleft and stopright
++ = check
+num = 1 or 2 or 3 or 4 or 5 or 6 or seven
+hide = onehide or twohide or threehide or fourhide or fivehide or sixhide or hideseven
+tmp = onetmp or twotmp or threetmp or fourtmp or fivetmp or sixtmp
+playerfive = playerfiveu or playerfiver or playerfived or playerfivel
+ae = barrierup or barrierdown or barrierleft or barrierright or playerone or thingone or backgroundone or wallone or playertwoleft or playertworight or thingtwo or backgroundtwo or walltwo or toggleone or toggletwo or backgroundthree or wallthree or thingthree or playerthree or sunkthree or wallfour or playerfourleft or playerfourright or thingfour or backgroundfour or wallfour2 or wallfour2down or togglethree or togglefour or thingfive or playerfive or togglefive or wallfive or backgroundfive or thingsix or playersix1 or playersix2 or playersix3 or playersix4 or backgroundsix or togglesix or wallsix or legs1 or legs2 or legs3 or legs4 or u3 or d3 or l3 or r3 or 3ulb or 3uly or 3urb or 3ury or 3dlb or 3dly or 3dry or 3drb or dlink3 or rlink3 or ulink3 or llink3 or triml or trimd or trimu or trimr or trimul or trimur or trimdl or trimdr or wallthingone or wallthingtwo or thingfive or thingfive2 or fiveleft or fiveright or fivedown or fiveup or wallfivealt or checkone or checktwo or checkthree or checkfour or checkfive or checksix or walltwoup or walltwodown or walltworight or walltwoleft or wallthingfour or playerl1 or playerl1a or playerl1b or playerl2 or playerr1 or playerr1a or playerr1b or playerr2
+y = x or o
+mark5 = lmark5 or dmark5 or rmark5 or umark5 or tailmark
+mark6 = lmark6 or dmark6 or rmark6 or umark6
+mark4 = lmark4 or dmark4 or rmark4 or umark4
+link = ulink or dlink or rlink or llink or linked
+| = heydontputthatthere
+justswapped=justswappedo or justswappedp
+swap = swap1 or swap2 or swap3 or swap4 or swap5 or swap6 or swap7 or swap8 or swap9 or swap10 or swap11 or swap12 or swap13 or swap14 or swap15 or swap16
+went = wentleft or wentright
+* = checkpoin
+< = branchmessageleft
+> = branchmessageright
+: = checkpointmessage
+; = uhhdont
+\ = branchmessage
+Ŧ = letterT
+Ħ = letterH
+Ā = letterA and r
+Ń = letterN and t
+Ķ = letterK and o
+Ŝ = letterS
+Ě = letterF
+Ő = letterO
+Ŗ = letterR
+Ŕ = letterP and r
+Ŀ = letterL and d
+Ą = letterA
+Ŷ = letterY
+Ĩ = letterI
+Ņ = letterN and l
+Ģ = letterG and d
+Ÿ = letterX
+Ĉ = letterC
+Ť = littlerT and u
+Ň = letterN
+Ū = letterU
+Ē = letterE
+ļ = letter and d
+z = u and camerastick
+q = p and camera
+player = camera
+barrier = barrierup or barrierdown or barrierleft or barrierright or barrierup2 or barrierdown2 or barrierleft2 or barrierright2
+' = camerashiftleft
+~ = awarpa
+` = iwarpb
+8 = iwarpc
+9 = awarpd
+" = messag
+efive = efiveleft or efiveup or efivedown or efiveright
+g = connector1 and x
+C = connector2 and x
+h = connector3 and x
+B = connector4 and x
+j = connector5 and x
+] = connector5
+M = connector6 and x
+k = connector7 and x
+going = goingleft or goingright
+connector = connector1 or connector2 or connector3 or connector4 or connector5 or connector6 or connector7
+touching = touchingone or touchingtwo or touchingthree
+po = p or o
+a = winspawn
+f = l and u
+_ = dontbegreedy
+, = reallybadidea
+=======
+SOUNDS
+=======
+SFX0 36772507
+
+sfx1 31029704
+sfx2 8545502
+
+sfx3 53480307
+sfx4 45570309
+
+sfx5 45570309
+
+
+sfx6 57550507
+
+sfx7 75502103
+
+================
+COLLISIONLAYERS
+================
+Background
+num
+hide
+tmp
+p
+Wall,check
+Thing
+sunk
+Toggle
+stopdown
+stopleft
+stopup
+stopright
+sevenwall
+letterA, letterC, letterE, letterF, letterG, letterH, letterI, letterK, letterL, letterN, letterO, letterP, letterR, letterS, letterT, letterU, letterX, LittlerT, letterY, letter
+backgroundone, backgroundtwo, backgroundthree, backgroundfour, backgroundfive, backgroundsix
+wallone, walltwo, wallthree, sunkthree, wallfour, wallfour2, wallfive, wallsix, wallfivealt
+trimu
+trimd
+trimr
+triml
+3ulb, 3uly, trimul
+3urb, 3ury, trimur
+3drb, 3dry, trimdr
+3dlb, 3dly, trimdl
+toggletwo, toggleone, togglethree, togglefour, togglefive, togglesix
+legs, goingleft, goingright
+checkone, checktwo, checkthree, checkfour, checkfive, checksix
+
+playerone, playertwoleft, playertworight, playerl1, playerl1a, playerl1b, playerl2, playerr1, playerr1a, playerr1b, playerr2, playerthree, playerfourleft, playerfourright, playersix1, playersix2, playersix3, playersix4
+
+tracel1, tracel2, traceu1, traceu2, traced1, traced2, tracer1, tracer2
+climb1, climb2, trace1, trace2
+thingone, thingtwo, thingthree, thingfour, thingfive, thingfive2, thingsix
+walltwodown
+walltwoleft,
+walltworight,
+walltwoup,
+
+wallthingone, wallthingtwo, wallthingfour
+wallfour2down
+justswappedo, justswappedp
+tmpcheck
+dmark4, halloweenbowlpleaseonlytakeone, dontbegreedy
+dmark5, efivedown
+dmark6, oops
+umark4,
+umark5, efiveup
+umark6
+lmark4
+lmark5, efiveleft
+lmark6
+rmark4
+rmark5, efiveright
+rmark6
+tailmark
+barrierup, barrierup2
+barrierdown, barrierdown2
+barrierleft, barrierleft2
+barrierright, barrierright2
+supported, touchingone, touchingtwo, touchingthree
+ulink, ulink3, fiveup
+dlink, dlink3, fivedown
+rlink, rlink3, fiveright
+llink, llink3, fiveleft
+playerfive,reallybadidea
+legs1, legs2, legs3, legs4, awarpa, awarpb, iwarpb, iwarpc, awarpc, awarpd, connector
+linked, wait, wait2
+near1
+near2
+fixmypuzzle, winner
+fixmypuzzle2, winspawn
+heydontputthatthere, dangthisissohackyblargh
+u3
+d3
+l3
+r3
+swap
+swapped
+exitmark, messag
+finishedeating
+noswap
+wentleft, wentright
+checkpoin
+branchmessageleft, branchmessageright, branchmessage, checkpointmessage, uhhdont
+
+camerastick,
+camera
+camerashiftleft, activewarp
+camerashift,
+======
+RULES
+======
+down [2 | 2 down player | 2] -> cancel
+[o no mark5] -> [o dangthisissohackyblargh]
+[winspawn] -> [winspawn winner]
+[winner][hideseven] -> [][hideseven]
+[action player][winner] -> win
+
+
+
+[moving camera][ p] -> [stationary camera][ moving p]
+
+
+
+[moving p sevenwall] -> [stationary p sevenwall]
+ [connector1 goingleft camera no wait2][awarpa] -> [connector1][awarpa p camera] again 
+ [connector7 goingright camera no wait2][iwarpb] -> [connector7][awarpb p camera] again message (Left tunnel)
+ [connector1 goingleft camera no wait2][iwarpc] -> [connector1][awarpc p camera] again message (Right tunnel)
+ [connector7 goingright camera no wait2][awarpb] -> [connector7][awarpb p camera] again
+ [connector1 goingleft camera no wait2][awarpc] -> [connector1][awarpc p camera] again
+ [connector7 goingright camera no wait2][awarpd] -> [connector7][awarpd p camera] again
+ 
+ [connector2 goingleft camera no wait2][connector1] -> [connector2][wait connector1 goingleft camera] again
+ [connector3 goingleft camera no wait2][connector2] -> [connector3][wait connector2 goingleft camera] again
+ [connector4 goingleft camera no wait2][connector3] -> [connector4][wait connector3 goingleft camera] again
+ [connector5 goingleft camera no wait2][connector4] -> [connector5][wait connector4 goingleft camera] again
+ [connector6 goingleft camera no wait2][connector5] -> [connector6][wait connector5 goingleft camera] again
+ [connector7 goingleft camera no wait2][connector6] -> [connector7][wait connector6 goingleft camera] again
+ [connector6 goingright camera no wait2][connector7] -> [connector6][wait connector7 goingright camera] again
+ [connector5 goingright camera no wait2][connector6] -> [connector5][wait connector6 goingright camera] again
+ [connector4 goingright camera no wait2][connector5] -> [connector4][wait connector5 goingright camera] again 
+ [connector3 goingright camera no wait2][connector4] -> [connector3][wait connector4 goingright camera] again
+ [connector2 goingright camera no wait2][connector3] -> [connector2][wait connector3 goingright camera] again
+ [connector1 goingright camera no wait2][connector2] -> [connector1][wait connector2 goingright camera] again
+
+ [awarpa | < p camera][connector1] -> [awarpa|][wait goingright camera connector1] again
+ [awarpd | < p camera][connector7] -> [awarpd|][wait goingleft camera connector7] again
+ [awarpb | < p camera][connector7] -> [awarpb|][wait goingleft camera connector7] again
+ [awarpc | < p camera][connector1] -> [awarpc|][wait goingright camera connector1] again
+ 
+ [wait2] -> [] again
+[wait] -> [wait2] again
+
+late [o warp] -> [o warp] message ...don't... (press Z to undo)
+
+[went no p] -> []
+
+
+ down [num no swap no stopdown no swapped|no num no stopup] -> [num|num]
++ left [num no swap no stopleft no swapped|no num no stopright] -> [num|num]
++ right [num no swap no stopright no swapped|no num no stopleft] -> [num|num]
++ up [num no swap no stopup no swapped|no num no stopdown] -> [num|num]
+
+ down [hide no swap no stopdown no swapped|no hide no stopup] -> [hide|hide]
++ left [hide no swap no stopleft no swapped|no hide no stopright] -> [hide|hide]
++ right [hide no swap no stopright no swapped|no hide no stopleft] -> [hide|hide]
++ up [hide no swap no stopup no swapped|no hide no stopdown] -> [hide|hide]
+
+[moving p][o exitmark] -> [moving p][exitmark]
+
+[> p | o mark5] -> [stationary p | o mark5]
+
+(MOVEMENT)
+(one)
+[> p 1| o no mark5] -> [> p 1| > o]
+
+(two)
+
+[tmpcheck] -> []
+[> p 2| o| no y] -> [> p 2| > o|]
+horizontal [> p 2 | y | y] -> [> p 2| y tmpcheck| y]
+horizontal [> p 2 | x ] -> [> p 2| x tmpcheck]
+up [p 2| y][tmpcheck] -> [p 2|y][] (QUADRATIC)
+random up [tmpcheck| ] -> [|tmpcheck]
+
+[climb2] -> []
+[climb1] -> [climb2] again
+right [right p 2][o tmpcheck | no y] -> [2][p wentright climb1| o] again
+left [left p 2][o tmpcheck | no y] -> [2][p wentleft climb1| o] again
+
+[left p 2 went][tmpcheck no x no o no 5] -> [2][p wentleft climb1] again
+[right p 2 went][tmpcheck no x no o 5] -> [2][p wentright lmark5 5 climb1] again
+[right p 2 went][tmpcheck no x no o no 5] -> [2][p wentright climb1] again
+
+
+down [stationary p 2| no o no x] -> [down p 2 |] again
+down [stationary o 2 no x| no p no o no x] -> [down o 2 |] again
+down [stationary p 2 | down o] -> [down p 2 | down o] again
+down [stationary o 2 | down p] -> [down o 2 |down p] again
+down [stationary o 2 | down o] -> [down o 2 |down o] again
+down [stationary o 2 | y 3] -> [down o 2 |y 3] again
+down [stationary o 2 | o 6] -> [down o 2 |o 6] again
+down [stationary o 2 | no mark5 o 5] -> [down o 2 |o 5] again
+down [stationary p 2 | o 3] -> [down p 2 |o 3] again
+down [down o 2 | o 3] -> [down o 2 | down o 3]
+down [down p 2 | o 3] -> [down p 2 | down o 3]
+down [down o 2 | o 6] -> [down o 2 | down o 6]
+down [down o 2 | o 5] -> [down o 2 | down o 5]
+down [p 2][down o 5 | no mark5 o 5] -> [p 2][down o 5 | down o 5]
+
+
+(three)
+[> p 3 | o 2 | x 2] -> [stationary p 3 | o 2 | x 2]
+[> p 3 |o no x] -> [> p 3 | > o no x]
+[moving o 3 | o 3] -> [moving o 3| moving o 3]
++ [p 3][> o no 1| o no 1] -> [p 3][> o | > o]
+
+(four)
+[> p 4|o ] -> [> p 4|> o]
+
+[o umark4 4] -> [up o 4]
+[o dmark4 4] -> [down o 4]
+[o lmark4 4] -> [left o 4]
+[o rmark4 4] -> [right o 4]
+
+[mark4 4] -> [4]
+
+right [> o |4 no o] -> [> o|4 rmark4] again
+up [> o |4 no o] -> [> o|4 umark4] again
+left [> o |4 no o] -> [> o|4 lmark4] again
+down [> o |4 no o] -> [> o|4 dmark4] again
+
+[> o 4|o] -> [stationary o 4| o]
+
+
+
+(three, again)
+[moving o 3 | o 3] -> [moving o 3| moving o 3]
++ [p 3][> o no 1| o no 1] -> [p 3][> o | > o]
+
+(six (dang why does this part have so many rules))
+[mark6 sixhide no p] -> [sixhide]
+[mark6 6 no p] -> [6]
+
+ late up [6 o no linked no fixmypuzzle no fixmypuzzle2| thing no linked no fixmypuzzle2] -> [6 o ulink| thing]
+ late down [6 o no linked no fixmypuzzle2 | thing no linked no fixmypuzzle no fixmypuzzle2] -> [6 o dlink | thing]
+ late left [6 o no linked no fixmypuzzle2| thing no linked no fixmypuzzle2] -> [6 o llink | thing]
+ late right [6 o no linked no fixmypuzzle2 | thing no linked no fixmypuzzle2] -> [6 o rlink | thing]
+ late [6 o no swap no swapped] -> [6 o linked]
+
+ [linked fixmypuzzle] -> [linked]
+ [linked fixmypuzzle2] -> [linked]
+
+[> p mark6| legs] -> [|p mark6]
+[< p 6| legs] -> [stationary p 6| legs]
+
+up [stationary p 6 umark6|no legs] -> [up p 6 umark6|]
+down [stationary p 6 dmark6|no legs] -> [down p 6 dmark6|]
+left [stationary p 6 lmark6|no legs] -> [left p 6 lmark6|]
+right [stationary p 6 rmark6|no legs] -> [right p 6 rmark6|]
+
+up [stationary p 6 umark6| legs] -> [up p 6 umark6|up legs]
+down [stationary p 6 dmark6| legs] -> [down p 6 dmark6|down legs]
+left [stationary p 6 lmark6| legs] -> [left p 6 lmark6|left legs]
+right [stationary p 6 rmark6| legs] -> [right p 6 rmark6|right legs]
+
+up [up p|t sixhide] -> [up p | umark6 t sixhide] again
+down [down p |t sixhide] -> [down p |t dmark6 sixhide] again
+left [left p |t sixhide] -> [left p |t lmark6 sixhide] again
+right [right p |t sixhide] -> [right p |t rmark6 sixhide] again
+
+up [> p][up o|t sixhide] -> [> p > umark6][up o | t sixhide] again
+down [> p][down o |t sixhide] -> [> p > dmark6][down o |t sixhide] again
+left [> p][left o |t sixhide] -> [> p > lmark6][left o |t sixhide] again
+right [> p][right o |t sixhide] -> [> p > rmark6][right o |t sixhide] again
+
+up [up p no 6|6] -> [up p | umark6 6] again
+down [down p no 6|6] -> [down p | dmark6 6] again
+left [left p no 6|6] -> [left p | lmark6 6] again
+right [right p no 6|6] -> [right p | rmark6 6] again
+
+down [no t|up p dmark6 6] -> [|up p dmark6 legs 6]
+up [no t|down p umark6 6] -> [|down p umark6 legs 6]
+right [no t|left p rmark6 6] -> [|left p rmark6 legs 6]
+left [no t|right p lmark6 6] -> [|right p lmark6 legs 6]
+
+late up [ o ulink | no 6 no 3] -> [ o | ]
+late down [ o dlink | no 6 no 3] -> [ o | ]
+late left [ o llink | no 6 no 3] -> [ o | ]
+late right [ o rlink | no 6 no 3] -> [ o | ]
+
+[> p 6| o no mark5] -> [> p 6 | > o]
+
+[> legs | o no mark5] -> [> legs | > o]
+startloop
+[> o 6| o no 1 no mark5] -> [> o 6 | > o]
+up [up o ulink | o] -> [up o ulink | up o]
+down [up o dlink | o] -> [up o dlink | up o]
+left [up o llink | o] -> [up o llink | up o]
+right [up o rlink | o] -> [up o rlink | up o]
+endloop
+startloop
+[> o 6| o no 1 no mark5] -> [> o 6 | > o]
+up [moving o ulink | o] -> [moving o ulink | moving o]
+down [moving o dlink | o] -> [moving o dlink | moving o]
+left [moving o llink | o] -> [moving o llink | moving o]
+right [moving o rlink | o] -> [moving o rlink | moving o]
+endloop
+
+
+late [legs no 6] -> []
+late [link no 6] -> []
+
+(five)
+
+[> p 5| o no mark5] -> [> p 5 | > o]
+
+up [up p |5 no x no mark5] -> [up p | dmark5 5 no x]
+down [down p |5 no x no mark5] -> [down p | umark5 5 no x]
+left [left p |5 no x no mark5] -> [left p | rmark5 5 no x]
+right [right p |5 no x no mark5] -> [right p | lmark5 5 no x]
+
+[tailmark][> p 5| no 5 no x] -> [tailmark][exitmark > p 5|]
+
+
+late up [umark5 no o no p 5|o 5] -> [umark5 finishedeating 5|5]
++ late left [lmark5 no o no p 5|o 5] -> [lmark5 finishedeating 5|5]
++ late right [rmark5 no o no p 5|o 5] -> [rmark5 finishedeating 5|5]
++ late down [dmark5 no o no p 5|o 5] -> [dmark5 finishedeating 5|5]
+late [finishedeating] -> [o]
+
+late [exitmark no o] -> []
+
+late up [p 5][umark5 no o no p 5| no 5] -> [p 5][umark5 o 5|]
++ late down [p 5][dmark5 no o no p 5| no 5] -> [p 5][dmark5 o 5|]
++ late left [p 5][lmark5 no o no p 5| no 5] -> [p 5][lmark5 o 5|]
++ late right [p 5][rmark5 no o no p 5| no 5] -> [p 5][rmark5 o 5|]
+
+late up [umark5 no o no p 5| no 5] -> [umark5 o 5|]
++ late down [dmark5 no o no p 5| no 5] -> [dmark5 o 5|]
++ late left [lmark5 no o no p 5| no 5] -> [lmark5 o 5|]
++ late right [rmark5 no o no p 5| no 5] -> [rmark5 o 5|]
+
+late down [tailmark no o | umark5] -> [|tailmark]
+late up [tailmark no o | dmark5] -> [|tailmark]
+late right [tailmark no o | lmark5] -> [|tailmark]
+late left [tailmark no o | rmark5] -> [|tailmark]
+
+
+
+
+(late [tailmark] -> []
+late [5 o no mark] -> [5 o tailmark])
+
+late [mark5 5 no p no o] -> [5]
+
+(four, again)
+
+right [> o |4 no o] -> [> o|4 rmark4] again
+up [> o |4 no o] -> [> o|4 umark4] again
+left [> o |4 no o] -> [> o|4 lmark4] again
+down [> o |4 no o] -> [> o|4 dmark4] again
+
+
+(TOGGLE)
+late [t justswappedp no 5 no p] -> [t]
+late [t justswappedo no 5 no fivehide no o] -> [t]
+late [t justswappedp 5 no o no p] -> [t 5]
+
+late [p] -> [p noswap]
+late [noswap][justswappedp t 5] -> [][justswappedp t 5]
+late [noswap][justswappedo t 5] -> [][justswappedo t 5]
+late [noswap][mark5 no 5] -> [noswap][]
+late [noswap]-> []
+
+
+
+late [p t no justswappedp no 5 no fivehide] -> [p t swap1 justswappedp] again SFX7
+late [o t no justswappedo no swap no swapped no 5 no fivehide] -> [o t swap1 justswappedo] again SFX7
+late [o t swap justswappedo no swapped][swap justswappedp no swapped] -> [o t][swap justswappedp] (QUADRATIC)
+
+late [p t no justswappedp 5] -> [p t swap1 justswappedp 5] again SFX7
+late [o t no mark5 no justswappedo 5] -> [o t swap1 justswappedo 5] again SFX7
+late [o t mark5 no justswappedp 5] -> [o t swap1 mark5 justswappedp 5] again SFX7
+late [p t no justswappedp fivehide] -> [p t swap1 justswappedp fivehide] again SFX7
+late [o t no justswappedp no justswappedo fivehide] -> [o t swap1 justswappedp fivehide] again SFX7
+
+
+
+
+ [one swap no swapped] -> [onetmp swap]
+ [two swap no swapped] -> [twotmp swap]
+ [three swap no swapped] -> [threetmp swap]
+ [four swap no swapped] -> [fourtmp swap]
+ [five swap no swapped] -> [fivetmp swap]
+ [six swap no swapped] -> [sixtmp swap]
+ [onehide swap no swapped] -> [one swap]
+ [twohide swap no swapped] -> [two swap]
+ [threehide swap no swapped] -> [three swap]
+ [fourhide swap no swapped] -> [four swap]
+ [fivehide swap no swapped] -> [five swap]
+ [sixhide swap no swapped] -> [six swap]
+ [hideseven swap no swapped] -> [seven swap]
+ [onetmp swap no swapped] -> [onehide swap]
+ [twotmp swap no swapped] -> [twohide swap]
+ [threetmp swap no swapped] -> [threehide swap]
+ [fourtmp swap no swapped] -> [fourhide swap]
+ [fivetmp swap no swapped] -> [fivehide swap]
+ [sixtmp swap no swapped] -> [sixhide swap]
+
+(five, weird swap rules)
+
+[touching] -> []
+
+
+up [po | po] -> [po touchingone | po]
+down [po touchingone| po] -> [po touchingtwo | po]
+down [po no touching| po] -> [po touchingone | po]
+left [o touchingtwo| po] -> [o touchingthree | po]
+left [po touchingone| po] -> [po touchingtwo | po]
+left [po no touching| po] -> [po touchingone | po]
+right [o touchingtwo| po] -> [o touchingthree | po]
+right [po touchingone| po] -> [po touchingtwo | po]
+right [po no touching| po] -> [po touchingone | po]
+
+up [swap t 5 no swapped][p no mark5 no touchingtwo| o no mark5 no x] -> [swap t 5][p umark5| o tailmark]
+down [swap t 5 no swapped][p no mark5 no touchingtwo| o no mark5 no x] -> [swap t 5][p dmark5| o tailmark]
+left [swap t 5 no swapped][p no mark5 no touchingtwo| o no mark5 no x] -> [swap t 5][p lmark5| o tailmark]
+right [swap t 5 no swapped][p no mark5 no touchingtwo| o no mark5 no x] -> [swap t 5][p rmark5| o tailmark]
+
+up [swap t 5 no swapped][o tailmark no touchingthree| o no mark5 no x] -> [swap t 5][o umark5| o tailmark]
++ down [swap t 5 no swapped][o tailmark no touchingthree| o no mark5 no x] -> [swap t 5][o dmark5| o tailmark]
++ left [swap t 5 no swapped][o tailmark no touchingthree| o no mark5 no x] -> [swap t 5][o lmark5| o tailmark]
++ right [swap t 5 no swapped][o tailmark no touchingthree| o no mark5 no x] -> [swap t 5][o rmark5| o tailmark]
+(UGLY)
+(up [swap t 5 no swapped][p | o no mark] -> [swap t 5][p umark| o tailmark]
+up [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o umark| o tailmark]
++ down [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o dmark| o tailmark]
++ left [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o lmark| o tailmark]
++ right [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o rmark| o tailmark]
+down [swap t 5 no swapped][p | o no mark] -> [swap t 5][p dmark| o tailmark]
+up [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o umark| o tailmark]
++ down [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o dmark| o tailmark]
++ left [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o lmark| o tailmark]
++ right [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o rmark| o tailmark]
+left [swap t 5 no swapped][p | o no mark] -> [swap t 5][p lmark| o tailmark]
+up [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o umark| o tailmark]
++ down [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o dmark| o tailmark]
++ left [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o lmark| o tailmark]
++ right [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o rmark| o tailmark]
+right [swap t 5 no swapped][p | o no mark] -> [swap t 5][p rmark| o tailmark]
+up [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o umark| o tailmark]
++ down [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o dmark| o tailmark]
++ left [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o lmark| o tailmark]
++ right [swap t 5 no swapped][o tailmark | o no mark] -> [swap t 5][o rmark| o tailmark])
+
+
+
+
+
+
+ [swapped no swap] -> []
+ [swap swapped] -> [swapped]
+ [swap no swapped] -> [swap swapped]
+
+ down [swap swapped no stopdown| no stopup no swapped] -> [swap swapped|swap] again
+ left [swap swapped no stopleft| no stopright no swapped] -> [swap swapped|swap] again
+ right [swap swapped no stopright| no stopleft no swapped] -> [swap swapped|swap] again
+ up [swap swapped no stopup| no stopdown no swapped] -> [swap swapped|swap] again
+
+startloop
+ down [swap15 no swapped no stopdown| no stopup no swapped no swap15] -> [swap15 |swap15]
+ left [swap15 no swapped no stopleft| no stopright no swapped no swap15] -> [swap15|swap15]
+ right [swap15 no swapped no stopright| no stopleft no swapped no swap15] -> [swap15 |swap15]
+ up [swap15 no swapped no stopup| no stopdown no swapped no swap15] -> [swap15 |swap15]
+endloop
+
+
+[swap14] -> [swap15]
+[swap13] -> [swap14]
+[swap12] -> [swap13]
+[swap11] -> [swap12]
+[swap10] -> [swap11]
+[swap9] -> [swap10]
+[swap8] -> [swap9]
+[swap7] -> [swap8]
+[swap6] -> [swap7]
+[swap5] -> [swap6]
+ [swap4] -> [swap5]
+ [swap3] -> [swap4]
+ [swap2] -> [swap3]
+ [swap1] -> [swap2]
+
+
+(STOPPING)
+[> p | exitmark] -> [stationary p | exitmark]
+up [up p | o mark5 no dmark5] -> [stationary p | o mark5]
+down [down p | o mark5 no umark5] -> [stationary p | o mark5]
+right [right p | o mark5 no lmark5] -> [stationary p | o mark5]
+left [left p | o mark5 no rmark5] -> [stationary p | o mark5]
+
+[> o 5| x no 3] -> [stationary o 5| x no 3]
+[> o 5| stationary o] -> [stationary o 5| o]
+
+[x moving o no 3] -> [x stationary o]
+(during swap just dont....)
+[swap][moving o] -> [swap][stationary o] (QUADRATIC)
+[swap][moving p] -> [swap][stationary p] (QUADRATIC)
+(one)
+[> o 1| o] -> [stationary o 1| o]
+[> o| o 1] -> [stationary o| o 1]
+[> o 1| x no 3] -> [stationary o 1| x no 3]
+[> p 1| stationary y no wallfour] -> [stationary p 1| stationary y]
+
+(two)
+[> o 2 | x no 3] -> [stationary o 2 | x no 3]
+[> p 2| stationary y no wallfour] -> [stationary p 2| stationary y]
+
+(three)
+[> o 3| x no 3] -> [stationary o 3| x no 3]
+[moving o 3 | stationary o 3] -> [stationary o 3| stationary o 3]
+[> p 3 | stationary y no wallfour] -> [stationary p 3 | stationary y]
+
+(four)
+[> o 4|o] -> [stationary o 4| o]
+[> o 4|x no three] -> [stationary o 4| x]
+[> o 4|p] -> [stationary o 4| p]
+[> p 4|stationary o] -> [stationary p 4| o]
+[> p 4|stationary wallfour2] -> [stationary p 4| wallfour2]
+[> p 4| wall no four] -> [stationary p 4 | wall]
+
+
+
+(five)
+
+[> p 5| stationary o] -> [stationary p 5| o]
+
+[> p 5| x] -> [stationary p 5| x]
+
+up [stationary p no 6 no 2|dmark5 dangthisissohackyblargh] -> [p|]
+down [stationary p no 6 no 2|umark5 dangthisissohackyblargh] -> [p|]
+left [stationary p no 6 no 2|rmark5 dangthisissohackyblargh] -> [p|]
+right [stationary p no 6 no 2|lmark5 dangthisissohackyblargh] -> [p|]
+
+[dangthisissohackyblargh] -> []
+
+ [up p 5 umark5] -> [stationary p 5 umark5]
+ [down p 5 dmark5] -> [stationary p 5 dmark5]
+ [left p 5 lmark5] -> [stationary p 5 lmark5]
+ [right p 5 rmark5] -> [stationary p 5 rmark5]
+
+
+(six)
+[> o 6| x no 3] -> [stationary o 6| x]
+[> p 6| x no 4] -> [stationary p 6|x]
+[> legs | x] -> [stationary legs | x]
+[> legs | stationary o] -> [stationary legs | stationary o]
+[> p | stationary legs] -> [stationary p | stationary legs]
+[> p | stationary o] -> [stationary p | stationary o]
+[> o 6 | horizontal p] -> [stationary o 6| horizontal p]
+[> o 6 | stationary p] -> [stationary o 6| stationary p]
+startloop
+[> o | stationary o] -> [stationary o | stationary o]
+up [stationary o ulink | o] -> [stationary o ulink | stationary o]
+down [stationary o dlink | o] -> [stationary o dlink | stationary o]
+left [stationary o llink | o] -> [stationary o llink | stationary o]
+right [stationary o rlink | o] -> [stationary o rlink | stationary o]
+endloop
+[> p | stationary o] -> [stationary p | stationary o]
+
+[> legs | stationary o] -> [stationary legs | stationary o]
+[> p | stationary legs] -> [stationary p | stationary legs]
+late [p legs] -> [p]
+[stationary p | legs] -> [stationary p | stationary legs]
+[> p mark6 6| mark6 ] -> [> p 6| mark6 ]
+[moving p mark6 6] -> [moving p moving mark6 6]
+[moving o link] -> [moving o moving link]
+
+late [heydontputthatthere thing] -> again message Hey, are you *trying* to softlock yourself? Let me undo that for you.
+[p | heydontputthatthere stationary thing] -> [< p | heydontputthatthere < thing]
+
+
+[^ p| legs] -> [^ p |]
+[v p| legs] -> [v p| ]
+
+
+late [p messag] -> [p] message Oh dang, I made a secret but now I have to decide what to put here now. Here have this silly drawing: tinyurl.com/enigmash
+
+(two again)
+[> o 2| stationary o 6 ] -> [stationary o 2| stationary o 6]
+
+(GRAVITY)
+
+(two)
+late down [p 2 | no o no x] -> [p 2 |] again
+late down [o 2 no x |no p no o no x] -> [o 2 |] again
+
+(three)
+late [supported] -> []
+late [o no x 3] -> [o supported 3]
+late [o supported 3|o 3] -> [o supported 3 | o supported 3]
+late right [o x 3 no supported no swap|no swap] -> [sunk 3 no swap|] SFX4
+(late [o x 3 no supported fivehide] -> [sunk 3 fivehide])
+
+(six)
+late up [umark6 p | no x no legs] -> again
+late down [dmark6 p | no x no legs] -> again
+late left [lmark6 p | no x no legs] -> again
+late right [rmark6 p | no x no legs] -> again
+
+
+(AESTHETIC)
+late [] -> [?]
+(debug)
+late [? ae] -> [?]
+
+
+(late [? check one] -> [? check one checkone]
+late [? check two] -> [? check two checktwo]
+late [? check three] -> [? check three checkthree]
+late [? check four] -> [? check four checkfour]
+late [? check five] -> [? check five checkfive]
+late [? check six] -> [? check six checksix])
+[left p] -> [left p left wentleft]
+[right p] -> [right p right wentright]
+[vertical p wentleft] -> [vertical p vertical wentleft]
+[vertical p wentright] -> [vertical p vertical wentright]
+
+(one)
+late [? wall one] -> [? wall one wallone]
+late [? thing one] -> [? thing one thingone]
+late [? wall thing one] -> [? wall thing one wallthingone]
+late [? p one] -> [? p one playerone]
+late [? toggle one] -> [? toggle one toggleone]
+late [? background one] -> [? background one backgroundone]
+
+(two)
+late [? wall two] -> [? wall two walltwo]
+late up [walltwo no stopup| no wall no stopdown] -> [walltwo walltwoup | ]
+late down [walltwo | no wall] -> [walltwo walltwodown | ]
+late left [walltwodown | no wall] -> [walltwodown walltwoleft | ]
+late right [walltwodown | no wall] -> [walltwodown walltworight | ]
+late [? thing two] -> [? thing two thingtwo]
+late [? wall thing two] -> [? wall thing two wallthingtwo]
+late [? p two wentleft] -> [? p two wentleft playertwoleft]
+late [? p two wentleft climb1] -> [? p two wentleft climb1 playerl1]
+late [? p two wentleft climb2] -> [? p two wentleft climb2 playerl2]
+late right [playerl1|] -> [playerl1|playerl1a]
+late down [playerl1a|] -> [playerl1a|playerl1b]
+late [? p two wentright] -> [? p two wentright playertworight]
+late [? p two wentright climb1] -> [? p two wentright climb1 playerr1]
+late [? p two wentright climb2] -> [? p two wentright climb2 playerr2]
+late left [playerr1|] -> [playerr1|playerr1a]
+late down [playerr1a|] -> [playerr1a|playerr1b]
+late [? toggle two] -> [? toggle two toggletwo]
+late [? background two] -> [? background two backgroundtwo]
+
+(three)
+late [? wall three] -> [? wall three wallthree]
+late [? sunk three] -> [? sunk three sunkthree]
+late [? thing three] -> [? thing three thingthree]
+late [? p three] -> [? p three playerthree]
+late [? toggle three] -> [? toggle three togglethree]
+late [? background three] -> [? background three backgroundthree]
+late up [? three|no wall no sunk] -> [? three u3 |]
+late down [? three|no wall no sunk] -> [? three d3 |]
+late left [? three|no wall no sunk] -> [? three l3 |]
+late right [? three|no wall no sunk] -> [? three r3 |]
+late [? wall u3 l3] -> [? wall u3 l3 3uly]
+late [? wall u3 r3] -> [? wall u3 r3 3ury]
+late [? wall d3 l3] -> [? wall d3 l3 3dly]
+late [? wall d3 r3] -> [? wall d3 r3 3dry]
+late [? 3 no wall no sunk no u3 no l3] -> [? 3 3ulb]
+late [? 3 no wall no sunk no u3 no r3] -> [? 3 3urb]
+late [? 3 no wall no sunk no d3 no l3] -> [? 3 3dlb]
+late [? 3 no wall no sunk no d3 no r3] -> [? 3 3drb]
+late up [3 thing | 3 thing] -> [3 thing ulink3 | 3 thing dlink3]
+late right [3 thing | 3 thing] -> [3 thing rlink3 | 3 thing llink3]
+
+(four)
+late [? wall four | no wall four] -> [? wall four wallfour | four]
+late [? wall four no wallfour] -> [? wall four wallfour2]
+late up [wall four wallfour2 |? four ] -> [wall four wallfour2 |? wallfour2down four]
+late [? thing four] -> [? thing four thingfour]
+late [? wallfour thingfour] -> [? wallfour thingfour wallthingfour]
+late [? p four wentleft] -> [? p four wentleft playerfourleft]
+late [? p four wentright] -> [? p four wentright playerfourright]
+late [? toggle four] -> [? toggle four togglefour]
+late [? background four] -> [? background four backgroundfour]
+
+(five)
+
+late [efive no o] -> []
+late [efive no mark5] -> []
+late right [? wall five] -> [? wall five wallfive]
+(late right [wall no five |? wall five] -> [wall|? wall five wallfive]
+late right [wallfivealt |? wall five] -> [wallfivealt|? wall five wallfive]
++ late right [wallfive |? wall five] -> [wallfive|? wall five wallfivealt])
+late [? thing mark5 five] -> [? thing mark5 five thingfive2]
+late [? thing no mark5 five] -> [? thing five thingfive]
+late [? umark5 five] -> [? umark5 five fiveup]
+late [? dmark5 five] -> [? dmark5 five fivedown]
+late [? lmark5 five] -> [? lmark5 five fiveleft]
+late [? rmark5 five] -> [? rmark5 five fiveright]
+
+late up [fiveup | five] -> [fiveup | fivedown five]
+late down [fivedown | five] -> [fivedown | fiveup five]
+late left [fiveleft | five] -> [fiveleft | fiveright five]
+late right [fiveright | five] -> [fiveright | fiveleft five]
+
+late [efiveup five] -> [efiveup fiveup five]
+late [efivedown five] -> [efivedown fivedown five]
+late [efiveleft five] -> [efiveleft fiveleft five]
+late [efiveright five] -> [efiveright fiveright five]
+
+late [? p umark5 five] -> [? p umark5 five playerfived]
+late [? p dmark5 five ] -> [? p dmark5 five playerfiveu]
+late [? p lmark5 five ] -> [? p lmark5 five playerfiver]
+late [? p rmark5 five ] -> [? p rmark5 five playerfivel]
+late [? p five no mark5] -> [? p five playerfiveu]
+late up [p fiveup| fivedown no thing] -> [p|]
+late down [p fivedown| fiveup no thing] -> [p|]
+late left [p fiveleft| fiveright no thing] -> [p|]
+late right [p fiveright| fiveleft no thing] -> [p|]
+
+
+late [? toggle five] -> [? toggle five togglefive]
+late [? background five] -> [? background five backgroundfive]
+
+
+(six)
+late [? wall six] -> [? wall six wallsix]
+late [? thing six] -> [? thing six thingsix]
+late [? p six umark6 ] -> [? p six umark6 playersix1]
+late [? p six dmark6 ] -> [? p six dmark6 playersix2]
+late [? p six lmark6 ] -> [? p six lmark6 playersix3]
+late [? p six rmark6] -> [? p six rmark6 playersix4]
+late [? toggle six] -> [? toggle six togglesix]
+late [? background six] -> [? background six backgroundsix]
+late [? legs|playersix1] -> [? legs legs1|playersix1]
+late [? legs|playersix2] -> [? legs legs2|playersix2]
+late [? legs|playersix3] -> [? legs legs3|playersix3]
+late [? legs|playersix4] -> [? legs legs4|playersix4]
+late up [? wall 6 | no wall] -> [? wall 6 trimu | ]
+late down [? wall 6 | no wall] -> [? wall 6 trimd | ]
+late left [? wall 6 | no wall] -> [? wall 6 triml | ]
+late right [? wall 6 | no wall] -> [? wall 6 trimr | ]
+late right [? wall 6 | trimu] -> [? wall 6 trimur | trimu]
+late right [? wall 6 | trimd] -> [? wall 6 trimdr | trimd]
+late left [? wall 6 | trimu] -> [? wall 6 trimul | trimu]
+late left [? wall 6 | trimd] -> [? wall 6 trimdl | trimd]
+
+late [/] -> []
+late [?] -> []
+
+late up [stopup no seven| no seven] -> [stopup barrierup2 | barrierdown2]
+late up [ no seven|stopdown no seven] -> [barrierup2 |stopdown barrierdown2]
+late left [stopleft no seven| no seven] -> [stopleft barrierleft2 | barrierright2]
+late left [ no seven|stopright no seven] -> [barrierleft2 |stopright barrierright2]
+
+late up [one |no one] -> [one barrierup | barrierdown]
+late up [two |no two] -> [two barrierup | barrierdown]
+late up [three |no three] -> [three barrierup | barrierdown]
+late up [four |no four] -> [four barrierup | barrierdown]
+late up [five |no five] -> [five barrierup | barrierdown]
+late up [six |no six] -> [six barrierup | barrierdown]
+late left [one |no one] -> [one barrierleft | barrierright]
+late left [two |no two] -> [two barrierleft | barrierright]
+late left [three |no three] -> [three barrierleft | barrierright]
+late left [four |no four] -> [four barrierleft | barrierright]
+late left [five |no five] -> [five barrierleft | barrierright]
+late left [six |no six] -> [six barrierleft | barrierright]
+
+(seven)
+
+[moving p seven] -> [stationary p seven]
+late [p seven] -> [p seven]
+late [t seven] -> [seven]
+late [o seven] -> [seven]
+late [seven barrier] -> [seven]
+late [seven no x] -> [seven x sevenwall]
+
+late [p checkpoin] -> [p] checkpoint
+
+(messages)
+
+left [> o | halloweenbowlpleaseonlytakeone] -> [|halloweenbowlpleaseonlytakeone] message >:| (press Z to undo)
+left [> o | dontbegreedy] -> [> o | halloweenbowlpleaseonlytakeone]
+
+late [p checkpointmessage] -> [p] message BTW, If you press R to reset, it won't put you all the way at the beginning. There are checkpoints scattered along the way.
+[> p 5 | uhhdont] -> message Uhhhhhhh... Trust me, bud, you don't want to do that. (press Z to undo)
+
+right [right p| branchmessageleft] -> message Just FYI, make sure you restart to the most recent checkpoint before exploring another region. Otherwise, you could mess up a puzzle here and get a checkpoint somewhere else, causing it to be permanently messed up. (You can ignore this if you did)
+left [left p| branchmessageright] -> message Just FYI, make sure you restart to the most recent checkpoint before exploring another region. Otherwise, you could mess up a puzzle here and get a checkpoint somewhere else, causing it to be permanently messed up. (You can ignore this if you did)
+right [right p| branchmessageleft][branchmessage] -> [right p| branchmessageleft][]
+left [left p| branchmessageright][branchmessage] -> [left p| branchmessageright][]
+
+late [o reallybadidea] -> message Er... that seems like a bad idea (press Z to undo)
+
+[> p 5 | oops] -> message Oops, puzzle design is hard. How bout we both just pretend we don't see that... (press Z to undo) 
+
+right [right o| branchmessageleft] -> [right o|] checkpoint
+left [left o| branchmessageright] -> [left o|] checkpoint
+
+late [camera no camerastick no camerashift no p][p] -> [][camera p]
+late left [camerashiftleft camera no camerashift] -> [camerashiftleft camera camerashift]
+late left [camerashiftleft camera camerashift|] -> [|camera camerashift]
+[camera camerashift][moving p] -> [moving camera moving camerashift][moving p]
+[camera camerastick camerashift] -> [camera camerastick]
+
+up [> p 5| no 5] -> [> p 5 efiveup | no 5]
+down [> p 5| no 5] -> [> p 5 efivedown | no 5]
+left [> p 5| no 5] -> [> p 5 efiveleft | no 5]
+right [> p 5| no 5] -> [> p 5 efiveright | no 5]
+
+[moving o one] -> SFX0
+[up p two] -> SFX1
+[p two climb1] -> SFX1
+down [down o two|two no x no o| x] -> SFX2
+[moving o three] -> SFX3
+[moving o four] -> SFX5
+[moving p five] -> SFX6
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+
+
+message See link below for credits/thanks
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....xxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.qxxxoo.1xxxxwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxoo..*.ooxxxxxwxxxxxx.....xxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.o.xxx......*l.xxxxx..dddssssxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxw.xxxxx.r.o.xx.r*...xxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxw.xxxxx.r.oxxx.rx...ssssssssssssswxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxw.xxxxx.r...xxxr.o..l.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxw.xxxxx.r...xxxe.x.roo.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxw.xxxxxxexx*xxxe.x..l..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxsxxxxxxxxxxxxxxw.xxxxxxexxxxxxxnw..l.oxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwnnnnnnnnnnnnnnx.xxennnnxxxxxxx*lxe..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxoxxxxxxxx.xxexxxxxx...xxxlxexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxx....o...*......xexxxxx....xxedxexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxx.x..o..xxx....2xexx..x*o.xxxxonnxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxx.x..o..xxx.....xex...xxo.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxx.x..o.:xxxxxxxxxex3..xxxxxxxsdsssxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxx.xxxxxxxxxxxxxxxesdddsxxxxxeooox.wxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxx.xxxxxxxxxxxxxxxxx.o.xwxxxxeo..xowxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxewxx.xxxxxsssxxxxxx....o.xwxxxxeo..x1wxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxewxx*xxxxexxexxxxx.*xxxxxexxxxxe...xdwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ssssssssssssssssssssssssssssesssdd...r*.ol.+...xxxxxxxwxxxxxnnnnxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxnexx.r.xxex.olxxxxxxxxxssswxxxxxxxxx*xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxexx.r.o.ex..l..o.xxxxxwxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxexx.rxx.rx..lsdsdssssswxxxxxxxxxoox..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx...xxxxxxxxxxxex..r...rx..u.....xxxxwxx.o..xx.@3...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.....xxxxxxxxxxex.1rxxxex........xxxxwxx.o.*xx....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx..t..xxx*..xxxxesxxxnnnnxxxxxxxxxx.*rxxx.o.txxxxxtxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.....oxxxx.....xxexxxxxxxxxxxxxxxx...rsxxxxxxxxxxx.o..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.....xxxxxoxtx.xxexxxxxxxxxxxx.......xexxxxxxxxxxx.o..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx.x..xxexxxxxxxxxsss.oooo.xxennnnnnnnnnnnnnnnnnnnnnnnnwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxo.....xexxxxxxxxexxxnuuuuunnnxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx..x..xexx@dddsxexxxx..2.#xxsxxxxxxxxxxxsxxxxxxxxxxsxxwxsssssssssssssssssssssss
+xxxxxxxxxxxxxxx...xxxxxxxxxxxxexx.l.2$unwxennuuuuwswnnnnnnnnnnnwnnnnnnnnnnxnnnnxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.t.xxxxssssssssexstl....exxexx..3.nxwxxxxxxxxxxxwxxxxxxo.....oo.xxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.txx*.oxxxexxxx*xxxne.u..x.xexxexxxx..xxwxxxxxxxxxxxwxxx...oxxxxx.sssxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.xxxxxxxxxexxxx.....r..t.xrnnxxexxxxxxxxwxxxxxxxxxxxwxxx...oxxxxx*vttwxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx*xxxxxxxxxexxxxxxxxxe.o.oxrxxxxexxxxxxxxwxxxxxxxxxxxwxxx...o...xxe[ttl.*.xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx$xxxxxxxxxesssssxxxxswxxxxrxxxxexxxxsssswxxxxxxxxxxxwxxx1^.o...xxetttwxsdssxxxxxxxxxxxxxxxx
+xxxxxxxxxxx3.xxxxxxxxexxxxennnntv....rsxxxe..!*wxxxwxxxxxxxxssswxxx.......xxxnnnss{tt}sxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxennnnxx..exxxxe.x..xxessseooodwxtxwxxxxxxxe..ewxxs...t...xxxxxe.t.t.ttwxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.x.ool.......exxxxe.xx..xexxxn.t.wx..xwxxxxxxxsw.xnnnesss.x..xxxxxe[.ttt}nxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.x...l..x..xxexxxxxnnnnunnwxx....wx..xnwxxxxen.x..oo..wxedsssssssset..tt.wxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.....l....4.xexxsssssssssexxx....wx..xxwxxxxex.x.o0...wx*dwxxxxxxxwnnl.ttwxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx....xlx....xxexxwxxxxxw.1nwxx.xxxwx..xxwxxxxe.ox......l_3l......6.uuwvrnuxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx..xxexxxxxxxxexxwxx...l..esssdssswx..xxwxxxxe.o.....6.wxexxxx.sxxxxxwnlw.xxxxxxxxxxxxxxxx
+ssssssssssss*.xxxexxxxxxxxswxwx....l..xwxx3xxxxx..xxwxxxxe.........wxxnnnnuesssxswsns.xxxxxxxxxxxxxxxx
+xxxxxxxxxxxe.xsssennnnnnnnexxw.....wxxxwxx@xxxxxxxxxwxxxxexxxxxx*xxwxxxxxxrnl..u.u2u*lxxxxxxxxxxxxxxxx
+xxxxxxxxxxxe.r..oll.xx...ru$2l.....l.xxwxxddod.xxxxxwxxennxxxxxx.xed..xxxx*wuuuuuuuunlxxxsssssssssssss
+xxxxxxxxxxxxnnx.xnx.....ru...l....xw.xxnnneeowuunnnnwxxexxxxx.....x.w.xxxx.w6.o.ooo.xlxxxwxxxxwxxxxxxx
+xxxxxxxxxxxxxxxxxxxx...ru....w.....l.xxxxxexnx.2xxxxwxxexxxx........l.xxxx.w..o--.o.xlxxxwxxxxwxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx...l.ruuxx...rsxxxxxxexsxsdxxxxwxxexxx.....xxxxwxxxxxxl........xlxxxwxxxxwxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx4.r..r..xxx...ro.x..xxnwu.*unnnxxxex......xxxxxwxxxxsswssssssssslssswxxxxwxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx.ldrxxxxxx.xr..*..xxxw....xxxxxxe......xssssswsssswenxxxxxxsexnxxxwxxxxwxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx..utuxxxxxx..r..x...*<l.....>..*3r.....xxwxxxxne.2r.xnnnnnnneexxxxxwxxxxwxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx....@xxxxxxxxr..xxxxxxw....xxxxxxedsssssswxxxxxe.xe*..1@.t..exwxxxxwxxxxwxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxrxxxxxs`.l.\....8xxxx.xxxx.;w.2%..e;xex.xxoo.x.e.wx...l.*xxwxxxxxxx
+xxxxxxxxxxxxxxxssssssssxxxxxxxxxxxxrsksseowxw..3.xxxxxssssgss.;l.....r;ssw.xxoo.x.e3wx.t.wx.xxwxxxxxxx
+xxxxxxxxxxxxxxxw...o.xessxxxssxxxMxexnxru*uul<....>..r....u*.uuwCx.xxenxex.xxoox..eeoo1%.wxxxxwxxxxxxx
+nnnnnnnnnnnnnnnl..xx..twonnnwjnnnnnnxxxr,enwwxxxxxxxxexxxxx.xxxwot.xhexxex.euuuuunnlwsssxw.t.xwxxxxxxx
+xxxxxxxxxxx.3*xl.x...1@w.B.tl.xxxxxxxxxtnnxwwxxxxxxxxex.x..o..xwoxxxxexxBnnn.]..x*rrnooonwo#5.wxxxxxxx
+xxxxxxxxxx..xgxlxc...htw....l*x....xxxxooxxwwxxxxxxxxexo...x..*lossssswxxxxx1%....Mnooxoesddddwxxxxxxx
+xxxxxxxxxx*xxxxwxx..x..l.1@tlxxx......xx.!xwwx...xxxxex.xxssdsxnnssddesxxxxxtoooooxxxxkoxwx*xxxxxxxxxx
+xxxxxxxxxxdxsset.......w.x..lxxxxx.xx...3.sww..xxxxxxex.xe5...uuu....nxnwxxxxxxxxoooooooxwx...9xxxxxxx
+xxxxxxxxeniu..nl.x..x.rnnnnnxxx..t.xxxxssswsw*xx"xxxxex.xe.......x...xsxwsennnnnnwxxxxxxxwxxtxxxxxxxxx
+xxxxxx~.r3t.t.etxxxxx.rsxxxxxxx....xxxexsssl..xxxxxxxex.xxuuunuuunuuune.u.u.xxxxennnnnnnn..x.xxxxxxxxx
+xxxxxxxxe@ttt.rsxxennnnnnnwxxxxxxxxxxxexwxx.ssxxsxssxex.xx...x1..x...xe.....xxxxxwxxx..x.o.x.xxxxxxxxx
+xxxxxxxxe.tttxxolxexxxxxxxwxxxxxxxxxxxeexxxdl.wslwlrses.xx.ox...x...xxe....#xxxxexxxx....x.x.xxxxxxxxx
+xxxxxxxxe.tttxxolxexxxxxxennnnnnnnnnnnnexxxl..u..u..xne.xx..x...x.....r.....xxxxxwxx.2x..x.x.xxxxxxxxx
+xxxxxxxxe..tt..r.*ex3oo..xwxxxennnnnnnnnxeu..dddddddd.e..xxxxxxxxxxx.xe....dsssse¿*o.%o.xx...xxxxxxxxx
+xxxxxxxxxw.t.xxxw.rt@.o..xwxtxxwxxxxxxxxxxw..l......r.rs.............xexxxedeo1wnxxxxxotxx.xxxxxxxxxxx
+xxxxxxxxxw...xxesxrt...x.xwx*xxwxxxxxxxxxxw..l.4....r..rxxxxxxxxxxxxxxexxxstwuuxxxxxxxx....xxxxxxxxxxx
+xxxxxxxxxnnnnnnnwnn.x....xwx3xxwxxxxxxxxxed..l......rx.rxxxxennnnnwxxxxnnnensxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxwxx.x....xwx@xxwxxxxxxxxxxed.l..d...r..exxxxex.$5xwxxxxxxxenwnnnnnnnnnnnnnnnnnnnnnnnnn
+xxxxxxxxxxxxxxxxwxxxxxxxxxwxxxxwxxxxxxxxxxxe.unuouuuu.rn..*.r..t.ol..xxxxxexxxxxxx.6.....xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxwxxxxxxxxxwxxxxwxxxxxxxxxxxe...6d...dxesdssxex...xwx1xxxxxexxxxxxx.......xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxwxxxxxxxxxwsxxxwxxxxxxxxxxxedddredsresswxxxwexxxxexx*xxxxxexxxxx.....7..7..xxxxxxxxxxx
+nnnnnnnnnnnnnnnnnnnnnnnnnnnennnnnnnnnnnwxxxxxxxnxxesleooooxwxnnnnnxx.xxxxxexxxxx....7..7...xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxexxxxxxx2xxxwxxxxxxxxxxxx.ex4%txwxxxxxxennnnnnnwwxxxx...7..7....xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxssssssssessssxxxxxxxwxxxxxxxxxxxx*ruwxxxwxxxxxxex4%..xxww..*...7..7..7..xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe&1..l&4.ul.&6wxxxxxxwxxxxxxxxxxxxxexnnnnxxxxxxxex..oo.ollxx.x....7..7...xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe....l...dl.o.wxxxxxxwxxxxxxxxxxxxxexxxxxxxxxxxxextoo.xxwl...x...7..7....xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe..o.l...l....wxxxxxxwxxxxxxxxxxxxxexxxxxxxxxxxxexxxxxxxwwxxxx..7..7.....xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe.ŦĦĀŃĶŜ.lĚŐŖ.wxxxxxxwxxxxxxxxxxxxxexxxxxxxxxxxxessssssswwxxxxxx.......xxsssssssssss
+xxxxxxxxxxxxxxxxxxe..t.l...l....wxxxxxxwxxxxxxxxxxxxxexxxxxxxxxxxxxxxxxxxxxwxxxxxx........r.xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe.d.ŔĿĄŶĨŅĢļtdwsssssennnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnxxxxxxxxxxxxx.xe2xxxxxxxxxx
+xxxxxxxxxxxxxxxxxxeutuuluzuul.u*f.....u'.......'.......'......'.......'.......'............lxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe....lat..l...wxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe....l..drto..wxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxeŸ.ŦŐlĈŐŅŤĨŇŪĒwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe..o.l..l.....wxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe....l2.l...5.wxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxe&3..l&ol....&wxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxnnnnnnnnnnnnnxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwxxxxxxxxxx
+
+(xexxpxxxxxxxxxxxxxxxxxx
+nnxx.xxxxxxxxxxxxxxxxxx
+.....ssssssssssssssssss
+....rxxxxxxxxxxxxxxxxxx
+....r....2xxxxxxxxxxxxx
+.ooor.....xxxxxxxxxxxxx
+..o.r...o.xxxxxxxxxxxxx
+.ooorxx.sdxxxxxxxxxxxxx
+....uuunw.nnnnnnnnnnnnn
+dddddd.xwx.........xx.x
+.....r.xw..o.o.o.x.xx.x
+..1..r3xw.o.o.o..x.t..x
+.....rxxw..o.o.o.xx.xxx
+.....rxxw.......1...xxx
+.....rxxwxxxxxxxxxxxxxx)
+
+
+

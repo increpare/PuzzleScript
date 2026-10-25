@@ -1,0 +1,132 @@
+title laser pointer
+author n/a
+homepage puzzlescript.namin.net
+
+
+========
+OBJECTS
+========
+
+Background 
+Black Grey
+00000
+01110
+01110
+01110
+00000
+
+Light
+Green
+
+MirrorS
+LightBlue Blue
+.....
+.010.
+.010.
+.010.
+.....
+
+MirrorCC
+LightBlue Blue
+.....
+.011.
+.101.
+.110.
+.....
+
+MirrorC
+LightBlue Blue
+.....
+.110.
+.101.
+.011.
+.....
+
+Target
+Green LightGreen
+01110
+10101
+11011
+10101
+01110
+
+Player
+Orange
+.....
+..0..
+.000.
+..0..
+.....
+
+=======
+LEGEND
+=======
+
+Mirror = MirrorS or MirrorC or MirrorCC
+
+. = Background
+M = MirrorC
+R = MirrorCC
+S = MirrorS
+P = Player
+T = Target
+
+=======
+SOUNDS
+=======
+
+
+================
+COLLISIONLAYERS
+================
+
+Background
+Player, Target, Mirror
+Light
+
+======
+RULES 
+======
+
+[ > Player | Mirror | no Mirror no Target] -> [ | Player | Mirror ]
+[ Mirror | > Player | no Mirror no Target ] -> [ | Mirror | Player ]
+[ Action Player ] -> [ down Light ]
+
+startLoop
+
+[ > Light no Mirror | ] -> [ Light | > Light ]
+[ > Light MirrorC ] -> [ V Light ]
+[ > Light MirrorCC ] -> [ ^ Light ]
+[ > Light MirrorS ] -> [ < Light ]
+
+endLoop
+
+[ > Light ] -> [ Light ]
+
+==============
+WINCONDITIONS
+==============
+
+All Target on Light
+No Mirror
+
+======= 
+LEVELS
+=======
+
+
+................
+................
+..........P.....
+................
+................
+.....T....R.....
+................
+................
+................
+................
+................
+................
+................
+...........T....
+
