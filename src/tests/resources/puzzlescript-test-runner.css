@@ -156,6 +156,7 @@ a {
 .test-runner__toolbar {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	gap: .55rem;
 	min-height: 3rem;
 	padding: .65rem 1.5rem;
@@ -174,7 +175,8 @@ a {
 	user-select: none;
 }
 
-.test-runner__hide-passed-input {
+.test-runner__hide-passed-input,
+.test-runner__tab-input {
 	position: absolute;
 	width: 1px;
 	height: 1px;
@@ -219,24 +221,45 @@ a {
 	outline-offset: 2px;
 }
 
-.test-runner__group-filter {
+.test-runner__tabs {
+	display: flex;
+	gap: .25rem;
+}
+
+.test-runner__tab {
 	display: inline-flex;
 	align-items: center;
 	gap: .35rem;
-	border: 1px solid #cdd5df;
-	border-radius: 999px;
-	padding: .32rem .65rem;
+	border: 1px solid transparent;
+	border-radius: .4rem;
+	padding: .45rem .65rem;
 	color: #596575;
-	background: #fff;
+	background: transparent;
 	font-size: .75rem;
 	font-weight: 680;
 	cursor: pointer;
 }
 
-.test-runner__group-filter.is-active {
+.test-runner__tab:hover {
+	background: #edf0f3;
+}
+
+.test-runner__tab:has(:checked) {
 	border-color: #9fb2d4;
 	color: #28519e;
 	background: #edf3ff;
+}
+
+.test-runner__tab:has(:focus-visible) {
+	outline: 3px solid rgba(49, 95, 194, .35);
+	outline-offset: 2px;
+}
+
+.test-runner:has(#test-group-simulation:checked) .test-result[data-group="compiler-messages"],
+.test-runner:has(#test-group-compiler-messages:checked) .test-result[data-group="simulation"],
+.test-runner:has(#test-group-simulation:checked) .test-runner__results:has(.test-result[data-group="simulation"]:not([hidden])) .test-runner__empty,
+.test-runner:has(#test-group-compiler-messages:checked) .test-runner__results:has(.test-result[data-group="compiler-messages"]:not([hidden])) .test-runner__empty {
+	display: none;
 }
 
 .test-runner__group-count {

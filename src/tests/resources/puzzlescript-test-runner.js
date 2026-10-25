@@ -10,13 +10,8 @@
 	var activeTest = null;
 	var started = false;
 	var currentRunTests = [];
-	var emptyState = null;
 	var filters = {
-		hidePassed: readHidePassedPreference(),
-		groups: {
-			"simulation": true,
-			"compiler-messages": true
-		}
+		hidePassed: readHidePassedPreference()
 	};
 
 	function readHidePassedPreference() {
@@ -244,9 +239,7 @@
 		for (i = 0; i < runTests.length; i++) {
 			results.appendChild(renderResult(runTests[i]));
 		}
-		emptyState = createElement("p", "test-runner__empty", "No results match the active controls.");
-		emptyState.hidden = true;
-		results.appendChild(emptyState);
+		results.appendChild(createElement("p", "test-runner__empty", "No results match the active controls."));
 		shell.appendChild(results);
 		root.replaceChildren(shell);
 		updateVisibility();
@@ -264,42 +257,33 @@
 	}
 
 	function isResultVisible(testRecord) {
-		return filters.groups[testRecord.group] &&
-			(!filters.hidePassed || testRecord.status !== "passed");
+		return !filters.hidePassed || testRecord.status !== "passed";
 	}
 
 	function updateVisibility() {
-		var visibleCount = 0;
 		var i;
 		for (i = 0; i < currentRunTests.length; i++) {
 			currentRunTests[i].element.hidden = !isResultVisible(currentRunTests[i]);
-			if (!currentRunTests[i].element.hidden) {
-				visibleCount++;
-			}
-		}
-		if (emptyState) {
-			emptyState.hidden = visibleCount !== 0;
 		}
 	}
 
-	function createGroupFilter(group, label) {
-		var button = createElement("button", "test-runner__group-filter" + (filters.groups[group] ? " is-active" : ""));
+	function createGroupTab(group, label) {
+		var tab = createElement("label", "test-runner__tab");
+		var radio = createElement("input", "test-runner__tab-input");
 		var count = createElement("span", "test-runner__group-count", groupCount(group));
-		button.type = "button";
-		button.setAttribute("aria-pressed", String(filters.groups[group]));
-		button.appendChild(document.createTextNode(label));
-		button.appendChild(count);
-		button.addEventListener("click", function () {
-			filters.groups[group] = !filters.groups[group];
-			button.setAttribute("aria-pressed", String(filters.groups[group]));
-			button.classList.toggle("is-active", filters.groups[group]);
-			updateVisibility();
-		});
-		return button;
+		radio.type = "radio";
+		radio.name = "test-group";
+		radio.id = "test-group-" + group;
+		radio.checked = currentRunTests[0].group === group;
+		tab.appendChild(radio);
+		tab.appendChild(document.createTextNode(label));
+		tab.appendChild(count);
+		return tab;
 	}
 
 	function renderToolbar() {
 		var toolbar = createElement("div", "test-runner__toolbar");
+		var tabs = createElement("div", "test-runner__tabs");
 		var hidePassed = createElement("label", "test-runner__hide-passed");
 		var checkbox = createElement("input", "test-runner__hide-passed-input");
 		var track = createElement("span", "test-runner__switch-track");
@@ -314,9 +298,10 @@
 		hidePassed.appendChild(checkbox);
 		hidePassed.appendChild(track);
 		hidePassed.appendChild(document.createTextNode("Hide passed"));
+		tabs.appendChild(createGroupTab(GROUP_SIMULATION, "Simulation tests"));
+		tabs.appendChild(createGroupTab(GROUP_COMPILER, "Compilation tests"));
+		toolbar.appendChild(tabs);
 		toolbar.appendChild(hidePassed);
-		toolbar.appendChild(createGroupFilter(GROUP_SIMULATION, "Simulation"));
-		toolbar.appendChild(createGroupFilter(GROUP_COMPILER, "Compiler messages"));
 		return toolbar;
 	}
 
@@ -650,6 +635,8 @@
 		var rerun = createElement("a", "test-result__rerun", "Rerun");
 		var detail = createElement("div", "test-result__detail");
 		var detailId = "test-result-detail-" + testRecord.number;
+
+		result.dataset.group = testRecord.group;
 
 		disclosure.type = "button";
 		disclosure.setAttribute("aria-controls", detailId);
