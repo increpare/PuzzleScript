@@ -33,8 +33,8 @@ var errormessage_testdata = [
         [{file:"test_scripts/you_can_t_have_anything_in_with_an_ellipsis_sorry.txt"}, ["line 140 : You can't have anything in with an ellipsis. Sorry."], 1]
     ],
     [
-        `You named an object "^", but this is a keyword. Don't do that!`,
-        [{file:"test_scripts/you_named_an_object_but_this_is_a_keyword_don_t_do_that.txt"}, ["line 68 : You named an object \"^\", but this is a keyword. Don't do that!"], 0]
+        `Single-character keyword legend synonym is allowed`,
+        [{file:"test_scripts/you_named_an_object_but_this_is_a_keyword_don_t_do_that.txt"}, [], 0]
     ],
     [
         "incorrect sound declaration",
@@ -114,7 +114,7 @@ var errormessage_testdata = [
     ],
     [
         `candy scroll saga`,
-        [{file:"test_scripts/candy_scroll_saga.txt"}, ["line 268 : You named an object \"[\", but this is a keyword. Don't do that!", "line 269 : You named an object \"]\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/candy_scroll_saga.txt"}, [], 0]
     ],
     [
         `take heart lass`,
@@ -178,7 +178,7 @@ var errormessage_testdata = [
     ],
     [
         `river puzzle`,
-        [{file:"test_scripts/river_puzzle.txt"}, ["line 120 : You named an object \"^\", but this is a keyword. Don't do that!", "line 127 : You named an object \"[\", but this is a keyword. Don't do that!", "line 128 : You named an object \"]\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/river_puzzle.txt"}, [], 0]
     ],
     [
         `rigid fail`,
@@ -218,7 +218,7 @@ var errormessage_testdata = [
     ],
     [
         "Ponies Jumping Synchronously",
-        [{file:"test_scripts/ponies.txt"}, ["line 252 : You named an object \"|\", but this is a keyword. Don't do that!", "line 261 : You named an object \"^\", but this is a keyword. Don't do that!", "line 349 : You're trying to close a comment here, but I can't find any opening bracket to match it? [This is highly suspicious; you probably want to fix it.]", "line 343 : Encountered an unexpected \"->\" inside square brackets. It's used to separate states, it has no place inside them >:| .", "line 343 : Multiple opening brackets without closing brackets. Something fishy here. Every '[' has to be closed by a ']', and you can't nest them.", "line 343 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right"], 0]
+        [{file:"test_scripts/ponies.txt"}, ["line 349 : You're trying to close a comment here, but I can't find any opening bracket to match it? [This is highly suspicious; you probably want to fix it.]", "line 343 : Encountered an unexpected \"->\" inside square brackets. It's used to separate states, it has no place inside them >:| .", "line 343 : Multiple opening brackets without closing brackets. Something fishy here. Every '[' has to be closed by a ']', and you can't nest them.", "line 343 : Error, when specifying a rule, the number of matches (square bracketed bits) on the left hand side of the arrow must equal the number on the right"], 0]
     ],
     [
         `notsnake`,
@@ -254,7 +254,7 @@ var errormessage_testdata = [
     ],
     [
         `manic ammo`,
-        [{file:"test_scripts/manic_ammo_2.txt"}, ["line 202 : You named an object \"^\", but this is a keyword. Don't do that!", "line 203 : You named an object \"<\", but this is a keyword. Don't do that!", "line 204 : You named an object \">\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/manic_ammo_2.txt"}, [], 0]
     ],
     [
         `mc escher`,
@@ -278,7 +278,7 @@ var errormessage_testdata = [
     ],
     [
         `leftrightnpcs`,
-        [{file:"test_scripts/leftrightnpcs.txt"}, ["line 58 : You named an object \"<\", but this is a keyword. Don't do that!", "line 59 : You named an object \">\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/leftrightnpcs.txt"}, [], 0]
     ],
     [
         `led challenge`,
@@ -286,7 +286,7 @@ var errormessage_testdata = [
     ],
     [
         `my first Kishoutenketsu`,
-        [{file:"test_scripts/my_first_kishoutenketsu.txt"}, ["line 426 : You named an object \"[\", but this is a keyword. Don't do that!", "line 431 : You named an object \"]\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/my_first_kishoutenketsu.txt"}, [], 0]
     ],
     [
         `kettle`,
@@ -306,15 +306,15 @@ var errormessage_testdata = [
     ],
     [
         `heroes of sokoban 3`,
-        [{file:"test_scripts/heroes_of_sokoban_3_2.txt"}, ["line 277 : You named an object \"[\", but this is a keyword. Don't do that!", "line 278 : You named an object \"]\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/heroes_of_sokoban_3_2.txt"}, [], 0]
     ],
     [
         `heroes of sokoban 2`,
-        [{file:"test_scripts/heroes_of_sokoban_2.txt"}, ["line 259 : You named an object \"[\", but this is a keyword. Don't do that!", "line 260 : You named an object \"]\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/heroes_of_sokoban_2.txt"}, [], 0]
     ],
     [
         `heroes of sokoban 1`,
-        [{file:"test_scripts/heroes_of_sokoban_1.txt"}, ["line 168 : You named an object \"[\", but this is a keyword. Don't do that!", "line 169 : You named an object \"]\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/heroes_of_sokoban_1.txt"}, [], 0]
     ],
     [
         `gobble rush`,
@@ -326,7 +326,7 @@ var errormessage_testdata = [
     ],
     [
         `easy enigma`,
-        [{file:"test_scripts/easy_enigma.txt"}, ["line 462 : You named an object \"V\", but this is a keyword. Don't do that!", "line 842 : You named an object \"|\", but this is a keyword. Don't do that!", "line 894 : You named an object \"^\", but this is a keyword. Don't do that!", "line 898 : You named an object \">\", but this is a keyword. Don't do that!", "line 900 : You named an object \"<\", but this is a keyword. Don't do that!", "line 902 : You named an object \"[\", but this is a keyword. Don't do that!", "line 903 : You named an object \"]\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/easy_enigma.txt"}, [], 0]
     ],
     [
         `dungeon janitor`,
@@ -338,11 +338,11 @@ var errormessage_testdata = [
     ],
     [
         `cute train`,
-        [{file:"test_scripts/cute_train_2.txt"}, ["line 226 : You named an object \"^\", but this is a keyword. Don't do that!", "line 231 : You named an object \"|\", but this is a keyword. Don't do that!", "line 246 : You named an object \"[\", but this is a keyword. Don't do that!", "line 247 : You named an object \"]\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/cute_train_2.txt"}, [], 0]
     ],
     [
         `cratopia`,
-        [{file:"test_scripts/cratopia_2.txt"}, ["line 250 : You named an object \">\", but this is a keyword. Don't do that!", "line 251 : You named an object \"<\", but this is a keyword. Don't do that!", "line 252 : You named an object \"^\", but this is a keyword. Don't do that!", "line 307 : Object \"EDITMODECURSOR\" included in multiple collision layers ( layers #3, #4 ). You should fix this!", "line 533 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 534 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 535 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 566 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 567 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 568 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 569 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 342 : Invalid syntax. Directions should be placed at the start of a rule."], 0]
+        [{file:"test_scripts/cratopia_2.txt"}, ["line 307 : Object \"EDITMODECURSOR\" included in multiple collision layers ( layers #3, #4 ). You should fix this!", "line 533 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 534 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 535 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 566 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 567 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 568 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 569 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 342 : Invalid syntax. Directions should be placed at the start of a rule."], 0]
     ],
     [
         `contellationz`,
@@ -350,7 +350,7 @@ var errormessage_testdata = [
     ],
     [
         `colour chained`,
-        [{file:"test_scripts/colour_chained.txt"}, ["line 85 : You named an object \"|\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/colour_chained.txt"}, [], 0]
     ],
     [
         `collapse`,
@@ -358,7 +358,7 @@ var errormessage_testdata = [
     ],
     [
         `coin counter`,
-        [{file:"test_scripts/coin_counter.txt"}, ["line 148 : You named an object \"^\", but this is a keyword. Don't do that!"], 0]
+        [{file:"test_scripts/coin_counter.txt"}, [], 0]
     ],
     [
         `chaos wizard`,
@@ -417,7 +417,7 @@ var errormessage_testdata = [
     ],
     [
         "censored version of NSFW game `Pornography for Beginners` by Holly Gramazio",
-        [{file:"test_scripts/gallery_censored_version_of_nsfw_game_pornography_for_beginn.txt"}, ["line 744 : Sprites must be 5 wide and 5 high.", "line 752 : Sprites must be 5 wide and 5 high.", "line 1038 : You named an object \"[\", but this is a keyword. Don't do that!", "line 1039 : You named an object \"]\", but this is a keyword. Don't do that!", "line 1159 : Object \"BBBNNNPLAYER\" included in multiple collision layers ( layers #4, #6 ). You should fix this!", "line 742 : Sprite graphics must be 5 wide and 5 high exactly.", "line 750 : Sprite graphics must be 5 wide and 5 high exactly."], 0]
+        [{file:"test_scripts/gallery_censored_version_of_nsfw_game_pornography_for_beginn.txt"}, ["line 744 : Sprites must be 5 wide and 5 high.", "line 752 : Sprites must be 5 wide and 5 high.", "line 1159 : Object \"BBBNNNPLAYER\" included in multiple collision layers ( layers #4, #6 ). You should fix this!", "line 742 : Sprite graphics must be 5 wide and 5 high exactly.", "line 750 : Sprite graphics must be 5 wide and 5 high exactly."], 0]
     ],
     [
         "crash bug when 'blank project' is selected #738",
@@ -441,7 +441,7 @@ var errormessage_testdata = [
     ],
     [
         "VEXT EDIT COMPILE TEST",
-        [{file:"test_scripts/vext_edit_compile_test.txt"}, ["line 898 : You named an object \"|\", but this is a keyword. Don't do that!", "line 915 : You named an object \"[\", but this is a keyword. Don't do that!", "line 917 : You named an object \"]\", but this is a keyword. Don't do that!", "line 918 : You named an object \">\", but this is a keyword. Don't do that!", "line 952 : You're repeating the object CRATE1MARK here multiple times on the RHS. This makes no sense. Don't do that.", "line 1134 : This rule has something amounting to \"CURSOR0A NO CURSOR0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1134 : This rule has something amounting to \"DEAD0A NO DEAD0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1134 : This rule has something amounting to \"CURSOR0B NO CURSOR0B\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1135 : This rule has something amounting to \"CURSOR0A NO CURSOR0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1135 : This rule has something amounting to \"DEAD0A NO DEAD0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1135 : This rule has something amounting to \"CURSOR0B NO CURSOR0B\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1136 : This rule has something amounting to \"CURSOR0A NO CURSOR0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1136 : This rule has something amounting to \"DEAD0A NO DEAD0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1136 : This rule has something amounting to \"CURSOR0B NO CURSOR0B\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1137 : This rule has something amounting to \"CURSOR0A NO CURSOR0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1137 : This rule has something amounting to \"DEAD0A NO DEAD0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1137 : This rule has something amounting to \"CURSOR0B NO CURSOR0B\" on the left-hand-side,which can never match, so the rule is getting removed during compilation."], 0]
+        [{file:"test_scripts/vext_edit_compile_test.txt"}, ["line 952 : You're repeating the object CRATE1MARK here multiple times on the RHS. This makes no sense. Don't do that.", "line 1134 : This rule has something amounting to \"CURSOR0A NO CURSOR0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1134 : This rule has something amounting to \"DEAD0A NO DEAD0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1134 : This rule has something amounting to \"CURSOR0B NO CURSOR0B\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1135 : This rule has something amounting to \"CURSOR0A NO CURSOR0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1135 : This rule has something amounting to \"DEAD0A NO DEAD0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1135 : This rule has something amounting to \"CURSOR0B NO CURSOR0B\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1136 : This rule has something amounting to \"CURSOR0A NO CURSOR0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1136 : This rule has something amounting to \"DEAD0A NO DEAD0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1136 : This rule has something amounting to \"CURSOR0B NO CURSOR0B\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1137 : This rule has something amounting to \"CURSOR0A NO CURSOR0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1137 : This rule has something amounting to \"DEAD0A NO DEAD0A\" on the left-hand-side,which can never match, so the rule is getting removed during compilation.", "line 1137 : This rule has something amounting to \"CURSOR0B NO CURSOR0B\" on the left-hand-side,which can never match, so the rule is getting removed during compilation."], 0]
     ],
     [
         "Editor crash with opening parenthesis in level section in middle of line #784",
@@ -1302,5 +1302,57 @@ var errormessage_testdata = [
     [
         "#1207 random object spawning remains allowed in late rules",
         ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nDust D\norange\n\nLEGEND\nParticle = Player or Dust\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nDust\n\nRULES\n\nlate [ Dust ] -> [ random Particle ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n.D.\n...\n", [], 0]
+    ],
+    [
+        "Alias names: legend names can start with punctuation and be used in rules",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nTarget T\nred\n\nLEGEND\n!a = Player or Target\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nTarget\n\nRULES\n[ !a ] -> [ !a ]\nWINCONDITIONS\nLEVELS\n\nP\n", [], 0]
+    ],
+    [
+        "Alias names: legend names can end with punctuation and be used in rules",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\na! = Player\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n[ a! ] -> [ a! ]\nWINCONDITIONS\nLEVELS\n\nP\n", [], 0]
+    ],
+    [
+        "Alias names: hyphenated legend properties can be used in rules",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nTarget T\nred\n\nLEGEND\na-b = Player or Target\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nTarget\n\nRULES\n[ a-b ] -> [ a-b ]\nWINCONDITIONS\nLEVELS\n\nP\n", [], 0]
+    ],
+    [
+        "Alias names: object synonyms can contain punctuation and be used in rules",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P !a a! a-b\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n[ !a ] -> [ a! ]\n[ a-b ] -> [ a-b ]\nWINCONDITIONS\nLEVELS\n\nP\n", [], 0]
+    ],
+    [
+        "Alias names: normal names retain Unicode letters, numbers, and underscores",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P Player_2 Caf\u00e9_3\nwhite\n\nTarget T\nred\n\nLEGEND\nPlayer_Target = Player_2 or Target\n^ = Caf\u00e9_3 or Player_Target\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nTarget\n\nRULES\nWINCONDITIONS\nLEVELS\n\nP\n", [], 0]
+    ],
+    [
+        "Keyword aliases: single-character legend definitions are allowed",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nTarget\nred\n\nLEGEND\nV = Player\n^ = Player\n< = Player\n> = Player\n| = Player\n[ = Player and Target\n] = Player or Target\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nTarget\n\nRULES\nWINCONDITIONS\nLEVELS\n\nV^<>|[\n", [], 0]
+    ],
+    [
+        "Keyword aliases: single-character object synonyms are allowed",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P V ^ < > | [ ]\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\nWINCONDITIONS\nLEVELS\n\nPV^<>|[]\n", [], 0]
+    ],
+    [
+        "Keyword aliases: v can define a property used in win conditions",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\nred\n\nLEGEND\nv = Player or Wall\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall\n\nRULES\nWINCONDITIONS\nSome v\nLEVELS\n\nP\n", [], 0]
+    ],
+    [
+        "Keyword aliases: longer object synonyms still warn",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P action cantmove sfx0\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\nWINCONDITIONS\nLEVELS\n\nP\n", ["line 6 : You named an object \"ACTION\", but this is a keyword. Don't do that!", "line 6 : You named an object \"CANTMOVE\", but this is a keyword. Don't do that!", "line 6 : You named an object \"SFX0\", but this is a keyword. Don't do that!"], 0]
+    ],
+    [
+        "Keyword aliases: movement aliases still warn and cannot replace objects in rules",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P action\nwhite\n\nWall W\nred\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\nBackground\nPlayer, Wall\n\nRULES\n[ action ] -> [ ]\nWINCONDITIONS\nLEVELS\n\nP.W\n", ["line 6 : You named an object \"ACTION\", but this is a keyword. Don't do that!", "line 21 : In a rule, if you specify a movement, it has to act on an object.", "line 21 : Error, malformed cell rule - encountered a \"[\"\" before previous bracket was closed", "line 21 : In a rule, each pattern to match on the left must have a corresponding pattern on the right of equal length (number of cells).", "You have an totally empty pattern on the left-hand side. This will match *everything*. You certainly don't want this."], 4]
+    ],
+    [
+        "Keyword aliases: sound event aliases still warn and cannot replace objects in sounds",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P sfx0\nwhite\n\nWall W\nred\n\nLEGEND\n\nSOUNDS\nsfx0 move 12345\nCOLLISIONLAYERS\nBackground\nPlayer, Wall\n\nRULES\n\nWINCONDITIONS\nLEVELS\n\nP.W\n", ["line 6 : You named an object \"SFX0\", but this is a keyword. Don't do that!", "line 15 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else."], 1]
+    ],
+    [
+        "Keyword aliases: primary object names still warn",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nV\nred\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer, V\n\nRULES\nWINCONDITIONS\nLEVELS\n\nPV\n", ["line 9 : You named an object \"V\", but this is a keyword. Don't do that!"], 0]
+    ],
+    [
+        "Keyword aliases: longer legend names still warn",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\naction = Player\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\nWINCONDITIONS\nLEVELS\n\nP\n", ["line 10 : You named an object \"ACTION\", but this is a keyword. Don't do that!"], 0]
     ],
 ];

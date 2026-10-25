@@ -269,7 +269,7 @@ let codeMirrorFn = function () {
                 ok = false;
             }
 
-            if (keyword_array.includes(candname)) {
+            if (candname.length > 1 && keyword_array.includes(candname)) {
                 logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
             }
 
@@ -715,7 +715,7 @@ let codeMirrorFn = function () {
                                         logError('Name "' + candname.toUpperCase() + '" already in use.', state.lineNumber);
                                     }
                                 }
-                                if (keyword_array.includes(candname)) {
+                                if ((sol || candname.length > 1) && keyword_array.includes(candname)) {
                                     logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
                                 }
 
