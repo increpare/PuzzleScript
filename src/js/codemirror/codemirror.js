@@ -69,10 +69,9 @@
     return removeChildren(parent).appendChild(e)
   }
 
-  // PuzzleScript: dynamic token colors (contrast-adjusted for midnight theme)
+  // PuzzleScript: dynamic token colors (adjusted for light and dark mode).
   var colorCache = {};
   function styleFromHexCode(hexCode) {
-    var editorBackground = parseHexColor('#0F192A');
     function rgbToHsl(rgb) {
       var r = rgb[0], g = rgb[1], b = rgb[2];
       r /= 255, g /= 255, b /= 255;
@@ -109,23 +108,24 @@
       }
       return [r * 255, g * 255, b * 255];
     }
-    var colorString = hexCode;
-    var style;
-    if (colorCache[colorString]) { style = colorCache[colorString]; } else {
-      var col = parseHexColor(colorString);
-      if (col) {
-        var r = contrastRatio(col, editorBackground);
-        if (r < MINIMUM_COLOR_CONTRAST_RATIO) {
-          var hsl = rgbToHsl(col);
-          do {
-            hsl[2] += 0.01;
-            r = contrastRatio(hslToRgb(hsl), editorBackground);
-          } while (r < MINIMUM_COLOR_CONTRAST_RATIO);
-          style = 'color: hsl(' + ~~(hsl[0] * 360) + ',' + ~~(hsl[1] * 100) + '%,' + ~~(hsl[2] * 100) + '%)';
-        } else { style = 'color:' + colorString; }
+    if (colorCache[hexCode]) { return colorCache[hexCode]; }
+    var col = parseHexColor(hexCode);
+    if (!col) { return; }
+    function readableColor(background, direction) {
+      var rgb = col;
+      var hsl = rgbToHsl(col);
+      while (contrastRatio(rgb, background) < MINIMUM_COLOR_CONTRAST_RATIO) {
+        hsl[2] = Math.max(0, Math.min(1, hsl[2] + direction * 0.01));
+        rgb = hslToRgb(hsl).map(Math.round);
       }
-      colorCache[colorString] = style;
+      // Check the same rounded RGB values that the browser will display.
+      return rgb === col ? hexCode : 'rgb(' + rgb.join(' ') + ')';
     }
+    var lightColor = readableColor(parseHexColor('#ffffff'), -1);
+    var darkColor = readableColor(parseHexColor('#0F192A'), 1);
+    // CSS switches even existing/cached tokens when the user changes theme.
+    var style = 'color: light-dark(' + lightColor + ', ' + darkColor + ')';
+    colorCache[hexCode] = style;
     return style;
   }
 
