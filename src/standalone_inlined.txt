@@ -166,7 +166,7 @@ body.player-shell:not(.touch-enabled) #homepagelink { font-size: 16px; line-heig
 #playerLinks :is(a, button) { min-height: 0; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; }
 #playerLinks .footer-separator { flex: none; padding: 0 6px; opacity: .5; }
 #playerLinks form { display: inline-flex; margin: 0; }
-.player-menu #playerLinks .footer-separator, .mobile-menu #playerLinks .footer-separator { display: none; }
+.player-menu #playerLinks .footer-separator { display: none; }
 .player-menu-footer #playerLinks { flex: 1; justify-content: center; font: 14px/20px system-ui, sans-serif; }
 .player-menu-footer #playerLinks :is(a, button) { display: flex; align-items: center; min-height: 44px; padding: 0 8px; }
 @media (orientation: landscape) and (min-width: 560px) and (max-height: 400px) {
@@ -10693,8 +10693,12 @@ CellPattern.prototype.generateReplaceFunction = function (OBJECT_SIZE, MOVEMENT_
 			curRigidGroupIndexMask = level.rigidGroupIndexMask[currentIndex] || new BitVec(${STRIDE_MOV});
 			curRigidMovementAppliedMask = level.rigidMovementAppliedMask[currentIndex] || new BitVec(${STRIDE_MOV});
 
-			if (${NOT_BITS_SET_IN_ARRAY("rigidMask", "curRigidGroupIndexMask.data", MOVEMENT_SIZE)} &&
-				${NOT_BITS_SET_IN_ARRAY("replace.movementsLayerMask", "curRigidMovementAppliedMask.data", MOVEMENT_SIZE)}) 
+
+			// Don't allow subsequent rigid rules to alter already-assigned ownership;
+			// (and: group indices are numeric codes, not flags.)
+			// cf https://github.com/increpare/PuzzleScript/issues/1206
+			${UNROLL("rigidMask &= ~curRigidMovementAppliedMask", MOVEMENT_SIZE)}
+			if (${IS_NONZERO("rigidMask", MOVEMENT_SIZE)})
 			{
 				${UNROLL("curRigidGroupIndexMask |= rigidMask", MOVEMENT_SIZE)}
 				${UNROLL("curRigidMovementAppliedMask |= replace.movementsLayerMask", MOVEMENT_SIZE)}
@@ -12308,7 +12312,7 @@ let codeMirrorFn = function () {
                 ok = false;
             }
 
-            if (keyword_array.includes(candname)) {
+            if (candname.length > 1 && keyword_array.includes(candname)) {
                 logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
             }
 
@@ -12479,13 +12483,13 @@ let codeMirrorFn = function () {
             let rulesCopy = [];
 
             for (let i = 0; i < state.legend_synonyms.length; i++) {
-                legend_synonymsCopy.push(state.legend_synonyms[i].slice());
+                legend_synonymsCopy.push(Object.assign(state.legend_synonyms[i].slice(), { lineNumber: state.legend_synonyms[i].lineNumber }));
             }
             for (let i = 0; i < state.legend_aggregates.length; i++) {
-                legend_aggregatesCopy.push(state.legend_aggregates[i].slice());
+                legend_aggregatesCopy.push(Object.assign(state.legend_aggregates[i].slice(), { lineNumber: state.legend_aggregates[i].lineNumber }));
             }
             for (let i = 0; i < state.legend_properties.length; i++) {
-                legend_propertiesCopy.push(state.legend_properties[i].slice());
+                legend_propertiesCopy.push(Object.assign(state.legend_properties[i].slice(), { lineNumber: state.legend_properties[i].lineNumber }));
             }
             for (let i = 0; i < state.sounds.length; i++) {
                 soundsCopy.push(state.sounds[i].slice());
@@ -12528,6 +12532,7 @@ let codeMirrorFn = function () {
 
                 tokenIndex: state.tokenIndex,
                 current_line_wip_array: state.current_line_wip_array.slice(),
+                current_line_mixed_case: state.current_line_mixed_case,
 
                 legend_synonyms: legend_synonymsCopy,
                 legend_aggregates: legend_aggregatesCopy,
@@ -12558,18 +12563,22 @@ let codeMirrorFn = function () {
             return nstate;
         },
         blankLine: function (state) {
-            pushNewBlankLevel(state);
+            // CodeMirror skips token() for empty lines; the compiler does not.
+            // Keep line numbers and section transitions identical in both paths.
+            this.token(new CodeMirror.StringStream(''), state);
         },
         token: function (stream, state) {
-            let mixedCase = stream.string;
             let sol = stream.sol();
             if (sol) {
                 state.lineNumber++;
                 state.current_line_wip_array = [];
+                // Keep the source spelling for names registered after the first token.
+                state.current_line_mixed_case = stream.string;
                 stream.string = stream.string.toLowerCase();
                 state.tokenIndex = 0;
                 state.line_should_end = false;
             }
+            let mixedCase = state.current_line_mixed_case;
             if (state.sol_after_comment) {
                 sol = true;
                 state.sol_after_comment = false;
@@ -12754,7 +12763,7 @@ let codeMirrorFn = function () {
                                         logError('Name "' + candname.toUpperCase() + '" already in use.', state.lineNumber);
                                     }
                                 }
-                                if (keyword_array.includes(candname)) {
+                                if ((sol || candname.length > 1) && keyword_array.includes(candname)) {
                                     logWarning('You named an object "' + candname.toUpperCase() + '", but this is a keyword. Don\'t do that!', state.lineNumber);
                                 }
 
@@ -13549,6 +13558,7 @@ let codeMirrorFn = function () {
                 tokenIndex: 0,
 
                 current_line_wip_array: [],
+                current_line_mixed_case: '',
 
                 legend_synonyms: [],
                 legend_aggregates: [],
@@ -14287,7 +14297,7 @@ function processRuleString(rule, state, curRules) {
                             logError("Error, an item can only have one direction/action at a time, but you're looking for several at once!", lineNumber);
                         } else if (!incellrow) {
                             logWarning("Invalid syntax. Directions should be placed at the start of a rule.", lineNumber);
-                        } else if (late && token !== 'no' && token !== 'random' && token !== 'randomdir') {
+                        } else if (late && token !== 'no' && token !== 'random') {
                             logError("Movements cannot appear in late rules.", lineNumber);
                         } else {
                             curcell.push(token);
@@ -18459,28 +18469,13 @@ Mobile.debugDot = function (event) {
         left: 37, // left arrow
         right: 39, // right arrow
         up: 38, // up arrow
-        down: 40, // down arrow
-        undo: 85, // u
-        restart: 82, // r
-        quit: 27 // escape
+        down: 40 // down arrow
     }
-
-    var TAB_STRING = [
-        '<div class="tab">',
-        '  <div class="tab-affordance"></div>',
-        '  <div class="tab-icon">',
-        '    <div class="slice"></div>',
-        '    <div class="slice"></div>',
-        '  </div>',
-        '</div>'
-    ].join("\n");
 
     /** Bootstrap Methods **/
 
     proto.initialize = function () {
         this.firstPos = { x: 0, y: 0 };
-        this.setTabAnimationRatio = this.setTabAnimationRatio.bind(this);
-        this.setMenuAnimationRatio = this.setMenuAnimationRatio.bind(this);
         this.repeatTick = this.repeatTick.bind(this);
         this.isFocused = true;
     };
@@ -18511,9 +18506,6 @@ Mobile.debugDot = function (event) {
             if (links) { document.querySelector('.player-menu-footer').appendChild(links); }
             Mobile.layoutPlayerControls();
             canvasResize();
-        } else {
-            this.showTab();
-            this.disableScrolling();
         }
         if (!this.isAudioSupported()) {
             this.disableAudio();
@@ -18823,9 +18815,9 @@ Mobile.debugDot = function (event) {
     proto.handleSwipe = function (direction, touchCount) {
         if (touchCount === 1) {
             this.emitKeydown(this.swipeDirection);
-        } else if (touchCount > 1) {
+        } else if (touchCount > 1 && Mobile.setPlayerMenu) {
             // Since this was a multitouch gesture, open the menu.
-            this.toggleMenu();
+            Mobile.setPlayerMenu(!Mobile.playerMenuOpen);
         }
     };
 
@@ -18855,179 +18847,6 @@ Mobile.debugDot = function (event) {
         });
     };
 
-    proto.toggleMenu = function () {
-        if (Mobile.playerToolbar) {
-            Mobile.setPlayerMenu(!Mobile.playerMenuOpen);
-            return;
-        }
-        if (this.isMenuVisible) {
-            this.hideMenu();
-        } else {
-            this.showMenu();
-        }
-    };
-
-    proto.showMenu = function () {
-        if (!this.menuElem) {
-            this.buildMenu();
-        }
-        this.getAnimatables().menu.animateUp();
-        this.isMenuVisible = true;
-        this.hideTab();
-    };
-
-    proto.hideMenu = function () {
-        if (this.menuElem) {
-            this.getAnimatables().menu.animateDown();
-        }
-        this.isMenuVisible = false;
-        this.showTab();
-    };
-
-    proto.getAnimatables = function () {
-        var self = this;
-        if (!this._animatables) {
-            this._animatables = {
-                tab: Animatable('tab', 0.1, self.setTabAnimationRatio),
-                menu: Animatable('menu', 0.1, self.setMenuAnimationRatio)
-            }
-        }
-        return this._animatables;
-    };
-
-    proto.showTab = function () {
-        if (!this.tabElem) {
-            this.buildTab();
-        }
-        this.getAnimatables().tab.animateDown();
-    };
-
-    proto.hideTab = function () {
-        if (this.tabElem) {
-            this.tabElem.setAttribute('style', 'display: none;');
-        }
-        this.getAnimatables().tab.animateUp();
-    };
-
-    proto.buildTab = function () {
-        var self = this;
-        var tempElem, body;
-        var openCallback;
-        var tabElem;
-        var assemblyElem;
-
-        tempElem = document.createElement('div');
-        tempElem.innerHTML = TAB_STRING;
-        assemblyElem = tempElem.children[0];
-
-        openCallback = function (event) {
-            event.stopPropagation();
-            self.showMenu();
-        };
-        this.tabAffordance = assemblyElem.getElementsByClassName('tab-affordance')[0];
-        this.tabElem = assemblyElem.getElementsByClassName('tab-icon')[0];
-
-        //the reason I'm adding all these empty click events is on safari to disable double-tap to zoom (also needs some other css settings. cf https://github.com/increpare/PuzzleScript/issues/599 SMGDH)
-        this.tabAffordance.addEventListener('touchstart', openCallback);
-        this.tabAffordance.addEventListener("click", event => { });
-        this.tabElem.addEventListener('touchstart', openCallback);
-        this.tabElem.addEventListener("click", event => { });
-
-        body = document.getElementsByTagName('body')[0];
-        body.appendChild(assemblyElem);
-    };
-
-    proto.buildMenu = function () {
-        var self = this;
-        var tempElem, body;
-        var undo, restart, quit;
-        var closeTab;
-        var closeCallback;
-
-        tempElem = document.createElement('div');
-        tempElem.innerHTML = this.buildMenuString(state);
-        this.menuElem = tempElem.children[0];
-        this.closeElem = this.menuElem.getElementsByClassName('close')[0];
-
-        closeCallback = function (event) {
-            event.stopPropagation();
-            self.hideMenu();
-        };
-        this.closeAffordance = this.menuElem.getElementsByClassName('close-affordance')[0];
-        closeTab = this.menuElem.getElementsByClassName('close')[0];
-        this.closeAffordance.addEventListener('touchstart', closeCallback);
-        this.closeAffordance.addEventListener("click", event => { });
-        closeTab.addEventListener('touchstart', closeCallback);
-        closeTab.addEventListener("click", event => { });
-
-        undo = this.menuElem.getElementsByClassName('undo')[0];
-        if (undo) {
-            undo.addEventListener('touchstart', function (event) {
-                event.stopPropagation();
-                self.emitKeydown('undo');
-            });
-            undo.addEventListener("click", event => { });
-        }
-        restart = this.menuElem.getElementsByClassName('restart')[0];
-        if (restart) {
-            restart.addEventListener('touchstart', function (event) {
-                event.stopPropagation();
-                self.emitKeydown('restart');
-            });
-            restart.addEventListener("click", event => { });
-        }
-
-        quit = this.menuElem.getElementsByClassName('quit')[0];
-        quit.addEventListener('touchstart', function (event) {
-            event.stopPropagation();
-            self.emitKeydown('quit');
-        });
-        quit.addEventListener("click", event => { });
-
-        body = document.getElementsByTagName('body')[0];
-        body.appendChild(this.menuElem);
-    };
-
-    proto.buildMenuString = function (state) {
-        // Template for the menu.
-        var itemCount, menuLines;
-        var noUndo, noRestart;
-
-        noUndo = state.metadata.noundo;
-        noRestart = state.metadata.norestart;
-
-        itemCount = 3;
-        if (noUndo) {
-            itemCount -= 1;
-        }
-        if (noRestart) {
-            itemCount -= 1;
-        }
-
-        menuLines = [
-            '<div class="mobile-menu item-count-' + itemCount + '">',
-            '  <div class="close-affordance"></div>',
-            '  <div class="close">',
-            '    <div class="slice"></div>',
-            '    <div class="slice"></div>',
-            '  </div>'
-        ];
-
-        if (!noUndo) {
-            menuLines.push('  <div class="undo button">Undo</div>');
-        }
-        if (!noRestart) {
-            menuLines.push('  <div class="restart button">Restart</div>');
-        }
-        menuLines = menuLines.concat([
-            '  <div class="quit button">Quit to Menu</div>',
-            '  <div class="clear"></div>',
-            '</div>'
-        ]);
-
-        return menuLines.join("\n");
-    };
-
     proto.buildFocusIndicator = function () {
         var focusElementParent;
         this.focusIndicator = document.createElement('DIV');
@@ -19037,71 +18856,6 @@ Mobile.debugDot = function (event) {
         focusElementParent = this.focusElement.parentNode;
         focusElementParent.appendChild(this.focusIndicator);
     };
-
-    proto.setTabAnimationRatio = function (ratio) {
-        var LEFT = 18;
-        var RIGHT = 48 + 18;
-        var size, opacityString;
-        var style;
-
-        // Round away any exponents that might appear.
-        ratio = Math.round((ratio) * 1000) / 1000;
-        if (ratio >= 0.999) {
-            this.tabAffordance.setAttribute('style', 'display: none;');
-        } else {
-            this.tabAffordance.setAttribute('style', 'display: block;');
-        }
-        size = RIGHT * ratio + LEFT * (1 - ratio);
-        opacityString = 'opacity: ' + (1 - ratio) + ';';
-        style = opacityString + ' ' +
-            'width: ' + size + 'px;';
-        this.tabElem.setAttribute('style', style);
-    };
-
-    proto.setMenuAnimationRatio = function (ratio) {
-        var LEFT = -48 - 18;
-        var RIGHT = -18;
-        var size, opacityString;
-        var style;
-
-        // Round away any exponents that might appear.
-        ratio = Math.round((ratio) * 1000) / 1000;
-
-        size = RIGHT * ratio + LEFT * (1 - ratio);
-        opacityString = 'opacity: ' + ratio + ';';
-        style = 'left: ' + (size - 4) + 'px; ' +
-            opacityString + ' ' +
-            'width: ' + (-size) + 'px;';
-        ratio = Math.round((ratio) * 1000) / 1000;
-
-        if (ratio <= 0.001) {
-            this.closeAffordance.setAttribute('style', 'display: none;');
-            opacityString = "display:none;"
-        } else {
-            this.closeAffordance.setAttribute('style', 'display: block;');
-        }
-
-        this.closeElem.setAttribute('style', style);
-
-        this.menuElem.setAttribute('style', opacityString);
-    };
-
-    proto.disableScrolling = function () {
-        var style = {
-            height: "100%",
-            overflow: "hidden",
-            position: "fixed",
-            width: "100%",
-            margin: 0
-        }
-
-        var styleString = "";
-        for (var key in style) {
-            styleString += key + ": " + style[key] + "; ";
-        }
-
-        document.body.setAttribute('style', styleString)
-    }
 
     /** Audio Methods **/
 
@@ -19138,108 +18892,6 @@ Mobile.debugDot = function (event) {
     };
 
 }(window.Mobile.GestureHandler.prototype));
-
-window.Animator = function () {
-    this.initialize.apply(this, arguments);
-};
-
-(function (proto) {
-    proto.initialize = function () {
-        this._animations = {};
-        this.tick = this.tick.bind(this);
-    };
-
-    proto.animate = function (key, tick) {
-        this._animations[key] = tick;
-        this.wakeup();
-    };
-
-    proto.wakeup = function () {
-        if (this._isAnimating) {
-            return;
-        }
-        this._isAnimating = true;
-        this.tick();
-    };
-
-    proto.tick = function () {
-        var key;
-        var isFinished, allFinished;
-        var toRemove, index;
-
-        toRemove = [];
-        allFinished = true;
-        for (key in this._animations) {
-            if (!this._animations.hasOwnProperty(key)) {
-                return;
-            }
-            isFinished = this._animations[key]();
-            if (!isFinished) {
-                allFinished = false;
-            } else {
-                toRemove.push(key);
-            }
-        }
-
-        if (!allFinished) {
-            requestAnimationFrame(this.tick);
-        } else {
-            for (index = 0; index < toRemove.length; toRemove++) {
-                delete this._isAnimating[toRemove[index]];
-            }
-            this._isAnimating = false;
-        }
-    };
-
-}(window.Animator.prototype));
-
-window.Animator.getInstance = function () {
-    if (!window.Animator._instance) {
-        window.Animator._instance = new window.Animator();
-    }
-    return window.Animator._instance;
-};
-
-function Animatable(key, increment, update) {
-    var ratio;
-    var handles;
-
-    handles = {
-        animateUp: function () {
-            Animator.getInstance().animate(key, tickUp);
-        },
-        animateDown: function () {
-            Animator.getInstance().animate(key, tickDown);
-        }
-    };
-
-    ratio = 0;
-
-    function tickUp() {
-        var isFinished;
-        ratio += increment;
-        if (ratio >= 1.0) {
-            isFinished = true;
-            ratio = 1;
-        }
-        update(ratio);
-        return isFinished;
-    };
-
-    function tickDown() {
-        var isFinished;
-        ratio -= increment;
-        if (ratio <= 0.0) {
-            isFinished = true;
-            ratio = 0;
-        }
-        update(ratio);
-        return isFinished;
-    };
-
-    return handles;
-};
-
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
 // http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating

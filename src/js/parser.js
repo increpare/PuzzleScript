@@ -489,6 +489,7 @@ let codeMirrorFn = function () {
 
                 tokenIndex: state.tokenIndex,
                 current_line_wip_array: state.current_line_wip_array.slice(),
+                current_line_mixed_case: state.current_line_mixed_case,
 
                 legend_synonyms: legend_synonymsCopy,
                 legend_aggregates: legend_aggregatesCopy,
@@ -524,15 +525,17 @@ let codeMirrorFn = function () {
             this.token(new CodeMirror.StringStream(''), state);
         },
         token: function (stream, state) {
-            let mixedCase = stream.string;
             let sol = stream.sol();
             if (sol) {
                 state.lineNumber++;
                 state.current_line_wip_array = [];
+                // Keep the source spelling for names registered after the first token.
+                state.current_line_mixed_case = stream.string;
                 stream.string = stream.string.toLowerCase();
                 state.tokenIndex = 0;
                 state.line_should_end = false;
             }
+            let mixedCase = state.current_line_mixed_case;
             if (state.sol_after_comment) {
                 sol = true;
                 state.sol_after_comment = false;
@@ -1512,6 +1515,7 @@ let codeMirrorFn = function () {
                 tokenIndex: 0,
 
                 current_line_wip_array: [],
+                current_line_mixed_case: '',
 
                 legend_synonyms: [],
                 legend_aggregates: [],
