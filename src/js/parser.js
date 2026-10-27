@@ -1171,7 +1171,7 @@ let codeMirrorFn = function () {
                                     warningStr += "#" + (foundOthers[i] + 1) + ", ";
                                 }
                                 warningStr += "#" + state.collisionLayers.length;
-                                logWarning(warningStr + ' ). You should fix this!', state.lineNumber);
+                                logWarning(warningStr + ' ). You should fix this! (The compiler will just pick one layer to assign it to).', state.lineNumber);
                             }
 
                             if (state.current_line_wip_array.includes(candname)) {

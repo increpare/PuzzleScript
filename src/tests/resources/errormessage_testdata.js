@@ -158,7 +158,7 @@ var errormessage_testdata = [
     ],
     [
         `smother`,
-        [{file:"test_scripts/smother_2.txt"}, ["line 168 : Object \"PLAYER\" included in multiple collision layers ( layers #4, #5 ). You should fix this!", "line 168 : Object \"WALL\" included in multiple collision layers ( layers #4, #5 ). You should fix this!"], 0]
+        [{file:"test_scripts/smother_2.txt"}, ["line 168 : Object \"PLAYER\" included in multiple collision layers ( layers #4, #5 ). You should fix this! (The compiler will just pick one layer to assign it to).", "line 168 : Object \"WALL\" included in multiple collision layers ( layers #4, #5 ). You should fix this! (The compiler will just pick one layer to assign it to)."], 0]
     ],
     [
         `slidings`,
@@ -342,7 +342,7 @@ var errormessage_testdata = [
     ],
     [
         `cratopia`,
-        [{file:"test_scripts/cratopia_2.txt"}, ["line 307 : Object \"EDITMODECURSOR\" included in multiple collision layers ( layers #3, #4 ). You should fix this!", "line 533 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 534 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 535 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 566 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 567 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 568 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 569 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 342 : Invalid syntax. Directions should be placed at the start of a rule."], 0]
+        [{file:"test_scripts/cratopia_2.txt"}, ["line 307 : Object \"EDITMODECURSOR\" included in multiple collision layers ( layers #3, #4 ). You should fix this! (The compiler will just pick one layer to assign it to).", "line 533 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 534 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 535 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 566 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 567 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 568 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 569 : Maps must be rectangular, yo (In a level, the length of each row must be the same).", "line 342 : Invalid syntax. Directions should be placed at the start of a rule."], 0]
     ],
     [
         `contellationz`,
@@ -417,7 +417,7 @@ var errormessage_testdata = [
     ],
     [
         "censored version of NSFW game `Pornography for Beginners` by Holly Gramazio",
-        [{file:"test_scripts/gallery_censored_version_of_nsfw_game_pornography_for_beginn.txt"}, ["line 744 : Sprites must be 5 wide and 5 high.", "line 752 : Sprites must be 5 wide and 5 high.", "line 1159 : Object \"BBBNNNPLAYER\" included in multiple collision layers ( layers #4, #6 ). You should fix this!", "line 742 : Sprite graphics must be 5 wide and 5 high exactly.", "line 750 : Sprite graphics must be 5 wide and 5 high exactly."], 0]
+        [{file:"test_scripts/gallery_censored_version_of_nsfw_game_pornography_for_beginn.txt"}, ["line 744 : Sprites must be 5 wide and 5 high.", "line 752 : Sprites must be 5 wide and 5 high.", "line 1159 : Object \"BBBNNNPLAYER\" included in multiple collision layers ( layers #4, #6 ). You should fix this! (The compiler will just pick one layer to assign it to).", "line 742 : Sprite graphics must be 5 wide and 5 high exactly.", "line 750 : Sprite graphics must be 5 wide and 5 high exactly."], 0]
     ],
     [
         "crash bug when 'blank project' is selected #738",
