@@ -1,3 +1,4 @@
+//new tests get appended to the end innit
 var testdata = [
 	[
 		"sokoban no win condition",
@@ -2040,6 +2041,14 @@ var testdata = [
 		"#1207 rejected late randomdir does not leave movement pending after undo",
 		// Dust's movement is in the second movement word, beyond restoreLevel's clearing range.
 		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nPaddingA\nblack\n\nPaddingB\nblack\n\nPaddingC\nblack\n\nPaddingD\nblack\n\nPaddingE\nblack\n\nDust D\norange\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\nPaddingA\nPaddingB\nPaddingC\nPaddingD\nPaddingE\nDust\n\nRULES\n\nlate [ Dust ] -> [ randomdir Dust ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n.D.\n...\n", [3, "undo", 4], "background player:0,background:1,1,\n1,background dust:2,1,\n1,1,1,\n", 0, "1207"]
+	],
+	[
+		"#1175 rejected AGAIN must not save a speculative checkpoint",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nTarget X\ngreen\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nTarget\nPlayer\n\nRULES\n\n[ moving Player ] -> [ moving Player ] again\n[ stationary Player Target ] -> [ stationary Player Target ] checkpoint\n\nWINCONDITIONS\nLEVELS\n\nPX\n", [3, "restart"], "background player:0,background target:1,\n"]
+	],
+	[
+		"#1175 a real no-input turn still saves a checkpoint",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nTarget X\ngreen\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nTarget\nPlayer\n\nRULES\n\n[ moving Player ] -> [ moving Player ] again\n[ stationary Player Target ] -> [ stationary Player Target ] checkpoint\n\nWINCONDITIONS\nLEVELS\n\nPX\n", [3, "tick", 1, "restart"], "background:0,background player target:1,\n"]
 	],
 ];
 

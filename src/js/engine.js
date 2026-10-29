@@ -3033,7 +3033,8 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 	// If not winning, process checkpoints and AGAIN command.
 	if (!winning) {
 		let checkpointIndex = level.commandQueue.indexOf('checkpoint');
-		if (checkpointIndex >= 0) {
+		// A speculative AGAIN turn must not change the restart state or storage.
+		if (!dontModify && checkpointIndex >= 0) {
 			if (verbose_logging) {
 				let r = level.commandQueueSourceRules[checkpointIndex];
 				consolePrintFromRule('CHECKPOINT command executed, saving current state to the restart state.', r);
