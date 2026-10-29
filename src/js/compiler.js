@@ -2438,6 +2438,7 @@ function twiddleMetaData(state) {
             } else {
                 if (intcoords[0] <= 0 || intcoords[1] <= 0) {
                     logWarning(`The dimensions given to me (you gave "${val}") are baad - they should be > 0.`, lineNumber);
+                    return null;
                 }
                 return intcoords;
             }
