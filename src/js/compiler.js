@@ -1825,8 +1825,8 @@ function rulesToMask(state) {
                         break;
                     }
                     
-                    if (object_dir === 'random') {
-                        logError("RANDOM cannot be matched on the left-hand side, it can only appear on the right", rule.lineNumber);
+                    if (object_dir === 'random' || object_dir === 'randomdir') {
+                        logError(`${object_dir.toUpperCase()} cannot be matched on the left-hand side; it can only appear on the right`, rule.lineNumber);
                         continue;
                     }
 

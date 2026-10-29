@@ -756,7 +756,19 @@ var errormessage_testdata = [
     ],
     [
         "RANDOM cannot be matched on the left-hand side",
-        [{file:"test_scripts/random_cannot_be_matched_on_the_left_hand_side.txt"}, ["line 78 : RANDOM cannot be matched on the left-hand side, it can only appear on the right"], 1]
+        [{file:"test_scripts/random_cannot_be_matched_on_the_left_hand_side.txt"}, ["line 78 : RANDOM cannot be matched on the left-hand side; it can only appear on the right"], 1]
+    ],
+    [
+        "#1179 randomdir cannot be matched on the left-hand side",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n[ randomdir Player ] -> [ Player ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n...\n...\n", ["line 18 : RANDOMDIR cannot be matched on the left-hand side; it can only appear on the right"], 1]
+    ],
+    [
+        "#1179 randomdir cannot be matched in a command-only rule",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n[ RANDOMDIR Player ] -> win\n\nWINCONDITIONS\nLEVELS\n\nP..\n...\n...\n", ["line 18 : RANDOMDIR cannot be matched on the left-hand side; it can only appear on the right"], 1]
+    ],
+    [
+        "#1179 randomdir cannot match a property on the left-hand side",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nCrate C\norange\n\nLEGEND\nMovers = Player or Crate\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer, Crate\n\nRULES\n\n[ randomdir Movers ] -> [ Movers ]\n\nWINCONDITIONS\nLEVELS\n\nPC.\n...\n...\n", ["line 22 : RANDOMDIR cannot be matched on the left-hand side; it can only appear on the right"], 1]
     ],
     [
         "An ellipsis on the right must be matched by one in the corresponding place on the left.",

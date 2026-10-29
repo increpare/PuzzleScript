@@ -2048,7 +2048,11 @@ var testdata = [
 	],
 	[
 		"#1175 a real no-input turn still saves a checkpoint",
-		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nTarget X\ngreen\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nTarget\nPlayer\n\nRULES\n\n[ moving Player ] -> [ moving Player ] again\n[ stationary Player Target ] -> [ stationary Player Target ] checkpoint\n\nWINCONDITIONS\nLEVELS\n\nPX\n", [3, "tick", 1, "restart"], "background:0,background player target:1,\n"]
+		["realtime_interval 1.0\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nTarget X\ngreen\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nTarget\nPlayer\n\nRULES\n\n[ moving Player ] -> [ moving Player ] again\n[ stationary Player Target ] -> [ stationary Player Target ] checkpoint\n\nWINCONDITIONS\nLEVELS\n\nPX\n", [3, "tick", 1, "restart"], "background:0,background player target:1,\n"]
+	],
+	[
+		"#1179 randomdir on the right still moves the player",
+		["realtime_interval 0.1\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n[ stationary Player ] -> [ randomdir Player ]\n\nWINCONDITIONS\nLEVELS\n\n...\n.P.\n...\n", ["tick"], "background:0,0,0,\nbackground player:1,0,0,\n0,0,0,\n", 0, "1179"]
 	],
 ];
 
