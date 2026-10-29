@@ -11754,7 +11754,8 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 	// If not winning, process checkpoints and AGAIN command.
 	if (!winning) {
 		let checkpointIndex = level.commandQueue.indexOf('checkpoint');
-		if (checkpointIndex >= 0) {
+		// A speculative AGAIN turn must not change the restart state or storage.
+		if (!dontModify && checkpointIndex >= 0) {
 			if (verbose_logging) {
 				let r = level.commandQueueSourceRules[checkpointIndex];
 				consolePrintFromRule('CHECKPOINT command executed, saving current state to the restart state.', r);
@@ -12522,8 +12523,9 @@ let codeMirrorFn = function () {
                 sol_after_comment: state.sol_after_comment,
 
                 inside_cell: state.inside_cell,
-                bracket_balance: state.bracket_balance,
+                lhs_rhs_rowcount_difference: state.lhs_rhs_rowcount_difference,
                 arrow_passed: state.arrow_passed,
+                rhs_pattern_started: state.rhs_pattern_started,
                 rule_prelude: state.rule_prelude,
 
                 objects_candname: state.objects_candname,
@@ -13214,7 +13216,7 @@ let codeMirrorFn = function () {
                                     warningStr += "#" + (foundOthers[i] + 1) + ", ";
                                 }
                                 warningStr += "#" + state.collisionLayers.length;
-                                logWarning(warningStr + ' ). You should fix this!', state.lineNumber);
+                                logWarning(warningStr + ' ). You should fix this! (The compiler will just pick one layer to assign it to).', state.lineNumber);
                             }
 
                             if (state.current_line_wip_array.includes(candname)) {
@@ -13240,7 +13242,8 @@ let codeMirrorFn = function () {
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
                             state.inside_cell = false;
                             state.arrow_passed = false;
-                            state.bracket_balance = 0;
+                            state.lhs_rhs_rowcount_difference = 0;
+                            state.rhs_pattern_started = false;
                             state.rule_prelude = true;
                         }
 
@@ -13256,13 +13259,16 @@ let codeMirrorFn = function () {
                             if (ch === '[') {
                                 state.inside_cell = true;
                                 state.rule_prelude = false;
+                                if (state.arrow_passed) {
+                                    state.rhs_pattern_started = true;
+                                }
                             } else if (ch === ']') {
                                 state.inside_cell = false;
                                 //used to detect if we've reached the final ']'
                                 if (state.arrow_passed) {
-                                    state.bracket_balance--;
+                                    state.lhs_rhs_rowcount_difference--;
                                 } else {
-                                    state.bracket_balance++;
+                                    state.lhs_rhs_rowcount_difference++;
                                 }
                             }
 
@@ -13545,8 +13551,9 @@ let codeMirrorFn = function () {
                 sol_after_comment: false,
 
                 inside_cell: false,
-                bracket_balance: 0,
+                lhs_rhs_rowcount_difference: 0,
                 arrow_passed: false,
+                rhs_pattern_started: false,
                 rule_prelude: true,
 
                 objects_candname: '',
@@ -15415,9 +15422,11 @@ function rulesToMask(state) {
                         break;
                     }
                     
-                    if (object_dir === 'random') {
-                        logError("RANDOM cannot be matched on the left-hand side; it can only appear on the right", rule.lineNumber);
-                        continue;
+                    if (object_dir === 'random' || object_dir === 'randomdir') {
+                        logError(`${object_dir.toUpperCase()} cannot be matched on the left-hand side; it can only appear on the right`, rule.lineNumber);
+                        state.rules.splice(ruleIndex, 1);
+                        ruleIndex--;
+                        continue outerloop;
                     }
 
                     // Process regular object
@@ -17247,6 +17256,16 @@ function onMouseUp(event) {
 	event.handled = true;
 }
 
+function pressKey(event, justPressed) {
+	// So if we have a key buffer that looks like A B ^ C D (current timepoint indicated by ^ ),
+	// and we press X, we want to get the new state being
+	// A B X ^ C D
+	keyRepeatIndex = Math.min(keyRepeatIndex + 1, keybuffer.length);
+	keybuffer.splice(keyRepeatIndex, 0, event.keyCode);
+	keyRepeatTimer = 0;
+	checkKey(event, justPressed);
+}
+
 function onKeyDown(event) {
 
 	ULBS();
@@ -17284,9 +17303,7 @@ function onKeyDown(event) {
 		if (keybuffer.indexOf(event.keyCode) === -1) {
 			if (event && ((event.ctrlKey&&event.keyCode!==90) || event.metaKey)) {
 			} else {
-				keybuffer.splice(keyRepeatIndex, 0, event.keyCode);
-				keyRepeatTimer = 0;
-				checkKey(event, !event.repeat);
+				pressKey(event, !event.repeat);
 			}
 		}
 	}
@@ -17445,9 +17462,7 @@ function pollGamepads() {
 
 	function keyPressed(keycode) {
     	if(keybuffer.indexOf(keycode) === -1) {
-    		keybuffer.splice(keyRepeatIndex, 0, keycode);
-	    	keyRepeatTimer = 0;
-	    	checkKey({keyCode: keycode}, true);
+			pressKey({keyCode: keycode}, true);
 		}
 
 		newGamepadKeys.splice(0, 0, keycode);
