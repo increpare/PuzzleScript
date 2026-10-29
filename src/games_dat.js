@@ -656,6 +656,7 @@ let games_gallery = [
   },
   {
     "url": "https://chz.itch.io/maera-public-works",
+    "source": "https://www.puzzlescript.net/play.html?p=e3eb8a58787f1ac88cb37b6dbc5a292b",
     "thumb": "public.gif",
     "title": "Maera Public Works",
     "author": "CHz",
@@ -720,6 +721,7 @@ let games_gallery = [
   },
   {
     "url": "https://nebu-soku.itch.io/golfshall-we-golf",
+    "source": "https://www.puzzlescript.net/editor.html?hack=86a02fbb49c6c73b4bf899dab5bc63ca",
     "thumb": "golfy.gif",
     "title": "Shall We Golf?",
     "author": "nebu soku",
@@ -727,6 +729,7 @@ let games_gallery = [
   },
   {
     "url": "https://galactical.itch.io/at-the-hedges-of-time",
+    "source": "https://www.puzzlescript.net/editor.html?hack=2fad7fdd93a1a9d6f689024baeb84f5b",
     "thumb": "hedges.gif",
     "title": "At the Hedges of Time",
     "author": "galactical",
@@ -741,6 +744,7 @@ let games_gallery = [
   },
   {
     "url": "https://nebu-soku.itch.io/two-worlds",
+    "source": "https://www.puzzlescript.net/editor.html?hack=fc724eb147fef6888222db429ca68fcd",
     "thumb": "twoworlds.gif",
     "title": "Two Worlds",
     "author": "nebu soku",
@@ -797,6 +801,7 @@ let games_gallery = [
   },
   {
     "url": "https://theconspiracy.itch.io/single-screen-scream",
+    "source": "https://www.puzzlescript.net/editor.html?hack=606fae173f4cd6e0014f2cb5a6509454",
     "thumb": "singlescreenscream.gif",
     "title": "Single Screen Scream",
     "author": "Kip Fabish",
@@ -937,6 +942,7 @@ let games_gallery = [
   },
   {
     "url": "https://wryandbeary.itch.io/seven-layer-dip",
+    "source": "https://www.puzzlescript.net/editor.html?hack=f34d1ea5b2636c253edf725bd2679976",
     "thumb": "f34d1ea5b2636c253edf725bd2679976.gif",
     "title": "Seven-Layer Dip",
     "author": "wryandbeary",
@@ -950,9 +956,18 @@ let games_gallery = [
   },
   {
     "url": "https://clickmazes.itch.io/locknpin",
+    "source": "https://www.puzzlescript.net/editor.html?hack=11118b5d6e0d22b5bfc26f3043c888db",
     "thumb": "11118b5d6e0d22b5bfc26f3043c888db.gif",
     "title": "Lock & Pin",
     "author": "Andrea Gilbert",
     "homepage": "https://clickmazes.itch.io/"
+  },
+  {
+    "url": "https://pap4qlxxlevb.itch.io/midwinter-springtime/",
+    "source": "https://www.puzzlescript.net/editor.html?hack=3e73c82343df51a600786e75745ccf6b",
+    "thumb": "3e73c82343df51a600786e75745ccf6b.gif",
+    "title": "Midwinter Springtime",
+    "author": "pap4qlxxlevb",
+    "homepage": "https://pap4qlxxlevb.itch.io/"
   },
 ]
