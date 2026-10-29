@@ -414,6 +414,16 @@ function onMouseUp(event) {
 	event.handled = true;
 }
 
+function pressKey(event, justPressed) {
+	// So if we have a key buffer that looks like A B ^ C D (current timepoint indicated by ^ ),
+	// and we press X, we want to get the new state being
+	// A B X ^ C D
+	keyRepeatIndex = Math.min(keyRepeatIndex + 1, keybuffer.length);
+	keybuffer.splice(keyRepeatIndex, 0, event.keyCode);
+	keyRepeatTimer = 0;
+	checkKey(event, justPressed);
+}
+
 function onKeyDown(event) {
 
 	ULBS();
@@ -451,9 +461,7 @@ function onKeyDown(event) {
 		if (keybuffer.indexOf(event.keyCode) === -1) {
 			if (event && ((event.ctrlKey&&event.keyCode!==90) || event.metaKey)) {
 			} else {
-				keybuffer.splice(keyRepeatIndex, 0, event.keyCode);
-				keyRepeatTimer = 0;
-				checkKey(event, !event.repeat);
+				pressKey(event, !event.repeat);
 			}
 		}
 	}
@@ -612,9 +620,7 @@ function pollGamepads() {
 
 	function keyPressed(keycode) {
     	if(keybuffer.indexOf(keycode) === -1) {
-    		keybuffer.splice(keyRepeatIndex, 0, keycode);
-	    	keyRepeatTimer = 0;
-	    	checkKey({keyCode: keycode}, true);
+			pressKey({keyCode: keycode}, true);
 		}
 
 		newGamepadKeys.splice(0, 0, keycode);
