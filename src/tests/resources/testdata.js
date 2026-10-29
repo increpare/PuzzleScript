@@ -2054,5 +2054,17 @@ var testdata = [
 		"#1179 randomdir on the right still moves the player",
 		["realtime_interval 0.1\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n[ stationary Player ] -> [ randomdir Player ]\n\nWINCONDITIONS\nLEVELS\n\n...\n.P.\n...\n", ["tick"], "background:0,0,0,\nbackground player:1,0,0,\n0,0,0,\n", 0, "1179"]
 	],
+	[
+		"#1179 rejected randomdir drops the whole rule and preserves the following rule",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nCrate C\norange\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer, Crate\n\nRULES\n\nright [ Player | randomdir Crate ] -> [ Player | Crate ]\n[ action Player ] -> [ right Player ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n", [4], "background:0,background player:1,0,\n"]
+	],
+	[
+		"#1179 rejected randomdir drops command-only rules",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\n\n[ randomdir Player ] -> restart\n[ action Player ] -> [ right Player ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n", [4], "background:0,background player:1,0,\n"]
+	],
+	[
+		"#1179 rejected random also drops the whole rule",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nCrate C\norange\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer, Crate\n\nRULES\n\nright [ Player | random Crate ] -> [ Player | Crate ]\n[ action Player ] -> [ right Player ]\n\nWINCONDITIONS\nLEVELS\n\nP..\n", [4], "background:0,background player:1,0,\n"]
+	],
 ];
 
