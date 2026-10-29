@@ -1827,7 +1827,9 @@ function rulesToMask(state) {
                     
                     if (object_dir === 'random' || object_dir === 'randomdir') {
                         logError(`${object_dir.toUpperCase()} cannot be matched on the left-hand side; it can only appear on the right`, rule.lineNumber);
-                        continue;
+                        state.rules.splice(ruleIndex, 1);
+                        ruleIndex--;
+                        continue outerloop;
                     }
 
                     // Process regular object
