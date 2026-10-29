@@ -479,8 +479,9 @@ let codeMirrorFn = function () {
                 sol_after_comment: state.sol_after_comment,
 
                 inside_cell: state.inside_cell,
-                bracket_balance: state.bracket_balance,
+                lhs_rhs_rowcount_difference: state.lhs_rhs_rowcount_difference,
                 arrow_passed: state.arrow_passed,
+                rhs_pattern_started: state.rhs_pattern_started,
                 rule_prelude: state.rule_prelude,
 
                 objects_candname: state.objects_candname,
@@ -1197,7 +1198,8 @@ let codeMirrorFn = function () {
                             state.tokenIndex = 0;//in rules, records whether bracket has been found or not
                             state.inside_cell = false;
                             state.arrow_passed = false;
-                            state.bracket_balance = 0;
+                            state.lhs_rhs_rowcount_difference = 0;
+                            state.rhs_pattern_started = false;
                             state.rule_prelude = true;
                         }
 
@@ -1213,13 +1215,16 @@ let codeMirrorFn = function () {
                             if (ch === '[') {
                                 state.inside_cell = true;
                                 state.rule_prelude = false;
+                                if (state.arrow_passed) {
+                                    state.rhs_pattern_started = true;
+                                }
                             } else if (ch === ']') {
                                 state.inside_cell = false;
                                 //used to detect if we've reached the final ']'
                                 if (state.arrow_passed) {
-                                    state.bracket_balance--;
+                                    state.lhs_rhs_rowcount_difference--;
                                 } else {
-                                    state.bracket_balance++;
+                                    state.lhs_rhs_rowcount_difference++;
                                 }
                             }
 
@@ -1502,8 +1507,9 @@ let codeMirrorFn = function () {
                 sol_after_comment: false,
 
                 inside_cell: false,
-                bracket_balance: 0,
+                lhs_rhs_rowcount_difference: 0,
                 arrow_passed: false,
+                rhs_pattern_started: false,
                 rule_prelude: true,
 
                 objects_candname: '',

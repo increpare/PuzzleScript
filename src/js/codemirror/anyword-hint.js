@@ -423,8 +423,10 @@
                             candlists.push(RULE_DIRECTION_WORDS);
                             candlists.push(LOOP_WORDS);
                             
-                            // we should only hint commands once we've reached the final ']'                         
-                            if (state.arrow_passed==true && state.bracket_balance===0) {
+                            // we should only hint commands on the rhs either 
+                            // 1: if there are no brackets yet, or
+                            // 2: if we have all of our cellrow groups.
+                            if (state.arrow_passed==true && (!state.rhs_pattern_started || state.lhs_rhs_rowcount_difference===0)) {
                                 var my_commands = RULE_COMMAND_WORDS;
                                 for (var i=0;i<SFX_COMMAND_LIST.length;i++){
                                     var sfxcommand = SFX_COMMAND_LIST[i];
