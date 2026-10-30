@@ -192,6 +192,7 @@ let games_gallery = [
   },
   {
     "url": "https://www.sokobond.com/puzzlescript/",
+    "source": "https://www.puzzlescript.net/editor.html?hack=7005648",
     "thumb": "sokobond.gif",
     "title": "Sokobond: The Demake",
     "author": "Jonah Ostroff",
@@ -245,6 +246,7 @@ let games_gallery = [
   },
   {
     "url": "https://candle.itch.io/chaos-wizard",
+    "source": "https://www.puzzlescript.net/editor.html?hack=8976756",
     "thumb": "chaos-wizard.gif",
     "title": "chaos wizard",
     "author": "mark wonnacott",
@@ -259,6 +261,7 @@ let games_gallery = [
   },
   {
     "url": "https://benjamindav.is/threes/",
+    "source": "https://www.puzzlescript.net/editor.html?hack=9123086",
     "thumb": "threes.gif",
     "title": "Threes: The Demake",
     "author": "Benjamin Davis",
@@ -291,6 +294,7 @@ let games_gallery = [
   },
   {
     "url": "https://www.draknek.org/games/puzzlescript/candy.php",
+    "source": "https://www.puzzlescript.net/editor.html?hack=8569268",
     "thumb": "candy.gif",
     "title": "Sticky Candy Puzzle Saga",
     "author": "Alan Hazelden",
@@ -319,6 +323,7 @@ let games_gallery = [
   },
   {
     "url": "https://www.draknek.org/games/puzzlescript/pulleys.php",
+    "source": "https://www.puzzlescript.net/editor.html?hack=11345687",
     "thumb": "pulleys.gif",
     "title": "You're Pulleying My Leg",
     "author": "Alan Hazelden",
@@ -402,6 +407,7 @@ let games_gallery = [
   },
   {
     "url": "https://www.draknek.org/games/puzzlescript/cyber-lasso.php",
+    "source": "https://www.puzzlescript.net/editor.html?hack=e3e444f7c63fb21b6ec0",
     "thumb": "lasso.gif",
     "title": "Cyber-Lasso",
     "author": "Alan Hazelden",
@@ -409,6 +415,7 @@ let games_gallery = [
   },
   {
     "url": "https://www.draknek.org/games/puzzlescript/train.php",
+    "source": "https://www.puzzlescript.net/editor.html?hack=a4195276e6979f5bdb21",
     "thumb": "train.gif",
     "title": "Train Braining",
     "author": "Alan Hazelden",
@@ -461,6 +468,7 @@ let games_gallery = [
   },
   {
     "url": "https://www.draknek.org/games/puzzlescript/skipping-stones.php",
+    "source": "https://www.puzzlescript.net/editor.html?hack=d6fd6fcf84de185e2584",
     "thumb": "stones.gif",
     "title": "Skipping Stones to Lonely Homes",
     "author": "Alan Hazelden",
@@ -514,6 +522,7 @@ let games_gallery = [
   },
   {
     "url": "https://www.draknek.org/games/puzzlescript/boxing-gloves.php",
+    "source": "https://www.puzzlescript.net/editor.html?hack=c2d717a77f9aa02ecb1b793111f3a921",
     "thumb": "gloves.gif",
     "title": "Boxes Love Boxing Gloves",
     "author": "Alan Hazelden",
@@ -597,6 +606,7 @@ let games_gallery = [
   },
   {
     "url": "https://rosden.itch.io/theflames",
+    "source": "https://www.puzzlescript.net/editor.html?hack=ea24893d81f84b4f11981e73f2ecf830",
     "thumb": "flames.gif",
     "title": "The Flames",
     "author": "Rosden Shadow",
@@ -610,6 +620,7 @@ let games_gallery = [
   },
   {
     "url": "https://www.draknek.org/games/puzzlescript/spikes-n-stuff.php",
+    "source": "https://www.puzzlescript.net/editor.html?hack=dc5c4a669e362e389e994025075f7d0b",
     "thumb": "spikes.gif",
     "title": "Spikes 'n' Stuff",
     "author": "Alan Hazelden",
