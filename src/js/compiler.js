@@ -188,6 +188,9 @@ function generateExtraMembers(state) {
             o.colors = ["#ff00ff"];
         }
         if (o.spritematrix.length === 0) {
+            if (o.colors.length > 1) {
+                logWarning('Object "' + n.toUpperCase() + '" lists several colours but doesn\'t have a sprite matrix; it will just be a solid square of the first colour.', o.lineNumber);
+            }
             o.spritematrix = [
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0],

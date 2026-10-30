@@ -1367,4 +1367,8 @@ var errormessage_testdata = [
         "Keyword aliases: longer legend names still warn",
         ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\naction = Player\nSOUNDS\nCOLLISIONLAYERS\n\nBackground\nPlayer\n\nRULES\nWINCONDITIONS\nLEVELS\n\nP\n", ["line 10 : You named an object \"ACTION\", but this is a keyword. Don't do that!"], 0]
     ],
+    [
+        "#1178 multiple colors without a sprite matrix warn that only the first is used",
+        ["OBJECTS\n\nBackground .\n(comment between declaration and colors)\nlightgreen green\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\nBackground\nPlayer\nRULES\nWINCONDITIONS\nLEVELS\nP\n", ["line 3 : Object \"BACKGROUND\"  lists several colours but doesn\'t have a sprite matrix; it will just be a solid square of the first colour."], 0]
+    ],
 ];
