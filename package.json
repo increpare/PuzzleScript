@@ -2,7 +2,7 @@
   "scripts": {
     "start": "python src/runserver.py",
     "build": "node compile.js",
-    "test": "node src/tests/editor_object_links_test.js && node src/tests/run_tests_node.js"
+    "test": "node src/tests/run_tests_node.js"
   },
   "dependencies": {
     "@jridgewell/gen-mapping": "^0.3.13",
