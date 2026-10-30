@@ -89,7 +89,3 @@ Recorded play session data (for play session tests - testdata.js):
 ```
 
 If you're at the title screen you won't get the second bit.  The recorded play session records all the input from when the level was loaded up until the moment of generation.  Yeah anyway just paste whichever bit you want as an entry in  `./src/tests/resources/testdata.js` or `./src/tests/resources/errormessage_testdata.js` and you're away.
-
-Big games and end states are kept out of those two files, so they stay small enough to browse. Each time `node src/tests/run_tests_node.js` runs, it moves any game source longer than 800 characters into `./src/tests/test_scripts/` and any end state longer than 400 characters into `./src/tests/test_endstates/`, as `.txt` files, and replaces the string with a reference like `{file:"test_scripts/name_of_test.txt"}`. Tests with identical text share one file. You can also write a reference by hand, pointing at a `.txt` file you've saved there yourself.
-
-It also writes `./src/tests/resources/external_testdata.js` (not committed), a copy of every referenced file, so `tests.html` still works when opened straight from disk. When `tests.html` is served over http, it reads the `.txt` files directly instead. If you open it from disk after editing a `.txt` file, run the Node tests first to refresh that copy.
