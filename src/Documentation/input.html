@@ -74,6 +74,14 @@ and then three of those entity types will receive input from the player.
 <p>
 See <a href="../editor.html?demo=kettle">kettle</a> for an example of sending many inputs to many entities simultaneously.
 <p>
+<h2 id="timing">My old game seems to move much more quickly than it used to...</h2>
+<p>
+There was a bug in older versions of PuzzleScript that resulted in different browsers running input repeat at different rate (fixed <a href="https://github.com/increpare/PuzzleScript/issues/949">here</a> in 2022).  The fix made the timing consistent between browsers, but it means if you tuned your game for firefox that it might be too snappy now if you re-export it or tried out a shared link.  I try very hard to not break or change the behaviour of existing puzzlescript games, but this is one of those cases where it was broken anyway in some browsers, and it's worth bringing things into harmony.
+<p>
+Another problem is puzzlescript has gotten much faster over the years, and some older games just yoloed it and set key_repeat_interval to 0.00001 or whatever.  Now this hubris is being pushed! Pls pick the speed that you want for your game. ^^
+<p>
+To adjust held-key speed, set <a href="prelude.html#key_repeat_interval"><code>key_repeat_interval</code></a> in the prelude. Its default is <code>0.15</code> seconds; a larger value, such as <code>key_repeat_interval 0.2</code>, repeats more slowly. For timed rules, adjust <code>realtime_interval</code> or <code>again_interval</code> as appropriate. Test the result in the browsers you want to support.
+</p>
     </div><!-- /.container -->
 
 
