@@ -1371,4 +1371,68 @@ var errormessage_testdata = [
         "#1178 multiple colors without a sprite matrix warn that only the first is used",
         ["OBJECTS\n\nBackground .\n(comment between declaration and colors)\nlightgreen green\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nCOLLISIONLAYERS\nBackground\nPlayer\nRULES\nWINCONDITIONS\nLEVELS\nP\n", ["line 3 : Object \"BACKGROUND\"  lists several colours but doesn\'t have a sprite matrix; it will just be a solid square of the first colour."], 0]
     ],
+	[
+		"Coverage: sprite with too few rows warns in the compiler",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nShort S\nred\n00000\n00000\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\nShort\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 21 : Sprite graphics must be 5 wide and 5 high exactly."],0]
+	],
+	[
+		"Coverage: sound error recovery consumes sfx1",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nsfx0 nope sfx1\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 24 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else."],1]
+	],
+	[
+		"Coverage: sound error recovery consumes move",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nsfx0 nope move\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 24 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else."],1]
+	],
+	[
+		"Coverage: sound error recovery consumes right",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nsfx0 nope right\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 24 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else."],1]
+	],
+	[
+		"Coverage: sound error recovery consumes Player",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nsfx0 nope Player\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 24 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else."],1]
+	],
+	[
+		"Coverage: sound error recovery consumes Missing",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nsfx0 nope Missing\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 24 : Was expecting a sound seed here (a number like 123123, like you generate by pressing the buttons above the console panel), but found something else."],1]
+	],
+	[
+		"Coverage: sprite with five short rows warns about its width",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nShort S\nred\n0000\n0000\n0000\n0000\n0000\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\nShort\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 21 : Sprite graphics must be 5 wide and 5 high exactly."],0]
+	],
+	[
+		"Coverage: sound error recovery consumes events, verbs, directions, and names",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nUnknown sfx0 create up Player Unknown\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 24 : unexpected sound token \"unknown\"."],1]
+	],
+	[
+		"Coverage: forward property member resolves through a later synonym",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\nProp = Alias or Crate\nAlias = Wall\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 22 : You're talking about ALIAS but it's not defined anywhere."],1]
+	],
+	[
+		"Coverage: forward property member expands a later property",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\nProp = Inner or Crate\nInner = Wall or Marker\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 22 : You're talking about INNER but it's not defined anywhere."],1]
+	],
+	[
+		"Coverage: forward synonym chain is promoted to a property during recovery",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\nAlias1 = Alias2\nAlias2 = Alias3\nAlias3 = Wall or Crate\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 22 : You're talking about ALIAS2 but it's not defined anywhere.","line 23 : You're talking about ALIAS3 but it's not defined anywhere."],2]
+	],
+	[
+		"Coverage: three expanded impossible alternatives list every overlap",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nRed R\nred\n\nGreen G\ngreen\n\nBlue B\nblue\n\nLEGEND\nColour = Red or Green or Blue\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer\nWall, Red\nMarker, Green\nTarget, Blue\nCrate\n\nRULES\n\n[ Colour Wall Marker Target ] -> [ Colour Wall Marker Target ]\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 45 : WALL and RED can never overlap (ditto for MARKER/GREEN, and TARGET/BLUE). This rule requires that to happen, so it impossible it will ever trigger."],1]
+	],
+	[
+		"Coverage: relative direction ^ cannot select a rule scan direction",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n^ [ Player ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 34 : Name \"^\", referred to in a rule, does not exist.","line 34 : You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions"],2]
+	],
+	[
+		"Coverage: relative direction v cannot select a rule scan direction",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nv [ Player ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 34 : Name \"v\", referred to in a rule, does not exist.","line 34 : You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions"],2]
+	],
+	[
+		"Coverage: relative direction < cannot select a rule scan direction",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n< [ Player ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 34 : Name \"<\", referred to in a rule, does not exist.","line 34 : You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions"],2]
+	],
+	[
+		"Coverage: relative direction > cannot select a rule scan direction",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n> [ Player ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 34 : Name \">\", referred to in a rule, does not exist.","line 34 : You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions"],2]
+	],
 ];

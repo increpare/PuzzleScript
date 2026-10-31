@@ -2973,17 +2973,13 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 	// Process RESTART command
 	const restartIndex = level.commandQueue.indexOf('restart');
 	if (restartIndex >= 0) {
-		if (verbose_logging && runrulesonlevelstart_phase) {
-			let r = level.commandQueueSourceRules[restartIndex];
-			logWarning(
-				'A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it\'s being ignored.',
-				r.lineNumber,
-				true
-			);
-		}
 		if (verbose_logging) {
 			let r = level.commandQueueSourceRules[restartIndex];
-			consolePrintFromRule('RESTART command executed, reverting to restart state.', r);
+			if (restarting) {
+				logWarning('RESTART command ignored because a restart is already in progress.', r.lineNumber, true);
+			} else {
+				consolePrintFromRule('RESTART command executed, reverting to restart state.', r);
+			}
 			consoleCacheDump();
 		}
 		if (!dontModify) {

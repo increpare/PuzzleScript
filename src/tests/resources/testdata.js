@@ -2132,5 +2132,81 @@ var testdata = [
 		"Checkpoint restart: advancing a level resets the restart target to fresh startup",
 		["run_rules_on_level_start\ndebug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ action Player ] -> win\nright [ Player no Marker ] -> [ > Player Marker ]\nlate [ Player Target ] -> checkpoint\n\nWINCONDITIONS\n\nLEVELS\n\nP.T..\n\nP....\n",[3,4,"restart"],"background marker:0,background player:1,background:2,2,2,\n",0,"checkpoint-seed"]
 	],
+	[
+		"Coverage: noundo blocks undo while movement still works",
+		["debug\nverbose_logging\n\nnoundo\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[3,"undo"],"background:0,background player:1,0,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: norestart ignores restart without adding an undo state",
+		["debug\nverbose_logging\n\nnorestart\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[3,"restart","undo"],"background player:0,background:1,1,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: undo restores the state from before a manual restart",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[3,"restart","undo"],"background:0,background player:1,0,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: blocked moves do not consume an extra undo",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..W\n",[3,3,3,"undo"],"background:0,background player:1,0,background wall:2,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: undo does not roll back the checkpoint used by restart",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ > Player ] -> checkpoint\n\nWINCONDITIONS\n\nLEVELS\n\nP...\n",[3,3,"undo","restart"],"background:0,0,background player:1,0,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: startup restart terminates and reapplies startup changes",
+		["debug\nverbose_logging\n\nrun_rules_on_level_start\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ Player ] -> [ Player Marker ] restart\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[],"background marker player:0,background:1,1,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: startup changes are reapplied after restart",
+		["debug\nverbose_logging\n\nrun_rules_on_level_start\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ Player no Marker ] -> [ Player Marker ]\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[3,"restart"],"background marker player:0,background:1,1,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: early loop revisits an earlier group at the end of the rules",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nstartloop\n[ Crate ] -> [ Marker ]\n[ Target ] -> [ Crate ]\nendloop\n\nWINCONDITIONS\n\nLEVELS\n\nPT.\n",[4],"background player:0,background marker:1,background:2,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: late loop revisits an earlier group at the end of the rules",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nstartloop\nlate [ Crate ] -> [ Marker ]\nlate [ Target ] -> [ Crate ]\nendloop\n\nWINCONDITIONS\n\nLEVELS\n\nPT.\n",[4],"background player:0,background marker:1,background:2,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: early loop converges before the following rule runs",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nstartloop\n[ Crate ] -> [ Marker ]\n[ Target ] -> [ Crate ]\nendloop\n[ Marker ] -> [ Wall ]\n\nWINCONDITIONS\n\nLEVELS\n\nPT.\n",[4],"background player:0,background wall:1,background:2,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: late loop converges before the following late rule runs",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nstartloop\nlate [ Crate ] -> [ Marker ]\nlate [ Target ] -> [ Crate ]\nendloop\nlate [ Marker ] -> [ Wall ]\n\nWINCONDITIONS\n\nLEVELS\n\nPT.\n",[4],"background player:0,background wall:1,background:2,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: cancel restores objects and suppresses movement sounds",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nPlayer move 101\nMarker create 202\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ > Player ] -> [ > Player Marker ] cancel\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[3],"background player:0,background:1,1,\n",0,"coverage-seed",[]]
+	],
+	[
+		"Coverage: rule restart overrides the norestart keyboard setting",
+		["debug\nverbose_logging\n\nnorestart\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nlate [ Player Target ] -> restart\n\nWINCONDITIONS\n\nLEVELS\n\nP.T\n",[3,3],"background player:0,background:1,background target:2,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: late object replacement preserves movement sound and creation order",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nPlayer move 101\nMarker create 202\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nlate [ Player ] -> [ Player Marker ]\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[3],"background:0,background marker player:1,0,\n",0,"coverage-seed",["101","202"]]
+	],
+	[
+		"Coverage: action sounds are distinct from directional movement sounds",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nPlayer action 101\nPlayer move right 202\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[4,3],"background:0,background player:1,0,\n",0,"coverage-seed",["101","202"]]
+	],
+	[
+		"Coverage: cantmove sound uses the blocked direction",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nPlayer cantmove right 101\nPlayer cantmove left 202\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nPW\n",[3,1],"background player:0,background wall:1,\n",0,"coverage-seed",["101","202"]]
+	],
+	[
+		"Coverage: random movement consumes the next seeded direction after undo",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ action Player ] -> [ randomdir Player ]\n\nWINCONDITIONS\n\nLEVELS\n\n.....\n.....\n..P..\n.....\n.....\n",[4,"undo",4],"background:0,0,0,0,0,\n0,0,0,0,0,\n0,0,0,0,0,\n0,0,background player:1,0,0,\n0,0,0,0,0,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: winning still works with a Unicode title and undo-only controls",
+		["debug\nverbose_logging\n\ntitle Coverage 日本語\nnorestart\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ action Player ] -> win\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n\nCP.\n",[4,4],"background crate:0,background player:1,background:2,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: startup win commands do not skip a level",
+		["debug\nverbose_logging\n\nrun_rules_on_level_start\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ Player ] -> win\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n\n.CP\n",[],"background player:0,background:1,1,\n",0,"coverage-seed"]
+	],
 ];
 
