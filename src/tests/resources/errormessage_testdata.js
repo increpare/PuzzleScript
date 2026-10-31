@@ -1435,4 +1435,8 @@ var errormessage_testdata = [
 		"Coverage: relative direction > cannot select a rule scan direction",
 		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n> [ Player ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 34 : Name \">\", referred to in a rule, does not exist.","line 34 : You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions"],2]
 	],
+	[
+		"Coverage: forward aggregate chain hangs compiler",
+		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\nAlias1 = Alias2\nAlias2 = Alias3\nAlias3 = Marker and Target\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 22 : You're talking about ALIAS2 but it's not defined anywhere.","line 23 : You're talking about ALIAS3 but it's not defined anywhere."],2]
+	],
 ];
