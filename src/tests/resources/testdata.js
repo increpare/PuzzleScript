@@ -2088,5 +2088,21 @@ var testdata = [
 	    ]
 	  ]
 	],
+	[
+		"Duplicate property expansion: random group removes duplicate weighting (seed 1, #1123)",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nRed R\nred\n\nGreen G\ngreen\n\nBlue B\nblue\n\nMarker M\nyellow\n\nLEGEND\n\nBrown = Red or Green\nPurple = Red or Blue\nColour = Brown or Purple\nX = Green and Blue\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer\nRed\nGreen\nBlue\nMarker\n\nRULES\n\nrandom [ Colour ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nRGB\n",[4],"background player:0,background green:1,background blue:2,\n",0,"1"]
+	],
+	[
+		"Duplicate property expansion: random group removes duplicate weighting (seed 5, #1123)",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nRed R\nred\n\nGreen G\ngreen\n\nBlue B\nblue\n\nMarker M\nyellow\n\nLEGEND\n\nBrown = Red or Green\nPurple = Red or Blue\nColour = Brown or Purple\nX = Green and Blue\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer\nRed\nGreen\nBlue\nMarker\n\nRULES\n\nrandom [ Colour ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nRGB\n",[4],"background red:0,background green:1,background player:2,\n",0,"5"]
+	],
+	[
+		"Duplicate property expansion: repeated conversions survive separate rule groups (#1123)",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nRed R\nred\n\nGreen G\ngreen\n\nBlue B\nblue\n\nMarker M\nyellow\n\nLEGEND\n\nBrown = Red or Green\nPurple = Red or Blue\nColour = Brown or Purple\nX = Green and Blue\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer\nRed\nGreen\nBlue\nMarker\n\nRULES\n\n[ Colour ] -> [ Player ]\n[ Player ] -> [ Red Marker ]\n[ Colour ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nR\n",[4],"background marker player:0,\n",0]
+	],
+	[
+		"Duplicate property expansion: same-cell overlap keeps shared-object rejection (#1123)",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nRed R\nred\n\nGreen G\ngreen\n\nBlue B\nblue\n\nMarker M\nyellow\n\nLEGEND\n\nBrown = Red or Green\nPurple = Red or Blue\nColour = Brown or Purple\nX = Green and Blue\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer\nRed\nGreen\nBlue\nMarker\n\nRULES\n\n[ Brown Purple ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nRX\n",[4],"background red:0,background player:1,\n",0]
+	],
 ];
 
