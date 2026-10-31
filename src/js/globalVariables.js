@@ -4,7 +4,6 @@ let unitTesting = false;
 let lazyFunctionGeneration = true;
 let curlevel = 0;
 let curlevelTarget = null;
-let hasUsedCheckpoint = false;
 let levelEditorOpened = false;
 let muted = 0;
 let runrulesonlevelstart_phase = false;

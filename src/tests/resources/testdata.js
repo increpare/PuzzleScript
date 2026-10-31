@@ -2104,5 +2104,33 @@ var testdata = [
 		"Duplicate property expansion: same-cell overlap keeps shared-object rejection (#1123)",
 		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nRed R\nred\n\nGreen G\ngreen\n\nBlue B\nblue\n\nMarker M\nyellow\n\nLEGEND\n\nBrown = Red or Green\nPurple = Red or Blue\nColour = Brown or Purple\nX = Green and Blue\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer\nRed\nGreen\nBlue\nMarker\n\nRULES\n\n[ Brown Purple ] -> [ Player ]\n\nWINCONDITIONS\n\nLEVELS\n\nRX\n",[4],"background red:0,background player:1,\n",0]
 	],
+	[
+		"Coverage: repeated restart restores the startup checkpoint without rerunning rules",
+		["run_rules_on_level_start\ndebug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nright [ Player no Marker ] -> [ > Player Marker ] checkpoint\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["restart","restart","restart"],"background marker:0,background player:1,background:2,\n",0,"coverage-seed"]
+	],
+	[
+		"Checkpoint restart: repeated manual restart preserves a checkpoint set during play",
+		["run_rules_on_level_start\ndebug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nright [ Player no Marker ] -> [ > Player Marker ]\nlate [ Player Target ] -> checkpoint\n\nWINCONDITIONS\n\nLEVELS\n\nP.T..\n",[3,"restart","restart"],"background marker:0,0,background player target:1,background:2,2,\n",0,"checkpoint-seed"]
+	],
+	[
+		"Checkpoint restart: rule RESTART restores the saved state without startup movement",
+		["run_rules_on_level_start\ndebug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ action Player ] -> restart\nright [ Player no Marker ] -> [ > Player Marker ]\nlate [ Player Target ] -> checkpoint\n\nWINCONDITIONS\n\nLEVELS\n\nP.T..\n",[3,3,4],"background marker:0,0,background player target:1,background:2,2,\n",0,"checkpoint-seed"]
+	],
+	[
+		"Checkpoint restart: undo after restart restores the pre-restart board",
+		["run_rules_on_level_start\ndebug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nright [ Player no Marker ] -> [ > Player Marker ]\nlate [ Player Target ] -> checkpoint\n\nWINCONDITIONS\n\nLEVELS\n\nP.T..\n",[3,3,"restart","undo"],"background marker:0,0,background marker target:1,background player:2,background:3,\n",0,"checkpoint-seed"]
+	],
+	[
+		"Checkpoint restart: undo does not discard the saved checkpoint",
+		["run_rules_on_level_start\ndebug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nright [ Player no Marker ] -> [ > Player Marker ]\nlate [ Player Target ] -> checkpoint\n\nWINCONDITIONS\n\nLEVELS\n\nP.T..\n",[3,3,"restart","undo","restart"],"background marker:0,0,background player target:1,background:2,2,\n",0,"checkpoint-seed"]
+	],
+	[
+		"Checkpoint restart: fresh-level restart still runs startup movement",
+		["run_rules_on_level_start\ndebug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nright [ Player no Marker ] -> [ > Player Marker ]\n\nWINCONDITIONS\n\nLEVELS\n\nP.T..\n",["restart","restart"],"background marker:0,background player:1,background target:2,background:3,3,\n",0,"checkpoint-seed"]
+	],
+	[
+		"Checkpoint restart: advancing a level resets the restart target to fresh startup",
+		["run_rules_on_level_start\ndebug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ action Player ] -> win\nright [ Player no Marker ] -> [ > Player Marker ]\nlate [ Player Target ] -> checkpoint\n\nWINCONDITIONS\n\nLEVELS\n\nP.T..\n\nP....\n",[3,4,"restart"],"background marker:0,background player:1,background:2,2,2,\n",0,"checkpoint-seed"]
+	],
 ];
 

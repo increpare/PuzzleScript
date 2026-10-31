@@ -535,7 +535,7 @@ function drawMessageScreen() {
 
 let loadedLevelSeed = 0;
 
-function loadLevelFromLevelDat(state, leveldat, randomseed, clearinputhistory) {
+function loadLevelFromLevelDat(state, leveldat, randomseed, clearinputhistory, checkpoint) {
 	if (!randomseed) {
 		randomseed = (Math.random() + Date.now()).toString();
 	}
@@ -580,10 +580,17 @@ function loadLevelFromLevelDat(state, leveldat, randomseed, clearinputhistory) {
 		}
 
 		backups = []
-		restartTarget = backupLevel();
+		if (checkpoint) {
+			restartTarget = checkpoint;
+			restartTargetIsCheckpoint = true;
+			restoreLevel(checkpoint);
+		} else {
+			restartTarget = backupLevel();
+			restartTargetIsCheckpoint = false;
+		}
 		keybuffer = [];
 
-		if ('run_rules_on_level_start' in state.metadata) {
+		if (!restartTargetIsCheckpoint && 'run_rules_on_level_start' in state.metadata) {
 			runrulesonlevelstart_phase = true;
 			processInput(-1, true);
 			runrulesonlevelstart_phase = false;
@@ -611,9 +618,7 @@ function loadLevelFromStateTarget(state, levelindex, target, randomseed) {
 			tryPlayStartLevelSound();
 		}
 	}
-	loadLevelFromLevelDat(state, state.levels[levelindex], randomseed);
-	restoreLevel(target);
-	restartTarget = target;
+	loadLevelFromLevelDat(state, state.levels[levelindex], randomseed, undefined, target);
 }
 
 function loadLevelFromState(state, levelindex, randomseed) {
@@ -708,6 +713,8 @@ function tryPlayCloseMessageSound() {
 
 let backups = [];
 let restartTarget;
+// Checkpoints contain an already initialized board; fresh restart targets do not.
+let restartTargetIsCheckpoint = false;
 
 function backupLevel() {
 	let ret = {
@@ -1158,7 +1165,7 @@ function DoRestart(force) {
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
 
-	if ('run_rules_on_level_start' in state.metadata) {
+	if (!restartTargetIsCheckpoint && 'run_rules_on_level_start' in state.metadata) {
 		processInput(-1, true);
 	}
 
@@ -3040,7 +3047,7 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 				consolePrintFromRule('CHECKPOINT command executed, saving current state to the restart state.', r);
 			}
 			restartTarget = level4Serialization();
-			hasUsedCheckpoint = true;
+			restartTargetIsCheckpoint = true;
 			let backupStr = JSON.stringify(restartTarget);
 			storage_set(document.URL + '_checkpoint', backupStr);
 			storage_set(document.URL, curlevel);
@@ -3214,10 +3221,6 @@ function nextLevel() {
 			loadLevelFromState(state, curlevel);
 		}
 	} else {
-		if (hasUsedCheckpoint) {
-			curlevelTarget = null;
-			hasUsedCheckpoint = false;
-		}
 		if (curlevel < (state.levels.length - 1)) {
 			curlevel++;
 			curlevelTarget = null;
@@ -3251,6 +3254,7 @@ function nextLevel() {
 		storage_set(document.URL, curlevel);
 		if (curlevelTarget !== null) {
 			restartTarget = level4Serialization();
+			restartTargetIsCheckpoint = true;
 			let backupStr = JSON.stringify(restartTarget);
 			storage_set(document.URL + '_checkpoint', backupStr);
 		} else {

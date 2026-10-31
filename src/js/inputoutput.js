@@ -817,6 +817,7 @@ function checkKey(e, justPressed) {
 						printLevel();
 					}
 					restartTarget = backupLevel();
+					restartTargetIsCheckpoint = false;
 					canvasResize();
 				}
 				return prevent(e);
