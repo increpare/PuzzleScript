@@ -677,6 +677,9 @@
 		var pendingElement = testRecord.element;
 		var completedElement = renderResult(testRecord);
 		pendingElement.replaceWith(completedElement);
+		if (currentRunTests.length === 1) {
+			setExpanded(testRecord, true);
+		}
 	}
 
 	function scheduleRunStep(callback) {
