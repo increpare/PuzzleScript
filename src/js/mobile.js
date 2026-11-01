@@ -45,7 +45,17 @@ Mobile.setupPlayerControls = function () {
     // Consume the compatibility click even if activation hides its button
     // (mute/unmute) or opens a menu under the pointer before click dispatch.
     var skipPointerClick = false;
+    function isTouchMouseEvent(event) {
+        return event.sourceCapabilities && event.sourceCapabilities.firesTouchEvents;
+    }
     document.addEventListener('pointerdown', function () { skipPointerClick = false; }, true);
+    if (!window.PointerEvent) {
+        document.addEventListener('mousedown', function (event) {
+            // A cancelled touch may emit no compatibility click. A new mouse
+            // press owns its own click; touch-generated mouse events do not.
+            if (!isTouchMouseEvent(event)) { skipPointerClick = false; }
+        }, true);
+    }
     document.addEventListener('click', function (event) {
         if (skipPointerClick && event.detail > 0) {
             skipPointerClick = false;
@@ -98,12 +108,14 @@ Mobile.setupPlayerControls = function () {
             }
         }
         var pointer = null;
+        var touchStart = null;
         var pointerUsed = false;
         function release() {
             if (pointer && pointer.ownsKey) {
                 onKeyUp({ keyCode: heldCode });
             }
             pointer = null;
+            touchStart = null;
             element.classList.remove('is-held');
         }
         releaseButtons.push(release);
@@ -141,25 +153,41 @@ Mobile.setupPlayerControls = function () {
             element.addEventListener('lostpointercapture', release);
         } else {
             // Older touch browsers can suppress the first click after a swipe.
-            var touchStart;
+            element.addEventListener('mousedown', function (event) {
+                if (!isTouchMouseEvent(event)) { pointerUsed = false; }
+            });
             element.addEventListener('touchstart', function (event) {
+                if (element.disabled || touchStart) { return; }
                 touchStart = event.touches.length === 1 ? event.touches[0] : null;
+                if (touchStart && heldCode) {
+                    event.preventDefault();
+                    pointerUsed = true;
+                    skipPointerClick = true;
+                    pointer = { ownsKey: keybuffer.indexOf(heldCode) < 0 };
+                    element.classList.add('is-held');
+                    lastDownTarget = canvas;
+                    onKeyDown({ keyCode: heldCode });
+                }
             });
             element.addEventListener('touchmove', function (event) {
                 if (touchStart && (event.touches.length !== 1 ||
-                    Math.abs(event.touches[0].clientX - touchStart.clientX) > 10 ||
-                    Math.abs(event.touches[0].clientY - touchStart.clientY) > 10)) { touchStart = null; }
+                    (heldCode ? !inside(event.touches[0]) :
+                        Math.abs(event.touches[0].clientX - touchStart.clientX) > 10 ||
+                        Math.abs(event.touches[0].clientY - touchStart.clientY) > 10))) {
+                    release();
+                }
             });
-            element.addEventListener('touchcancel', function () { touchStart = null; });
+            element.addEventListener('touchcancel', release);
             element.addEventListener('touchend', function (event) {
-                var tap = touchStart && !element.disabled && !event.touches.length && inside(event.changedTouches[0]);
-                touchStart = null;
+                var tap = !heldCode && touchStart && !element.disabled && !event.touches.length && inside(event.changedTouches[0]);
+                release();
                 event.preventDefault();
                 if (tap) { activate(false); }
             });
         }
         element.addEventListener('click', function (event) {
-            if (!pointerUsed || event.detail === 0) { activate(event.detail === 0); }
+            var touchMouse = !window.PointerEvent && isTouchMouseEvent(event);
+            if (event.detail === 0 || (!pointerUsed && !touchMouse)) { activate(event.detail === 0); }
             pointerUsed = false;
         });
         return element;
