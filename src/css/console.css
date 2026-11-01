@@ -8,6 +8,10 @@
 	  line-height:1.0;
 }
 
+#consoletextarea > .console-batch {
+	white-space: pre-line;
+}
+
 .errorTextLineNumber {
 	color: light-dark(purple,yellow);
 	text-decoration: underline;

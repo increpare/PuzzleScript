@@ -3061,6 +3061,8 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 			let r = level.commandQueueSourceRules[againIndex];
 			let oldVerboseLogging = verbose_logging;
 			let oldMessageText = messagetext;
+			let oldCommandQueue = level.commandQueue;
+			let oldCommandQueueSourceRules = level.commandQueueSourceRules;
 			verbose_logging = false;
 			if (processInput(-1, true, true)) {
 				verbose_logging = oldVerboseLogging;
@@ -3077,6 +3079,9 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 			}
 			verbose_logging = oldVerboseLogging;
 			messagetext = oldMessageText;
+			// The probe's commands belong to the future turn, not this message.
+			level.commandQueue = oldCommandQueue;
+			level.commandQueueSourceRules = oldCommandQueueSourceRules;
 		}
 	}
 
@@ -3084,8 +3089,17 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 		consolePrint('Turn complete');
 	}
 
-	level.commandQueue = [];
-	level.commandQueueSourceRules = [];
+	// Dismissing a rule message checks this queue for its explicit win.
+	// Suppressed wins (including initialization and editor turns) must expire now.
+	let winIndex = level.commandQueue.indexOf('win');
+	if (!dontModify && !dontDoWin && !levelEditorOpened && textMode &&
+		level.commandQueue.includes('message') && winIndex >= 0) {
+		level.commandQueueSourceRules = [level.commandQueueSourceRules[winIndex]];
+		level.commandQueue = ['win'];
+	} else {
+		level.commandQueue = [];
+		level.commandQueueSourceRules = [];
+	}
 	return modified;
 }
 
