@@ -620,7 +620,9 @@ function pollGamepads() {
 
 	function keyPressed(keycode) {
     	if(keybuffer.indexOf(keycode) === -1) {
-			pressKey({keyCode: keycode}, true);
+			// A message or level transition can clear keybuffer while the
+			// physical button stays down. Only a new physical press is fresh.
+			pressKey({keyCode: keycode}, gamepadKeys.indexOf(keycode) === -1);
 		}
 
 		newGamepadKeys.splice(0, 0, keycode);
