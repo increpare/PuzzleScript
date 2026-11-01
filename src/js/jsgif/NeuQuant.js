@@ -28,7 +28,7 @@
 
 	//import flash.utils.ByteArray;
 	
-	NeuQuant = function()
+	var NeuQuant = function()
 	{
 	    var exports = {};
 		/*private_static*/ var netsize/*int*/ = 256; /* number of colours used */

@@ -8,7 +8,7 @@
 
 	//import flash.utils.ByteArray;
 	
-	LZWEncoder = function()
+	var LZWEncoder = function()
 	{
 	    var exports = {};
 		/*private_static*/ var EOF/*int*/ = -1;
