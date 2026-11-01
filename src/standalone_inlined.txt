@@ -807,7 +807,6 @@ let unitTesting = false;
 let lazyFunctionGeneration = true;
 let curlevel = 0;
 let curlevelTarget = null;
-let hasUsedCheckpoint = false;
 let levelEditorOpened = false;
 let muted = 0;
 let runrulesonlevelstart_phase = false;
@@ -9256,7 +9255,7 @@ function drawMessageScreen() {
 
 let loadedLevelSeed = 0;
 
-function loadLevelFromLevelDat(state, leveldat, randomseed, clearinputhistory) {
+function loadLevelFromLevelDat(state, leveldat, randomseed, clearinputhistory, checkpoint) {
 	if (!randomseed) {
 		randomseed = (Math.random() + Date.now()).toString();
 	}
@@ -9301,10 +9300,17 @@ function loadLevelFromLevelDat(state, leveldat, randomseed, clearinputhistory) {
 		}
 
 		backups = []
-		restartTarget = backupLevel();
+		if (checkpoint) {
+			restartTarget = checkpoint;
+			restartTargetIsCheckpoint = true;
+			restoreLevel(checkpoint);
+		} else {
+			restartTarget = backupLevel();
+			restartTargetIsCheckpoint = false;
+		}
 		keybuffer = [];
 
-		if ('run_rules_on_level_start' in state.metadata) {
+		if (!restartTargetIsCheckpoint && 'run_rules_on_level_start' in state.metadata) {
 			runrulesonlevelstart_phase = true;
 			processInput(-1, true);
 			runrulesonlevelstart_phase = false;
@@ -9332,9 +9338,7 @@ function loadLevelFromStateTarget(state, levelindex, target, randomseed) {
 			tryPlayStartLevelSound();
 		}
 	}
-	loadLevelFromLevelDat(state, state.levels[levelindex], randomseed);
-	restoreLevel(target);
-	restartTarget = target;
+	loadLevelFromLevelDat(state, state.levels[levelindex], randomseed, undefined, target);
 }
 
 function loadLevelFromState(state, levelindex, randomseed) {
@@ -9429,6 +9433,8 @@ function tryPlayCloseMessageSound() {
 
 let backups = [];
 let restartTarget;
+// Checkpoints contain an already initialized board; fresh restart targets do not.
+let restartTargetIsCheckpoint = false;
 
 function backupLevel() {
 	let ret = {
@@ -9879,7 +9885,7 @@ function DoRestart(force) {
 	restoreLevel(restartTarget);
 	tryPlayRestartSound();
 
-	if ('run_rules_on_level_start' in state.metadata) {
+	if (!restartTargetIsCheckpoint && 'run_rules_on_level_start' in state.metadata) {
 		processInput(-1, true);
 	}
 
@@ -11687,17 +11693,13 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 	// Process RESTART command
 	const restartIndex = level.commandQueue.indexOf('restart');
 	if (restartIndex >= 0) {
-		if (verbose_logging && runrulesonlevelstart_phase) {
-			let r = level.commandQueueSourceRules[restartIndex];
-			logWarning(
-				'A "restart" command is being triggered in the "run_rules_on_level_start" section of level creation, which would cause an infinite loop if it was actually triggered, but it\'s being ignored.',
-				r.lineNumber,
-				true
-			);
-		}
 		if (verbose_logging) {
 			let r = level.commandQueueSourceRules[restartIndex];
-			consolePrintFromRule('RESTART command executed, reverting to restart state.', r);
+			if (restarting) {
+				logWarning('RESTART command ignored because a restart is already in progress.', r.lineNumber, true);
+			} else {
+				consolePrintFromRule('RESTART command executed, reverting to restart state.', r);
+			}
 			consoleCacheDump();
 		}
 		if (!dontModify) {
@@ -11761,7 +11763,7 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 				consolePrintFromRule('CHECKPOINT command executed, saving current state to the restart state.', r);
 			}
 			restartTarget = level4Serialization();
-			hasUsedCheckpoint = true;
+			restartTargetIsCheckpoint = true;
 			let backupStr = JSON.stringify(restartTarget);
 			storage_set(document.URL + '_checkpoint', backupStr);
 			storage_set(document.URL, curlevel);
@@ -11935,10 +11937,6 @@ function nextLevel() {
 			loadLevelFromState(state, curlevel);
 		}
 	} else {
-		if (hasUsedCheckpoint) {
-			curlevelTarget = null;
-			hasUsedCheckpoint = false;
-		}
 		if (curlevel < (state.levels.length - 1)) {
 			curlevel++;
 			curlevelTarget = null;
@@ -11972,6 +11970,7 @@ function nextLevel() {
 		storage_set(document.URL, curlevel);
 		if (curlevelTarget !== null) {
 			restartTarget = level4Serialization();
+			restartTargetIsCheckpoint = true;
 			let backupStr = JSON.stringify(restartTarget);
 			storage_set(document.URL + '_checkpoint', backupStr);
 		} else {
@@ -12040,6 +12039,7 @@ Rule.prototype.generateFindMatchesFunction = function () {
 	}
 	return CACHE_RULE_FINDMATCHES[fn] = new Function('level', fn);
 }
+
 </script>
 <script>
 'use strict';
@@ -13032,7 +13032,17 @@ let codeMirrorFn = function () {
                                     if (!wordAlreadyDeclared(state, matched_name)) {
                                         tokentype = 'ERROR';
                                         state.current_line_wip_array.push("ERROR");
-                                        logError(`unexpected sound token "${matched_name}".`, state.lineNumber);
+                                        const sound_as_verb = reg_soundverbs.exec(matched_name);
+                                        const is_sound_verb = sound_as_verb !== null && sound_as_verb[0].trim() === matched_name;
+                                        const sound_as_dir = reg_sounddirectionindicators.exec(matched_name);
+                                        const is_sound_dir = sound_as_dir !== null && sound_as_dir[0].trim() === matched_name;
+                                        if (is_sound_verb) {
+                                            logError(`Sound verb "${matched_name.toUpperCase()}" needs an entity before it, e.g. "Player ${matched_name.toUpperCase()} 12345".`, state.lineNumber);
+                                        } else if (is_sound_dir) {
+                                            logError(`Sound direction "${matched_name.toUpperCase()}" needs an entity and MOVE or CANTMOVE before it, e.g. "Player MOVE ${matched_name.toUpperCase()} 12345".`, state.lineNumber);
+                                        } else {
+                                            logError(`unexpected sound token "${matched_name}".`, state.lineNumber);
+                                        }
                                     } else {
                                         tokentype = 'NAME';
                                         state.current_line_wip_array.push([matched_name, tokentype]);
@@ -13070,7 +13080,8 @@ let codeMirrorFn = function () {
                                     state.tokenIndex++;
                                 } else {
                                     match = errorFallbackMatchToken(stream);
-                                    logError("Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.", state.lineNumber);
+                                    const objectName = state.current_line_wip_array[0][0].toUpperCase();
+                                    logError(`Was expecting a sound verb here (e.g. MOVE, DESTROY, CANTMOVE, or the like), but found something else. Try "${objectName} MOVE 12345" or "${objectName} ACTION 12345".`, state.lineNumber);
                                     tokentype = 'ERROR';
                                     state.current_line_wip_array.push("ERROR");
                                 }
@@ -13785,6 +13796,9 @@ function generateExtraMembers(state) {
             o.colors = ["#ff00ff"];
         }
         if (o.spritematrix.length === 0) {
+            if (o.colors.length > 1) {
+                logWarning('Object "' + n.toUpperCase() + '" lists several colours but doesn\'t have a sprite matrix; it will just be a solid square of the first colour.', o.lineNumber);
+            }
             o.spritematrix = [
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0],
@@ -13917,7 +13931,7 @@ function generateExtraMembers(state) {
                 propertiesDict[n] = propertiesDict[value];
                 modified = true;
             } else if (value in aggregatesDict) {
-                delete aggregatesDict[n];
+                delete synonymsDict[n];
                 aggregatesDict[n] = aggregatesDict[value];
                 modified = true;
             } else if (value in synonymsDict) {
@@ -16035,6 +16049,7 @@ function twiddleMetaData(state) {
             } else {
                 if (intcoords[0] <= 0 || intcoords[1] <= 0) {
                     logWarning(`The dimensions given to me (you gave "${val}") are baad - they should be > 0.`, lineNumber);
+                    return null;
                 }
                 return intcoords;
             }
@@ -17462,7 +17477,9 @@ function pollGamepads() {
 
 	function keyPressed(keycode) {
     	if(keybuffer.indexOf(keycode) === -1) {
-			pressKey({keyCode: keycode}, true);
+			// A message or level transition can clear keybuffer while the
+			// physical button stays down. Only a new physical press is fresh.
+			pressKey({keyCode: keycode}, gamepadKeys.indexOf(keycode) === -1);
 		}
 
 		newGamepadKeys.splice(0, 0, keycode);
@@ -17659,6 +17676,7 @@ function checkKey(e, justPressed) {
 						printLevel();
 					}
 					restartTarget = backupLevel();
+					restartTargetIsCheckpoint = false;
 					canvasResize();
 				}
 				return prevent(e);
