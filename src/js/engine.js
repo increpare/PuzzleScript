@@ -2625,7 +2625,7 @@ function applyRuleGroup(ruleGroup) {
         }
     }
 
-    if (loopcount >= MAX_LOOP_COUNT) {
+    if (loopcount > MAX_LOOP_COUNT) {
         logErrorCacheable("Got caught looping lots in a rule group :O", ruleGroup[0].lineNumber, true);
     }
 
