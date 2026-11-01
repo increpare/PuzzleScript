@@ -10,6 +10,7 @@ let _editorCleanState = "";
 
 let importedSource = document.getElementById("importedSource");
 let fileToOpen = importedSource && importedSource.textContent !== "null" ? null : getParameterByName("demo");
+let gistToLoad = null;
 if (importedSource && importedSource.textContent !== "null") {
 	code.value = JSON.parse(importedSource.textContent);
 	importedSource.remove();
@@ -26,13 +27,10 @@ if (importedSource && importedSource.textContent !== "null") {
 		jumpToLine(line);
 	});
 } else if (fileToOpen!==null&&fileToOpen.length>0) {
-	tryLoadFile(fileToOpen);
 	code.value = "loading...";
 } else {
-	let gistToLoad=getParameterByName("hack");
+	gistToLoad=getParameterByName("hack");
 	if (gistToLoad!==null&&gistToLoad.length>0) {
-		let id = gistToLoad.replace(/[\\\/]/,"");
-		tryLoadGist(id);
 		code.value = "loading...";
 	} else {
 		try {
@@ -48,6 +46,17 @@ if (importedSource && importedSource.textContent !== "null") {
 		}
 	}
 }
+
+function loadInitialGame() {
+	if (fileToOpen) {
+		tryLoadFile(fileToOpen);
+	} else if (gistToLoad) {
+		tryLoadGist(gistToLoad.replace(/[\\\/]/,""));
+	}
+}
+
+// Start source requests after all editor scripts have executed.
+document.addEventListener("DOMContentLoaded", loadInitialGame, {once: true});
 
 CodeMirror.commands.swapLineUp = function(cm) {
     let ranges = cm.listSelections(), linesToMove = [], at = cm.firstLine() - 1, newSels = [];
@@ -219,24 +228,11 @@ function tryLoadFile(fileName) {
   			return;
   		}
   		
-		function doStuff(){
-			editor.setValue(fileOpenClient.responseText);
-			clearConsole();
-			setEditorClean();
-			unloadGame();
-			compile(["restart"]);
-		}
-		if (document.readyState === "complete") {
-			doStuff();
-		} else {
-			let handler = (event)=>{
-				if (document.readyState === "complete") {
-					doStuff();			
-					document.removeEventListener("readystatechange",handler);							
-				}
-			};
-			document.addEventListener("readystatechange",handler);
-		}
+		editor.setValue(fileOpenClient.responseText);
+		clearConsole();
+		setEditorClean();
+		unloadGame();
+		compile(["restart"]);
 	}
 	fileOpenClient.send();
 }
@@ -294,11 +290,11 @@ function rip_source_from_html(s){
 }
 
 editor.on("drop", function(editor, event) {
-	files = event.dataTransfer.files;
+	const files = event.dataTransfer.files;
 	if (files.length > 0) {
 		const file=files[0];
 		try{
-			reader = new FileReader();
+			const reader = new FileReader();
 			reader.onload = function(e) {
 				let source_text = reader.result;
 				// Extract source from standalone HTML exports.
