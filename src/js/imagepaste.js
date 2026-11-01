@@ -75,11 +75,10 @@ function quantizeColors(colorList, k) {
 function suggest_unused_name(base, editor) {
 	const raw = (editor && typeof editor.getValue === 'function') ? editor.getValue() : '';
 	const text = (typeof raw === 'string' && raw) ? raw : '';
-	for (let i = 1; i < 100; i++) {
+	for (let i = 1; ; i++) {
 		const name = base + '_' + i;
 		if (text.indexOf(name) === -1) return name;
 	}
-	return base;
 }
 
 /**
