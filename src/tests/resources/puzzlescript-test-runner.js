@@ -5,7 +5,8 @@
 	var GROUP_COMPILER = "compiler-messages";
 	var HIDE_PASSED_KEY = "puzzlescript-test-runner-hide-passed";
 	var TEST_PAGE_TITLE = document.title;
-	var TEST_BATCH_BUDGET_MS = 200;
+	var RUNNER_SCRIPT_URL = document.currentScript && document.currentScript.src;
+	var TEST_BATCH_BUDGET_MS = 8;
 	var tests = [];
 	var activeTest = null;
 	var started = false;
@@ -69,6 +70,7 @@
 			source: options.source,
 			setup: options.setup || [],
 			output: options.output,
+			data: options.data,
 			callback: callback,
 			status: "pending",
 			duration: 0,
@@ -127,7 +129,7 @@
 		};
 	}
 
-	function executeTest(testRecord) {
+	function executeTest(testRecord, compilation) {
 		var returned;
 		var startedAt = performance.now();
 		testRecord.status = "pending";
@@ -135,7 +137,7 @@
 		testRecord.error = null;
 		activeTest = testRecord;
 		try {
-			returned = testRecord.callback();
+			returned = testRecord.callback(compilation);
 		} catch (error) {
 			testRecord.error = normalizeException(error);
 		} finally {
@@ -605,19 +607,25 @@
 	}
 
 	function populateDetail(detail, testRecord) {
-		var i;
+		var outcome = createElement("div", "test-result__outcome");
 		detail.appendChild(renderSource(testRecord));
 		if (testRecord.setup.length) {
 			detail.appendChild(renderSetup(testRecord.setup));
 		}
+		populateOutcome(outcome, testRecord);
+		detail.appendChild(outcome);
+	}
+
+	function populateOutcome(outcome, testRecord) {
+		var i;
 		if (testRecord.status === "passed") {
-			detail.appendChild(renderOutput(testRecord.output));
+			outcome.appendChild(renderOutput(testRecord.output));
 		}
 		for (i = 0; i < testRecord.comparisons.length; i++) {
-			detail.appendChild(renderComparison(testRecord.comparisons[i]));
+			outcome.appendChild(renderComparison(testRecord.comparisons[i]));
 		}
 		if (testRecord.error) {
-			detail.appendChild(renderError(testRecord.error));
+			outcome.appendChild(renderError(testRecord.error));
 		}
 	}
 
@@ -647,8 +655,6 @@
 		name.type = "button";
 		name.setAttribute("aria-controls", detailId);
 		name.setAttribute("aria-expanded", "false");
-		disclosure.disabled = pending;
-		name.disabled = pending;
 		rerun.href = rerunUrl(testRecord.number);
 		rerun.addEventListener("click", function (event) {
 			event.stopPropagation();
@@ -674,12 +680,85 @@
 	}
 
 	function renderCompletedResult(testRecord) {
-		var pendingElement = testRecord.element;
-		var completedElement = renderResult(testRecord);
-		pendingElement.replaceWith(completedElement);
+		var result = testRecord.element;
+		var status = result.querySelector(".test-result__status");
+		result.classList.remove("test-result--pending");
+		result.classList.add("test-result--" + testRecord.status);
+		status.textContent = testRecord.status === "passed" ? "✓" : "×";
+		status.setAttribute("aria-label", testRecord.status === "errored" ? "Error" :
+			testRecord.status === "passed" ? "Passed" : "Failed");
+		result.querySelector(".test-result__duration").textContent = testRecord.duration.toFixed(1) + "ms";
+		result.hidden = !isResultVisible(testRecord);
+		if (testRecord.detailRendered) {
+			populateOutcome(result.querySelector(".test-result__outcome"), testRecord);
+		}
 		if (currentRunTests.length === 1) {
 			setExpanded(testRecord, true);
 		}
+	}
+
+	function runInWorker(root, runTests) {
+		var worker;
+		var nextIndex = 0;
+		var totalDuration = 0;
+		var i;
+		if (!window.Worker || !RUNNER_SCRIPT_URL) {
+			return false;
+		}
+		for (i = 0; i < runTests.length; i++) {
+			if (!runTests[i].data) {
+				return false;
+			}
+		}
+		try {
+			worker = new Worker(new URL("puzzlescript-test-worker.js", RUNNER_SCRIPT_URL));
+		} catch (error) {
+			return false;
+		}
+
+		function sendNextTest() {
+			var testRecord = runTests[nextIndex];
+			updateRunningTest(root, testRecord);
+			worker.postMessage({ name: testRecord.name, group: testRecord.group, data: testRecord.data });
+		}
+
+		worker.onmessage = function (event) {
+			var result = event.data;
+			var testRecord;
+			if (result.ready) {
+				sendNextTest();
+				return;
+			}
+			testRecord = runTests[nextIndex];
+			if (result.compilation && !result.error) {
+				// HTML message decoding needs the real DOM; compilation stays in the worker.
+				executeTest(testRecord, result.compilation);
+				testRecord.duration += result.duration;
+			} else {
+				testRecord.duration = result.duration;
+				testRecord.status = result.status;
+				testRecord.comparisons = result.comparisons;
+				testRecord.error = result.error;
+			}
+			totalDuration += testRecord.duration;
+			renderCompletedResult(testRecord);
+			nextIndex++;
+			if (nextIndex < runTests.length) {
+				sendNextTest();
+			} else {
+				worker.terminate();
+				updateCompletedHeader(root.querySelector(".test-runner__header"), runTests, totalDuration);
+			}
+		};
+		worker.onerror = function (event) {
+			event.preventDefault();
+			console.warn("Test worker unavailable; continuing on the main thread.", event.message);
+			worker.terminate();
+			scheduleRunStep(function () {
+				runBatch(root, runTests, nextIndex, totalDuration);
+			});
+		};
+		return true;
 	}
 
 	function scheduleRunStep(callback) {
@@ -708,7 +787,6 @@
 		for (i = 0; i < completedInBatch.length; i++) {
 			renderCompletedResult(completedInBatch[i]);
 		}
-		updateVisibility();
 
 		if (nextIndex < runTests.length) {
 			updateRunningTest(root, runTests[nextIndex]);
@@ -741,13 +819,15 @@
 		renderRunning(root, runTests);
 		scheduleRunStep(function () {
 			scheduleRunStep(function () {
-				runBatch(root, runTests, 0, 0);
+				if (!runInWorker(root, runTests)) {
+					runBatch(root, runTests, 0, 0);
+				}
 			});
 		});
 	}
 
 	window.test = registerTest;
-	window.PuzzleScriptTests = { start: start };
+	window.PuzzleScriptTests = { start: start, execute: executeTest };
 	window.PuzzleScriptTestAssertions = {
 		push: pushAssertion,
 		equal: assertEqual

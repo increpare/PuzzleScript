@@ -83,13 +83,11 @@ function runTest(dataarray,testname) {
 }
 
 
-function runCompilationTest(dataarray,testname) {
+function compileTest(dataarray,testname) {
 	console.log("Running test "+testname);
 	unitTesting=true;
 	lazyFunctionGeneration=false;
 	levelString=dataarray[0];
-	var recordedErrorStrings=dataarray[1];
-	var recordedErrorCount=dataarray[2];
 	if (typeof resetParserErrorState === 'function') {
 		resetParserErrorState();
 	} else {
@@ -107,15 +105,20 @@ function runCompilationTest(dataarray,testname) {
 	}
 
 	if (compileThrew) {
-		return false;
+		return null;
 	}
 
 	
 	unitTesting=true;
 	lazyFunctionGeneration=false;
+	return { messages: errorStrings.slice(), errorCount: errorCount };
+}
 
-	var strippedErrorStrings = errorStrings.map(stripHTMLTags);
-	var errorCountMatches = errorCount === recordedErrorCount;
+function compareCompilationTest(dataarray, compilation) {
+	var recordedErrorStrings=dataarray[1];
+	var recordedErrorCount=dataarray[2];
+	var strippedErrorStrings = compilation.messages.map(stripHTMLTags);
+	var errorCountMatches = compilation.errorCount === recordedErrorCount;
 	var i_recorded=0;
 	var i_simulated=0;
 	for (i_simulated=0;i_simulated<strippedErrorStrings.length && i_recorded<recordedErrorStrings.length;i_simulated++){
@@ -131,11 +134,16 @@ function runCompilationTest(dataarray,testname) {
 		var simulated_summary = strippedErrorStrings.join("\n");
 		var recorded_summary = recordedErrorStrings.join("\n");
 		if (simulated_summary === recorded_summary) {
-			simulated_summary = "Error count: " + errorCount + "\n" + simulated_summary;
+			simulated_summary = "Error count: " + compilation.errorCount + "\n" + simulated_summary;
 			recorded_summary = "Error count: " + recordedErrorCount + "\n" + recorded_summary;
 		}
 		PuzzleScriptTestAssertions.equal(simulated_summary,recorded_summary);
 		return false;
 	}
 	return true;
+}
+
+function runCompilationTest(dataarray,testname) {
+	var compilation = compileTest(dataarray,testname);
+	return compilation !== null && compareCompilationTest(dataarray, compilation);
 }

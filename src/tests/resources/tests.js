@@ -64,6 +64,7 @@ for (var i=0;i<testdata.length;i++) {
 		testdata[i][0],
 		{
 			group: "simulation",
+			data: testdata[i][1],
 			source: testdata[i][1][0],
 			setup: simulationSetup(testdata[i][1]),
 			output: testdata[i][1][2]
@@ -82,11 +83,12 @@ for (var j=0;j<errormessage_testdata.length;j++) {
 		"🐛"+errormessage_testdata[j][0],
 		{
 			group: "compiler-messages",
+			data: errormessage_testdata[j][1],
 			source: errormessage_testdata[j][1][0],
 			output: errormessage_testdata[j][1][1].join("\n")
 		},
 		function(num){
-			return function(){
+			return function(compilation){
 				var td = errormessage_testdata[num];
 				if (td[1].length!==3){
 					throw new Error(
@@ -94,7 +96,7 @@ for (var j=0;j<errormessage_testdata.length;j++) {
 						"Accidentally pasted in level recording data?"
 					);
 				}
-				return runCompilationTest(td[1],td[0]);
+				return compilation ? compareCompilationTest(td[1], compilation) : runCompilationTest(td[1],td[0]);
 			};
 		}(j)
 	);
