@@ -988,7 +988,17 @@ let codeMirrorFn = function () {
                                     if (!wordAlreadyDeclared(state, matched_name)) {
                                         tokentype = 'ERROR';
                                         state.current_line_wip_array.push("ERROR");
-                                        logError(`unexpected sound token "${matched_name}".`, state.lineNumber);
+                                        const sound_as_verb = reg_soundverbs.exec(matched_name);
+                                        const is_sound_verb = sound_as_verb !== null && sound_as_verb[0].trim() === matched_name;
+                                        const sound_as_dir = reg_sounddirectionindicators.exec(matched_name);
+                                        const is_sound_dir = sound_as_dir !== null && sound_as_dir[0].trim() === matched_name;
+                                        if (is_sound_verb) {
+                                            logError(`Sound verb "${matched_name.toUpperCase()}" needs an entity before it, e.g. "Player ${matched_name.toUpperCase()} 12345".`, state.lineNumber);
+                                        } else if (is_sound_dir) {
+                                            logError(`Sound direction "${matched_name.toUpperCase()}" needs an entity and MOVE or CANTMOVE before it, e.g. "Player MOVE ${matched_name.toUpperCase()} 12345".`, state.lineNumber);
+                                        } else {
+                                            logError(`unexpected sound token "${matched_name}".`, state.lineNumber);
+                                        }
                                     } else {
                                         tokentype = 'NAME';
                                         state.current_line_wip_array.push([matched_name, tokentype]);
@@ -1026,7 +1036,8 @@ let codeMirrorFn = function () {
                                     state.tokenIndex++;
                                 } else {
                                     match = errorFallbackMatchToken(stream);
-                                    logError("Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else.", state.lineNumber);
+                                    const objectName = state.current_line_wip_array[0][0].toUpperCase();
+                                    logError(`Was expecting a sound verb here (e.g. MOVE, DESTROY, CANTMOVE, or the like), but found something else. Try "${objectName} MOVE 12345" or "${objectName} ACTION 12345".`, state.lineNumber);
                                     tokentype = 'ERROR';
                                     state.current_line_wip_array.push("ERROR");
                                 }

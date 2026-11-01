@@ -596,7 +596,7 @@ var errormessage_testdata = [
     ],
     [
         "Was expecting a soundverb here",
-        ["title Was expecting a soundverb here\nauthor David Skinner\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nlightgreen green\n11111\n01111\n11101\n11111\n10111\n\nTarget\ndarkblue\n.....\n.000.\n.0.0.\n.000.\n.....\n\nWall\nbrown darkbrown\n00010\n11111\n01000\n11111\n00010\n\nPlayer\nblack orange white blue\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nCrate\norange\n00000\n0...0\n0...0\n0...0\n00000\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Crate\n@ = Crate and Target\nO = Target\n\n=======\nSOUNDS\n=======\n\nCrate asdfasd 36772507\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ] \n\n==============\nWINCONDITIONS\n==============\n\nall Target on Crate\n\n=======\nLEVELS\n=======\n\n####..\n#.O#..\n#..###\n#@P..#\n#..*.#\n#..###\n####..\n\n######\n#....#\n#.#P.#\n#.*@.#\n#.O@.#\n#....#\n######\n\n", ["line 64 : Was expecting a soundverb here (MOVE, DESTROY, CANTMOVE, or the like), but found something else."], 1]
+        ["title Was expecting a soundverb here\nauthor David Skinner\nhomepage www.puzzlescript.net\n\n========\nOBJECTS\n========\n\nBackground\nlightgreen green\n11111\n01111\n11101\n11111\n10111\n\nTarget\ndarkblue\n.....\n.000.\n.0.0.\n.000.\n.....\n\nWall\nbrown darkbrown\n00010\n11111\n01000\n11111\n00010\n\nPlayer\nblack orange white blue\n.000.\n.111.\n22222\n.333.\n.3.3.\n\nCrate\norange\n00000\n0...0\n0...0\n0...0\n00000\n\n=======\nLEGEND\n=======\n\n. = Background\n# = Wall\nP = Player\n* = Crate\n@ = Crate and Target\nO = Target\n\n=======\nSOUNDS\n=======\n\nCrate asdfasd 36772507\n\n================\nCOLLISIONLAYERS\n================\n\nBackground\nTarget\nPlayer, Wall, Crate\n\n======\nRULES\n======\n\n[ > Player | Crate ] -> [ > Player | > Crate ] \n\n==============\nWINCONDITIONS\n==============\n\nall Target on Crate\n\n=======\nLEVELS\n=======\n\n####..\n#.O#..\n#..###\n#@P..#\n#..*.#\n#..###\n####..\n\n######\n#....#\n#.#P.#\n#.*@.#\n#.O@.#\n#....#\n######\n\n", ["line 64 : Was expecting a sound verb here (e.g. MOVE, DESTROY, CANTMOVE, or the like), but found something else. Try \"CRATE MOVE 12345\" or \"CRATE ACTION 12345\"."], 1]
     ],
     [
         "COLLISIONLAYERS - error detected - unexpected character ",
@@ -1404,15 +1404,15 @@ var errormessage_testdata = [
 		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nUnknown sfx0 create up Player Unknown\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 24 : unexpected sound token \"unknown\"."],1]
 	],
 	[
-		"Coverage: forward property member resolves through a later synonym",
+		"Coverage: a property reports a synonym declared later",
 		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\nProp = Alias or Crate\nAlias = Wall\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 22 : You're talking about ALIAS but it's not defined anywhere."],1]
 	],
 	[
-		"Coverage: forward property member expands a later property",
+		"Coverage: a property reports another property declared later",
 		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\nProp = Inner or Crate\nInner = Wall or Marker\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 22 : You're talking about INNER but it's not defined anywhere."],1]
 	],
 	[
-		"Coverage: forward synonym chain is promoted to a property during recovery",
+		"Coverage: a forward property alias chain reports both undeclared names",
 		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\nAlias1 = Alias2\nAlias2 = Alias3\nAlias3 = Wall or Crate\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 22 : You're talking about ALIAS2 but it's not defined anywhere.","line 23 : You're talking about ALIAS3 but it's not defined anywhere."],2]
 	],
 	[
@@ -1439,4 +1439,16 @@ var errormessage_testdata = [
 		"Coverage: forward aggregate chain hangs compiler",
 		["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\nAlias1 = Alias2\nAlias2 = Alias3\nAlias3 = Marker and Target\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["line 22 : You're talking about ALIAS2 but it's not defined anywhere.","line 23 : You're talking about ALIAS3 but it's not defined anywhere."],2]
 	],
+    [
+        "#1187 sound verbs need an object before them",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\naction 12341242\nCOLLISIONLAYERS\nBackground\nPlayer\nRULES\nWINCONDITIONS\nLEVELS\nP\n",["line 11 : Sound verb \"ACTION\" needs an entity before it, e.g. \"Player ACTION 12345\"."],1]
+    ],
+    [
+        "#1187 sound directions need an object and directional verb",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nup 12341242\nCOLLISIONLAYERS\nBackground\nPlayer\nRULES\nWINCONDITIONS\nLEVELS\nP\n",["line 11 : Sound direction \"UP\" needs an entity and MOVE or CANTMOVE before it, e.g. \"Player MOVE UP 12345\"."],1]
+    ],
+    [
+        "#1187 object sounds need a verb before the seed",
+        ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nPlayer 12341242\nCOLLISIONLAYERS\nBackground\nPlayer\nRULES\nWINCONDITIONS\nLEVELS\nP\n",["line 11 : Was expecting a sound verb here (e.g. MOVE, DESTROY, CANTMOVE, or the like), but found something else. Try \"PLAYER MOVE 12345\" or \"PLAYER ACTION 12345\"."],1]
+    ],
 ];
