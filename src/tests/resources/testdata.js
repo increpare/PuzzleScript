@@ -2153,8 +2153,8 @@ var testdata = [
 		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ > Player ] -> checkpoint\n\nWINCONDITIONS\n\nLEVELS\n\nP...\n",[3,3,"undo","restart"],"background:0,0,background player:1,0,\n",0,"coverage-seed"]
 	],
 	[
-		"Coverage: startup restart terminates and reapplies startup changes",
-		["debug\nverbose_logging\n\nrun_rules_on_level_start\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ Player ] -> [ Player Marker ] restart\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[],"background marker player:0,background:1,1,\n",0,"coverage-seed"]
+		"Coverage: startup restart reruns startup rules with the next seeded choice",
+		["debug\nverbose_logging\n\nrun_rules_on_level_start\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nChoice = Marker or Target\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ Player no Choice ] -> [ Player random Choice ] restart\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[],"background player target:0,background:1,1,\n",0,"coverage-seed"]
 	],
 	[
 		"Coverage: startup changes are reapplied after restart",
@@ -2185,7 +2185,7 @@ var testdata = [
 		["debug\nverbose_logging\n\nnorestart\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nlate [ Player Target ] -> restart\n\nWINCONDITIONS\n\nLEVELS\n\nP.T\n",[3,3],"background player:0,background:1,background target:2,\n",0,"coverage-seed"]
 	],
 	[
-		"Coverage: late object replacement preserves movement sound and creation order",
+		"Coverage: late object creation follows the movement sound",
 		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\nPlayer move 101\nMarker create 202\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\nlate [ Player ] -> [ Player Marker ]\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[3],"background:0,background marker player:1,0,\n",0,"coverage-seed",["101","202"]]
 	],
 	[
@@ -2201,12 +2201,20 @@ var testdata = [
 		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ action Player ] -> [ randomdir Player ]\n\nWINCONDITIONS\n\nLEVELS\n\n.....\n.....\n..P..\n.....\n.....\n",[4,"undo",4],"background:0,0,0,0,0,\n0,0,0,0,0,\n0,0,0,0,0,\n0,0,background player:1,0,0,\n0,0,0,0,0,\n",0,"coverage-seed"]
 	],
 	[
-		"Coverage: winning still works with a Unicode title and undo-only controls",
-		["debug\nverbose_logging\n\ntitle Coverage 日本語\nnorestart\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ action Player ] -> win\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n\nCP.\n",[4,4],"background crate:0,background player:1,background:2,\n",0,"coverage-seed"]
+		"Coverage: win advances to the next level with a Unicode title and norestart",
+		["debug\nverbose_logging\n\ntitle Coverage 日本語\nnorestart\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ action Player ] -> win\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n\nCP.\n",[4],"background crate:0,background player:1,background:2,\n",0,"coverage-seed"]
 	],
 	[
 		"Coverage: startup win commands do not skip a level",
 		["debug\nverbose_logging\n\nrun_rules_on_level_start\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n[ Player ] -> win\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n\n.CP\n",[],"background player:0,background:1,1,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: undo with an empty history leaves the level unchanged",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",["undo"],"background player:0,background:1,1,\n",0,"coverage-seed"]
+	],
+	[
+		"Coverage: undo skips duplicate restart states",
+		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[3,"restart","restart","undo"],"background:0,background player:1,0,\n",0,"coverage-seed"]
 	],
 ];
 
