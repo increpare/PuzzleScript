@@ -2973,10 +2973,13 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 	// Process RESTART command
 	const restartIndex = level.commandQueue.indexOf('restart');
 	if (restartIndex >= 0) {
+		const deferRestart = !unitTesting && !restarting && level.commandQueue.includes('message');
 		if (verbose_logging) {
 			let r = level.commandQueueSourceRules[restartIndex];
 			if (restarting) {
 				logWarning('RESTART command ignored because a restart is already in progress.', r.lineNumber, true);
+			} else if (deferRestart) {
+				consolePrintFromRule('RESTART command will execute after its message is dismissed.', r);
 			} else {
 				consolePrintFromRule('RESTART command executed, reverting to restart state.', r);
 			}
@@ -2987,6 +2990,10 @@ function processCommandQueue(bak, dontModify, dontDoWin, inputDir) {
 		}
 		addUndoState(bak);
 		if (!dontModify) {
+			if (deferRestart) {
+				// Keep the restart queued while its message is displayed.
+				return true;
+			}
 			DoRestart(true);
 		}
 	}

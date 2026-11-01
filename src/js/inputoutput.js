@@ -998,7 +998,11 @@ function update() {
 				ignoreNotJustPressedAction = true;
 				titleSelection = 0;
 				canvasResize();
-				checkWin();
+				if (level.commandQueue.includes('restart')) {
+					DoRestart(true);
+				} else {
+					checkWin();
+				}
 			}
 		}
 	}
