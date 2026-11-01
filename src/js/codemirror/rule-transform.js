@@ -104,7 +104,7 @@ class RuleTransform {
         ['_N', '_S', '_W', '_E'],
         ['Horizontal', 'Vertical'],
         ['HORIZONTAL', 'VERTICAL'],
-        ['horizontal', 'vertical'],
+        ['_horizontal', '_vertical'],
         ['_h', '_v'],
         ['_H', '_V'],
     ];
