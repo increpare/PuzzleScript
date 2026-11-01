@@ -2216,5 +2216,9 @@ var testdata = [
 		"Coverage: undo skips duplicate restart states",
 		["debug\nverbose_logging\n\nOBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nWall W\ngray\n\nCrate C\nred\n\nMarker M\nyellow\n\nTarget T\nblue\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer, Wall, Crate\nMarker\nTarget\n\nRULES\n\n\n\nWINCONDITIONS\n\nLEVELS\n\nP..\n",[3,"restart","restart","undo"],"background:0,background player:1,0,\n",0,"coverage-seed"]
 	],
+	[
+	"rule loop limit check",
+	["title rule loop limit check\nverbose_logging\ndebug\n\nOBJECTS\n\nBackground . #\nblack\n\nPlayer P\nwhite\n\nCrate C\nred\n\nLEGEND\n\nSOUNDS\n\nCOLLISIONLAYERS\n\nBackground\nPlayer\nCrate\n\nRULES\n\nright [ Crate | no Crate ] -> [ | Crate ]\n\nWINCONDITIONS\n\nLEVELS\n\nC........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#.........#\n",[3],"background:0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,background crate:1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,\n",0,"1793572424580.6113",[]]
+	],
 ];
 
