@@ -2721,6 +2721,8 @@ function calculateLoopPoints(state, rulegroup_collection) {
             if (rule_in_loop) {
                 if (init_group_index === -1) {
                     init_group_index = group_i
+                    firstRule.loopStartLine = loop_start_line;
+                    firstRule.loopEndLine = loop_end_line;
                 }
                 // only the last rulegroup in a loop should be the loop point - 
                 // this is a bit lazy, but basically we look back, and if the 

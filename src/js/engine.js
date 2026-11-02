@@ -2655,6 +2655,8 @@ function applyRules(rules, loopPoint, bannedGroup) {
             }
 
             if (verbose_logging) {
+                const { loopStartLine, loopEndLine } = rules[ruleGroupIndex][0];
+                consolePrint(`Jumping from <a onclick="jumpToLine(${loopEndLine});" href="javascript:void(0);">ENDLOOP</a> to <a onclick="jumpToLine(${loopStartLine});" href="javascript:void(0);">STARTLOOP</a>.`);
                 debugger_turnIndex++;
                 addToDebugTimeline(level, -2);
             }
@@ -2672,6 +2674,10 @@ function applyRules(rules, loopPoint, bannedGroup) {
             if (loopCount > 200) {
                 logErrorCacheable("got caught in an endless startloop...endloop vortex, escaping!", rules[ruleGroupIndex][0].lineNumber, true);
                 break;
+            }
+            if (verbose_logging) {
+                const { loopStartLine, loopEndLine } = rules[ruleGroupIndex][0];
+                consolePrint(`Jumping from <a onclick="jumpToLine(${loopEndLine});" href="javascript:void(0);">ENDLOOP</a> to <a onclick="jumpToLine(${loopStartLine});" href="javascript:void(0);">STARTLOOP</a>.`);
             }
         }
 
