@@ -781,7 +781,7 @@ function processRuleString(rule, state, curRules) {
                                     } else {
                                         logError(`You cannot specify the same object more than once in a single cell (in this case ${token.toUpperCase()} occurs multiple times).`, lineNumber);
                                         if (token in state.propertiesDict){
-                                            logWarningNoLine(`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
+                                            logWarningNoLine(diagnosticHTML`( However, noticing that you're committing this crime with <i>properties</i>, and not being able to help but acknowledge that you <i>may</i> be trying to do something esoteric and <i>clever</i> with the property inference system,  I might be brought to suggest that you consider this: you can have multiple equivalent properties with different names. )`);
                                         }
                                     }
                                 }
@@ -2532,7 +2532,7 @@ function printCellRow(cellRow) {
             if (direction === "...") {
                 result += direction + " ";
             } else {
-                result += direction + " " + object + " ";
+                result += escapeDiagnosticText(direction) + " " + escapeDiagnosticText(object) + " ";
             }
         }
     }
@@ -2554,7 +2554,7 @@ function cacheRuleStringRep(rule) {
     }
 
     if (directed){
-        result += rule.direction.toString().toUpperCase() + " ";
+        result += escapeDiagnosticText(rule.direction.toString().toUpperCase()) + " ";
     }
     if (rule.rigid) {
         result = "RIGID " + result + " ";
@@ -2577,9 +2577,9 @@ function cacheRuleStringRep(rule) {
     for (let i = 0; i < rule.commands.length; i++) {
         let command = rule.commands[i];
         if (command.length === 1) {
-            result = result + command[0].toString();
+            result = result + escapeDiagnosticText(command[0]);
         } else {
-            result = result + '(' + command[0].toString() + ", " + command[1].toString() + ') ';
+            result = result + '(' + escapeDiagnosticText(command[0]) + ", " + escapeDiagnosticText(command[1]) + ') ';
         }
     }
     //print commands next
@@ -3170,7 +3170,7 @@ function compile(command, text, randomseed) {
         const advice = IDE === false
             ? '  If this is an older game, and you think it just broke because of recent changes in the puzzlescript engine, please consider dropping an email to analytic@gmail.com with a link to the game and I\'ll try make sure it\'s back working ASAP.'
             : '';
-        consoleError('<span class="systemMessage">' + summary + advice + '</span>');
+        consoleError(diagnosticHTML`<span class="systemMessage">${summary}${advice}</span>`);
         if (errorCount > MAX_ERRORS) {
             return;
         }

@@ -55,7 +55,32 @@ function TooManyErrors() {
     throw new Error(message);
 }
 
+// Ordinary diagnostic strings are text. This tag preserves source-owned markup
+// while escaping every interpolated value, including quotes in attributes.
+class DiagnosticHTML {
+    constructor(html) { this.html = html; }
+    toString() { return this.html; }
+}
+
+function escapeDiagnosticText(text) {
+    return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function diagnosticHTML(strings, ...values) {
+    let html = strings[0];
+    for (let i = 0; i < values.length; i++) {
+        html += escapeDiagnosticText(values[i]) + strings[i + 1];
+    }
+    return new DiagnosticHTML(html);
+}
+
+function formatDiagnosticHTML(message) {
+    return message instanceof DiagnosticHTML ? message.html : escapeDiagnosticText(message);
+}
+
 function buildErrorHtml(lineNumber, str, className) {
+    str = formatDiagnosticHTML(str);
     const c = className || 'errorText';
     if (lineNumber === undefined) {
         return '<span class="' + c + '">' + str + '</span>';
@@ -265,7 +290,7 @@ let codeMirrorFn = function () {
 
             let alreadyDefined = wordAlreadyDeclared(state, candname);
             if (alreadyDefined !== null) {
-                logError(`Name "${candname.toUpperCase()}" already in use (on line <a onclick="jumpToLine(${alreadyDefined.lineNumber});" href="javascript:void(0);"><span class="errorTextLineNumber">line ${alreadyDefined.lineNumber}</span></a>).`, state.lineNumber);
+                logError(diagnosticHTML`Name "${candname.toUpperCase()}" already in use (on line <a onclick="jumpToLine(${alreadyDefined.lineNumber});" href="javascript:void(0);"><span class="errorTextLineNumber">line ${alreadyDefined.lineNumber}</span></a>).`, state.lineNumber);
                 ok = false;
             }
 
@@ -1429,7 +1454,7 @@ let codeMirrorFn = function () {
                                             state.metadata.push(m2[0].trim());
                                             if (token in state.metadata_lines) {
                                                 let otherline = state.metadata_lines[token];
-                                                logWarning(`You've already defined a ${token.toUpperCase()} in the prelude on line <a onclick="jumpToLine(${otherline});" href="javascript:void(0);">${otherline}</a>.`, state.lineNumber);
+                                                logWarning(diagnosticHTML`You've already defined a ${token.toUpperCase()} in the prelude on line <a onclick="jumpToLine(${otherline});" href="javascript:void(0);">${otherline}</a>.`, state.lineNumber);
                                             }
                                             state.metadata_lines[token] = state.lineNumber;
                                         } else {
@@ -1459,8 +1484,7 @@ let codeMirrorFn = function () {
                                 return 'METADATA';
                             } else {
                                 //garbage found
-                                const text = stream.string.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                                logError(`Unrecognised stuff "${text}" in the prelude.`, state.lineNumber);
+                                logError(`Unrecognised stuff "${stream.string}" in the prelude.`, state.lineNumber);
                             }
                         } else {
                             stream.match(reg_notcommentstart, true);

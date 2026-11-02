@@ -174,7 +174,7 @@ function consoleCacheDump(scrolldown=true) {
 }
 
 function consoleError(text) {	
-        let errorString = '<span class="errorText">' + text + '</span>';
+        let errorString = '<span class="errorText">' + formatDiagnosticHTML(text) + '</span>';
         consolePrint(errorString,true);
 }
 function clearConsole() {

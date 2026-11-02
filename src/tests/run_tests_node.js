@@ -143,7 +143,8 @@ vm.runInThisContext(allCode, { filename: 'combined_sources.js' });
 // Only strip actual HTML tags (starting with <letter or </letter), not
 // literal < characters that appear in error message text.
 global.stripHTMLTags = function(html_str) {
-    return html_str.replace(/<\/?[a-zA-Z][^>]*>/g, '').trim();
+    return html_str.replace(/<\/?[a-zA-Z][^>]*>/g, '')
+        .replace(/&(amp|lt|gt|quot|#39);/g, (_, entity) => ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'" })[entity]).trim();
 };
 
 // ---- Run tests ----
