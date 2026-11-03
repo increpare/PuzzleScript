@@ -232,7 +232,7 @@ function flattenPropertyEntry(n, a, substitutor) {
 
 //syntax-highlighting token class for a named colour, or null if it's not one
 function colorNameToken(candcol) {
-    if (candcol in colorPalettes.arnecolors) {
+    if (Object.hasOwn(colorPalettes.arnecolors, candcol)) {
         return 'COLOR COLOR-' + candcol.toUpperCase();
     } else if (candcol === "transparent") {
         return 'COLOR FADECOLOR';

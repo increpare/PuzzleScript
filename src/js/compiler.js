@@ -2,8 +2,10 @@
 
 
 function isColor(str) {
+    if (typeof str !== 'string')
+        return false;
     str = str.trim();
-    if (str in colorPalettes.arnecolors)
+    if (Object.hasOwn(colorPalettes.arnecolors, str))
         return true;
     if (REGEX_HEX.test(str))
         return true;
@@ -14,7 +16,7 @@ function isColor(str) {
 
 function colorToHex(palette, str) {
     str = str.trim();
-    if (str in palette) {
+    if (Object.hasOwn(palette, str)) {
         return palette[str];
     }
 
@@ -136,10 +138,10 @@ function generateExtraMembers(state) {
         let key = state.metadata[i];
         let val = state.metadata[i + 1];
         if (key === 'color_palette') {
-            if (val in colorPalettesAliases) {
+            if (Object.hasOwn(colorPalettesAliases, val)) {
                 val = colorPalettesAliases[val];
             }
-            if (colorPalettes[val] === undefined) {
+            if (!Object.hasOwn(colorPalettes, val)) {
                 logError('Palette "' + val + '" not found, defaulting to arnecolors.', 0);
             } else {
                 colorPalette = colorPalettes[val];
@@ -666,7 +668,7 @@ function processRuleString(rule, state, curRules) {
                         }
                     } else if (relativeDirections.includes(token)) {
                         logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
-                    } else if (token in directionaggregates) {
+                    } else if (reg_ruledirectionindicators.test(token) && Object.hasOwn(directionaggregates, token)) {
                         directions = directions.concat(directionaggregates[token]);
                     } else if (token === 'late') {
                         late = true;
@@ -1245,7 +1247,7 @@ function getMovings(state, cell) {
     for (let j = 0; j < cell.length; j += 2) {
         let dir = cell[j];
         let name = cell[j + 1];
-        if (dir in directionaggregates) {
+        if (Object.hasOwn(directionaggregates, dir)) {
             result.push([name, dir]);
         }
     }
