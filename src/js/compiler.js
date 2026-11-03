@@ -3153,6 +3153,7 @@ function compile(command, text, randomseed) {
         consoleError(error.message+"\n"+error.stack,true);
         console.error(error);
         UnitTestingThrow(error);
+        return;
     } finally {
         compiling = false;
     }

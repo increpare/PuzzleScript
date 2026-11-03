@@ -9,7 +9,14 @@ function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    if (results == null) {
+        return "";
+    }
+    try {
+        return decodeURIComponent(results[1].replace(/\+/g, " "));
+    } catch (error) {
+        return "";
+    }
 }
 
 // be careful about modifying this (cf  // https://github.com/increpare/PuzzleScript/issues/829 )
