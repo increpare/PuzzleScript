@@ -1,0 +1,185 @@
+title Pushing It
+author Jack Lance
+text_color #A20021
+background_color #C1FBC6
+run_rules_on_level_start
+homepage www.puzzlescript.net
+
+
+========
+OBJECTS
+========
+background
+orange
+
+
+Background1
+#CCCCCC
+
+Background2
+#C1FBC6
+
+PusherR
+#A20021 #555555
+..000
+00010
+01110
+00010
+..000
+
+Pusherl
+#A20021 #555555
+000..
+01000
+01110
+01000
+000..
+
+Pusherd
+#A20021 #555555
+.000.
+.010.
+00100
+01110
+00000
+
+
+Target
+#668866
+00.00
+0...0
+.....
+0...0
+00.00
+
+Button
+#668866 #A20021
+.....
+.000.
+.010.
+.000.
+.....
+
+Wall
+#153A29 #222222
+00011
+00110
+01100
+11000
+10001
+
+wallu
+#01130A
+00000
+.....
+.....
+.....
+.....
+
+walld
+#01130A
+.....
+.....
+.....
+.....
+00000
+
+wallr
+#01130A
+....0
+....0
+....0
+....0
+....0
+
+
+walll
+#01130A
+0....
+0....
+0....
+0....
+0....
+
+Player
+#555555 #A20021
+.000.
+00000
+01010
+00000
+.000.
+
+box
+#555555 #A20021
+10.01
+00100
+.111.
+00100
+10.01
+
+
+=======
+LEGEND
+=======
+
+. = Background
+x = Wall
+p = Player
+d = pusherd
+r = PusherR
+l = pusherl
+b = button
+o = box
+t = target
+y = Wall and background1
+
+=======
+SOUNDS
+=======
+SFX1 54822305
+
+================
+COLLISIONLAYERS
+================
+
+Background
+background1, background2
+wall
+walll
+wallr
+walld
+wallu
+Target, button
+Player, pusherl, pusherr, pusherd, box
+
+======
+RULES
+======
+
+[wall] -> [wall wallu walld wallr walll]
+up [wallu | walld] -> [|]
+right [wallr | walll] -> [|]
+[background1 | ] -> [background1 | background2]
++[background2 | ] -> [background2 | background1]
+[moving player] -> [stationary player]
+[> player | pusherd ] -> [ | player] SFX1
+==============
+WINCONDITIONS
+==============
+
+
+=======
+LEVELS
+=======
+
+
+yxxxxxxxxxx
+xpx...d...x
+x.x..xbb.xx
+x.xx.x.x..x
+x..x.x.xxox
+xxbx.b.xxbx
+x..xr.xxx.x
+x.xxxbxxx.x
+rb....xxt.l
+xxxxxxxxxxx
