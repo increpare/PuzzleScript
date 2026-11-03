@@ -1451,4 +1451,28 @@ var errormessage_testdata = [
         "#1187 object sounds need a verb before the seed",
         ["OBJECTS\n\nBackground .\nblack\n\nPlayer P\nwhite\n\nLEGEND\nSOUNDS\nPlayer 12341242\nCOLLISIONLAYERS\nBackground\nPlayer\nRULES\nWINCONDITIONS\nLEVELS\nP\n",["line 11 : Was expecting a sound verb here (e.g. MOVE, DESTROY, CANTMOVE, or the like), but found something else. Try \"PLAYER MOVE 12345\" or \"PLAYER ACTION 12345\"."],1]
     ],
+    [
+        "#1216 recursive synonmys crash compiler",
+        ["title #1216 recursive synonmys crash compiler\nOBJECTS\nBackground\nblack\n\nPlayer\nwhite\n\nLEGEND\na = b\nb = a\n. = Background\nP = Player\n\nSOUNDS\n\nCOLLISIONLAYERS\nBackground\nPlayer, a\n\nRULES\n\nWINCONDITIONS\n\nLEVELS\nP\n\n",["line 10 : You're talking about B but it's not defined anywhere.","line 11 : You can't define object B in terms of itself!","line 19 : Cannot add \"A\" to a collision layer; it has not been declared."],3]
+    ],
+    [
+        "#1216 recursive synonmys crash compiler abc",
+        ["title #1216 recursive synonmys crash compiler\nOBJECTS\nBackground\nblack\n\nPlayer\nwhite\n\nLEGEND\na = b\nb = c\nc = a\n. = Background\nP = Player\n\nSOUNDS\n\nCOLLISIONLAYERS\nBackground\nPlayer, a\n\nRULES\n\nWINCONDITIONS\n\nLEVELS\nP\n\n",["line 10 : You're talking about B but it's not defined anywhere.","line 11 : You're talking about C but it's not defined anywhere.","line 12 : You can't define object C in terms of itself!","line 20 : Cannot add \"A\" to a collision layer; it has not been declared."],4]
+    ],
+    [
+        "#1216 recursive synonmys crash compiler (properties)",
+        ["title #1216 recursive synonmys crash compiler\nOBJECTS\nBackground\nblack\n\nPlayer\nwhite\n\nLEGEND\na = b or c\nb = c or d\nd = a or b\n. = Background\nP = Player\n\nSOUNDS\n\nCOLLISIONLAYERS\nBackground\nPlayer, a\n\nRULES\n\nWINCONDITIONS\n\nLEVELS\nP\n\n",["line 10 : You're talking about B but it's not defined anywhere.","line 10 : You're talking about C but it's not defined anywhere.","line 11 : You're talking about C but it's not defined anywhere.","line 11 : You're talking about D but it's not defined anywhere.","line 20 : Cannot add \"A\" to a collision layer; it has not been declared."],5]
+    ],
+    [
+        "#1216 recursive synonmys crash compiler (Aggregates)",
+        ["title #1216 recursive synonmys crash compiler\nOBJECTS\nBackground\nblack\n\nPlayer\nwhite\n\nLEGEND\na = b\nb = c\nd = a and b\n. = Background\nP = Player\n\nSOUNDS\n\nCOLLISIONLAYERS\nBackground\nPlayer, a\n\nRULES\n\nWINCONDITIONS\n\nLEVELS\nP\n\n",["line 10 : You're talking about B but it's not defined anywhere.","line 11 : You're talking about C but it's not defined anywhere.","line 20 : Cannot add \"A\" to a collision layer; it has not been declared."],3]
+    ],
+    [
+        "#1216 recursive synonyms are rejected without crashing",
+        ["OBJECTS\nBackground\nblack\n\nPlayer\nwhite\n\nLEGEND\na = b\nb = a\n. = Background\nP = Player\n\nSOUNDS\n\nCOLLISIONLAYERS\nBackground\nPlayer, a\n\nRULES\n\nWINCONDITIONS\n\nLEVELS\nP\n", [
+            "line 9 : You're talking about B but it's not defined anywhere.",
+            "line 10 : You can't define object B in terms of itself!",
+            "line 18 : Cannot add \"A\" to a collision layer; it has not been declared."
+        ], 3]
+    ],
 ];

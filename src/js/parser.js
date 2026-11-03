@@ -332,6 +332,12 @@ let codeMirrorFn = function () {
 
             if (splits.length === 3) {
                 //SYNONYM
+                // A forward reference can lead back to the name being defined.
+                // Reject the closing link before it creates a synonym cycle.
+                if (lookupLegendName(state, splits[2]).name === splits[0]) {
+                    logError("You can't define object " + splits[0].toUpperCase() + " in terms of itself!", state.lineNumber);
+                    return;
+                }
                 let synonym = [splits[0], splits[2]];
                 synonym.lineNumber = state.lineNumber;
                 registerOriginalCaseName(state, splits[0], mixedCase, state.lineNumber);
