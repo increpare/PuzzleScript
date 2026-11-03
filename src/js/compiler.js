@@ -160,7 +160,7 @@ function generateExtraMembers(state) {
     }
 
     let glyphOrder = [];
-    let glyphDict = {};
+    let glyphDict = Object.create(null);
 
     //convert colors to hex
     const state_object_keys = Object.keys(state.objects);
@@ -279,14 +279,14 @@ function generateExtraMembers(state) {
     state.glyphDict = glyphDict;
     state.glyphOrder = glyphOrder;
 
-    let aggregatesDict = {};
+    let aggregatesDict = Object.create(null);
     for (let i = 0; i < state.legend_aggregates.length; i++) {
         let entry = state.legend_aggregates[i];
         aggregatesDict[entry[0]] = entry.slice(1);
     }
     state.aggregatesDict = aggregatesDict;
 
-    let propertiesDict = {};
+    let propertiesDict = Object.create(null);
     for (let i = 0; i < state.legend_properties.length; i++) {
         let entry = state.legend_properties[i];
         propertiesDict[entry[0]] = entry.slice(1);
@@ -294,7 +294,7 @@ function generateExtraMembers(state) {
     state.propertiesDict = propertiesDict;
 
     //calculate lookup dictionaries
-    let synonymsDict = {};
+    let synonymsDict = Object.create(null);
     for (let i = 0; i < state.legend_synonyms.length; i++) {
         let entry = state.legend_synonyms[i];
         let key = entry[0];
@@ -336,7 +336,7 @@ function generateExtraMembers(state) {
     }
 
     /* determine which properties specify objects all on one layer */
-    state.propertiesSingleLayer = {};
+    state.propertiesSingleLayer = Object.create(null);
     const propertiesDict_keys = Object.keys(propertiesDict);
     const propertiesDict_keys_l = propertiesDict_keys.length;
     for (let k_i = 0; k_i < propertiesDict_keys_l; k_i++) {
@@ -942,7 +942,7 @@ First, let's check for 'X no X' on the RHS.
                     if (!item.startsWith("no")){
                         let no_name = cell[l+1];
                         //properties (single-layer or not) are deliberately not added to the present mask
-                        if (state.objects.hasOwnProperty(no_name)){
+                        if (Object.hasOwn(state.objects, no_name)){
                             objects_present.push(no_name);
                             objects_present_mask.ibitset(state.objects[no_name].id);
                         }
@@ -1020,7 +1020,7 @@ First, let's check for 'X no X' on the RHS.
                     }
                     let entity_name = cell[l+1]
                     //if it's a single-layer property
-                    if (state.propertiesSingleLayer.hasOwnProperty(entity_name)){
+                    if (Object.hasOwn(state.propertiesSingleLayer, entity_name)){
                         let layer = state.propertiesSingleLayer[entity_name];
                         required_layers.ibitset(layer);
                         let property_obs = state.propertiesDict[entity_name];
@@ -1034,13 +1034,13 @@ First, let's check for 'X no X' on the RHS.
                             required_objects.ibitset(object_data.id);
                         }
                         occupier[layer]=entity_name;
-                    } else if (state.objects.hasOwnProperty(entity_name)){
+                    } else if (Object.hasOwn(state.objects, entity_name)){
                         let layer = state.objects[entity_name].layer;
                         let ob_id = state.objects[entity_name].id;
                         required_layers.ibitset(layer);
                         required_objects.ibitset(ob_id);
                         occupier[layer]=entity_name;
-                    } else if (state.aggregatesDict.hasOwnProperty(entity_name)){
+                    } else if (Object.hasOwn(state.aggregatesDict, entity_name)){
                         let aggregate_obs = state.aggregatesDict[entity_name];
                         for (let m=0;m<aggregate_obs.length;m++){
                             let object_info = state.objects[aggregate_obs[m]];
@@ -1299,7 +1299,7 @@ function expandNoPrefixedProperties(state, cell) {
 
 //entries are flat arrays, so a per-entry slice is a deep-enough copy
 function cloneReplacementDict(src) {
-    const result = {};
+    const result = Object.create(null);
     const keys = Object.keys(src);
     const keys_l = keys.length;
     for (let k_i = 0; k_i < keys_l; k_i++) {
@@ -1326,7 +1326,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
     // 		doesn't need to be split up (assuming single-layer player/block aggregates)
 
     // we can't manage this if they're being used to disambiguate
-    let ambiguousProperties = {};
+    let ambiguousProperties = Object.create(null);
 
     for (let j = 0; j < rule.rhs.length; j++) {
         let row_l = rule.lhs[j];
@@ -1360,7 +1360,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
                     for (let prop_n = 0; prop_n < properties.length; ++prop_n) {
                         let property = properties[prop_n];
 
-                        if (state.propertiesSingleLayer.hasOwnProperty(property) &&
+                        if (Object.hasOwn(state.propertiesSingleLayer, property) &&
                             ambiguousProperties[property] !== true) {
                             // we don't need to explode this property
                             continue;
@@ -1376,7 +1376,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
                         for (let l = 0; l < aliases.length; l++) {
                             let concreteType = aliases[l];
                             let newrule = deepCloneRule(cur_rule);
-                            newrule.propertyReplacement = cur_rule.propertyReplacement ? cloneReplacementDict(cur_rule.propertyReplacement) : {};
+                            newrule.propertyReplacement = cur_rule.propertyReplacement ? cloneReplacementDict(cur_rule.propertyReplacement) : Object.create(null);
 
                             concretizePropertyInCell(newrule.lhs[j][k], property, concreteType);
                             if (newrule.rhs.length > 0) {
@@ -1439,7 +1439,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
                 let cur_cell = cur_rulerow[k];
                 let properties = getPropertiesFromCell(state, cur_cell);
                 for (let prop_n = 0; prop_n < properties.length; prop_n++) {
-                    if (ambiguousProperties.hasOwnProperty(properties[prop_n])) {
+                    if (Object.hasOwn(ambiguousProperties, properties[prop_n])) {
                         rhsPropertyRemains = properties[prop_n];
                     }
                 }
@@ -1941,7 +1941,7 @@ function rulesToMask(state) {
                             const mask = state.objectMasks[object_name];
                             rhsBitVectors.randomMask_r.ior(mask);
                             
-                            const values = state.propertiesDict.hasOwnProperty(object_name) ? 
+                            const values = Object.hasOwn(state.propertiesDict, object_name) ?
                                 state.propertiesDict[object_name] : [object_name];
                             
                             if (values.length === 1) {
@@ -2315,7 +2315,7 @@ function generateMasks(state) {
     }
     state.layerMasks = layerMasks;
 
-    let objectMask = {};
+    let objectMask = Object.create(null);
 
     const object_keys = Object.keys(state.objects);
     const object_keys_l = object_keys.length;
@@ -2367,7 +2367,7 @@ function generateMasks(state) {
     state.objectMasks = objectMask;
 
 
-    state.aggregateMasks = {};
+    state.aggregateMasks = Object.create(null);
 
     //set aggregate masks similarly
     for (let aggregateName of Object.keys(state.aggregatesDict)) {

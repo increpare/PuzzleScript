@@ -199,7 +199,7 @@ function printLevel() {
 		const glyphMasks = [];
 
 		for (const glyphName in state.glyphDict) {
-			if (state.glyphDict.hasOwnProperty(glyphName) && glyphName.length === 1) {
+			if (Object.hasOwn(state.glyphDict, glyphName) && glyphName.length === 1) {
 				const glyph = state.glyphDict[glyphName];
 				const glyphmask = new BitVec(STRIDE_OBJ);
 				for (let i = 0; i < glyph.length; i++) {

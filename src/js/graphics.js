@@ -159,7 +159,7 @@ function generateGlyphImages() {
 
     const seenobjects = {};
     for (var n of state.glyphOrder) {
-        if (n.length == 1 && state.glyphDict.hasOwnProperty(n)) {
+        if (n.length == 1 && Object.hasOwn(state.glyphDict, n)) {
             var g = state.glyphDict[n];
 
             /* hide duplicate entries from editor palette*/
@@ -317,7 +317,7 @@ function glyphCount() {
     //could also just return glyphImages.length
     var count = 0;
     for (var n of state.glyphOrder) {
-        if (n.length == 1 && state.glyphDict.hasOwnProperty(n)) {
+        if (n.length == 1 && Object.hasOwn(state.glyphDict, n)) {
             count++;
         }
     }

@@ -445,9 +445,9 @@ let codeMirrorFn = function () {
     return {
         wordChars: "puzzle",
         copyState: function (state) {
-            let objectsCopy = {};
+            let objectsCopy = Object.create(null);
             for (let i in state.objects) {
-                if (state.objects.hasOwnProperty(i)) {
+                if (Object.hasOwn(state.objects, i)) {
                     let o = state.objects[i];
                     objectsCopy[i] = {
                         colors: o.colors.slice(),
@@ -492,8 +492,8 @@ let codeMirrorFn = function () {
                 rulesCopy.push(state.rules[i].slice());
             }
 
-            let original_case_namesCopy = Object.assign({}, state.original_case_names);
-            let original_line_numbersCopy = Object.assign({}, state.original_line_numbers);
+            let original_case_namesCopy = Object.assign(Object.create(null), state.original_case_names);
+            let original_line_numbersCopy = Object.assign(Object.create(null), state.original_line_numbers);
 
             let nstate = {
                 lineNumber: state.lineNumber,
@@ -685,7 +685,7 @@ let codeMirrorFn = function () {
                     if (state.section === 'sounds') {
                         //populate names from objects and legends
                         for (let n in state.objects) {
-                            if (state.objects.hasOwnProperty(n)) {
+                            if (Object.hasOwn(state.objects, n)) {
                                 state.names.add(n);
                             }
                         }
@@ -698,7 +698,7 @@ let codeMirrorFn = function () {
                     else if (state.section === 'levels') {
                         //populate character abbreviations (properties are ambiguous, so they're not included)
                         for (let n in state.objects) {
-                            if (state.objects.hasOwnProperty(n) && n.length === 1) {
+                            if (Object.hasOwn(state.objects, n) && n.length === 1) {
                                 state.abbrevNames.add(n);
                             }
                         }
@@ -1531,7 +1531,8 @@ let codeMirrorFn = function () {
                 /*
                     permanently useful
                 */
-                objects: {},
+                // Source names such as __proto__ must be ordinary dictionary keys.
+                objects: Object.create(null),
 
                 /*
                     for parsing
@@ -1577,8 +1578,8 @@ let codeMirrorFn = function () {
                 metadata: [],
                 metadata_lines: {},
 
-                original_case_names: {},
-                original_line_numbers: {},
+                original_case_names: Object.create(null),
+                original_line_numbers: Object.create(null),
 
                 abbrevNames: new Set(),
 
