@@ -2,7 +2,8 @@
 
 function displayError(message) {
 	var errorText = document.getElementById("errormessage");
-	errorText.innerHTML="ERROR "+message+"<br>";
+	errorText.textContent="ERROR "+message;
+	errorText.appendChild(document.createElement("br"));
 
 }
 function getParameterByName(name) {

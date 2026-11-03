@@ -306,7 +306,7 @@ editor.on("drop", function(editor, event) {
 				} 
 				editor.setValue(source_text);
 				editor.clearHistory();
-				consolePrint("Loaded file: " + file.name);
+				consolePrint("Loaded file: " + escapeDiagnosticText(file.name));
 			};
 			reader.readAsText(file);
 		} catch(e) {

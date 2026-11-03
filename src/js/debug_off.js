@@ -7,9 +7,9 @@ const IDE=false;
 const diffToVisualize=null;
 
 function stripTags(str) {
-	let div = document.createElement("div");
-	div.innerHTML = str;
-	let result = div.textContent || div.innerText || "";
+	let template = document.createElement("template");
+	template.innerHTML = str;
+	let result = template.content.textContent || "";
 	return result;
 }
 
@@ -36,13 +36,15 @@ function UnitTestingThrow(error){}
 function consoleError(str,lineNumber){
 	let errorText = document.getElementById("errormessage");
 	str=stripTags(str);
-	errorText.innerHTML+=str+"<br>";
+	errorText.appendChild(document.createTextNode(str));
+	errorText.appendChild(document.createElement("br"));
 }
 
 function logErrorNoLine(str){
 	let errorText = document.getElementById("errormessage");
 	str=stripTags(str);
-	errorText.innerHTML+=str+"<br>";
+	errorText.appendChild(document.createTextNode(str));
+	errorText.appendChild(document.createElement("br"));
 }
 
 function clearInputHistory() {}
