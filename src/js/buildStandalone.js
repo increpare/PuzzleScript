@@ -40,12 +40,22 @@ function buildStandalone(sourceCode) {
 	}
 	let homepage = "https://www.puzzlescript.net";
 	if (state.metadata.homepage!==undefined) {
-		homepage=state.metadata.homepage;
-		if (!homepage.match(/^https?:\/\//)) {
+		homepage = state.metadata.homepage;
+		if (!/^https?:\/\//i.test(homepage) && !/^[a-z][a-z0-9+.-]*:/i.test(homepage)) {
 			homepage = "https://" + homepage;
 		}
+		// Allow broken destinations, but never an executable URL scheme.
+		if (!/^https?:\/\//i.test(homepage)) {
+			homepage = null;
+		}
 	}
-	let homepage_stripped = homepage.replace(/^https?:\/\//,'');
+	// Preserve the author's display text independently of URL normalization.
+	let homepage_stripped = (state.metadata.homepage === undefined ? homepage : state.metadata.homepage).replace(/^https?:\/\//i,'');
+	try {
+		homepage_stripped = decodeURIComponent(homepage_stripped);
+	} catch (e) {
+		// A literal or malformed percent escape should still display as written.
+	}
 	homepage_stripped = escapeHtmlChars(homepage_stripped);
 
 	let background_color="black";
@@ -63,8 +73,8 @@ function buildStandalone(sourceCode) {
 	htmlString = htmlString.replace(/__GAMETITLE__/g,escapeHtmlChars(title));
 
 
-	htmlString = htmlString.replace(/__HOMEPAGE__/g,homepage);
-	htmlString = htmlString.replace(/__HOMEPAGE_STRIPPED_PROTOCOL__/g,homepage_stripped);
+	htmlString = htmlString.replace(/href="__HOMEPAGE__"/g,() => homepage === null ? '' : 'href="' + escapeHtmlChars(homepage) + '"');
+	htmlString = htmlString.replace(/__HOMEPAGE_STRIPPED_PROTOCOL__/g,() => homepage_stripped);
 
 	let hackLink = 'nohack' in state.metadata ? '' :
 		'<nav id="playerLinks" hidden><span class="footer-separator" aria-hidden="true">|</span><form method="post" action="https://www.puzzlescript.net/editor.html" accept-charset="UTF-8" target="_blank" rel="noopener" onsubmit="this.elements.source.value=sourceCode">' +
