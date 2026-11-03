@@ -15,7 +15,7 @@ let diffToVisualize=null;
 
 function convertLevelToString() {
 	let out = '';
-	let seenCells = {};
+	let seenCells = Object.create(null);
 	let i = 0;
 	for (let y = 0; y < level.height; y++) {
 		for (let x = 0; x < level.width; x++) {
@@ -29,7 +29,7 @@ function convertLevelToString() {
 			objs.sort();
 			objs = objs.join(" ");
 			/* replace repeated object combinations with numbers */
-			if (!seenCells.hasOwnProperty(objs)) {
+			if (!Object.hasOwn(seenCells, objs)) {
 				seenCells[objs] = i++;
 				out += objs + ":";
 			}
