@@ -914,9 +914,9 @@ const IDE=false;
 const diffToVisualize=null;
 
 function stripTags(str) {
-	let div = document.createElement("div");
-	div.innerHTML = str;
-	let result = div.textContent || div.innerText || "";
+	let template = document.createElement("template");
+	template.innerHTML = str;
+	let result = template.content.textContent || "";
 	return result;
 }
 
@@ -943,13 +943,15 @@ function UnitTestingThrow(error){}
 function consoleError(str,lineNumber){
 	let errorText = document.getElementById("errormessage");
 	str=stripTags(str);
-	errorText.innerHTML+=str+"<br>";
+	errorText.appendChild(document.createTextNode(str));
+	errorText.appendChild(document.createElement("br"));
 }
 
 function logErrorNoLine(str){
 	let errorText = document.getElementById("errormessage");
 	str=stripTags(str);
-	errorText.innerHTML+=str+"<br>";
+	errorText.appendChild(document.createTextNode(str));
+	errorText.appendChild(document.createElement("br"));
 }
 
 function clearInputHistory() {}
@@ -8176,7 +8178,7 @@ function generateGlyphImages() {
 
     const seenobjects = {};
     for (var n of state.glyphOrder) {
-        if (n.length == 1 && state.glyphDict.hasOwnProperty(n)) {
+        if (n.length == 1 && Object.hasOwn(state.glyphDict, n)) {
             var g = state.glyphDict[n];
 
             /* hide duplicate entries from editor palette*/
@@ -8334,7 +8336,7 @@ function glyphCount() {
     //could also just return glyphImages.length
     var count = 0;
     for (var n of state.glyphOrder) {
-        if (n.length == 1 && state.glyphDict.hasOwnProperty(n)) {
+        if (n.length == 1 && Object.hasOwn(state.glyphDict, n)) {
             count++;
         }
     }
@@ -12303,7 +12305,7 @@ function flattenPropertyEntry(n, a, substitutor) {
 
 //syntax-highlighting token class for a named colour, or null if it's not one
 function colorNameToken(candcol) {
-    if (candcol in colorPalettes.arnecolors) {
+    if (Object.hasOwn(colorPalettes.arnecolors, candcol)) {
         return 'COLOR COLOR-' + candcol.toUpperCase();
     } else if (candcol === "transparent") {
         return 'COLOR FADECOLOR';
@@ -12403,6 +12405,12 @@ let codeMirrorFn = function () {
 
             if (splits.length === 3) {
                 //SYNONYM
+                // A forward reference can lead back to the name being defined.
+                // Reject the closing link before it creates a synonym cycle.
+                if (lookupLegendName(state, splits[2]).name === splits[0]) {
+                    logError("You can't define object " + splits[0].toUpperCase() + " in terms of itself!", state.lineNumber);
+                    return;
+                }
                 let synonym = [splits[0], splits[2]];
                 synonym.lineNumber = state.lineNumber;
                 registerOriginalCaseName(state, splits[0], mixedCase, state.lineNumber);
@@ -12510,9 +12518,9 @@ let codeMirrorFn = function () {
     return {
         wordChars: "puzzle",
         copyState: function (state) {
-            let objectsCopy = {};
+            let objectsCopy = Object.create(null);
             for (let i in state.objects) {
-                if (state.objects.hasOwnProperty(i)) {
+                if (Object.hasOwn(state.objects, i)) {
                     let o = state.objects[i];
                     objectsCopy[i] = {
                         colors: o.colors.slice(),
@@ -12557,8 +12565,8 @@ let codeMirrorFn = function () {
                 rulesCopy.push(state.rules[i].slice());
             }
 
-            let original_case_namesCopy = Object.assign({}, state.original_case_names);
-            let original_line_numbersCopy = Object.assign({}, state.original_line_numbers);
+            let original_case_namesCopy = Object.assign(Object.create(null), state.original_case_names);
+            let original_line_numbersCopy = Object.assign(Object.create(null), state.original_line_numbers);
 
             let nstate = {
                 lineNumber: state.lineNumber,
@@ -12750,7 +12758,7 @@ let codeMirrorFn = function () {
                     if (state.section === 'sounds') {
                         //populate names from objects and legends
                         for (let n in state.objects) {
-                            if (state.objects.hasOwnProperty(n)) {
+                            if (Object.hasOwn(state.objects, n)) {
                                 state.names.add(n);
                             }
                         }
@@ -12763,7 +12771,7 @@ let codeMirrorFn = function () {
                     else if (state.section === 'levels') {
                         //populate character abbreviations (properties are ambiguous, so they're not included)
                         for (let n in state.objects) {
-                            if (state.objects.hasOwnProperty(n) && n.length === 1) {
+                            if (Object.hasOwn(state.objects, n) && n.length === 1) {
                                 state.abbrevNames.add(n);
                             }
                         }
@@ -13596,7 +13604,8 @@ let codeMirrorFn = function () {
                 /*
                     permanently useful
                 */
-                objects: {},
+                // Source names such as __proto__ must be ordinary dictionary keys.
+                objects: Object.create(null),
 
                 /*
                     for parsing
@@ -13642,8 +13651,8 @@ let codeMirrorFn = function () {
                 metadata: [],
                 metadata_lines: {},
 
-                original_case_names: {},
-                original_line_numbers: {},
+                original_case_names: Object.create(null),
+                original_line_numbers: Object.create(null),
 
                 abbrevNames: new Set(),
 
@@ -13661,8 +13670,10 @@ let codeMirrorFn = function () {
 
 
 function isColor(str) {
+    if (typeof str !== 'string')
+        return false;
     str = str.trim();
-    if (str in colorPalettes.arnecolors)
+    if (Object.hasOwn(colorPalettes.arnecolors, str))
         return true;
     if (REGEX_HEX.test(str))
         return true;
@@ -13673,7 +13684,7 @@ function isColor(str) {
 
 function colorToHex(palette, str) {
     str = str.trim();
-    if (str in palette) {
+    if (Object.hasOwn(palette, str)) {
         return palette[str];
     }
 
@@ -13795,10 +13806,10 @@ function generateExtraMembers(state) {
         let key = state.metadata[i];
         let val = state.metadata[i + 1];
         if (key === 'color_palette') {
-            if (val in colorPalettesAliases) {
+            if (Object.hasOwn(colorPalettesAliases, val)) {
                 val = colorPalettesAliases[val];
             }
-            if (colorPalettes[val] === undefined) {
+            if (!Object.hasOwn(colorPalettes, val)) {
                 logError('Palette "' + val + '" not found, defaulting to arnecolors.', 0);
             } else {
                 colorPalette = colorPalettes[val];
@@ -13819,7 +13830,7 @@ function generateExtraMembers(state) {
     }
 
     let glyphOrder = [];
-    let glyphDict = {};
+    let glyphDict = Object.create(null);
 
     //convert colors to hex
     const state_object_keys = Object.keys(state.objects);
@@ -13938,14 +13949,14 @@ function generateExtraMembers(state) {
     state.glyphDict = glyphDict;
     state.glyphOrder = glyphOrder;
 
-    let aggregatesDict = {};
+    let aggregatesDict = Object.create(null);
     for (let i = 0; i < state.legend_aggregates.length; i++) {
         let entry = state.legend_aggregates[i];
         aggregatesDict[entry[0]] = entry.slice(1);
     }
     state.aggregatesDict = aggregatesDict;
 
-    let propertiesDict = {};
+    let propertiesDict = Object.create(null);
     for (let i = 0; i < state.legend_properties.length; i++) {
         let entry = state.legend_properties[i];
         propertiesDict[entry[0]] = entry.slice(1);
@@ -13953,7 +13964,7 @@ function generateExtraMembers(state) {
     state.propertiesDict = propertiesDict;
 
     //calculate lookup dictionaries
-    let synonymsDict = {};
+    let synonymsDict = Object.create(null);
     for (let i = 0; i < state.legend_synonyms.length; i++) {
         let entry = state.legend_synonyms[i];
         let key = entry[0];
@@ -13995,7 +14006,7 @@ function generateExtraMembers(state) {
     }
 
     /* determine which properties specify objects all on one layer */
-    state.propertiesSingleLayer = {};
+    state.propertiesSingleLayer = Object.create(null);
     const propertiesDict_keys = Object.keys(propertiesDict);
     const propertiesDict_keys_l = propertiesDict_keys.length;
     for (let k_i = 0; k_i < propertiesDict_keys_l; k_i++) {
@@ -14325,7 +14336,7 @@ function processRuleString(rule, state, curRules) {
                         }
                     } else if (relativeDirections.includes(token)) {
                         logError('You cannot use relative directions (\"^v<>\") to indicate in which direction(s) a rule applies.  Use absolute directions indicators (Up, Down, Left, Right, Horizontal, or Vertical, for instance), or, if you want the rule to apply in all four directions, do not specify directions', lineNumber);
-                    } else if (token in directionaggregates) {
+                    } else if (reg_ruledirectionindicators.test(token) && Object.hasOwn(directionaggregates, token)) {
                         directions = directions.concat(directionaggregates[token]);
                     } else if (token === 'late') {
                         late = true;
@@ -14601,7 +14612,7 @@ First, let's check for 'X no X' on the RHS.
                     if (!item.startsWith("no")){
                         let no_name = cell[l+1];
                         //properties (single-layer or not) are deliberately not added to the present mask
-                        if (state.objects.hasOwnProperty(no_name)){
+                        if (Object.hasOwn(state.objects, no_name)){
                             objects_present.push(no_name);
                             objects_present_mask.ibitset(state.objects[no_name].id);
                         }
@@ -14679,7 +14690,7 @@ First, let's check for 'X no X' on the RHS.
                     }
                     let entity_name = cell[l+1]
                     //if it's a single-layer property
-                    if (state.propertiesSingleLayer.hasOwnProperty(entity_name)){
+                    if (Object.hasOwn(state.propertiesSingleLayer, entity_name)){
                         let layer = state.propertiesSingleLayer[entity_name];
                         required_layers.ibitset(layer);
                         let property_obs = state.propertiesDict[entity_name];
@@ -14693,13 +14704,13 @@ First, let's check for 'X no X' on the RHS.
                             required_objects.ibitset(object_data.id);
                         }
                         occupier[layer]=entity_name;
-                    } else if (state.objects.hasOwnProperty(entity_name)){
+                    } else if (Object.hasOwn(state.objects, entity_name)){
                         let layer = state.objects[entity_name].layer;
                         let ob_id = state.objects[entity_name].id;
                         required_layers.ibitset(layer);
                         required_objects.ibitset(ob_id);
                         occupier[layer]=entity_name;
-                    } else if (state.aggregatesDict.hasOwnProperty(entity_name)){
+                    } else if (Object.hasOwn(state.aggregatesDict, entity_name)){
                         let aggregate_obs = state.aggregatesDict[entity_name];
                         for (let m=0;m<aggregate_obs.length;m++){
                             let object_info = state.objects[aggregate_obs[m]];
@@ -14904,7 +14915,7 @@ function getMovings(state, cell) {
     for (let j = 0; j < cell.length; j += 2) {
         let dir = cell[j];
         let name = cell[j + 1];
-        if (dir in directionaggregates) {
+        if (Object.hasOwn(directionaggregates, dir)) {
             result.push([name, dir]);
         }
     }
@@ -14958,7 +14969,7 @@ function expandNoPrefixedProperties(state, cell) {
 
 //entries are flat arrays, so a per-entry slice is a deep-enough copy
 function cloneReplacementDict(src) {
-    const result = {};
+    const result = Object.create(null);
     const keys = Object.keys(src);
     const keys_l = keys.length;
     for (let k_i = 0; k_i < keys_l; k_i++) {
@@ -14985,7 +14996,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
     // 		doesn't need to be split up (assuming single-layer player/block aggregates)
 
     // we can't manage this if they're being used to disambiguate
-    let ambiguousProperties = {};
+    let ambiguousProperties = Object.create(null);
 
     for (let j = 0; j < rule.rhs.length; j++) {
         let row_l = rule.lhs[j];
@@ -15019,7 +15030,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
                     for (let prop_n = 0; prop_n < properties.length; ++prop_n) {
                         let property = properties[prop_n];
 
-                        if (state.propertiesSingleLayer.hasOwnProperty(property) &&
+                        if (Object.hasOwn(state.propertiesSingleLayer, property) &&
                             ambiguousProperties[property] !== true) {
                             // we don't need to explode this property
                             continue;
@@ -15035,7 +15046,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
                         for (let l = 0; l < aliases.length; l++) {
                             let concreteType = aliases[l];
                             let newrule = deepCloneRule(cur_rule);
-                            newrule.propertyReplacement = cur_rule.propertyReplacement ? cloneReplacementDict(cur_rule.propertyReplacement) : {};
+                            newrule.propertyReplacement = cur_rule.propertyReplacement ? cloneReplacementDict(cur_rule.propertyReplacement) : Object.create(null);
 
                             concretizePropertyInCell(newrule.lhs[j][k], property, concreteType);
                             if (newrule.rhs.length > 0) {
@@ -15098,7 +15109,7 @@ function concretizePropertyRule(state, rule, lineNumber) {
                 let cur_cell = cur_rulerow[k];
                 let properties = getPropertiesFromCell(state, cur_cell);
                 for (let prop_n = 0; prop_n < properties.length; prop_n++) {
-                    if (ambiguousProperties.hasOwnProperty(properties[prop_n])) {
+                    if (Object.hasOwn(ambiguousProperties, properties[prop_n])) {
                         rhsPropertyRemains = properties[prop_n];
                     }
                 }
@@ -15600,7 +15611,7 @@ function rulesToMask(state) {
                             const mask = state.objectMasks[object_name];
                             rhsBitVectors.randomMask_r.ior(mask);
                             
-                            const values = state.propertiesDict.hasOwnProperty(object_name) ? 
+                            const values = Object.hasOwn(state.propertiesDict, object_name) ?
                                 state.propertiesDict[object_name] : [object_name];
                             
                             if (values.length === 1) {
@@ -15974,7 +15985,7 @@ function generateMasks(state) {
     }
     state.layerMasks = layerMasks;
 
-    let objectMask = {};
+    let objectMask = Object.create(null);
 
     const object_keys = Object.keys(state.objects);
     const object_keys_l = object_keys.length;
@@ -16026,7 +16037,7 @@ function generateMasks(state) {
     state.objectMasks = objectMask;
 
 
-    state.aggregateMasks = {};
+    state.aggregateMasks = Object.create(null);
 
     //set aggregate masks similarly
     for (let aggregateName of Object.keys(state.aggregatesDict)) {
@@ -17110,7 +17121,7 @@ function printLevel() {
 		const glyphMasks = [];
 
 		for (const glyphName in state.glyphDict) {
-			if (state.glyphDict.hasOwnProperty(glyphName) && glyphName.length === 1) {
+			if (Object.hasOwn(state.glyphDict, glyphName) && glyphName.length === 1) {
 				const glyph = state.glyphDict[glyphName];
 				const glyphmask = new BitVec(STRIDE_OBJ);
 				for (let i = 0; i < glyph.length; i++) {
