@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Transient form-POST import of game text into the deployed PuzzleScript editor.
 
-No dependencies or storage. See IMPORT_DEPLOYMENT.md for the Caddy/CGI adapter.
+No dependencies or storage. The HTTP adapter supports the Caddy/CGI route.
 The 32 MiB limit applies to the encoded body (UTF-8 percent encoding can triple
 its size). Accept any Origin, including local files' null Origin: this creates
 an editor document, not a saved game or an authenticated state change.
