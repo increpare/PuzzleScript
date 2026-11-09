@@ -41,7 +41,7 @@ class ImportSourceTests(unittest.TestCase):
         self.assertIn('<base href="/">', body)
         self.assertEqual(headers['Cache-Control'], 'no-store')
         self.assertEqual(headers['Referrer-Policy'], 'no-referrer')
-        self.assertIn("script-src-attr 'none'", headers['Content-Security-Policy'])
+        self.assertNotIn('Content-Security-Policy', headers)
         self.assertNotIn('Access-Control-Allow-Origin', headers)
 
     def test_large_source_and_hosted_origin(self):

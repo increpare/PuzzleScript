@@ -14,18 +14,6 @@ let gistToLoad = null;
 if (importedSource && importedSource.textContent !== "null") {
 	code.value = JSON.parse(importedSource.textContent);
 	importedSource.remove();
-	// CSP blocks inline handlers on imported pages. Dispatch only the editor's
-	// numeric line links, including quoted targets used in rule/definition links.
-	document.getElementById('consoletextarea').addEventListener('click', function(event) {
-		const link = event.target.closest('a');
-		if (!link) { return; }
-		const target = /^jumpToLine\((['"]?)([1-9][0-9]*)\1\);?$/.exec(link.getAttribute('onclick') || '');
-		if (!target) { return; }
-		const line = Number(target[2]);
-		if (!Number.isSafeInteger(line)) { return; }
-		event.preventDefault();
-		jumpToLine(line);
-	});
 } else if (fileToOpen!==null&&fileToOpen.length>0) {
 	code.value = "loading...";
 } else {

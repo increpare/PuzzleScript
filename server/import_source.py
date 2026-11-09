@@ -24,11 +24,7 @@ SOURCE_MARKER = '<script id="importedSource" type="application/json">null</scrip
 def handle_request(environ, stream, editor_path=EDITOR_PATH):
     headers = {'Content-Type': 'text/html; charset=utf-8',
                'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer',
-               'X-Content-Type-Options': 'nosniff',
-               # Imported games compile using generated functions. Scripts come
-               # from the deployed editor; source-derived event attributes must
-               # never execute even if an existing diagnostic contains HTML.
-               'Content-Security-Policy': "script-src 'self' 'unsafe-eval'; script-src-attr 'none'; object-src 'none'; base-uri 'self'"}
+               'X-Content-Type-Options': 'nosniff'}
 
     def error(status, message):
         return status, headers, ('<!doctype html><html lang="en"><meta charset="utf-8">'

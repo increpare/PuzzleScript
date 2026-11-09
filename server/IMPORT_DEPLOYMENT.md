@@ -8,10 +8,11 @@ omits the button; it does not remove source from the export. No spoiler prompt.
 The endpoint accepts any submitting origin, including `Origin: null` from local
 files. This is ordinary form navigation, so it needs no CORS headers.
 
-Import responses also use a script policy allowing deployed same-origin scripts
-and the engine’s existing generated functions, while blocking inline event
-attributes. A focused parser fix escapes unknown-prelude text in diagnostics.
-Ordinary GET responses retain their existing policy.
+Import responses use the same script policy as ordinary editor GET responses.
+The receiver escapes source before embedding it in an inert JSON script, and
+editor diagnostics escape game text before adding their own markup. The earlier
+POST-only policy blocked the editor's existing inline controls, including the
+visual debugger, so it was removed.
 
 The receiver reads the current deployed editor HTML, replaces its inert
 `importedSource` JSON marker, and supplies `<base href="/">` for assets, links,
@@ -187,17 +188,12 @@ independently exported from the live editor, opened the actual HTML via
 file://, clicked Edit game, and confirmed exact source for both the small demo
 and a 5,243,790-byte valid source, plus nohack omission and METADATA highlighting.
 Mac Chrome additionally imported source containing harmless HTML event markers,
-clicked RUN, and confirmed no marker execution. Unknown-prelude text rendered
-escaped; the existing metadata-warning HTML was contained by the import-only
-script policy. Imports populate the editor; the user still clicks RUN to compile.
-
-Imported pages dispatch diagnostic and definition links through an external
-console click listener that accepts only exact `jumpToLine(NUMBER)` calls
-(including quoted positive integer targets) and safe integer line numbers. It
-calls the known function directly, never evaluates handler strings, and prevents
-the javascript: URL navigation. The script policy still blocks arbitrary inline
-handlers. Ordinary GET editor links retain their existing behavior. Normal editor
-browser saves/autosaves remain enabled. No source is stored on the server.
+clicked RUN, and confirmed no marker execution. Unknown-prelude and metadata
+diagnostics now render source text escaped. Imports populate the editor; the
+user still clicks RUN to compile. Imported and ordinary GET editor controls
+follow the same paths, including source links and visual debugger previews.
+Normal editor browser saves/autosaves remain enabled. No source is stored on
+the server.
 
 To roll back completely, remove the route by restoring the original Caddyfile,
 restore the original CGI launcher, restore archived site files, and remove only
